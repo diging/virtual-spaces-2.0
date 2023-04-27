@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.model.IVSImage;
-import edu.asu.diging.vspace.core.model.display.FolderType;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionDownload;
 
 public interface IStorageEngine {
@@ -16,9 +15,7 @@ public interface IStorageEngine {
 
     boolean renameImage(IVSImage image, String newFileName);
 
-    String createFolder(String relativePath, FolderType space);
-
-    String createFolder(String exhibitionFolderName);
+    String createFolder(String relativePath);
 
     byte[] generateZipFolder(String exhibitionFolderPath) throws IOException;
 

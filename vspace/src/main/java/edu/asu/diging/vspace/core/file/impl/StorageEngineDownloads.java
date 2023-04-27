@@ -27,7 +27,6 @@ import org.springframework.stereotype.Component;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IVSImage;
-import edu.asu.diging.vspace.core.model.display.FolderType;
 
 @Component
 @Qualifier("storageEngineDownloads")
@@ -118,13 +117,12 @@ public class StorageEngineDownloads implements IStorageEngine {
      * Creates folder given path
      */
     @Override
-    public String createFolder(String relativePath, FolderType folderType) {
+    public String createFolder(String relativePath) {
         File folder = new File(path + File.separator + relativePath);
         if (!folder.exists()) {
             folder.mkdir();
         }
         return relativePath;
-//        return folder.getAbsolutePath();
     }
 
     /**
@@ -154,17 +152,6 @@ public class StorageEngineDownloads implements IStorageEngine {
         }
 
         return directory;
-    }
-
-    @Override
-    public String createFolder(String folderName) {
-        File folder = new File(path + File.separator + folderName);
-        if (!folder.exists()) {
-            folder.mkdir();
-        }
-
-        return folder.getAbsolutePath();
-
     }
 
     @Override

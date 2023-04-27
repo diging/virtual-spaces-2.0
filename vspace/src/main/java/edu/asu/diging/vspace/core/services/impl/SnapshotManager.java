@@ -33,7 +33,6 @@ import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
-import edu.asu.diging.vspace.core.model.display.FolderType;
 import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.BranchingPoint;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionDownload;
@@ -119,24 +118,6 @@ public class SnapshotManager implements ISnapshotManager {
         snapshotTaskRepository.save(snapshotTask);   
     }
     
-//    /**
-//     * Copies the resources folder into the exhibitionFolderPath
-//     * @param exhibitionFolderPath
-//     * @param resourcesPath
-//     * @throws IOException 
-//     */
-//    @Override
-//    public void copyResourcesToExhibition(String exhibitionFolderPath, String resourcesPath) throws IOException {
-////TODO MOVE TO STORAGE ENGINE
-//        try {
-//            FileUtils.copyDirectory(new File(resourcesPath), new File(exhibitionFolderPath+ File.separator + RESOURCES_FOLDER_NAME)); 
-//        } catch (IOException e) {
-//            logger.error("Could not copy resources" , e);
-//            throw new IOException(e);
-//            
-//        } 
-//    }
-    
     /**
      * 
      * Download given space and related modules into exhibitionFolderPath
@@ -147,13 +128,15 @@ public class SnapshotManager implements ISnapshotManager {
     @Override
     public void downloadSpace(Space space, String exhibitionFolderName,  SequenceHistory sequenceHistory) {
 
-        String spaceFolderPath = storageEngineDownloads.createFolder( exhibitionFolderName + File.separator +space.getId(), FolderType.SPACE);
+        String spaceFolderPath = exhibitionFolderName + File.separator + space.getId();
+        storageEngineDownloads.createFolder(spaceFolderPath);
 
         storeTemplateForSpace(space.getId(), spaceFolderPath , sequenceHistory);
 
-        String imagesFolderPath = storageEngineDownloads.createFolder(exhibitionFolderName + File.separator +space.getId() + File.separator  + IMAGES_FOLDER_NAME, FolderType.IMAGE); 
+        String imagesFolderPath = spaceFolderPath + File.separator  + IMAGES_FOLDER_NAME;
+        storageEngineDownloads.createFolder(imagesFolderPath); 
 
-        //Copies the space image
+        // Copies the space image
         storageManager.copyImageUploadsToDownloads(space.getImage(), imagesFolderPath) ;
 
         List<IModuleLink> moduleLinks = space.getModuleLinks();

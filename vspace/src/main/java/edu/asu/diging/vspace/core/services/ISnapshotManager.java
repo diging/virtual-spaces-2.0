@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.context.WebContext;
 
+import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.SequenceNotFoundException;
 import edu.asu.diging.vspace.core.exception.SlideNotFoundException;
 import edu.asu.diging.vspace.core.exception.SlidesInSequenceNotFoundException;
@@ -35,7 +36,7 @@ public interface ISnapshotManager {
     
 
 
-    void storeTemplateForSpace(String directory, String spaceFolderPath,SequenceHistory sequenceHistory);
+    void storeTemplateForSpace(String directory, String spaceFolderPath,SequenceHistory sequenceHistory) throws FileStorageException;
 
     void populateContextForSpace(Context context, String id, SequenceHistory sequenceHistory);
 

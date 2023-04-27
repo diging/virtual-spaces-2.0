@@ -20,11 +20,16 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
+import org.mockito.stubbing.OngoingStubbing;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import edu.asu.diging.vspace.core.data.SpaceRepository;
+import edu.asu.diging.vspace.core.data.SnapshotTaskRepository;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
+import edu.asu.diging.vspace.core.file.IStorageManager;
 import edu.asu.diging.vspace.core.file.impl.StorageEngineDownloads;
+import edu.asu.diging.vspace.core.file.impl.StorageManager;
 import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.IImageBlock;
 import edu.asu.diging.vspace.core.model.IModule;
@@ -38,6 +43,7 @@ import edu.asu.diging.vspace.core.model.impl.Module;
 import edu.asu.diging.vspace.core.model.impl.ModuleLink;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
 import edu.asu.diging.vspace.core.model.impl.Slide;
+import edu.asu.diging.vspace.core.model.impl.SnapshotTask;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
@@ -52,10 +58,17 @@ public class SnapshotManagerTest {
     private FileUtils fileUtils;
 
     @Mock
-    StorageEngineDownloads storageEngine;
+    private StorageEngineDownloads storageEngine;
     
     @Mock
-    SpaceRepository spaceRepository;
+    private SpaceRepository spaceRepository;
+    
+    @Mock
+    private StorageManager storageManager;
+    
+    @Mock
+    private SnapshotTaskRepository SnapshotTaskRepository;
+
     
     @Before
     public void init() {
@@ -85,11 +98,11 @@ public class SnapshotManagerTest {
 
         String exhibitionFolderPath = "/Exhibition"; 
         String spaceFolderPath = exhibitionFolderPath + File.separator+ space.getId();
-        String imagesFolderPath = exhibitionFolderPath + File.separator+ "images";
-        when(storageEngine.createFolder(space.getId(), exhibitionFolderPath)).thenReturn(spaceFolderPath);
+        String imagesFolderPath = spaceFolderPath + File.separator+ "images";
+//        when(storageEngine.createFolder(space.getId(), exhibitionFolderPath)).thenReturn(spaceFolderPath);
         doNothing().when(serviceToTest).storeTemplateForSpace(space.getId(), spaceFolderPath, null);
-        when(storageEngine.createFolder("images", spaceFolderPath)).thenReturn(imagesFolderPath);
-        doNothing().when(storageEngine).copyImageToFolder(Mockito.any(IVSImage.class), Mockito.any(String.class));
+//        when(storageEngine.createFolder("images", spaceFolderPath)).thenReturn(imagesFolderPath);
+        doNothing().when(storageManager).copyImageUploadsToDownloads(Mockito.any(IVSImage.class), Mockito.any(String.class));
 
         serviceToTest.downloadSpace(space, exhibitionFolderPath, null);
 
@@ -189,30 +202,17 @@ public class SnapshotManagerTest {
     
     
     @Test
-    public void test_downloadExhibition_generateZipFolderfailure() throws IOException {
-        String exhibitionFolderPath = "/Exhibition";
+    public void test_downloadExhibition_createSnapShotfailure() throws IOException {
         String resourcesPath = "/Resources";
-        
         ExhibitionDownload exhibitionDownload = new ExhibitionDownload();
         exhibitionDownload.setId("ID1");
-        when(spaceRepository.findAllBySpaceStatus(SpaceStatus.PUBLISHED)).thenReturn(new ArrayList());
-        when(storageEngine.generateZipFolder(Mockito.anyString())).thenThrow(IOException.class);
-        
-        assertThrows(IOException.class, ()-> serviceToTest.createSnapShot(resourcesPath, "folderName",null,  exhibitionFolderPath, exhibitionDownload));
-    }
+        SnapshotTask snapshotTask = new SnapshotTask();  
+        snapshotTask.setExhibitionDownload(exhibitionDownload);    
+        exhibitionDownload.setSnapshotTask(snapshotTask);
 
-    
-    @Test
-    public void test_downloadExhibition_copyResourcesfailure() throws IOException {
-        String exhibitionFolderPath = "/Exhibition";
-        String resourcesPath = "/Resources";
-        ExhibitionDownload exhibitionDownload = new ExhibitionDownload();
-        exhibitionDownload.setId("ID1");
         when(spaceRepository.findAllBySpaceStatus(SpaceStatus.PUBLISHED)).thenReturn(new ArrayList());
-//        when(storageEngine.generateZipFolder(Mockito.anyString()).return;
-        doThrow(new IOException()).when(serviceToTest).copyResourcesToExhibition(exhibitionFolderPath, resourcesPath );
-        
-        assertThrows(IOException.class, ()-> serviceToTest.createSnapShot(resourcesPath,"folderName", null, exhibitionFolderPath, exhibitionDownload));
+        doThrow(new IOException()).when(storageEngine).copyToFolder(Mockito.anyString(), Mockito.anyString() );        
+        assertThrows(IOException.class, ()-> serviceToTest.createSnapShot(resourcesPath, "folderName", null, exhibitionDownload));
     }
 
 }
