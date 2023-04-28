@@ -33,7 +33,7 @@ public class ImageBlockFactoryTest {
     }
 
     @Test
-    public void test_CreateImageBlock_success() {
+    public void test_createImageBlock_success() {
         IImageBlock imageBlock = imageBlockFactory.createImageBlock(mockSlide, mockImage);
         assertNotNull(imageBlock);
         assertEquals(mockSlide, imageBlock.getSlide());
