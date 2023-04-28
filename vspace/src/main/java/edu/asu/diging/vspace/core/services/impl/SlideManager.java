@@ -346,8 +346,6 @@ public class SlideManager implements ISlideManager {
                 slideForm.getNames().add(createLocalizedNameForm(slide, language));
                 slideForm.getDescriptions().add(createLocalizedDescriptionForm(slide, language)); 
             }
-
-
         });
         return slideForm;      
     }

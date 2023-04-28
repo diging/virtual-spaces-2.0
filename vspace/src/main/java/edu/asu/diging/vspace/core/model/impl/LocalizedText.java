@@ -2,30 +2,40 @@ package edu.asu.diging.vspace.core.model.impl;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
-import edu.asu.diging.vspace.core.model.ILanguageDescriptionObject;
-import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
+import edu.asu.diging.vspace.core.model.ILocalizedText;
 
 
 @Entity
-public class LanguageDescriptionObject implements ILanguageDescriptionObject {
-	
+public class LocalizedText implements ILocalizedText {
+
     @Id
-    @GeneratedValue(generator = "language_description_id_generator")
-    @GenericGenerator(name = "language_description_id_generator", parameters = @Parameter(name = "prefix", value = "EXHLANGOBJ"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
+    @GeneratedValue(generator = "localized_text_id_generator")
+    @GenericGenerator(name = "localized_text_id_generator", parameters = @Parameter(name = "prefix", value = "LOCTEXT"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
 
-    @OneToOne(targetEntity = ExhibitionLanguage.class)
-    ExhibitionLanguage exhibitionLanguage; 
+    @ManyToOne
+    @JoinColumn(name = "LOC_EXH_LANG")
+    private ExhibitionLanguage exhibitionLanguage; 
 
-    String userText;
+    private String text;
     
-
+    public LocalizedText() {
+        super();
+    }
+    
+    public LocalizedText(ExhibitionLanguage exhibitionLanguage, String text) {
+        super();
+        this.exhibitionLanguage = exhibitionLanguage;
+        this.text = text;
+    }
+    
     public String getId() {
         return id;
     }
@@ -34,20 +44,19 @@ public class LanguageDescriptionObject implements ILanguageDescriptionObject {
         this.id = id;
     }
 
-    public String getUserText() {
-        return userText;
-    }
-
-    public void setUserText(String userText) {
-        this.userText = userText;
-    }
-
     public ExhibitionLanguage getExhibitionLanguage() {
         return exhibitionLanguage;
     }
 
     public void setExhibitionLanguage(ExhibitionLanguage exhibitionLanguage) {
         this.exhibitionLanguage = exhibitionLanguage;
+    }
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
     }
 
 }

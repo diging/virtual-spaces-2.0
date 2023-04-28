@@ -50,6 +50,4 @@ public interface ISlideManager {
     SlideForm getSlideForm(String slideId);
 
     SlideForm createNewSlideForm(ISlide slide);
-
-    
 }
