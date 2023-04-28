@@ -7,11 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import edu.asu.diging.vspace.core.data.ExhibitionAboutPageRepository;
 import edu.asu.diging.vspace.core.data.ExhibitionRepository;
-import edu.asu.diging.vspace.core.data.LanguageDescriptionObjectRepository;
+import edu.asu.diging.vspace.core.data.LocalizedTextRepository;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionAboutPage;
-import edu.asu.diging.vspace.core.model.impl.LanguageDescriptionObject;
+import edu.asu.diging.vspace.core.model.impl.LocalizedText;
 import edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.web.staff.forms.AboutPageForm;
@@ -31,7 +31,7 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
     private IExhibitionManager exhibitionManager;
     
     @Autowired
-    private LanguageDescriptionObjectRepository languageObjectRepo;
+    private LocalizedTextRepository languageObjectRepo;
     
     /* (non-Javadoc)
      * @see edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager#findAll()
@@ -50,13 +50,13 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
     @Override
     public ExhibitionAboutPage storeAboutPageData(ExhibitionAboutPage exhibitionAboutPage,AboutPageForm languageAboutPage) {
 			
-        for(LanguageDescriptionObject titles:languageAboutPage.getTitles())
+        for(LocalizedText titles:languageAboutPage.getTitles())
         {
-            setAboutPageTitle(titles.getUserText(),exhibitionAboutPage);
+            setAboutPageTitle(titles.getText(),exhibitionAboutPage);
         }
-        for(LanguageDescriptionObject texts:languageAboutPage.getAboutPageTexts())
+        for(LocalizedText texts:languageAboutPage.getAboutPageTexts())
         {
-            setAboutPageDescription(texts.getUserText(),exhibitionAboutPage);
+            setAboutPageDescription(texts.getText(),exhibitionAboutPage);
         }
         store(exhibitionAboutPage);
         return exhibitionAboutPage;				
@@ -95,8 +95,8 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
     public void setAboutPageTitle(String title, ExhibitionAboutPage exhibitionAboutPage) {
         if(title!=null || title.length()!=0)
 	{
-            LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
-            languageObject.setUserText(title);
+            LocalizedText languageObject = new LocalizedText();
+            languageObject.setText(title);
             if(exhibitionAboutPage.getExhibitionTitles() == null) {
                 exhibitionAboutPage.setExhibitionTitles(new ArrayList());
             }
@@ -112,8 +112,8 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
     public void setAboutPageDescription(String aboutPageTexts, ExhibitionAboutPage exhibitionAboutPage) {
         if(aboutPageTexts!=null || aboutPageTexts.length()!=0)
 	{
-            LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
-            languageObject.setUserText(aboutPageTexts);
+            LocalizedText languageObject = new LocalizedText();
+            languageObject.setText(aboutPageTexts);
             if(exhibitionAboutPage.getExhibitionTextDescriptions() == null) {
                 exhibitionAboutPage.setExhibitionTextDescriptions(new ArrayList());
             }
@@ -125,7 +125,7 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
 	/**
      * This method save the LanguageDescriptionObject in database.
     */
-    private void storeLanguageObject(LanguageDescriptionObject languageObject) {
+    private void storeLanguageObject(LocalizedText languageObject) {
         languageObjectRepo.save(languageObject);
     }   
 }

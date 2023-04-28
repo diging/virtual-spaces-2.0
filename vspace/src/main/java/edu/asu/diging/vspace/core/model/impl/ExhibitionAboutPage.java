@@ -16,7 +16,7 @@ import org.commonmark.renderer.html.HtmlRenderer;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
-import edu.asu.diging.vspace.core.model.ILanguageDescriptionObject;
+import edu.asu.diging.vspace.core.model.ILocalizedText;
 
 /**
  * Model for Exhibition About Page
@@ -39,28 +39,28 @@ public class ExhibitionAboutPage{
     
     
     
-    @OneToMany(targetEntity = LanguageDescriptionObject.class, cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @OneToMany(targetEntity = LocalizedText.class, cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(name="AboutPage_LangObj_titles")
-    private List<ILanguageDescriptionObject> exhibitionTitles;
+    private List<ILocalizedText> exhibitionTitles;
 
-    @OneToMany(targetEntity = LanguageDescriptionObject.class, cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @OneToMany(targetEntity = LocalizedText.class, cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(name="AboutPage_LangObj_descriptions")
-    private List<ILanguageDescriptionObject> exhibitionTextDescriptions;
+    private List<ILocalizedText> exhibitionTextDescriptions;
 
 
-    public List<ILanguageDescriptionObject> getExhibitionTitles() {
+    public List<ILocalizedText> getExhibitionTitles() {
         return exhibitionTitles;
     }
 
-    public void setExhibitionTitles(List<ILanguageDescriptionObject> exhibitionTitles) {
+    public void setExhibitionTitles(List<ILocalizedText> exhibitionTitles) {
         this.exhibitionTitles = exhibitionTitles;
     }
 
-    public List<ILanguageDescriptionObject> getExhibitionTextDescriptions() {
+    public List<ILocalizedText> getExhibitionTextDescriptions() {
         return exhibitionTextDescriptions;
     }
 
-    public void setExhibitionTextDescriptions(List<ILanguageDescriptionObject> exhibitionTextDescriptions) {
+    public void setExhibitionTextDescriptions(List<ILocalizedText> exhibitionTextDescriptions) {
         this.exhibitionTextDescriptions = exhibitionTextDescriptions;
     }
 

@@ -17,10 +17,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import edu.asu.diging.vspace.core.model.IExhibition;
-import edu.asu.diging.vspace.core.model.ILanguageDescriptionObject;
+import edu.asu.diging.vspace.core.model.ILocalizedText;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionAboutPage;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
-import edu.asu.diging.vspace.core.model.impl.LanguageDescriptionObject;
+import edu.asu.diging.vspace.core.model.impl.LocalizedText;
 import edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.web.staff.forms.AboutPageForm;
@@ -48,23 +48,23 @@ public class ExhibitionAboutPageController {
         AboutPageForm aboutPageForm=new AboutPageForm();
         aboutPageForm.setAboutPageText(exhibitionAboutPage.getAboutPageText());
         aboutPageForm.setTitle(exhibitionAboutPage.getTitle());
-        List<LanguageDescriptionObject> titleList = new ArrayList();
-        List<LanguageDescriptionObject> textList = new ArrayList();
-        for(ILanguageDescriptionObject titles:exhibitionAboutPage.getExhibitionTitles())
+        List<LocalizedText> titleList = new ArrayList();
+        List<LocalizedText> textList = new ArrayList();
+        for(ILocalizedText titles:exhibitionAboutPage.getExhibitionTitles())
         {
-            titleList.add((LanguageDescriptionObject) titles);
+            titleList.add((LocalizedText) titles);
         }
-        for(ILanguageDescriptionObject texts:exhibitionAboutPage.getExhibitionTextDescriptions())
+        for(ILocalizedText texts:exhibitionAboutPage.getExhibitionTextDescriptions())
 	{
-            textList.add((LanguageDescriptionObject) texts);
+            textList.add((LocalizedText) texts);
         }
         aboutPageForm.setTitles(titleList);
         aboutPageForm.setAboutPageTexts(textList);
         model.addAttribute("aboutPage", aboutPageForm);
         IExhibition startExhibtion = exhibitionManager.getStartExhibition();
-        List<LanguageDescriptionObject> languageObjectList = new ArrayList();
+        List<LocalizedText> languageObjectList = new ArrayList();
         startExhibtion.getLanguages().forEach(exhibitionLanguage -> {
-            LanguageDescriptionObject languageObject = new LanguageDescriptionObject();
+            LocalizedText languageObject = new LocalizedText();
             languageObject.setExhibitionLanguage((ExhibitionLanguage)exhibitionLanguage);
             languageObjectList.add(languageObject);
         });
