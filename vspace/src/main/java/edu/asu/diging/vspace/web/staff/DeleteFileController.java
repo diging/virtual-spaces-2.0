@@ -22,7 +22,7 @@ public class DeleteFileController {
         if(!fileManager.deleteFile(fileId)) {
             return new ResponseEntity<String>("Could not delete file", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<String>("Deleted file", HttpStatus.OK);
+        return new ResponseEntity<String>("File deleted successfully", HttpStatus.OK);
     }
 
 }

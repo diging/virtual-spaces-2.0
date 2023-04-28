@@ -32,18 +32,15 @@ public class AddFileController {
     @RequestMapping(value = "/staff/files/add", method = RequestMethod.POST)
     public ResponseEntity<String> createFile( Model model, @ModelAttribute FileForm fileForm, @RequestParam("file") MultipartFile file,
             Principal principal) {
-        byte[] fileBytes = null;
-        String originalFileName = null;
-        CreationReturnValue returnVal = null;
         if (file != null) {
             try {
-                fileBytes = file.getBytes();
-                originalFileName = file.getOriginalFilename();
-                returnVal = fileManager.storeFile(fileBytes, originalFileName, fileForm.getFileName(),fileForm.getDescription());
+                byte[] fileBytes = file.getBytes();
+                String originalFileName = file.getOriginalFilename();
+                fileManager.storeFile(fileBytes, originalFileName, fileForm.getFileName(),fileForm.getDescription());
               
             } catch (IOException e) {
                 logger.error("Error occured while creating file", e);  
-                return new ResponseEntity<String>("Could not create file", HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<String>("Could not create file", HttpStatus.INTERNAL_SERVER_ERROR);
             }
             
         }      

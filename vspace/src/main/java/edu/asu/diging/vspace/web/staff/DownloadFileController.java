@@ -30,7 +30,7 @@ public class DownloadFileController {
     @RequestMapping(value = "/staff/files/{fileId}/download", method = RequestMethod.GET )
     public ResponseEntity<Resource> downloadFile(Model model, @PathVariable String fileId) throws IOException {
         Resource resource = null;  
-        IVSFile file= null;
+        IVSFile file = null;
         try {        
             file = fileManager.getFileById(fileId);
             if(file!=null) {

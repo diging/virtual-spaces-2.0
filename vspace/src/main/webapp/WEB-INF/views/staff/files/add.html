@@ -24,7 +24,7 @@
 					window.location.href = "[(@{'/staff/files/list/'})]"+'?'+"uploadFileSuccess=true&message="+data;
 				},
 				error : function(data) {
-					var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>File upload failed. Please try again after sometime.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+					var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>File upload failed. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
 					$('.errorAdd').append(alert);
 				}
 			});
