@@ -234,8 +234,8 @@ public class SlideManager implements ISlideManager {
         if(!CollectionUtils.isEmpty(descriptions)) { 
             for(LocalizedTextForm description : descriptions ) {
                 LocalizedText localizedText = localizedTextRepo.findById(description.getLocalisedTextId()).orElse(null);
-                if(localizedText != null) {            
-                localizedText.setText(description.getText());  
+                if(localizedText != null) {
+                    localizedText.setText(description.getText());  
                 }
                     
                 else {
