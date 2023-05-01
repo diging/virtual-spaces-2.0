@@ -29,7 +29,7 @@ public class ExternalLinkDisplayFactoryTest {
     }
 
     @Test
-    public void testCreateExternalLinkDisplay() {
+    public void test_createExternalLinkDisplay_success() {
         IExternalLinkDisplay externalLinkDisplay = externalLinkDisplayFactory.createExternalLinkDisplay(mockExternalLink);
         assertNotNull(externalLinkDisplay);
         assertEquals(mockExternalLink, externalLinkDisplay.getExternalLink());

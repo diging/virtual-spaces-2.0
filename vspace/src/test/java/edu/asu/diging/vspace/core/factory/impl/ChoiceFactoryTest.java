@@ -1,4 +1,4 @@
-package edu.asu.diging.vspace.core.services.impl;
+package edu.asu.diging.vspace.core.factory.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,10 +13,10 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import edu.asu.diging.vspace.core.factory.impl.ChoiceFactory;
 import edu.asu.diging.vspace.core.model.IChoice;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
+import edu.asu.diging.vspace.core.services.impl.SequenceManager;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ChoiceFactoryTest {

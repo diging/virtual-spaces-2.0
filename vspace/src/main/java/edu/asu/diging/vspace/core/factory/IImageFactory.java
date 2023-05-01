@@ -3,6 +3,7 @@ package edu.asu.diging.vspace.core.factory;
 import edu.asu.diging.vspace.core.model.IVSImage;
 
 /**
+ * (non-javadoc)
  * The IImageFactory interface defines a factory for creating instances of the {@link IVSImage}
  * interface. 
  * Implementations of this interface should provide an implementation for the
@@ -13,6 +14,7 @@ import edu.asu.diging.vspace.core.model.IVSImage;
 public interface IImageFactory {
 
     /**
+     * (non-javadoc)
      * Creates a new instance of the {@link IVSImage} interface, based on the given filename and
      * file type.
      * 
