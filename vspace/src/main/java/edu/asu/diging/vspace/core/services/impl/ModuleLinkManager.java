@@ -112,7 +112,7 @@ public class ModuleLinkManager extends LinkManager<IModuleLink, IModule, IModule
     }
 
     @Override
-    public HashSet<ISpace> findSpaceLinksFromModuleId(String moduleId) {
+    public HashSet<ISpace> findSpaceFromModuleId(String moduleId) {
         List<ModuleLink> moduleLinks = moduleLinkRepo.findByModuleId(moduleId);
         return (HashSet<ISpace>) moduleLinks.stream().map(s->s.getSpace()).collect(Collectors.toSet());
     }

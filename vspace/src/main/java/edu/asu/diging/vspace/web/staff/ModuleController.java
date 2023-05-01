@@ -36,7 +36,7 @@ public class ModuleController {
         model.addAttribute("slides", moduleManager.getModuleSlides(id));
         model.addAttribute("sequences", moduleManager.getModuleSequences(id));
         model.addAttribute("moduleStatus", module.getModuleStatus());
-        HashSet <ISpace> spaces = moduleLink.findSpaceLinksFromModuleId(id);
+        HashSet <ISpace> spaces = moduleLink.findSpaceFromModuleId(id);
         model.addAttribute("spacesList", spaces);
         return "staff/modules/module";
     }
