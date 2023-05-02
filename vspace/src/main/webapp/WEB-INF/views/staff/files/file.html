@@ -9,10 +9,11 @@
 
 <script th:inline="javascript">
 
-function deleteFile(){
+function deleteFile(fileid){
 	var token = [[${_csrf.token}]];
 	$.ajax({
-        url: "[(@{'/staff/files/'+${file.id} +'/delete'})]",
+/*         url: "[(@{'/staff/files/'+${file.id} +'/delete'})]",
+ */        url: "[(@{'/staff/files/'})]" +fileid +'/delete',
         type: 'POST',
         headers:{
 			'X-CSRF-Token':token
@@ -20,7 +21,7 @@ function deleteFile(){
         cache: false,
         contentType : false,
         success: function(data) {
-        	window.location.href = "[(@{'/staff/files/list/'})]";
+        	window.location.href = "[(@{'/staff/files/list/'})]"+'?'+"deleteFileSuccess=true&message="+data;
         },
         error: function(data) {
         	var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
@@ -28,12 +29,56 @@ function deleteFile(){
         }
     });
 }
+$(document).ready(function($) {
+  	$(function () {
+  	  $('[data-toggle="tooltip"]').tooltip()
+  	});
+      
+	var fileId;
+	$("#deleteFileTooltip").on("click", function() {
+		fileId = $(this).attr("value");
+		$('#deleteFileAlert').modal('show');
+	});
+	
+	$("#deleteFileButtonConfirm").on("click", function() {
+		$('#deleteFileAlert').modal('hide');
+		deleteFile(fileId);
+	});
+	
+	
+	$("#cancelFileDelButton").click(function () {
+	    $("#deleteFileAlert").data('value', 0);
+	    $("#deleteFileAlert").modal('hide');
+	});
+});
 
 </script>
 </head>
 
 <body>
     <div  layout:fragment="content" class="main-content">
+       <div id="deleteFileAlert" class="modal fade" role="dialog" data-value="0">
+		    <div class="modal-dialog">
+		        <div class="modal-content">
+		            <div class="modal-header">
+		                <h4 class="modal-title" id="deleteFileTitle">Confirm Deletion</h4>
+		                <button type="button" id="closeSlide" class="close"
+		                    data-dismiss="modal" aria-hidden="true"><span class="icon-circle-close"></span></button>
+		            </div>
+		            <div class="modal-body">
+		                <p>
+		                    Are you sure you want to delete this file? 
+		                </p>
+		            </div>
+		            <div class="modal-footer">
+		                <button type="button" id="cancelFileDelButton"
+		                    class="btn btn-default" data-dismiss="modal">Cancel</button>
+		                <button id="deleteFileButtonConfirm"  type="submit"
+		                    class="btn btn-danger btn-ok">Delete</button>
+		            </div>
+		        </div>
+		    </div>
+		</div>
     <input action="action" class="btn primary-btn" type="button" onclick="history.go(-1);" value= "Back" > </input>
     
     <span class = "errorDelete"></span>
@@ -47,7 +92,7 @@ function deleteFile(){
  			 
  		</div>
  		<div>
- 		<button class="delete btn primary-btn" type="submit" value="submit" onClick = "deleteFile()" style="float:right">
+ 		<button class="delete btn primary-btn"  id="deleteFileTooltip"  type="submit" th:value=${file.getId()} style="float:right">
 			Delete File
 			</button>
  		<h3 >Edit File</h3>

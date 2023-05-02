@@ -56,8 +56,7 @@ public class StorageEngine implements IStorageEngine {
 
     @Override
     public byte[] getImageContent(String directory, String filename) throws IOException {
-        File fileObject = getFile(directory, filename);       
-        return getFileContent(fileObject);
+        return getMediaContent(directory, filename);
     }
 
     @Override
@@ -74,30 +73,6 @@ public class StorageEngine implements IStorageEngine {
         return new ByteArrayResource(Files.readAllBytes(path));   
     }
 
-    private byte[] getFileContent(File fileObject) throws IOException  {
-        URLConnection con = fileObject.toURI().toURL().openConnection();
-
-        InputStream input = con.getInputStream();
-
-        byte[] buffer = new byte[4096];
-
-        ByteArrayOutputStream byteOutput = new ByteArrayOutputStream();
-        BufferedOutputStream output = new BufferedOutputStream(byteOutput);
-
-        int n = -1;
-        while ((n = input.read(buffer)) != -1) {
-            output.write(buffer, 0, n);
-        }
-        input.close();
-        output.flush();
-        output.close();
-
-        byteOutput.flush();
-        byte[] bytes = byteOutput.toByteArray();
-        byteOutput.close();
-        return bytes;
-    }
-    
     @Override
     public byte[] getMediaContent(String directory, String filename) throws IOException {
         File fileObject = new File(path + File.separator + directory + File.separator + filename);
