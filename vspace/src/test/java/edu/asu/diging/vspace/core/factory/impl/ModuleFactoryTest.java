@@ -24,7 +24,7 @@ public class ModuleFactoryTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
     }
-    
+
     @Test
     public void test_createModule_success() {
         ModuleForm form = mock(ModuleForm.class);
