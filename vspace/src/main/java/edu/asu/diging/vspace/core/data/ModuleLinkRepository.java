@@ -17,7 +17,7 @@ import edu.asu.diging.vspace.core.model.IModuleLink;
 @JaversSpringDataAuditable
 public interface ModuleLinkRepository extends PagingAndSortingRepository<ModuleLink, String> {
 
-    @Query("select m from ModuleLink m where m.module.id = ?1")
+    
     List<ModuleLink> findByModuleId(String moduleId);
           
     @Query("select moduleLink from ModuleLink moduleLink where module_id = ?1")
