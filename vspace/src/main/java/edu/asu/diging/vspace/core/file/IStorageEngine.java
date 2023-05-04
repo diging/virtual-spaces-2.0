@@ -9,8 +9,6 @@ import edu.asu.diging.vspace.core.model.impl.ExhibitionDownload;
 public interface IStorageEngine {
     String storeFile(byte[] fileContent, String filename, String directory) throws FileStorageException;
 
-    String storeFile(byte[] fileContent, String filename, String directory, String path) throws FileStorageException;
-
     byte[] getImageContent(String directory, String filename) throws IOException;
 
     boolean renameImage(IVSImage image, String newFileName);

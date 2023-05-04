@@ -170,7 +170,7 @@ public class SnapshotManager implements ISnapshotManager {
             // add attributes to context
             String response = springTemplateEngine.process("exhibition/downloads/spaceDownloadTemplate", thymeleafContext);
             byte[] fileContent = response.getBytes();
-            storageEngineDownloads.storeFile(fileContent, directory+".html",null, spaceFolderPath );
+            storageEngineDownloads.storeFile(fileContent, directory+".html",spaceFolderPath );
 
         } catch ( FileStorageException e) {
             logger.error("Could not copy template" , e);
@@ -255,7 +255,7 @@ public class SnapshotManager implements ISnapshotManager {
             populateContextForSlide( thymeleafContext, spaceId, moduleId, sequenceId, slideId );
             String response = springTemplateEngine.process("exhibition/downloads/slideDownloadTemplate" , thymeleafContext);
             byte[] fileContent = response.getBytes();
-            storageEngineDownloads.storeFile(fileContent, slideId+".html",null, spaceFolderPath );
+            storageEngineDownloads.storeFile(fileContent, slideId+".html",spaceFolderPath );
 
         } catch ( FileStorageException e) {
             logger.error("Could not add html page for slide" , e);

@@ -149,32 +149,6 @@ public class StorageEngineUploads implements IStorageEngine {
     }
 
     @Override
-    public String storeFile(byte[] fileContent, String filename, String directory, String path)
-            throws FileStorageException {
-        File parent = new File(path +   (directory!= null ? File.separator + directory : "" ));
-        if (!parent.exists()) {
-            parent.mkdir();
-        }
-        File file = new File(parent.getAbsolutePath() + File.separator + filename);
-
-
-        BufferedOutputStream stream;
-        try {
-            stream = new BufferedOutputStream(new FileOutputStream(file));
-        } catch (FileNotFoundException e) {
-            throw new FileStorageException("Could not store file.", e);
-        }
-        try {
-            stream.write(fileContent);
-            stream.close();
-        } catch (IOException e) {
-            throw new FileStorageException("Could not store file.", e);
-        }
-
-        return directory;
-    }
-
-    @Override
     public void copyToFolder(String relativePath, String folderToCopy) throws IOException {
         // TODO Auto-generated method stub
         

@@ -18,32 +18,49 @@ import java.util.zip.ZipOutputStream;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.stereotype.Component;
 
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IVSImage;
 
-@Component
-@Qualifier("storageEngineDownloads")
-@PropertySource({"classpath:config.properties", "${appConfigFile:classpath:}/app.properties"})
-public class StorageEngineDownloads implements IStorageEngine {
+public class StorageEngine  implements IStorageEngine {
+
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Value("${downloads_path}")
-    private String path;
-    
-    @Autowired
-    @Qualifier("storageEngineUploads")
-    StorageEngineUploads storageEngineUploads;
 
-    /**
-     * Get the given image content as a byte array 
-     */
+    private String path;
+
+    public StorageEngine() {
+        super();
+    }
+
+    StorageEngine(String path) {
+        this.path = path;
+    }
+
+    @Override
+    public String storeFile(byte[] fileContent, String filename, String directory) throws FileStorageException {
+        File parent = new File(path + File.separator + directory);
+        if (!parent.exists()) {
+            parent.mkdir();
+        }
+        File file = new File(parent.getAbsolutePath() + File.separator + filename);
+        BufferedOutputStream stream;
+        try {
+            stream = new BufferedOutputStream(new FileOutputStream(file));
+        } catch (FileNotFoundException e) {
+            throw new FileStorageException("Could not store file.", e);
+        }
+        try {
+            stream.write(fileContent);
+            stream.close();
+        } catch (IOException e) {
+            throw new FileStorageException("Could not store file.", e);
+        }
+
+        return directory;
+    }
+
     @Override
     public byte[] getImageContent(String directory, String filename) throws IOException {
         File fileObject = new File(path + File.separator + directory + File.separator + filename);
@@ -70,13 +87,6 @@ public class StorageEngineDownloads implements IStorageEngine {
         return bytes;
     }
 
-    /**
-     * Method to rename image   
-     * 
-     * @param image - image file
-     * @param newFileName - new name of the file
-     * @return true if file renaming was successful, otherwise return false 
-     */ 
     @Override
     public boolean renameImage(IVSImage image, String newFileName) {
         File currentFile = new File(path + File.separator + image.getId() + File.separator + image.getFilename());
@@ -84,10 +94,6 @@ public class StorageEngineDownloads implements IStorageEngine {
         return currentFile.renameTo(renamedFile);
     }
 
-
-    /**
-     * Creates folder given path
-     */
     @Override
     public String createFolder(String relativePath) {
         File folder = new File(path + File.separator + relativePath);
@@ -97,44 +103,15 @@ public class StorageEngineDownloads implements IStorageEngine {
         return relativePath;
     }
 
-    /**
-     * 
-     * Stores the file in the base path
-     */
     @Override
-    public String storeFile(byte[] fileContent, String filename, String directory) throws FileStorageException {
-        File parent = new File(path +   (directory!= null ? File.separator + directory : "" ));
-        if (!parent.exists()) {
-            parent.mkdir();
-        }
-        File file = new File(parent.getAbsolutePath() + File.separator + filename);
-
-
-        BufferedOutputStream stream;
-        try {
-            stream = new BufferedOutputStream(new FileOutputStream(file));
-        } catch (FileNotFoundException e) {
-            throw new FileStorageException("Could not store file.", e);
-        }
-        try {
-            stream.write(fileContent);
-            stream.close();
-        } catch (IOException e) {
-            throw new FileStorageException("Could not store file.", e);
-        }
-
-        return directory;
-    }
-
-    @Override
-    public byte[] generateZipFolder(String folderName) throws IOException {
-        Path zipFile = Paths.get(path + File.separator + folderName);
+    public byte[] generateZipFolder(String folderPath) throws IOException {
+        Path zipFile = Paths.get(path + File.separator + folderPath);
         ByteArrayOutputStream byteArrayOutputStreamResult = null;
 
         try (ByteArrayOutputStream  byteArrayOutputStream = new ByteArrayOutputStream();
-            BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(byteArrayOutputStream);
-            ZipOutputStream responseZipStream = new ZipOutputStream(bufferedOutputStream);
-            Stream<Path> paths = Files.walk(zipFile)) {
+                BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(byteArrayOutputStream);
+                ZipOutputStream responseZipStream = new ZipOutputStream(bufferedOutputStream);
+                Stream<Path> paths = Files.walk(zipFile)) {
             paths
             .filter(path -> !Files.isDirectory(path))
             .forEach(path -> {
@@ -143,7 +120,7 @@ public class StorageEngineDownloads implements IStorageEngine {
                     responseZipStream.putNextEntry(zipEntry);
                     Files.copy(path, responseZipStream);
                     responseZipStream.closeEntry();
-    
+
                 } catch (IOException e) {
                     logger.error("Could not generate Zip folder");
                 }
@@ -153,9 +130,8 @@ public class StorageEngineDownloads implements IStorageEngine {
             throw new IOException(e);
         }   
         return byteArrayOutputStreamResult.toByteArray();
-
     }
-    
+
     @Override
     public void copyToFolder(String relativePath, String folderToCopy) throws IOException {
         try {
@@ -163,8 +139,9 @@ public class StorageEngineDownloads implements IStorageEngine {
         } catch (IOException e) {
             logger.error("Could not copy resources" , e);
             throw new IOException(e);
-            
-        } 
+
+        }       
     }
-    
+
+
 }

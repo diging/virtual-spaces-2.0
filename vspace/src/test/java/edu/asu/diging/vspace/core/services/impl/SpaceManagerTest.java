@@ -1,5 +1,6 @@
 package edu.asu.diging.vspace.core.services.impl;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -118,7 +119,7 @@ public class SpaceManagerTest {
         String dirName = "DIR";
         String storePath = "PATH";
 
-        Mockito.when(storage.storeFile(imageBytes, filename, dirName, uploadsPath)).thenReturn(storePath);
+        Mockito.when(storage.storeFile(imageBytes, filename,  uploadsPath + File.separator + dirName)).thenReturn(storePath);
 
         Space space = new Space();
         Mockito.when(spaceRepo.save((Space) space)).thenReturn(space);
