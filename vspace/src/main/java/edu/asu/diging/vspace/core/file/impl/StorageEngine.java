@@ -113,8 +113,8 @@ public class StorageEngine  implements IStorageEngine {
                 ZipOutputStream responseZipStream = new ZipOutputStream(bufferedOutputStream);
                 Stream<Path> paths = Files.walk(zipFile)) {
             paths
-            .filter(path -> !Files.isDirectory(path))
-            .forEach(path -> {
+                .filter(path -> !Files.isDirectory(path))
+                .forEach(path -> {
                 ZipEntry  zipEntry = new ZipEntry(zipFile.relativize(path).toString());
                 try {
                     responseZipStream.putNextEntry(zipEntry);

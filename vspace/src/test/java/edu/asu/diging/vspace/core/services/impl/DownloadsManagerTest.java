@@ -28,8 +28,7 @@ import org.mockito.Spy;
 import edu.asu.diging.vspace.core.data.ExhibitionDownloadRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.exception.ExhibitionDownloadNotFoundException;
-import edu.asu.diging.vspace.core.file.impl.StorageEngineUploads;
-import edu.asu.diging.vspace.core.file.impl.StorageEngineDownloads;
+import edu.asu.diging.vspace.core.file.impl.StorageEngine;
 import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.IImageBlock;
 import edu.asu.diging.vspace.core.model.IModule;
@@ -56,7 +55,7 @@ public class DownloadsManagerTest {
     private DownloadsManager serviceToTest;
 
     @Mock
-    StorageEngineDownloads storageEngine;
+    StorageEngine storageEngine;
     
     @Mock
     SnapshotManager snapshotManager;
@@ -98,18 +97,16 @@ public class DownloadsManagerTest {
     
     
     @Test
-    public void test_triggerDownloadExhibition_success() {
+    public void test_triggerDownloadExhibition_success() throws IOException, InterruptedException, ExecutionException {
         String resourcesPath = "/Resources";
         String exhibitionFolderName = "folderName";
-        try {
+
             serviceToTest.triggerDownloadExhibition(resourcesPath, exhibitionFolderName);
 
             Mockito.verify(storageEngine).createFolder(exhibitionFolderName);
 
             Mockito.verify(snapshotManager).createSnapShot(resourcesPath, exhibitionFolderName, null,  null);
-        } catch(Exception e) {
-
-        }
+        
     }
   
     @Test
