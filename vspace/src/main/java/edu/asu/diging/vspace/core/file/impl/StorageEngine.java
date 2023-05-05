@@ -34,7 +34,7 @@ public class StorageEngine  implements IStorageEngine {
         super();
     }
 
-    StorageEngine(String path) {
+    public StorageEngine(String path) {
         this.path = path;
     }
 

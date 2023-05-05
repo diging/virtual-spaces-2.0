@@ -26,11 +26,7 @@ public class StorageManager implements IStorageManager{
     @Qualifier("storageEngineDownloads")
     private IStorageEngine storageEngineDownloads;
     
-    @Value("${downloads_path}")
-    private String downloadsPath;
-    
-    @Value("${uploads_path}")
-    private String uploadsPath;
+
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -48,8 +44,6 @@ public class StorageManager implements IStorageManager{
             try {
                 byte[] byteArray = storageEngineUploads.getImageContent(image.getId(), image.getFilename());
                 storageEngineDownloads.storeFile(byteArray, image.getFilename(),imagesFolderPath + File.separator+image.getId());
-//                storageEngineDownloads.storeFile(byteArray, image.getFilename(),image.getId(), imagesFolderPath);
-
             } catch (IOException | FileStorageException e) {
                 logger.error("Could not copy images" , e);
             }     
