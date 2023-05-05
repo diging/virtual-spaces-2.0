@@ -115,17 +115,16 @@ public class StorageEngine  implements IStorageEngine {
             paths
                 .filter(path -> !Files.isDirectory(path))
                 .forEach(path -> {
-                ZipEntry  zipEntry = new ZipEntry(zipFile.relativize(path).toString());
-                try {
-                    responseZipStream.putNextEntry(zipEntry);
-                    Files.copy(path, responseZipStream);
-                    responseZipStream.closeEntry();
-
-                } catch (IOException e) {
-                    logger.error("Could not generate Zip folder");
-                }
-            });
-            byteArrayOutputStreamResult = byteArrayOutputStream;
+                    ZipEntry  zipEntry = new ZipEntry(zipFile.relativize(path).toString());
+                    try {
+                        responseZipStream.putNextEntry(zipEntry);
+                        Files.copy(path, responseZipStream);
+                        responseZipStream.closeEntry();
+                    } catch (IOException e) {
+                        logger.error("Could not generate Zip folder");
+                    }
+                });
+                byteArrayOutputStreamResult = byteArrayOutputStream;
         } catch (IOException e) {
             throw new IOException(e);
         }   

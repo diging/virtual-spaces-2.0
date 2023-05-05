@@ -101,11 +101,11 @@ public class DownloadsManagerTest {
         String resourcesPath = "/Resources";
         String exhibitionFolderName = "folderName";
 
-            serviceToTest.triggerDownloadExhibition(resourcesPath, exhibitionFolderName);
+        serviceToTest.triggerDownloadExhibition(resourcesPath, exhibitionFolderName);
 
-            Mockito.verify(storageEngine).createFolder(exhibitionFolderName);
+        Mockito.verify(storageEngine).createFolder(exhibitionFolderName);
 
-            Mockito.verify(snapshotManager).createSnapShot(resourcesPath, exhibitionFolderName, null,  null);
+        Mockito.verify(snapshotManager).createSnapShot(resourcesPath, exhibitionFolderName, null,  null);
         
     }
   
