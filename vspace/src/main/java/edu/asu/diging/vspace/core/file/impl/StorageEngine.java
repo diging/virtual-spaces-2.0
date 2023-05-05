@@ -124,7 +124,7 @@ public class StorageEngine  implements IStorageEngine {
                         logger.error("Could not generate Zip folder");
                     }
                 });
-                byteArrayOutputStreamResult = byteArrayOutputStream;
+            byteArrayOutputStreamResult = byteArrayOutputStream;
         } catch (IOException e) {
             throw new IOException(e);
         }   
