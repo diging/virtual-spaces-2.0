@@ -59,16 +59,15 @@ public class ExhibitionAboutPage {
     public String getTitle() {
         return title;
     }
-
-    public String getAboutPageText() {
-        return aboutPageText;
-    }
-    
     
     public void setTitle(String title) {
         this.title = title;
     }
 
+    public String getAboutPageText() {
+        return aboutPageText;
+    }
+    
     public void setAboutPageText(String aboutPageText) {
         this.aboutPageText = aboutPageText;
     }

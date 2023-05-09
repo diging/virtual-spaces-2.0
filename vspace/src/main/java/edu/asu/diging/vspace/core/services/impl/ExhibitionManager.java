@@ -186,13 +186,4 @@ public class ExhibitionManager implements IExhibitionManager {
         return exhibitionLanguage;
     }
 
-    /**
-     * 
-     * Returns the default language of the given exhibition
-     */
-    @Override
-    public IExhibitionLanguage getDefaultLanguage(IExhibition exhibtion) {
-        return  exhibtion.getLanguages().stream().filter(language -> language.isDefault()).findFirst().orElse(null);
-    }
-
 }

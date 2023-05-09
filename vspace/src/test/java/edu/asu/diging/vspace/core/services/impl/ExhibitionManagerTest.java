@@ -73,7 +73,7 @@ public class ExhibitionManagerTest {
     
 
     @Test
-    public void test_updateExhibitionLanguages_success() {
+    public void test_updateExhibitionLanguages_success() throws ExhibitionLanguageDeletionException {
         Exhibition exhibition = new Exhibition();
 
         List<String> languages= new ArrayList() ;
@@ -92,17 +92,13 @@ public class ExhibitionManagerTest {
         mappedLanguages.add(language1);
         mappedLanguages.add(language2);
         when(exhibitionLanguageConfig.getExhibitionLanguageList()).thenReturn(mappedLanguages);
-        try {
-            serviceToTest.updateExhibitionLanguages(exhibition, languages,null);
-        } catch (ExhibitionLanguageDeletionException e) {
-            e.printStackTrace();
-        }
+        serviceToTest.updateExhibitionLanguages(exhibition, languages,null);       
         assertEquals(exhibition.getLanguages().size(),2);
 
     }
 
     @Test
-    public void test_updateExhibitionLanguages_duplicates() {
+    public void test_updateExhibitionLanguages_duplicates() throws ExhibitionLanguageDeletionException {
         Exhibition exhibition = new Exhibition();
 
         //Exhibition already consists of 2 languages
@@ -131,18 +127,14 @@ public class ExhibitionManagerTest {
         mappedLanguages.add(language2);
         mappedLanguages.add(language3);
         when(exhibitionLanguageConfig.getExhibitionLanguageList()).thenReturn(mappedLanguages);
-        try {
-            serviceToTest.updateExhibitionLanguages(exhibition, languages, null);
-        } catch (ExhibitionLanguageDeletionException e) {
-            e.printStackTrace();
-        }
+        serviceToTest.updateExhibitionLanguages(exhibition, languages, null);
 
         //no duplicate entries should be added
         assertEquals(exhibition.getLanguages().size(),3);
     }
 
     @Test
-    public void test_updateExhibitionLanguages_whenCodeIsNotPresentInConfig() {
+    public void test_updateExhibitionLanguages_whenCodeIsNotPresentInConfig() throws ExhibitionLanguageDeletionException {
         Exhibition exhibition = new Exhibition();
 
         List<String> languages= new ArrayList() ;
@@ -160,18 +152,14 @@ public class ExhibitionManagerTest {
         mappedLanguages.add(language1);
         mappedLanguages.add(language2);
         when(exhibitionLanguageConfig.getExhibitionLanguageList()).thenReturn(mappedLanguages);
-        try {
-            serviceToTest.updateExhibitionLanguages(exhibition, languages,null);
-        } catch (ExhibitionLanguageDeletionException e) {
-            e.printStackTrace();
-        }
+        serviceToTest.updateExhibitionLanguages(exhibition, languages,null);
         assertEquals(exhibition.getLanguages().size(),1);
 
 
     }
 
     @Test
-    public void test_updateExhibitionLanguages_defaultLanguage() {
+    public void test_updateExhibitionLanguages_defaultLanguage() throws ExhibitionLanguageDeletionException {
         Exhibition exhibition = new Exhibition();
 
         List<String> languages= new ArrayList() ;
@@ -188,32 +176,26 @@ public class ExhibitionManagerTest {
         mappedLanguages.add(language1);
         mappedLanguages.add(language2);
         when(exhibitionLanguageConfig.getExhibitionLanguageList()).thenReturn(mappedLanguages);
-        try {
-            serviceToTest.updateExhibitionLanguages(exhibition, languages, "en");
-            assertEquals(exhibition.getLanguages().size(),2);
-            exhibition.getLanguages().forEach(language -> {
-                if(language.getCode().equals("en")) { 
-                    assertTrue(language.isDefault());
-          
-                } });
-            
-            serviceToTest.updateExhibitionLanguages(exhibition, languages, "aa");
-            assertEquals(exhibition.getLanguages().size(),2);
-            exhibition.getLanguages().forEach(language -> {
-                if(language.getCode().equals("en")) { 
-                    assertFalse(language.isDefault());
-          
-                }
-                if(language.getCode().equals("aa")) { 
-                    assertTrue(language.isDefault());
-          
-                }});
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-        }
- 
+
+        serviceToTest.updateExhibitionLanguages(exhibition, languages, "en");
+        assertEquals(exhibition.getLanguages().size(),2);
+        exhibition.getLanguages().forEach(language -> {
+            if(language.getCode().equals("en")) { 
+                assertTrue(language.isDefault());
+      
+            } });
         
+        serviceToTest.updateExhibitionLanguages(exhibition, languages, "aa");
+        assertEquals(exhibition.getLanguages().size(),2);
+        exhibition.getLanguages().forEach(language -> {
+            if(language.getCode().equals("en")) { 
+                assertFalse(language.isDefault());
+      
+            }
+            if(language.getCode().equals("aa")) { 
+                assertTrue(language.isDefault());
+      
+            }});
 
     }
     
@@ -232,7 +214,7 @@ public class ExhibitionManagerTest {
     }
     
     @Test
-    public void test_updateExhibitionLanguages_whenLanguageIsUnselected() {
+    public void test_updateExhibitionLanguages_whenLanguageIsUnselected() throws ExhibitionLanguageDeletionException {
         Exhibition exhibition = new Exhibition();
   
         List<Map> mappedLanguages= new ArrayList();
@@ -252,24 +234,18 @@ public class ExhibitionManagerTest {
         languages.add("aa");  
 
         when(exhibitionLanguageConfig.getExhibitionLanguageList()).thenReturn(mappedLanguages);
+
+        serviceToTest.updateExhibitionLanguages(exhibition, languages, "aa");
+        assertEquals(exhibition.getLanguages().size(),2);
         
-        try {
-            serviceToTest.updateExhibitionLanguages(exhibition, languages, "aa");
-            assertEquals(exhibition.getLanguages().size(),2);
-            
-            languages.remove("en");
-            serviceToTest.updateExhibitionLanguages(exhibition, languages, "aa");
-            assertEquals(exhibition.getLanguages().size(),1);
-        } catch (ExhibitionLanguageDeletionException e) {
-            e.printStackTrace();
-        }
-      
-        
-        
+        languages.remove("en");
+        serviceToTest.updateExhibitionLanguages(exhibition, languages, "aa");
+        assertEquals(exhibition.getLanguages().size(),1);
+   
     }
     
     @Test
-    public void test_updateExhibitionLanguages_whenLanguageCouldNotBeDeleted() {
+    public void test_updateExhibitionLanguages_whenLanguageCouldNotBeDeleted() throws ExhibitionLanguageDeletionException {
         Exhibition exhibition = new Exhibition();
   
         List<Map> mappedLanguages= new ArrayList();
@@ -294,22 +270,14 @@ public class ExhibitionManagerTest {
         
         
         when(serviceToTestMock.checkIfLocalizedTextExists(language)).thenReturn(false);
-        
-        try {
-            serviceToTest.updateExhibitionLanguages(exhibition, languages, "aa");
-            assertEquals(exhibition.getLanguages().size(),2);
-            
 
-            languages.remove("en");
-            Assert.assertThrows(ExhibitionLanguageDeletionException.class,
-                    () ->   serviceToTest.updateExhibitionLanguages(exhibition, languages, "aa"));
-          
-        } catch (ExhibitionLanguageDeletionException e) {
-   
-            e.printStackTrace();
-        }
-      
+        serviceToTest.updateExhibitionLanguages(exhibition, languages, "aa");
+        assertEquals(exhibition.getLanguages().size(),2);
         
+
+        languages.remove("en");
+        Assert.assertThrows(ExhibitionLanguageDeletionException.class,
+                () ->   serviceToTest.updateExhibitionLanguages(exhibition, languages, "aa"));       
         
     }
 }
