@@ -1,9 +1,8 @@
 package edu.asu.diging.vspace.core.services.impl;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
@@ -19,12 +18,8 @@ import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.IModuleLink;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.display.IModuleLinkDisplay;
-import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.ModuleLinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.ModuleLink;
-import edu.asu.diging.vspace.core.model.impl.Space;
-import edu.asu.diging.vspace.core.model.impl.SpaceLink;
-import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IModuleLinkManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
@@ -112,9 +107,9 @@ public class ModuleLinkManager extends LinkManager<IModuleLink, IModule, IModule
     }
 
     @Override
-    public HashSet<ISpace> findSpaceListFromModuleId(String moduleId) {
-        List<ModuleLink> moduleLinks = moduleLinkRepo.findByModuleId(moduleId);
-        return (HashSet<ISpace>) moduleLinks.stream().map(s->s.getSpace()).collect(Collectors.toSet());
+    public Set<ISpace> findSpaceListFromModuleId(String moduleId) {
+        List<IModuleLink> moduleLinks = moduleLinkRepo.findModuleLinksByModuleId(moduleId);
+        return moduleLinks.stream().map(s->s.getSpace()).collect(Collectors.toSet());
     }
 
 }

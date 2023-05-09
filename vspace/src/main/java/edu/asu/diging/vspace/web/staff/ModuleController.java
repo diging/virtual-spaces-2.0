@@ -2,6 +2,8 @@ package edu.asu.diging.vspace.web.staff;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,7 +38,7 @@ public class ModuleController {
         model.addAttribute("slides", moduleManager.getModuleSlides(id));
         model.addAttribute("sequences", moduleManager.getModuleSequences(id));
         model.addAttribute("moduleStatus", module.getModuleStatus());
-        HashSet <ISpace> spaces = moduleLink.findSpaceListFromModuleId(id);
+        Set<ISpace> spaces = moduleLink.findSpaceListFromModuleId(id);
         model.addAttribute("spacesList", spaces);
         return "staff/modules/module";
     }
