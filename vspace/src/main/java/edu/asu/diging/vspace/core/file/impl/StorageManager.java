@@ -42,7 +42,7 @@ public class StorageManager implements IStorageManager{
     public void copyImageUploadsToDownloads(IVSImage image, String imagesFolderPath) {
         if(image!=null) {
             try {
-                byte[] byteArray = storageEngineUploads.getImageContent(image.getId(), image.getFilename());
+                byte[] byteArray = storageEngineUploads.getMediaContent(image.getId(), image.getFilename());
                 storageEngineDownloads.storeFile(byteArray, image.getFilename(),imagesFolderPath + File.separator+image.getId());
             } catch (IOException | FileStorageException e) {
                 logger.error("Could not copy images" , e);

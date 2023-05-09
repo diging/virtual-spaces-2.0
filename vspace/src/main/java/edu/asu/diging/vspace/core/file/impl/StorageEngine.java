@@ -59,11 +59,11 @@ public class StorageEngine  implements IStorageEngine {
         }
 
         return directory;
-    }
-
-    @Override
-    public byte[] getImageContent(String directory, String filename) throws IOException {
-        File fileObject = new File(path + File.separator + directory + File.separator + filename);
+	}
+	
+	@Override
+	public byte[] getMediaContent(String directory, String filename) throws IOException {
+		File fileObject = new File(path + File.separator + directory + File.separator + filename);
         URLConnection con = fileObject.toURI().toURL().openConnection();
 
         InputStream input = con.getInputStream();

@@ -28,7 +28,7 @@ import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.data.SnapshotTaskRepository;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.file.IStorageManager;
-import edu.asu.diging.vspace.core.file.impl.StorageEngineDownloads;
+import edu.asu.diging.vspace.core.file.impl.StorageEngine;
 import edu.asu.diging.vspace.core.file.impl.StorageManager;
 import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.IImageBlock;
@@ -58,7 +58,7 @@ public class SnapshotManagerTest {
     private FileUtils fileUtils;
 
     @Mock
-    private StorageEngineDownloads storageEngine;
+    private StorageEngine storageEngine;
     
     @Mock
     private SpaceRepository spaceRepository;
@@ -99,9 +99,7 @@ public class SnapshotManagerTest {
         String exhibitionFolderPath = "/Exhibition"; 
         String spaceFolderPath = exhibitionFolderPath + File.separator+ space.getId();
         String imagesFolderPath = spaceFolderPath + File.separator+ "images";
-//        when(storageEngine.createFolder(space.getId(), exhibitionFolderPath)).thenReturn(spaceFolderPath);
         doNothing().when(serviceToTest).storeTemplateForSpace(space.getId(), spaceFolderPath, null);
-//        when(storageEngine.createFolder("images", spaceFolderPath)).thenReturn(imagesFolderPath);
         doNothing().when(storageManager).copyImageUploadsToDownloads(Mockito.any(IVSImage.class), Mockito.any(String.class));
 
         serviceToTest.downloadSpace(space, exhibitionFolderPath, null);
