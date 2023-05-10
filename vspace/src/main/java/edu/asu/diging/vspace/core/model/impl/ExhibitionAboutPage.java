@@ -40,11 +40,11 @@ public class ExhibitionAboutPage {
     
     
     
-    @OneToMany(targetEntity = LocalizedText.class, cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @OneToMany(targetEntity = LocalizedText.class, cascade={CascadeType.ALL})
     @JoinTable(name="AboutPage_LocText_titles")
     private List<ILocalizedText> localizedTitles = new ArrayList<ILocalizedText>();
 
-    @OneToMany(targetEntity = LocalizedText.class, cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @OneToMany(targetEntity = LocalizedText.class, cascade={CascadeType.ALL})
     @JoinTable(name="AboutPage_LocText_descriptions")
     private List<ILocalizedText> localizedDescriptions = new ArrayList<ILocalizedText>();
 

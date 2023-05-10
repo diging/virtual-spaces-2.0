@@ -16,5 +16,5 @@ public interface IExhibitionLanguage extends IVSpaceElement {
     
     void setLabel(String label);
 
-    List<LocalizedText> getLocalizedTexts();
+//    List<LocalizedText> getLocalizedTexts();
 }

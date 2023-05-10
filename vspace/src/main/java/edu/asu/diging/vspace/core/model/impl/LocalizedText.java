@@ -1,4 +1,5 @@
 package edu.asu.diging.vspace.core.model.impl;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -20,7 +21,7 @@ public class LocalizedText implements ILocalizedText {
     @GenericGenerator(name = "localized_text_id_generator", parameters = @Parameter(name = "prefix", value = "LOCTEXT"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "LOC_EXH_LANG")
     private ExhibitionLanguage exhibitionLanguage; 
 

@@ -115,7 +115,7 @@ public class ExhibitionManager implements IExhibitionManager {
         }
         
         // Adds defaultLanguage to codes list if not already exists.
-        if(!StringUtils.isEmpty(defaultLanguage) && !codes.contains(defaultLanguage)) {
+        if(StringUtils.hasText(defaultLanguage) && !codes.contains(defaultLanguage)) {
             codes.add(defaultLanguage);
         }
 
@@ -134,9 +134,7 @@ public class ExhibitionManager implements IExhibitionManager {
             if(checkIfLocalizedTextExists(language))  {
                 throw new ExhibitionLanguageDeletionException() ;
             }
-            language.getLocalizedTexts().clear();
-            //delete the empty localized texts
-            localizedTextRepo.deleteAll(language.getLocalizedTexts());
+
         }
 
         
@@ -151,7 +149,12 @@ public class ExhibitionManager implements IExhibitionManager {
     @Override
     public boolean checkIfLocalizedTextExists(IExhibitionLanguage language)  {        
 
-        return !CollectionUtils.isEmpty(language.getLocalizedTexts()) || !CollectionUtils.isEmpty(language.getLocalizedTexts()) && !checkIfTextIsEmpty(language.getLocalizedTexts());
+        
+       List<LocalizedText> localizedTexts = localizedTextRepo.findByExhibitionLanguage(language);
+       List<LocalizedText> emptyLocalizedTexts = localizedTexts.stream().filter(localizedText -> !StringUtils.hasText(localizedText.getText())).collect(Collectors.toList());
+       localizedTextRepo.deleteAll(emptyLocalizedTexts);
+ 
+       return localizedTexts.size() > emptyLocalizedTexts.size();
 
     }
     

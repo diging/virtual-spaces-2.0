@@ -1,6 +1,7 @@
 package edu.asu.diging.vspace.core.factory.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.thymeleaf.util.StringUtils;
 
 import edu.asu.diging.vspace.core.factory.IExhibitionAboutPageFactory;
@@ -12,6 +13,7 @@ import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.web.staff.forms.AboutPageForm;
 import edu.asu.diging.vspace.web.staff.forms.LocalizedTextForm;
 
+@Component
 public class ExhibitionAboutPageFactory  implements IExhibitionAboutPageFactory{
 
     
@@ -29,7 +31,7 @@ public class ExhibitionAboutPageFactory  implements IExhibitionAboutPageFactory{
         aboutPageForm.setTitle(exhibitionAboutPage.getTitle());        
 
         IExhibition startExhibtion = exhibitionManager.getStartExhibition();    
-        IExhibitionLanguage defaultLanguage = exhibitionManager.getDefaultLanguage(startExhibtion);
+        IExhibitionLanguage defaultLanguage = startExhibtion.getDefaultLanguage();
 
         aboutPageForm.getTitles().add(createLocalizedTitleForm(exhibitionAboutPage, defaultLanguage));       
         aboutPageForm.getAboutPageTexts().add(createLocalizedAboutTextForm(exhibitionAboutPage, defaultLanguage));

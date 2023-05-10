@@ -33,6 +33,6 @@ public interface IExhibition extends IVSpaceElement {
 
     List<IExhibitionLanguage> getLanguages();
     
-    public IExhibitionLanguage getDefaultLanguage(IExhibition exhibtion);
+    public IExhibitionLanguage getDefaultLanguage();
 
 }
