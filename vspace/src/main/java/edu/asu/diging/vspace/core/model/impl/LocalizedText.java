@@ -24,6 +24,9 @@ public class LocalizedText implements ILocalizedText {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "LOC_EXH_LANG")
     private ExhibitionLanguage exhibitionLanguage; 
+    
+    @OneToOne(cascade = CascadeType.ALL)
+    VSpaceElement targetElement;
 
     private String text;
     
@@ -58,6 +61,14 @@ public class LocalizedText implements ILocalizedText {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public VSpaceElement getTargetElement() {
+        return targetElement;
+    }
+
+    public void setTargetElement(VSpaceElement targetElement) {
+        this.targetElement = targetElement;
     }
 
 }

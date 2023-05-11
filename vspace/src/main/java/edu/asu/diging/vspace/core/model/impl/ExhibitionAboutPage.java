@@ -26,7 +26,7 @@ import edu.asu.diging.vspace.core.model.ILocalizedText;
  *
  */
 @Entity
-public class ExhibitionAboutPage {
+public class ExhibitionAboutPage extends VSpaceElement {
     @Id
     @GeneratedValue(generator = "exh_abtpg_id_generator")
     @GenericGenerator(name = "exh_abtpg_id_generator", parameters = @Parameter(name = "prefix", value = "EXHABT"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
@@ -40,11 +40,11 @@ public class ExhibitionAboutPage {
     
     
     
-    @OneToMany(targetEntity = LocalizedText.class, cascade={CascadeType.ALL})
+    @OneToMany(mappedBy= "targetElement", targetEntity = LocalizedText.class, cascade={CascadeType.ALL})
     @JoinTable(name="AboutPage_LocText_titles")
     private List<ILocalizedText> localizedTitles = new ArrayList<ILocalizedText>();
 
-    @OneToMany(targetEntity = LocalizedText.class, cascade={CascadeType.ALL})
+    @OneToMany(mappedBy= "targetElement", targetEntity = LocalizedText.class, cascade={CascadeType.ALL})
     @JoinTable(name="AboutPage_LocText_descriptions")
     private List<ILocalizedText> localizedDescriptions = new ArrayList<ILocalizedText>();
 

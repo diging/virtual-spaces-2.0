@@ -112,7 +112,6 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
                 if(exhibitionLanguage != null) {
                     localizedText = new LocalizedText(exhibitionLanguage, title.getText());
                     exhibitionAboutPage.getExhibitionTitles().add(localizedText);
-//                    exhibitionLanguage.getLocalizedTexts().add(localizedText);
                 }
             }
             

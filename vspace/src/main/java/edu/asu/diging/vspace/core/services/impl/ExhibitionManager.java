@@ -152,8 +152,14 @@ public class ExhibitionManager implements IExhibitionManager {
         
        List<LocalizedText> localizedTexts = localizedTextRepo.findByExhibitionLanguage(language);
        List<LocalizedText> emptyLocalizedTexts = localizedTexts.stream().filter(localizedText -> !StringUtils.hasText(localizedText.getText())).collect(Collectors.toList());
+       emptyLocalizedTexts.forEach(localizedText -> {
+           localizedText.getTargetElement();//TODO: delete trget element list entry
+           localizedText.setTargetElement(null);
+           
+       });
        localizedTextRepo.deleteAll(emptyLocalizedTexts);
  
+       
        return localizedTexts.size() > emptyLocalizedTexts.size();
 
     }
