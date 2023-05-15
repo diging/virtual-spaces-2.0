@@ -25,8 +25,10 @@ import edu.asu.diging.vspace.core.factory.impl.ExhibitionFactory;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
+import edu.asu.diging.vspace.core.model.impl.ExhibitionAboutPage;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.impl.LocalizedText;
+import edu.asu.diging.vspace.core.model.impl.VSpaceElement;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 
 @Transactional
@@ -152,9 +154,11 @@ public class ExhibitionManager implements IExhibitionManager {
         
        List<LocalizedText> localizedTexts = localizedTextRepo.findByExhibitionLanguage(language);
        List<LocalizedText> emptyLocalizedTexts = localizedTexts.stream().filter(localizedText -> !StringUtils.hasText(localizedText.getText())).collect(Collectors.toList());
-       emptyLocalizedTexts.forEach(localizedText -> {
-           localizedText.getTargetElement();//TODO: delete trget element list entry
-           localizedText.setTargetElement(null);
+       emptyLocalizedTexts.forEach(localizedText -> { 
+           ExhibitionAboutPage exhibitionAboutPage = localizedText.getTargetExhibitionAboutPage();
+           exhibitionAboutPage.getExhibitionTextDescriptions().remove(localizedText);
+           //TODO: delete target element list entry
+//           localizedText.setTargetExhibitionAboutPage(null);
            
        });
        localizedTextRepo.deleteAll(emptyLocalizedTexts);

@@ -112,6 +112,8 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
                 if(exhibitionLanguage != null) {
                     localizedText = new LocalizedText(exhibitionLanguage, title.getText());
                     exhibitionAboutPage.getExhibitionTitles().add(localizedText);
+                    localizedText.setTargetExhibitionAboutPage(exhibitionAboutPage);
+                    
                 }
             }
             
@@ -132,7 +134,10 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
             } else {
                 ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findById(aboutPageText.getExhibitionLanguageId()).orElse(null);
                 if(exhibitionLanguage != null) {
-                    exhibitionAboutPage.getExhibitionTextDescriptions().add(new LocalizedText(exhibitionLanguage, aboutPageText.getText()));
+                    LocalizedText newLocalizedText = new LocalizedText(exhibitionLanguage, aboutPageText.getText());
+                    newLocalizedText.setTargetExhibitionAboutPage(exhibitionAboutPage);
+                    exhibitionAboutPage.getExhibitionTextDescriptions().add(newLocalizedText);
+               
                 }
             }        
         }

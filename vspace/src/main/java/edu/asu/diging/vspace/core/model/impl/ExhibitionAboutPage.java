@@ -7,6 +7,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.OneToMany;
@@ -40,12 +41,17 @@ public class ExhibitionAboutPage extends VSpaceElement {
     
     
     
-    @OneToMany(mappedBy= "targetElement", targetEntity = LocalizedText.class, cascade={CascadeType.ALL})
-    @JoinTable(name="AboutPage_LocText_titles")
+    @OneToMany(targetEntity = LocalizedText.class, cascade={CascadeType.ALL})
+    @JoinTable(name="AboutPage_LocText_titles",  
+    joinColumns = @JoinColumn(name = "ExhibitionAboutPage_Id", referencedColumnName="id"),
+    inverseJoinColumns = @JoinColumn(name = "LocalizedText_Id", referencedColumnName="id"))
     private List<ILocalizedText> localizedTitles = new ArrayList<ILocalizedText>();
 
-    @OneToMany(mappedBy= "targetElement", targetEntity = LocalizedText.class, cascade={CascadeType.ALL})
-    @JoinTable(name="AboutPage_LocText_descriptions")
+    @OneToMany(targetEntity = LocalizedText.class, cascade={CascadeType.ALL})
+    @JoinTable(name="AboutPage_LocText_descriptions",
+    joinColumns = @JoinColumn(name = "ExhibitionAboutPage_Id", referencedColumnName="id"),
+    inverseJoinColumns = @JoinColumn(name = "LocalizedText_Id", referencedColumnName="id")
+    )
     private List<ILocalizedText> localizedDescriptions = new ArrayList<ILocalizedText>();
 
     public String getId() {
