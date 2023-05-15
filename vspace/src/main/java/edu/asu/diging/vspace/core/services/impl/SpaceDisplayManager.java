@@ -60,14 +60,13 @@ public class SpaceDisplayManager implements ISpaceDisplayManager {
         if(display==null) {
             display = displayFactory.createSpaceDisplay();
         }
+     
         if(image!=null) {
             if(image.getWidth()<=0 || image.getHeight()<=0) {
                 try {
-                    ImageData data = imageService
-                        .getImageData(storage.getImageContent(image.getId(), image.getFilename()));
-                    if(data!=null)
-                    {
-                    	image.setWidth(data.getWidth());
+                    ImageData data = imageService.getImageData(storage.getMediaContent(image.getId(), image.getFilename()));
+                    if (data != null) {
+                        image.setWidth(data.getWidth());
                         image.setHeight(data.getHeight());
                     }
                 } catch (IOException e) {
