@@ -69,6 +69,7 @@ public class SpaceDisplayManager implements ISpaceDisplayManager {
                         image.setWidth(data.getWidth());
                         image.setHeight(data.getHeight());
                     }
+                    
                 } catch (IOException e) {
                     logger.error("Could not get image.", e);
                     return display;
