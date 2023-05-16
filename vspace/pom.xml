@@ -26,9 +26,9 @@
 
         <db.driver>com.mysql.jdbc.Driver</db.driver>
         <db.url>jdbc:mysql://localhost:3306/vspace?serverTimezone=UTC&amp;useEncoding=true</db.url>
-        <db.user>root</db.user>
-        <db.password>Starsfirefly13</db.password>
-        <uploaded.files.path>/Users/starsfirefly/Desktop/DIG/storage</uploaded.files.path>
+        <db.user>vspace</db.user>
+        <db.password>vspace</db.password>
+        <uploaded.files.path></uploaded.files.path>
 
         <email.user></email.user>
         <email.password></email.password>
