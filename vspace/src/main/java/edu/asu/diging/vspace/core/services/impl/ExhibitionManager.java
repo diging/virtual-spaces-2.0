@@ -133,7 +133,7 @@ public class ExhibitionManager implements IExhibitionManager {
                 .filter(language -> !codes.contains(language.getCode())).collect(Collectors.toList());
 
         for (IExhibitionLanguage language  : exhibitionLanguageToBeRemoved ) {
-            if(checkIfLocalizedTextExists(language))  {
+            if(checkIfLocalizedTextsExists(language))  {
                 throw new ExhibitionLanguageDeletionException() ;
             }
 
@@ -149,33 +149,41 @@ public class ExhibitionManager implements IExhibitionManager {
      * 
      */
     @Override
-    public boolean checkIfLocalizedTextExists(IExhibitionLanguage language)  {        
+    public boolean checkIfLocalizedTextsExists(IExhibitionLanguage language)  {        
 
         
        List<LocalizedText> localizedTexts = localizedTextRepo.findByExhibitionLanguage(language);
-       List<LocalizedText> emptyLocalizedTexts = localizedTexts.stream().filter(localizedText -> !StringUtils.hasText(localizedText.getText())).collect(Collectors.toList());
-       emptyLocalizedTexts.forEach(localizedText -> { 
-           ExhibitionAboutPage exhibitionAboutPage = localizedText.getTargetExhibitionAboutPage();
-           exhibitionAboutPage.getExhibitionTextDescriptions().remove(localizedText);
-           //TODO: delete target element list entry
-//           localizedText.setTargetExhibitionAboutPage(null);
-           
-       });
-       localizedTextRepo.deleteAll(emptyLocalizedTexts);
- 
+       List<LocalizedText> emptyLocalizedTexts = localizedTexts.stream()
+               .filter(localizedText -> !StringUtils.hasText(localizedText.getText())).collect(Collectors.toList());
+       deleteEmptyLocalizedTexts(emptyLocalizedTexts);
        
        return localizedTexts.size() > emptyLocalizedTexts.size();
 
     }
     
     /**
+     * Removes localized texts from parent entities and delete them.
      * 
-     * @param localizedTexts
-     * @return
      */
-    private boolean checkIfTextIsEmpty(List<LocalizedText> localizedTexts) {
+    @Override
+    public void deleteEmptyLocalizedTexts(List<LocalizedText> emptyLocalizedTexts) {
+        emptyLocalizedTexts.forEach(localizedText -> { 
+            removeFromExhibitionAboutPage(localizedText);
 
-        return !localizedTexts.stream().anyMatch( localizedText -> !StringUtils.hasText(localizedText.getText()));
+        });
+        localizedTextRepo.deleteAll(emptyLocalizedTexts);
+    }
+
+    /**
+     * Removes localized texts from Exhibition About Page entity
+     * 
+     * @param localizedText
+     */
+    private void removeFromExhibitionAboutPage(LocalizedText localizedText) {
+        ExhibitionAboutPage exhibitionAboutPage = localizedText.getTargetExhibitionAboutPage();
+        exhibitionAboutPage.getExhibitionTextDescriptions().remove(localizedText);
+        exhibitionAboutPage.getExhibitionTitles().remove(localizedText);
+
     }
 
     /**

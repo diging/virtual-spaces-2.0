@@ -27,7 +27,7 @@ public class LocalizedText implements ILocalizedText {
     @JoinColumn(name = "LOC_EXH_LANG")
     private ExhibitionLanguage exhibitionLanguage; 
     
-    @ManyToOne( targetEntity = ExhibitionAboutPage.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne( targetEntity = ExhibitionAboutPage.class)
     ExhibitionAboutPage targetExhibitionAboutPage;
 
     private String text;

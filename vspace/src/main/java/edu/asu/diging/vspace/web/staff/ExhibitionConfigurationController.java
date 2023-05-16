@@ -105,7 +105,7 @@ public class ExhibitionConfigurationController {
             
         } catch (ExhibitionLanguageDeletionException e) {
             attributes.addAttribute("alertType", "failure");
-            attributes.addAttribute("message", "Could not delete the Exhibition Language");
+            attributes.addAttribute("message", "Could not delete the Exhibition Language as it has localized data associated to it.");
             attributes.addAttribute("showAlert", "true");
             return new RedirectView(request.getContextPath() + "/staff/exhibit/config");
         }

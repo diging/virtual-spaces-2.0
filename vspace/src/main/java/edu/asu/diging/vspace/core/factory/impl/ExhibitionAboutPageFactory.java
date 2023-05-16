@@ -1,5 +1,7 @@
 package edu.asu.diging.vspace.core.factory.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.util.StringUtils;
@@ -33,30 +35,30 @@ public class ExhibitionAboutPageFactory  implements IExhibitionAboutPageFactory{
         IExhibition startExhibtion = exhibitionManager.getStartExhibition();    
         IExhibitionLanguage defaultLanguage = startExhibtion.getDefaultLanguage();
 
-        aboutPageForm.getTitles().add(createLocalizedTitleForm(exhibitionAboutPage, defaultLanguage));       
-        aboutPageForm.getAboutPageTexts().add(createLocalizedAboutTextForm(exhibitionAboutPage, defaultLanguage));
+        aboutPageForm.getTitles().add(createLocalizedTextForm(exhibitionAboutPage, defaultLanguage, exhibitionAboutPage.getExhibitionTitles()));       
+        aboutPageForm.getAboutPageTexts().add(createLocalizedTextForm(exhibitionAboutPage, defaultLanguage, exhibitionAboutPage.getExhibitionTextDescriptions()));
 
         startExhibtion.getLanguages().forEach(language -> {
             if(!language.isDefault()) {
-                aboutPageForm.getTitles().add(createLocalizedTitleForm(exhibitionAboutPage, language));               
-                aboutPageForm.getAboutPageTexts().add(createLocalizedAboutTextForm(exhibitionAboutPage, language)); 
+                aboutPageForm.getTitles().add(createLocalizedTextForm(exhibitionAboutPage, language, exhibitionAboutPage.getExhibitionTitles()));               
+                aboutPageForm.getAboutPageTexts().add(createLocalizedTextForm(exhibitionAboutPage, language, exhibitionAboutPage.getExhibitionTextDescriptions())); 
             }
         });
         return aboutPageForm;
     }
     
     /**
-     * Creates Localized title object for form 
-     * 
+     * Creates LocalizedTextForm form using provided list of localizedTexts. 
      * @param exhibitionAboutPage
      * @param language
+     * @param localizedTexts
      * @return
      */
-    private LocalizedTextForm createLocalizedAboutTextForm(ExhibitionAboutPage exhibitionAboutPage,
-            IExhibitionLanguage language) {
+    private LocalizedTextForm createLocalizedTextForm(ExhibitionAboutPage exhibitionAboutPage,
+            IExhibitionLanguage language, List<ILocalizedText> localizedTexts) {
 
         LocalizedTextForm localizedAboutTextForm = new LocalizedTextForm(null, null,  language.getId(), language.getLabel() );
-        ILocalizedText aboutPageText = exhibitionAboutPage.getExhibitionTextDescriptions().stream()
+        ILocalizedText aboutPageText = localizedTexts.stream()
                 .filter(exhibitionText -> StringUtils.equals(language.getId(), exhibitionText.getExhibitionLanguage().getId())).findAny().orElse(null);
 
         if(aboutPageText != null) {
@@ -67,27 +69,5 @@ public class ExhibitionAboutPageFactory  implements IExhibitionAboutPageFactory{
         localizedAboutTextForm.setIsDefaultExhibitionLanguage(language.isDefault());
         return localizedAboutTextForm;
     }
-    
-    
-    /**
-     * 
-     * Creates Localized about text object for form 
-     * @param exhibitionAboutPage
-     * @param language
-     * @return
-     */
-    private LocalizedTextForm createLocalizedTitleForm(ExhibitionAboutPage exhibitionAboutPage, IExhibitionLanguage language) {
-        LocalizedTextForm localizedTitleForm = new LocalizedTextForm(null, null,  language.getId(), language.getLabel() );
 
-        ILocalizedText title = exhibitionAboutPage.getExhibitionTitles().stream()
-                .filter(exhibitionTitle ->  StringUtils.equals(exhibitionTitle.getExhibitionLanguage().getId(), language.getId())).findAny().orElse(null);
-
-        if(title != null) {
-            localizedTitleForm.setText(title.getText());
-            localizedTitleForm.setLocalisedTextId(title.getId());
-        } 
-        localizedTitleForm.setIsDefaultExhibitionLanguage(language.isDefault());      
-        
-        return localizedTitleForm;
-    }
 }
