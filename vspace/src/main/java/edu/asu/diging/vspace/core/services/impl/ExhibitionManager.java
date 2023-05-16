@@ -137,11 +137,8 @@ public class ExhibitionManager implements IExhibitionManager {
                 throw new ExhibitionLanguageDeletionException() ;
             }
 
-        }
-
-        
+        }       
         exhibition.getLanguages().removeAll(exhibitionLanguageToBeRemoved);
-
     }
     
     /**
@@ -149,15 +146,14 @@ public class ExhibitionManager implements IExhibitionManager {
      * 
      */
     @Override
-    public boolean checkIfLocalizedTextsExists(IExhibitionLanguage language)  {        
+    public boolean checkIfLocalizedTextsExists(IExhibitionLanguage language)  {               
+        List<LocalizedText> localizedTexts = localizedTextRepo.findByExhibitionLanguage(language);
+        List<LocalizedText> emptyLocalizedTexts = localizedTexts.stream()
+                .filter(localizedText -> !StringUtils.hasText(localizedText.getText())).collect(Collectors.toList());
+        deleteEmptyLocalizedTexts(emptyLocalizedTexts);
 
-        
-       List<LocalizedText> localizedTexts = localizedTextRepo.findByExhibitionLanguage(language);
-       List<LocalizedText> emptyLocalizedTexts = localizedTexts.stream()
-               .filter(localizedText -> !StringUtils.hasText(localizedText.getText())).collect(Collectors.toList());
-       deleteEmptyLocalizedTexts(emptyLocalizedTexts);
-       
-       return localizedTexts.size() > emptyLocalizedTexts.size();
+        //This returns true if non empty localized texts exist
+        return localizedTexts.size() > emptyLocalizedTexts.size();
 
     }
     

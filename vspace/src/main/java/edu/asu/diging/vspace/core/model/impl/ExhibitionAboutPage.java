@@ -43,14 +43,14 @@ public class ExhibitionAboutPage extends VSpaceElement {
     
     @OneToMany(targetEntity = LocalizedText.class, cascade={CascadeType.ALL})
     @JoinTable(name="AboutPage_LocText_titles",  
-    joinColumns = @JoinColumn(name = "ExhibitionAboutPage_Id", referencedColumnName="id"),
-    inverseJoinColumns = @JoinColumn(name = "LocalizedText_Id", referencedColumnName="id"))
+        joinColumns = @JoinColumn(name = "ExhibitionAboutPage_Id", referencedColumnName="id"),
+        inverseJoinColumns = @JoinColumn(name = "LocalizedText_Id", referencedColumnName="id"))
     private List<ILocalizedText> localizedTitles = new ArrayList<ILocalizedText>();
 
     @OneToMany(targetEntity = LocalizedText.class, cascade={CascadeType.ALL})
     @JoinTable(name="AboutPage_LocText_descriptions",
-    joinColumns = @JoinColumn(name = "ExhibitionAboutPage_Id", referencedColumnName="id"),
-    inverseJoinColumns = @JoinColumn(name = "LocalizedText_Id", referencedColumnName="id")
+        joinColumns = @JoinColumn(name = "ExhibitionAboutPage_Id", referencedColumnName="id"),
+        inverseJoinColumns = @JoinColumn(name = "LocalizedText_Id", referencedColumnName="id")
     )
     private List<ILocalizedText> localizedDescriptions = new ArrayList<ILocalizedText>();
 
