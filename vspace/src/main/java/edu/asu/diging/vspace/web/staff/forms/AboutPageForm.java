@@ -11,6 +11,10 @@ public class AboutPageForm {
 
     private String aboutPageText;
     
+    private LocalizedTextForm defaultTitle;
+    
+    private LocalizedTextForm defaultAboutPageText;
+    
     private List<LocalizedTextForm> titles = new ArrayList<LocalizedTextForm>();
 	
     private List<LocalizedTextForm> aboutPageTexts = new ArrayList<LocalizedTextForm>();
@@ -30,6 +34,22 @@ public class AboutPageForm {
     public void setAboutPageText(String aboutPageText) {
         this.aboutPageText = aboutPageText;
     }
+    
+    public LocalizedTextForm getDefaultTitle() {
+        return defaultTitle;
+    }
+
+    public void setDefaultTitle(LocalizedTextForm defaultTitle) {
+        this.defaultTitle = defaultTitle;
+    }
+
+    public LocalizedTextForm getDefaultAboutPageText() {
+        return defaultAboutPageText;
+    }
+
+    public void setDefaultAboutPageText(LocalizedTextForm defaultAboutPageText) {
+        this.defaultAboutPageText = defaultAboutPageText;
+    }   
 
     public List<LocalizedTextForm> getTitles() {
         return titles;
@@ -45,6 +65,8 @@ public class AboutPageForm {
 
     public void setAboutPageTexts(List<LocalizedTextForm> aboutPageTexts) {
         this.aboutPageTexts = aboutPageTexts;
-    }	
+    }
+
+
 
 }

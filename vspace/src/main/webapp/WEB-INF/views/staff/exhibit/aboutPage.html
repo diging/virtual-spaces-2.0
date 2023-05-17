@@ -85,31 +85,45 @@
 				
 				
 				<div>
-				<div class="tab" >				
+				<div class="tab" >	
+					<button class="tablinks"  th:onclick="openForm(event, [[${aboutPage.defaultTitle.exhibitionLanguageLabel}]] )">[[${aboutPage.defaultTitle.exhibitionLanguageLabel}]]</button>				
+							
 					<div th:each= "title,  stat : ${aboutPage.titles}">
 					  <button class="tablinks"  th:onclick="openForm(event, [[${title.exhibitionLanguageLabel}]] )">[[${title.exhibitionLanguageLabel}]]</button>				
 					</div>
 				</div>
-				<div>		
+				<div>
+						<div th:id = "${aboutPage.defaultTitle.exhibitionLanguageLabel}" class = "tabcontent">
+							<p>  [[${aboutPage.defaultTitle.exhibitionLanguageLabel}]]</p>	
+						<label for="title">About Page Title:</label>
+						<input type="hidden" class="form-control" id="title" th:value="${aboutPage.defaultTitle.localisedTextId}" th:name="aboutPage.defaultTitle.localisedTextId" ></input>
+						<input type="hidden" class="form-control" id="title" th:value="${aboutPage.defaultTitle.exhibitionLanguageId}" th:name="aboutPage.defaultTitle.exhibitionLanguageId" ></input> 					
+						<input type="text" class="form-control" id="title" th:value="${aboutPage.defaultTitle.text}" th:name="aboutPage.defaultTitle.text" ></input>
+						<label for="aboutPageText">About Page Text:</label>
+									<textarea class="form-control" rows="5" cols="30" id="aboutPageText" th:value= "${aboutPage.defaultAboutPageText.text}" th:name="|aboutPage.defaultAboutPageText.text|">[[${aboutPage.defaultAboutPageText.text}]]</textarea>
+			 						<input type="hidden"   class="form-control"  id="aboutText" th:value="${aboutPage.defaultAboutPageText.localisedTextId}" th:name="|aboutPage.defaultAboutPageText.localisedTextId|" ></input>
+									<input type="hidden" class="form-control"  id="aboutText" th:value="${aboutPage.defaultAboutPageText.exhibitionLanguageId}" th:name="|aboutPage.defaultAboutPageText.exhibitionLanguageId|" ></input>			
+	 						
+	 					</div>
 					<div style="padding-top: 20px;" th:each= "title,  stat : ${aboutPage.titles}" > 
-					<div th:id = "${title.exhibitionLanguageLabel}" class = "tabcontent">
-						<p>  [[${title.exhibitionLanguageLabel}]]</p>	
-					<label for="title">About Page Title:</label>
-					<input type="hidden" class="form-control" id="title" th:value="${title.localisedTextId}" th:name="|titles[${stat.index}].localisedTextId|" ></input>
-					<input type="hidden" class="form-control" id="title" th:value="${title.exhibitionLanguageId}" th:name="|titles[${stat.index}].exhibitionLanguageId|" ></input> 					
-					<input type="text" class="form-control" id="title" th:value="${title.text}" th:name="|titles[${stat.index}].text|" ></input>
-						<div style="padding-top: 20px;" th:each= "aboutPageText : ${aboutPage.aboutPageTexts}"  > 								
-								<label th:if="${aboutPageText.exhibitionLanguageId} == ${title.exhibitionLanguageId} "  for="aboutPageText">About Page Text:</label>
-								<textarea  th:if="${aboutPageText.exhibitionLanguageId} == ${title.exhibitionLanguageId} " class="form-control" rows="5" cols="30" id="aboutPageText" th:value= "${aboutPageText.text}" th:name="|aboutPageTexts[${stat.index}].text|">[[${aboutPageText.text}]]</textarea>
-		 						<input type="hidden"  th:if="${aboutPageText.exhibitionLanguageId} == ${title.exhibitionLanguageId} " class="form-control"  id="aboutText" th:value="${aboutPageText.localisedTextId}" th:name="|aboutPageTexts[${stat.index}].localisedTextId|" ></input>
-								<input type="hidden" th:if="${aboutPageText.exhibitionLanguageId} == ${title.exhibitionLanguageId} " class="form-control"  id="aboutText" th:value="${aboutPageText.exhibitionLanguageId}" th:name="|aboutPageTexts[${stat.index}].exhibitionLanguageId|" ></input>
- 						 					
-		 				</div>
-			
- 						
- 					</div>
- 				</div>				
-					</div>
+						<div th:id = "${title.exhibitionLanguageLabel}" class = "tabcontent">
+							<p>  [[${title.exhibitionLanguageLabel}]]</p>	
+						<label for="title">About Page Title:</label>
+						<input type="hidden" class="form-control" id="title" th:value="${title.localisedTextId}" th:name="|titles[${stat.index}].localisedTextId|" ></input>
+						<input type="hidden" class="form-control" id="title" th:value="${title.exhibitionLanguageId}" th:name="|titles[${stat.index}].exhibitionLanguageId|" ></input> 					
+						<input type="text" class="form-control" id="title" th:value="${title.text}" th:name="|titles[${stat.index}].text|" ></input>
+							<div style="padding-top: 20px;" th:each= "aboutPageText : ${aboutPage.aboutPageTexts}"  > 								
+									<label th:if="${aboutPageText.exhibitionLanguageId} == ${title.exhibitionLanguageId} "  for="aboutPageText">About Page Text:</label>
+									<textarea  th:if="${aboutPageText.exhibitionLanguageId} == ${title.exhibitionLanguageId} " class="form-control" rows="5" cols="30" id="aboutPageText" th:value= "${aboutPageText.text}" th:name="|aboutPageTexts[${stat.index}].text|">[[${aboutPageText.text}]]</textarea>
+			 						<input type="hidden"  th:if="${aboutPageText.exhibitionLanguageId} == ${title.exhibitionLanguageId} " class="form-control"  id="aboutText" th:value="${aboutPageText.localisedTextId}" th:name="|aboutPageTexts[${stat.index}].localisedTextId|" ></input>
+									<input type="hidden" th:if="${aboutPageText.exhibitionLanguageId} == ${title.exhibitionLanguageId} " class="form-control"  id="aboutText" th:value="${aboutPageText.exhibitionLanguageId}" th:name="|aboutPageTexts[${stat.index}].exhibitionLanguageId|" ></input>
+	 						 					
+			 				</div>
+				
+	 						
+	 					</div>
+ 					</div>				
+				</div>
 				</div>
 				<p style="padding-top: 20px;">
 					<button th:formaction="@{/staff/exhibit/about?}" class="btn primary-btn" type="submit" value="submit">Submit</button>
