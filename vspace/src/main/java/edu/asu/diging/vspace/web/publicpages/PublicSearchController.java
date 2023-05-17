@@ -1,5 +1,4 @@
-package edu.asu.diging.vspace.web.general.search;
-
+package edu.asu.diging.vspace.web.publicpages;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;

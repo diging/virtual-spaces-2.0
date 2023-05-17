@@ -1,4 +1,4 @@
-package edu.asu.diging.vspace.web.general.search;
+package edu.asu.diging.vspace.web.publicpages;
 
 import java.util.List;
 
