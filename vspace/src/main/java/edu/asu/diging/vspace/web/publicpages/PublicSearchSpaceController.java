@@ -27,9 +27,8 @@ public class PublicSearchSpaceController {
     public ResponseEntity<SearchSpaceResults> searchInVspace(
             @RequestParam(value = "spacePagenum", required = false, defaultValue = "1") String spacePagenum,
             Model model, @RequestParam(name = "searchText") String searchTerm) throws JsonProcessingException {
-
-        SearchSpaceResults publicSearch = publicSearchManager.searchForSpace(spacePagenum, searchTerm);      
-        return new ResponseEntity<SearchSpaceResults>(publicSearch, HttpStatus.OK);
+        
+        return new ResponseEntity<SearchSpaceResults>(publicSearchManager.searchForSpace(spacePagenum, searchTerm), HttpStatus.OK);
     }
 
    
