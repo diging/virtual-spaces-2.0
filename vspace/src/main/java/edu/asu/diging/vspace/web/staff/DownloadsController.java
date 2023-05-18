@@ -111,8 +111,7 @@ public class DownloadsController {
     public ResponseEntity<Boolean> exhibitionDownloadStatus(@PathVariable("id") String id, @RequestParam("folderName") String exhibitionDownloadFolderName , HttpServletRequest request)
     {
         try {
-            Boolean isSnapshotCreated = downloadsManager.checkIfSnapshotCreated(id);
-            return new ResponseEntity<Boolean>(isSnapshotCreated, HttpStatus.OK);
+            return new ResponseEntity<Boolean>(downloadsManager.checkIfSnapshotCreated(id), HttpStatus.OK);
 
         } catch (Exception e) {
 

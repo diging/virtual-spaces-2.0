@@ -105,7 +105,7 @@ public class DownloadsManagerTest {
 
         Mockito.verify(storageEngine).createFolder(exhibitionFolderName);
 
-        Mockito.verify(snapshotManager).createSnapShot(resourcesPath, exhibitionFolderName, null,  null);
+        Mockito.verify(snapshotManager).createSnapshot(resourcesPath, exhibitionFolderName, null,  null);
         
     }
   

@@ -98,14 +98,14 @@ public class SnapshotManager implements ISnapshotManager {
     private IStorageManager storageManager;
     
     
-    public final static String IMAGES_FOLDER_NAME = "images";
+    public final String IMAGES_FOLDER_NAME = "images";
 
-    private static final String RESOURCES_FOLDER_NAME = "resources";
+    private final String RESOURCES_FOLDER_NAME = "resources";
     
     @Async
     @Override
     @Transactional
-    public void createSnapShot(String resourcesPath, String exhibitionFolderName,SequenceHistory sequenceHistory, ExhibitionDownload exhibitionDownload)  throws IOException, InterruptedException {
+    public void createSnapshot(String resourcesPath, String exhibitionFolderName,SequenceHistory sequenceHistory, ExhibitionDownload exhibitionDownload)  throws IOException, InterruptedException {
         storageEngineDownloads.copyToFolder(exhibitionFolderName + File.separator + RESOURCES_FOLDER_NAME, resourcesPath);
         List<Space> spaces= spaceRepository.findAllBySpaceStatus(SpaceStatus.PUBLISHED);
 

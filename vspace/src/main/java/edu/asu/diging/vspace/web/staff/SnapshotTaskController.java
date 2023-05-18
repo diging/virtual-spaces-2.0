@@ -26,25 +26,17 @@ public class SnapshotTaskController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
 
-    @RequestMapping(value = "/staff/exhibit/snapshotTask/status", method = RequestMethod.GET) 
-    public ResponseEntity<SnapshotTask> getLatestSnapshotStatus(HttpServletRequest request, HttpServletResponse response,  Model model) {
-        SnapshotTask snapshotTask = null;
-        try {                 
-            
-            snapshotTask= snapshotTaskRepository.findFirstByOrderByCreationDateDesc();   
+    @RequestMapping(value = "/staff/exhibit/task/snapshot/status", method = RequestMethod.GET) 
+    public ResponseEntity<SnapshotTask> getLatestSnapshotStatus(HttpServletRequest request, HttpServletResponse response,  Model model) {                     
+        SnapshotTask snapshotTask = snapshotTaskRepository.findFirstByOrderByCreationDateDesc();   
+        if(snapshotTask == null) {
+            logger.error("Could not find snapshot task");
+            return new ResponseEntity<SnapshotTask>(snapshotTask, HttpStatus.INTERNAL_SERVER_ERROR);
+        } else {
             return  ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_TYPE, "application/json")
-                    .body(snapshotTask); 
-
-        } 
-        catch (Exception e) {
-            logger.error("Could not find snapshot task", e);
-            return new ResponseEntity<SnapshotTask>(snapshotTask, HttpStatus.INTERNAL_SERVER_ERROR);
-
-
+                    .body(snapshotTask);   
         }
     }
-
-
 
 }

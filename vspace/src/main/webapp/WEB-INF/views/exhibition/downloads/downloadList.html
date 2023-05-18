@@ -28,7 +28,7 @@ $(document).ready(function($) {
 	
 	 $.ajax({
 			type : "GET",
-			url : "[(@{'/staff/exhibit/snapshotTask/status?'+ ${_csrf.parameterName}+'='+${_csrf.token} })] ",
+			url : "[(@{'/staff/exhibit/task/snapshot/status?'+ ${_csrf.parameterName}+'='+${_csrf.token} })] ",
 			cache : false,
 			
 			contentType : false,
@@ -70,10 +70,7 @@ $(document).ready(function($) {
 	 				pollForExhibitionDownload(data.id, data.folderName);					
  					
 				},
-				error : function(data) {
-			/* 		var loader = document.getElementById('downloadLoader');
-					loader.style.visibility="hidden"; */
-					
+				error : function(data) {					
 					var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>Snapshot could not be downloaded</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
 					$('.errorAdd').append(alert);
 					

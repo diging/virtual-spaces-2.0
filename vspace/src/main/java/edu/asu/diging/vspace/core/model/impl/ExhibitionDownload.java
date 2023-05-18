@@ -32,12 +32,6 @@ public class ExhibitionDownload extends VSpaceElement implements IExhibitionDown
     public ExhibitionDownload() {
         super();
     }    
-
-//    public ExhibitionDownload(String folderPath, String folderName) {
-//        super();
-//        this.folderPath = folderPath;
-//        this.folderName = folderName;
-//    }
     
     @Override
     public String getId() {

@@ -210,7 +210,7 @@ public class SnapshotManagerTest {
 
         when(spaceRepository.findAllBySpaceStatus(SpaceStatus.PUBLISHED)).thenReturn(new ArrayList());
         doThrow(new IOException()).when(storageEngine).copyToFolder(Mockito.anyString(), Mockito.anyString() );        
-        assertThrows(IOException.class, ()-> serviceToTest.createSnapShot(resourcesPath, "folderName", null, exhibitionDownload));
+        assertThrows(IOException.class, ()-> serviceToTest.createSnapshot(resourcesPath, "folderName", null, exhibitionDownload));
     }
 
 }

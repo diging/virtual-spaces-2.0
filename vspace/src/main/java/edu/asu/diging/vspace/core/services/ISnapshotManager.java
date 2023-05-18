@@ -17,7 +17,7 @@ import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
 import edu.asu.diging.vspace.core.model.impl.Space;
 
 public interface ISnapshotManager {
-    void createSnapShot(String resourcesPath, String exhibitionFolderName, SequenceHistory sequenceHistory, ExhibitionDownload exhibitionDownload) throws IOException, InterruptedException ;
+    void createSnapshot(String resourcesPath, String exhibitionFolderName, SequenceHistory sequenceHistory, ExhibitionDownload exhibitionDownload) throws IOException, InterruptedException ;
     
     void downloadSpace(Space space, String exhibitionFolderPath,  SequenceHistory sequenceHistory);
 

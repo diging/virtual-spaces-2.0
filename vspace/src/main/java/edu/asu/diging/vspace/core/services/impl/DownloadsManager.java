@@ -84,7 +84,7 @@ public class DownloadsManager  implements  IDownloadsManager {
         exhibitionDownload.setSnapshotTask(snapshotTask); 
         exhibitionDownloadRepository.save(exhibitionDownload);
 
-        snapshotManager.createSnapShot(resourcesPath, exhibitionFolderName, sequenceHistory, exhibitionDownload);
+        snapshotManager.createSnapshot(resourcesPath, exhibitionFolderName, sequenceHistory, exhibitionDownload);
         return exhibitionDownload;
 
     }
