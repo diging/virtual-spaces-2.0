@@ -12,8 +12,6 @@ public interface IStorageEngine {
 
     String storeFile(byte[] fileContent, String filename, String directory) throws FileStorageException;
 
-    byte[] getImageContent(String directory, String filename) throws IOException;
-
     Resource downloadFile(String fileName, String directory) throws IOException;
 
     boolean renameFile(String fileName, String newFileName, String directory);

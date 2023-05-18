@@ -32,6 +32,11 @@ public class AddFileController {
     @RequestMapping(value = "/staff/files/add", method = RequestMethod.POST)
     public ResponseEntity<String> createFile( Model model, @ModelAttribute FileForm fileForm, @RequestParam("file") MultipartFile file,
             Principal principal) {
+        
+        if(file == null) {
+            return new ResponseEntity<String>("File not present.", HttpStatus.BAD_REQUEST);
+
+        }
         if (file != null) {
             try {
                 byte[] fileBytes = file.getBytes();
@@ -44,7 +49,7 @@ public class AddFileController {
             }
             
         }      
-        return new ResponseEntity<String>("File uploaded successfully", HttpStatus.OK);
+        return new ResponseEntity<String>("File uploaded successfully.", HttpStatus.OK);
     }
     
     @RequestMapping(value = "/staff/files/add", method = RequestMethod.GET)

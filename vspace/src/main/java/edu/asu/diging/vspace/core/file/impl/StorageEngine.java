@@ -34,9 +34,7 @@ public class StorageEngine implements IStorageEngine {
     * @see edu.asu.diging.vspace.core.file.impl.IStorageEngine#storeFile(byte[], java.lang.String, java.lang.String)
     */
     @Override
-    public String storeFile(byte[] fileContent, String filename, String directory) throws FileStorageException {
-        
-        
+    public String storeFile(byte[] fileContent, String filename, String directory) throws FileStorageException {        
         File file = getFile(directory, filename);
         BufferedOutputStream stream;
         try {
@@ -52,11 +50,6 @@ public class StorageEngine implements IStorageEngine {
         }
 
         return directory;
-    }
-
-    @Override
-    public byte[] getImageContent(String directory, String filename) throws IOException {
-        return getMediaContent(directory, filename);
     }
 
     @Override
