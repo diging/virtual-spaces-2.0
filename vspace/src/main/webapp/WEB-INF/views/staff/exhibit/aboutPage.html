@@ -96,13 +96,13 @@
 						<div th:id = "${aboutPage.defaultTitle.exhibitionLanguageLabel}" class = "tabcontent">
 							<p>  [[${aboutPage.defaultTitle.exhibitionLanguageLabel}]]</p>	
 						<label for="title">About Page Title:</label>
-						<input type="hidden" class="form-control" id="title" th:value="${aboutPage.defaultTitle.localisedTextId}" th:name="aboutPage.defaultTitle.localisedTextId" ></input>
-						<input type="hidden" class="form-control" id="title" th:value="${aboutPage.defaultTitle.exhibitionLanguageId}" th:name="aboutPage.defaultTitle.exhibitionLanguageId" ></input> 					
-						<input type="text" class="form-control" id="title" th:value="${aboutPage.defaultTitle.text}" th:name="aboutPage.defaultTitle.text" ></input>
+						<input type="hidden" class="form-control" id="title" th:value="${aboutPage.defaultTitle.localisedTextId}" th:name="defaultTitle.localisedTextId" ></input>
+						<input type="hidden" class="form-control" id="title" th:value="${aboutPage.defaultTitle.exhibitionLanguageId}" th:name="defaultTitle.exhibitionLanguageId" ></input> 					
+						<input type="text" class="form-control" id="title" th:value="${aboutPage.defaultTitle.text}" th:name="defaultTitle.text" ></input>
 						<label for="aboutPageText">About Page Text:</label>
-									<textarea class="form-control" rows="5" cols="30" id="aboutPageText" th:value= "${aboutPage.defaultAboutPageText.text}" th:name="|aboutPage.defaultAboutPageText.text|">[[${aboutPage.defaultAboutPageText.text}]]</textarea>
-			 						<input type="hidden"   class="form-control"  id="aboutText" th:value="${aboutPage.defaultAboutPageText.localisedTextId}" th:name="|aboutPage.defaultAboutPageText.localisedTextId|" ></input>
-									<input type="hidden" class="form-control"  id="aboutText" th:value="${aboutPage.defaultAboutPageText.exhibitionLanguageId}" th:name="|aboutPage.defaultAboutPageText.exhibitionLanguageId|" ></input>			
+									<textarea class="form-control" rows="5" cols="30" id="aboutPageText" th:value= "${aboutPage.defaultAboutPageText.text}" th:name="defaultAboutPageText.text">[[${aboutPage.defaultAboutPageText.text}]]</textarea>
+			 						<input type="hidden"   class="form-control"  id="aboutText" th:value="${aboutPage.defaultAboutPageText.localisedTextId}" th:name="defaultAboutPageText.localisedTextId" ></input>
+									<input type="hidden" class="form-control"  id="aboutText" th:value="${aboutPage.defaultAboutPageText.exhibitionLanguageId}" th:name="defaultAboutPageText.exhibitionLanguageId" ></input>			
 	 						
 	 					</div>
 					<div style="padding-top: 20px;" th:each= "title,  stat : ${aboutPage.titles}" > 
