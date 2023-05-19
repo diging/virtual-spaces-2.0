@@ -62,7 +62,7 @@ public class DownloadsController {
         return "exhibition/downloads/downloadList";
     }
 
-    @RequestMapping(value = "/staff/exhibit/download/trigger", method = RequestMethod.GET) 
+    @RequestMapping(value = "/staff/exhibit/download", method = RequestMethod.POST) 
     public ResponseEntity<ExhibitionDownload> downloadExhibitionTrigger(HttpServletRequest request, HttpServletResponse response,  Model model) {
         ExhibitionDownload exhibitionDownload = null;
         try {     

@@ -19,14 +19,14 @@ public class StorageEngineConfig {
     @Value("${uploads_path}")
     private String uploadsPath;
     
-    @Bean 
+    @Bean(name = "storageEngineDownloads")
     public IStorageEngine storageEngineDownloads(){
         
         return new StorageEngine(downloadsPath);
         
     }
     
-    @Bean 
+    @Bean(name = "storageEngineUploads")
     public IStorageEngine storageEngineUploads(){
         
         return new StorageEngine(uploadsPath);

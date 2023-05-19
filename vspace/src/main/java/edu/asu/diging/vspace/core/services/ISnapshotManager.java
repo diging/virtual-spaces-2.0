@@ -17,27 +17,31 @@ import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
 import edu.asu.diging.vspace.core.model.impl.Space;
 
 public interface ISnapshotManager {
-    void createSnapshot(String resourcesPath, String exhibitionFolderName, SequenceHistory sequenceHistory, ExhibitionDownload exhibitionDownload) throws IOException, InterruptedException ;
     
-    void downloadSpace(Space space, String exhibitionFolderPath,  SequenceHistory sequenceHistory);
+    void createSnapshot(String resourcesPath, String exhibitionFolderName, SequenceHistory sequenceHistory, ExhibitionDownload exhibitionDownload) throws IOException, InterruptedException, FileStorageException ;
 
-    void downloadModule(IModule module, ISpace space, String imagesFolderPath, String spaceFolderPath);
-
-    void downloadSequences(ISequence startSequence, IModule module, ISpace space, String spaceFolderPath,
-            String imagesFolderPath) ;
-
-    void storeTemplateForSlide(String slideId, String spaceFolderPath,  String spaceId,
-            String moduleId, String sequenceId);
-
- 
+    /**
+     * Populates the context with variables for slide template.
+     * 
+     * @param context
+     * @param spaceId
+     * @param moduleId
+     * @param sequenceId
+     * @param slideId
+     * @throws SlidesInSequenceNotFoundException
+     * @throws SequenceNotFoundException
+     * @throws SlideNotFoundException
+     */
     void populateContextForSlide(Context context, String spaceId, String moduleId, String sequenceId, String slideId)
             throws SlidesInSequenceNotFoundException, SequenceNotFoundException, SlideNotFoundException;
 
-    
-
-
-    void storeTemplateForSpace(String directory, String spaceFolderPath,SequenceHistory sequenceHistory) throws FileStorageException;
-
+    /**
+     * Populates context with variables to process space template
+     * 
+     * @param context
+     * @param id
+     * @param sequenceHistory
+     */
     void populateContextForSpace(Context context, String id, SequenceHistory sequenceHistory);
 
 }

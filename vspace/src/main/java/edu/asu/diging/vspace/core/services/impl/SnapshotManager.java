@@ -101,18 +101,21 @@ public class SnapshotManager implements ISnapshotManager {
     public final String IMAGES_FOLDER_NAME = "images";
 
     private final String RESOURCES_FOLDER_NAME = "resources";
+       
+    public final  String SPACE_TEMPLATE_DOWNLOAD_API = "exhibition/downloads/spaceDownloadTemplate";
+    
+    public final  String SLIDE_TEMPLATE_DOWNLOAD_API = "exhibition/downloads/slideDownloadTemplate";
     
     @Async
     @Override
     @Transactional
-    public void createSnapshot(String resourcesPath, String exhibitionFolderName,SequenceHistory sequenceHistory, ExhibitionDownload exhibitionDownload)  throws IOException, InterruptedException {
+    public void createSnapshot(String resourcesPath, String exhibitionFolderName,SequenceHistory sequenceHistory, ExhibitionDownload exhibitionDownload)  throws IOException, InterruptedException, FileStorageException {
         storageEngineDownloads.copyToFolder(exhibitionFolderName + File.separator + RESOURCES_FOLDER_NAME, resourcesPath);
         List<Space> spaces= spaceRepository.findAllBySpaceStatus(SpaceStatus.PUBLISHED);
 
         for(Space space : spaces) {
             downloadSpace(space, exhibitionFolderName, sequenceHistory);                
-        }         
-
+        }        
         SnapshotTask snapshotTask = exhibitionDownload.getSnapshotTask();
         snapshotTask.setTaskComplete(true);
         snapshotTaskRepository.save(snapshotTask);   
@@ -124,9 +127,9 @@ public class SnapshotManager implements ISnapshotManager {
      * @param space
      * @param exhibitionFolderPath
      * @param context
+     * @throws FileStorageException 
      */
-    @Override
-    public void downloadSpace(Space space, String exhibitionFolderName,  SequenceHistory sequenceHistory) {
+    private void downloadSpace(Space space, String exhibitionFolderName,  SequenceHistory sequenceHistory) throws FileStorageException {
 
         String spaceFolderPath = exhibitionFolderName + File.separator + space.getId();
         storageEngineDownloads.createFolder(spaceFolderPath);
@@ -149,54 +152,42 @@ public class SnapshotManager implements ISnapshotManager {
         });        
     }
     
-
-
-
-    
-    
-
     /**
      * Stores the processed template for space into spaceFolderPath.
      * 
      * @param directory
      * @param spaceFolderPath
      * @param context
+     * @throws FileStorageException 
      */
-    @Override
-    public void storeTemplateForSpace(String directory, String spaceFolderPath,  SequenceHistory sequenceHistory) {
-        try {           
-            Context thymeleafContext = new Context();
-            populateContextForSpace(thymeleafContext, directory, sequenceHistory);
-            // add attributes to context
-            String response = springTemplateEngine.process("exhibition/downloads/spaceDownloadTemplate", thymeleafContext);
-            byte[] fileContent = response.getBytes();
-            storageEngineDownloads.storeFile(fileContent, directory+".html",spaceFolderPath );
+    private void storeTemplateForSpace(String spaceId, String spaceFolderPath,  SequenceHistory sequenceHistory) throws FileStorageException {
 
-        } catch ( FileStorageException e) {
-            logger.error("Could not copy template" , e);
-        }   
+        Context thymeleafContext = new Context();
+        populateContextForSpace(thymeleafContext, spaceId, sequenceHistory);
+        // add attributes to context
+        String response = springTemplateEngine.process(SPACE_TEMPLATE_DOWNLOAD_API, thymeleafContext);
+        byte[] fileContent = response.getBytes();
+        storageEngineDownloads.storeFile(fileContent, spaceId+".html",spaceFolderPath );
+
 
     }
 
     /**
      * 
-     * Downloads given module and related slides into spacefolderpath.
+     * Downloads given module and related slides into space folder path.
      * @param module
      * @param space
      * @param imagesFolderPath
      * @param spaceFolderPath
      * @param context
      */
-    @Override
-    public void downloadModule(IModule module, ISpace space, String imagesFolderPath, String spaceFolderPath) {
+    private void downloadModule(IModule module, ISpace space, String imagesFolderPath, String spaceFolderPath) {
         ISequence startSequence = module.getStartSequence();
         if(startSequence!= null) {
             downloadSequences(startSequence, module, space, spaceFolderPath,imagesFolderPath );
         }
-
     }
-    
-    
+       
     /**
      * 
      * Downloads given sequence into spacefolderPath.
@@ -207,9 +198,8 @@ public class SnapshotManager implements ISnapshotManager {
      * @param imagesFolderPath
      * @param context
      */
-    @Override
-    public void downloadSequences(ISequence startSequence, IModule module, ISpace space, String spaceFolderPath,
-            String imagesFolderPath) {
+    private void downloadSequences(ISequence startSequence, IModule module, ISpace space, String spaceFolderPath,
+            String imagesFolderPath) throws FileStorageException {
         List<ISlide> slides = startSequence.getSlides();
         slides.forEach(slide -> {
             if(slide instanceof BranchingPoint) {
@@ -230,11 +220,8 @@ public class SnapshotManager implements ISnapshotManager {
 
                 } 
                 storeTemplateForSlide(slide.getId(), spaceFolderPath ,  space.getId(), module.getId(), startSequence.getId());
-
             }
-
         });
-
     }
 
     /**
@@ -246,39 +233,25 @@ public class SnapshotManager implements ISnapshotManager {
      * @param spaceId
      * @param moduleId
      * @param sequenceId
+     * @throws FileStorageException 
      */
-    @Override
-    public void storeTemplateForSlide(String slideId, String spaceFolderPath, String spaceId, String moduleId, String sequenceId ) {
+    private void storeTemplateForSlide(String slideId, String spaceFolderPath, String spaceId, String moduleId, String sequenceId ) throws FileStorageException {
         try {      
             Context thymeleafContext = new Context();
 
             populateContextForSlide( thymeleafContext, spaceId, moduleId, sequenceId, slideId );
-            String response = springTemplateEngine.process("exhibition/downloads/slideDownloadTemplate" , thymeleafContext);
+            String response = springTemplateEngine.process(SLIDE_TEMPLATE_DOWNLOAD_API , thymeleafContext);
             byte[] fileContent = response.getBytes();
             storageEngineDownloads.storeFile(fileContent, slideId+".html",spaceFolderPath );
 
-        } catch ( FileStorageException e) {
-            logger.error("Could not add html page for slide" , e);
         } catch (SlidesInSequenceNotFoundException  | SequenceNotFoundException |SlideNotFoundException e ) {
             logger.error("Could not add html page for slide" , e);
         }       
     }
 
-    /**
-     * Populates the context with variables for slide template.
-     * 
-     * @param context
-     * @param spaceId
-     * @param moduleId
-     * @param sequenceId
-     * @param slideId
-     * @throws SlidesInSequenceNotFoundException
-     * @throws SequenceNotFoundException
-     * @throws SlideNotFoundException
-     */
+
     @Override
     public void populateContextForSlide(Context context, String spaceId, String moduleId, String sequenceId, String slideId) throws SlidesInSequenceNotFoundException, SequenceNotFoundException, SlideNotFoundException {
-
         IModule module = moduleManager.getModule(moduleId);
         context.setVariable("module", module);
         String startSequenceId = module.getStartSequence().getId();
@@ -321,12 +294,6 @@ public class SnapshotManager implements ISnapshotManager {
 
         context.setVariable("currentSlideCon", currentSlide);
 
-//        if(sequenceHistory.hasHistory()) {
-//            context.setVariable("showBackToPreviousChoice", true);
-//            context.setVariable("previousSequenceId", sequenceHistory.peekSequenceId());
-//            context.setVariable("previousBranchingPoint", ((BranchingPoint)slideManager.getSlide(sequenceHistory.peekBranchingPointId())));
-//        }
-
         context.setVariable("numOfSlides", sequenceSlides.size());
         context.setVariable("currentNumOfSlide", slideIndex + 1);
         context.setVariable("spaceId", spaceId);
@@ -334,6 +301,7 @@ public class SnapshotManager implements ISnapshotManager {
 
 
     }
+    
     /** Populates context with variables to process space template
      * 
      * @param context
@@ -363,8 +331,5 @@ public class SnapshotManager implements ISnapshotManager {
         context.setVariable("display", spaceDisplayManager.getBySpace(space));
         context.setVariable("externalLinkList", externalLinkManager.getLinkDisplays(id));
 
-//        if (sequenceHistory.hasHistory()) {
-//            sequenceHistory.flushFromHistory();
-//        }
     }
 }

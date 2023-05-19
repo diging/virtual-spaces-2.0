@@ -27,12 +27,7 @@ public class StorageEngine  implements IStorageEngine {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-
     private String path;
-
-    public StorageEngine() {
-        super();
-    }
 
     public StorageEngine(String path) {
         this.path = path;
@@ -125,22 +120,13 @@ public class StorageEngine  implements IStorageEngine {
                     }
                 });
             byteArrayOutputStreamResult = byteArrayOutputStream;
-        } catch (IOException e) {
-            throw new IOException(e);
-        }   
+        }
+        
         return byteArrayOutputStreamResult.toByteArray();
     }
 
     @Override
     public void copyToFolder(String relativePath, String folderToCopy) throws IOException {
-        try {
-            FileUtils.copyDirectory(new File(folderToCopy), new File(path + File.separator+ relativePath)); 
-        } catch (IOException e) {
-            logger.error("Could not copy resources" , e);
-            throw new IOException(e);
-
-        }       
+        FileUtils.copyDirectory(new File(folderToCopy), new File(path + File.separator+ relativePath));        
     }
-
-
 }

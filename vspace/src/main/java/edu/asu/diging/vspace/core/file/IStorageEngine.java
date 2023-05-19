@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.model.IVSImage;
-import edu.asu.diging.vspace.core.model.impl.ExhibitionDownload;
 
 public interface IStorageEngine {
     String storeFile(byte[] fileContent, String filename, String directory) throws FileStorageException;
