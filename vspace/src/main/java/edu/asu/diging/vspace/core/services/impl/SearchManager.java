@@ -50,9 +50,9 @@ public abstract class SearchManager implements ISearchManager {
     protected abstract Page<ISlide> updateSlidePageWithSpaceInfo(Page<ISlide> slidePage);
 
     
-    protected SearchSpaceResults convertToSearchSpaceResults(List<ISpace> spaceList) {
+    protected SearchSpaceResults convertToSearchSpaceResults(Page<ISpace> spacePage) {
         SearchSpaceResults staffSearchSpaceResults = new SearchSpaceResults();
-        staffSearchSpaceResults.setSpaces(spaceList);
+        staffSearchSpaceResults.setSpaces(spacePage.getContent());
         return staffSearchSpaceResults;
     }
     
@@ -141,7 +141,7 @@ public abstract class SearchManager implements ISearchManager {
     @Override
     public SearchSpaceResults searchForSpace(String spacePagenum, String searchTerm) {
         Page<ISpace> spacePage = searchSpacesAndPaginate(searchTerm, Integer.parseInt(spacePagenum));
-        return convertToSearchSpaceResults(spacePage.getContent());
+        return convertToSearchSpaceResults(spacePage);
     }
 
 
@@ -220,8 +220,7 @@ public abstract class SearchManager implements ISearchManager {
             requestedPageForSpace = PageRequest.of(totalSpacePage - 1, pageSize);   
             spacePage = searchSpaces(requestedPageForSpace,  searchTerm);
         }
-
-
+  
         return spacePage;
     }
 
