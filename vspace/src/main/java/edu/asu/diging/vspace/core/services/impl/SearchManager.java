@@ -49,10 +49,12 @@ public abstract class SearchManager implements ISearchManager {
 
     protected abstract Page<ISlide> updateSlidePageWithSpaceInfo(Page<ISlide> slidePage);
 
-    
-    protected SearchSpaceResults convertToSearchSpaceResults(Page<ISpace> spacePage) {
+    @Override
+    public SearchSpaceResults convertToSearchSpaceResults(Page<ISpace> spacePage) {
         SearchSpaceResults staffSearchSpaceResults = new SearchSpaceResults();
         staffSearchSpaceResults.setSpaces(spacePage.getContent());
+        staffSearchSpaceResults.setCurrentPage(spacePage.getNumber() + 1);
+        staffSearchSpaceResults.setTotalPages(spacePage.getTotalPages());
         return staffSearchSpaceResults;
     }
     
@@ -128,22 +130,6 @@ public abstract class SearchManager implements ISearchManager {
 
         return staffSearchSlideTextBlockResults;
     }
-
-    /**
-     * This method is used to search the searched string specified in the input
-     * parameter(searchTerm) and return the published spaces corresponding to
-     * the page number specified in the input parameter(spacePagenum) whose name or
-     * description contains the search string.
-     * 
-     * @param spacePagenum current page number sent as request parameter in the URL.
-     * @param searchTerm   This is the search string which is being searched.
-     */
-    @Override
-    public SearchSpaceResults searchForSpace(String spacePagenum, String searchTerm) {
-        Page<ISpace> spacePage = searchSpacesAndPaginate(searchTerm, Integer.parseInt(spacePagenum));
-        return convertToSearchSpaceResults(spacePage);
-    }
-
 
     /**
      * This method is used to search the searched string specified in the input

@@ -27,7 +27,9 @@ public class StaffSearchSpaceController {
     public ResponseEntity<SearchSpaceResults> searchInVspace(
             @RequestParam(value = "spacePagenum", required = false, defaultValue = "1") String spacePagenum,
             Model model, @RequestParam(name = "searchText") String searchTerm) throws JsonProcessingException {
-        return new ResponseEntity<SearchSpaceResults>(staffSearchManager.searchForSpace(spacePagenum, searchTerm), HttpStatus.OK);
+        Page<ISpace> spacePage = staffSearchManager.searchSpacesAndPaginate(searchTerm, Integer.parseInt(spacePagenum));
+        SearchSpaceResults searchResults = staffSearchManager.convertToSearchSpaceResults(spacePage);  
+        return new ResponseEntity<SearchSpaceResults>(searchResults, HttpStatus.OK);
     }
 
 

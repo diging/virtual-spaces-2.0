@@ -29,11 +29,7 @@ public class PublicSearchSpaceController {
             Model model, @RequestParam(name = "searchText") String searchTerm) throws JsonProcessingException {
         
         Page<ISpace> spacePage = publicSearchManager.searchSpacesAndPaginate(searchTerm, Integer.parseInt(spacePagenum));
-        SearchSpaceResults searchResults = new SearchSpaceResults();
-        searchResults.setSpaces(spacePage.getContent());
-        searchResults.setCurrentPage(spacePage.getNumber() + 1);
-        searchResults.setTotalPages(spacePage.getTotalPages());
-    
+        SearchSpaceResults searchResults = publicSearchManager.convertToSearchSpaceResults(spacePage);
         return new ResponseEntity<SearchSpaceResults>(searchResults, HttpStatus.OK);
     }
   

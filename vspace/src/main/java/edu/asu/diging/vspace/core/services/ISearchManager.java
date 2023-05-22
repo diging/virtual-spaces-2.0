@@ -48,17 +48,6 @@ public interface ISearchManager {
      *         requested page.
      */
     Page<ISlide> searchSlideTextsAndPaginate(String searchTerm, int page);
-
-    /**
-     * This method is used to search the searched string specified in the input
-     * parameter(searchTerm) and return the published spaces corresponding to
-     * the page number specified in the input parameter(spacePagenum) whose name or
-     * description contains the search string.
-     * 
-     * @param spacePagenum current page number sent as request parameter in the URL.
-     * @param searchTerm   This is the search string which is being searched.
-     */
-    SearchSpaceResults searchForSpace(String spacePagenum, String searchTerm);
     
     /**
      * This method is used to search the searched string specified in the input
@@ -95,6 +84,13 @@ public interface ISearchManager {
      * @param searchTerm       This is the search string which is being searched.
      */
     SearchSlideTextBlockResults searchForSlideText(String slideTextPagenum, String searchTerm);
+    
+    /**
+     * This method is used to convert the searched results specified in the input
+     * parameter(spacePage) into SearchSpaceResults object and return the published spaces.
+     * @param spacePage  set of spaces whose name or description contains the search string
+     */
+    SearchSpaceResults convertToSearchSpaceResults(Page<ISpace> spacePage);
     
     
 }
