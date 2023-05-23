@@ -1,4 +1,5 @@
 package edu.asu.diging.vspace.web.staff.api;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,19 +30,19 @@ public class ImagesSearchFullApiController {
 	private ISpaceManager spaceManager;
     
     private final Logger logger = LoggerFactory.getLogger(getClass());
-
-    @RequestMapping("/staff/images/search/full")
-	public String imageSearchFull(Model model,
-	@RequestParam(value = "searchText", required = false) String searchTerm) {
-    	return String.format("redirect:/staff/images/search/full/1?searchText=%s",(searchTerm==null?"":searchTerm));
-    }
-    
+  
     @RequestMapping("/staff/images/search/full/{page}")
 	public String imageSeacrhDescription(@PathVariable(required = false) String page,
 			@RequestParam(value = "searchText", required = false) String searchTerm, Model model,
 			RedirectAttributes attributes) {
     	int pageNo;
     	page = StringUtils.isEmpty(page) ? "1" : page;
+    	try {
+            pageNo = Integer.parseInt(page);
+        }   
+        catch (NumberFormatException numberFormatException) {
+            pageNo = 1;
+        }
     	ImageCategory category = null;
         if(searchTerm!=null && !searchTerm.isEmpty()) {
             try {
@@ -52,13 +53,6 @@ public class ImagesSearchFullApiController {
             }
             
         }
-    	
-    	try {
-            pageNo = Integer.parseInt(page);
-    	} 	
-    	catch (NumberFormatException numberFormatException) {
-            pageNo = 1;
-    	}
     	model.addAttribute("totalPages", imageService.getTotalPages(category));
         model.addAttribute("currentPageNumber", pageNo);
         model.addAttribute("totalImageCount", imageService.getTotalImageCount(category));
