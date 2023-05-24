@@ -347,7 +347,10 @@ $(document).ready(function() {
             <div id="list" style="margin-top: 0">
                <ul class="list-group list-group-flush" th:each="space: ${spacesList}">
                   <li class="list-group-item">
-                     <span class="icon-2x2-grid"></span>&emsp;[[${space.name}]]
+                  	<a th:href="@{'/staff/space/'+${space.id}}">
+                     	<span class="icon-2x2-grid"></span>&emsp;[[${space.name}]]
+                     </a>
+                     
                   </li>
                </ul>
             </div>
