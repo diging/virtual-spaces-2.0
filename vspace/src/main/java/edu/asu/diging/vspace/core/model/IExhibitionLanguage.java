@@ -1,5 +1,8 @@
 package edu.asu.diging.vspace.core.model;
 
+import java.util.List;
+import edu.asu.diging.vspace.core.model.impl.LocalizedText;
+
 public interface IExhibitionLanguage extends IVSpaceElement {
     
     String getCode();
@@ -11,5 +14,7 @@ public interface IExhibitionLanguage extends IVSpaceElement {
     void setDefault(boolean isDefault);
     
     void setLabel(String label);
+    
+    List<LocalizedText> getLocalizedTexts();
           
 }

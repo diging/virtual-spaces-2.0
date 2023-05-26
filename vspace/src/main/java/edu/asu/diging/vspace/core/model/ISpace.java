@@ -34,12 +34,12 @@ public interface ISpace extends IVSpaceElement {
     
     void setHideIncomingLinks(boolean hideIncomingLinks);
     
-    List<ILocalizedtext> getSpaceNames();
+    List<ILocalizedText> getSpaceNames();
     
-    void setSpaceNames(List<ILocalizedtext> spaceNames);
+    void setSpaceNames(List<ILocalizedText> spaceNames);
     
-    void setSpaceDescriptions(List<ILocalizedtext> spaceDescriptions);
+    void setSpaceDescriptions(List<ILocalizedText> spaceDescriptions);
     
-    List<ILocalizedtext> getSpaceDescriptions() ;
+    List<ILocalizedText> getSpaceDescriptions() ;
 
 }

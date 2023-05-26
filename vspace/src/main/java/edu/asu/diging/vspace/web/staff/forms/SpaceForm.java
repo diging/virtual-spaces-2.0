@@ -10,9 +10,9 @@ public class SpaceForm {
 	private String name;
 	private String description;
 	
-    private List<LocalizedText> names = new ArrayList();
+    private List<LocalizedTextForm> names = new ArrayList<LocalizedTextForm>();
     
-    private List<LocalizedText> descriptions =  new ArrayList();
+    private List<LocalizedTextForm> descriptions =  new ArrayList<LocalizedTextForm>();
 	
 	public String getName() {
 		return name;
@@ -26,16 +26,16 @@ public class SpaceForm {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-    public List<LocalizedText> getNames() {
+    public List<LocalizedTextForm> getNames() {
         return names;
     }
-    public void setNames(List<LocalizedText> names) {
+    public void setNames(List<LocalizedTextForm> names) {
         this.names = names;
     }
-    public List<LocalizedText> getDescriptions() {
+    public List<LocalizedTextForm> getDescriptions() {
         return descriptions;
     }
-    public void setDescriptions(List<LocalizedText> descriptions) {
+    public void setDescriptions(List<LocalizedTextForm> descriptions) {
         this.descriptions = descriptions;
     }
 }

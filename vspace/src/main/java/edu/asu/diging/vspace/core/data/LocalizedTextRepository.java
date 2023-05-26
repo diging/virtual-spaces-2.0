@@ -4,12 +4,12 @@ import org.javers.spring.annotation.JaversSpringDataAuditable;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
-import edu.asu.diging.vspace.core.model.ILocalizedtext;
+import edu.asu.diging.vspace.core.model.ILocalizedText;
 import edu.asu.diging.vspace.core.model.impl.LocalizedText;
 
 
 @Repository
 @JaversSpringDataAuditable
-public interface LanguageDescriptionObjectRepository extends PagingAndSortingRepository<LocalizedText, String>{
+public interface LocalizedTextRepository extends PagingAndSortingRepository<LocalizedText, String>{
 
 }

@@ -26,7 +26,7 @@ import edu.asu.diging.vspace.core.factory.ISpaceDisplayFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceLinkDisplayFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceLinkFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
-import edu.asu.diging.vspace.core.model.ILocalizedtext;
+import edu.asu.diging.vspace.core.model.ILocalizedText;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.display.ISpaceDisplay;
@@ -394,7 +394,7 @@ public class SpaceManagerTest {
     public void setNameAsDefaultLanguage_success() {
         Space space=new Space();
         space.setId(spaceId1);
-        List<ILocalizedtext> nameList = new ArrayList();
+        List<ILocalizedText> nameList = new ArrayList();
         
         LocalizedText languageObj1 = new LocalizedText();
         languageObj1.setText("Space Name English");
@@ -430,7 +430,7 @@ public class SpaceManagerTest {
         Space space=new Space();
         space.setId(spaceId1);
         space.setName("Initial name");
-        List<ILocalizedtext> nameList = new ArrayList();
+        List<ILocalizedText> nameList = new ArrayList();
         
         LocalizedText languageObj1 = new LocalizedText();
         languageObj1.setText("Space Name English");
@@ -466,7 +466,7 @@ public class SpaceManagerTest {
     public void setDescriptionAsDefaultLanguage_success() {
         Space space=new Space();
         space.setId(spaceId1);
-        List<ILocalizedtext> descriptionList = new ArrayList();
+        List<ILocalizedText> descriptionList = new ArrayList();
         
         LocalizedText languageObj1 = new LocalizedText();
         languageObj1.setText("Space Name English");
@@ -500,7 +500,7 @@ public class SpaceManagerTest {
         Space space=new Space();
         space.setId(spaceId1);
         space.setDescription("Initial Description");
-        List<ILocalizedtext> descriptionList = new ArrayList();
+        List<ILocalizedText> descriptionList = new ArrayList();
         
         LocalizedText languageObj1 = new LocalizedText();
         languageObj1.setText("Space Name English");
