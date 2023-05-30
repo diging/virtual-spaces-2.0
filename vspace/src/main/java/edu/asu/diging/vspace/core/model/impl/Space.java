@@ -22,7 +22,7 @@ import org.hibernate.annotations.Parameter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import edu.asu.diging.vspace.core.model.IExternalLink;
-import edu.asu.diging.vspace.core.model.ILocalizedtext;
+import edu.asu.diging.vspace.core.model.ILocalizedText;
 import edu.asu.diging.vspace.core.model.IModuleLink;
 import edu.asu.diging.vspace.core.model.IPrefix;
 import edu.asu.diging.vspace.core.model.ISpace;
@@ -64,11 +64,11 @@ public class Space extends VSpaceElement implements ISpace {
     
     @OneToMany( targetEntity = LocalizedText.class,  cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(name="Space_LangObj_names")
-    private List<ILocalizedtext> spaceNames = new ArrayList();
+    private List<ILocalizedText> spaceNames = new ArrayList<ILocalizedText>();
     
     @OneToMany( targetEntity = LocalizedText.class,  cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(name="Space_LangObj_descriptions")
-    private List<ILocalizedtext> spaceDescriptions = new ArrayList();
+    private List<ILocalizedText> spaceDescriptions = new ArrayList<ILocalizedText>();
     
     /*
      * (non-Javadoc)
@@ -218,19 +218,19 @@ public class Space extends VSpaceElement implements ISpace {
         this.hideIncomingLinks = hideIncomingLinks;
     }
     
-    public List<ILocalizedtext> getSpaceNames() {
+    public List<ILocalizedText> getSpaceNames() {
         return spaceNames;
     }
 
-    public void setSpaceNames(List<ILocalizedtext> spaceNames) {
+    public void setSpaceNames(List<ILocalizedText> spaceNames) {
         this.spaceNames = spaceNames;
     }
 
-    public List<ILocalizedtext> getSpaceDescriptions() {
+    public List<ILocalizedText> getSpaceDescriptions() {
         return spaceDescriptions;
     }
 
-    public void setSpaceDescriptions(List<ILocalizedtext> spaceDescriptions) {
+    public void setSpaceDescriptions(List<ILocalizedText> spaceDescriptions) {
         
         this.spaceDescriptions = spaceDescriptions;
     }

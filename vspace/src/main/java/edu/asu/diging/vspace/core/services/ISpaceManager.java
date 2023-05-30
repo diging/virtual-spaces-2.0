@@ -13,6 +13,7 @@ import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
+import edu.asu.diging.vspace.web.staff.forms.LocalizedTextForm;
 import edu.asu.diging.vspace.web.staff.forms.SpaceForm;
 
 public interface ISpaceManager {
@@ -47,13 +48,15 @@ public interface ISpaceManager {
 
     void setDescriptionAsDefaultLanguage(ISpace space);
 
-    void addSpaceDescription(ISpace space, List<LocalizedText> descriptions);
+    void addSpaceDescription(ISpace space, List<LocalizedTextForm> descriptions);
 
-    void addSpaceName(ISpace space, List<LocalizedText> names);
+    void addSpaceName(ISpace space, List<LocalizedTextForm> names);
 
     Iterable<Space> getSpaceList();
 
     void updateSpacesWithDefaultNameAndDescription(Iterable<Space> spaceList);
 
     SpaceForm getSpaceForm(String spaceId);
+    
+    SpaceForm createNewSpaceForm(ISpace space);
 }

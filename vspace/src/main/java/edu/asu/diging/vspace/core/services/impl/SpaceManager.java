@@ -17,11 +17,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.thymeleaf.util.StringUtils;
 
 import edu.asu.diging.vspace.core.data.ExhibitionLanguageRepository;
 import edu.asu.diging.vspace.core.data.ExhibitionRepository;
 import edu.asu.diging.vspace.core.data.ImageRepository;
-import edu.asu.diging.vspace.core.data.LanguageDescriptionObjectRepository;
+import edu.asu.diging.vspace.core.data.LocalizedTextRepository;
 import edu.asu.diging.vspace.core.data.SpaceLinkRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.data.display.SpaceDisplayRepository;
@@ -31,7 +32,9 @@ import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceDisplayFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
-import edu.asu.diging.vspace.core.model.ILocalizedtext;
+import edu.asu.diging.vspace.core.model.IExhibition;
+import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
+import edu.asu.diging.vspace.core.model.ILocalizedText;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.display.ISpaceDisplay;
@@ -47,6 +50,7 @@ import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.impl.model.ImageData;
+import edu.asu.diging.vspace.web.staff.forms.LocalizedTextForm;
 import edu.asu.diging.vspace.web.staff.forms.SpaceForm;
 
 @Transactional
@@ -88,10 +92,10 @@ public class SpaceManager implements ISpaceManager {
     private SpaceLinkDisplayRepository spaceLinkDisplayRepo;
     
     @Autowired
-    LanguageDescriptionObjectRepository languageDescriptionObjectRepo;
+    ExhibitionLanguageRepository exhibitionLanguageRepository;
     
     @Autowired
-    ExhibitionLanguageRepository exhibitionLanguageRepository;
+    private LocalizedTextRepository localizedTextRepo;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
    
@@ -197,6 +201,8 @@ public class SpaceManager implements ISpaceManager {
     public ISpace getSpace(String id) {
         Optional<Space> space = spaceRepo.findById(id);
         if (space != null && space.isPresent()) {
+            setDescriptionAsDefaultLanguage(space.get());
+            setNameAsDefaultLanguage(space.get());
             return space.get();
         }
         return null;
@@ -328,25 +334,24 @@ public class SpaceManager implements ISpaceManager {
      * @param names
      */
     @Override
-    public void addSpaceName(ISpace space, List<LocalizedText> names) {
+    public void addSpaceName(ISpace space, List<LocalizedTextForm> names) {
         if(!CollectionUtils.isEmpty(names)) {
-            for(LocalizedText name : names )  {
-                ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findByLabel(name.getExhibitionLanguage().getLabel());
-                if(exhibitionLanguage != null) {
-                    name.setExhibitionLanguage(exhibitionLanguage); 
-                    Optional<ILocalizedtext> spaceTitle = space.getSpaceNames().stream()
-                            .filter(title -> exhibitionLanguage.getId().equals(title.getExhibitionLanguage().getId()))
-                            .findAny();
-                    if(spaceTitle.isPresent()) {
-                        spaceTitle.get().setText(name.getText()); 
-                    } else {
-                        space.getSpaceNames().add(name); 
-
-                    }
+            for(LocalizedTextForm name : names ) {
+                LocalizedText localizedText = localizedTextRepo.findById(name.getLocalisedTextId()).orElse(null);
+                if(localizedText != null) {            
+                    localizedText.setText(name.getText());
                 }
 
-            }
+                else {
+                    ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findById(name.getExhibitionLanguageId()).orElse(null);
+                    if(exhibitionLanguage != null) {
 
+                        localizedText = new LocalizedText(exhibitionLanguage, name.getText());
+                        space.getSpaceNames().add(localizedText);
+                        exhibitionLanguage.getLocalizedTexts().add(localizedText);
+                    }
+                }
+            }
         }
         setNameAsDefaultLanguage(space);
               
@@ -358,26 +363,25 @@ public class SpaceManager implements ISpaceManager {
      * @param descriptions
      */
     @Override
-    public void addSpaceDescription(ISpace space, List<LocalizedText> descriptions) {
-        if(!CollectionUtils.isEmpty(descriptions)) {
-            for(LocalizedText description : descriptions )  {               
-                ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findByLabel(description.getExhibitionLanguage().getLabel());
-                if(exhibitionLanguage != null) {
-                    description.setExhibitionLanguage(exhibitionLanguage);
-                    Optional<ILocalizedtext> spaceDescription = space.getSpaceDescriptions().stream()
-                            .filter(desc -> exhibitionLanguage.getId().equals(desc.getExhibitionLanguage().getId()))
-                            .findAny();
-                    if(spaceDescription.isPresent()) {
-                        spaceDescription.get().setText(description.getText());
-                    } else {
-                        space.getSpaceDescriptions().add(description);
+    public void addSpaceDescription(ISpace space, List<LocalizedTextForm> descriptions) {
+        if(!CollectionUtils.isEmpty(descriptions)) { 
+            for(LocalizedTextForm description : descriptions ) {
+                LocalizedText localizedText = localizedTextRepo.findById(description.getLocalisedTextId()).orElse(null);
+                if(localizedText != null) {
+                    localizedText.setText(description.getText());  
+                }
 
+                else {
+                    ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findById(description.getExhibitionLanguageId()).orElse(null);
+                    if(exhibitionLanguage != null) {
+                        localizedText = new LocalizedText(exhibitionLanguage, description.getText());
+                        space.getSpaceDescriptions().add(localizedText);
+                        exhibitionLanguage.getLocalizedTexts().add(localizedText);
                     }
                 }
             }
-        }
-        setDescriptionAsDefaultLanguage(space);     
-
+        }             
+        setDescriptionAsDefaultLanguage(space);
     }
 
     @Override
@@ -390,7 +394,7 @@ public class SpaceManager implements ISpaceManager {
     public void setNameAsDefaultLanguage(ISpace space) {
         String defaultSpaceName = space.getSpaceNames().stream()
                 .filter(title -> Boolean.TRUE.equals(title.getExhibitionLanguage().isDefault()))     
-                .map(ILocalizedtext::getText)
+                .map(ILocalizedText::getText)
                 .findAny().orElse(space.getName()) ;
         space.setName(defaultSpaceName);
 
@@ -400,7 +404,7 @@ public class SpaceManager implements ISpaceManager {
     public void setDescriptionAsDefaultLanguage(ISpace space) {
         String defaultSpaceDescription = space.getSpaceDescriptions().stream()
                 .filter(description -> Boolean.TRUE.equals(description.getExhibitionLanguage().isDefault()))
-                .map(ILocalizedtext::getText)
+                .map(ILocalizedText::getText)
                 .findAny().orElse(space.getDescription());       
         space.setDescription(defaultSpaceDescription);
 
@@ -421,22 +425,84 @@ public class SpaceManager implements ISpaceManager {
             setNameAsDefaultLanguage(space);
         });
     }
+    
 
     @Override
     public SpaceForm getSpaceForm(String spaceId) {
         ISpace space = getSpace(spaceId);
-        SpaceForm spaceForm = new SpaceForm();
-        spaceForm.setName(space.getName());
-        spaceForm.setDescription(space.getDescription());
-        space.getSpaceDescriptions().forEach(description -> {
-            spaceForm.getDescriptions().add((LocalizedText) description);
+        SpaceForm slideForm = createNewSpaceForm(space);   
+        slideForm.setName(space.getName());
+        slideForm.setDescription(space.getDescription());
+        return slideForm; 
+
+    }
+    /**
+     * 
+     * Creates new space form object
+     * @param space
+     * @return
+     */
+    @Override
+    public SpaceForm createNewSpaceForm(ISpace space) {
+        SpaceForm spaceForm = new SpaceForm();      
+        IExhibition startExhibtion = exhibitionManager.getStartExhibition();
+        IExhibitionLanguage defaultLanguage = exhibitionManager.getDefaultLanguage(startExhibtion);
+        spaceForm.getNames().add(createLocalizedNameForm(space, defaultLanguage));
+        spaceForm.getDescriptions().add(createLocalizedDescriptionForm(space, defaultLanguage)); 
+
+        startExhibtion.getLanguages().forEach(language -> {
+            if(!language.isDefault()) {
+                spaceForm.getNames().add(createLocalizedNameForm(space, language));
+                spaceForm.getDescriptions().add(createLocalizedDescriptionForm(space, language)); 
+            }
         });
+        return spaceForm;      
+    }
+    
+    /**
+     * Creates Localized space title object for form 
+     * 
+     * @param space
+     * @param language
+     * @return
+     */
 
-        space.getSpaceNames().forEach(title -> {
-            spaceForm.getNames().add((LocalizedText) title);
-        });
+    private LocalizedTextForm createLocalizedNameForm(ISpace space, IExhibitionLanguage language) {
+        LocalizedTextForm localizedTitleForm = new LocalizedTextForm(null, null, language.getId(), language.getLabel());
+        if(space!=null) {
+            ILocalizedText title = space.getSpaceNames().stream()
+                .filter(name -> StringUtils.equals(language.getId(), name.getExhibitionLanguage().getId())).findAny().orElse(null);
+            if(title != null) {
+                localizedTitleForm.setText(title.getText());
+                localizedTitleForm.setLocalisedTextId(title.getId());
+            }
+        }
+        localizedTitleForm.setExhibitionLanguageId(language.getId());
+        localizedTitleForm.setIsDefaultExhibitionLanguage(language.isDefault());     
+        return localizedTitleForm;
+    }
 
-        return spaceForm;
+    /**
+     * 
+     * Creates Localized space description object for form 
+     * @param space
+     * @param language
+     * @return
+     */
 
+    private LocalizedTextForm createLocalizedDescriptionForm(ISpace space, IExhibitionLanguage language) {
+        LocalizedTextForm localizedDescriptionForm = new LocalizedTextForm(null, null, language.getId(), language.getLabel());
+        if(space!=null) {
+            ILocalizedText text = space.getSpaceDescriptions().stream()
+                .filter(description -> StringUtils.equals(language.getId(), description.getExhibitionLanguage().getId())).findAny().orElse(null);
+
+            if(text != null) {
+                localizedDescriptionForm.setText(text.getText());
+                localizedDescriptionForm.setLocalisedTextId(text.getId());
+            } 
+        }
+        localizedDescriptionForm.setExhibitionLanguageId(language.getId());
+        localizedDescriptionForm.setIsDefaultExhibitionLanguage(language.isDefault());
+        return localizedDescriptionForm;
     }
 }
