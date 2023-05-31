@@ -52,7 +52,7 @@ public class AddSpaceController {
 
     @RequestMapping(value = "/staff/space/add", method = RequestMethod.GET)
     public String showAddSpace(Model model) {
-        model.addAttribute("space", new SpaceForm());
+        model.addAttribute("space", spaceManager.createNewSpaceForm(null));
         model.addAttribute("images", imageService.getImages(1));          
         IExhibition startExhibtion = exhibitionManager.getStartExhibition();        
         
