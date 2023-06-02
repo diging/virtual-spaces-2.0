@@ -66,6 +66,7 @@ public class AddSpaceController {
             Principal principal, @RequestParam(value = "imageId", required=false) String imageId, RedirectAttributes redirectAttrs) throws IOException {
         ISpace space = spaceFactory.createSpace(spaceForm);
         spaceManager.updateNameAndDescription(space, spaceForm);
+        System.out.println("here");
         space.setSpaceStatus(SpaceStatus.UNPUBLISHED);      
         byte[] bgImage = null;
         String filename = null;

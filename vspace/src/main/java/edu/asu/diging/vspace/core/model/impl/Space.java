@@ -58,9 +58,6 @@ public class Space extends VSpaceElement implements ISpace {
     @OneToOne(targetEntity = VSImage.class)
     @NotFound(action = NotFoundAction.IGNORE)
     private IVSImage image;
-
-    @Transient
-    private Boolean incomingLinks;
     
     @OneToMany( targetEntity = LocalizedText.class,  cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(name="Space_LangObj_names")
@@ -69,6 +66,11 @@ public class Space extends VSpaceElement implements ISpace {
     @OneToMany( targetEntity = LocalizedText.class,  cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(name="Space_LangObj_descriptions")
     private List<ILocalizedText> spaceDescriptions = new ArrayList<ILocalizedText>();
+
+    @Transient
+    private Boolean incomingLinks;
+    
+    
     
     /*
      * (non-Javadoc)
