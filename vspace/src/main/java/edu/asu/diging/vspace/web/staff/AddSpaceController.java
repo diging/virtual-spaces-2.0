@@ -64,7 +64,7 @@ public class AddSpaceController {
     @RequestMapping(value = "/staff/space/add", method = RequestMethod.POST)
     public String addSpace(Model model, @ModelAttribute SpaceForm spaceForm, @RequestParam("file") MultipartFile file,
             Principal principal, @RequestParam(value = "imageId", required=false) String imageId, RedirectAttributes redirectAttrs) throws IOException {
-        ISpace space = spaceFactory.createSpace(spaceForm);
+        ISpace space = spaceManager.createSpace(spaceForm);
         spaceManager.updateNameAndDescription(space, spaceForm);
         System.out.println("here");
         space.setSpaceStatus(SpaceStatus.UNPUBLISHED);      

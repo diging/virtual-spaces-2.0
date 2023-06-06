@@ -1,5 +1,8 @@
 package edu.asu.diging.vspace.core.services.impl;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -15,6 +18,7 @@ import org.mockito.MockitoAnnotations;
 
 import edu.asu.diging.vspace.core.data.ExhibitionLanguageRepository;
 import edu.asu.diging.vspace.core.data.ImageRepository;
+import edu.asu.diging.vspace.core.data.LocalizedTextRepository;
 import edu.asu.diging.vspace.core.data.SpaceLinkRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.data.display.SpaceDisplayRepository;
@@ -26,11 +30,13 @@ import edu.asu.diging.vspace.core.factory.ISpaceDisplayFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceLinkDisplayFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceLinkFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
+import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.ILocalizedText;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.display.ISpaceDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.SpaceDisplay;
+import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.impl.LocalizedText;
 import edu.asu.diging.vspace.core.model.impl.Space;
@@ -39,6 +45,8 @@ import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.impl.model.ImageData;
+import edu.asu.diging.vspace.web.staff.forms.LocalizedTextForm;
+import edu.asu.diging.vspace.web.staff.forms.SpaceForm;
 
 public class SpaceManagerTest {
 
@@ -80,7 +88,12 @@ public class SpaceManagerTest {
     
     @Mock
     private ExhibitionLanguageRepository exhibitionLanguageRepo;
-
+    
+    @Mock
+    private LocalizedTextRepository localizedRextRepo;
+    
+    @Mock
+    private ExhibitionLanguageRepository exhibitionLanguageRepository;
 
     @InjectMocks
     private SpaceManager managerToTest;
@@ -310,222 +323,101 @@ public class SpaceManagerTest {
     }
 
     @Test
-    public void test_addSpaceDescription_success() {
-        Space space=new Space();
-        space.setId(spaceId1);
+    public void test_createSpace_success() {
+        List<Space> spacePageList = new ArrayList();
 
-        List<LocalizedText> descriptionList = new ArrayList();
-        LocalizedText languageObj = new LocalizedText();
-        languageObj.setText("Space description");
+        spacePageList.add(new Space());
 
-        ExhibitionLanguage lang = new ExhibitionLanguage();
-        lang.setLabel("English");
-        languageObj.setExhibitionLanguage(lang);
-        descriptionList.add(languageObj);
+        SpaceForm spaceForm = new SpaceForm();
+        List<LocalizedTextForm> titleList = new ArrayList<LocalizedTextForm>();
+        titleList.add(new LocalizedTextForm("title", "ID1", "langId", "English"));
+        List<LocalizedTextForm> spaceTextList = new ArrayList<LocalizedTextForm>();
 
-        Mockito.when(exhibitionLanguageRepo.findByLabel(lang.getLabel())).thenReturn(lang);
-        managerToTest.addSpaceDescription(space, descriptionList);
-        Assert.assertEquals(space.getSpaceDescriptions().size(), 1);
+        spaceTextList.add(new LocalizedTextForm( "space text","ID2", "langId", "English"));
 
 
-    }
-    
-    @Test
-    public void test_addSpaceDescription_failure() {
-        Space space=new Space();
-        space.setId(spaceId1);
+        spaceForm.setNames(titleList);
+        spaceForm.setDescriptions(spaceTextList);
+        when(spaceRepo.findAll()).thenReturn(spacePageList);
 
-        List<LocalizedText> descriptionList = new ArrayList();
-        LocalizedText languageObj = new LocalizedText();
-        languageObj.setText("Space description");
+        LocalizedText locText1 =  new LocalizedText();
+        locText1.setId( "ID1");
 
-        ExhibitionLanguage lang = new ExhibitionLanguage();
-        lang.setLabel("English");
-        languageObj.setExhibitionLanguage(lang);
-        descriptionList.add(languageObj);
-
-        Mockito.when(exhibitionLanguageRepo.findByLabel(lang.getLabel())).thenReturn(null);
-        managerToTest.addSpaceDescription(space, descriptionList);
-        Assert.assertEquals(space.getSpaceDescriptions().size(), 0);
-
-
-    }
-    @Test
-    public void test_addSpaceName_success() {
-        Space space=new Space();
-        space.setId(spaceId1);
+        LocalizedText locText2 =  new LocalizedText();
+        locText1.setId( "ID2");
+        when(localizedRextRepo.findById("ID1") ).thenReturn(Optional.of(locText1));
+        when(localizedRextRepo.findById("ID2") ).thenReturn(Optional.of(locText2));
         
-        List<LocalizedText> nameList = new ArrayList();
-        LocalizedText languageObj = new LocalizedText();
-        languageObj.setText("Space Name");
-
-        ExhibitionLanguage lang = new ExhibitionLanguage();
-        lang.setLabel("English");
-        languageObj.setExhibitionLanguage(lang);
-        nameList.add(languageObj);
-
-        Mockito.when(exhibitionLanguageRepo.findByLabel(lang.getLabel())).thenReturn(lang);
-        managerToTest.addSpaceName(space, nameList);
-        Assert.assertEquals(space.getSpaceNames().size(), 1);
-
-    }
-    
-    @Test
-    public void test_addSpaceName_failure() {
-        Space space=new Space();
-        space.setId(spaceId1);
-        
-        List<LocalizedText> nameList = new ArrayList();
-        LocalizedText languageObj = new LocalizedText();
-        languageObj.setText("Space Name");
-
-        ExhibitionLanguage lang = new ExhibitionLanguage();
-        lang.setLabel("English");
-        languageObj.setExhibitionLanguage(lang);
-        nameList.add(languageObj);
-
-        Mockito.when(exhibitionLanguageRepo.findByLabel(lang.getLabel())).thenReturn(null);
-        managerToTest.addSpaceName(space, nameList);
-        Assert.assertEquals(space.getSpaceNames().size(), 0);
-
-    }
-    
-    @Test
-    public void setNameAsDefaultLanguage_success() {
-        Space space=new Space();
-        space.setId(spaceId1);
-        List<ILocalizedText> nameList = new ArrayList();
-        
-        LocalizedText languageObj1 = new LocalizedText();
-        languageObj1.setText("Space Name English");
-        ExhibitionLanguage lang1 = new ExhibitionLanguage();
-        lang1.setLabel("English");
-        lang1.setDefault(false);
-        languageObj1.setExhibitionLanguage(lang1);
-        nameList.add(languageObj1);
-        
-        LocalizedText languageObj2 = new LocalizedText();
-        languageObj2.setText("Raumname");
-        ExhibitionLanguage lang2 = new ExhibitionLanguage();
-        lang2.setLabel("German");
-        lang2.setDefault(true);
-        languageObj2.setExhibitionLanguage(lang2);
-        nameList.add(languageObj2);
-        
-        Mockito.when(exhibitionLanguageRepo.findByLabel(lang1.getLabel())).thenReturn(lang1);
-        Mockito.when(exhibitionLanguageRepo.findByLabel(lang2.getLabel())).thenReturn(lang2);
-
-        space.setSpaceNames(nameList);
-        
-        managerToTest.setNameAsDefaultLanguage(space);
-        
-        
-        Assert.assertEquals(space.getName(), "Raumname");
-        
-        
-    }
-    
-    @Test
-    public void setNameAsDefaultLanguage_failure() {
-        Space space=new Space();
-        space.setId(spaceId1);
-        space.setName("Initial name");
-        List<ILocalizedText> nameList = new ArrayList();
-        
-        LocalizedText languageObj1 = new LocalizedText();
-        languageObj1.setText("Space Name English");
-        ExhibitionLanguage lang1 = new ExhibitionLanguage();
-        lang1.setLabel("English");
-        lang1.setDefault(false);
-        languageObj1.setExhibitionLanguage(lang1);
-        nameList.add(languageObj1);
-        
-        LocalizedText languageObj2 = new LocalizedText();
-        languageObj2.setText("Raumname");
-        ExhibitionLanguage lang2 = new ExhibitionLanguage();
-        lang2.setLabel("German");
-        lang2.setDefault(false);
-        languageObj2.setExhibitionLanguage(lang2);
-        nameList.add(languageObj2);
-        
-        Mockito.when(exhibitionLanguageRepo.findByLabel(lang1.getLabel())).thenReturn(lang1);
-        Mockito.when(exhibitionLanguageRepo.findByLabel(lang2.getLabel())).thenReturn(lang2);
-
-        space.setSpaceNames(nameList);
-        
-        managerToTest.setNameAsDefaultLanguage(space);
-        
-        //no default name is set
-        Assert.assertEquals(space.getName(), "Initial name");
-        
-        
-    }
-
-    
-    @Test
-    public void setDescriptionAsDefaultLanguage_success() {
-        Space space=new Space();
-        space.setId(spaceId1);
-        List<ILocalizedText> descriptionList = new ArrayList();
-        
-        LocalizedText languageObj1 = new LocalizedText();
-        languageObj1.setText("Space Name English");
-        ExhibitionLanguage lang1 = new ExhibitionLanguage();
-        lang1.setLabel("English");
-        lang1.setDefault(false);
-        languageObj1.setExhibitionLanguage(lang1);
-        descriptionList.add(languageObj1);
-        
-        LocalizedText languageObj2 = new LocalizedText();
-        languageObj2.setText("Raumname");
-        ExhibitionLanguage lang2 = new ExhibitionLanguage();
-        lang2.setLabel("German");
-        lang2.setDefault(true);
-        languageObj2.setExhibitionLanguage(lang2);
-        descriptionList.add(languageObj2);
-        
-        Mockito.when(exhibitionLanguageRepo.findByLabel(lang1.getLabel())).thenReturn(lang1);
-        Mockito.when(exhibitionLanguageRepo.findByLabel(lang2.getLabel())).thenReturn(lang2);
-
-        space.setSpaceDescriptions(descriptionList);
-        
-        managerToTest.setDescriptionAsDefaultLanguage(space);      
-        
-        Assert.assertEquals(space.getDescription(), "Raumname");        
-        
+        when(exhibitionLanguageRepository.findById("langId")).thenReturn(Optional.empty());
+        managerToTest.createSpace(spaceForm);
+        assertEquals(locText1.getText(), "title");
+        assertEquals(locText2.getText(), "space text");
     }
 
     @Test
-    public void setDescriptionAsDefaultLanguage_failure() {
-        Space space=new Space();
-        space.setId(spaceId1);
-        space.setDescription("Initial Description");
-        List<ILocalizedText> descriptionList = new ArrayList();
-        
-        LocalizedText languageObj1 = new LocalizedText();
-        languageObj1.setText("Space Name English");
-        ExhibitionLanguage lang1 = new ExhibitionLanguage();
-        lang1.setLabel("English");
-        lang1.setDefault(false);
-        languageObj1.setExhibitionLanguage(lang1);
-        descriptionList.add(languageObj1);
-        
-        LocalizedText languageObj2 = new LocalizedText();
-        languageObj2.setText("Raumname");
-        ExhibitionLanguage lang2 = new ExhibitionLanguage();
-        lang2.setLabel("German");
-        lang2.setDefault(false);
-        languageObj2.setExhibitionLanguage(lang2);
-        descriptionList.add(languageObj2);
-        
-        Mockito.when(exhibitionLanguageRepo.findByLabel(lang1.getLabel())).thenReturn(lang1);
-        Mockito.when(exhibitionLanguageRepo.findByLabel(lang2.getLabel())).thenReturn(lang2);
+    public void test_createSlide_failure() {
+        List<Space> spacePageList = new ArrayList();
 
-        space.setSpaceDescriptions(descriptionList);
+        spacePageList.add(new Space());
+
+        SpaceForm spaceForm = new SpaceForm();
+        List<LocalizedTextForm> titleList = new ArrayList<LocalizedTextForm>();
+        titleList.add(new LocalizedTextForm("title", "ID1", "langId", "English"));
+        List<LocalizedTextForm> spaceTextList = new ArrayList<LocalizedTextForm>();
+
+        spaceTextList.add(new LocalizedTextForm( "space text","ID2", "langId", "English"));
+
+        spaceForm.setNames(titleList);
+        spaceForm.setDescriptions(spaceTextList);
         
-        managerToTest.setDescriptionAsDefaultLanguage(space);      
+
+        LocalizedText locText1 =  new LocalizedText();
+        locText1.setId( "ID1");
+
+
+        when(localizedRextRepo.findById("ID1") ).thenReturn(Optional.empty());
+        when(localizedRextRepo.findById("ID2") ).thenReturn(Optional.empty());
         
-        Assert.assertEquals(space.getDescription(), "Initial Description");        
-        
+
+        when(exhibitionLanguageRepository.findById("langId")).thenReturn(Optional.empty());
+        managerToTest.createSpace(spaceForm);
+        assertEquals(locText1.getText(), null);
+    } 
+
+
+    @Test
+    public void test_createNewSpaceForm_success() {
+        Exhibition exhibition = new Exhibition();
+        List<IExhibitionLanguage> languageList =  new ArrayList<IExhibitionLanguage>();
+        ExhibitionLanguage  language2 = new ExhibitionLanguage();
+
+
+        language2.setLabel("English");
+        languageList.add(language2);
+        exhibition.setLanguages(languageList);
+
+        List<Space> spacePageList = new ArrayList();
+        Space spacePage = new Space();        
+        LocalizedText locText1 =  new LocalizedText();
+        locText1.setId( "ID1");        
+        List<ILocalizedText> titleList = new ArrayList<ILocalizedText>();     
+        titleList.add(new LocalizedText(language2, "title1"));        
+        List<ILocalizedText> spaceTextList = new ArrayList<ILocalizedText>();
+        spaceTextList.add(new LocalizedText( language2, "space text"));      
+        spacePage.setSpaceNames(titleList);       
+        spacePage.setSpaceDescriptions(spaceTextList);
+        spacePageList.add(spacePage);
+
+        when(spaceRepo.findAll()).thenReturn(spacePageList);
+
+        when(exhibitionManager.getStartExhibition()).thenReturn(exhibition);      
+
+        SpaceForm  spaceForm =   managerToTest.createNewSpaceForm(spacePage);
+        assertEquals(spaceForm.getDescriptions().size(), 1);
+
+        assertEquals(spaceForm.getNames().size(), 1);
+
+        assertEquals(spaceForm.getDescriptions().get(0).getText(), "space text");
+
     }
 }

@@ -59,4 +59,6 @@ public interface ISpaceManager {
     SpaceForm getSpaceForm(String spaceId);
     
     SpaceForm createNewSpaceForm(ISpace space);
+
+    ISpace createSpace(SpaceForm form);
 }

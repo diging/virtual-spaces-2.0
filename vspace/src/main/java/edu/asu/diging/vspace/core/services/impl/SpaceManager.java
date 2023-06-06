@@ -31,6 +31,7 @@ import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceDisplayFactory;
+import edu.asu.diging.vspace.core.factory.ISpaceFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
@@ -75,6 +76,9 @@ public class SpaceManager implements ISpaceManager {
 
     @Autowired
     private IImageFactory imageFactory;
+    
+    @Autowired
+    private ISpaceFactory spaceFactory;
 
     @Autowired
     private IImageService imageService;
@@ -323,6 +327,13 @@ public class SpaceManager implements ISpaceManager {
     @Override
     public Page<ISpace> findByNameOrDescription(Pageable requestedPage, String searchText) {
         return spaceRepo.findDistinctByNameContainingOrDescriptionContaining(requestedPage, searchText,searchText);
+    }
+    
+    
+    @Override
+    public ISpace createSpace(SpaceForm form) {
+        ISpace space = spaceFactory.createSpace(form);
+        return spaceRepo.save((Space) space);
     }
     
     /**
