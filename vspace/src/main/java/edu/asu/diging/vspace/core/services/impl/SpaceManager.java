@@ -332,7 +332,9 @@ public class SpaceManager implements ISpaceManager {
     
     @Override
     public ISpace createSpace(SpaceForm form) {
-        ISpace space = spaceFactory.createSpace(form);
+        ISpace space = new Space();
+        space.setName(form.getName());
+        space.setDescription(form.getDescription());
         return spaceRepo.save((Space) space);
     }
     
@@ -447,74 +449,5 @@ public class SpaceManager implements ISpaceManager {
         slideForm.setDescription(space.getDescription());
         return slideForm; 
 
-    }
-    /**
-     * 
-     * Creates new space form object
-     * @param space
-     * @return
-     */
-    @Override
-    public SpaceForm createNewSpaceForm(ISpace space) {
-        SpaceForm spaceForm = new SpaceForm();      
-        IExhibition startExhibtion = exhibitionManager.getStartExhibition();
-        IExhibitionLanguage defaultLanguage = exhibitionManager.getDefaultLanguage(startExhibtion);
-        spaceForm.getNames().add(createLocalizedNameForm(space, defaultLanguage));
-        spaceForm.getDescriptions().add(createLocalizedDescriptionForm(space, defaultLanguage)); 
-
-        startExhibtion.getLanguages().forEach(language -> {
-            if(!language.isDefault()) {
-                spaceForm.getNames().add(createLocalizedNameForm(space, language));
-                spaceForm.getDescriptions().add(createLocalizedDescriptionForm(space, language)); 
-            }
-        });
-        return spaceForm;      
-    }
-    
-    /**
-     * Creates Localized space title object for form 
-     * 
-     * @param space
-     * @param language
-     * @return
-     */
-
-    private LocalizedTextForm createLocalizedNameForm(ISpace space, IExhibitionLanguage language) {
-        LocalizedTextForm localizedTitleForm = new LocalizedTextForm(null, null, language.getId(), language.getLabel());
-        if(space!=null) {
-            ILocalizedText title = space.getSpaceNames().stream()
-                .filter(name -> StringUtils.equals(language.getId(), name.getExhibitionLanguage().getId())).findAny().orElse(null);
-            if(title != null) {
-                localizedTitleForm.setText(title.getText());
-                localizedTitleForm.setLocalisedTextId(title.getId());
-            }
-        }
-        localizedTitleForm.setExhibitionLanguageId(language.getId());
-        localizedTitleForm.setIsDefaultExhibitionLanguage(language.isDefault());     
-        return localizedTitleForm;
-    }
-
-    /**
-     * 
-     * Creates Localized space description object for form 
-     * @param space
-     * @param language
-     * @return
-     */
-
-    private LocalizedTextForm createLocalizedDescriptionForm(ISpace space, IExhibitionLanguage language) {
-        LocalizedTextForm localizedDescriptionForm = new LocalizedTextForm(null, null, language.getId(), language.getLabel());
-        if(space!=null) {
-            ILocalizedText text = space.getSpaceDescriptions().stream()
-                .filter(description -> StringUtils.equals(language.getId(), description.getExhibitionLanguage().getId())).findAny().orElse(null);
-
-            if(text != null) {
-                localizedDescriptionForm.setText(text.getText());
-                localizedDescriptionForm.setLocalisedTextId(text.getId());
-            } 
-        }
-        localizedDescriptionForm.setExhibitionLanguageId(language.getId());
-        localizedDescriptionForm.setIsDefaultExhibitionLanguage(language.isDefault());
-        return localizedDescriptionForm;
     }
 }

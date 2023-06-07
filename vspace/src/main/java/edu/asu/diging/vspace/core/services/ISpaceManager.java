@@ -57,8 +57,6 @@ public interface ISpaceManager {
     void updateSpacesWithDefaultNameAndDescription(Iterable<Space> spaceList);
 
     SpaceForm getSpaceForm(String spaceId);
-    
-    SpaceForm createNewSpaceForm(ISpace space);
 
     ISpace createSpace(SpaceForm form);
 }
