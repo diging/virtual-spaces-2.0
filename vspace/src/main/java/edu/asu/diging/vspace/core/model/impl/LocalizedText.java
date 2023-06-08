@@ -10,6 +10,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import edu.asu.diging.vspace.core.model.ILocalizedText;
+import edu.asu.diging.vspace.core.model.ISpace;
 
 
 @Entity
@@ -22,7 +23,10 @@ public class LocalizedText implements ILocalizedText {
 
     @ManyToOne
     @JoinColumn(name = "LOC_EXH_LANG")
-    private ExhibitionLanguage exhibitionLanguage; 
+    private ExhibitionLanguage exhibitionLanguage;
+    
+    @ManyToOne( targetEntity = Space.class)
+    ISpace targetSpace;
 
     private String text;
 
@@ -57,6 +61,14 @@ public class LocalizedText implements ILocalizedText {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public ISpace getTargetSpace() {
+        return targetSpace;
+    }
+
+    public void setTargetSpace(ISpace space) {
+        this.targetSpace = space;
     }
 
 }

@@ -361,7 +361,7 @@ public class SpaceManager implements ISpaceManager {
 
                         localizedText = new LocalizedText(exhibitionLanguage, name.getText());
                         space.getSpaceNames().add(localizedText);
-                        exhibitionLanguage.getLocalizedTexts().add(localizedText);
+                        localizedText.setTargetSpace(space);
                     }
                 }
             }
@@ -389,7 +389,7 @@ public class SpaceManager implements ISpaceManager {
                     if(exhibitionLanguage != null) {
                         localizedText = new LocalizedText(exhibitionLanguage, description.getText());
                         space.getSpaceDescriptions().add(localizedText);
-                        exhibitionLanguage.getLocalizedTexts().add(localizedText);
+                        localizedText.setTargetSpace(space);
                     }
                 }
             }
@@ -444,7 +444,7 @@ public class SpaceManager implements ISpaceManager {
     @Override
     public SpaceForm getSpaceForm(String spaceId) {
         ISpace space = getSpace(spaceId);
-        SpaceForm slideForm = createNewSpaceForm(space);   
+        SpaceForm slideForm = spaceFactory.createNewSpaceForm(space);   
         slideForm.setName(space.getName());
         slideForm.setDescription(space.getDescription());
         return slideForm; 

@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
@@ -59,13 +60,19 @@ public class Space extends VSpaceElement implements ISpace {
     @NotFound(action = NotFoundAction.IGNORE)
     private IVSImage image;
     
-    @OneToMany( targetEntity = LocalizedText.class,  cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    @JoinTable(name="Space_LangObj_names")
+    @OneToMany(targetEntity = LocalizedText.class, cascade={CascadeType.ALL})
+    @JoinTable(name="Space_LangObj_names",  
+        joinColumns = @JoinColumn(name = "Space_Id", referencedColumnName="id"),
+        inverseJoinColumns = @JoinColumn(name = "LocalizedText_Id", referencedColumnName="id"))
     private List<ILocalizedText> spaceNames = new ArrayList<ILocalizedText>();
-    
-    @OneToMany( targetEntity = LocalizedText.class,  cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
-    @JoinTable(name="Space_LangObj_descriptions")
+
+    @OneToMany(targetEntity = LocalizedText.class, cascade={CascadeType.ALL})
+    @JoinTable(name="Space_LangObj_descriptions",
+        joinColumns = @JoinColumn(name = "Space_Id", referencedColumnName="id"),
+        inverseJoinColumns = @JoinColumn(name = "LocalizedText_Id", referencedColumnName="id")
+    )
     private List<ILocalizedText> spaceDescriptions = new ArrayList<ILocalizedText>();
+       
 
     @Transient
     private Boolean incomingLinks;
