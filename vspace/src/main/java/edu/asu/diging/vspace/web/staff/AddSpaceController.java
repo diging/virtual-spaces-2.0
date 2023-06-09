@@ -24,6 +24,7 @@ import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.impl.LocalizedText;
+import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IImageService;
@@ -45,19 +46,13 @@ public class AddSpaceController {
 
     @Autowired
     private IImageService imageService;
-    
-    @Autowired
-    private IExhibitionManager exhibitionManager;
-
-
+   
     @RequestMapping(value = "/staff/space/add", method = RequestMethod.GET)
     public String showAddSpace(Model model) {
-        model.addAttribute("space", spaceManager.createNewSpaceForm(null));
+        ISpace space = new Space();
+        model.addAttribute("space", spaceFactory.createNewSpaceForm(space));
         model.addAttribute("images", imageService.getImages(1));          
-        IExhibition startExhibtion = exhibitionManager.getStartExhibition();        
         
-        model.addAttribute("languageObjectList" , startExhibtion.getLanguages());
-
         return "staff/spaces/add";
     }
 
