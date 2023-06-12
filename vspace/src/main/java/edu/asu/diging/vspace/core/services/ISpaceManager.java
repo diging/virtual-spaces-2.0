@@ -48,9 +48,9 @@ public interface ISpaceManager {
 
     void setDescriptionAsDefaultLanguage(ISpace space);
 
-    void addSpaceDescription(ISpace space, List<LocalizedTextForm> descriptions);
+    void addSpaceDescription(ISpace space, LocalizedTextForm descriptions);
 
-    void addSpaceName(ISpace space, List<LocalizedTextForm> names);
+    void addSpaceName(ISpace space, LocalizedTextForm names);
 
     Iterable<Space> getSpaceList();
 

@@ -347,9 +347,8 @@ public class SpaceManager implements ISpaceManager {
      * @param names
      */
     @Override
-    public void addSpaceName(ISpace space, List<LocalizedTextForm> names) {
-        if(!CollectionUtils.isEmpty(names)) {
-            for(LocalizedTextForm name : names ) {
+    public void addSpaceName(ISpace space, LocalizedTextForm name) {
+        if(name!=null) { 
                 LocalizedText localizedText = localizedTextRepo.findById(name.getLocalisedTextId()).orElse(null);
                 if(localizedText != null) {            
                     localizedText.setText(name.getText());
@@ -364,11 +363,12 @@ public class SpaceManager implements ISpaceManager {
                         localizedText.setTargetSpace(space);
                     }
                 }
-            }
         }
+            
         setNameAsDefaultLanguage(space);
-              
     }
+    
+
 
     /**
      * Adds description to spaceDescription list.
@@ -376,9 +376,8 @@ public class SpaceManager implements ISpaceManager {
      * @param descriptions
      */
     @Override
-    public void addSpaceDescription(ISpace space, List<LocalizedTextForm> descriptions) {
-        if(!CollectionUtils.isEmpty(descriptions)) { 
-            for(LocalizedTextForm description : descriptions ) {
+    public void addSpaceDescription(ISpace space, LocalizedTextForm description) {
+        if(description!=null) { 
                 LocalizedText localizedText = localizedTextRepo.findById(description.getLocalisedTextId()).orElse(null);
                 if(localizedText != null) {
                     localizedText.setText(description.getText());  
@@ -387,20 +386,27 @@ public class SpaceManager implements ISpaceManager {
                 else {
                     ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findById(description.getExhibitionLanguageId()).orElse(null);
                     if(exhibitionLanguage != null) {
-                        localizedText = new LocalizedText(exhibitionLanguage, description.getText());
-                        space.getSpaceDescriptions().add(localizedText);
-                        localizedText.setTargetSpace(space);
+                        LocalizedText newLocalizedText = new LocalizedText(exhibitionLanguage, description.getText());
+                        space.getSpaceDescriptions().add(newLocalizedText);
+                        newLocalizedText.setTargetSpace(space);
                     }
                 }
-            }
-        }             
+        }
         setDescriptionAsDefaultLanguage(space);
     }
+ 
 
     @Override
-    public void updateNameAndDescription(ISpace space, SpaceForm spaceForm) {              
-        addSpaceName(space, spaceForm.getNames());
-        addSpaceDescription(space, spaceForm.getDescriptions()); 
+    public void updateNameAndDescription(ISpace space, SpaceForm spaceForm) {
+        addSpaceName(space,spaceForm.getDefaultName());
+        addSpaceDescription(space,spaceForm.getDefaultDescription());
+        
+        for(LocalizedTextForm title:spaceForm.getNames()) {        
+            addSpaceName(space,title);
+        }
+        for(LocalizedTextForm text:spaceForm.getDescriptions()) {
+            addSpaceDescription(space,text);
+        }
         System.out.println("after");
     }
 
