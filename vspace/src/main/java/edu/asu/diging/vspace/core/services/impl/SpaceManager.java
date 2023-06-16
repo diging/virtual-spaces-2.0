@@ -342,24 +342,21 @@ public class SpaceManager implements ISpaceManager {
      */
     @Override
     public void addSpaceName(ISpace space, LocalizedTextForm name) {
-        if(name!=null) { 
-                LocalizedText localizedText = localizedTextRepo.findById(name.getLocalisedTextId()).orElse(null);
-                if(localizedText != null) {            
-                    localizedText.setText(name.getText());
+        if(name!=null) {
+            LocalizedText localizedText = localizedTextRepo.findById(name.getLocalisedTextId()).orElse(null);
+            if(localizedText != null) {
+                localizedText.setText(name.getText());
                 }
-
-                else {
-                    ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findById(name.getExhibitionLanguageId()).orElse(null);
-                    if(exhibitionLanguage != null) {
-
-                        localizedText = new LocalizedText(exhibitionLanguage, name.getText());
-                        space.getSpaceNames().add(localizedText);
-                        localizedText.setTargetSpace(space);
+            else {
+                ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findById(name.getExhibitionLanguageId()).orElse(null);
+                if(exhibitionLanguage != null) {
+                    localizedText = new LocalizedText(exhibitionLanguage, name.getText());
+                    space.getSpaceNames().add(localizedText);
+                    localizedText.setTargetSpace(space);
                     }
                 }
+            }
         }
-            
-    }
     
 
 
@@ -370,22 +367,20 @@ public class SpaceManager implements ISpaceManager {
      */
     @Override
     public void addSpaceDescription(ISpace space, LocalizedTextForm description) {
-        if(description!=null) { 
-                LocalizedText localizedText = localizedTextRepo.findById(description.getLocalisedTextId()).orElse(null);
-                if(localizedText != null) {
-                    localizedText.setText(description.getText());  
+        if(description!=null) {
+            LocalizedText localizedText = localizedTextRepo.findById(description.getLocalisedTextId()).orElse(null);
+            if(localizedText != null) {
+                localizedText.setText(description.getText());
                 }
-
-                else {
-                    ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findById(description.getExhibitionLanguageId()).orElse(null);
-                    if(exhibitionLanguage != null) {
-                        LocalizedText newLocalizedText = new LocalizedText(exhibitionLanguage, description.getText());
-                        space.getSpaceDescriptions().add(newLocalizedText);
-                        newLocalizedText.setTargetSpace(space);
+            else {
+                ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findById(description.getExhibitionLanguageId()).orElse(null);
+                if(exhibitionLanguage != null) {
+                    LocalizedText newLocalizedText = new LocalizedText(exhibitionLanguage, description.getText());
+                    space.getSpaceDescriptions().add(newLocalizedText);
+                    newLocalizedText.setTargetSpace(space);
                     }
-                }
+            }
         }
-        
     }
  
 
