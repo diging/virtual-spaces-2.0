@@ -382,8 +382,6 @@ public class SpaceManager implements ISpaceManager {
             }
         }
     }
- 
-
     @Override
     public void updateNameAndDescription(ISpace space, SpaceForm spaceForm) {
         space.setName(spaceForm.getDefaultName().getText());

@@ -9,6 +9,7 @@ public class SpaceForm {
 
 	private String name;
 	private String description;
+	
     private LocalizedTextForm defaultName;
 
     private LocalizedTextForm defaultDescription;
