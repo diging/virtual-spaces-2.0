@@ -358,8 +358,6 @@ public class SpaceManager implements ISpaceManager {
             }
         }
     
-
-
     /**
      * Adds description to spaceDescription list.
      * @param space

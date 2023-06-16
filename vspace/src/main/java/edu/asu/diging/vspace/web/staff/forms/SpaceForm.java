@@ -54,6 +54,5 @@ public class SpaceForm {
     public void setDefaultDescription(LocalizedTextForm defaultDescription) {
         this.defaultDescription = defaultDescription;
     }
-    
-    
+      
 }
