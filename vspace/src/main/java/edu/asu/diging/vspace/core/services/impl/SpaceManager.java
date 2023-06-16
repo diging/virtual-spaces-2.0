@@ -205,8 +205,6 @@ public class SpaceManager implements ISpaceManager {
     public ISpace getSpace(String id) {
         Optional<Space> space = spaceRepo.findById(id);
         if (space != null && space.isPresent()) {
-            setDescriptionAsDefaultLanguage(space.get());
-            setNameAsDefaultLanguage(space.get());
             return space.get();
         }
         return null;
@@ -222,8 +220,6 @@ public class SpaceManager implements ISpaceManager {
         space.getSpaceLinks().size();
         space.getModuleLinks().size();
         space.getExternalLinks().size();
-        setDescriptionAsDefaultLanguage(space);
-        setNameAsDefaultLanguage(space);
         return space;
     }
 
@@ -318,8 +314,6 @@ public class SpaceManager implements ISpaceManager {
         while (iterator.hasNext()) {
             Space space = iterator.next();
             space.setIncomingLinks((spaceLinkRepo.findByTargetSpace(space)).size() > 0 ? true : false);
-            setDescriptionAsDefaultLanguage(space);
-            setNameAsDefaultLanguage(space);
         }
         return spaces;
     }
@@ -365,7 +359,6 @@ public class SpaceManager implements ISpaceManager {
                 }
         }
             
-        setNameAsDefaultLanguage(space);
     }
     
 
@@ -392,12 +385,14 @@ public class SpaceManager implements ISpaceManager {
                     }
                 }
         }
-        setDescriptionAsDefaultLanguage(space);
+        
     }
  
 
     @Override
     public void updateNameAndDescription(ISpace space, SpaceForm spaceForm) {
+        space.setName(spaceForm.getDefaultName().getText());
+        space.setDescription(spaceForm.getDefaultDescription().getText());
         addSpaceName(space,spaceForm.getDefaultName());
         addSpaceDescription(space,spaceForm.getDefaultDescription());
         
@@ -407,46 +402,8 @@ public class SpaceManager implements ISpaceManager {
         for(LocalizedTextForm text:spaceForm.getDescriptions()) {
             addSpaceDescription(space,text);
         }
-        System.out.println("after");
-    }
-
-    @Override
-    public void setNameAsDefaultLanguage(ISpace space) {
-        String defaultSpaceName = space.getSpaceNames().stream()
-                .filter(title -> Boolean.TRUE.equals(title.getExhibitionLanguage().isDefault()))     
-                .map(ILocalizedText::getText)
-                .findAny().orElse(space.getName()) ;
-        space.setName(defaultSpaceName);
-
-    }
-
-    @Override
-    public void setDescriptionAsDefaultLanguage(ISpace space) {
-        String defaultSpaceDescription = space.getSpaceDescriptions().stream()
-                .filter(description -> Boolean.TRUE.equals(description.getExhibitionLanguage().isDefault()))
-                .map(ILocalizedText::getText)
-                .findAny().orElse(space.getDescription());       
-        space.setDescription(defaultSpaceDescription);
-
     }
     
-    @Override
-    public Iterable<Space> getSpaceList() {
-        Iterable<Space> spaceList = addIncomingLinkInfoToSpaces(spaceRepo.findAll());
-        updateSpacesWithDefaultNameAndDescription(spaceList);        
-        return spaceList;
-              
-    }
-
-    @Override
-    public void updateSpacesWithDefaultNameAndDescription(Iterable<Space> spaceList) {
-        spaceList.forEach(space -> {
-            setDescriptionAsDefaultLanguage(space);
-            setNameAsDefaultLanguage(space);
-        });
-    }
-    
-
     @Override
     public SpaceForm getSpaceForm(String spaceId) {
         ISpace space = getSpace(spaceId);

@@ -25,20 +25,12 @@ public class EditSpaceController {
 
     @Autowired
     private ISpaceManager spaceManager;
-    
-    @Autowired
-    private IExhibitionManager exhibitionManager;
-
+   
     @RequestMapping(value="/staff/space/{spaceId}/edit", method=RequestMethod.GET)
     public String show(Model model, @PathVariable("spaceId") String spaceId) {
 
         model.addAttribute("spaceForm", spaceManager.getSpaceForm(spaceId));
         model.addAttribute("spaceId", spaceId);
-        
-        IExhibition startExhibtion = exhibitionManager.getStartExhibition();   
-        
-        model.addAttribute("languageObjectList" , startExhibtion.getLanguages());
-
         return "staff/spaces/edit";
     }
     

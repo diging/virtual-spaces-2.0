@@ -44,17 +44,9 @@ public interface ISpaceManager {
 
     void updateNameAndDescription(ISpace space, SpaceForm spaceForm);
 
-    void setNameAsDefaultLanguage(ISpace space);
-
-    void setDescriptionAsDefaultLanguage(ISpace space);
-
     void addSpaceDescription(ISpace space, LocalizedTextForm descriptions);
 
     void addSpaceName(ISpace space, LocalizedTextForm names);
-
-    Iterable<Space> getSpaceList();
-
-    void updateSpacesWithDefaultNameAndDescription(Iterable<Space> spaceList);
 
     SpaceForm getSpaceForm(String spaceId);
 
