@@ -25,7 +25,6 @@ $(document).ready(function($) {
 		console.log(num);
 		window.location.assign("[(@{'/staff/downloads/list'})]"+'?'+"downloadsPagenum="+num);
 	});
-	
 	 $.ajax({
 			type : "GET",
 			url : "[(@{'/staff/exhibit/task/snapshot/status?'+ ${_csrf.parameterName}+'='+${_csrf.token} })] ",

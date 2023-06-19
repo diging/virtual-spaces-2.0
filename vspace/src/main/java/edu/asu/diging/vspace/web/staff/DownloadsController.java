@@ -116,7 +116,6 @@ public class DownloadsController {
         } catch (Exception e) {
 
             return new ResponseEntity<Boolean>(false, HttpStatus.INTERNAL_SERVER_ERROR);
-
         }
     }
 
