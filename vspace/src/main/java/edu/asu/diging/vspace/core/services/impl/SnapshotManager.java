@@ -147,7 +147,12 @@ public class SnapshotManager implements ISnapshotManager {
         moduleLinks.forEach(moduleLink -> {
 
             IModule module =   moduleLink.getModule();
-            downloadModule(module, space,  imagesFolderPath, spaceFolderPath);
+            try {
+                downloadModule(module, space,  imagesFolderPath, spaceFolderPath);
+            } catch (FileStorageException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
 
         });        
     }
@@ -180,8 +185,9 @@ public class SnapshotManager implements ISnapshotManager {
      * @param imagesFolderPath
      * @param spaceFolderPath
      * @param context
+     * @throws FileStorageException 
      */
-    private void downloadModule(IModule module, ISpace space, String imagesFolderPath, String spaceFolderPath) {
+    private void downloadModule(IModule module, ISpace space, String imagesFolderPath, String spaceFolderPath) throws FileStorageException {
         ISequence startSequence = module.getStartSequence();
         if(startSequence!= null) {
             downloadSequences(startSequence, module, space, spaceFolderPath,imagesFolderPath );
@@ -209,7 +215,12 @@ public class SnapshotManager implements ISnapshotManager {
 
                     if(!choice.getSequence().getId().equals(startSequence.getId())) {
 
-                        downloadSequences(choice.getSequence(), module, space, spaceFolderPath, imagesFolderPath); 
+                        try {
+                            downloadSequences(choice.getSequence(), module, space, spaceFolderPath, imagesFolderPath);
+                        } catch (FileStorageException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        } 
                     }
                 });
             } else {
@@ -219,7 +230,12 @@ public class SnapshotManager implements ISnapshotManager {
                     storageManager.copyImageUploadsToDownloads(image, imagesFolderPath);
 
                 } 
-                storeTemplateForSlide(slide.getId(), spaceFolderPath ,  space.getId(), module.getId(), startSequence.getId());
+                try {
+                    storeTemplateForSlide(slide.getId(), spaceFolderPath ,  space.getId(), module.getId(), startSequence.getId());
+                } catch (FileStorageException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
             }
         });
     }
