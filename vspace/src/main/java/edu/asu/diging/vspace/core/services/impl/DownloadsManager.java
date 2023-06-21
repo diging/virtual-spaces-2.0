@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import edu.asu.diging.vspace.core.data.ExhibitionDownloadRepository;
 import edu.asu.diging.vspace.core.data.SnapshotTaskRepository;
 import edu.asu.diging.vspace.core.exception.ExhibitionDownloadNotFoundException;
+import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IExhibitionDownload;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionDownload;
@@ -84,7 +85,11 @@ public class DownloadsManager  implements  IDownloadsManager {
         exhibitionDownload.setSnapshotTask(snapshotTask); 
         exhibitionDownloadRepository.save(exhibitionDownload);
 
-        snapshotManager.createSnapshot(resourcesPath, exhibitionFolderName, sequenceHistory, exhibitionDownload);
+        try {
+            snapshotManager.createSnapshot(resourcesPath, exhibitionFolderName, sequenceHistory, exhibitionDownload);
+        } catch (IOException | InterruptedException | FileStorageException e) {
+            e.printStackTrace();
+        }
         return exhibitionDownload;
 
     }
