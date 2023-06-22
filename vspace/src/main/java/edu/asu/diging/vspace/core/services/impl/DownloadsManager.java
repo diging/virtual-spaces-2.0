@@ -88,6 +88,7 @@ public class DownloadsManager  implements  IDownloadsManager {
         try {
             snapshotManager.createSnapshot(resourcesPath, exhibitionFolderName, sequenceHistory, exhibitionDownload);
         } catch (IOException | InterruptedException | FileStorageException e) {
+            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return exhibitionDownload;
