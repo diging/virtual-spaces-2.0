@@ -1,5 +1,7 @@
 package edu.asu.diging.vspace.core.model.impl;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -10,6 +12,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import edu.asu.diging.vspace.core.model.ILocalizedText;
+import edu.asu.diging.vspace.core.model.IVSpaceElement;
 
 
 @Entity
@@ -20,9 +23,12 @@ public class LocalizedText implements ILocalizedText {
     @GenericGenerator(name = "localized_text_id_generator", parameters = @Parameter(name = "prefix", value = "LOCTEXT"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "LOC_EXH_LANG")
     private ExhibitionLanguage exhibitionLanguage; 
+    
+    @ManyToOne( targetEntity = ExhibitionAboutPage.class)
+    ExhibitionAboutPage targetExhibitionAboutPage;
 
     private String text;
     
@@ -58,5 +64,15 @@ public class LocalizedText implements ILocalizedText {
     public void setText(String text) {
         this.text = text;
     }
+
+    public ExhibitionAboutPage getTargetExhibitionAboutPage() {
+        return targetExhibitionAboutPage;
+    }
+
+    public void setTargetExhibitionAboutPage(ExhibitionAboutPage targetExhibitionAboutPage) {
+        this.targetExhibitionAboutPage = targetExhibitionAboutPage;
+    }
+
+
 
 }

@@ -148,6 +148,15 @@ public class Exhibition extends VSpaceElement implements IExhibition {
         this.previewId = previewId;
     }
     
+    /**
+     * 
+     * Returns the default language of the given exhibition
+     */
+    @Override
+    public IExhibitionLanguage getDefaultLanguage() {
+        return  this.getLanguages().stream().filter(language -> language.isDefault()).findFirst().orElse(null);
+    }
+    
     @Override
     public int hashCode() {
         return Objects.hash(id);
