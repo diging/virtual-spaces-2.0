@@ -8,6 +8,8 @@ public class SlideForm {
 
     private String name;
     private String description;
+    private LocalizedTextForm defaultName;
+    private LocalizedTextForm defaultDescription;
     private String type;
     private List<String> choices;
     
@@ -50,6 +52,18 @@ public class SlideForm {
     }
     public void setDescriptions(List<LocalizedTextForm> descriptions) {
         this.descriptions = descriptions;
+    }
+    public LocalizedTextForm getDefaultName() {
+        return defaultName;
+    }
+    public void setDefaultName(LocalizedTextForm defaultName) {
+        this.defaultName = defaultName;
+    }
+    public LocalizedTextForm getDefaultDescription() {
+        return defaultDescription;
+    }
+    public void setDefaultDescription(LocalizedTextForm defaultDescription) {
+        this.defaultDescription = defaultDescription;
     }
     
     
