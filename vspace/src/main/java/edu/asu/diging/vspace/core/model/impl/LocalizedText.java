@@ -12,6 +12,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import edu.asu.diging.vspace.core.model.ILocalizedText;
+import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.IVSpaceElement;
 
 
@@ -27,8 +28,8 @@ public class LocalizedText implements ILocalizedText {
     @JoinColumn(name = "LOC_EXH_LANG")
     private ExhibitionLanguage exhibitionLanguage; 
     
-    @ManyToOne( targetEntity = ExhibitionAboutPage.class)
-    ExhibitionAboutPage targetExhibitionAboutPage;
+    @ManyToOne( targetEntity = Slide.class)
+    ISlide targetSlide;
 
     private String text;
     
@@ -65,13 +66,15 @@ public class LocalizedText implements ILocalizedText {
         this.text = text;
     }
 
-    public ExhibitionAboutPage getTargetExhibitionAboutPage() {
-        return targetExhibitionAboutPage;
+    public ISlide getTargetSlide() {
+        return targetSlide;
     }
 
-    public void setTargetExhibitionAboutPage(ExhibitionAboutPage targetExhibitionAboutPage) {
-        this.targetExhibitionAboutPage = targetExhibitionAboutPage;
+    public void setTargetSlide(ISlide targetSlide) {
+        this.targetSlide = targetSlide;
     }
+
+    
 
 
 

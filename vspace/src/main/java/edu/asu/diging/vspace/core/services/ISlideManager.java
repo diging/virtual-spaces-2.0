@@ -39,15 +39,10 @@ public interface ISlideManager {
     
     void updateNameAndDescription(ISlide slide, SlideForm slideForm);
 
-    void setNameAsDefaultLanguage(ISlide slide);
+    void addSlideDescription(ISlide slide, LocalizedTextForm description);
 
-    void setDescriptionAsDefaultLanguage(ISlide slide);
+    void addSlideName(ISlide slide, LocalizedTextForm name);
 
-    void addSlideDescription(ISlide slide, List<LocalizedTextForm> descriptions);
-
-    void addSlideName(ISlide slide, List<LocalizedTextForm> names);
-    
     SlideForm getSlideForm(String slideId);
 
-    SlideForm createNewSlideForm(ISlide slide);
 }
