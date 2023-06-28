@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import edu.asu.diging.vspace.core.factory.ISlideFactory;
 import edu.asu.diging.vspace.core.model.IBranchingPoint;
 import edu.asu.diging.vspace.core.model.IChoiceBlock;
 import edu.asu.diging.vspace.core.model.IExhibition;
@@ -37,17 +38,16 @@ public class AddSlideController {
     
     @Autowired
     private IExhibitionManager exhibitionManager;
+    
+    @Autowired
+    private ISlideFactory slideFactory;
 
     @RequestMapping(value = "/staff/module/{id}/slide/add", method = RequestMethod.GET)
     public String showAddSlide(@PathVariable("id") String moduleId, Model model) {
         model.addAttribute("moduleId", moduleId);
-        model.addAttribute("slide", slideManager.createNewSlideForm(null));
+        model.addAttribute("slide", slideFactory.createNewSlideForm(null));
         model.addAttribute("sequences", moduleManager.getModuleSequences(moduleId));
         
-        IExhibition startExhibtion = exhibitionManager.getStartExhibition();
-        
-        model.addAttribute("languageObjectList" , startExhibtion.getLanguages());
-
         return "staff/modules/slides/add";
     }
 

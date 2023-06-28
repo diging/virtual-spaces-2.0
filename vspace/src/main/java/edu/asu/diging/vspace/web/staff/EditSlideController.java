@@ -42,8 +42,6 @@ public class EditSlideController {
             @PathVariable("moduleId") String moduleId, @PathVariable("slideId") String slideId) {
         ISlide slide = slideManager.getSlide(slideId);
         slide.setDescription(description);
-        slideManager.setDescriptionAsDefaultLanguage(slide);
-        
         slideManager.updateSlide((Slide) slide);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
@@ -53,7 +51,6 @@ public class EditSlideController {
             @PathVariable("moduleId") String moduleId, @PathVariable("slideId") String slideId) {
         ISlide slide = slideManager.getSlide(slideId);
         slide.setName(title);
-        slideManager.setNameAsDefaultLanguage(slide);
         slideManager.updateSlide((Slide) slide);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
@@ -76,8 +73,6 @@ public class EditSlideController {
         model.addAttribute("slideId", slideId);
         model.addAttribute("moduleId", moduleId);
         model.addAttribute("sequences", moduleManager.getModuleSequences(moduleId));
-        IExhibition startExhibtion = exhibitionManager.getStartExhibition();
-        model.addAttribute("languageObjectList" , startExhibtion.getLanguages());
         return "staff/modules/slides/edit";
     }
 
