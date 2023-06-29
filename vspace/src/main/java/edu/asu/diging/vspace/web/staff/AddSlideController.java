@@ -18,6 +18,7 @@ import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.display.SlideType;
+import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
@@ -45,7 +46,8 @@ public class AddSlideController {
     @RequestMapping(value = "/staff/module/{id}/slide/add", method = RequestMethod.GET)
     public String showAddSlide(@PathVariable("id") String moduleId, Model model) {
         model.addAttribute("moduleId", moduleId);
-        model.addAttribute("slide", slideFactory.createNewSlideForm(null));
+        ISlide slide=new Slide();
+        model.addAttribute("slide", slideFactory.createNewSlideForm(slide));
         model.addAttribute("sequences", moduleManager.getModuleSequences(moduleId));
         
         return "staff/modules/slides/add";
