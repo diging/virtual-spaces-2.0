@@ -74,8 +74,4 @@ public class LocalizedText implements ILocalizedText {
         this.targetSlide = targetSlide;
     }
 
-    
-
-
-
 }

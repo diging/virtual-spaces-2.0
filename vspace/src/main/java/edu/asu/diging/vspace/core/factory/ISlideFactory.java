@@ -10,6 +10,6 @@ public interface ISlideFactory {
 
     ISlide createSlide(IModule module, SlideForm form, SlideType type);
     
-    SlideForm createNewSlideForm(ISlide space);
+    SlideForm createNewSlideForm(ISlide slide);
 
 }

@@ -32,9 +32,6 @@ public class SlideFactory implements ISlideFactory {
     private IChoiceFactory choiceFactory;
     
     @Autowired
-    private SlideManager slideManager;
-    
-    @Autowired
     private IExhibitionManager exhibitionManager;
 
     /*
@@ -98,17 +95,17 @@ public class SlideFactory implements ISlideFactory {
      */
     private LocalizedTextForm createLocalizedTextForm(ISlide slide, IExhibitionLanguage language, List<ILocalizedText> localizedTexts) {
 
-        LocalizedTextForm localizedSpaceForm = new LocalizedTextForm(null, null,  language.getId(), language.getLabel() );
+        LocalizedTextForm localizedSlideForm = new LocalizedTextForm(null, null,  language.getId(), language.getLabel() );
         ILocalizedText slideText = localizedTexts.stream()
                 .filter(exhibitionText -> StringUtils.equals(language.getId(), exhibitionText.getExhibitionLanguage().getId())).findAny().orElse(null);
 
         if(slideText != null) {
-            localizedSpaceForm.setText(slideText.getText());
-            localizedSpaceForm.setLocalisedTextId( slideText.getId());
+            localizedSlideForm.setText(slideText.getText());
+            localizedSlideForm.setLocalisedTextId( slideText.getId());
 
         } 
-        localizedSpaceForm.setIsDefaultExhibitionLanguage(language.isDefault());
-        return localizedSpaceForm;
+        localizedSlideForm.setIsDefaultExhibitionLanguage(language.isDefault());
+        return localizedSlideForm;
     }
     
     
