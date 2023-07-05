@@ -23,8 +23,10 @@ import org.springframework.security.authentication.BadCredentialsException;
 
 import edu.asu.diging.vspace.config.ExhibitionLanguageConfig;
 import edu.asu.diging.vspace.core.data.ExhibitionRepository;
+import edu.asu.diging.vspace.core.exception.ExhibitionLanguageDeletionException;
 import edu.asu.diging.vspace.core.exception.LanguageListConfigurationNotFoundException;
 import edu.asu.diging.vspace.core.model.IExhibition;
+import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
 
@@ -68,7 +70,7 @@ public class ExhibitionManagerTest {
     
 
     @Test
-    public void test_updateExhibitionLanguages_success() {
+    public void test_updateExhibitionLanguages_success() throws ExhibitionLanguageDeletionException {
         Exhibition exhibition = new Exhibition();
 
         List<String> languages= new ArrayList() ;
@@ -93,7 +95,7 @@ public class ExhibitionManagerTest {
     }
 
     @Test
-    public void test_updateExhibitionLanguages_duplicates() {
+    public void test_updateExhibitionLanguages_duplicates() throws ExhibitionLanguageDeletionException {
         Exhibition exhibition = new Exhibition();
 
         //Exhibition already consists of 2 languages
@@ -129,7 +131,7 @@ public class ExhibitionManagerTest {
     }
 
     @Test
-    public void test_updateExhibitionLanguages_whenCodeIsNotPresentInConfig() {
+    public void test_updateExhibitionLanguages_whenCodeIsNotPresentInConfig() throws ExhibitionLanguageDeletionException {
         Exhibition exhibition = new Exhibition();
 
         List<String> languages= new ArrayList() ;
@@ -154,7 +156,7 @@ public class ExhibitionManagerTest {
     }
 
     @Test
-    public void test_updateExhibitionLanguages_defaultLanguage() {
+    public void test_updateExhibitionLanguages_defaultLanguage() throws ExhibitionLanguageDeletionException {
         Exhibition exhibition = new Exhibition();
 
         List<String> languages= new ArrayList() ;
@@ -209,7 +211,7 @@ public class ExhibitionManagerTest {
     }
     
     @Test
-    public void test_updateExhibitionLanguages_whenLanguageIsUnselected() {
+    public void test_updateExhibitionLanguages_whenLanguageIsUnselected() throws ExhibitionLanguageDeletionException {
         Exhibition exhibition = new Exhibition();
   
         List<Map> mappedLanguages= new ArrayList();
@@ -237,6 +239,43 @@ public class ExhibitionManagerTest {
         serviceToTest.updateExhibitionLanguages(exhibition, languages, "aa");
         assertEquals(exhibition.getLanguages().size(),1);
         
+        
+    }
+    
+    @Test
+    public void test_updateExhibitionLanguages_whenLanguageCouldNotBeDeleted() throws ExhibitionLanguageDeletionException {
+        Exhibition exhibition = new Exhibition();
+  
+        List<Map> mappedLanguages= new ArrayList();
+
+        Map<String, String> language1 =    new LinkedHashMap<String, String>();
+        language1.put("code", "en");
+        language1.put("label", "English");
+        Map<String, String> language2 =   new LinkedHashMap<String, String>();
+        language2.put("code", "aa");
+        language2.put("label", "Afar");
+        mappedLanguages.add(language1);
+        mappedLanguages.add(language2);
+        
+        
+        List<String> languages= new ArrayList() ;
+        languages.add("en");
+        languages.add("aa");  
+
+        when(exhibitionLanguageConfig.getExhibitionLanguageList()).thenReturn(mappedLanguages);
+        IExhibitionLanguage language = new ExhibitionLanguage();
+        language.setLabel("English");
+        
+        
+        when(serviceToTest.checkIfLocalizedTextsExists(language)).thenReturn(false);
+
+        serviceToTest.updateExhibitionLanguages(exhibition, languages, "aa");
+        assertEquals(exhibition.getLanguages().size(),2);
+        
+
+        languages.remove("en");
+        Assert.assertThrows(ExhibitionLanguageDeletionException.class,
+                () ->   serviceToTest.updateExhibitionLanguages(exhibition, languages, "aa"));       
         
     }
 }
