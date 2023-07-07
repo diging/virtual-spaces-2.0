@@ -21,6 +21,7 @@ import edu.asu.diging.vspace.core.data.LocalizedTextRepository;
 import edu.asu.diging.vspace.core.data.SequenceRepository;
 import edu.asu.diging.vspace.core.data.SlideRepository;
 import edu.asu.diging.vspace.core.exception.SlideDoesNotExistException;
+import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.ILocalizedText;
 import edu.asu.diging.vspace.core.model.IModule;
@@ -216,8 +217,12 @@ public class SlideManagerTest {
         
         IModule module = moduleManager.getModule(moduleId);
         SlideType type = slideForm.getType().isEmpty() ? null : SlideType.valueOf(slideForm.getType());
-
-        slideManagerToTest.createSlide(module, slideForm, type);
+        
+        Slide slide = new Slide();
+        Exhibition exhibition = new Exhibition();
+        when(exhibitionManager.getStartExhibition()).thenReturn((IExhibition)exhibition);
+        when(slideRepo.save(slide)).thenReturn(slide);
+        ISlide savedslide = slideManagerToTest.createSlide(module, slideForm, type);
         assertEquals(locText1.getText(), "title");
         assertEquals(locText2.getText(), "slide text");
     }
@@ -242,6 +247,8 @@ public class SlideManagerTest {
 
         LocalizedText locText1 =  new LocalizedText();
         locText1.setId( "ID1");
+        Exhibition exhibition = new Exhibition();
+        when(exhibitionManager.getStartExhibition()).thenReturn((IExhibition)exhibition);
 
 
         when(localizedRextRepo.findById("ID1") ).thenReturn(Optional.empty());
@@ -254,41 +261,4 @@ public class SlideManagerTest {
         assertEquals(locText1.getText(), null);
     } 
     
-
-    @Test
-    public void test_createAboutPageForm_success() {
-        Exhibition exhibition = new Exhibition();
-        List<IExhibitionLanguage> languageList =  new ArrayList<IExhibitionLanguage>();
-        ExhibitionLanguage  language2 = new ExhibitionLanguage();
-
-
-        language2.setLabel("English");
-        languageList.add(language2);
-        exhibition.setLanguages(languageList);
-
-        List<Slide> slidePageList = new ArrayList();
-        Slide slidePage = new Slide();        
-        LocalizedText locText1 =  new LocalizedText();
-        locText1.setId( "ID1");        
-        List<ILocalizedText> titleList = new ArrayList<ILocalizedText>();     
-        titleList.add(new LocalizedText(language2, "title1"));        
-        List<ILocalizedText> slideTextList = new ArrayList<ILocalizedText>();
-        slideTextList.add(new LocalizedText( language2, "about text"));      
-        slidePage.setSlideNames(titleList);       
-        slidePage.setSlideDescriptions(slideTextList);
-        slidePageList.add(slidePage);
-
-        when(slideRepo.findAll()).thenReturn(slidePageList);
-
-        when(exhibitionManager.getStartExhibition()).thenReturn(exhibition);      
-
-        SlideForm  slideForm =   slideManagerToTest.createNewSlideForm(slidePage);
-        assertEquals(slideForm.getDescriptions().size(), 1);
-
-        assertEquals(slideForm.getNames().size(), 1);
-
-        assertEquals(slideForm.getDescriptions().get(0).getText(), "slide text");
-
-    }
-
 }

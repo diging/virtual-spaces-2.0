@@ -43,7 +43,7 @@ public class SlideFactoryTest {
         languageList.add(language2);
         exhibition.setLanguages(languageList);
 
-        List<Slide> spacePageList = new ArrayList();
+        List<Slide> slidePageList = new ArrayList();
         Slide slidePage = new Slide();        
         LocalizedText locText1 =  new LocalizedText();
         locText1.setId( "ID1");        
@@ -53,9 +53,9 @@ public class SlideFactoryTest {
         slideTextList.add(new LocalizedText( language2, "slide text"));      
         slidePage.setSlideNames(titleList);       
         slidePage.setSlideDescriptions(slideTextList);
-        spacePageList.add(slidePage);
+        slidePageList.add(slidePage);
 
-        when(slideRepo.findAll()).thenReturn(spacePageList);
+        when(slideRepo.findAll()).thenReturn(slidePageList);
 
         when(exhibitionManager.getStartExhibition()).thenReturn(exhibition);      
 

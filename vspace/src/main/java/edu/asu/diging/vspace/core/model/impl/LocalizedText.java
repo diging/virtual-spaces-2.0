@@ -30,6 +30,9 @@ public class LocalizedText implements ILocalizedText {
     
     @ManyToOne( targetEntity = Slide.class)
     ISlide targetSlide;
+    
+    @ManyToOne( targetEntity = ExhibitionAboutPage.class)
+    ExhibitionAboutPage targetExhibitionAboutPage;
 
     private String text;
     
@@ -73,5 +76,14 @@ public class LocalizedText implements ILocalizedText {
     public void setTargetSlide(ISlide targetSlide) {
         this.targetSlide = targetSlide;
     }
+
+    public ExhibitionAboutPage getTargetExhibitionAboutPage() {
+        return targetExhibitionAboutPage;
+    }
+
+    public void setTargetExhibitionAboutPage(ExhibitionAboutPage targetExhibitionAboutPage) {
+        this.targetExhibitionAboutPage = targetExhibitionAboutPage;
+    }
+    
 
 }
