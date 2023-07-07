@@ -1,3 +1,4 @@
+
 <html layout:decorate="~{layouts/main_staff}">
 <head>
 <link rel="stylesheet" type="text/css" id="applicationStylesheet"
@@ -789,8 +790,9 @@ function makeExternalLinksEditable(linkName, linkId, externalLinkURL, posXEdit, 
     $("#externalLinkLabelEdit").val(linkName);
     $("#externalLinkIdValueEdit").val(linkId);
     $("#externalLinkURLEdit").val(externalLinkURL);
-    $('#extTypeEdit option[value="'+linkType+'"]').attr("selected", "selected");
-    $('#extTabOpenEdit option[value="'+tabOpenType+'"]').attr("selected", "selected");
+    $('#extTypeEdit option[value="'+linkType+'"]').prop("selected", true);
+    $('#extTabOpenEdit option[value="'+tabOpenType+'"]').prop("selected",true);
+    
     resetHighlighting();
 
     $('[data-link-id="' + linkId + '"]').css("color", "#c1bb88");
@@ -1774,7 +1776,8 @@ $(function(){
 		            <i class="fa fa-info-circle black" data-toggle="tooltip" data-html="true" data-placement="top" 
 						th:title="|Created on <span class='date'>${space.creationDate}</span> by ${space.createdBy}|"></i>
 		            <a th:href="@{'/staff/space/'+${space?.id}+'/edit'}"><span class="icon-edit"></span></a>
-		        </h2>
+		            <a th:href="@{'/exhibit/space/'+${space?.id}}" data-toggle="tooltip" title="Link to the public space"><span class="icon-link"></span></a>
+		            </h2>
 		        <p>[[${space.description}]]</p>
 		        <div class="flex-spacing">
 		        	<div class="dropdown">

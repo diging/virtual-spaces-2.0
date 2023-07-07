@@ -144,6 +144,16 @@
                             class="list-group-item list-group-item-action">[[${choice.sequence.name}]]</a>
                     </div>
                 </div>
+                <div style="align-items: center" class="list-group" th:id="${contents.id}" th:if="${#strings.equals(contents['class'].simpleName,'VideoBlock')}">
+                  <br/>[[${contents.video.title}]]
+                    <iframe th:id="${contents.id}" width="800" height="530" th:src="${contents.video.url}" th:if="${contents.video.url}" frameborder="0"
+                        allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen ></iframe>
+                     <video width="800" height="530" th:if="${contents.video.url == null}" controls>
+						  <source th:src="@{'/api/video/'+${contents.video.id}}" />
+						</video>
+						 <br>
+               </div>
             </div>
         </div>
       </div>
