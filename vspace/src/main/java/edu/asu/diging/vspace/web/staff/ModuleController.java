@@ -18,7 +18,7 @@ public class ModuleController {
     private IModuleManager moduleManager;
 
     @Autowired
-    private IModuleLinkManager moduleLink;
+    private IModuleLinkManager moduleLinkManager;
 
     @RequestMapping(STAFF_MODULE_PATH+"{id}")
     public String showModule(@PathVariable String id, Model model) {
@@ -27,7 +27,7 @@ public class ModuleController {
         model.addAttribute("slides", moduleManager.getModuleSlides(id));
         model.addAttribute("sequences", moduleManager.getModuleSequences(id));
         model.addAttribute("moduleStatus", module.getModuleStatus());
-        model.addAttribute("spacesList", moduleLink.findSpaceListFromModuleId(id));
+        model.addAttribute("spacesList", moduleLinkManager.findSpaceListFromModuleId(id));
         return "staff/modules/module";
     }
 }
