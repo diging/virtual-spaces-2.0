@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.ImageCategory;
+import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
@@ -32,7 +33,7 @@ public class ImagesSearchFullApiController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
   
     @RequestMapping("/staff/images/search/full/{page}")
-	public String imageSeacrhDescription(@PathVariable(required = false) String page,
+	public String imageSearchDescription(@PathVariable(required = false) String page,
 			@RequestParam(value = "searchText", required = false) String searchTerm, Model model,
 			RedirectAttributes attributes) {
     	int pageNo;
@@ -57,7 +58,8 @@ public class ImagesSearchFullApiController {
         model.addAttribute("currentPageNumber", pageNo);
         model.addAttribute("totalImageCount", imageService.getTotalImageCount(category));
     	
-        List<IVSImage> imageResults = imageService.getImagesForPagination(pageNo, category, searchTerm);
+        List<VSImage> imageResults = imageService.getPaginatedImagesByCategoryAndSearchTerm(pageNo, category, searchTerm);
+        
         Map<String, List<ISpace>> imageToSpaces = new HashMap<String, List<ISpace>>();
         for (IVSImage image : imageResults) {
             List<ISpace> spaces = spaceManager.getSpacesWithImageId(image.getId());

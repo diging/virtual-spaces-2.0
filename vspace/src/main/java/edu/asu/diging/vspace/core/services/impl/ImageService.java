@@ -250,26 +250,22 @@ public class ImageService implements IImageService {
     }
     
     /**
-     * Method to return the requested images
+     * Retrieves a list of IVSImages for pagination based on the provided parameters.
      * 
      * @param pageNo.    if pageNo<1, 1st page is returned, if pageNo>total
      *                   pages,last page is returned
      * @param searchTerm - This is the search string which is being searched.
-     * @param images     - This is the result list of search images.
+     * @param category - The category of the images to filter by.
      * @return list of images in the requested pageNo and requested order.
      */
     @Override
-    public List<IVSImage> getImagesForPagination(int pageNo, ImageCategory category, String searchTerm) {    	
+    public List<VSImage> getPaginatedImagesByCategoryAndSearchTerm(int pageNo, ImageCategory category, String searchTerm) {    	
     	Sort sortingParameters = getSortingParameters(searchTerm, searchTerm);
         pageNo = validatePageNumber(pageNo, category);
         Pageable sortByRequestedField = PageRequest.of(pageNo - 1, pageSize, sortingParameters);
         String likeSearchTerm = "%" + searchTerm + "%";
         Page<VSImage> result = imageRepo.findByFilenameLikeOrNameLikeOrDescriptionLike(sortByRequestedField,
             likeSearchTerm, likeSearchTerm, likeSearchTerm);
-        List<IVSImage> imageResults = new ArrayList<>();
-        if (result != null) {
-            result.getContent().forEach(i -> imageResults.add(i));
-        }
-        return imageResults;
+        return result.getContent();
     }
 }
