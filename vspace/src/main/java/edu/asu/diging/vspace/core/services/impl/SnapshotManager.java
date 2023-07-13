@@ -184,7 +184,12 @@ public class SnapshotManager implements ISnapshotManager {
     private void downloadModule(IModule module, ISpace space, String imagesFolderPath, String spaceFolderPath) {
         ISequence startSequence = module.getStartSequence();
         if(startSequence!= null) {
-            downloadSequences(startSequence, module, space, spaceFolderPath,imagesFolderPath );
+            try {
+                downloadSequences(startSequence, module, space, spaceFolderPath,imagesFolderPath );
+            } catch (FileStorageException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
     }
        
