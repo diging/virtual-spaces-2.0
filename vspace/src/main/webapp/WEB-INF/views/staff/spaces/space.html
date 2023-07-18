@@ -10,7 +10,13 @@
 <style type="text/css">
 
 .right-aligned {
-  margin-left: auto;
+  margin-left: 15px;
+}
+
+.inline-spacing {
+  display: flex;
+  align-items: center;
+  margin: 40px 0;
 }
 
 </style>
@@ -1785,7 +1791,7 @@ $(function(){
 		            <a th:href="@{'/exhibit/space/'+${space?.id}}" data-toggle="tooltip" title="Link to the public space"><span class="icon-link"></span></a>
 		            </h2>
 		        <p>[[${space.description}]]</p>
-		        <div class="flex-spacing">
+		        <div class="inline-spacing">
 		        	<div class="dropdown">
 					  <button class="btn form-control btn-sm dropdown-toggle" type="button" id="incominglinks" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					    Incoming space links
@@ -1799,7 +1805,7 @@ $(function(){
 			            </div>
 					  </div>
 					</div>
-					&nbsp;
+					
 					<div class="dropdown right-aligned">
 					  <button class="btn form-control btn-sm dropdown-toggle" type="button" id="outgoinglinks" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					    Outgoing space links
