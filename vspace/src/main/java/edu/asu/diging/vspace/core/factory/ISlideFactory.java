@@ -14,7 +14,6 @@ import edu.asu.diging.vspace.web.staff.forms.SlideForm;
 public interface ISlideFactory {
 
     /*
-    *
     * Creates a slide based on the specified module, form, and type.
     * @param module The module associated with the slide.
     * @param form The form of the slide.
