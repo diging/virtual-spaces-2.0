@@ -8,7 +8,7 @@ import edu.asu.diging.vspace.web.staff.forms.SlideForm;
 /*
 * (non-Javadoc)
 * The {@code ISlideFactory} interface defines a factory for creating a list of slides.
-* It provides a single method for creating a object of {@link ISlide} from given java.lang.String.
+* It provides a single method for creating a object of {@link ISlide} from given specified parameters.
 * 
 */
 public interface ISlideFactory {
@@ -18,7 +18,7 @@ public interface ISlideFactory {
     * @param module The module associated with the slide.
     * @param form The form of the slide.
     * @param type The type of the slide.
-    * @return The created slide.
+    * @return edu.asu.diging.vspace.core.model.ISlide object with the specified parameters
     */
     ISlide createSlide(IModule module, SlideForm form, SlideType type);
 
