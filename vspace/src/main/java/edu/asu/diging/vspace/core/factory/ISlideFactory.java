@@ -7,7 +7,7 @@ import edu.asu.diging.vspace.web.staff.forms.SlideForm;
 
 /*
 * 
-* The {@code ISlideFactory} interface defines a factory for creating a list of slides.
+* The {@code ISlideFactory} interface defines a factory for creating a instances of ISlide.
 * It provides a single method for creating a instance of edu.asu.diging.vspace.core.model.ISlide interface.
 * 
 */
