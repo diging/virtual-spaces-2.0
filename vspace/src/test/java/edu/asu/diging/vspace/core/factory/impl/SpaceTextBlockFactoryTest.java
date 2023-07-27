@@ -32,7 +32,7 @@ public class SpaceTextBlockFactoryTest {
         String text = "Test SpaceTextBlock";
         ISpaceTextBlock spaceTextBlock  = spaceTextBlockFactory.createSpaceTextBlock(text, space);
         
-        assertEquals(text, spaceTextBlock.getName());
+        assertEquals(text, spaceTextBlock.getText());
         assertEquals(space, spaceTextBlock.getSpace());
     }
  
