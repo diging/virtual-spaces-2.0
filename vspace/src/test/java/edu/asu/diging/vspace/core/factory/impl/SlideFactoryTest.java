@@ -46,7 +46,7 @@ public class SlideFactoryTest {
         IModule module = moduleManager.getModule(moduleId);
         SlideType type = form.getType().isEmpty() ? null : SlideType.valueOf(form.getType());
         
-        ISlide slide = slideFactory.createSlide(null, form, null);
+        ISlide slide = slideFactory.createSlide(module, form, type);
         assertEquals(name, slide.getName());
         assertEquals(description, slide.getDescription());
     }

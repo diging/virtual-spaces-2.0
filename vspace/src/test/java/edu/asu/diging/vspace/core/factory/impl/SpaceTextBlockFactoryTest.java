@@ -34,7 +34,5 @@ public class SpaceTextBlockFactoryTest {
         
         assertEquals(text, spaceTextBlock.getText());
         assertEquals(space, spaceTextBlock.getSpace());
-    }
- 
-        
+    }       
 }
