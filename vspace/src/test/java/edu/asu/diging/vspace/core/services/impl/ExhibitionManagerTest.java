@@ -61,7 +61,6 @@ public class ExhibitionManagerTest {
         Exhibition exhibition = new Exhibition();
         exhibition.setId(id);
         Optional<Exhibition> exhibitionOptional = Optional.of(exhibition);
-        ;
         when(exhibitRepo.findById(id)).thenReturn(exhibitionOptional);
 
         IExhibition exhibitionTest = serviceToTest.getExhibitionById(id);
@@ -176,7 +175,6 @@ public class ExhibitionManagerTest {
         exhibition.getLanguages().forEach(language -> {
             if (language.getCode().equals("en")) {
                 assertTrue(language.isDefault());
-
             }
         });
 
@@ -189,7 +187,6 @@ public class ExhibitionManagerTest {
             }
             if (language.getCode().equals("aa")) {
                 assertTrue(language.isDefault());
-
             }
         });
 
