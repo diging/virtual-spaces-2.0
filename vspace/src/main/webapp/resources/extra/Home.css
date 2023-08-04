@@ -115,6 +115,7 @@
 }
 
 .spaceImage {
+	background-image: url('/resources/images/cannot-load-photo.png');
 	height: 100px;
     overflow: hidden;
     background-size: cover;
