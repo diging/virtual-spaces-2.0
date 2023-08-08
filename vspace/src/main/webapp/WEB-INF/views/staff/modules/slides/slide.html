@@ -45,6 +45,35 @@
             var defaultValue;
             var addVideoClk=0;
             var editVideoClk=0;
+            $(window).on("load", function() {
+                $( window ).resize(function() {
+                    drawLinks();
+                });
+                drawLinks();
+            });
+            //store where a user clicked on an image
+            var storeX;
+            var storeY;
+            var selectedModuleLinkId;
+            var selectedSpaceLinkId;
+            var selectedExternalLinkId;
+            var selectedTextBlockId;
+            const displaceUnpublishedOnX = 25;
+            const displaceUnpublishedOnY = 13;
+            const displaceUnpublishedOnXModal = 50;
+            const displaceUnpublishedOnYModal = 13;
+            const displaceLableOnX = 10;
+            const displaceLableOnY = 35;
+            var modalBgImageHeight;
+            var modalBgImageWidth;
+            
+            var externalLinkIconReader = new FileReader();
+            var externalLinkIcon;
+            externalLinkIconReader.onload = function(e) {
+                externalLinkIcon = e.target.result;
+                showExternalLinks(createExternalLinkInfo());
+            }
+
             
             $(function () {
             	  $('[data-toggle="tooltip"]').tooltip()
@@ -530,6 +559,154 @@
 		            	}
 	            	}
             	});
+            	
+            	function showExternalLinkEdit(externalLink, show, posX, posY) {
+            	    externalLink["x"]=storeX;
+            	    externalLink["y"]=storeY;
+            	    var selectedLinkClass = '#externalModallinkId-'+selectedExternalLinkId;
+            	    var selectedLabelClass = '.label-'+selectedExternalLinkId;
+            	    updateLinkProperties(selectedLinkClass,selectedLabelClass,externalLink["rotation"],posX,posY,externalLink["externalLinkLabel"]);
+            	}
+
+            	function updateLinkProperties(selectedLinkClass,selectedLabelClass,rotation,x,y,linkLabel, show){
+            	    var posX, posY;
+            	    if(show) {
+            	        posX = $("#main-bgImage").position().left;
+            	        posY = $("#main-bgImage").position().top;
+            	    }
+            	    else{
+            	        posX = $("#bgImage").position().left;
+            	        posY = 0
+            	    }
+            	    $(selectedLinkClass).css({ 'transform': 'rotate(' + rotation + 'deg)'});
+            	    $(selectedLinkClass).css({ 'position': 'absolute'});
+            	    $(selectedLinkClass).css({ 'left': x + posX});
+            	    $(selectedLinkClass).css({ 'top': y + posY});
+            	    $(selectedLabelClass+' span').remove();
+            	    $(selectedLabelClass).append('<span class = "tooltiptext" style="fill: grey;">' + linkLabel + '</span>');
+            	    feather.replace();    
+            	}
+
+            	function hideLinkInfoTabs(){
+            	    $("#editExternalLinkInfo").hide();
+            	    $("#editSpaceLinkInfo").hide();
+            	    $("#editModuleLinkInfo").hide();
+            	    $("#editTextBlockInfo").hide();
+            	    $("#createExternalLinkAlert").hide();
+            	    $("#createSpaceLinkAlert").hide();
+            	    $("#createModuleLinkAlert").hide();
+            	    $("#errorMsg").text("");
+            	    $('#errorAlert').hide();
+            	}
+
+            	function showExternalLinks(externalLink, show, x, y) {
+            	    $("#ext_label").remove();
+            	    $("#link").remove();
+            	    $("#undefined").remove();
+            	    var posX = $("#bgImage").position().left;
+            	    var posY = $("#bgImage").position().top;
+            	    var ext_label = $("<p id='ext_label' class='tooltiptext'></p>");
+            	    ext_label.text(externalLink["externalLinkLabel"]);
+
+            	    var link;
+            	    if(externalLink["type"] == "IMAGE" && externalLinkIcon) {
+            	        link = $('<div id="link" data-link-id="' + externalLink["id"] + '"><img src="' + externalLinkIcon + '"></div>');
+            	    } else {
+            	        $(ext_label).css({
+            	            'position': 'absolute',
+            	            'font-size': "12px",
+            	            'transform': 'rotate(0deg)',
+            	            'color': 'blue'
+            	        });
+            	        link = $('<span id="' + externalLink["id"] +'" data-link-id="' + externalLink["id"] + '"  class="externalLink-' + externalLink["id"] + '"><div id="link" class="Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-ext-link Icon_awesome_info_staff_e"></span></div></span>');
+            	    }
+            	    
+            	    if(show) {
+            	        link.css('top', externalLink["y"] + posY);
+            	    } else {
+            	    	link.css('top', externalLink["y"]);
+            	    }
+
+            	    link.css('position', 'absolute');
+            	    link.css('left', externalLink["x"] + posX);
+            	    link.css('color', 'blue');
+            	    link.css('font-size', "12px");
+
+            	    if (externalLink["id"]) {
+            			link.attr("data-link-id", externalLink["id"]);
+            			link.css('cursor', 'pointer');
+            			link.attr('href', externalLink["url"]);
+            			link.click(function(e) {
+            				makeExternalLinksEditable(externalLink["externalLinkLabel"], externalLink["id"], externalLink["externalLinkURL"], externalLink["x"], externalLink["y"], externalLink["displayId"], externalLink["type"],externalLink["howToOpen"],externalLink["tabOpen"]);
+            			});
+            			
+            			ext_label.attr("data-link-id", externalLink["id"]);
+            			ext_label.css('cursor', 'pointer');
+            			ext_label.attr("class", "label-"+externalLink["id"]);
+            			ext_label.click(function(e) {
+            				makeExternalLinksEditable(externalLink["externalLinkLabel"], externalLink["id"], externalLink["externalLinkURL"], externalLink["x"], externalLink["y"], externalLink["displayId"], externalLink["type"],externalLink["howToOpen"],externalLink["tabOpen"]);
+            			});
+            	    }
+
+            	    $("#space").append(link);
+            	    $("#link").append(ext_label);
+            	    $("#external-link").remove();
+
+            	}
+            	
+            	function editExternalLinkInfo() {
+            		var info = {};
+            		info["x"] = storeX;
+            		info["y"] = storeY;
+            		info["tabOpen"] = $("#extTabOpenEdit").val();
+            		info["type"] = $("#extTypeEdit").val();
+            		info["externalLinkLabel"] = $("#externalLinkLabelEdit").val();
+            		info["externalLinkURL"] = $("#externalLinkURLEdit").val();
+            		return info;
+            	}
+            	
+            	function makeExternalLinksEditable(linkName, linkId, externalLinkURL, posXEdit, posYEdit, displayLinkId, linkType,tabOpenType) {
+            	    selectedExternalLinkId=linkId;
+            	    storeX=posXEdit;
+            	    storeY=posYEdit;
+            	    $("#externalLinkInfoLabel").text(linkName);
+            	    $("#externalLinkId").val(linkId);
+            	    $("#externalLinkDisplayId").val(displayLinkId);
+            	    $("#externalLinkInfoLabelEdit").text(linkName);
+            	    $("#externalLinkLabelEdit").val(linkName);
+            	    $("#externalLinkIdValueEdit").val(linkId);
+            	    $("#externalLinkURLEdit").val(externalLinkURL);
+            	    $('#extTypeEdit option[value="'+linkType+'"]').prop("selected", true);
+            	    $('#extTabOpenEdit option[value="'+tabOpenType+'"]').prop("selected",true);
+            	    
+            	    resetHighlighting();
+
+            	    $('[data-link-id="' + linkId + '"]').css("color", "#c1bb88");
+            	    $('div[data-link-id="' + linkId + '"]').removeClass("alert-primary");
+            	    $('div[data-link-id="' + linkId + '"]').addClass("alert-warning");
+            	    $('img[data-link-id="' + linkId + '"]').css("border", "solid 1px #c1bb88");
+
+            	    $("#bgImage").on("click", function(e){
+            	        e.preventDefault();
+            	        var posX = $(this).position().left;
+            	        var posY = $(this).position().top;    
+            	        storeX = e.pageX - $(this).offset().left;
+            	        storeY = e.pageY - $(this).offset().top + 25;
+            	        showExternalLinkEdit(editExternalLinkInfo(), false, storeX,storeY);
+            	    });
+            	    hideLinkInfoTabs();
+            	    displayForms("#editExternalLinkInfo");
+            	}
+            	
+            	function displayForms(formToShow){
+            	    drawLinks();
+            	    $("#space").css("display", "-webkit-box");
+            	    $(formToShow).css("display", "flex");
+            	    modalBgImageHeight = parseInt($("#bgImage").css("height"));
+            	    modalBgImageWidth = parseInt($("#bgImage").css("width"));
+            	}
+
+
 
             	function updateContentOrder(jsonObj,token){
 	            		$.ajax({
@@ -1650,6 +1827,8 @@
                     </div>
                 </div>
             </div>
+            
+            
             <div id="addChoiceAlert" class="modal" tabindex="-1"
                 role="dialog">
                 <div class="modal-dialog" role="document">
