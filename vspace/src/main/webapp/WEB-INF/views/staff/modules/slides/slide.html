@@ -1768,6 +1768,86 @@
                     </div>
                 </div>
             </div>
+            
+            <div id="createExternalLinkAlert" class="custom_form_style" style="z-index: 1;">
+	        <div class="divider"></div>
+	        <form id="createExternalLinkForm" style="z-index: 1;">
+	            <div role="alert" style="margin-top: 30px;">
+                    <div class = "saveLoader" style="font-size: 30px; display: none; text-align: center;">
+                        <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+                    </div>
+	            	<div class="row">	
+	            		<div class="col">
+	            			<h5 class="alert-heading">Create new External Link</h5>
+			                <p>Please click on the image where you
+			                   want to place the new external link. Then click
+			                   "Create External Link".</p>
+	            		</div>
+	                </div>
+	
+	                <input type="hidden" name="x" id="externalLinkX" /> 
+	                <input type="hidden" name="y" id="externalLinkY" /> 
+	                
+	                <div class="row">
+	                	<div class="col-sm-4">
+	                		<label>Label</label>
+	                	</div>
+	                	<div class="col-sm-8">
+	                		<input class="form-control-sm extlink-target" type="text" style="width: inherit; background: var(--base-grey)"
+	                			 name="externalLinkLabel" id="externalLinkLabel">	
+	                	</div>
+	                </div>
+	                 
+	                <div class="row">
+	                	<div class="col-sm-4">
+	                		<label>External Link</label>
+	                	</div>
+	                	<div class="col-sm-8">
+	                		<input class="form-control-sm extlink-target" type="text" style="width: inherit; background: var(--base-grey)"
+	                    		size="15" name="url" id="externalLink">	
+	                	</div>
+	                </div>               
+					<div class="row">
+	                    <div class="col-sm-4">
+	                        <label>How To Open:</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <select id="extTabOpen" name="tabOpen" class="form-control-sm extlink-target" style="width: inherit; background: var(--base-grey)">
+	                            <option th:selected>Choose...</option>
+	                            <option th:value="NEWWINDOW">New Window</option>
+	                            <option th:value="SAMEWINDOW">Same Window</option>
+	                        </select>
+	                    </div>
+	                </div>
+	                <div class="row">
+	                    <div class="col-sm-4">
+	                        <label>Type</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <select id="extType" name="type" class="form-control-sm extlink-target" style="width: inherit; background: var(--base-grey)">
+	                            <option th:selected>Choose...</option>
+	                            <option th:value="IMAGE">Image</option>
+	                            <option th:value="ARROW">Link</option>
+	                        </select>
+	                    </div>
+	                </div>
+	
+	                <div class="row">
+	                    <div class="col-sm-4">
+	                        <label>Image</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <input type="file" class="form-control-sm" name="externalLinkImage" id="externalLinkImage" style="width: inherit">
+	                    </div>
+	                </div>
+	                <p class="mt-5 text-center">
+	                    <button type="reset" class="btn btn-light cancelExternalLinkBtn btn-sm">Cancel</button>
+	                    <button id="createExternalLinkBtn" type="submit" class="btn primary-btn btn-sm">Create External Link</button>
+	                </p>
+	            </div>
+	        </form>
+		</div>
+        
             <div id="addVideoAlert" class="modal" tabindex="-1" role="dialog" aria-hidden="true">
 				<div class="modal-dialog" role="document" draggable="true">
 					<div class="modal-content">
