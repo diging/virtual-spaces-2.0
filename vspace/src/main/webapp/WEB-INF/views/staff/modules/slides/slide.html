@@ -435,7 +435,151 @@
 					}
 				});
 			}
-            
+            function drawLinks(){
+        	    $(".Info_cz_Class").remove();
+        	    $(".imageLink").remove();
+        	    $(".alertLink").remove();
+        	    $(".ellipse_class").remove();
+        	    $(".unpublishedSpaceClass").remove();
+        	    $(".textBlockClass").remove();
+        	    $(".deletedSpaceClass").remove();
+        	    
+        	    $.ajax({
+        	        type: "GET",
+        	        url: "[(@{'/staff/space/'+${space?.id}+'/links'})]",
+        	        cache       : false,
+        	        contentType : false,
+        	        processData : false,
+        	        beforeSend: function () {
+        	            $("#loader").show();
+        	            },
+        	       	complete: function () {
+        	            $("#loader").hide();
+        	            },
+        	        success: function(data) {
+        	            var spaceLinks = data['spaceLinks'];
+        	            var externalLinks = data['externalLinks'];
+        	            var moduleLinks = data['moduleLinks'];
+        	            var textBlocks = data['textBlocks'];
+        	            
+        	            var posXModal = $("#bgImage").position().left;
+        	            var posYModal = $("#bgImage").position().top;
+        	            var posX = $("#main-bgImage").position().left;
+        	            var posY = $("#main-bgImage").position().top;
+        	            
+        	            spaceLinks.forEach(function(link,index){
+        	                var spanId= "spacelinkModalId-";
+        	                var divId = "#space"
+        	                generateSpaceLinks(link,spanId,divId,true, posX, posY, posXModal, posYModal);
+        	            })
+        	            spaceLinks.forEach(function(link,index){
+        	                var spanId= "spacelinkId-";
+        	                var divId = "#main-space";
+        	                generateSpaceLinks(link,spanId,divId,false, posX, posY, posXModal, posYModal);
+        	            })
+        	            
+        	            moduleLinks.forEach(function(link,index){
+        	                var spanId= "moduleModallinkId-";
+        	                var divId = "#space";
+        	                generateModuleLinks(link,spanId,divId,true, posX, posY, posXModal, posYModal);
+        	            })
+        	            moduleLinks.forEach(function(link,index){
+        	                var spanId= "modulelinkId-";
+        	                var divId = "#main-space";
+        	                generateModuleLinks(link,spanId,divId,false, posX, posY, posXModal, posYModal);
+        	            })
+        	            
+        	            externalLinks.forEach(function(link,index){
+        	                var spanId= "externalModallinkId-";
+        	                var divId = "#space";
+        	                generateExternalLinks(link,spanId,divId,true, posX, posY, posXModal, posYModal);
+        	            })
+        	            
+        	            externalLinks.forEach(function(link,index){
+        	                var spanId= "externallinkId-";
+        	                var divId = "#main-space";
+        	                generateExternalLinks(link,spanId,divId,false, posX, posY, posXModal, posYModal);
+        	            })
+        	            
+        	            textBlocks.forEach(function(block,index){
+        	                var spanId= "textModalBlockId-";
+        	                var divId = "#space";
+        	                var imageHeight = modalBgImageHeight;
+        	                var imageWidth = modalBgImageWidth;
+        	                generateTextBlock(block,spanId,divId,true, posX, posY, posXModal, posYModal, imageHeight, imageWidth);
+        	            })
+        	            
+        	            textBlocks.forEach(function(block,index){
+        	                var spanId= "textBlockId-";
+        	                var divId = "#main-space";
+        	                var imageHeight = parseInt($("#main-bgImage").css("height"));
+        	                var imageWidth = parseInt($("#main-bgImage").css("width"));
+        	                generateTextBlock(block,spanId,divId,false, posX, posY, posXModal, posYModal, imageHeight, imageWidth);
+        	            })
+        	        }
+        	    });
+        	}
+        	
+        	function displayForms(formToShow){
+        	    drawLinks();
+        	    $("#space").css("display", "-webkit-box");
+        	    $(formToShow).css("display", "flex");
+        	    modalBgImageHeight = parseInt($("#bgImage").css("height"));
+        	    modalBgImageWidth = parseInt($("#bgImage").css("width"));
+        	}
+
+
+
+        	function updateContentOrder(jsonObj,token){
+            		$.ajax({
+            		 // ------------- adjusting content order of blocks if their position changed after dragging ----------
+	            		url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/blocks/order/update'})]",
+	            		type: 'POST',
+	            		beforeSend: function(){
+		            		$(".loader").remove();
+		            		$('#contOrdUpdStatus').empty();
+		            		$('#contOrdUpdStatus').append($('<div class="loader" style="font-size: 30px;display: none; text-align: center;"><i class="icon-spinner" aria-hidden="true">Saving...</i></div>'));
+		            		$(".loader").show();
+	            		},
+	            		complete: function(){
+		            		$(".loader").hide();
+		            		timeout = null;
+	            		},
+	            		cache       : false,
+	            		contentType: 'application/json; charset=utf-8',
+	            		processData :false,
+	            		headers:{
+	            			'X-CSRF-Token':token
+	            		},
+	            		data: JSON.stringify(jsonObj),
+	            		success: function(data) {
+		            		$(".save").remove();
+		            		for(let i=0;i<data.length;i++) {
+			            		$('#'+data[i].id).attr('data-position',data[i].contentOrder);
+		            		} 
+		            		var successDiv = $('<div style="width: 100%;height: 50px;" class="save alert alert-success alert-dismissible fade show" role="alert">');
+		            		successDiv.append('<p>Successfully Saved.</p>');
+		            		successDiv.append('<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
+		            		successDiv.append('</div>');
+		            		$('#contOrdUpdStatus').empty();
+		            		$('#contOrdUpdStatus').append(successDiv);
+	            		},
+	            		error: function(data) {
+		            		$(".errInSave").remove();
+		            		var errorDiv = $('<div style="width: 100%;height: 50px;" class="errInSave alert alert-danger alert-dismissible fade show" role="alert">');
+		            		errorDiv.append('<p>We are sorry but something went wrong. Please try again later.</p>');
+		            		errorDiv.append('<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
+		            		errorDiv.append('</div>');
+		            		$('#contOrdUpdStatus').empty();
+		            		$('#contOrdUpdStatus').append(errorDiv);
+	            		}
+            		});
+        		}
+            [# th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}"]
+        		$('#addChoice').show();
+        		$('#choiceSpace').show();
+        	[/]
+        	
             function guidedTour() {
             	const tour = new Shepherd.Tour({
             		  defaultStepOptions: {
@@ -718,66 +862,6 @@
             			}
             		}
             	}
-            	
-            	function displayForms(formToShow){
-            	    drawLinks();
-            	    $("#space").css("display", "-webkit-box");
-            	    $(formToShow).css("display", "flex");
-            	    modalBgImageHeight = parseInt($("#bgImage").css("height"));
-            	    modalBgImageWidth = parseInt($("#bgImage").css("width"));
-            	}
-
-
-
-            	function updateContentOrder(jsonObj,token){
-	            		$.ajax({
-	            		 // ------------- adjusting content order of blocks if their position changed after dragging ----------
-		            		url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/blocks/order/update'})]",
-		            		type: 'POST',
-		            		beforeSend: function(){
-			            		$(".loader").remove();
-			            		$('#contOrdUpdStatus').empty();
-			            		$('#contOrdUpdStatus').append($('<div class="loader" style="font-size: 30px;display: none; text-align: center;"><i class="icon-spinner" aria-hidden="true">Saving...</i></div>'));
-			            		$(".loader").show();
-		            		},
-		            		complete: function(){
-			            		$(".loader").hide();
-			            		timeout = null;
-		            		},
-		            		cache       : false,
-		            		contentType: 'application/json; charset=utf-8',
-		            		processData :false,
-		            		headers:{
-		            			'X-CSRF-Token':token
-		            		},
-		            		data: JSON.stringify(jsonObj),
-		            		success: function(data) {
-			            		$(".save").remove();
-			            		for(let i=0;i<data.length;i++) {
-				            		$('#'+data[i].id).attr('data-position',data[i].contentOrder);
-			            		} 
-			            		var successDiv = $('<div style="width: 100%;height: 50px;" class="save alert alert-success alert-dismissible fade show" role="alert">');
-			            		successDiv.append('<p>Successfully Saved.</p>');
-			            		successDiv.append('<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
-			            		successDiv.append('</div>');
-			            		$('#contOrdUpdStatus').empty();
-			            		$('#contOrdUpdStatus').append(successDiv);
-		            		},
-		            		error: function(data) {
-			            		$(".errInSave").remove();
-			            		var errorDiv = $('<div style="width: 100%;height: 50px;" class="errInSave alert alert-danger alert-dismissible fade show" role="alert">');
-			            		errorDiv.append('<p>We are sorry but something went wrong. Please try again later.</p>');
-			            		errorDiv.append('<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
-			            		errorDiv.append('</div>');
-			            		$('#contOrdUpdStatus').empty();
-			            		$('#contOrdUpdStatus').append(errorDiv);
-		            		}
-	            		});
-            		}
-                [# th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}"]
-            		$('#addChoice').show();
-            		$('#choiceSpace').show();
-            	[/]
             	
             
                 //-------- edit contentblock description --------
