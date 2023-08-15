@@ -10,6 +10,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import edu.asu.diging.vspace.core.model.IExternalLink;
+import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.ISpace;
 
 @Entity
@@ -25,6 +26,10 @@ public class ExternalLink extends VSpaceElement implements IExternalLink {
     @ManyToOne(targetEntity=Space.class)
     @JoinColumn(name="space_id", nullable=false)
     private ISpace space;
+    
+    @ManyToOne(targetEntity=Slide.class)
+    @JoinColumn(name="space_id", nullable=false)
+    private ISlide slide;
 
     private String externalLink;
 
@@ -45,8 +50,21 @@ public class ExternalLink extends VSpaceElement implements IExternalLink {
     }
 
     /* (non-Javadoc)
-     * @see edu.asu.diging.vspace.core.model.impl.IExternalLink#getSpace()
+     * @see edu.asu.diging.vspace.core.model.impl.IExternalLink#getSlide()
      */
+    @Override
+    public ISlide getSlide() {
+        return slide;
+    }
+
+    /* (non-Javadoc)
+     * @see edu.asu.diging.vspace.core.model.impl.IExternalLink#setSlide(edu.asu.diging.vspace.core.model.ISlide)
+     */
+    @Override
+    public void setSlide(ISlide slide) {
+        this.slide = slide;
+    }
+    
     @Override
     public ISpace getSpace() {
         return space;
