@@ -28,7 +28,7 @@ public class ExternalLink extends VSpaceElement implements IExternalLink {
     private ISpace space;
     
     @ManyToOne(targetEntity=Slide.class)
-    @JoinColumn(name="space_id", nullable=false)
+    @JoinColumn(name="slide_id", nullable=false)
     private ISlide slide;
 
     private String externalLink;

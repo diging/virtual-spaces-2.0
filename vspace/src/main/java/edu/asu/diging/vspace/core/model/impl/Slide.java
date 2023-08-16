@@ -19,6 +19,7 @@ import org.hibernate.annotations.Parameter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import edu.asu.diging.vspace.core.model.IContentBlock;
+import edu.asu.diging.vspace.core.model.IExternalLink;
 import edu.asu.diging.vspace.core.model.IImageBlock;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISequence;
@@ -35,6 +36,9 @@ public class Slide extends VSpaceElement implements ISlide {
 
     @ManyToOne(targetEntity = Module.class)
     private IModule module;
+    
+    @OneToMany(mappedBy = "slide", targetEntity=ExternalLink.class)
+    private List<IExternalLink> externalLinks;
 
     // -------- @JsonIgnore used as this entity will be returned in a controller
     @JsonIgnore
@@ -85,6 +89,23 @@ public class Slide extends VSpaceElement implements ISlide {
     public void setModule(IModule module) {
         this.module = module;
     }
+    
+    /* (non-Javadoc)
+     * @see edu.asu.diging.vspace.core.model.impl.ISlide#getExternalLinks()
+     */
+    @Override
+    public List<IExternalLink> getExternalLinks() {
+        return externalLinks;
+    }
+
+    /* (non-Javadoc)
+     * @see edu.asu.diging.vspace.core.model.impl.ISplide#setExternalLinks(java.util.List)
+     */
+    @Override
+    public void setExternalLinks(List<IExternalLink> externalLinks) {
+        this.externalLinks = externalLinks;
+    }
+    
 
     /*
      * (non-Javadoc)
