@@ -2,8 +2,6 @@ package edu.asu.diging.vspace.core.model;
 
 import java.util.List;
 
-import edu.asu.diging.vspace.core.model.impl.SpacesCustomOrder;
-
 public interface IExhibition extends IVSpaceElement {
 
     /*
@@ -25,19 +23,19 @@ public interface IExhibition extends IVSpaceElement {
     void setTitle(String title);
 
     String getTitle();
-    
-    ExhibitionSpaceOrderMode getSpaceOrderMode();
-    
-    void setSpaceOrderMode(ExhibitionSpaceOrderMode exhibitionSpaceOrderMode);
-
-    SpacesCustomOrder getSpacesCustomOrder();
-
-    void setSpacesCustomOrder(SpacesCustomOrder spacesCustomOrder);
 
     boolean isAboutPageConfigured();
 
     void setAboutPageConfigured(boolean aboutPageConfigured);
 
     List<IExhibitionLanguage> getLanguages();
+    
+    ExhibitionModes getMode();
+    
+    void setMode(ExhibitionModes mode);
+    
+    String getPreviewId();
+    
+    void setPreviewId(String previewId);
 
 }

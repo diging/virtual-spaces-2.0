@@ -31,6 +31,7 @@
     overflow-x: hidden;
     transition: 0.5s;
     padding-top: 60px;
+
 }
 
 .sidenav a {
@@ -40,6 +41,7 @@
     color: #818181;
     display: block;
     transition: 0.3s;
+  
 }
 
 .sidenav .closebtn {
@@ -53,6 +55,7 @@
 @media screen and (max-height: 450px) {
     .sidenav {
         padding-top: 15px;
+  
     }
     .sidenav a {
         font-size: 18px;
@@ -89,6 +92,9 @@
     visibility: visible;
 }
 
+
+
+
 .exitfullscreen:hover .tooltiptextForExitFullscreen {
     visibility: visible;
 }
@@ -108,6 +114,7 @@
 }
 
 
+
 .tooltiptextForExitFullscreen {
     visibility: hidden;
     width: 120px;
@@ -125,6 +132,9 @@
 
 .barPosition {
     top: 25px;
+}
+#previewNavBarItem {
+	display: inline-flex;
 }
 
 @media only screen and (max-width: 800px) { /* For mobile phones: */
@@ -164,6 +174,7 @@
     /* top layer */
     z-index: 9999;
     transition: all 0.5s;
+
 }
 
 #sidebar.active {
@@ -270,9 +281,12 @@
 		let maxWidth='(max-width: 1200px)';
 		function openNav(){
 		  $("#mySidenav").css("width", "250px");
+		  $("#mySidenav").css("overflow", "visible");
+		  
 		}
         function closeNav(){
         	$("#mySidenav").css("width", "0");
+        	 $("#mySidenav").css("overflow", "hidden");
 		}
 		function openModuleNav(){
 		    if (window.matchMedia(maxWidth).matches){
@@ -508,6 +522,8 @@
 		</div>
 		
 		</div>
+
+     
 		<div class="imgResizeDiv">
                 <button class="btn circle-btn" id="toggleBtn" style="width: 35px; height: 35px; margin-left: 10px; margin-top: 5px; padding: 3px;"
                     onclick="toggleImgSize(1)">
@@ -526,6 +542,7 @@
                 </button>
             </div>
             
+           
         <div class="container-fluid"
             th:style="${showAlert} ? 'display:none' : 'display:block'">
             <div class="modalDown alert alert-warning center col-md-12"
@@ -537,21 +554,24 @@
                     th:unless="${exhibitionConfig.customMessage != '' && exhibitionConfig.mode == 'OFFLINE'}">[[${exhibitionConfig.mode?.value}]]</h6>
             </div>
             <div id="Module_1" class="Home_Class" style="margin: -45px 0 60px auto;">
+             
                 <div  th:if="${isExhPreview} == null OR ${isExhPreview} == false" id="mySidenav" class="sidenav">
                     <a href="javascript:void(0)" class="closebtn"
                         onclick="closeNav()">&times;</a>
                     <ul th:each="space: ${publishedSpaces}">
                         <li><a class="dropdown-item"
-                            th:href="@{'/exhibit/space/'+${space?.id}}">[[${space.name}]]</a>
+                            th:href="@{'/exhibit/space/'+${space?.id}}">[[${space.name}]]</a> 
+                             
+                            
                         </li>
                     </ul>
                 </div>
-                  <div  th:if="${isExhPreview} == true" id="mySidenav" class="sidenav">
-                    <a href="javascript:void(0)" class="closebtn"
-                        onclick="closeNav()">&times;</a>
+              	   
+                <div  th:if="${isExhPreview} == true" id="mySidenav" class="sidenav">
+                  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
                     <ul th:each="space: ${publishedSpaces}">
-                        <li><a class="dropdown-item"
-                            th:href="@{'/preview/'+${previewId}+'/space/'+${space?.id}}">[[${space.name}]]</a>
+                        <li><a class="dropdown-item" id="previewNavBarItem" th:href="@{'/preview/'+${previewId}+'/space/'+${space?.id}}">[[${space.name}]]
+                            </a>
                         </li>
                     </ul>
                 </div>
