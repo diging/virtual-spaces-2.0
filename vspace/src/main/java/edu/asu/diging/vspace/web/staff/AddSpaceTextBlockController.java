@@ -33,7 +33,7 @@ public class AddSpaceTextBlockController {
     @RequestMapping(value = "/staff/space/{id}/textblock", method = RequestMethod.POST)
     public ResponseEntity<String> createSpaceTextBlock(@PathVariable("id") String id, @RequestParam("x") String x,
             @RequestParam("y") String y, @RequestParam("textContent") String text,
-            @RequestParam("height") String height, @RequestParam("width") String width)
+            @RequestParam("height") String height, @RequestParam("width") String width, @RequestParam("textColor") String textColor)
                     throws IOException{
 
         ISpace source = spaceManager.getSpace(id);
@@ -51,7 +51,7 @@ public class AddSpaceTextBlockController {
         ISpaceTextBlockDisplay display=null;
         try {
             display = spaceTextBlockManager.createTextBlock(id, new Float(x), new Float(y),
-                    text, new Float(height), new Float(width));
+                    text, new Float(height), new Float(width), textColor);
         } catch (SpaceDoesNotExistException e) {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode node = mapper.createObjectNode();

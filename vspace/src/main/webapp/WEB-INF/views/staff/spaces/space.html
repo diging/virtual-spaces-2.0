@@ -7,11 +7,15 @@
 <script src="//use.fontawesome.com/releases/v5.8.1/js/all.js"
     data-auto-replace-svg="nest"></script>
 <script th:src="@{'/resources/extra/space.js'}"></script>
-
+<script th:src="@{/assets/bootstrap-colorpicker/js/bootstrap-colorpicker.js}"></script>
 <script th:inline="javascript">
 //# sourceURL=script.js
 $(function () {
     $('[data-toggle="tooltip"]').tooltip()
+});
+
+$(function () {
+    $('#textColor').colorpicker();
 });
 
 $(window).on("load", function() {
@@ -2162,17 +2166,32 @@ $(function(){
                                 name="height" style="width: inherit;"><br>
                         </div>
                     </div>
-    
+            		<div class="row" style="height: 32%;">
+                        <div class="col-sm-4">
+                            <label>Text Color:</label>
+                        </div>
+                        <div class="col-sm-8" id="textColor">
+                        	<input type="text" class="form-control input-lg" />
+                        	<span class="input-group-append">
+                   				<span class="input-group-text colorpicker-input-addon"><i></i></span>
+                  			</span>
+<!--                             <textarea class="form-control-xs textContent"
+                                 name="textContent"
+                                id="textContentID" style="width: 140%; height: 400%;"></textarea> -->
+                                <br>
+                        </div>
+                    </div>
                     <div class="row" style="height: 32%;">
                         <div class="col-sm-4">
                             <label>Text:</label>
                         </div>
                         <div class="col-sm-8">
-                            <textarea class="form-control-xs textContent"
+                   		 <textarea class="form-control-xs textContent"
                                  name="textContent"
                                 id="textContentID" style="width: 140%; height: 400%;"></textarea><br>
                         </div>
                     </div>
+            
                     <div class="row">
                         <p class="mt-5 text-center" style="padding-top: 80%">
                             <button type="reset" class="btn btn-light btn-sm cancelAddTextBlockBtn">Cancel</button>
