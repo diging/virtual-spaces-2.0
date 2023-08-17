@@ -7,6 +7,9 @@
 <script src="//use.fontawesome.com/releases/v5.8.1/js/all.js"
     data-auto-replace-svg="nest"></script>
 <script th:src="@{'/resources/extra/space.js'}"></script>
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
 <script th:src="@{/assets/bootstrap-colorpicker/js/bootstrap-colorpicker.js}"></script>
 <script th:inline="javascript">
 //# sourceURL=script.js
@@ -2170,14 +2173,11 @@ $(function(){
                         <div class="col-sm-4">
                             <label>Text Color:</label>
                         </div>
-                        <div class="col-sm-8" id="textColor">
-                        	<input type="text" class="form-control input-lg" />
-                        	<span class="input-group-append">
-                   				<span class="input-group-text colorpicker-input-addon"><i></i></span>
-                  			</span>
-<!--                             <textarea class="form-control-xs textContent"
-                                 name="textContent"
-                                id="textContentID" style="width: 140%; height: 400%;"></textarea> -->
+                        <div class="col-sm-8" >
+                        	<input type="color" class="form-control input-lg" name="textColor" />
+                      <!--   	<span class="input-group-append">
+                   				<span id="textColor"  class="input-group-text colorpicker-input-addon"><i></i></span>
+                  			</span> -->
                                 <br>
                         </div>
                     </div>

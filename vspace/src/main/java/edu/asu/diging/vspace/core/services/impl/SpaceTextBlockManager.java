@@ -40,10 +40,10 @@ public class SpaceTextBlockManager implements ISpaceTextBlockManager{
 
     @Override
     public ISpaceTextBlockDisplay createTextBlock(String id, float positionX, float positionY, String text,
-            float height, float width){
+            float height, float width, String textColor ){
         ISpace source = spaceManager.getSpace(id);
         ISpaceTextBlock textBlock=spaceTextBlockFactory.createSpaceTextBlock(text, source);
-        ISpaceTextBlockDisplay spaceTextBlockDisplay = spaceTextBlockDisplayFactory.createSpaceTextBlockDisplay(textBlock,positionX,positionY,height, width);
+        ISpaceTextBlockDisplay spaceTextBlockDisplay = spaceTextBlockDisplayFactory.createSpaceTextBlockDisplay(textBlock,positionX,positionY,height, width, textColor);
         spaceTextBlockRepo.save((SpaceTextBlock) textBlock);
         return spaceTextBlockDisplayRepo.save((SpaceTextBlockDisplay)spaceTextBlockDisplay);
     }
