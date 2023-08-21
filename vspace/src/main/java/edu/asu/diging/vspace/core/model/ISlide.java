@@ -15,4 +15,8 @@ public interface ISlide extends IVSpaceElement {
     IImageBlock getFirstImageBlock();
     
     ITextBlock getFirstMatchedTextBlock(String searchTerm);
+    
+    List<IExternalLink> getExternalLinks();
+
+    void setExternalLinks(List<IExternalLink> externalLinks);
 }
