@@ -19,4 +19,7 @@ public interface ExternalLinkDisplayRepository extends PagingAndSortingRepositor
     public List<IExternalLinkDisplay> findExternalLinkDisplaysForSpace(String spaceId);
 
     public void deleteByExternalLink(IExternalLink link);
+    
+    @Query("SELECT d FROM ExternalLinkDisplay d WHERE d.externalLink.slide.id = ?1")
+    public List<IExternalLinkDisplay> findExternalLinkDisplaysForSlide(String slideId);
 }

@@ -20,6 +20,7 @@ import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.impl.BranchingPoint;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
+import edu.asu.diging.vspace.core.services.IExternalLinkManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 import edu.asu.diging.vspace.web.staff.forms.SequenceForm;
@@ -36,6 +37,9 @@ public class SlideController {
 
     @Autowired
     private IContentBlockManager contentBlockManager;
+    
+    @Autowired
+    private IExternalLinkManager externalLinkManager;
 
     @RequestMapping("/staff/module/{moduleId}/slide/{id}")
     public String listSlides(@PathVariable("id") String id, @PathVariable("moduleId") String moduleId, Model model) {
@@ -43,6 +47,7 @@ public class SlideController {
         ISlide slide = slideManager.getSlide(id);
         model.addAttribute("module", moduleManager.getModule(moduleId));
         model.addAttribute("slide", slide);
+        model.addAttribute("externalLinks", externalLinkManager.getLinkDisplays(id));
         model.addAttribute("slideSequences", slideManager.getSlideSequences(id, moduleId));
         List<IContentBlock> slideContents = contentBlockManager.getAllContentBlocks(id);
         model.addAttribute("slideContents", slideContents);
