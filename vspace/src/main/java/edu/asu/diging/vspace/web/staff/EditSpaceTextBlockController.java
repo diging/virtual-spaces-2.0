@@ -32,7 +32,7 @@ public class EditSpaceTextBlockController{
     public ResponseEntity<String> editSpaceTextBlock(@PathVariable("id") String id, @RequestParam("x") String x,
             @RequestParam("y") String y, @RequestParam("textBlockId") String textBlockId, @RequestParam("textBlockDisplayId") String textBlockDisplayId, 
             @RequestParam("textContentEdit") String text,
-            @RequestParam("height") String height, @RequestParam("width") String width)
+            @RequestParam("height") String height, @RequestParam("width") String width, @RequestParam("textColor") String textColor)
                     throws IOException{
 
         ISpace source = spaceManager.getSpace(id);
@@ -41,7 +41,7 @@ public class EditSpaceTextBlockController{
         }
 
         ISpaceTextBlockDisplay display = (ISpaceTextBlockDisplay) spaceTextBlockManager.updateTextBlock(id, new Float(x), new Float(y),
-                textBlockId, textBlockDisplayId, text, new Float(height), new Float(width));
+                textBlockId, textBlockDisplayId, text, new Float(height), new Float(width), textColor);
 
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode linkNode = mapper.createObjectNode();
@@ -51,6 +51,7 @@ public class EditSpaceTextBlockController{
         linkNode.put("width", width);
         linkNode.put("height", height);
         linkNode.put("textContent", text);
+        linkNode.put("textColor", textColor);
         return new ResponseEntity<>(mapper.writeValueAsString(linkNode), HttpStatus.OK);
     }
 

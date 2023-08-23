@@ -63,7 +63,7 @@ public class SpaceTextBlockManager implements ISpaceTextBlockManager{
     }
     @Override
     public ISpaceTextBlockDisplay updateTextBlock(String id, float positionX, float positionY, String textBlockId,
-            String textBlockDisplayId, String text, float height, float width) {
+            String textBlockDisplayId, String text, float height, float width, String textColor) {
 
         Optional<SpaceTextBlock> spaceTextBlock = spaceTextBlockRepo.findById(textBlockId);
         Optional<SpaceTextBlockDisplay> spaceTextBlockDisplay = spaceTextBlockDisplayRepo.findById(textBlockDisplayId);
@@ -75,6 +75,7 @@ public class SpaceTextBlockManager implements ISpaceTextBlockManager{
             spaceTextBlockDisplayEdit.setWidth(width);
             spaceTextBlockDisplayEdit.setPositionX(positionX);
             spaceTextBlockDisplayEdit.setPositionY(positionY);
+            spaceTextBlockDisplayEdit.setTextColor(textColor);        
             spaceTextBlockRepo.save((SpaceTextBlock)spaceTextBlockEdit);
             return spaceTextBlockDisplayRepo.save((SpaceTextBlockDisplay)spaceTextBlockDisplayEdit);
         }
