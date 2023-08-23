@@ -467,28 +467,6 @@
         	            var posX = $("#main-bgImage").position().left;
         	            var posY = $("#main-bgImage").position().top;
         	            
-        	            spaceLinks.forEach(function(link,index){
-        	                var spanId= "spacelinkModalId-";
-        	                var divId = "#space"
-        	                generateSpaceLinks(link,spanId,divId,true, posX, posY, posXModal, posYModal);
-        	            })
-        	            spaceLinks.forEach(function(link,index){
-        	                var spanId= "spacelinkId-";
-        	                var divId = "#main-space";
-        	                generateSpaceLinks(link,spanId,divId,false, posX, posY, posXModal, posYModal);
-        	            })
-        	            
-        	            moduleLinks.forEach(function(link,index){
-        	                var spanId= "moduleModallinkId-";
-        	                var divId = "#space";
-        	                generateModuleLinks(link,spanId,divId,true, posX, posY, posXModal, posYModal);
-        	            })
-        	            moduleLinks.forEach(function(link,index){
-        	                var spanId= "modulelinkId-";
-        	                var divId = "#main-space";
-        	                generateModuleLinks(link,spanId,divId,false, posX, posY, posXModal, posYModal);
-        	            })
-        	            
         	            externalLinks.forEach(function(link,index){
         	                var spanId= "externalModallinkId-";
         	                var divId = "#space";
@@ -499,22 +477,6 @@
         	                var spanId= "externallinkId-";
         	                var divId = "#main-space";
         	                generateExternalLinks(link,spanId,divId,false, posX, posY, posXModal, posYModal);
-        	            })
-        	            
-        	            textBlocks.forEach(function(block,index){
-        	                var spanId= "textModalBlockId-";
-        	                var divId = "#space";
-        	                var imageHeight = modalBgImageHeight;
-        	                var imageWidth = modalBgImageWidth;
-        	                generateTextBlock(block,spanId,divId,true, posX, posY, posXModal, posYModal, imageHeight, imageWidth);
-        	            })
-        	            
-        	            textBlocks.forEach(function(block,index){
-        	                var spanId= "textBlockId-";
-        	                var divId = "#main-space";
-        	                var imageHeight = parseInt($("#main-bgImage").css("height"));
-        	                var imageWidth = parseInt($("#main-bgImage").css("width"));
-        	                generateTextBlock(block,spanId,divId,false, posX, posY, posXModal, posYModal, imageHeight, imageWidth);
         	            })
         	        }
         	    });
