@@ -17,7 +17,8 @@ public class SpaceTextBlockDisplayFactory implements ISpaceTextBlockDisplayFacto
      * createModuleLinkDisplay(edu.asu.diging.vspace.core.model.IModuleLink)
      */
     @Override
-    public ISpaceTextBlockDisplay createSpaceTextBlockDisplay(ISpaceTextBlock textBlock, float positionX, float positionY, float height, float width, String textColor) {
+    public ISpaceTextBlockDisplay createSpaceTextBlockDisplay(ISpaceTextBlock textBlock, float positionX, float positionY, float height, float width, 
+            String textColor, String borderColor) {
         ISpaceTextBlockDisplay display = new SpaceTextBlockDisplay();
         display.setSpaceTextBlock(textBlock);
         display.setPositionX(positionX);
@@ -25,6 +26,7 @@ public class SpaceTextBlockDisplayFactory implements ISpaceTextBlockDisplayFacto
         display.setHeight(height);
         display.setWidth(width);
         display.setTextColor(textColor);
+        display.setBorderColor(borderColor);
         return display;
     }
 }

@@ -31,7 +31,8 @@ public class SpaceTextBlockDisplay extends VSpaceElement implements ISpaceTextBl
     private float height;
     private float width;
     private String textColor;
-
+    private String borderColor;
+    
     @Override
     public String getId() {
         return id;
@@ -98,5 +99,13 @@ public class SpaceTextBlockDisplay extends VSpaceElement implements ISpaceTextBl
 
     public void setTextColor(String textColor) {
         this.textColor = textColor;
+    }
+
+    public String getBorderColor() {
+        return borderColor;
+    }
+
+    public void setBorderColor(String borderColor) {
+        this.borderColor = borderColor;
     }
 }

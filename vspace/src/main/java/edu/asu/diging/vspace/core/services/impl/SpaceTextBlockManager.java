@@ -40,10 +40,10 @@ public class SpaceTextBlockManager implements ISpaceTextBlockManager{
 
     @Override
     public ISpaceTextBlockDisplay createTextBlock(String id, float positionX, float positionY, String text,
-            float height, float width, String textColor ){
+            float height, float width, String textColor, String borderColor ){
         ISpace source = spaceManager.getSpace(id);
         ISpaceTextBlock textBlock=spaceTextBlockFactory.createSpaceTextBlock(text, source);
-        ISpaceTextBlockDisplay spaceTextBlockDisplay = spaceTextBlockDisplayFactory.createSpaceTextBlockDisplay(textBlock,positionX,positionY,height, width, textColor);
+        ISpaceTextBlockDisplay spaceTextBlockDisplay = spaceTextBlockDisplayFactory.createSpaceTextBlockDisplay(textBlock,positionX,positionY,height, width, textColor, borderColor);
         spaceTextBlockRepo.save((SpaceTextBlock) textBlock);
         return spaceTextBlockDisplayRepo.save((SpaceTextBlockDisplay)spaceTextBlockDisplay);
     }
@@ -63,7 +63,7 @@ public class SpaceTextBlockManager implements ISpaceTextBlockManager{
     }
     @Override
     public ISpaceTextBlockDisplay updateTextBlock(String id, float positionX, float positionY, String textBlockId,
-            String textBlockDisplayId, String text, float height, float width, String textColor) {
+            String textBlockDisplayId, String text, float height, float width, String textColor, String borderColor) {
 
         Optional<SpaceTextBlock> spaceTextBlock = spaceTextBlockRepo.findById(textBlockId);
         Optional<SpaceTextBlockDisplay> spaceTextBlockDisplay = spaceTextBlockDisplayRepo.findById(textBlockDisplayId);
@@ -75,7 +75,8 @@ public class SpaceTextBlockManager implements ISpaceTextBlockManager{
             spaceTextBlockDisplayEdit.setWidth(width);
             spaceTextBlockDisplayEdit.setPositionX(positionX);
             spaceTextBlockDisplayEdit.setPositionY(positionY);
-            spaceTextBlockDisplayEdit.setTextColor(textColor);        
+            spaceTextBlockDisplayEdit.setTextColor(textColor);     
+            spaceTextBlockDisplayEdit.setBorderColor(borderColor); 
             spaceTextBlockRepo.save((SpaceTextBlock)spaceTextBlockEdit);
             return spaceTextBlockDisplayRepo.save((SpaceTextBlockDisplay)spaceTextBlockDisplayEdit);
         }

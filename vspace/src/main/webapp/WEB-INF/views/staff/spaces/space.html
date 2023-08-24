@@ -208,14 +208,14 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
     if(block != null){
         var height = (block.height*imageHeight)/100;
         var width = (block.width*imageWidth)/100;
-        var textBlock = $('<span id="'+spanId+block.spaceTextBlock.id+'" data-link-id="'+block.spaceTextBlock.id+'" data-blockId="'+block.id+'" data-text="'+block.spaceTextBlock.text+'" data-width="'+block.width+'"  data-height="'+block.height+'" class="textBlockClass spaceLink-'+block.spaceTextBlock.id+'"><textarea class="textBlock" style="height:'+height+'px; width:'+width+'px; resize:none; background: rgba(0, 0, 0, 0.4); color:'+block.textColor+';" readonly type="textarea">'+block.spaceTextBlock.text+'</textarea></span>');
+        var textBlock = $('<span id="'+spanId+block.spaceTextBlock.id+'" data-link-id="'+block.spaceTextBlock.id+'" data-blockId="'+block.id+'" data-text="'+block.spaceTextBlock.text+'" data-width="'+block.width+'"  data-height="'+block.height+'" class="textBlockClass spaceLink-'+block.spaceTextBlock.id+'"><textarea class="textBlock" style="height:'+height+'px; width:'+width+'px; resize:none; background: rgba(0, 0, 0, 0.4); color:'+block.textColor+'; border-color: '+block.borderColor+';" readonly type="textarea">'+block.spaceTextBlock.text+'</textarea></span>');
         setLinkPosition(textBlock,block,false,isModal,false, posX, posY, posXModal, posYModal, true);
         $(divId).append(textBlock);
         if(spanId === "textBlockId-"){
             $('#'+spanId+block.spaceTextBlock.id).css('cursor', 'pointer');
             $('#'+spanId+block.spaceTextBlock.id).click(function(e) {  
                 var blockData = $('#'+spanId+block.spaceTextBlock.id).data();
-                makeTextBlockEditable(blockData["blockid"],blockData["linkId"],blockData["text"],block.positionX,block.positionY,blockData["width"],blockData["height"], block.textColor);
+                makeTextBlockEditable(blockData["blockid"],blockData["linkId"],blockData["text"],block.positionX,block.positionY,blockData["width"],blockData["height"], block.textColor, block.borderColor);
             });
         }
         
@@ -374,6 +374,7 @@ function showTextBlockEdit(textBlock){
     $(selectedTextArea).css('height', (textBlock["height"]*imageHeight)/100);   
     $(selectedTextArea).text(textBlock["text"]);
     $(selectedClass).css('color', textBlock["textColor"]);
+    $(selectedClass).css('border-color', textBlock["borderColor"]);
 }
 
 function showSpaceLink(spaceLink, show, x, y) {
@@ -666,7 +667,7 @@ function createTextBlockInfo() {
     info["height"] = $("#textBoxHeightID").val();
     info["width"] = $("#textBoxWidthID").val();
     info["textColor"] = $("#textColorID").val();
-
+    info["borderColor"] = $("#borderColorID").val();
     return info;
 }
 
@@ -678,6 +679,7 @@ function editTextBlockInfo() {
     info["height"] = $("#textBoxHeightIDEdit").val();
     info["width"] = $("#textBoxWidthIDEdit").val();
     info["textColor"] = $("#textColorIDEdit").val();
+    info["borderColor"] = $("#borderColorIDEdit").val();
     return info;
 }
 
@@ -823,7 +825,7 @@ function makeExternalLinksEditable(linkName, linkId, externalLinkURL, posXEdit, 
     displayForms("#editExternalLinkInfo");
 }
 
-function makeTextBlockEditable(blockDisplayId,blockId,text,posX,posY,width,height, textColor){
+function makeTextBlockEditable(blockDisplayId,blockId,text,posX,posY,width,height, textColor, borderColor){
     selectedTextBlockId=blockId;
     storeX=posX;
     storeY=posY;
@@ -835,6 +837,7 @@ function makeTextBlockEditable(blockDisplayId,blockId,text,posX,posY,width,heigh
     $("#textBoxHeightIDEdit").val(height);
     $("#textContentIDForEdit").val(text);
     $("#textColorIDEdit").val(textColor);
+    $("#borderColorIDEdit").val(borderColor);
     resetHighlighting();
     $("#bgImage").on("click", function(e){
         e.preventDefault();
@@ -2186,6 +2189,15 @@ $(function(){
                     </div>
                     <div class="row" style="height: 32%;">
                         <div class="col-sm-4">
+                            <label>Border Color:</label>
+                        </div>
+                        <div class="col-sm-8" >
+                        	<input type="color" class="form-control input-lg" name="borderColor" id="borderColorID"/>
+                                <br>
+                        </div>
+                    </div>
+                    <div class="row" style="height: 32%;">
+                        <div class="col-sm-4">
                             <label>Text:</label>
                         </div>
                         <div class="col-sm-8">
@@ -2553,6 +2565,15 @@ $(function(){
                         </div>
                         <div class="col-sm-8" >
                         	<input type="color" class="form-control input-lg" name="textColor" id="textColorIDEdit"/>
+                                <br>
+                        </div>
+                    </div>
+                    <div class="row" style="height: 32%;">
+                        <div class="col-sm-4">
+                            <label>Border Color:</label>
+                        </div>
+                        <div class="col-sm-8" >
+                        	<input type="color" class="form-control input-lg" name="borderColor" id="borderColorIDEdit"/>
                                 <br>
                         </div>
                     </div>

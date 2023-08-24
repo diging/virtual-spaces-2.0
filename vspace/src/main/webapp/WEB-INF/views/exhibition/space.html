@@ -493,7 +493,7 @@
                     var posY = $("#space").position().top;
                     var heightText = (block.height*height)/100;
                     var widthText = (block.width*width)/100;
-                    var textBlock = $('<span data-link-id="'+block.id+'" class="spaceLink-'+block.id+' Info_cz_Class"><textarea class="textBlock" style="height:'+heightText+'px; width:'+widthText+'px; resize:none; color: '+block.textColor+';" readonly>'+block.spaceTextBlock.text+'</textarea></span>');
+                    var textBlock = $('<span data-link-id="'+block.id+'" class="spaceLink-'+block.id+' Info_cz_Class"><textarea class="textBlock" style="height:'+heightText+'px; width:'+widthText+'px; resize:none; color: '+block.textColor+'; border-color:'+block.borderColor+';" readonly>'+block.spaceTextBlock.text+'</textarea></span>');
                     textBlock.css('position', 'absolute');
                     var	linkPosX=(width*block.positionX)/[(${display.width})];
                     var	linkPosY=(height*block.positionY)/relativeHeight;
