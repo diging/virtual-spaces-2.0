@@ -16,9 +16,12 @@ import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.BranchingPointRepository;
 import edu.asu.diging.vspace.core.data.ChoiceRepository;
+import edu.asu.diging.vspace.core.data.ExternalLinkDisplayRepository;
+import edu.asu.diging.vspace.core.data.ExternalLinkRepository;
 import edu.asu.diging.vspace.core.data.SequenceRepository;
 import edu.asu.diging.vspace.core.data.SlideRepository;
 import edu.asu.diging.vspace.core.exception.SlideDoesNotExistException;
+import edu.asu.diging.vspace.core.factory.IExternalLinkDisplayFactory;
 import edu.asu.diging.vspace.core.factory.IExternalLinkFactory;
 import edu.asu.diging.vspace.core.factory.impl.ChoiceFactory;
 import edu.asu.diging.vspace.core.factory.impl.SlideFactory;
@@ -29,8 +32,10 @@ import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.display.IExternalLinkDisplay;
 import edu.asu.diging.vspace.core.model.display.SlideType;
+import edu.asu.diging.vspace.core.model.display.impl.ExternalLinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.BranchingPoint;
 import edu.asu.diging.vspace.core.model.impl.Choice;
+import edu.asu.diging.vspace.core.model.impl.ExternalLink;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.services.ISlideManager;
@@ -59,6 +64,16 @@ public class SlideManager implements ISlideManager {
 
     @Autowired
     private ChoiceFactory choiceFactory;
+    
+    @Autowired
+    private ExternalLinkRepository externalLinkRepo;
+    
+    @Autowired
+    private IExternalLinkDisplayFactory externalLinkDisplayFactory;
+    
+    @Autowired
+    private ExternalLinkDisplayRepository externalLinkDisplayRepo;
+
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -173,25 +188,6 @@ public class SlideManager implements ISlideManager {
     public Page<ISlide> findByNameOrDescription(Pageable requestedPage, String searchText) {
 
         return slideRepo.findDistinctByNameContainingOrDescriptionContaining(requestedPage, searchText,searchText);
-    }
-    
-    @Override
-    public IExternalLinkDisplay createExternalLink(String title, ISlide source, float positionX, float positionY, String externalLink) throws SlideDoesNotExistException {
-        // we need this to fully load the space
-        Optional<Slide> sourceSpace = slideRepo.findById(source.getId());
-        if(!sourceSpace.isPresent()) {
-            throw new SlideDoesNotExistException();
-        }
-        source = sourceSpace.get();
-        IExternalLink link = externalLinkFactory.createExternalLink(title, source, externalLink);
-        externalLinkRepo.save((ExternalLink) link);
-
-        IExternalLinkDisplay display = externalLinkDisplayFactory.createExternalLinkDisplay(link);
-        display.setPositionX(positionX);
-        display.setPositionY(positionY);
-        display.setName(title);
-        externalLinkDisplayRepo.save((ExternalLinkDisplay) display);
-        return display;
     }
 
 }

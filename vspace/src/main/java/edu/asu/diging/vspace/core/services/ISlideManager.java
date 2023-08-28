@@ -36,8 +36,5 @@ public interface ISlideManager {
     
     Page<ISlide> findByNameOrDescription(Pageable requestedPage,String searchText);
     
-    IExternalLinkDisplay createExternalLink(String title, ISlide slide, float positionX, float positionY, String externalLink)
-            throws SlideDoesNotExistException;
-    
-    List<IExternalLinkDisplay> getExternalLinkDisplaysonSlide(String slideId);
+    List<IExternalLinkDisplay> getExternalLinkDisplaysOnSlide(String slideId);
 }
