@@ -36,5 +36,4 @@ public interface ISlideManager {
     
     Page<ISlide> findByNameOrDescription(Pageable requestedPage,String searchText);
     
-    List<IExternalLinkDisplay> getExternalLinkDisplaysOnSlide(String slideId);
 }

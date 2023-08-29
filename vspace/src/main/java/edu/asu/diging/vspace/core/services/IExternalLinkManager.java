@@ -14,19 +14,12 @@ public interface IExternalLinkManager extends ILinkManager<IExternalLink, Extern
 
     IExternalLinkDisplay createLink(String title, String id, float positionX, float positionY, int rotation, String linkedId,
             String linkLabel, DisplayType displayType, byte[] linkImage, String imageFilename,ExternalLinkDisplayMode howToOpen)
-            throws SpaceDoesNotExistException, ImageCouldNotBeStoredException, SpaceDoesNotExistException;
+            throws SpaceDoesNotExistException, ImageCouldNotBeStoredException, SpaceDoesNotExistException, SlideDoesNotExistException;
 
     IExternalLinkDisplay updateLink(String title, String id, float positionX, float positionY, int rotation, String linkedId,
             String linkLabel, String linkId, String linkDisplayId, DisplayType displayType, byte[] linkImage,
             String imageFilename,ExternalLinkDisplayMode howToOpen)
             throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException;
-    
-    IExternalLinkDisplay createLinkForSlide(String title, String id, float positionX, float positionY, int rotation, String linkedId,
-            String linkLabel, DisplayType displayType, byte[] linkImage, String imageFilename,ExternalLinkDisplayMode howToOpen)
-            throws SlideDoesNotExistException, ImageCouldNotBeStoredException, SlideDoesNotExistException;
 
-    IExternalLinkDisplay updateLinkForSlide(String title, String id, float positionX, float positionY, int rotation, String linkedId,
-            String linkLabel, String linkId, String linkDisplayId, DisplayType displayType, byte[] linkImage,
-            String imageFilename,ExternalLinkDisplayMode howToOpen)
-            throws SlideDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException;
+   
 }

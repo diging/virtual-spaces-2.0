@@ -13,12 +13,14 @@ import edu.asu.diging.vspace.core.data.ExternalLinkRepository;
 import edu.asu.diging.vspace.core.data.ImageRepository;
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
+import edu.asu.diging.vspace.core.exception.SlideDoesNotExistException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.IExternalLinkDisplayFactory;
 import edu.asu.diging.vspace.core.factory.IExternalLinkFactory;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IExternalLink;
+import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.ExternalLinkDisplayMode;
@@ -27,6 +29,7 @@ import edu.asu.diging.vspace.core.model.display.impl.ExternalLinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.ExternalLink;
 import edu.asu.diging.vspace.core.model.impl.ExternalLinkValue;
 import edu.asu.diging.vspace.core.services.IExternalLinkManager;
+import edu.asu.diging.vspace.core.services.ISlideManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Transactional
@@ -36,6 +39,9 @@ public class ExternalLinkManager extends LinkManager<IExternalLink, ExternalLink
 
     @Autowired
     private ISpaceManager spaceManager;
+    
+    @Autowired
+    private ISlideManager slideManager;
 
     @Autowired
     private ExternalLinkRepository externalLinkRepo;
@@ -69,7 +75,7 @@ public class ExternalLinkManager extends LinkManager<IExternalLink, ExternalLink
         IExternalLink link = externalLinkFactory.createExternalLink(title, source);
         return externalLinkRepo.save((ExternalLink) link);
     }
-
+    
     @Override
     protected ExternalLinkValue getTarget(String externalLink) {
         return new ExternalLinkValue(externalLink);
