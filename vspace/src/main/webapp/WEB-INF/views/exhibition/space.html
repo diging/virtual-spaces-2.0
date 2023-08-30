@@ -210,12 +210,15 @@ outline: 2px solid red;
 </style>
 
 <script th:inline="javascript">
+$(document).ready(function() {
+	const textBlock = document.getElementByClassName("textBlock");
+	const color = textBlock.style.borderColor;
+	console.log("color" + color);
+	textBlock.addEventListener('focus-visible', function(e) {
+		e.target.style.outline = "2px solid blue";
+	});
 
-const textBlock = document.getElementByClassName("textBlock");
-const color = textBlock.style.borderColor;
-textBlock.addEventListener('focus-visible', function(e) {
-	e.target.style.outline = "2px solid blue";
-});
+}
 
 </script>
 </head>
@@ -515,12 +518,30 @@ textBlock.addEventListener('focus-visible', function(e) {
                     var	linkPosY=(height*block.positionY)/relativeHeight;
                     textBlock.css('left', linkPosX + posX);
                     textBlock.css('top', linkPosY + posY);
-                 	textBlock.click(function(){                 		  
-                 		textBlock.css("outline", "2px solid blue");
-                 		  });
+                    
+               
                     $("#space").append(textBlock);
+                    
+                    
                 }
             })
+            
+            var textBlockElements = document.getElementsByClassName("textBlock");
+            Array.from(textBlockElements).forEach(function(textBlock, index){
+            	if(textBlock != null) {
+            	   	const color = textBlock.style.borderColor;
+                 	console.log("color" + color);
+                 	textBlock.addEventListener('focus', function(e) {
+               		e.target.style.outline = "2px solid "+ color;
+                 	});
+                 	textBlock.addEventListener('blur', function(e) {
+                 		e.target.style.outline = "none";
+                	});
+            	}
+         
+            })
+              
+                	
 		}
 		</script>
 		

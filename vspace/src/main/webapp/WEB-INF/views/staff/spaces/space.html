@@ -26,6 +26,20 @@ $(window).on("load", function() {
         drawLinks();
     });
     drawLinks();
+    
+    var textBlockElements = document.getElementsByClassName("textBlock");
+    Array.from(textBlockElements).forEach(function(textBlock, index){
+    	if(textBlock != null) {
+    	   	const color = textBlock.style.borderColor;
+         	textBlock.addEventListener('focus', function(e) {
+       		e.target.style.outline = "2px solid "+ color;
+         	});
+         	textBlock.addEventListener('blur', function(e) {
+         		e.target.style.outline = "none";
+        	});
+    	}
+ 
+    })
 });
 //store where a user clicked on an image
 var storeX;
