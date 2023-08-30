@@ -23,7 +23,7 @@
 
         <db.driver>com.mysql.jdbc.Driver</db.driver>
         <db.url>jdbc:mysql://localhost:3306/vspace?serverTimezone=UTC&amp;useEncoding=true</db.url>
-        <db.user>vsapce</db.user>
+        <db.user>vspace</db.user>
         <db.password>vspace</db.password>
         <uploaded.files.path></uploaded.files.path>
 
