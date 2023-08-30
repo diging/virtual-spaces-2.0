@@ -23,6 +23,7 @@ import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.ExternalLinkDisplayMode;
 import edu.asu.diging.vspace.core.model.display.IExternalLinkDisplay;
 import edu.asu.diging.vspace.core.services.IExternalLinkManager;
+import edu.asu.diging.vspace.core.services.IExternalLinkSlideManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
@@ -32,14 +33,14 @@ public class AddSlideExternalLinkController {
     private ISlideManager slideManager;
     
     @Autowired
-    private IExternalLinkManager externalLinkManager;
+    private IExternalLinkSlideManager externalLinkSlideManager;
     
     @RequestMapping(value = "/staff/slide/{id}/externallink", method = RequestMethod.POST)
     public ResponseEntity<String> createExternalLink(@PathVariable("id") String id, @RequestParam("x") String x,
             @RequestParam("y") String y, @RequestParam("externalLinkLabel") String title,
             @RequestParam("url") String externalLink, @RequestParam("tabOpen") String howToOpen,
             @RequestParam("type") String displayType, @RequestParam("externalLinkImage") MultipartFile file)
-            throws NumberFormatException, SlideDoesNotExistException, IOException, ImageCouldNotBeStoredException, SpaceDoesNotExistException {
+            throws NumberFormatException, SlideDoesNotExistException, IOException, ImageCouldNotBeStoredException {
 
         ISlide slide = slideManager.getSlide(id);
         if (slide == null) {
@@ -55,7 +56,7 @@ public class AddSlideExternalLinkController {
         DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
         ExternalLinkDisplayMode externalLinkOpenMode = howToOpen.isEmpty() ? null
                 : ExternalLinkDisplayMode.valueOf(howToOpen);
-        IExternalLinkDisplay display = externalLinkManager.createLink(title, id, new Float(x), new Float(y), 0,
+        IExternalLinkDisplay display = externalLinkSlideManager.createLink(title, id, new Float(x), new Float(y), 0,
                 externalLink, title, type, linkImage, filename, externalLinkOpenMode);
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode linkNode = mapper.createObjectNode();
