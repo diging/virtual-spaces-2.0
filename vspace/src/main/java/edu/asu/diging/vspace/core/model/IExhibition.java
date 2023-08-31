@@ -30,6 +30,8 @@ public interface IExhibition extends IVSpaceElement {
 
     List<IExhibitionLanguage> getLanguages();
     
+    public IExhibitionLanguage getDefaultLanguage();
+
     ExhibitionModes getMode();
     
     void setMode(ExhibitionModes mode);

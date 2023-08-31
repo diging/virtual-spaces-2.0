@@ -10,14 +10,68 @@
     overflow-y: scroll;
     height: 400px;
 }
+
+/* Style the tab */
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 17px;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+}
 </style>
-</style>
+
 
 <script th:inline="javascript">
 	$(document).ready(function() {
 		$(".EasyMDEContainer").remove();
 		markDown = new EasyMDE({element : $('#textBlockText')[0]});
 	});
+	
+	function openForm(evt, label) {
+			console.log(label);
+		  var i, tabcontent, tablinks;
+		  tabcontent = document.getElementsByClassName("tabcontent");
+		  for (i = 0; i < tabcontent.length; i++) {
+		    tabcontent[i].style.display = "none";
+		  }
+		  tablinks = document.getElementsByClassName("tablinks");
+		  for (i = 0; i < tablinks.length; i++) {
+		    tablinks[i].className = tablinks[i].className.replace(" active", "");
+		  }
+		  document.getElementById(label).style.display = "block";
+		  evt.currentTarget.className += " active";
+		  evt.preventDefault();
+		}
 </script>
 </head>
 
@@ -25,23 +79,57 @@
 	<div layout:fragment="content" class="main-content">
 		<h2>Exhibition About Page</h2>
 		<div style="padding: 30px 0;">
-			<form
-				th:action="@{/staff/exhibit/about?}"
-				method="POST" name="f">
+			<form		method="POST" 			
+			name="f" >
 				<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-				<div style="padding-top: 20px;">
-					<label for="title">About Page Title:</label> <input type="text"
-						class="form-control" name="title" th:value="${aboutPage.title}" />
+				
+				
+				<div>
+				<div class="tab" >	
+					<button class="tablinks"  th:onclick="openForm(event, [[${aboutPage.defaultTitle.exhibitionLanguageLabel}]] )">[[${aboutPage.defaultTitle.exhibitionLanguageLabel}]]</button>				
+							
+					<div th:each= "title,  stat : ${aboutPage.titles}">
+					  <button class="tablinks"  th:onclick="openForm(event, [[${title.exhibitionLanguageLabel}]] )">[[${title.exhibitionLanguageLabel}]]</button>				
+					</div>
 				</div>
-				<div style="padding-top: 20px;">
-					<label for="text">Text:</label>
-					<textarea  id="textBlockText" rows="3"
-						name="aboutPageText" th:text="${aboutPage.aboutPageText}"></textarea>
+				<div>
+						<div th:id = "${aboutPage.defaultTitle.exhibitionLanguageLabel}" class = "tabcontent">
+							<p>  [[${aboutPage.defaultTitle.exhibitionLanguageLabel}]]</p>	
+						<label for="title">About Page Title:</label>
+						<input type="hidden" class="form-control" id="title" th:value="${aboutPage.defaultTitle.localisedTextId}" th:name="defaultTitle.localisedTextId" ></input>
+						<input type="hidden" class="form-control" id="title" th:value="${aboutPage.defaultTitle.exhibitionLanguageId}" th:name="defaultTitle.exhibitionLanguageId" ></input> 					
+						<input type="text" class="form-control" id="title" th:value="${aboutPage.defaultTitle.text}" th:name="defaultTitle.text" ></input>
+						<label for="aboutPageText">About Page Text:</label>
+									<textarea class="form-control" rows="5" cols="30" id="aboutPageText" th:value= "${aboutPage.defaultAboutPageText.text}" th:name="defaultAboutPageText.text">[[${aboutPage.defaultAboutPageText.text}]]</textarea>
+			 						<input type="hidden"   class="form-control"  id="aboutText" th:value="${aboutPage.defaultAboutPageText.localisedTextId}" th:name="defaultAboutPageText.localisedTextId" ></input>
+									<input type="hidden" class="form-control"  id="aboutText" th:value="${aboutPage.defaultAboutPageText.exhibitionLanguageId}" th:name="defaultAboutPageText.exhibitionLanguageId" ></input>			
+	 						
+	 					</div>
+					<div style="padding-top: 20px;" th:each= "title,  stat : ${aboutPage.titles}" > 
+						<div th:id = "${title.exhibitionLanguageLabel}" class = "tabcontent">
+							<p>  [[${title.exhibitionLanguageLabel}]]</p>	
+						<label for="title">About Page Title:</label>
+						<input type="hidden" class="form-control" id="title" th:value="${title.localisedTextId}" th:name="|titles[${stat.index}].localisedTextId|" ></input>
+						<input type="hidden" class="form-control" id="title" th:value="${title.exhibitionLanguageId}" th:name="|titles[${stat.index}].exhibitionLanguageId|" ></input> 					
+						<input type="text" class="form-control" id="title" th:value="${title.text}" th:name="|titles[${stat.index}].text|" ></input>
+							<div style="padding-top: 20px;" th:each= "aboutPageText : ${aboutPage.aboutPageTexts}"  > 								
+									<label th:if="${aboutPageText.exhibitionLanguageId} == ${title.exhibitionLanguageId} "  for="aboutPageText">About Page Text:</label>
+									<textarea  th:if="${aboutPageText.exhibitionLanguageId} == ${title.exhibitionLanguageId} " class="form-control" rows="5" cols="30" id="aboutPageText" th:value= "${aboutPageText.text}" th:name="|aboutPageTexts[${stat.index}].text|">[[${aboutPageText.text}]]</textarea>
+			 						<input type="hidden"  th:if="${aboutPageText.exhibitionLanguageId} == ${title.exhibitionLanguageId} " class="form-control"  id="aboutText" th:value="${aboutPageText.localisedTextId}" th:name="|aboutPageTexts[${stat.index}].localisedTextId|" ></input>
+									<input type="hidden" th:if="${aboutPageText.exhibitionLanguageId} == ${title.exhibitionLanguageId} " class="form-control"  id="aboutText" th:value="${aboutPageText.exhibitionLanguageId}" th:name="|aboutPageTexts[${stat.index}].exhibitionLanguageId|" ></input>
+	 						 					
+			 				</div>
+				
+	 						
+	 					</div>
+ 					</div>				
 				</div>
-
+				</div>
 				<p style="padding-top: 20px;">
-					<button class="btn primary-btn" type="submit" value="submit">Submit</button>
+					<button th:formaction="@{/staff/exhibit/about?}" class="btn primary-btn" type="submit" value="submit">Submit</button>
 				</p>
+	
+		
 			</form>
 		</div>
 	</div>
