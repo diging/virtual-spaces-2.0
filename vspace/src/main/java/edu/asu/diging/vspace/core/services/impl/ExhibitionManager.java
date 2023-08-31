@@ -161,10 +161,11 @@ public class ExhibitionManager implements IExhibitionManager {
      */
     @Override
     public void deleteEmptyLocalizedTexts(List<LocalizedText> emptyLocalizedTexts) {
-        emptyLocalizedTexts.forEach(localizedText -> { 
-            removeFromExhibitionAboutPage(localizedText);
-
-        });
+//        emptyLocalizedTexts.forEach(localizedText -> { 
+//            localizedTextRepo.delete(localizedText);
+////            removeFromExhibitionAboutPage(localizedText);
+//
+//        });
         localizedTextRepo.deleteAll(emptyLocalizedTexts);
     }
 
