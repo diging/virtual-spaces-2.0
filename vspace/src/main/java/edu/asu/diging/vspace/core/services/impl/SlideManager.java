@@ -219,7 +219,7 @@ public class SlideManager implements ISlideManager {
                 if(exhibitionLanguage != null) {
                     localizedText = new LocalizedText(exhibitionLanguage, name.getText());
                     slide.getSlideNames().add(localizedText);
-                    localizedText.setTargetSlide(slide);
+//                    localizedText.setTargetSlide(slide);
                 }
             }
         }
@@ -242,7 +242,7 @@ public class SlideManager implements ISlideManager {
                 if(exhibitionLanguage != null) {
                     LocalizedText newLocalizedText = new LocalizedText(exhibitionLanguage, description.getText());
                     slide.getSlideDescriptions().add(newLocalizedText);
-                    newLocalizedText.setTargetSlide(slide);
+//                    newLocalizedText.setTargetSlide(slide);
                 }
             }
         }
