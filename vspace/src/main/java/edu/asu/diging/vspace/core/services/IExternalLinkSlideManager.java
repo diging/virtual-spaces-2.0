@@ -11,7 +11,7 @@ import edu.asu.diging.vspace.core.model.display.IExternalLinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.ExternalLinkValue;
 
 public interface IExternalLinkSlideManager extends ILinkManager<IExternalLink, ExternalLinkValue, IExternalLinkDisplay>{
-    
+   
     IExternalLinkDisplay createLink(String title, String id, float positionX, float positionY, int rotation, String linkedId,
             String linkLabel, DisplayType displayType, byte[] linkImage, String imageFilename,ExternalLinkDisplayMode howToOpen)
             throws SlideDoesNotExistException, ImageCouldNotBeStoredException, SlideDoesNotExistException;

@@ -8,6 +8,7 @@ import edu.asu.diging.vspace.core.data.ImageRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
+import edu.asu.diging.vspace.core.exception.SlideDoesNotExistException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
@@ -51,7 +52,21 @@ public abstract class LinkManager<L extends ILink<T>, T extends IVSpaceElement, 
         return updateLinkAndDisplay(link, displayLink);
 
     }
+    
+    protected U createLinkForSlide(String title, String id, float positionX, float positionY, int rotation, String linkedId,
+            String linkLabel, DisplayType displayType, byte[] linkImage, String imageFilename)
+            throws SlideDoesNotExistException, ImageCouldNotBeStoredException, SlideDoesNotExistException {
 
+        L link = createLinkObject(title, id);
+        T target = getTarget(linkedId);
+        link.setName(linkLabel);
+        link.setTarget(target);
+        U displayLink = createDisplayLink(link);
+        setDisplayProperties(displayLink, id, positionX, positionY, rotation, displayType, linkImage, imageFilename);
+        return updateLinkAndDisplay(link, displayLink);
+
+    }
+   
     @Override
     public U updateLink(String title, String id, float positionX, float positionY, int rotation, String linkedId,
             String linkLabel, String linkId, String linkDisplayId, DisplayType displayType, byte[] linkImage,
