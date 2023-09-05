@@ -161,25 +161,9 @@ public class ExhibitionManager implements IExhibitionManager {
      */
     @Override
     public void deleteEmptyLocalizedTexts(List<LocalizedText> emptyLocalizedTexts) {
-//        emptyLocalizedTexts.forEach(localizedText -> { 
-//            localizedTextRepo.delete(localizedText);
-////            removeFromExhibitionAboutPage(localizedText);
-//
-//        });
         localizedTextRepo.deleteAll(emptyLocalizedTexts);
     }
 
-    /**
-     * Removes localized texts from Exhibition About Page entity
-     * 
-     * @param localizedText
-     */
-    private void removeFromExhibitionAboutPage(LocalizedText localizedText) {
-        ExhibitionAboutPage exhibitionAboutPage = localizedText.getTargetExhibitionAboutPage();
-        exhibitionAboutPage.getExhibitionTextDescriptions().remove(localizedText);
-        exhibitionAboutPage.getExhibitionTitles().remove(localizedText);
-
-    }
 
     /**
      * Adds exhibitionLanguage to exhibition if not already present. If already present, returns exhibitionLanguage from the exhibition.

@@ -26,9 +26,6 @@ public class LocalizedText implements ILocalizedText {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "LOC_EXH_LANG")
     private ExhibitionLanguage exhibitionLanguage; 
-    
-    @ManyToOne( targetEntity = ExhibitionAboutPage.class)
-    ExhibitionAboutPage targetExhibitionAboutPage;
 
     private String text;
     
@@ -64,15 +61,6 @@ public class LocalizedText implements ILocalizedText {
     public void setText(String text) {
         this.text = text;
     }
-
-    public ExhibitionAboutPage getTargetExhibitionAboutPage() {
-        return targetExhibitionAboutPage;
-    }
-
-    public void setTargetExhibitionAboutPage(ExhibitionAboutPage targetExhibitionAboutPage) {
-        this.targetExhibitionAboutPage = targetExhibitionAboutPage;
-    }
-
 
 
 }
