@@ -115,6 +115,7 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
                     localizedText = new LocalizedText(exhibitionLanguage, title.getText());
                     exhibitionAboutPage.getExhibitionTitles().add(localizedText);
 //                    localizedText.setTargetExhibitionAboutPage(exhibitionAboutPage);
+
                     
                 }
             }
@@ -138,6 +139,7 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
                 if(exhibitionLanguage != null) {
                     LocalizedText newLocalizedText = new LocalizedText(exhibitionLanguage, aboutPageText.getText());
 //                    newLocalizedText.setTargetExhibitionAboutPage(exhibitionAboutPage);
+
                     exhibitionAboutPage.getExhibitionTextDescriptions().add(newLocalizedText);
                
                 }
@@ -146,3 +148,4 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
     } 
    
 }
+

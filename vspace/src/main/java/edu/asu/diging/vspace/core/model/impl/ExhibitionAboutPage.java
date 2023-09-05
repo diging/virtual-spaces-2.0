@@ -45,6 +45,7 @@ public class ExhibitionAboutPage extends VSpaceElement {
     @JoinTable(name="AboutPage_LocText_titles",  
         joinColumns = @JoinColumn(name = "ExhibitionAboutPage_Id", referencedColumnName="id")
     )
+
     private List<ILocalizedText> localizedTitles = new ArrayList<ILocalizedText>();
 
     @OneToMany(targetEntity = LocalizedText.class, cascade={CascadeType.ALL})
@@ -76,7 +77,7 @@ public class ExhibitionAboutPage extends VSpaceElement {
     public void setAboutPageText(String aboutPageText) {
         this.aboutPageText = aboutPageText;
     }
-	
+
     public List<ILocalizedText> getExhibitionTitles() {
         return localizedTitles;
     }

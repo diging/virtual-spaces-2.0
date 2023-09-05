@@ -27,6 +27,6 @@ public class ExhibitionLanguageDeletionException  extends Exception {
     public ExhibitionLanguageDeletionException(Throwable cause) {
         super(cause);
     }
-
     
 }
+

@@ -276,4 +276,5 @@ public class ExhibitionManagerTest {
                 () ->   serviceToTest.updateExhibitionLanguages(exhibition, languages, "aa"));       
         
     }
+
 }

@@ -4,6 +4,51 @@
     type="text/css" rel="stylesheet">
 <script th:src="@{/resources/multiselect/js/multiselect.min.js}"></script>
 
+<style type="text/css">
+.EasyMDEContainer .CodeMirror-wrap{
+    overflow-y: scroll;
+    height: 400px;
+}
+
+/* Style the tab */
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 17px;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+}
+</style>
+
 <script>
 //# sourceURL=click.js
 $(document).ready(function(){
@@ -45,19 +90,74 @@ $(document).ready(function(){
 	     }        
 	});
 });
+
+function openForm(evt, label) {
+	console.log(label);
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+  document.getElementById(label).style.display = "block";
+  evt.currentTarget.className += " active";
+  evt.preventDefault();
+} 
+
+
 </script>
 </head>
 
 <body>
     <div class="main-content" layout:fragment="content">
         <h1>Add new Slide</h1>
-        <form th:action="@{'/staff/module/'+${moduleId}+'/slide/add'}"
-            method="POST" name="f" class="form-horizontal">
-            <div class="form-group row">
-                <label for="name" class="col-md-2 col-form-label">Slide
-                    Name:</label> <input type="text"
-                    class="form-control col-md-10" id="name" name="name" />
-            </div>
+        <form method="POST" name="f" class="form-horizontal" th:object="${slide}">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+			
+			<div>
+				<div class="tab" >	
+					<button class="tablinks"  th:onclick="openForm(event, [[${slide.defaultName.exhibitionLanguageLabel}]] )">[[${slide.defaultName.exhibitionLanguageLabel}]]</button>				
+							
+					<div th:each= "title,  stat : ${slide.names}">
+					  <button class="tablinks"  th:onclick="openForm(event, [[${title.exhibitionLanguageLabel}]] )">[[${title.exhibitionLanguageLabel}]]</button>				
+					</div>
+				</div>
+				<div>
+					<div th:id = "${slide.defaultName.exhibitionLanguageLabel}" class = "tabcontent">
+						<p>  [[${slide.defaultName.exhibitionLanguageLabel}]]</p>	
+					<label for="title">Slide Name:</label>
+					<input type="hidden" class="form-control" id="title" th:value="${slide.defaultName.localisedTextId}" th:name="defaultName.localisedTextId" ></input>
+					<input type="hidden" class="form-control" id="title" th:value="${slide.defaultName.exhibitionLanguageId}" th:name="defaultName.exhibitionLanguageId" ></input> 					
+					<input type="text" class="form-control" id="title" th:value="${slide.defaultName.text}" th:name="defaultName.text" ></input>
+					<label for="description">Description:</label>
+								<textarea class="form-control" rows="5" cols="30" id="slidePageText" th:value= "${slide.defaultDescription.text}" th:name="defaultDescription.text">[[${slide.defaultDescription.text}]]</textarea>
+		 						<input type="hidden"   class="form-control"  id="slideText" th:value="${slide.defaultDescription.localisedTextId}" th:name="defaultDescription.localisedTextId" ></input>
+								<input type="hidden" class="form-control"  id="slideText" th:value="${slide.defaultDescription.exhibitionLanguageId}" th:name="defaultDescription.exhibitionLanguageId" ></input>			
+ 						
+ 					</div>
+ 					
+					<div th:each= "title,  stat : ${slide.names}" > 
+					<div th:id = "${title.exhibitionLanguageLabel}" class = "tabcontent">
+						<p>  [[${title.exhibitionLanguageLabel}]]</p>	
+					<label for="title">Slide Name:</label>
+					<input type="hidden" class="form-control" id="title" th:value="${title.localisedTextId}" th:name="|names[${stat.index}].localisedTextId|" ></input>
+					<input type="hidden" class="form-control" id="title" th:value="${title.exhibitionLanguageId}" th:name="|names[${stat.index}].exhibitionLanguageId|" ></input> 					
+					<input type="text" class="form-control" id="title" th:value="${title.text}" th:name="|names[${stat.index}].text|" ></input>
+						<div th:each= "description : ${slide.descriptions}"  > 								
+								<label th:if="${description.exhibitionLanguageId} == ${title.exhibitionLanguageId} "  for="description">Description:</label>
+								<textarea  th:if="${description.exhibitionLanguageId} == ${title.exhibitionLanguageId} " class="form-control" rows="5" cols="30" id="description" th:value= "${description.text}" th:name="|descriptions[${stat.index}].text|">[[${description.text}]]</textarea>
+		 						<input type="hidden"  th:if="${description.exhibitionLanguageId} == ${title.exhibitionLanguageId} " class="form-control"  id="slideText" th:value="${description.localisedTextId}" th:name="|descriptions[${stat.index}].localisedTextId|" ></input>
+								<input type="hidden" th:if="${description.exhibitionLanguageId} == ${title.exhibitionLanguageId} " class="form-control"  id="slideText" th:value="${description.exhibitionLanguageId}" th:name="|descriptions[${stat.index}].exhibitionLanguageId|" ></input>
+
+		 				</div>
+		 			</div>
+ 					</div>				
+				</div>
+			</div>
+            
             <div class="form-group row">
                 <label for="type" class="col-md-2 col-form-label">Type:</label>
                 <select name="type" id="type"
@@ -82,12 +182,10 @@ $(document).ready(function(){
 
                 </select> <input type="hidden" id="choices" name="choices"></input>
             </div>
-            <div class="form-group row">
-                <label for="description" class="col-md-2 col-form-label">Description:</label>
-                <textarea class="form-control col-md-10" rows="5"
-                    cols="30" id="description" name="description"></textarea>
-            </div>
-            <button type="submit" id="newSlide" class="btn primary-btn">Create Slide</button>
+            
+            <p style="padding-top: 20px;">
+					<button th:formaction="@{'/staff/module/'+${moduleId}+'/slide/add'}" class="btn primary-btn" type="submit" value="submit">Create Slide</button>
+			</p>
         </form>
     </div>
 </body>

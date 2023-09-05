@@ -16,7 +16,7 @@ public class AboutPageForm {
     private LocalizedTextForm defaultAboutPageText;
     
     private List<LocalizedTextForm> titles = new ArrayList<LocalizedTextForm>();
-	
+
     private List<LocalizedTextForm> aboutPageTexts = new ArrayList<LocalizedTextForm>();
 
     public String getTitle() {
@@ -66,7 +66,6 @@ public class AboutPageForm {
     public void setAboutPageTexts(List<LocalizedTextForm> aboutPageTexts) {
         this.aboutPageTexts = aboutPageTexts;
     }
-
 
 
 }

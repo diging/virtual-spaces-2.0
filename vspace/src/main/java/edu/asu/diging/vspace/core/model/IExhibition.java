@@ -39,5 +39,4 @@ public interface IExhibition extends IVSpaceElement {
     String getPreviewId();
     
     void setPreviewId(String previewId);
-
 }

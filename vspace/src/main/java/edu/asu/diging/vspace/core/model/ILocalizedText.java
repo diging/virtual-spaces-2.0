@@ -12,5 +12,6 @@ public interface ILocalizedText {
     ExhibitionLanguage getExhibitionLanguage();
     
     void setExhibitionLanguage( ExhibitionLanguage exhibitionLanguage);
-    
+
 }
+

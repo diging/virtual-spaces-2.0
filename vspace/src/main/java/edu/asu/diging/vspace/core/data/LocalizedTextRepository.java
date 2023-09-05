@@ -7,7 +7,6 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
-import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.impl.LocalizedText;
 
 @Repository
@@ -15,4 +14,5 @@ import edu.asu.diging.vspace.core.model.impl.LocalizedText;
 public interface LocalizedTextRepository extends PagingAndSortingRepository<LocalizedText, String>{
 
     List<LocalizedText> findByExhibitionLanguage(IExhibitionLanguage language);
+
 }

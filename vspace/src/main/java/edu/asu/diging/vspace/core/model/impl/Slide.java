@@ -1,5 +1,6 @@
 package edu.asu.diging.vspace.core.model.impl;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -9,9 +10,12 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.JoinTable;
+import javax.persistence.JoinColumn;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -20,9 +24,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.IImageBlock;
+import edu.asu.diging.vspace.core.model.ILocalizedText;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
+import edu.asu.diging.vspace.core.model.ISlideExhibitionLanguageObject;
 import edu.asu.diging.vspace.core.model.ITextBlock;
 
 @Entity
@@ -44,6 +50,36 @@ public class Slide extends VSpaceElement implements ISlide {
     @JsonIgnore
     @ManyToMany(mappedBy = "slides", targetEntity = Sequence.class)
     private List<ISequence> sequence;
+    
+    @OneToMany(targetEntity = LocalizedText.class, cascade={CascadeType.ALL})
+    @JoinTable(name="Slide_LangObj_names",  
+        joinColumns = @JoinColumn(name = "Slide_Id", referencedColumnName="id"),
+        inverseJoinColumns = @JoinColumn(name = "LocalizedText_Id", referencedColumnName="id"))
+    private List<ILocalizedText> slideNames = new ArrayList<ILocalizedText>();
+
+    @OneToMany(targetEntity = LocalizedText.class, cascade={CascadeType.ALL})
+    @JoinTable(name="Slide_LangObj_descriptions",
+        joinColumns = @JoinColumn(name = "Slide_Id", referencedColumnName="id"),
+        inverseJoinColumns = @JoinColumn(name = "LocalizedText_Id", referencedColumnName="id"))
+    private List<ILocalizedText> slideDescriptions = new ArrayList<ILocalizedText>();
+    
+    
+    
+    public List<ILocalizedText> getSlideNames() {
+        return slideNames;
+    }
+
+    public void setSlideNames(List<ILocalizedText> slideNames) {
+        this.slideNames = slideNames;
+    }
+
+    public List<ILocalizedText> getSlideDescriptions() {
+        return slideDescriptions;
+    }
+
+    public void setSlideDescriptions(List<ILocalizedText> slideDescriptions) {
+        this.slideDescriptions = slideDescriptions;
+    }
 
     /*
      * (non-Javadoc)

@@ -26,5 +26,5 @@ public interface IExhibitionAboutPageManager {
     ExhibitionAboutPage store(AboutPageForm aboutPageForm);
 
     ExhibitionAboutPage getExhibitionAboutPage();
-
 }
+

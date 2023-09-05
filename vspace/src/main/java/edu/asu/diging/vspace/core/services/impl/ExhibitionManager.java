@@ -22,10 +22,14 @@ import edu.asu.diging.vspace.core.exception.LanguageListConfigurationNotFoundExc
 import edu.asu.diging.vspace.core.factory.impl.ExhibitionFactory;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
+import edu.asu.diging.vspace.core.model.ISlide;
+import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionAboutPage;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.impl.LocalizedText;
+import edu.asu.diging.vspace.core.model.impl.Space;
+
 import edu.asu.diging.vspace.core.model.impl.VSpaceElement;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 
@@ -153,6 +157,7 @@ public class ExhibitionManager implements IExhibitionManager {
         //This returns true if non empty localized texts exist
         return localizedTexts.size() > emptyLocalizedTexts.size();
 
+
     }
     
     /**
@@ -161,8 +166,25 @@ public class ExhibitionManager implements IExhibitionManager {
      */
     @Override
     public void deleteEmptyLocalizedTexts(List<LocalizedText> emptyLocalizedTexts) {
+        emptyLocalizedTexts.forEach(localizedText -> { 
+            removeFromSlidePage(localizedText);
+
+        });
         localizedTextRepo.deleteAll(emptyLocalizedTexts);
     }
+
+    /**
+     * Removes localized texts from Exhibition About Page entity
+     * 
+     * @param localizedText
+     */
+    private void removeFromSlidePage(LocalizedText localizedText) {
+        ISlide slide = localizedText.getTargetSlide();
+        slide.getSlideNames().remove(localizedText);
+        slide.getSlideDescriptions().remove(localizedText);
+
+    }
+    
 
 
     /**
