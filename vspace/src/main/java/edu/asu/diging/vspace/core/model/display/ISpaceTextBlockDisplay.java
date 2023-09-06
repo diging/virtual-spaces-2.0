@@ -29,7 +29,15 @@ public interface ISpaceTextBlockDisplay extends IVSpaceElement{
 
     void setWidth(float width);
     
+    String getTextColor();
+    
     void setTextColor(String textColor);
 
+    String getBorderColor();
+    
     void setBorderColor(String borderColor);
+    
+
+    
+   
 }
