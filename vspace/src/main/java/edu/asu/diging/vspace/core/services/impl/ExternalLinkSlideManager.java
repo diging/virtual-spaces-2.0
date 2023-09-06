@@ -14,6 +14,7 @@ import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
 import edu.asu.diging.vspace.core.exception.SlideDoesNotExistException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
+import edu.asu.diging.vspace.core.factory.IExternalLinkDisplayFactory;
 import edu.asu.diging.vspace.core.factory.IExternalLinkFactory;
 import edu.asu.diging.vspace.core.model.IExternalLink;
 import edu.asu.diging.vspace.core.model.ISlide;
@@ -43,6 +44,9 @@ public class ExternalLinkSlideManager extends LinkManager<IExternalLink, Externa
     
     @Autowired
     private ExternalLinkDisplayRepository externalLinkDisplayRepo;
+    
+    @Autowired
+    private IExternalLinkDisplayFactory externalLinkDisplayFactory;
 
     @Override
     public List<IExternalLinkDisplay> getLinkDisplays(String slideId) {
@@ -74,6 +78,17 @@ public class ExternalLinkSlideManager extends LinkManager<IExternalLink, Externa
         ISlide source = slideManager.getSlide(id);
         IExternalLink link = externalLinkFactory.createExternalLink(title, source);
         return externalLinkRepo.save((ExternalLink) link);
+    }
+    
+    @Override
+    protected void deleteLinkDisplayRepo(IExternalLink link) {
+        externalLinkDisplayRepo.deleteByExternalLink(link);
+    }
+  
+
+    @Override
+    protected void deleteLinkRepo(IExternalLink link) {
+        externalLinkRepo.delete((ExternalLink) link);
     }
     
     @Override
@@ -109,10 +124,31 @@ public class ExternalLinkSlideManager extends LinkManager<IExternalLink, Externa
          * ExternalLinkDisplay object to set howToOpen field then Hibernate
          * automatically persist howToOpen in database.
          */
-        IExternalLinkDisplay externalLinkDisplay = updateLink(title, id, positionX, positionY, rotation, linkedId,
+        IExternalLinkDisplay externalLinkDisplay = updateLinkForSlide(title, id, positionX, positionY, rotation, linkedId,
                 linkLabel, linkId, linkDisplayId, displayType, linkImage, imageFilename);
         externalLinkDisplay.setHowToOpen(howToOpen);
         return externalLinkDisplay;
+    }
+
+    @Override
+    protected void removeFromLinkList(ISpace space, IExternalLink link) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    protected IExternalLink getLink(String externalLinkID) {
+        Optional<ExternalLink> externalLink = externalLinkRepo.findById(externalLinkID);
+        if (externalLink.isPresent()) {
+            return externalLink.get();
+        }
+        return null;
+    }
+
+    @Override
+    protected IExternalLinkDisplay createDisplayLink(IExternalLink link) {
+        return externalLinkDisplayFactory.createExternalLinkDisplay(link);
+
     }
     
 

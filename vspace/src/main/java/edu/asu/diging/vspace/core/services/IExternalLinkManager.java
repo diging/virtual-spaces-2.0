@@ -14,7 +14,7 @@ public interface IExternalLinkManager extends ILinkManager<IExternalLink, Extern
 
     IExternalLinkDisplay createLink(String title, String id, float positionX, float positionY, int rotation, String linkedId,
             String linkLabel, DisplayType displayType, byte[] linkImage, String imageFilename,ExternalLinkDisplayMode howToOpen)
-            throws SpaceDoesNotExistException, ImageCouldNotBeStoredException, SpaceDoesNotExistException, SlideDoesNotExistException;
+            throws SpaceDoesNotExistException, ImageCouldNotBeStoredException, SpaceDoesNotExistException;
 
     IExternalLinkDisplay updateLink(String title, String id, float positionX, float positionY, int rotation, String linkedId,
             String linkLabel, String linkId, String linkDisplayId, DisplayType displayType, byte[] linkImage,
