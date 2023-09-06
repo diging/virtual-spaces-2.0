@@ -57,6 +57,7 @@ public class SpaceController {
         model.addAttribute("linksOnThisSpace", spaceManager.getOutgoingLinks(id));
         model.addAttribute("linksToThisSpace",spaceManager.getIncomingLinks(id));
         model.addAttribute("space", space);
+ 
         model.addAttribute("spaceLinks", spaceLinkManager.getLinkDisplays(id));
         model.addAttribute("externalLinks", externalLinkManager.getLinkDisplays(id));
         model.addAttribute("moduleLinks", moduleLinkManager.getLinkDisplays(id));
@@ -64,6 +65,10 @@ public class SpaceController {
         model.addAttribute("display", spaceDisplayManager.getBySpace(space));
         model.addAttribute("moduleList", moduleManager.getAllModules());
         model.addAttribute("spaceTextBlocks", spaceTextBlockManager.getSpaceTextBlockDisplays(id));
+        
+        
+//        model.addAttribute("defaultName" , spaceManager.getDefaultSpaceName(space));
+//        model.addAttribute("defaultDescription" , spaceManager.getDefaultSpaceDescription(space));
         return "staff/spaces/space";
     }
 

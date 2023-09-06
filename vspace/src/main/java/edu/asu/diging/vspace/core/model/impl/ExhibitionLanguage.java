@@ -33,7 +33,6 @@ public class ExhibitionLanguage extends VSpaceElement implements IExhibitionLang
     
     private boolean isDefault;
     
-
 //    @OneToMany(targetEntity = LocalizedText.class)    
 //    private List<LocalizedText> localizedTexts = new ArrayList<LocalizedText>();
 
@@ -101,7 +100,7 @@ public class ExhibitionLanguage extends VSpaceElement implements IExhibitionLang
 //        this.localizedTexts = localizedTexts;
 //    }
 
-    
+
     @Override
     public int hashCode() {
         return Objects.hash(code, exhibition, label);

@@ -12,6 +12,7 @@ public class LocalizedTextForm {
     
     Boolean isDefaultExhibitionLanguage;
 
+
     public LocalizedTextForm() {
         super();
     }
@@ -25,7 +26,6 @@ public class LocalizedTextForm {
         this.exhibitionLanguageLabel = exhibitionLanguageLabel;
     }
     
-   
     public String getText() {
         return text;
     }

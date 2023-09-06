@@ -43,5 +43,4 @@ public interface IExhibitionManager {
 
     void deleteEmptyLocalizedTexts(List<LocalizedText> emptyLocalizedTexts);
 
-
 }

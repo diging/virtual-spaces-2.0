@@ -86,6 +86,7 @@ public class ExhibitionConfigurationController {
             @RequestParam("exhibitLanguage") List<String> languages,
             @RequestParam("defaultExhibitLanguage") String defaultLanguage,
             RedirectAttributes attributes) throws IOException {     
+
         ISpace startSpace = spaceManager.getSpace(spaceID);
         Exhibition exhibition;
         if (exhibitID == null || exhibitID.isEmpty()) {

@@ -8,10 +8,13 @@ import org.springframework.data.domain.Pageable;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
+import edu.asu.diging.vspace.core.model.impl.LocalizedText;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
+import edu.asu.diging.vspace.web.staff.forms.LocalizedTextForm;
+import edu.asu.diging.vspace.web.staff.forms.SpaceForm;
 
 public interface ISpaceManager {
 
@@ -38,4 +41,15 @@ public interface ISpaceManager {
     Iterable<Space> addIncomingLinkInfoToSpaces(Iterable<Space> spaces);
     
     Page<ISpace> findByNameOrDescription(Pageable requestedPage,String searchText);
+
+    void updateNameAndDescription(ISpace space, SpaceForm spaceForm);
+
+    void addSpaceDescription(ISpace space, LocalizedTextForm descriptions);
+
+    void addSpaceName(ISpace space, LocalizedTextForm names);
+
+    SpaceForm getSpaceForm(String spaceId);
+
+    ISpace createSpace(SpaceForm form);
+    
 }

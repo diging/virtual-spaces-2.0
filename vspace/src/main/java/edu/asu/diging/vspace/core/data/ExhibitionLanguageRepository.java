@@ -11,5 +11,5 @@ import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
 public interface ExhibitionLanguageRepository extends PagingAndSortingRepository<ExhibitionLanguage, String>{
 
     ExhibitionLanguage findByLabel(String label);
-
 }
+

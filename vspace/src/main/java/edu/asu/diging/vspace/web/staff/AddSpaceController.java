@@ -2,6 +2,8 @@ package edu.asu.diging.vspace.web.staff;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,12 +19,18 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.asu.diging.vspace.core.exception.ImageDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.ISpaceFactory;
+import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
+import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
+import edu.asu.diging.vspace.core.model.impl.LocalizedText;
+import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
+import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
+import edu.asu.diging.vspace.core.services.impl.ExhibitionManager;
 import edu.asu.diging.vspace.web.staff.forms.SpaceForm;
 
 @Controller
@@ -38,21 +46,22 @@ public class AddSpaceController {
 
     @Autowired
     private IImageService imageService;
-
-
+   
     @RequestMapping(value = "/staff/space/add", method = RequestMethod.GET)
     public String showAddSpace(Model model) {
-        model.addAttribute("space", new SpaceForm());
-        model.addAttribute("images", imageService.getImages(1));
-
+        ISpace space = new Space();
+        model.addAttribute("space", spaceFactory.createNewSpaceForm(space));
+        model.addAttribute("images", imageService.getImages(1));          
+        
         return "staff/spaces/add";
     }
 
     @RequestMapping(value = "/staff/space/add", method = RequestMethod.POST)
     public String addSpace(Model model, @ModelAttribute SpaceForm spaceForm, @RequestParam("file") MultipartFile file,
             Principal principal, @RequestParam(value = "imageId", required=false) String imageId, RedirectAttributes redirectAttrs) throws IOException {
-        ISpace space = spaceFactory.createSpace(spaceForm);
-        space.setSpaceStatus(SpaceStatus.UNPUBLISHED);
+        ISpace space = spaceManager.createSpace(spaceForm);
+        spaceManager.updateNameAndDescription(space, spaceForm);
+        space.setSpaceStatus(SpaceStatus.UNPUBLISHED);      
         byte[] bgImage = null;
         String filename = null;
         if (file != null) {

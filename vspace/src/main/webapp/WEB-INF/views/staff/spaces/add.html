@@ -4,6 +4,51 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
 <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 
+<style type="text/css">
+.EasyMDEContainer .CodeMirror-wrap{
+    overflow-y: scroll;
+    height: 400px;
+}
+
+/* Style the tab */
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 17px;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+}
+</style>
+
 <script th:inline="javascript">
 
 $(document).ready(function(){
@@ -49,9 +94,29 @@ $(document).ready(function(){
         $("#selectedImage").append('<img width="300px" src="' + tbaseUrl + image.id + '" class="img-thumbnail" />');
         return $image;
     }
-
 });
 </script>
+
+<script type="text/javascript">
+	
+	function openForm(evt, label) {
+		console.log(label);
+	  var i, tabcontent, tablinks;
+	  tabcontent = document.getElementsByClassName("tabcontent");
+	  for (i = 0; i < tabcontent.length; i++) {
+	    tabcontent[i].style.display = "none";
+	  }
+	  tablinks = document.getElementsByClassName("tablinks");
+	  for (i = 0; i < tablinks.length; i++) {
+	    tablinks[i].className = tablinks[i].className.replace(" active", "");
+	  }
+	  document.getElementById(label).style.display = "block";
+	  evt.currentTarget.className += " active";
+	  evt.preventDefault();
+	} 
+</script>
+
+
 </head>
 <body>
 <div class="main-content" layout:fragment="content">
@@ -59,15 +124,48 @@ $(document).ready(function(){
 	
 	<form method="POST" th:action="@{|/staff/space/add?${_csrf.parameterName}=${_csrf.token}|}" th:object="${space}" enctype="multipart/form-data" style="margin-top:40px">
 		<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-		<div class="form-group row">
-			<label for="name" class="col-md-2 col-form-label">Space Name:</label>
-			<input type="text" class="form-control col-md-10" name="name" id="name" />
-		</div>
-	
-		<div class="form-group row">
-			<label for="description" class="col-md-2 col-form-label">Description:</label>
-			<textarea class="form-control col-md-10" rows="5" cols="30" id="description" name="description"></textarea>
-		</div>
+			
+			<div>
+				<div class="tab" >	
+					<button class="tablinks"  th:onclick="openForm(event, [[${space.defaultName.exhibitionLanguageLabel}]] )">[[${space.defaultName.exhibitionLanguageLabel}]]</button>				
+							
+					<div th:each= "title,  stat : ${space.names}">
+					  <button class="tablinks"  th:onclick="openForm(event, [[${title.exhibitionLanguageLabel}]] )">[[${title.exhibitionLanguageLabel}]]</button>				
+					</div>
+				</div>
+				<div>
+					<div th:id = "${space.defaultName.exhibitionLanguageLabel}" class = "tabcontent">
+						<p>  [[${space.defaultName.exhibitionLanguageLabel}]]</p>	
+					<label for="title">Space Name:</label>
+					<input type="hidden" class="form-control" id="title" th:value="${space.defaultName.localisedTextId}" th:name="defaultName.localisedTextId" ></input>
+					<input type="hidden" class="form-control" id="title" th:value="${space.defaultName.exhibitionLanguageId}" th:name="defaultName.exhibitionLanguageId" ></input> 					
+					<input type="text" class="form-control" id="title" th:value="${space.defaultName.text}" th:name="defaultName.text" ></input>
+					<label for="description">Description:</label>
+								<textarea class="form-control" rows="5" cols="30" id="spacePageText" th:value= "${space.defaultDescription.text}" th:name="defaultDescription.text">[[${space.defaultDescription.text}]]</textarea>
+		 						<input type="hidden"   class="form-control"  id="spaceText" th:value="${space.defaultDescription.localisedTextId}" th:name="defaultDescription.localisedTextId" ></input>
+								<input type="hidden" class="form-control"  id="spaceText" th:value="${space.defaultDescription.exhibitionLanguageId}" th:name="defaultDescription.exhibitionLanguageId" ></input>			
+ 						
+ 					</div>
+ 					
+					<div th:each= "title,  stat : ${space.names}" > 
+					<div th:id = "${title.exhibitionLanguageLabel}" class = "tabcontent">
+						<p>  [[${title.exhibitionLanguageLabel}]]</p>	
+					<label for="title">Space Name:</label>
+					<input type="hidden" class="form-control" id="title" th:value="${title.localisedTextId}" th:name="|names[${stat.index}].localisedTextId|" ></input>
+					<input type="hidden" class="form-control" id="title" th:value="${title.exhibitionLanguageId}" th:name="|names[${stat.index}].exhibitionLanguageId|" ></input> 					
+					<input type="text" class="form-control" id="title" th:value="${title.text}" th:name="|names[${stat.index}].text|" ></input>
+						<div th:each= "description : ${space.descriptions}"  > 								
+								<label th:if="${description.exhibitionLanguageId} == ${title.exhibitionLanguageId} "  for="description">Description:</label>
+								<textarea  th:if="${description.exhibitionLanguageId} == ${title.exhibitionLanguageId} " class="form-control" rows="5" cols="30" id="description" th:value= "${description.text}" th:name="|descriptions[${stat.index}].text|">[[${description.text}]]</textarea>
+		 						<input type="hidden"  th:if="${description.exhibitionLanguageId} == ${title.exhibitionLanguageId} " class="form-control"  id="spaceText" th:value="${description.localisedTextId}" th:name="|descriptions[${stat.index}].localisedTextId|" ></input>
+								<input type="hidden" th:if="${description.exhibitionLanguageId} == ${title.exhibitionLanguageId} " class="form-control"  id="spaceText" th:value="${description.exhibitionLanguageId}" th:name="|descriptions[${stat.index}].exhibitionLanguageId|" ></input>
+
+		 				</div>
+		 			</div>
+ 					</div>				
+				</div>
+			</div>
+				
 	
 		<div class="form-group row">
 			<label for="image" class="col-md-2 col-form-label">Background image:</label>
@@ -87,7 +185,9 @@ $(document).ready(function(){
 	            </div>
 	    </div>
 	
-		<button class="btn primary-btn" type="submit" value="submit">Create	Space</button>
+		<p style="padding-top: 20px;">
+			<button class="btn primary-btn" type="submit" value="submit">Create Space</button>
+		</p>
 	</form>
 </div>
 </body>

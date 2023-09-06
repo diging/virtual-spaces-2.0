@@ -33,5 +33,13 @@ public interface ISpace extends IVSpaceElement {
     void setShowUnpublishedLinks(Boolean showUnpublishedLinks);
     
     void setHideIncomingLinks(boolean hideIncomingLinks);
+    
+    List<ILocalizedText> getSpaceNames();
+    
+    void setSpaceNames(List<ILocalizedText> spaceNames);
+    
+    void setSpaceDescriptions(List<ILocalizedText> spaceDescriptions);
+    
+    List<ILocalizedText> getSpaceDescriptions() ;
 
 }
