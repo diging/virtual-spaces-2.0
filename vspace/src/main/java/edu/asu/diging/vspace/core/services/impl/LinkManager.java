@@ -12,7 +12,9 @@ import edu.asu.diging.vspace.core.exception.SlideDoesNotExistException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
+import edu.asu.diging.vspace.core.model.IExternalLink;
 import edu.asu.diging.vspace.core.model.ILink;
+import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.IVSpaceElement;
@@ -20,6 +22,7 @@ import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.ILinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.ILinkManager;
+import edu.asu.diging.vspace.core.services.ISlideManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Transactional
@@ -28,6 +31,9 @@ public abstract class LinkManager<L extends ILink<T>, T extends IVSpaceElement, 
 
     @Autowired
     private ISpaceManager spaceManager;
+    
+    @Autowired
+    private ISlideManager slideManager;
 
     @Autowired
     private IImageFactory imageFactory;
@@ -66,6 +72,23 @@ public abstract class LinkManager<L extends ILink<T>, T extends IVSpaceElement, 
         return updateLinkAndDisplay(link, displayLink);
 
     }
+    
+    
+    protected U updateLinkForSlide(String title, String id, float positionX, float positionY, int rotation, String linkedId,
+            String linkLabel, String linkId, String linkDisplayId, DisplayType displayType, byte[] linkImage,
+            String imageFilename)
+            throws SlideDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException {
+
+        validateSlide(id);
+
+        L link = getLink(linkId);
+        T target = getTarget(linkedId);
+        link.setName(title);
+        link.setTarget(target);
+        U displayLink = getDisplayLink(linkDisplayId);
+        setDisplayProperties(displayLink, id, positionX, positionY, rotation, displayType, linkImage, imageFilename);
+        return updateLinkAndDisplay(link, displayLink);
+    }
    
     @Override
     public U updateLink(String title, String id, float positionX, float positionY, int rotation, String linkedId,
@@ -91,6 +114,18 @@ public abstract class LinkManager<L extends ILink<T>, T extends IVSpaceElement, 
         deleteLinkDisplayRepo(link);
         deleteLinkRepo(link);
     }
+    
+    protected void deleteLinkForSlide(String linkId) {
+        L link = getLink(linkId);
+        removeFromLinkListForSlide(link.getSlide(), link);
+        deleteLinkDisplayRepo(link);
+        deleteLinkRepo(link);
+    }
+    
+    
+    protected void removeFromLinkListForSlide(ISlide slide, L link) {
+        slide.getExternalLinks().remove(link);
+    }
 
     protected abstract void deleteLinkRepo(L link);
 
@@ -114,6 +149,13 @@ public abstract class LinkManager<L extends ILink<T>, T extends IVSpaceElement, 
         ISpace source = spaceManager.getSpace(id);
         if (source == null) {
             throw new SpaceDoesNotExistException();
+        }
+    }
+    
+    protected void validateSlide(String id) throws SlideDoesNotExistException {
+        ISlide source = slideManager.getSlide(id);
+        if (source == null) {
+            throw new SlideDoesNotExistException();
         }
     }
 

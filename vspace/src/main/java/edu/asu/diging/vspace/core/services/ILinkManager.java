@@ -10,6 +10,7 @@ import edu.asu.diging.vspace.core.model.IVSpaceElement;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.ILinkDisplay;
 
+
 public interface ILinkManager<L extends ILink<T>, T extends IVSpaceElement, U extends ILinkDisplay> {
 
     U createLink(String title, String id, float positionX, float positionY, int rotation, String linkedId,
@@ -24,5 +25,7 @@ public interface ILinkManager<L extends ILink<T>, T extends IVSpaceElement, U ex
     List<U> getLinkDisplays(String spaceId);
 
     void deleteLink(String linkId);
+
+    
 
 }

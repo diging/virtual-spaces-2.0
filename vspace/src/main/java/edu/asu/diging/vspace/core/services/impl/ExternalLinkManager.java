@@ -41,9 +41,6 @@ public class ExternalLinkManager extends LinkManager<IExternalLink, ExternalLink
     private ISpaceManager spaceManager;
     
     @Autowired
-    private ISlideManager slideManager;
-
-    @Autowired
     private ExternalLinkRepository externalLinkRepo;
 
     @Autowired
