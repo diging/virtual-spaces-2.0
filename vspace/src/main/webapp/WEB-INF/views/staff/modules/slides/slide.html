@@ -40,24 +40,34 @@
         </style>
         <script th:inline="javascript">
             //# sourceURL=click.js
-            var contentCount = [[${#lists.size(slideContents)}]];
-            var markDown = null;
-            var defaultValue;
-            var addVideoClk=0;
-            var editVideoClk=0;
+            
+            $(function () {
+            	  $('[data-toggle="tooltip"]').tooltip()
+            });
+            
             $(window).on("load", function() {
                 $( window ).resize(function() {
                     drawLinks();
                 });
                 drawLinks();
             });
+            
+            $(window).scroll(function(){
+          	  var sticky = $('.sticky'),
+          	      scroll = $(window).scrollTop();
+          	  if (scroll >= 100) sticky.addClass('fixed');
+          	  else sticky.removeClass('fixed');
+          	});
+            
+            var contentCount = [[${#lists.size(slideContents)}]];
+            var markDown = null;
+            var defaultValue;
+            var addVideoClk=0;
+            var editVideoClk=0;
             //store where a user clicked on an image
             var storeX;
             var storeY;
-            var selectedModuleLinkId;
-            var selectedSpaceLinkId;
             var selectedExternalLinkId;
-            var selectedTextBlockId;
             const displaceUnpublishedOnX = 25;
             const displaceUnpublishedOnY = 13;
             const displaceUnpublishedOnXModal = 50;
@@ -67,6 +77,7 @@
             var modalBgImageHeight;
             var modalBgImageWidth;
             
+          //link icons for exterenal links
             var externalLinkIconReader = new FileReader();
             var externalLinkIcon;
             externalLinkIconReader.onload = function(e) {
@@ -74,18 +85,6 @@
                 showExternalLinks(createExternalLinkInfo());
             }
 
-            
-            $(function () {
-            	  $('[data-toggle="tooltip"]').tooltip()
-            });
-            
-            $(window).scroll(function(){
-            	  var sticky = $('.sticky'),
-            	      scroll = $(window).scrollTop();
-            	  if (scroll >= 100) sticky.addClass('fixed');
-            	  else sticky.removeClass('fixed');
-            });
-            
             function createImageBlock(reader, width) {
                 var imageblock = $('<div id="current" class="valueDiv tab row"><img src="#" style="imgDiv tab row"/><input type="hidden" id="deleteImageId" /><a class="btn deleteImage col-md-1" href="javascript:;" style="position:absolute; right:25px;"><span class="icon-trash error"></span></a></div>');
                 imageblock.find('img').attr('src', reader.result);
@@ -446,7 +445,7 @@
         	    
         	    $.ajax({
         	        type: "GET",
-        	        url: "[(@{'/staff/space/'+${space?.id}+'/links'})]",
+        	        url: "[(@{'/staff/slide/'+${slide?.id}+'/links'})]",
         	        cache       : false,
         	        contentType : false,
         	        processData : false,
