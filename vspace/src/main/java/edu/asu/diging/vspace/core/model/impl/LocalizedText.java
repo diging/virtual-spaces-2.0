@@ -34,8 +34,8 @@ public class LocalizedText implements ILocalizedText {
     @JoinColumn(name = "LOC_EXH_LANG")
     private ExhibitionLanguage exhibitionLanguage;
     
-    @ManyToOne( targetEntity = Space.class)
-    ISpace targetSpace;
+//    @ManyToOne( targetEntity = Space.class)
+//    ISpace targetSpace;
 
     private String text;
 
@@ -71,23 +71,6 @@ public class LocalizedText implements ILocalizedText {
 
     public void setText(String text) {
         this.text = text;
-    }
-
-//    public ISlide getTargetSlide() {
-//        return targetSlide;
-//    }
-//
-//    public void setTargetSlide(ISlide targetSlide) {
-//        this.targetSlide = targetSlide;
-//    }
-
-
-    public ISpace getTargetSpace() {
-        return targetSpace;
-    }
-
-    public void setTargetSpace(ISpace space) {
-        this.targetSpace = space;
     }
 
 }
