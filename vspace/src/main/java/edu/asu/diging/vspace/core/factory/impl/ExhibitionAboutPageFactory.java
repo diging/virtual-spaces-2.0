@@ -35,12 +35,16 @@ public class ExhibitionAboutPageFactory  implements IExhibitionAboutPageFactory{
         IExhibition startExhibtion = exhibitionManager.getStartExhibition();    
         IExhibitionLanguage defaultLanguage = startExhibtion.getDefaultLanguage();
 
-        aboutPageForm.setDefaultTitle(createLocalizedTextForm(exhibitionAboutPage, defaultLanguage, exhibitionAboutPage.getExhibitionTitles()));
-        aboutPageForm.setDefaultAboutPageText(createLocalizedTextForm(exhibitionAboutPage, defaultLanguage, exhibitionAboutPage.getExhibitionTextDescriptions()));
+        aboutPageForm.setDefaultTitle(createLocalizedTextForm(exhibitionAboutPage, defaultLanguage, 
+                exhibitionAboutPage.getExhibitionTitles()));
+        aboutPageForm.setDefaultAboutPageText(createLocalizedTextForm(exhibitionAboutPage, defaultLanguage, 
+                exhibitionAboutPage.getExhibitionTextDescriptions()));
         startExhibtion.getLanguages().forEach(language -> {
             if(!language.isDefault()) {
-                aboutPageForm.getTitles().add(createLocalizedTextForm(exhibitionAboutPage, language, exhibitionAboutPage.getExhibitionTitles()));               
-                aboutPageForm.getAboutPageTexts().add(createLocalizedTextForm(exhibitionAboutPage, language, exhibitionAboutPage.getExhibitionTextDescriptions())); 
+                aboutPageForm.getTitles().add(createLocalizedTextForm(exhibitionAboutPage, language, 
+                        exhibitionAboutPage.getExhibitionTitles()));               
+                aboutPageForm.getAboutPageTexts().add(createLocalizedTextForm(exhibitionAboutPage, language, 
+                        exhibitionAboutPage.getExhibitionTextDescriptions())); 
             }
         });
         return aboutPageForm;
@@ -58,7 +62,8 @@ public class ExhibitionAboutPageFactory  implements IExhibitionAboutPageFactory{
 
         LocalizedTextForm localizedAboutTextForm = new LocalizedTextForm(null, null,  language.getId(), language.getLabel() );
         ILocalizedText aboutPageText = localizedTexts.stream()
-                .filter(exhibitionText -> StringUtils.equals(language.getId(), exhibitionText.getExhibitionLanguage().getId())).findAny().orElse(null);
+                .filter(exhibitionText -> StringUtils.equals(language.getId(), 
+                        exhibitionText.getExhibitionLanguage().getId())).findAny().orElse(null);
 
         if(aboutPageText != null) {
             localizedAboutTextForm.setText(aboutPageText.getText());

@@ -97,7 +97,8 @@ public class SlideFactory implements ISlideFactory {
 
         LocalizedTextForm localizedSlideForm = new LocalizedTextForm(null, null,  language.getId(), language.getLabel() );
         ILocalizedText slideText = localizedTexts.stream()
-                .filter(exhibitionText -> StringUtils.equals(language.getId(), exhibitionText.getExhibitionLanguage().getId())).findAny().orElse(null);
+                .filter(exhibitionText -> StringUtils.equals(language.getId(), 
+                        exhibitionText.getExhibitionLanguage().getId())).findAny().orElse(null);
 
         if(slideText != null) {
             localizedSlideForm.setText(slideText.getText());

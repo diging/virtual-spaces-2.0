@@ -214,7 +214,8 @@ public class SlideManager implements ISlideManager {
             if(localizedText != null) {
                 localizedText.setText(name.getText());
             } else {
-                ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findById(name.getExhibitionLanguageId()).orElse(null);
+                ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findById(name.getExhibitionLanguageId())
+                        .orElse(null);
                 if(exhibitionLanguage != null) {
                     localizedText = new LocalizedText(exhibitionLanguage, name.getText());
                     slide.getSlideNames().add(localizedText);
@@ -235,7 +236,8 @@ public class SlideManager implements ISlideManager {
             if(localizedText != null) {
                 localizedText.setText(description.getText());
             } else {
-                ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findById(description.getExhibitionLanguageId()).orElse(null);
+                ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findById(description.getExhibitionLanguageId())
+                        .orElse(null);
                 if(exhibitionLanguage != null) {
                     LocalizedText newLocalizedText = new LocalizedText(exhibitionLanguage, description.getText());
                     slide.getSlideDescriptions().add(newLocalizedText);
