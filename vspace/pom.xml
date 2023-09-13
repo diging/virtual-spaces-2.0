@@ -22,10 +22,10 @@
         <log.level>debug</log.level>
 
         <db.driver>com.mysql.jdbc.Driver</db.driver>
-        <db.url>jdbc:mysql://localhost:3306/vspace?serverTimezone=UTC&amp;useEncoding=true&amp;useSSL=false</db.url>
-        <db.user>root</db.user>
-        <db.password></db.password>
-        <uploaded.files.path>/Users/prachikharge/newfolder/virtual-spaces-2.0/vspace/uploads</uploaded.files.path>
+        <db.url>jdbc:mysql://localhost:3306/vspace?serverTimezone=UTC&amp;useEncoding=true</db.url>
+        <db.user>vspace</db.user>
+        <db.password>vspace</db.password>
+        <uploaded.files.path></uploaded.files.path>
 
         <email.user></email.user>
         <email.password></email.password>
