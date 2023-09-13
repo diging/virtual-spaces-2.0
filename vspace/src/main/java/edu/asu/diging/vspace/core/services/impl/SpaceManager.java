@@ -342,7 +342,7 @@ public class SpaceManager implements ISpaceManager {
      */
     @Override
     public void addSpaceName(ISpace space, LocalizedTextForm name) {
-        if(name!=null) {
+        if(name!=null && !StringUtils.isEmpty(name.getText())) {
             LocalizedText localizedText = localizedTextRepo.findById(name.getLocalisedTextId()).orElse(null);
             if(localizedText != null) {
                 localizedText.setText(name.getText());
@@ -364,7 +364,7 @@ public class SpaceManager implements ISpaceManager {
      */
     @Override
     public void addSpaceDescription(ISpace space, LocalizedTextForm description) {
-        if(description!=null) {
+        if(description!=null && !StringUtils.isEmpty(description.getText())) {
             LocalizedText localizedText = localizedTextRepo.findById(description.getLocalisedTextId()).orElse(null);
             if(localizedText != null) {
                 localizedText.setText(description.getText());

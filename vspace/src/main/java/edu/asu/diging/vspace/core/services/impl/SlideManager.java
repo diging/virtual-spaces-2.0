@@ -209,17 +209,15 @@ public class SlideManager implements ISlideManager {
      */
     @Override
     public void addSlideName(ISlide slide, LocalizedTextForm name) {
-        if(name!=null) {
+        if(name!=null && !StringUtils.isEmpty(name.getText())) {
             LocalizedText localizedText = localizedTextRepo.findById(name.getLocalisedTextId()).orElse(null);
             if(localizedText != null) {
                 localizedText.setText(name.getText());
-            }
-            else {
+            } else {
                 ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findById(name.getExhibitionLanguageId()).orElse(null);
                 if(exhibitionLanguage != null) {
                     localizedText = new LocalizedText(exhibitionLanguage, name.getText());
                     slide.getSlideNames().add(localizedText);
-//                    localizedText.setTargetSlide(slide);
                 }
             }
         }
@@ -232,17 +230,15 @@ public class SlideManager implements ISlideManager {
      */
     @Override
     public void addSlideDescription(ISlide slide, LocalizedTextForm description) {
-        if(description!=null) {
+        if(description!=null && !StringUtils.isEmpty(description.getText())) {
             LocalizedText localizedText = localizedTextRepo.findById(description.getLocalisedTextId()).orElse(null);
             if(localizedText != null) {
                 localizedText.setText(description.getText());
-            }
-            else {
+            } else {
                 ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findById(description.getExhibitionLanguageId()).orElse(null);
                 if(exhibitionLanguage != null) {
                     LocalizedText newLocalizedText = new LocalizedText(exhibitionLanguage, description.getText());
                     slide.getSlideDescriptions().add(newLocalizedText);
-//                    newLocalizedText.setTargetSlide(slide);
                 }
             }
         }

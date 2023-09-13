@@ -103,23 +103,21 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
      * exhibitionTitles list for each user selected Exhibition Language.
     */
     public void setAboutPageTitle(LocalizedTextForm title, ExhibitionAboutPage exhibitionAboutPage) {
-        if(title!=null) {
-            
+        if(title!=null && !StringUtils.isEmpty(title.getText())) {
+
             LocalizedText localizedText = localizedTextRepo.findById(title.getLocalisedTextId()).orElse(null);
             if(localizedText != null) {            
                 localizedText.setText(title.getText());            
             } else {
-                
+
                 ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findById(title.getExhibitionLanguageId()).orElse(null);
                 if(exhibitionLanguage != null) {
                     localizedText = new LocalizedText(exhibitionLanguage, title.getText());
                     exhibitionAboutPage.getExhibitionTitles().add(localizedText);
-//                    localizedText.setTargetExhibitionAboutPage(exhibitionAboutPage);
 
-                    
                 }
             }
-            
+
         }
 
     }
@@ -129,7 +127,7 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
      * exhibitionTextDescriptions list for each user selected Exhibition Language.
     */
     public void setAboutPageDescription(LocalizedTextForm aboutPageText, ExhibitionAboutPage exhibitionAboutPage) {
-        if(aboutPageText!=null) {
+        if(aboutPageText!=null && !StringUtils.isEmpty(aboutPageText.getText())) {
             LocalizedText localizedText = localizedTextRepo.findById(aboutPageText.getLocalisedTextId()).orElse(null);
             
             if(localizedText != null) {
@@ -138,10 +136,8 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
                 ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findById(aboutPageText.getExhibitionLanguageId()).orElse(null);
                 if(exhibitionLanguage != null) {
                     LocalizedText newLocalizedText = new LocalizedText(exhibitionLanguage, aboutPageText.getText());
-//                    newLocalizedText.setTargetExhibitionAboutPage(exhibitionAboutPage);
-
                     exhibitionAboutPage.getExhibitionTextDescriptions().add(newLocalizedText);
-               
+
                 }
             }        
         }
