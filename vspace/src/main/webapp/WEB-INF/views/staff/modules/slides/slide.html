@@ -84,7 +84,77 @@
                 externalLinkIcon = e.target.result;
                 showExternalLinks(createExternalLinkInfo());
             }
-
+            
+            //Set link position 
+            function setLinkPosition(modalLink, link, isSpaceLink, isModal, isExternalLink, posX, posY, posXModal, posYModal, isTextBlock, isModuleLink){
+				modalLink.css('position', 'absolute');
+			    if(isModal){
+			        modalLink.css('left',link.positionX + posXModal);
+			        modalLink.css('top', link.positionY + posYModal);
+			    }else{
+			        modalLink.css('left', link.positionX + posX);
+			        modalLink.css('top', link.positionY + posY);
+			    }
+			    modalLink.css('transform', 'rotate('+link.rotation+'deg)');
+			    modalLink.find("span").css('fill', 'grey');
+			    modalLink.css('color', 'rgba(128,128,128,1)');
+			    modalLink.css('font-size', "16px");
+			    var positionX = isModal ? posXModal : posX;
+			    var positionY = isModal ? posYModal : posY;
+			    if(isSpaceLink && (link.link.targetSpace==null || link.link.targetSpace.spaceStatus=="UNPUBLISHED")){
+				var inactiveLinkId;
+				var inactiveLinkClasses;
+				var inactiveLinkTitle;
+				if(link.link.targetSpace==null) {
+				    inactiveLinkId = "deletedSpace-";
+				    inactiveLinkClasses = "deletedSpaceClass deletedClass-";   
+				    inactiveLinkTitle = "The target space for this link has been deleted. This link won't be shown on the public site."
+			    	} else {
+				    inactiveLinkId = "unpublished-";
+				    inactiveLinkClasses = "unpublishedSpaceClass unpublishedClass-";
+				    inactiveLinkTitle = "The target space for this link is unpublished. This link won't be shown on the public site."
+			    	}
+				var inactiveSpaceElement  = $('<span data-link-id="'+inactiveLinkId +link.link.id+'" class="icon-warning secondary '+inactiveLinkClasses+link.link.id+'"></span>')
+			    	inactiveSpaceElement.css('position', 'absolute');
+				inactiveSpaceElement.css('left', link.positionX + positionX + displaceUnpublishedOnX);
+				inactiveSpaceElement.css('top', link.positionY + positionY - displaceUnpublishedOnY);
+				inactiveSpaceElement.css('transform', 'rotate('+link.rotation+'deg)');
+				inactiveSpaceElement.css('font-size', "24px");
+				inactiveSpaceElement.attr('title', inactiveLinkTitle);
+				if(isModal){
+				    $("#space").append(inactiveSpaceElement);
+				} else{
+				    $("#main-space").append(inactiveSpaceElement);
+				}
+			    }
+			    if(isModuleLink && link.link.module.moduleStatus!=null && link.link.module.moduleStatus=="UNPUBLISHED"){
+			    	var unpublishedModuleElement = $('<span data-link-id="unpublished-'+link.link.id+'" class="icon-warning secondary unpublishedSpaceClass unpublishedClass-'+link.link.id+'"></span>')
+			        unpublishedModuleElement.css('position', 'absolute');
+			    	unpublishedModuleElement.css('left', link.positionX + positionX + displaceUnpublishedOnX);
+			    	unpublishedModuleElement.css('top', link.positionY + positionY - displaceUnpublishedOnY);
+			    	unpublishedModuleElement.css('transform', 'rotate('+link.rotation+'deg)');
+			    	unpublishedModuleElement.css('font-size', "24px");
+			        if(isModal){
+			            $("#space").append(unpublishedModuleElement);
+			        }else{
+			            $("#main-space").append(unpublishedModuleElement);
+			        }
+			    }
+			    if(!isTextBlock){
+			        var linkId = isExternalLink ? link.externalLink.id : link.link.id;
+			        setLabelPosition(link,linkId,positionX,positionY);
+			    }
+			}
+            
+            // set label position
+            function setLabelPosition(link,id, positionX, positionY){
+            	$(".label-"+id).css({
+            	    'left': link.positionX + positionX - displaceLableOnX,
+            	    'top': link.positionY + positionY + displaceLableOnY,
+            	    'color': 'red'
+            	}); 
+            }
+            
             function createImageBlock(reader, width) {
                 var imageblock = $('<div id="current" class="valueDiv tab row"><img src="#" style="imgDiv tab row"/><input type="hidden" id="deleteImageId" /><a class="btn deleteImage col-md-1" href="javascript:;" style="position:absolute; right:25px;"><span class="icon-trash error"></span></a></div>');
                 imageblock.find('img').attr('src', reader.result);
