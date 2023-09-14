@@ -260,6 +260,7 @@
     transition: 0.5s;
     padding-top: 70px;
     word-break: break-all;
+    overflow-y: scroll;
 }
 
 .btn-light {
