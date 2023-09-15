@@ -2,7 +2,7 @@
 <html layout:decorate="~{layouts/main_staff}">
 	<body>
 		<div th:fragment="navbar"> 
-			     <div id="mySidenav" class="sidenav">
+		    <div id="mySidenav" class="sidenav">
 				<ul class="side-list" style="padding:1px;display: table;margin: 0 auto;padding-top:35px">
 		            <li class="nav-link alert alert-warning"
 						sec:authorize="hasAnyRole('ADMIN', 'STAFF')"
@@ -108,7 +108,6 @@
 		        </div>
 		      </div>
 		    </nav>
-
             <script>
                  $(document).on('input', '#searchField', function(e){
                 	 if($("#searchField").val().trim()) {
