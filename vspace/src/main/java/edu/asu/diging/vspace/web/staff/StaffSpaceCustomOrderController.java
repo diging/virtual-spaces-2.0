@@ -19,7 +19,7 @@ import edu.asu.diging.vspace.core.services.ISpacesCustomOrderManager;
  */
 
 @Controller
-public class StaffSpaceController {
+public class StaffSpaceCustomOrderController {
     
     @Autowired
     private ISpacesCustomOrderManager spacesCustomOrderManager;

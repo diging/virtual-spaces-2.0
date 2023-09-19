@@ -16,6 +16,11 @@ import edu.asu.diging.vspace.core.model.impl.SpacesCustomOrder;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IExhibitionSpaceOrderUtility;
 
+/**
+ * Utility class for Exhibition Spaces custom order
+ * @author prachikharge
+ *
+ */
 @Component
 public class ExhibitionSpaceOrderUtility implements IExhibitionSpaceOrderUtility {
     

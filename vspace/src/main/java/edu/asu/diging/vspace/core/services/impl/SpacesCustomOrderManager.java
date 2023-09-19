@@ -70,8 +70,9 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
     @Override
     public ISpacesCustomOrder get(String customSpaceOrderId) {
         Optional<SpacesCustomOrder> spacesCustomOrderOptional = spacesCustomOrderRepository.findById(customSpaceOrderId);
-        if(spacesCustomOrderOptional.isPresent())
+        if(spacesCustomOrderOptional.isPresent()) {
             return spacesCustomOrderOptional.get();
+        }          
         return null;
     }
     
@@ -93,10 +94,15 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
         save(spacesCustomOrders);
     }
     
-    /**
-     *This method updates the custom order name or description
-     */
+  
+
     @Override
+    /**
+     * This method updates the custom order name and description
+     * @param spacesCustomOrderId
+     * @param title
+     * @param description
+     */
     public void updateNameAndDescription(String spacesCustomOrderId, String title, String description) {
         ISpacesCustomOrder spaceCustomOrder = get(spacesCustomOrderId);
         spaceCustomOrder.setCustomOrderName(title);
@@ -105,17 +111,15 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
     }
 
     /**
-     * This method edits the custom order
+     * This method updated custom order of spaces
      * @param spacesCustomOrderId
      * @param spacesIds
      */
     @Override
     public void updateSpaces(String spacesCustomOrderId, List<String> spacesIds) {
         List<ISpace> spaces = new ArrayList<ISpace>();
-        for(String id : spacesIds) {
-            if(spaceManager.getSpace(id) != null)
-                spaces.add(spaceManager.getSpace(id));
-        }
+        spacesIds.stream().filter(spaceId -> spaceManager.getSpace(spaceId) != null)
+            .map(id -> spaces.add(spaceManager.getSpace(id)));
         ISpacesCustomOrder spaceCustomOrder = get(spacesCustomOrderId);
         spaceCustomOrder.setCustomOrderedSpaces(spaces);
         spacesCustomOrderRepository.save((SpacesCustomOrder)spaceCustomOrder);
@@ -135,7 +139,7 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
     }
     
     /**
-     * This method deletes the custom order by id
+     * This method deletes the @{SpaceCustomOrder} object with the given id.
      * @param id
      */
     @Override
