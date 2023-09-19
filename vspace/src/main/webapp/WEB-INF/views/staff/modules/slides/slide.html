@@ -316,6 +316,38 @@
 			}			
 			
 			//--------- Utility functions -------------
+
+			function createExternalLinkInfo() {
+				var info = {};
+				info["x"] = storeX;
+				info["y"] = storeY;
+				info["tabOpen"] = $("#extTabOpen").val();
+				info["type"] = $("#extType").val();
+				info["externalLinkLabel"] = $("#externalLinkLabel").val();
+				info["externalLinkURL"] = $("#externalLink").val();
+				return info;
+			}
+			
+			function editExternalLinkInfo() {
+				var info = {};
+				info["x"] = storeX;
+				info["y"] = storeY;
+				info["tabOpen"] = $("#extTabOpenEdit").val();
+				info["type"] = $("#extTypeEdit").val();
+				info["externalLinkLabel"] = $("#externalLinkLabelEdit").val();
+				info["externalLinkURL"] = $("#externalLinkURLEdit").val();
+				return info;
+			}
+			
+			function displayForms(formToShow){
+			    drawLinks();
+			    $("#slide").css("display", "-webkit-box");
+			    $(formToShow).css("display", "flex");
+			    modalBgImageHeight = parseInt($("#bgImage").css("height"));
+			    modalBgImageWidth = parseInt($("#bgImage").css("width"));
+			}
+			
+			
 			
 			
             function createImageBlock(reader, width) {
@@ -668,14 +700,6 @@
 				});
 			}
             
-        	function displayForms(formToShow){
-        	    drawLinks();
-        	    $("#space").css("display", "-webkit-box");
-        	    $(formToShow).css("display", "flex");
-        	    modalBgImageHeight = parseInt($("#bgImage").css("height"));
-        	    modalBgImageWidth = parseInt($("#bgImage").css("width"));
-        	}
-
         	function updateContentOrder(jsonObj,token){
             		$.ajax({
             		 // ------------- adjusting content order of blocks if their position changed after dragging ----------
@@ -967,25 +991,6 @@
                     addVideoClk =1;
                     editVideoClk=0;
                 });
-                
-                $("#addExternalLinkButton").click(function(e) {
-                    $("#bgImage").off("click");
-                    $("#bgImage").on("click", function(e){
-                        e.preventDefault();
-                        $("#link").remove();
-                        $("#external-arrow").remove();
-                        $("#ext_label").remove();
-                        var icon;
-                        var posX = $(this).position().left
-                        var posY = $(this).position().top;
-                        storeX = e.pageX - $(this).offset().left;
-                        storeY = e.pageY - $(this).offset().top + 25;
-                        showExternalLinks(createExternalLinkInfo(), false, storeX, storeY);
-                    });
-                    hideLinkInfoTabs();
-                    displayForms("#createExternalLinkAlert");
-                });
-
                 
                 $("#uploadImage").click(function(e) {
                     e.preventDefault();
