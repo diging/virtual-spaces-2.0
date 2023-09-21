@@ -1,0 +1,192 @@
+
+<html layout:decorate="~{layouts/main_staff}">
+<head>
+<script th:src="@{/resources/bootpag/js/bootpag.min.js}"></script>
+<script th:inline="javascript">
+</script>
+<style>
+.pagination>li>a {
+    border: 1px solid var(--primary);
+    padding: 5px;
+    color: var(--primary);
+    font-size: 15px;
+}
+
+.pagination>li.active>a {
+    background: var(--primary);
+    color: #fff;
+    font-size: 15px;
+}
+
+.img-thumbnail {
+    height: 100px;
+    width: 140px;
+}
+</style>
+<script th:inline="javascript">
+
+function deleteFile(fileid){
+	var token = [[${_csrf.token}]];
+	$.ajax({
+        url: "[(@{'/staff/files/'})]"+fileid +'/delete?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]] ,
+        type: 'POST',
+        cache: false,
+        contentType : false,
+        success: function(data) {
+        	window.location.href = "[(@{'/staff/files/list/'})]"+'?'+"deleteFileSuccess=true&message="+data;
+        },
+        error: function(data) {
+        	var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+            $('.errorDelete').append(alert);
+        }
+    });
+}
+
+$(document).ready(function($) {
+	
+   	$(function () {
+	  $('[data-toggle="tooltip"]').tooltip()
+	});
+    
+  	var fileId;
+    $(".deleteFileTooltip").on("click", function() {
+		fileId = $(this).attr("value");
+		$('#deleteFileAlert').modal('show');
+	});
+    
+    $("#deleteFileButtonConfirm").on("click", function() {
+		$('#deleteFileAlert').modal('hide');
+		deleteFile(fileId);
+	});
+    
+    
+    $("#cancelFileDelButton").click(function () {
+        $("#deleteFileAlert").data('value', 0);
+        $("#deleteFileAlert").modal('hide');
+	});
+	
+    
+	$("#files").addClass("active");	
+	$('.filePage-selection').bootpag({
+		total: [[${filesTotalPages}]],
+		page: [[${filesCurrentPageNumber}]],
+		maxVisible: 10,
+		leaps: true,
+		firstLastUse: true,
+		first: '|<',
+		last: '>|',
+		wrapClass: 'pagination',
+		activeClass: 'active',
+		disabledClass: 'disabled',
+		nextClass: 'next',
+		prevClass: 'prev',
+		lastClass: 'last',
+		firstClass: 'first'
+	}).on("page", function(event, num){
+		window.location.assign("[(@{'/staff/files/list'})]"+'?'+"filesPagenum="+num);
+	});
+	
+
+});
+
+</script>
+</script>
+<style>
+.pagination>li>a {
+	border: 1px solid #A55941;
+	padding: 5px;
+	color: #A55941;
+	font-size: 15px;
+}
+
+.pagination>li.active>a {
+	background: #A55941;
+	color: #fff;
+	font-size: 15px;
+}
+
+a.nav-link.active.show {
+	border-color: transparent;
+	border-bottom: 4px solid var(--primary);
+	color: var(--primary) !important;
+	background: transparent;
+	font-weight: 600;
+}
+
+
+</style>
+</head>
+<body>
+    <div layout:fragment="content" class="main-content">
+    <span class = "alert"></span>
+     <span class = "errorDelete"></span>
+      <span th:if="${param.uploadFileSuccess}" class = "successAlert" >
+      	<div class="alert alert-success alert-dismissible fade show" role="alert"><p>[[${param.message}]]</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>
+       </span>
+          <span th:if="${param.deleteFileSuccess}" class = "successAlert" >
+      	<div class="alert alert-success alert-dismissible fade show" role="alert"><p>[[${param.message}]]</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>
+       </span>
+    	<a th:href="@{/staff/files/add}" class="btn primary-btn btn-sm" style="float: right; margin-right: 15px">+ Upload File</a>
+        <h2>Files</h2>
+        <div style="padding-bottom: 20px;">This virtual exhibition
+            contains the following files.</div>
+        <div class="filePage-selection"></div>
+        <table class="table" >
+            <thead>
+                <tr>
+                    <th scope="col" sort-prop="filename"><a
+                        href="#">Filename</a></th>
+                    <th scope="col" sort-prop="name"><a href="#">Original File Name</a></th>
+                    <th scope="col" sort-prop="type"><a href="#">File Type</a></th>
+                    <th scope="col" sort-prop="createdBy"><a
+                        href="#">Created By</a></th>
+                    <th scope="col" sort-prop="creationDate"><a
+                        href="#">Created Date</a></th>
+                     <th scope="col" sort-prop="modifiedDate"><a
+                     href="#">Modified Date</a></th>
+                     <th scope="col" >View</th>
+                     
+                     
+                </tr>
+            </thead>
+            <tbody class="tableBody" id="files">
+                <tr th:each="file: ${files}">
+                    <th scope="row">[[${file.filename}]]</th>
+                    <td>[[${file.originalFileName}]]</td>
+                    <td>[[${file.fileType}]]</td>
+                    <td>[[${file.createdBy}]]</td>
+                    <td><span class="date">[[${file.creationDate}]]</span></td>
+                    <td><span class="date">[[${file.creationDate}]]</span></td>
+                    <td><a data-toggle="tooltip" class="editFileTooltip" title="Edit File"  data-html="true" data-placement="top"  th:href="@{'/staff/files/'+${file.id}} +'/edit'" ><span class="icon-write secondary" ></span> </a></td>
+                    <td><a data-toggle="tooltip" class="deleteFileTooltip" title="Delete File"  th:value=${file.getId()}  data-html="true" data-placement="top"  href="#" ><span id= "deleteFileButton" class="icon-trash secondary" ></span></a></td>
+                    <td><a data-toggle="tooltip" class="downloadFileTooltip" title="Download File" data-html="true" data-placement="top"  th:href="@{'/staff/files/'+${file.id}+'/download?id='+${file.id}}" ><span class="icon-arrow-down secondary" ></span> </a></td>
+                
+                </tr>
+            </tbody>
+        </table>
+        <div id="deleteFileAlert" class="modal fade" role="dialog" data-value="0">
+		    <div class="modal-dialog">
+		        <div class="modal-content">
+		            <div class="modal-header">
+		                <h4 class="modal-title" id="deleteFileTitle">Confirm Deletion</h4>
+		                <button type="button" id="closeSlide" class="close"
+		                    data-dismiss="modal" aria-hidden="true"><span class="icon-circle-close"></span></button>
+		            </div>
+		            <div class="modal-body">
+		                <p>
+		                    Are you sure you want to delete this file? 
+		                </p>
+		            </div>
+		            <div class="modal-footer">
+		                <button type="button" id="cancelFileDelButton"
+		                    class="btn btn-default" data-dismiss="modal">Cancel</button>
+		                <button id="deleteFileButtonConfirm"  type="submit"
+		                    class="btn btn-danger btn-ok">Delete</button>
+		            </div>
+		        </div>
+		    </div>
+		</div>
+        <div class="filePage-selection"></div>
+        </div>
+</body>
+</html>
