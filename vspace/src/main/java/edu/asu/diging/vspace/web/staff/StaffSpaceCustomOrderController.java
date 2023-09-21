@@ -12,7 +12,7 @@ import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.ISpacesCustomOrderManager;
 
 /**
- * StaffSpaceController is the controller
+ * StaffSpaceCustomOrderController is the controller
  * to set mode of order of spaces on exhibition side, change custom order selection
  * @author Tushar Anand
  *
@@ -34,17 +34,11 @@ public class StaffSpaceCustomOrderController {
         return "/staff/spaces/customorder/customordering";
     }
     
-    @RequestMapping(value = "/staff/space/order/setExhibitionCustomOrder", method = RequestMethod.POST)
+    @RequestMapping(value = "/staff/space/order/{orderId}/set", method = RequestMethod.POST)
     public String setExhibitionSpacesCustomOrder(Model model,
             @RequestParam("selectedCustomOrderId") String orderId) {
         spacesCustomOrderManager.setExhibitionSpacesCustomOrder(orderId);
         return "redirect:/staff/space/order";
-    }
-    
-    @RequestMapping(value = "/staff/space/order/mode", method = RequestMethod.POST)
-    public String updateSpaceOrderMode(String mode, @RequestParam ExhibitionSpaceOrderMode spaceOrderMode) {
-        exhibitionManager.updateSpaceOrderMode(spaceOrderMode);
-        return "redirect:/staff/space/list";
     }
     
 }
