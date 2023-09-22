@@ -77,8 +77,7 @@ public class SpaceController {
         return new ResponseEntity<>(spaceLinkPresent, HttpStatus.OK);
     }
 
-    @RequestMapping(value = STAFF_SPACE_PATH
-            + "{id}/links", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = STAFF_SPACE_PATH + "{id}/links", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Object>> showSpaceLinks(@PathVariable String id, Model model) {
         Map<String, Object> responseData = new HashMap<String, Object>();
 

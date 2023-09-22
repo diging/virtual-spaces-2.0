@@ -66,7 +66,6 @@ public class ExhibitionConfigurationController {
                     .map(language -> language.getLabel()).collect(Collectors.toList()));
             model.addAttribute("defaultLanguage", exhibition.getLanguages().stream()
                     .filter(language -> language.isDefault()).findFirst().orElse(null));
-
         }
         model.addAttribute("exhibitionModes", Arrays.asList(ExhibitionModes.values()));
         model.addAttribute("spacesList", spaceRepo.findAll());
@@ -134,7 +133,6 @@ public class ExhibitionConfigurationController {
             externalImage = externalLinkImage.getBytes();
             externalLinkFilename = externalLinkImage.getOriginalFilename();
             externalDefaultImage = imageService.storeImage(externalImage, externalLinkFilename);
-
         }
         List<IVSImage> defaultImagelist = new ArrayList<>();
         defaultImagelist.add(spaceDefaultImage);
