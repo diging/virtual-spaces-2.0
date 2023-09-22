@@ -24,13 +24,13 @@ import edu.asu.diging.vspace.core.services.impl.ExternalLinkManager;
 @Controller
 public class EditExternalLinkController extends EditSpaceLinksController {
 
-	@Autowired
-	private ISpaceManager spaceManager;
+    @Autowired
+    private ISpaceManager spaceManager;
 
-	@Autowired
-	private IExternalLinkManager externalLinkManager;
+    @Autowired
+    private IExternalLinkManager externalLinkManager;
 
-	@RequestMapping(value = "/staff/space/link/external/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/staff/space/link/external/{id}", method = RequestMethod.POST)
 	public ResponseEntity<String> createExternalLink(@PathVariable("id") String id, @RequestParam("x") String x,
 			@RequestParam("y") String y, @RequestParam("externalLinkLabel") String title,
 			@RequestParam("externalLinkDesc") String desc, @RequestParam("url") String externalLink,
@@ -43,16 +43,16 @@ public class EditExternalLinkController extends EditSpaceLinksController {
 			throws SpaceDoesNotExistException, IOException, LinkDoesNotExistsException, NumberFormatException,
 			ImageCouldNotBeStoredException, ImageDoesNotExistException {
 
-		ResponseEntity<String> validation = checkIfSpaceExists(spaceManager, id, x, y);
-		if (validation != null) {
+        ResponseEntity<String> validation = checkIfSpaceExists(spaceManager, id, x, y);
+        if (validation != null) {
 			return validation;
-		}
+	    }
 		byte[] linkImage = null;
 		String filename = null;
 		if (file != null) {
 			linkImage = file.getBytes();
 			filename = file.getOriginalFilename();
-		}
+        }
 		DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
 		ExternalLinkDisplayMode externalLinkOpenMode = howToOpen.isEmpty() ? null
 				: ExternalLinkDisplayMode.valueOf(howToOpen);

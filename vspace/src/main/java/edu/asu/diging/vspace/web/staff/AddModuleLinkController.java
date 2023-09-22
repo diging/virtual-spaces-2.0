@@ -26,13 +26,13 @@ import edu.asu.diging.vspace.core.services.ISpaceManager;
 @Controller
 public class AddModuleLinkController {
 
-	@Autowired
-	private ISpaceManager spaceManager;
+    @Autowired
+    private ISpaceManager spaceManager;
 
-	@Autowired
-	private IModuleLinkManager moduleLinkManager;
+    @Autowired
+    private IModuleLinkManager moduleLinkManager;
 
-	@RequestMapping(value = "/staff/space/{id}/modulelink", method = RequestMethod.POST)
+    @RequestMapping(value = "/staff/space/{id}/modulelink", method = RequestMethod.POST)
 	public ResponseEntity<String> createModuleLink(@PathVariable("id") String id, @RequestParam("x") String x,
 			@RequestParam("y") String y, @RequestParam("rotation") String rotation,
 			@RequestParam("moduleLinkLabel") String title, @RequestParam("linkedModule") String linkedModuleId,
@@ -42,46 +42,46 @@ public class AddModuleLinkController {
 			@RequestParam(value = "imageId", required = false) String imageId)
 			throws NumberFormatException, SpaceDoesNotExistException, IOException, ImageCouldNotBeStoredException, ImageDoesNotExistException {
 
-		ISpace source = spaceManager.getSpace(id);
-		if (source == null) {
-			return new ResponseEntity<>("{'error': 'Space could not be found.'}", HttpStatus.NOT_FOUND);
-		}
+        ISpace source = spaceManager.getSpace(id);
+        if (source == null) {
+            return new ResponseEntity<>("{'error': 'Space could not be found.'}", HttpStatus.NOT_FOUND);
+        }
 
-		if (x == null || x.trim().isEmpty() || y == null || y.trim().isEmpty()) {
-			ObjectMapper mapper = new ObjectMapper();
-			ObjectNode node = mapper.createObjectNode();
-			node.put("errorMessage", "No link coordinates specified.");
-			return new ResponseEntity<String>(mapper.writeValueAsString(node), HttpStatus.BAD_REQUEST);
-		}
+        if (x == null || x.trim().isEmpty() || y == null || y.trim().isEmpty()) {
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode node = mapper.createObjectNode();
+            node.put("errorMessage", "No link coordinates specified.");
+            return new ResponseEntity<String>(mapper.writeValueAsString(node), HttpStatus.BAD_REQUEST);
+        }
 
 		byte[] linkImage = null;
 		String filename = null;
-		if (file != null) {
-			linkImage = file.getBytes();
+        if (file != null) {
+            linkImage = file.getBytes();
 			filename = file.getOriginalFilename();
-		}
+        }
 
-		DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
-		IModuleLinkDisplay display;
-		try {
-			display = moduleLinkManager.createLink(title, id, new Float(x), new Float(y), new Integer(rotation),
+        DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
+        IModuleLinkDisplay display;
+        try {
+            display = moduleLinkManager.createLink(title, id, new Float(x), new Float(y), new Integer(rotation),
 					linkedModuleId, moduleLinkLabel, moduleLinkDesc, type, linkImage, filename, imageId);
-		} catch (SpaceDoesNotExistException e) {
-			ObjectMapper mapper = new ObjectMapper();
-			ObjectNode node = mapper.createObjectNode();
-			node.put("errorMessage", "space could not be found.");
-			return new ResponseEntity<>(mapper.writeValueAsString(node), HttpStatus.INTERNAL_SERVER_ERROR);
+	    } catch (SpaceDoesNotExistException e) {
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode node = mapper.createObjectNode();
+            node.put("errorMessage", "space could not be found.");
+            return new ResponseEntity<>(mapper.writeValueAsString(node), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		display.setRotation(new Integer(rotation));
+        display.setRotation(new Integer(rotation));
 
-		ObjectMapper mapper = new ObjectMapper();
-		ObjectNode linkNode = mapper.createObjectNode();
-		linkNode.put("id", display.getLink().getId());
-		linkNode.put("displayId", display.getId());
-		linkNode.put("x", display.getPositionX());
-		linkNode.put("y", display.getPositionY());
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode linkNode = mapper.createObjectNode();
+        linkNode.put("id", display.getLink().getId());
+        linkNode.put("displayId", display.getId());
+        linkNode.put("x", display.getPositionX());
+        linkNode.put("y", display.getPositionY());
 
-		return new ResponseEntity<>(mapper.writeValueAsString(linkNode), HttpStatus.OK);
+        return new ResponseEntity<>(mapper.writeValueAsString(linkNode), HttpStatus.OK);
 	}
 
 }
