@@ -46,7 +46,7 @@ public class EditSpaceLinkController extends EditSpaceLinksController {
         if (validation != null) {
             return validation;
         }
-		byte[] linkImage = null;
+        byte[] linkImage = null;
         String filename = null;
         if (file != null && !file.isEmpty()) {
             linkImage = file.getBytes();
@@ -60,6 +60,6 @@ public class EditSpaceLinkController extends EditSpaceLinksController {
         String linkedSpaceStatus = targetSpaceStatus != null ? targetSpaceStatus.toString() : null;
         return success(display.getLink().getId(), display.getId(), display.getPositionX(), display.getPositionY(),
 				display.getRotation(), null, title, displayType, linkedSpaceId, linkedSpaceStatus);
-	}
+    }
 
 }

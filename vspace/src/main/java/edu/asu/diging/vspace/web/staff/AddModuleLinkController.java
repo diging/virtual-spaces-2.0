@@ -71,7 +71,7 @@ public class AddModuleLinkController {
             ObjectNode node = mapper.createObjectNode();
             node.put("errorMessage", "space could not be found.");
             return new ResponseEntity<>(mapper.writeValueAsString(node), HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+        }
         display.setRotation(new Integer(rotation));
 
         ObjectMapper mapper = new ObjectMapper();
@@ -82,6 +82,6 @@ public class AddModuleLinkController {
         linkNode.put("y", display.getPositionY());
 
         return new ResponseEntity<>(mapper.writeValueAsString(linkNode), HttpStatus.OK);
-	}
+    }
 
 }
