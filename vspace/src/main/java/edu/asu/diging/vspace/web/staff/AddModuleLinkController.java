@@ -54,11 +54,11 @@ public class AddModuleLinkController {
             return new ResponseEntity<String>(mapper.writeValueAsString(node), HttpStatus.BAD_REQUEST);
         }
 
-		byte[] linkImage = null;
-		String filename = null;
+        byte[] linkImage = null;
+        String filename = null;
         if (file != null) {
             linkImage = file.getBytes();
-			filename = file.getOriginalFilename();
+            filename = file.getOriginalFilename();
         }
 
         DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
@@ -66,7 +66,7 @@ public class AddModuleLinkController {
         try {
             display = moduleLinkManager.createLink(title, id, new Float(x), new Float(y), new Integer(rotation),
 					linkedModuleId, moduleLinkLabel, moduleLinkDesc, type, linkImage, filename, imageId);
-	    } catch (SpaceDoesNotExistException e) {
+        } catch (SpaceDoesNotExistException e) {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode node = mapper.createObjectNode();
             node.put("errorMessage", "space could not be found.");

@@ -45,21 +45,21 @@ public class EditExternalLinkController extends EditSpaceLinksController {
 
         ResponseEntity<String> validation = checkIfSpaceExists(spaceManager, id, x, y);
         if (validation != null) {
-			return validation;
-	    }
-		byte[] linkImage = null;
-		String filename = null;
-		if (file != null) {
-			linkImage = file.getBytes();
-			filename = file.getOriginalFilename();
+            return validation;
         }
-		DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
-		ExternalLinkDisplayMode externalLinkOpenMode = howToOpen.isEmpty() ? null
+        byte[] linkImage = null;
+        String filename = null;
+        if (file != null) {
+            linkImage = file.getBytes();
+            filename = file.getOriginalFilename();
+        }
+        DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
+        ExternalLinkDisplayMode externalLinkOpenMode = howToOpen.isEmpty() ? null
 				: ExternalLinkDisplayMode.valueOf(howToOpen);
-		IExternalLinkDisplay display = (IExternalLinkDisplay) externalLinkManager.updateLink(title, id, new Float(x),
+        IExternalLinkDisplay display = (IExternalLinkDisplay) externalLinkManager.updateLink(title, id, new Float(x),
 				new Float(y), 0, externalLink, title,desc, externalLinkIdValueEdit, externalLinkDisplayId, type, linkImage,
 				filename, imageId);
-		return success(display.getExternalLink().getId(), display.getId(), display.getPositionX(),
+        return success(display.getExternalLink().getId(), display.getId(), display.getPositionX(),
 				display.getPositionY(), display.getRotation(), display.getExternalLink().getExternalLink(), title,
 				displayType, null, null);
 

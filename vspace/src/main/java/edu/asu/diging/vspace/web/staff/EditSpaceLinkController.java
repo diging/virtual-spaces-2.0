@@ -24,13 +24,13 @@ import edu.asu.diging.vspace.core.exception.ImageDoesNotExistException;
 @Controller
 public class EditSpaceLinkController extends EditSpaceLinksController {
 
-	@Autowired
-	private ISpaceManager spaceManager;
+    @Autowired
+    private ISpaceManager spaceManager;
 
-	@Autowired
-	private ISpaceLinkManager spaceLinkManager;
+    @Autowired
+    private ISpaceLinkManager spaceLinkManager;
 
-	@RequestMapping(value = "/staff/space/link/space/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/staff/space/link/space/{id}", method = RequestMethod.POST)
 	public ResponseEntity<String> editSpaceLink(@PathVariable("id") String id, @RequestParam("x") String x,
 			@RequestParam("y") String y, @RequestParam("rotation") String rotation,
 			@RequestParam("spaceLinkLabel") String title, @RequestParam("linkedSpace") String linkedSpaceId,
@@ -42,23 +42,23 @@ public class EditSpaceLinkController extends EditSpaceLinksController {
 			@RequestParam(value = "imageId", required = false) String imageId) throws NumberFormatException,
 			SpaceDoesNotExistException, LinkDoesNotExistsException, IOException, ImageCouldNotBeStoredException, ImageDoesNotExistException {
 
-		ResponseEntity<String> validation = checkIfSpaceExists(spaceManager, id, x, y);
-		if (validation != null) {
-			return validation;
-		}
+        ResponseEntity<String> validation = checkIfSpaceExists(spaceManager, id, x, y);
+        if (validation != null) {
+            return validation;
+        }
 		byte[] linkImage = null;
-		String filename = null;
-		if (file != null && !file.isEmpty()) {
-			linkImage = file.getBytes();
-			filename = file.getOriginalFilename();
-		}
-		DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
-		ISpaceLinkDisplay display = (ISpaceLinkDisplay) spaceLinkManager.updateLink(title, id, new Float(x),
+        String filename = null;
+        if (file != null && !file.isEmpty()) {
+            linkImage = file.getBytes();
+            filename = file.getOriginalFilename();
+        }
+        DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
+        ISpaceLinkDisplay display = (ISpaceLinkDisplay) spaceLinkManager.updateLink(title, id, new Float(x),
 				new Float(y), new Integer(rotation), linkedSpaceId, spaceLinkLabel,spaceLinkDesc, spaceLinkIdValueEdit,
 				spaceLinkDisplayId, type, linkImage, filename,  imageId);
-		SpaceStatus targetSpaceStatus = spaceManager.getSpace(linkedSpaceId).getSpaceStatus();
-		String linkedSpaceStatus = targetSpaceStatus != null ? targetSpaceStatus.toString() : null;
-		return success(display.getLink().getId(), display.getId(), display.getPositionX(), display.getPositionY(),
+        SpaceStatus targetSpaceStatus = spaceManager.getSpace(linkedSpaceId).getSpaceStatus();
+        String linkedSpaceStatus = targetSpaceStatus != null ? targetSpaceStatus.toString() : null;
+        return success(display.getLink().getId(), display.getId(), display.getPositionX(), display.getPositionY(),
 				display.getRotation(), null, title, displayType, linkedSpaceId, linkedSpaceStatus);
 	}
 
