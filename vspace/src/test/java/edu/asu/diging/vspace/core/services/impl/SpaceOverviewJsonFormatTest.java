@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,7 +72,7 @@ public class SpaceOverviewJsonFormatTest {
 
         Map<String, List<String>> spacesToSpacesAndModulesMap = new HashMap<>();
         spacesToSpacesAndModulesMap.put("SPACE_ID1",
-                new ArrayList<>((List.of("MODULE_ID1", "MODULE_ID5", "MODULE_ID4", "SPACE_ID2"))));
+                Arrays.asList("MODULE_ID1", "MODULE_ID5", "MODULE_ID4", "SPACE_ID2"));
         spacesToSpacesAndModulesMap.put("MODULE_ID1", null);
         try {
             String json = serviceToTest.createNodes("contextPath", spacesToSpacesAndModulesMap);

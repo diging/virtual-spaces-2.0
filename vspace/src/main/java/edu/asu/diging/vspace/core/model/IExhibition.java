@@ -1,5 +1,7 @@
 package edu.asu.diging.vspace.core.model;
 
+import java.util.List;
+
 public interface IExhibition extends IVSpaceElement {
 
     /*
@@ -25,5 +27,15 @@ public interface IExhibition extends IVSpaceElement {
     boolean isAboutPageConfigured();
 
     void setAboutPageConfigured(boolean aboutPageConfigured);
+
+    List<IExhibitionLanguage> getLanguages();
+    
+    ExhibitionModes getMode();
+    
+    void setMode(ExhibitionModes mode);
+    
+    String getPreviewId();
+    
+    void setPreviewId(String previewId);
 
 }

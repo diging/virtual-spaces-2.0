@@ -31,6 +31,7 @@
     overflow-x: hidden;
     transition: 0.5s;
     padding-top: 60px;
+
 }
 
 .sidenav a {
@@ -40,6 +41,9 @@
     color: #818181;
     display: block;
     transition: 0.3s;
+    white-space: normal; /* Add this property to allow text wrapping */
+    word-break: normal;
+  
 }
 
 .sidenav .closebtn {
@@ -53,6 +57,7 @@
 @media screen and (max-height: 450px) {
     .sidenav {
         padding-top: 15px;
+  
     }
     .sidenav a {
         font-size: 18px;
@@ -89,6 +94,9 @@
     visibility: visible;
 }
 
+
+
+
 .exitfullscreen:hover .tooltiptextForExitFullscreen {
     visibility: visible;
 }
@@ -108,6 +116,7 @@
 }
 
 
+
 .tooltiptextForExitFullscreen {
     visibility: hidden;
     width: 120px;
@@ -125,6 +134,9 @@
 
 .barPosition {
     top: 25px;
+}
+#previewNavBarItem {
+	display: inline-flex;
 }
 
 @media only screen and (max-width: 800px) { /* For mobile phones: */
@@ -164,6 +176,7 @@
     /* top layer */
     z-index: 9999;
     transition: all 0.5s;
+
 }
 
 #sidebar.active {
@@ -233,7 +246,8 @@
 					$("#Module_1").css("margin-bottom", "60px");
 				}
 			}
-			$("#space a").remove();        
+			$("#space a").remove(); 
+			$(".Info_cz_Class").remove();
 			drawLinks();
 		}
 		
@@ -269,9 +283,12 @@
 		let maxWidth='(max-width: 1200px)';
 		function openNav(){
 		  $("#mySidenav").css("width", "250px");
+		  $("#mySidenav").css("overflow", "visible");
+		  
 		}
         function closeNav(){
         	$("#mySidenav").css("width", "0");
+        	 $("#mySidenav").css("overflow", "hidden");
 		}
 		function openModuleNav(){
 		    if (window.matchMedia(maxWidth).matches){
@@ -333,8 +350,9 @@
 		    	let spaceHeight = $("#bgImage").css("height");
 		    	$("#Module_1").css("height",spaceHeight);
 			$( window ).resize(function() {
-				$("#space a").remove();
-		    		drawLinks();
+					$("#space a").remove();
+					$(".Info_cz_Class").remove();
+			    	drawLinks();
 		    	});
 		    	drawLinks();
 		    	toggleImgSize(false);
@@ -343,16 +361,24 @@
 		function drawLinks() {
 			var spaceLinks = [[${spaceLinks}]];
 			var moduleLinks = [[${moduleList}]];
+			var isExhPreview  =[[${isExhPreview}]];
 			var externalLinks = [[${externalLinkList}]];
+			var spaceTextBlocks = [[${spaceTextBlocks}]];
 			var height = parseInt($("#bgImage").css("height"));
 			var width = parseInt($("#bgImage").css("width"));
 			let relativeHeight = ([(${display?.width})]/width)*height;
-		    spaceLinks.forEach(function(link,index){
+			spaceLinks.forEach(function(link,index) {
                 if(link!=null){
                     var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 
     		        var posY = $("#space").position().top;
     		        var spaceLink = $('<a></a>');
-    		        spaceLink.attr("href", link.link.targetSpace.id);
+    		        if(isExhPreview=== true){
+    		        	spaceLink.attr("href",[[@{|/preview/${previewId}/space/|}]]+link.link.targetSpace.id);
+    		        }
+    		        else{
+    		        	spaceLink.attr("href", link.link.targetSpace.id);
+    		        }
+    		        
     		        var linkDisplay;
     		        var spaceLinkTooltip;
     		        if(link.type=="ALERT"){
@@ -391,7 +417,12 @@
                     var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 
     		        var posY = $("#space").position().top;
     		        var moduleLink = $('<a></a>');
-    		        var moduleLinkURL = [[@{|/exhibit/${space?.id}/module/|}]]+link.link.module.id;
+    		        var moduleLinkURL = null;
+    		        if(isExhPreview=== true){
+    		        	moduleLinkURL = [[@{|/preview/${previewId}/${space?.id}/module/|}]]+link.link.module.id;
+    		        } else{
+    		        	 moduleLinkURL = [[@{|/exhibit/${space?.id}/module/|}]]+link.link.module.id;
+    		        }
     		        moduleLink.attr("href", moduleLinkURL);
     		        var moduleLinkTooltip = (link.link.name!=null && link.link.name!=''? link.link.name : '') + (link.link.description!=null && link.link.description!='' ? ' : '+link.link.description : "");
     		        var linkDisplay;
@@ -460,6 +491,22 @@
   		          });
                 }
             })
+            
+            spaceTextBlocks.forEach(function(block,index){
+                if(block!=null){
+                    var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left;
+                    var posY = $("#space").position().top;
+                    var heightText = (block.height*height)/100;
+                    var widthText = (block.width*width)/100;
+                    var textBlock = $('<span data-link-id="'+block.id+'" class="spaceLink-'+block.id+' Info_cz_Class"><textarea class="textBlock" style="height:'+heightText+'px; width:'+widthText+'px; resize:none;" readonly>'+block.spaceTextBlock.text+'</textarea></span>');
+                    textBlock.css('position', 'absolute');
+                    var	linkPosX=(width*block.positionX)/[(${display.width})];
+                    var	linkPosY=(height*block.positionY)/relativeHeight;
+                    textBlock.css('left', linkPosX + posX);
+                    textBlock.css('top', linkPosY + posY);
+                    $("#space").append(textBlock);
+                }
+            })
 		}
 		</script>
 		
@@ -480,6 +527,8 @@
 		</div>
 		
 		</div>
+
+     
 		<div class="imgResizeDiv">
                 <button class="btn circle-btn" id="toggleBtn" style="width: 35px; height: 35px; margin-left: 10px; margin-top: 5px; padding: 3px;"
                     onclick="toggleImgSize(1)">
@@ -498,6 +547,7 @@
                 </button>
             </div>
             
+           
         <div class="container-fluid"
             th:style="${showAlert} ? 'display:none' : 'display:block'">
             <div class="modalDown alert alert-warning center col-md-12"
@@ -509,17 +559,28 @@
                     th:unless="${exhibitionConfig.customMessage != '' && exhibitionConfig.mode == 'OFFLINE'}">[[${exhibitionConfig.mode?.value}]]</h6>
             </div>
             <div id="Module_1" class="Home_Class" style="margin: -45px 0 60px auto;">
-                <div id="mySidenav" class="sidenav">
+             
+                <div  th:if="${isExhPreview} == null OR ${isExhPreview} == false" id="mySidenav" class="sidenav">
                     <a href="javascript:void(0)" class="closebtn"
                         onclick="closeNav()">&times;</a>
                     <ul th:each="space: ${publishedSpaces}">
                         <li><a class="dropdown-item"
-                            th:href="@{'/exhibit/space/'+${space?.id}}">[[${space.name}]]</a>
+                            th:href="@{'/exhibit/space/'+${space?.id}}">[[${space.name}]]</a> 
+                             
+                            
                         </li>
                     </ul>
                 </div>
-                <span style="font-size: 30px; cursor: pointer"
-                    onclick="openNav()">&#9776;</span>
+              	   
+                <div  th:if="${isExhPreview} == true" id="mySidenav" class="sidenav">
+                  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+                    <ul th:each="space: ${publishedSpaces}">
+                        <li><a class="dropdown-item" id="previewNavBarItem" th:href="@{'/preview/'+${previewId}+'/space/'+${space?.id}}">[[${space.name}]]
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <span style="font-size: 30px; cursor: pointer" onclick="openNav()">&#9776;</span>
                 <div class="spaceClass" id="spaceDiv"
                     style="width: 80%; display: flex; margin-left: 10px; margin-top: -50px; justify-content: center; padding-top: 10px;">
                     <div>
@@ -532,13 +593,21 @@
                                     <ul style="list-style: none;"
                                         th:each="module: ${moduleList}">
                                         <li
-                                            th:if="${!#strings.isEmpty(module.link.name)}"><a
+                                            th:if="${!#strings.isEmpty(module.link.name) AND (isExhPreview == null OR isExhPreview== false)}"><a
                                             class="dropdown-item"
                                             th:href="@{'/exhibit/'+${space?.id}+'/module/'+${module.link.module?.id}}"><div class="Info Info_cz_module_Class"><svg class="Ellipse_8_module_c_sidenav"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_module_c_sidenav"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_module_c_sidenav"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_module_m_sidenav"></span></div>[[${module.link.name}]]</a></li>
                                         <li
-                                            th:if="${#strings.isEmpty(module.link.name)}"><a
+                                            th:if="${#strings.isEmpty(module.link.name) AND (isExhPreview == null OR isExhPreview== false)}"><a
                                             class="dropdown-item"
                                             th:href="@{'/exhibit/'+${space?.id}+'/module/'+${module.link.module?.id}}"><div class="Info Info_cz_module_Class"><svg class="Ellipse_8_module_c_sidenav"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_module_c_sidenav"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_module_c_sidenav"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_module_m_sidenav"></span></div>[[${module.link.module.name}]]</a></li>
+                                       <li
+                                            th:if="${!#strings.isEmpty(module.link.name) AND isExhPreview == true}"><a
+                                            class="dropdown-item"
+                                            th:href="@{'/preview/'+${previewId}+'/'+${space?.id}+'/module/'+${module.link.module?.id}}"><div class="Info Info_cz_module_Class"><svg class="Ellipse_8_module_c_sidenav"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_module_c_sidenav"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_module_c_sidenav"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_module_m_sidenav"></span></div>[[${module.link.name}]]</a></li>
+                                        <li
+                                            th:if="${#strings.isEmpty(module.link.name) AND isExhPreview == true}"><a
+                                            class="dropdown-item"
+                                            th:href="@{'/preview/'+${previewId}+'/'+${space?.id}+'/module/'+${module.link.module?.id}}"><div class="Info Info_cz_module_Class"><svg class="Ellipse_8_module_c_sidenav"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_module_c_sidenav"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_module_c_sidenav"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_module_m_sidenav"></span></div>[[${module.link.module.name}]]</a></li>
                                     </ul>
                                 </div>
                             </div>

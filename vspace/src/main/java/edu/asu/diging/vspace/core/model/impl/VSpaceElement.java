@@ -9,6 +9,7 @@ import edu.asu.diging.vspace.core.model.IVSpaceElement;
 
 @MappedSuperclass
 public abstract class VSpaceElement implements IVSpaceElement {
+    
     private String name;
     @Lob private String description;
     private String createdBy;
