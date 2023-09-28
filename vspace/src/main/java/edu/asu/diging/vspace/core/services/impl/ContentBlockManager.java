@@ -590,11 +590,6 @@ public class ContentBlockManager implements IContentBlockManager {
     }
 
     @Override
-    public void updateSpaceBlock(ISpaceBlock spaceBlock) {
-        spaceBlockRepo.save((SpaceBlock) spaceBlock);
-    }
-
-    @Override
     public void saveVideoBlock(IVideoBlock videoBlock) {
         videoRepo.save((VSVideo) videoBlock.getVideo());
 

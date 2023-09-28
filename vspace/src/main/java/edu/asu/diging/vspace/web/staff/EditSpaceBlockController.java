@@ -37,7 +37,7 @@ public class EditSpaceBlockController {
         ISpace space = spaceManager.getSpace(spaceId);
         spaceBlock.setTitle(spaceBlockTitle);
         spaceBlock.setSpace(space);
-        contentBlockManager.updateSpaceBlock(spaceBlock);
+        contentBlockManager.saveSpaceBlock(spaceBlock);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 }
