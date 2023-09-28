@@ -167,7 +167,7 @@ function generateSpaceLinks(link,spanId,divId,isModal, posX, posY, posXModal, po
              }
              else{
             	var defaultSpaceURL = [[@{/api/defaultSpaceImage/}]];
-            	spaceLink = $('<img id="'+spanId+link.link.id+'" class="spaceLink-'+link.link.id+' imageLink" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.targetSpace?.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'" src="'+defaultSpaceURL+'" width="30" height="30" border-radius = "50%"/>');
+            	spaceLink = $('<div id="'+spanId+link.link.id+'" class="spaceLink-'+link.link.id+' Info_cz_Class imageLink" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.targetSpace?.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'"><img src="'+defaultSpaceURL+'" width="30" height="30" border-radius = "50%"/><p class="label-'+link.link.id+'" data-link-id="'+link.link.id+'"><span class="tooltiptext">'+link.link.name+'</span></p></div>');
               	 
             }}
         setLinkPosition(spaceLink,link,true,isModal,false, posX, posY, posXModal, posYModal, false);
@@ -199,7 +199,7 @@ function generateModuleLinks(link,spanId,divId,isModal, posX, posY, posXModal, p
                 }
              else{
             	var moduleImageURL = [[@{/api/defaultModuleImage/}]];
-            	moduleLink = $('<img id="'+spanId+link.link.id+'" class="spaceLink-'+link.link.id+' imageLink" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.targetSpace?.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'" src="'+moduleImageURL+'" width="30" height="30" border-radius = "100%"/>');
+            	moduleLink = $('<div id="'+spanId+link.link.id+'" class="spaceLink-'+link.link.id+' imageLink Info_cz_Class" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.targetSpace?.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'"><img src="'+moduleImageURL+'" width="30" height="30" border-radius = "100%"/><p class="label-'+link.link.id+'" data-link-id="'+link.link.id+'"><span class="tooltiptext">'+link.link.name+'</span></p></div>');
               	 
             }
                }
@@ -231,7 +231,7 @@ function generateExternalLinks(link,spanId,divId,isModal, posX, posY, posXModal,
              else{
             	
             	var externalLinkImageUrl = [[@{/api/defaultExternalLinkImage/}]];
-            	externalLink = $('<img id="'+spanId+link.externalLink.id+'" data-linkTarget="'+link.externalLink.externalLink+'" data-linkType="'+link.type+'"  data-howToOpen="'+ link.howToOpen+'" data-linkLabel="'+link.externalLink.name+'" class="externalLink-'+link.externalLink.id+' imageLink" data-link-id="'+link.externalLink.id+'" src="'+externalLinkImageUrl+'" width="30" height="30" border-radius = "50%"/>');
+            	externalLink = $('<div id="'+spanId+link.externalLink.id+'" data-linkTarget="'+link.externalLink.externalLink+'" data-linkType="'+link.type+'"  data-howToOpen="'+ link.howToOpen+'" data-linkLabel="'+link.externalLink.name+'" class="externalLink-'+link.externalLink.id+' imageLink Info_cz_Class" data-link-id="'+link.externalLink.id+'"><img src="'+externalLinkImageUrl+'" width="30" height="30" border-radius = "50%"/><p class="label-'+link.externalLink.id+'" data-link-id="'+link.externalLink.id+'"><span class="tooltiptext">'+link.externalLink.name+'</span></p></div>');
         		
             }
 			}
@@ -1806,6 +1806,10 @@ $(function(){
 	left: -38px;
 	top: 31px;
 	background: rgba(0, 0, 0, 0.6);
+}
+
+.Info_cz_Class:hover {
+	z-index: 999;
 }
 
 .Info_cz_Class:hover .tooltiptext {
