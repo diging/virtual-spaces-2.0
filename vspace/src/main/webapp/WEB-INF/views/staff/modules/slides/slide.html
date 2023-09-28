@@ -457,6 +457,85 @@
 	            $("#changeBgImgAlert").show();          
 	        });
 			
+			// ----------- submit buttons (e.g. to create external links) ------------------
+			
+			
+			$("#createExternalLinkBtn").click(function(e) {
+            e.preventDefault();
+            $("#slide").scrollTop(0);
+            var payload = {};
+
+            if (storeX == undefined || storeY == undefined) {
+                $("#errorMsg").text("Please click on the image to specify where the new link should be located.")
+                $('#errorAlert').show();
+                return;
+            }
+
+            var externalLink = $("#externalLink").val();
+            var externalLinkLabel = $("#externalLinkLabel").val();
+            var type = $("#extType option:selected").text();
+
+            if (externalLink == undefined || externalLink == "") {
+                $("#errorMsg").text("Please provide the link to the external link.")
+                $('#errorAlert').show();
+                return;
+            }
+
+            if (externalLinkLabel == undefined || externalLinkLabel == "") {
+                $("#errorMsg").text("Please enter a label for this external link.")
+                $('#errorAlert').show();
+                return;
+            }
+            
+            if (type == undefined || type == "Choose...") {
+                $("#errorMsg").text("Please select a link type in Type dropdown.")
+                $('#errorAlert').show();
+                return;
+            }
+            $("#externalLinkX").val(storeX);
+            $("#externalLinkY").val(storeY - 25);
+
+            var form = $("#createExternalLinkForm");
+            var formData = new FormData(form[0]);
+            var externalLinkInfo = createExternalLinkInfo();
+
+            $.ajax({
+                type: "POST",
+                url: "[(@{'/staff/slide/'+${slide?.id}+'/externallink?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+                cache       : false,
+                contentType : false,
+                processData : false,
+                enctype: 'multipart/form-data',
+                data: formData,
+                beforeSend: function () {
+                    $(".saveLoader").show();
+                    },
+               	complete: function () {
+                    $(".saveLoader").hide();
+                    },
+                success: function(data) {
+                    var linkData = JSON.parse(data);
+                    $("#bgImage").off("click");
+                    externalLinkInfo["id"] = linkData["id"];
+                    externalLinkInfo["displayId"]=linkData["displayId"];
+                    externalLinkInfo["x"]=linkData["x"];
+                    externalLinkInfo["y"]=linkData["y"];
+                    showExternalLinks(externalLinkInfo, true);
+                    $("#ext_label").attr("id","");
+                    $("#link").attr("id","");
+                    $("#createExternalLinkAlert").hide();
+                    $("#errorMsg").text("");
+                    $('#errorAlert').hide();
+                    $("."+linkData["id"]).remove();
+                    form[0].reset();
+                    $("#external-arrow").attr("id","");
+                    $("#space").css("display", "none");
+                    externalLinkIcon=null;
+                    drawLinks();
+                	}
+            	});
+        	});
+			
             function createImageBlock(reader, width) {
                 var imageblock = $('<div id="current" class="valueDiv tab row"><img src="#" style="imgDiv tab row"/><input type="hidden" id="deleteImageId" /><a class="btn deleteImage col-md-1" href="javascript:;" style="position:absolute; right:25px;"><span class="icon-trash error"></span></a></div>');
                 imageblock.find('img').attr('src', reader.result);
