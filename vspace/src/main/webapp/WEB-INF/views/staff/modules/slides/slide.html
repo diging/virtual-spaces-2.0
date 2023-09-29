@@ -529,12 +529,60 @@
                     $("."+linkData["id"]).remove();
                     form[0].reset();
                     $("#external-arrow").attr("id","");
-                    $("#space").css("display", "none");
+                    $("#slide").css("display", "none");
                     externalLinkIcon=null;
                     drawLinks();
                 	}
             	});
         	});
+			
+			$("#editExternalLinkBtn").click(function(e) {
+	            e.preventDefault();
+	            $("#slide").scrollTop(0);
+	            var linkId = $("#externalLinkIdEdit").val();
+	            if (storeX == undefined || storeY == undefined) {
+	                $("#errorMsg").text("Please click on the image to specify where the new link should be located.")
+	                $('#errorAlert').show();
+	                return;
+	            }
+	            var linkedSpace = $("#externalLinkIdEdit").val();
+	            $("#externalLinkXEdit").val(storeX);
+	            $("#externalLinkYEdit").val(storeY - 25);
+	            var form = $("#editExternalLinkForm");
+	            var formData = new FormData(form[0]);
+	            var externalLinkInfo = editExternalLinkInfo();
+	            $.ajax({
+	                type: "POST",
+	                url: "[(@{'/staff/slide/link/external/'+${slide?.id}+'?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+	                cache: false,
+	                contentType : false,
+	                processData : false,
+	                enctype: 'multipart/form-data',
+	                data: formData,
+	                beforeSend: function () {
+	                    $(".saveLoader").show();
+	                    },
+	               	complete: function () {
+	                    $(".saveLoader").hide();
+	                    },
+	                success: function(data) {
+	                    var linkData = JSON.parse(data);
+	                    $("#bgImage").off("click");
+	                    externalLinkInfo["id"] = linkData["id"];
+	                    externalLinkInfo["displayId"]=linkData["displayId"];
+	                    externalLinkInfo["x"]=linkData["x"];
+	                    externalLinkInfo["y"]=linkData["y"];
+	                    $('#linkLabel-'+selectedExternalLinkId).val(linkData["label"]);
+	                    $('#linkType-'+selectedExternalLinkId).val(linkData["dislpayType"]);
+	                    $('#externalLinkTarget-'+selectedExternalLinkId).val(linkData["url"]);
+	                    showExternalLinkEdit(editExternalLinkInfo, true);
+	                    hideLinkInfoTabs();
+	                    $("#slide").css("display", "none");
+	                    selectedExternalLinkId=undefined;
+	                    drawLinks();
+	                }
+	            });
+	        });
 			
             function createImageBlock(reader, width) {
                 var imageblock = $('<div id="current" class="valueDiv tab row"><img src="#" style="imgDiv tab row"/><input type="hidden" id="deleteImageId" /><a class="btn deleteImage col-md-1" href="javascript:;" style="position:absolute; right:25px;"><span class="icon-trash error"></span></a></div>');
