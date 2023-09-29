@@ -26,6 +26,10 @@
 	width: 100%;
 	z-index: 100;
 }
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
 </style>
 <script th:inline="javascript">
             //# sourceURL=click.js
@@ -38,7 +42,6 @@
             $(function () {
             	  $('[data-toggle="tooltip"]').tooltip()
             });
-            
             $(window).scroll(function(){
             	  var sticky = $('.sticky'),
             	      scroll = $(window).scrollTop();
@@ -1255,7 +1258,7 @@
 			</button>
 			&nbsp;
 			<button type="button" id="addSpace" class="btn pill-btn"
-				data-toggle="tooltip" title="Add Space Block" data-placement="top">
+				data-toggle="tooltip" title="Add Space Block" >
 				+&nbsp;<span class="icon-layers"></span>
 			</button>
 			&nbsp;
