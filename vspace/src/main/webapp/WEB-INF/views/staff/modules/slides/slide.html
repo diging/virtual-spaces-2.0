@@ -27,11 +27,19 @@
 	z-index: 100;
 }
 
-.tooltip:hover .tooltiptext {
-  visibility: visible;
+.tooltip {
+  z-index:0;
 }
 </style>
+
+
 <script th:inline="javascript">
+
+$(function () {
+    $('.close').on('click', function () {
+        $('.modal').hide();
+    })
+})
             //# sourceURL=click.js
             let currentSelectedSpace="";
             var contentCount = [[${#lists.size(slideContents)}]];
@@ -1283,7 +1291,7 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<h5 class="modal-title">Confirm Delete</h5>
-						<button type="button" class="close" data-dismiss="modal"
+						<button type="button" class="close" data-bs-dismiss="modal"
 							aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
@@ -1305,7 +1313,7 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<h5 class="modal-title">Confirm Delete</h5>
-						<button type="button" class="close" data-dismiss="modal"
+						<button type="button" class="close" data-bs-dismiss="modal"
 							aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
@@ -1327,7 +1335,7 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<h5 class="modal-title">Confirm Delete</h5>
-						<button type="button" class="close" data-dismiss="modal"
+						<button type="button" class="close" data-bs-dismiss="modal"
 							aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
@@ -1349,7 +1357,7 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<h5 class="modal-title">Confirm Delete</h5>
-						<button type="button" class="close" data-dismiss="modal"
+						<button type="button" class="close" data-bs-dismiss="modal"
 							aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
@@ -1371,7 +1379,7 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<h5 class="modal-title">Add new Text Block</h5>
-						<button type="button" class="close" data-dismiss="modal"
+						<button type="button" class="close" data-bs-dismiss="modal"
 							aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
@@ -1397,7 +1405,7 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<h5 class="modal-title">Add link to space</h5>
-						<button type="button" class="close" data-dismiss="modal"
+						<button type="button" class="close" data-bs-dismiss="modal"
 							aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
@@ -1437,7 +1445,7 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<h5 class="modal-title">Edit Text Block</h5>
-						<button type="button" class="close" data-dismiss="modal"
+						<button type="button" class="close" data-bs-dismiss="modal"
 							aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
@@ -1465,7 +1473,7 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<h5 class="modal-title">Edit Space Block</h5>
-						<button type="button" class="close" data-dismiss="modal"
+						<button type="button" class="close" data-bs-dismiss="modal"
 							aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
@@ -1500,7 +1508,7 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<h5 class="modal-title">Add new Image Block</h5>
-						<button type="button" class="close" data-dismiss="modal"
+						<button type="button" class="close" data-bs-dismiss="modal"
 							aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
@@ -1562,7 +1570,7 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<h5 class="modal-title">Select from the Choices</h5>
-						<button type="button" class="close" data-dismiss="modal"
+						<button type="button" class="close" data-bs-dismiss="modal"
 							aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
