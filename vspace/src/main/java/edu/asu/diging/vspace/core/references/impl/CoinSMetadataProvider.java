@@ -64,8 +64,7 @@ public class CoinSMetadataProvider implements IReferenceMetadataProvider {
                 + getRefEditorsEncoded(reference.getEditors());
         String refNoteEncoded = getRefNoteEncoded(reference.getNote()) + getRefTypeEncoded(reference.getType());
         String referenceTypeRFTValueString = getReferenceData(reference.getType());
-        String defaultURL = CoinSConstants.DEFAULT_URL_VERSION;
-        StringBuffer urlEncodedReferenceMetaData = new StringBuffer(defaultURL);
+        StringBuffer urlEncodedReferenceMetaData = new StringBuffer(CoinSConstants.DEFAULT_URL_VERSION);
         try {
             urlEncodedReferenceMetaData.append("&");
             urlEncodedReferenceMetaData.append(CoinSConstants.DEFAULT_CTX_VERSION);

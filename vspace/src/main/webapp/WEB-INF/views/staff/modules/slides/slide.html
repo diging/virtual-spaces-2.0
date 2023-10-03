@@ -164,8 +164,7 @@
                 } 
                 else if(divName.includes("biblioDivStaff")){
                 	$(e.target).closest('.biblioDivStaff').addClass("open");
-                	var description = $("div.open p:eq(0)").text();
-                	defaultValue = description;
+                	defaultValue = $("div.open p:eq(0)").text();
                 	var title = $("div.open p span:eq(0)").text();
                 	var desc = $("div.open p span:eq(1)").text();
                 	var refListDiv = $(".open div").html();
