@@ -9,8 +9,5 @@ public interface ILink<T extends IVSpaceElement> extends IVSpaceElement{
     T getTarget();
 
     void setTarget(T target);
-    
-    ISlide getSlide();
 
-    void setSlide(ISlide slide);
 }

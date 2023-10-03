@@ -185,11 +185,11 @@
 			    $(".ellipse_class").remove();
 			    $(".unpublishedSpaceClass").remove();
 			    $(".textBlockClass").remove();
-			    $(".deletedSlideClass").remove();
+			    $(".deletedSpaceClass").remove();
 			    
 			    $.ajax({
 			        type: "GET",
-			        url: "[(@{'/staff/slide/'+${slide?.id}+'/links'})]",
+			        url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}})]",
 			        cache       : false,
 			        contentType : false,
 			        processData : false,
@@ -206,7 +206,7 @@
 			            var posYModal = $("#bgImage").position().top;
 			            var posX = $("#main-bgImage").position().left;
 			            var posY = $("#main-bgImage").position().top;
-			           
+			            
 			            externalLinks.forEach(function(link,index){
 			                var spanId= "externalModallinkId-";
 			                var divId = "#space";
@@ -218,9 +218,10 @@
 			                var divId = "#main-space";
 			                generateExternalLinks(link,spanId,divId,false, posX, posY, posXModal, posYModal);
 			            })
+			            
 			        }
 			    });
-			}
+			}            
             
 			//--------- show links functions --------------
 			function showExternalLinkEdit(externalLink, show, posX, posY) {
@@ -259,7 +260,7 @@
 			}
 			
 			// Show external link function
-			
+
 			function showExternalLinks(externalLink, show, x, y) {
 			    $("#ext_label").remove();
 			    $("#link").remove();
@@ -313,7 +314,7 @@
 			    $("#link").append(ext_label);
 			    $("#external-link").remove();
 			
-			}			
+			}
 			
 			//--------- Utility functions -------------
 
@@ -325,6 +326,7 @@
 				info["type"] = $("#extType").val();
 				info["externalLinkLabel"] = $("#externalLinkLabel").val();
 				info["externalLinkURL"] = $("#externalLink").val();
+				console.log("info here");
 				return info;
 			}
 			
@@ -399,7 +401,7 @@
 			    text.css('position', 'absolute');
 			    text.css('left', x + posX);
 			    text.css('top', y);
-			    $("#slide").append(text);
+			    $("#space").append(text);
 			    
 			    var textB = $('#textB')[0],
 			    tHeight = textB.clientHeight,
@@ -430,8 +432,7 @@
 			
 			// -------- buttons that open modals (e.g. to create external links) ------
 			
-			$("#addExternalLinkButton").click(function(e) {
-	            $("#createSlideLinkAlert").hide();
+	        $("#addExternalLinkButton").click(function(e) {
 	            $("#changeBgImgAlert").hide();
 	            $("#bgImage").off("click");
 	            $("#bgImage").on("click", function(e){
@@ -449,9 +450,9 @@
 	            hideLinkInfoTabs();
 	            displayForms("#createExternalLinkAlert");
 	        });
-			
-			$('#changeBgImgButton').click(function(file) {
-	            $("#createSlideLinkAlert").hide();
+	
+	        $('#changeBgImgButton').click(function(file) {
+	            $("#createSpaceLinkAlert").hide();
 	            $("#createExternalLinkAlert").hide();
 	            drawLinks();
 	            $("#changeBgImgAlert").show();          
@@ -460,85 +461,85 @@
 			// ----------- submit buttons (e.g. to create external links) ------------------
 			
 			
-			$("#createExternalLinkBtn").click(function(e) {
-            e.preventDefault();
-            $("#slide").scrollTop(0);
-            var payload = {};
-
-            if (storeX == undefined || storeY == undefined) {
-                $("#errorMsg").text("Please click on the image to specify where the new link should be located.")
-                $('#errorAlert').show();
-                return;
-            }
-
-            var externalLink = $("#externalLink").val();
-            var externalLinkLabel = $("#externalLinkLabel").val();
-            var type = $("#extType option:selected").text();
-
-            if (externalLink == undefined || externalLink == "") {
-                $("#errorMsg").text("Please provide the link to the external link.")
-                $('#errorAlert').show();
-                return;
-            }
-
-            if (externalLinkLabel == undefined || externalLinkLabel == "") {
-                $("#errorMsg").text("Please enter a label for this external link.")
-                $('#errorAlert').show();
-                return;
-            }
-            
-            if (type == undefined || type == "Choose...") {
-                $("#errorMsg").text("Please select a link type in Type dropdown.")
-                $('#errorAlert').show();
-                return;
-            }
-            $("#externalLinkX").val(storeX);
-            $("#externalLinkY").val(storeY - 25);
-
-            var form = $("#createExternalLinkForm");
-            var formData = new FormData(form[0]);
-            var externalLinkInfo = createExternalLinkInfo();
-
-            $.ajax({
-                type: "POST",
-                url: "[(@{'/staff/slide/'+${slide?.id}+'/externallink?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
-                cache       : false,
-                contentType : false,
-                processData : false,
-                enctype: 'multipart/form-data',
-                data: formData,
-                beforeSend: function () {
-                    $(".saveLoader").show();
-                    },
-               	complete: function () {
-                    $(".saveLoader").hide();
-                    },
-                success: function(data) {
-                    var linkData = JSON.parse(data);
-                    $("#bgImage").off("click");
-                    externalLinkInfo["id"] = linkData["id"];
-                    externalLinkInfo["displayId"]=linkData["displayId"];
-                    externalLinkInfo["x"]=linkData["x"];
-                    externalLinkInfo["y"]=linkData["y"];
-                    showExternalLinks(externalLinkInfo, true);
-                    $("#ext_label").attr("id","");
-                    $("#link").attr("id","");
-                    $("#createExternalLinkAlert").hide();
-                    $("#errorMsg").text("");
-                    $('#errorAlert').hide();
-                    $("."+linkData["id"]).remove();
-                    form[0].reset();
-                    $("#external-arrow").attr("id","");
-                    $("#slide").css("display", "none");
-                    externalLinkIcon=null;
-                    drawLinks();
-                	}
-            	});
-        	});
-			
-			$("#editExternalLinkBtn").click(function(e) {
+	        $("#createExternalLinkBtn").click(function(e) {
 	            e.preventDefault();
-	            $("#slide").scrollTop(0);
+	            $("#space").scrollTop(0);
+	            var payload = {};
+	
+	            if (storeX == undefined || storeY == undefined) {
+	                $("#errorMsg").text("Please click on the image to specify where the new link should be located.")
+	                $('#errorAlert').show();
+	                return;
+	            }
+	
+	            var externalLink = $("#externalLink").val();
+	            var externalLinkLabel = $("#externalLinkLabel").val();
+	            var type = $("#extType option:selected").text();
+	
+	            if (externalLink == undefined || externalLink == "") {
+	                $("#errorMsg").text("Please provide the link to the external link.")
+	                $('#errorAlert').show();
+	                return;
+	            }
+	
+	            if (externalLinkLabel == undefined || externalLinkLabel == "") {
+	                $("#errorMsg").text("Please enter a label for this external link.")
+	                $('#errorAlert').show();
+	                return;
+	            }
+	            
+	            if (type == undefined || type == "Choose...") {
+	                $("#errorMsg").text("Please select a link type in Type dropdown.")
+	                $('#errorAlert').show();
+	                return;
+	            }
+	            $("#externalLinkX").val(storeX);
+	            $("#externalLinkY").val(storeY - 25);
+	
+	            var form = $("#createExternalLinkForm");
+	            var formData = new FormData(form[0]);
+	            var externalLinkInfo = createExternalLinkInfo();
+	
+	            $.ajax({
+	                type: "POST",
+	                url: "[(@{'/staff/space/'+${space?.id}+'/externallink?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+	                cache       : false,
+	                contentType : false,
+	                processData : false,
+	                enctype: 'multipart/form-data',
+	                data: formData,
+	                beforeSend: function () {
+	                    $(".saveLoader").show();
+	                    },
+	               	complete: function () {
+	                    $(".saveLoader").hide();
+	                    },
+	                success: function(data) {
+	                    var linkData = JSON.parse(data);
+	                    $("#bgImage").off("click");
+	                    externalLinkInfo["id"] = linkData["id"];
+	                    externalLinkInfo["displayId"]=linkData["displayId"];
+	                    externalLinkInfo["x"]=linkData["x"];
+	                    externalLinkInfo["y"]=linkData["y"];
+	                    showExternalLinks(externalLinkInfo, true);
+	                    $("#ext_label").attr("id","");
+	                    $("#link").attr("id","");
+	                    $("#createExternalLinkAlert").hide();
+	                    $("#errorMsg").text("");
+	                    $('#errorAlert').hide();
+	                    $("."+linkData["id"]).remove();
+	                    form[0].reset();
+	                    $("#external-arrow").attr("id","");
+	                    $("#space").css("display", "none");
+	                    externalLinkIcon=null;
+	                    drawLinks();
+	                }
+	            });
+	        });
+			
+	        $("#editExternalLinkBtn").click(function(e) {
+	            e.preventDefault();
+	            $("#space").scrollTop(0);
 	            var linkId = $("#externalLinkIdEdit").val();
 	            if (storeX == undefined || storeY == undefined) {
 	                $("#errorMsg").text("Please click on the image to specify where the new link should be located.")
@@ -553,7 +554,7 @@
 	            var externalLinkInfo = editExternalLinkInfo();
 	            $.ajax({
 	                type: "POST",
-	                url: "[(@{'/staff/slide/link/external/'+${slide?.id}+'?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+	                url: "[(@{'/staff/space/link/external/'+${space?.id}+'?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
 	                cache: false,
 	                contentType : false,
 	                processData : false,
@@ -577,8 +578,28 @@
 	                    $('#externalLinkTarget-'+selectedExternalLinkId).val(linkData["url"]);
 	                    showExternalLinkEdit(editExternalLinkInfo, true);
 	                    hideLinkInfoTabs();
-	                    $("#slide").css("display", "none");
+	                    $("#space").css("display", "none");
 	                    selectedExternalLinkId=undefined;
+	                    drawLinks();
+	                }
+	            });
+	        });
+	        
+	        $("#deleteExternalLinkButton").click(function() {
+	            var linkId = $("#externalLinkIdValueEdit").val();
+	            $.ajax({
+	                url: "[(@{'/staff/space/'+${space?.id}+'/externallink/'})]"+ linkId + '?[(${_csrf.parameterName})]=[(${_csrf.token})]',
+	                method: "DELETE",
+	                beforeSend: function () {
+	                    $(".saveLoader").show();
+	                    },
+	               	complete: function () {
+	                    $(".saveLoader").hide();
+	                    },
+	                success:function(data) {
+	                    $('[data-link-id="' + linkId + '"]').remove();
+	                    hideLinkInfoTabs();
+	                    $("#space").css("display", "none");
 	                    drawLinks();
 	                }
 	            });

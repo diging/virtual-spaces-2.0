@@ -32,8 +32,9 @@ public class AddSlideExternalLinkController {
     @Autowired
     private IExternalLinkSlideManager externalLinkSlideManager;
     
-    @RequestMapping(value = "/staff/slide/{id}/externallink", method = RequestMethod.POST)
-    public ResponseEntity<String> createSlideExternalLink(@PathVariable("id") String id, @RequestParam("x") String x,
+    @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/externallink", method = RequestMethod.POST)
+    public ResponseEntity<String> createSlideExternalLink(@PathVariable("id") String id, @PathVariable("moduleId") String moduleId, 
+            @RequestParam("x") String x,
             @RequestParam("y") String y, @RequestParam("externalLinkLabel") String title,
             @RequestParam("url") String externalLink, @RequestParam("tabOpen") String howToOpen,
             @RequestParam("type") String displayType, @RequestParam("externalLinkImage") MultipartFile file)
