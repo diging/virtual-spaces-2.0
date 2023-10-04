@@ -38,12 +38,15 @@
 }
 
 .sidenav a {
-	padding: 8px 8px 8px 32px;
-	text-decoration: none;
-	font-size: 15px;
-	color: #818181;
-	display: block;
-	transition: 0.3s;
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 15px;
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+    white-space: normal; /* Add this property to allow text wrapping */
+    word-break: normal;
+  
 }
 
 .sidenav .closebtn {
@@ -93,6 +96,9 @@
 	visibility: visible;
 }
 
+
+
+
 .exitfullscreen:hover .tooltiptextForExitFullscreen {
 	visibility: visible;
 }
@@ -129,6 +135,9 @@
 
 .barPosition {
 	top: 25px;
+}
+#previewNavBarItem {
+	display: inline-flex;
 }
 
 @media only screen and (max-width: 800px) { /* For mobile phones: */
@@ -281,9 +290,12 @@
 		let maxWidth='(max-width: 1200px)';
 		function openNav(){
 		  $("#mySidenav").css("width", "250px");
+		  $("#mySidenav").css("overflow", "visible");
+		  
 		}
         function closeNav(){
         	$("#mySidenav").css("width", "0");
+        	 $("#mySidenav").css("overflow", "hidden");
 		}
 		function openModuleNav(){
 		    if (window.matchMedia(maxWidth).matches){
@@ -563,6 +575,8 @@
 			</div>
 
 		</div>
+
+     
 		<div class="imgResizeDiv">
 			<button class="btn circle-btn" id="toggleBtn"
 				style="width: 35px; height: 35px; margin-left: 10px; margin-top: 5px; padding: 3px;"

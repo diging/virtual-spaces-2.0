@@ -1,26 +1,17 @@
 package edu.asu.diging.vspace.config;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.AbstractEnvironment;
 import org.springframework.core.env.Environment;
-import org.springframework.core.env.MapPropertySource;
 import org.springframework.stereotype.Component;
-
-import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
-import org.springframework.core.env.MutablePropertySources;
 
 
 @Component

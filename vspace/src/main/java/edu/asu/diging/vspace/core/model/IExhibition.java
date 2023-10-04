@@ -41,5 +41,13 @@ public interface IExhibition extends IVSpaceElement {
     void setExternallinkDefaultImage(IVSImage externallinkDefaultImage);
 
     List<IExhibitionLanguage> getLanguages();
+    
+    ExhibitionModes getMode();
+    
+    void setMode(ExhibitionModes mode);
+    
+    String getPreviewId();
+    
+    void setPreviewId(String previewId);
 
 }
