@@ -1198,7 +1198,7 @@
 
                     $.ajax({
                         type: "POST",
-                        url: "[(@{'/staff/space/'+${space?.id}+'/externallink?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+                        url: "[(@{'/staff/slide/'+${slide?.id}+'/externallink?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
                         cache       : false,
                         contentType : false,
                         processData : false,
@@ -1971,6 +1971,18 @@
             </div>
             <p style="margin-top: 0.5rem;">Double click on a block to edit it. Drag and drop blocks to change their order.</p>
             <div class="sticky" id="contOrdUpdStatus"></div>
+			<div id="slide" th:style="|max-width: ${display.width+400}px;|" th:if="${slide.image != null}" class="link-modal flex-spacing">
+        	<img id="bgImage" th:style="|max-width: ${display.width}px;|" th:src="@{'/api/image/'+${slide.image?.id}}" />
+        	<div id="errorAlert"
+            	class="alert alert-danger alert-dismissible fade show"
+            	role="alert"
+            	style="display: none; position: fixed; top: 10%; right: 50px; z-index: 10">
+            	<strong>Error!</strong> <span id="errorMsg"></span>
+            	<button type="button" class="close" id="closeAlert"
+                	aria-label="Close">
+                	<span aria-hidden="true">&times;</span>
+            	</button>
+        	</div>                        
             <!-- Delete Text Modal -->
             <div id="confirmDeleteTextAlert" class="modal" tabindex="-1"
                 role="dialog" th:draggable="true">
