@@ -9,12 +9,12 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import edu.asu.diging.vspace.core.references.IReferenceMetadataRegistry;
+import edu.asu.diging.vspace.core.references.IReferenceMetadataFormatRegistry;
 import edu.asu.diging.vspace.core.references.IReferenceMetadataProvider;
 import edu.asu.diging.vspace.core.references.ReferenceMetadataType;
 
 @Service
-public class ReferenceMetadataRegistry implements IReferenceMetadataRegistry {
+public class ReferenceMetadataFormatRegistry implements IReferenceMetadataFormatRegistry {
 
     @Autowired
     private List<IReferenceMetadataProvider> referenceMetadataProviders;

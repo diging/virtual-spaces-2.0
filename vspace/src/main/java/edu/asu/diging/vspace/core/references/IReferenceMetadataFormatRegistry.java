@@ -8,7 +8,7 @@ package edu.asu.diging.vspace.core.references;
  * @see  edu.asu.diging.vspace.core.references.IReference
  */
 
-public interface IReferenceMetadataRegistry {
+public interface IReferenceMetadataFormatRegistry {
 
     public void init();
 
