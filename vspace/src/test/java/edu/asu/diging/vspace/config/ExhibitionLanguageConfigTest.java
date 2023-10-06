@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.print.DocFlavor.STRING;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -75,7 +77,12 @@ public class ExhibitionLanguageConfigTest {
 
     @Test
     public void test_getExhibitionLanguageList_success() {
-        List<Map> languageList = Arrays.asList(Map.of("key1", "value1"), Map.of("key2", "value2"));
+        Map< String, String> map1 = new HashMap();
+        map1.put("key1", "value1") ;
+        Map< String, String> map2 = new HashMap();
+        map1.put("key2", "value2") ;
+        
+        List<Map> languageList = Arrays.asList(map1, map2);
 
         serviceToTest.setExhibitionLanguageList(languageList);
 

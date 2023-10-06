@@ -286,7 +286,7 @@ public class ContentBlockManagerTest {
         SpaceBlock spaceBlock = new SpaceBlock();
         spaceBlock.setId(upadtedSpaceId);
         Mockito.when(spaceBlockRepo.save(spaceBlock)).thenReturn(spaceBlock);
-        managerToTest.updateSpaceBlock(spaceBlock);
+        managerToTest.saveSpaceBlock(spaceBlock);
         Mockito.verify(spaceBlockRepo).save(spaceBlock);
 
     }
