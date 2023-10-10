@@ -1970,19 +1970,7 @@
                 +&nbsp;<span class="icon-checkmark"></span></button>
             </div>
             <p style="margin-top: 0.5rem;">Double click on a block to edit it. Drag and drop blocks to change their order.</p>
-            <div class="sticky" id="contOrdUpdStatus"></div>
-			<div id="slide" th:style="|max-width: ${display.width+400}px;|" th:if="${slide.image != null}" class="link-modal flex-spacing">
-        	<img id="bgImage" th:style="|max-width: ${display.width}px;|" th:src="@{'/api/image/'+${slide.image?.id}}" />
-        	<div id="errorAlert"
-            	class="alert alert-danger alert-dismissible fade show"
-            	role="alert"
-            	style="display: none; position: fixed; top: 10%; right: 50px; z-index: 10">
-            	<strong>Error!</strong> <span id="errorMsg"></span>
-            	<button type="button" class="close" id="closeAlert"
-                	aria-label="Close">
-                	<span aria-hidden="true">&times;</span>
-            	</button>
-        	</div>                        
+            <div class="sticky" id="contOrdUpdStatus"></div>             
             <!-- Delete Text Modal -->
             <div id="confirmDeleteTextAlert" class="modal" tabindex="-1"
                 role="dialog" th:draggable="true">
@@ -2192,183 +2180,7 @@
                 </div>
             </div>
             
-            <div id="createExternalLinkAlert" class="custom_form_style" style="z-index: 1;">
-	        <div class="divider"></div>
-	        <form id="createExternalLinkForm" style="z-index: 1;">
-	            <div role="alert" style="margin-top: 30px;">
-                    <div class = "saveLoader" style="font-size: 30px; display: none; text-align: center;">
-                        <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
-                    </div>
-	            	<div class="row">	
-	            		<div class="col">
-	            			<h5 class="alert-heading">Create new External Link</h5>
-			                <p>Please click on the image where you
-			                   want to place the new external link. Then click
-			                   "Create External Link".</p>
-	            		</div>
-	                </div>
-	
-	                <input type="hidden" name="x" id="externalLinkX" /> 
-	                <input type="hidden" name="y" id="externalLinkY" /> 
-	                
-	                <div class="row">
-	                	<div class="col-sm-4">
-	                		<label>Label</label>
-	                	</div>
-	                	<div class="col-sm-8">
-	                		<input class="form-control-sm extlink-target" type="text" style="width: inherit; background: var(--base-grey)"
-	                			 name="externalLinkLabel" id="externalLinkLabel">	
-	                	</div>
-	                </div>
-	                 
-	                <div class="row">
-	                	<div class="col-sm-4">
-	                		<label>External Link</label>
-	                	</div>
-	                	<div class="col-sm-8">
-	                		<input class="form-control-sm extlink-target" type="text" style="width: inherit; background: var(--base-grey)"
-	                    		size="15" name="url" id="externalLink">	
-	                	</div>
-	                </div>               
-					<div class="row">
-	                    <div class="col-sm-4">
-	                        <label>How To Open:</label>
-	                    </div>
-	                    <div class="col-sm-8">
-	                        <select id="extTabOpen" name="tabOpen" class="form-control-sm extlink-target" style="width: inherit; background: var(--base-grey)">
-	                            <option th:selected>Choose...</option>
-	                            <option th:value="NEWWINDOW">New Window</option>
-	                            <option th:value="SAMEWINDOW">Same Window</option>
-	                        </select>
-	                    </div>
-	                </div>
-	                <div class="row">
-	                    <div class="col-sm-4">
-	                        <label>Type</label>
-	                    </div>
-	                    <div class="col-sm-8">
-	                        <select id="extType" name="type" class="form-control-sm extlink-target" style="width: inherit; background: var(--base-grey)">
-	                            <option th:selected>Choose...</option>
-	                            <option th:value="IMAGE">Image</option>
-	                            <option th:value="ARROW">Link</option>
-	                        </select>
-	                    </div>
-	                </div>
-	
-	                <div class="row">
-	                    <div class="col-sm-4">
-	                        <label>Image</label>
-	                    </div>
-	                    <div class="col-sm-8">
-	                        <input type="file" class="form-control-sm" name="externalLinkImage" id="externalLinkImage" style="width: inherit">
-	                    </div>
-	                </div>
-	                <p class="mt-5 text-center">
-	                    <button type="reset" class="btn btn-light cancelExternalLinkBtn btn-sm">Cancel</button>
-	                    <button id="createExternalLinkBtn" type="submit" class="btn primary-btn btn-sm">Create External Link</button>
-	                </p>
-	            </div>
-	        </form>
-		</div>
-        
-        <div id="editExternalLinkInfo" class="custom_form_style" style="z-index: 1;">
-            <div class="divider"></div>
-            <form id="editExternalLinkForm" style="z-index: 1;">
-                <p class="float-right">
-                    <a href="#" id="closeEditExternalLinkInfo" class="icon-circle-close"></a>
-                </p>
-                <div role="alert" style="margin-top: 30px;">
-                    <div class = "saveLoader" style="font-size: 30px; display: none; text-align: center;">
-                        <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <h6 class="alert-heading">
-                                <span style="color: var(--dark-grey)">Modify External
-                                    Link: </span><span
-                                    id="externalLinkInfoLabelEdit"></span>
-                            </h6>
-                            <p>Please click on the image where you
-                                want to place the existing external
-                                link. Then click "Edit External Link".</p>
-                        </div>
-                    </div>
-                    <input type="hidden" name="externalLinkIdValueEdit"
-                        id="externalLinkIdValueEdit" />
-                    <input type="hidden" name="x" id="externalLinkXEdit" />
-                    <input type="hidden" name="y" id="externalLinkYEdit" />
-                    <input type="hidden" name="externalLinkDisplayId"
-                        id="externalLinkDisplayId" />
-
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <label>Label:</label>
-                        </div>
-                        <div class="col-sm-8">
-                            <input
-                                class="form-control-sm externallink-targetEdit"
-                                type="text" name="externalLinkLabel"
-                                id="externalLinkLabelEdit"
-                                style="width: inherit; background: var(--base-grey)"><br>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-sm-4" style="padding-right: 0;">
-                            <label>External Link
-                            </label>
-                        </div>
-                        <div class="col-sm-8">
-                            <input
-                                class="form-control-sm externallink-targetEdit"
-                                type="text" name="url"
-                                id="externalLinkURLEdit"
-                                style="width: inherit; background: var(--base-grey)">
-                        </div>
-                    </div>
-					<div class="row">
-	                    <div class="col-sm-4">
-	                        <label>How To Open:</label>
-	                    </div>
-	                    <div class="col-sm-8">
-	                        <select id="extTabOpenEdit" name="tabOpen" class="form-control-sm extlink-target" style="width: inherit; background: var(--base-grey)">
-	                            <option th:value="NEWWINDOW">New Window</option>
-	                            <option th:value="SAMEWINDOW">Same Window</option>
-	                        </select>
-	                    </div>
-	                </div>
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <label>Type:</label>
-                        </div>
-                        <div class="col-sm-8">
-                            <select id="extTypeEdit" name="type"
-                                class="form-control-sm externallink-targetEdit">
-                                <option th:value="IMAGE">Image</option>
-                                <option th:value="ARROW">Link</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-sm-3" style="padding-right: 0;">
-                            <label>Image:</label>
-                        </div>
-                        <div class="col-sm-9">
-                            <input type="file" class="form-control-sm"
-                                name="externalLinkImage"
-                                id="externalLinkImageEdit" style="width: inherit" />
-                        </div>
-                    </div>
-                    
-                    <p class="mt-5 text-center">
-                        <button id="deleteExternalLinkButton" type="reset" class="btn delete-btn btn-sm"><i class="fa fa-trash"></i>Delete</button>
-                        <button id="editExternalLinkBtn" type="reset" class="btn primary-btn btn-sm">Save External Link</button>
-                    </p>
-                    
-                </div>
-            </form>
-        </div>
+            
         
             <div id="addVideoAlert" class="modal" tabindex="-1" role="dialog" aria-hidden="true">
 				<div class="modal-dialog" role="document" draggable="true">
@@ -2474,6 +2286,202 @@
                     </div>
                 </div>
             </div>
+            
+            
+            <div th:each="contents: ${slideContents}">
+            <div id="space" style="max-width: 861px; display: -webkit-box;" th:if="${#strings.equals(contents['class'].simpleName,'ImageBlock')}" class="link-modal flex-spacing">
+        	<img id="bgImage" style="max-width: 461px;" th:src="@{'/api/image/'+${contents.image.id}}" />
+        	<div id="errorAlert"
+            	class="alert alert-danger alert-dismissible fade show"
+            	role="alert"
+            	style="display: none; position: fixed; top: 10%; right: 50px; z-index: 10">
+            	<strong>Error!</strong> <span id="errorMsg"></span>
+            	<button type="button" class="close" id="closeAlert"
+                	aria-label="Close">
+                	<span aria-hidden="true">&times;</span>
+            	</button>
+        	</div> 
+        	<div id="createExternalLinkAlert" class="custom_form_style" style="z-index: 1;display: flex;">
+			        <div class="divider"></div>
+			        <form id="createExternalLinkForm" style="z-index: 1;">
+			            <div role="alert" style="margin-top: 30px;">
+		                    <div class = "saveLoader" style="font-size: 30px; display: none; text-align: center;">
+		                        <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+		                    </div>
+			            	<div class="row">	
+			            		<div class="col">
+			            			<h5 class="alert-heading">Create new External Link</h5>
+					                <p>Please click on the image where you
+					                   want to place the new external link. Then click
+					                   "Create External Link".</p>
+			            		</div>
+			                </div>
+			
+			                <input type="hidden" name="x" id="externalLinkX" /> 
+			                <input type="hidden" name="y" id="externalLinkY" /> 
+			                
+			                <div class="row">
+			                	<div class="col-sm-4">
+			                		<label>Label</label>
+			                	</div>
+			                	<div class="col-sm-8">
+			                		<input class="form-control-sm extlink-target" type="text" style="width: inherit; background: var(--base-grey)"
+			                			 name="externalLinkLabel" id="externalLinkLabel">	
+			                	</div>
+			                </div>
+			                 
+			                <div class="row">
+			                	<div class="col-sm-4">
+			                		<label>External Link</label>
+			                	</div>
+			                	<div class="col-sm-8">
+			                		<input class="form-control-sm extlink-target" type="text" style="width: inherit; background: var(--base-grey)"
+			                    		size="15" name="url" id="externalLink">	
+			                	</div>
+			                </div>               
+							<div class="row">
+			                    <div class="col-sm-4">
+			                        <label>How To Open:</label>
+			                    </div>
+			                    <div class="col-sm-8">
+			                        <select id="extTabOpen" name="tabOpen" class="form-control-sm extlink-target" style="width: inherit; background: var(--base-grey)">
+			                            <option th:selected>Choose...</option>
+			                            <option th:value="NEWWINDOW">New Window</option>
+			                            <option th:value="SAMEWINDOW">Same Window</option>
+			                        </select>
+			                    </div>
+			                </div>
+			                <div class="row">
+			                    <div class="col-sm-4">
+			                        <label>Type</label>
+			                    </div>
+			                    <div class="col-sm-8">
+			                        <select id="extType" name="type" class="form-control-sm extlink-target" style="width: inherit; background: var(--base-grey)">
+			                            <option th:selected>Choose...</option>
+			                            <option th:value="IMAGE">Image</option>
+			                            <option th:value="ARROW">Link</option>
+			                        </select>
+			                    </div>
+			                </div>
+			
+			                <div class="row">
+			                    <div class="col-sm-4">
+			                        <label>Image</label>
+			                    </div>
+			                    <div class="col-sm-8">
+			                        <input type="file" class="form-control-sm" name="externalLinkImage" id="externalLinkImage" style="width: inherit">
+			                    </div>
+			                </div>
+			                <p class="mt-5 text-center">
+			                    <button type="reset" class="btn btn-light cancelExternalLinkBtn btn-sm">Cancel</button>
+			                    <button id="createExternalLinkBtn" type="submit" class="btn primary-btn btn-sm">Create External Link</button>
+			                </p>
+			            </div>
+			        </form>
+				</div>
+		        
+		        <div id="editExternalLinkInfo" class="custom_form_style" style="z-index: 1;">
+		            <div class="divider"></div>
+		            <form id="editExternalLinkForm" style="z-index: 1;">
+		                <p class="float-right">
+		                    <a href="#" id="closeEditExternalLinkInfo" class="icon-circle-close"></a>
+		                </p>
+		                <div role="alert" style="margin-top: 30px;">
+		                    <div class = "saveLoader" style="font-size: 30px; display: none; text-align: center;">
+		                        <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+		                    </div>
+		                    <div class="row">
+		                        <div class="col">
+		                            <h6 class="alert-heading">
+		                                <span style="color: var(--dark-grey)">Modify External
+		                                    Link: </span><span
+		                                    id="externalLinkInfoLabelEdit"></span>
+		                            </h6>
+		                            <p>Please click on the image where you
+		                                want to place the existing external
+		                                link. Then click "Edit External Link".</p>
+		                        </div>
+		                    </div>
+		                    <input type="hidden" name="externalLinkIdValueEdit"
+		                        id="externalLinkIdValueEdit" />
+		                    <input type="hidden" name="x" id="externalLinkXEdit" />
+		                    <input type="hidden" name="y" id="externalLinkYEdit" />
+		                    <input type="hidden" name="externalLinkDisplayId"
+		                        id="externalLinkDisplayId" />
+		
+		                    <div class="row">
+		                        <div class="col-sm-4">
+		                            <label>Label:</label>
+		                        </div>
+		                        <div class="col-sm-8">
+		                            <input
+		                                class="form-control-sm externallink-targetEdit"
+		                                type="text" name="externalLinkLabel"
+		                                id="externalLinkLabelEdit"
+		                                style="width: inherit; background: var(--base-grey)"><br>
+		                        </div>
+		                    </div>
+		
+		                    <div class="row">
+		                        <div class="col-sm-4" style="padding-right: 0;">
+		                            <label>External Link
+		                            </label>
+		                        </div>
+		                        <div class="col-sm-8">
+		                            <input
+		                                class="form-control-sm externallink-targetEdit"
+		                                type="text" name="url"
+		                                id="externalLinkURLEdit"
+		                                style="width: inherit; background: var(--base-grey)">
+		                        </div>
+		                    </div>
+							<div class="row">
+			                    <div class="col-sm-4">
+			                        <label>How To Open:</label>
+			                    </div>
+			                    <div class="col-sm-8">
+			                        <select id="extTabOpenEdit" name="tabOpen" class="form-control-sm extlink-target" style="width: inherit; background: var(--base-grey)">
+			                            <option th:value="NEWWINDOW">New Window</option>
+			                            <option th:value="SAMEWINDOW">Same Window</option>
+			                        </select>
+			                    </div>
+			                </div>
+		                    <div class="row">
+		                        <div class="col-sm-4">
+		                            <label>Type:</label>
+		                        </div>
+		                        <div class="col-sm-8">
+		                            <select id="extTypeEdit" name="type"
+		                                class="form-control-sm externallink-targetEdit">
+		                                <option th:value="IMAGE">Image</option>
+		                                <option th:value="ARROW">Link</option>
+		                            </select>
+		                        </div>
+		                    </div>
+		
+		                    <div class="row">
+		                        <div class="col-sm-3" style="padding-right: 0;">
+		                            <label>Image:</label>
+		                        </div>
+		                        <div class="col-sm-9">
+		                            <input type="file" class="form-control-sm"
+		                                name="externalLinkImage"
+		                                id="externalLinkImageEdit" style="width: inherit" />
+		                        </div>
+		                    </div>
+		                    
+		                    <p class="mt-5 text-center">
+		                        <button id="deleteExternalLinkButton" type="reset" class="btn delete-btn btn-sm"><i class="fa fa-trash"></i>Delete</button>
+		                        <button id="editExternalLinkBtn" type="reset" class="btn primary-btn btn-sm">Save External Link</button>
+		                    </p>
+		                    
+		                </div>
+		            </form>
+		        </div>
+		        </div>
+		        </div>
+            
+            
             <div id="slideSpace">
                 <div th:each="contents: ${slideContents}">
                     <div th:attr="data-position=${contents.contentOrder}" th:id="${contents.id}" class="valueDiv tab row" th:if="${#strings.equals(contents['class'].simpleName,'ImageBlock')}">
