@@ -8,12 +8,12 @@ package edu.asu.diging.vspace.core.references;
  * @see  edu.asu.diging.vspace.core.references.IReference
  */
 
-public interface IReferenceMetadataFormatRegistry {
+public interface IReferenceDisplayMetadataRegistry {
 
     public void init();
 
-    public IReferenceMetadataProvider getProvider(ReferenceMetadataType refMetaDataType);
+    public IReferenceDisplayProvider getProvider(ReferenceDisplayType refMetaDataType);
 
-    public IReferenceMetadataProvider getProvider(String metadataType);
+    public IReferenceDisplayProvider getProvider(String displayType);
 
 }

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import edu.asu.diging.vspace.core.model.IReference;
 import edu.asu.diging.vspace.core.references.IReferenceDisplayFormatter;
 import edu.asu.diging.vspace.core.references.IReferenceDisplayProvider;
+import edu.asu.diging.vspace.core.references.ReferenceDisplayType;
 
 @Service
 public class ReferenceDisplayDefault implements IReferenceDisplayProvider {
@@ -30,6 +31,12 @@ public class ReferenceDisplayDefault implements IReferenceDisplayProvider {
         abstracts).addCompanyName(companyName);
 
         return refFormatter.getReferenceDisplayText();
+    }
+
+    @Override
+    public ReferenceDisplayType getReferenceDisplayType() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

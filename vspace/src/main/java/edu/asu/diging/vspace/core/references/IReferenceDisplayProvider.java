@@ -8,6 +8,9 @@ import edu.asu.diging.vspace.core.model.IReference;
  */
 public interface IReferenceDisplayProvider {
     
+    public ReferenceDisplayType getReferenceDisplayType();
+    
+    
     public String getReferenceDisplayText(IReference reference);
     
 }
