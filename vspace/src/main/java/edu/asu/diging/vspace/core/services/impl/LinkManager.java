@@ -73,23 +73,6 @@ public abstract class LinkManager<L extends ILink<T>, T extends IVSpaceElement, 
 
     }
     
-    
-    protected U updateLinkForSlide(String title, String id, float positionX, float positionY, int rotation, String linkedId,
-            String linkLabel, String linkId, String linkDisplayId, DisplayType displayType, byte[] linkImage,
-            String imageFilename)
-            throws SlideDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException {
-
-        validateSlide(id);
-
-        L link = getLink(linkId);
-        T target = getTarget(linkedId);
-        link.setName(title);
-        link.setTarget(target);
-        U displayLink = getDisplayLink(linkDisplayId);
-        setDisplayProperties(displayLink, id, positionX, positionY, rotation, displayType, linkImage, imageFilename);
-        return updateLinkAndDisplay(link, displayLink);
-    }
-   
     @Override
     public U updateLink(String title, String id, float positionX, float positionY, int rotation, String linkedId,
             String linkLabel, String linkId, String linkDisplayId, DisplayType displayType, byte[] linkImage,
@@ -113,18 +96,6 @@ public abstract class LinkManager<L extends ILink<T>, T extends IVSpaceElement, 
         removeFromLinkList(link.getSpace(), link);
         deleteLinkDisplayRepo(link);
         deleteLinkRepo(link);
-    }
-    
-    protected void deleteLinkForSlide(String linkId) {
-        L link = getLink(linkId);
-        removeFromLinkListForSlide(link.getSlide(), link);
-        deleteLinkDisplayRepo(link);
-        deleteLinkRepo(link);
-    }
-    
-    
-    protected void removeFromLinkListForSlide(ISlide slide, L link) {
-        slide.getExternalLinks().remove(link);
     }
 
     protected abstract void deleteLinkRepo(L link);
@@ -152,13 +123,6 @@ public abstract class LinkManager<L extends ILink<T>, T extends IVSpaceElement, 
         }
     }
     
-    protected void validateSlide(String id) throws SlideDoesNotExistException {
-        ISlide source = slideManager.getSlide(id);
-        if (source == null) {
-            throw new SlideDoesNotExistException();
-        }
-    }
-
     protected void setDisplayProperties(ILinkDisplay linkDisplay, String id, float positionX, float positionY,
             int rotation, DisplayType displayType, byte[] linkImage, String imageFilename)
             throws ImageCouldNotBeStoredException {

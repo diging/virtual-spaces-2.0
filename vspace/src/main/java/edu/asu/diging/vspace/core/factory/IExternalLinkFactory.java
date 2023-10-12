@@ -8,6 +8,4 @@ public interface IExternalLinkFactory {
 
     IExternalLink createExternalLink(String title, ISpace space);
     
-    IExternalLink createExternalLink(String title, ISlide slide);
-
 }

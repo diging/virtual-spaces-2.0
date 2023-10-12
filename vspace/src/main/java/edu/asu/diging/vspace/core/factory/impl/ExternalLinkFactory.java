@@ -24,18 +24,4 @@ public class ExternalLinkFactory implements IExternalLinkFactory {
         link.setSpace(space);
         return link;
     }
-    
-    /*
-     * (non-Javadoc)
-     * 
-     * @see edu.asu.diging.vspace.core.factory.impl.IExternalLinkFactory#
-     * createExternalLink(java.lang.String, edu.asu.diging.vspace.core.model.ISlide)
-     */
-    @Override
-    public IExternalLink createExternalLink(String title, ISlide slide) {
-        IExternalLink link = new ExternalLink();
-        link.setName(title);
-        link.setSlide(slide);
-        return link;
-    }
 }

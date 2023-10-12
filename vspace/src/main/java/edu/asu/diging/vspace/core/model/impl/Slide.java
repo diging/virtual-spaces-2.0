@@ -37,9 +37,6 @@ public class Slide extends VSpaceElement implements ISlide {
     @ManyToOne(targetEntity = Module.class)
     private IModule module;
     
-    @OneToMany(mappedBy = "slide", targetEntity=ExternalLink.class)
-    private List<IExternalLink> externalLinks;
-
     // -------- @JsonIgnore used as this entity will be returned in a controller
     @JsonIgnore
     @OneToMany(targetEntity = ContentBlock.class, mappedBy = "slide", cascade = CascadeType.ALL)
@@ -90,23 +87,6 @@ public class Slide extends VSpaceElement implements ISlide {
         this.module = module;
     }
     
-    /* (non-Javadoc)
-     * @see edu.asu.diging.vspace.core.model.impl.ISlide#getExternalLinks()
-     */
-    @Override
-    public List<IExternalLink> getExternalLinks() {
-        return externalLinks;
-    }
-
-    /* (non-Javadoc)
-     * @see edu.asu.diging.vspace.core.model.impl.ISplide#setExternalLinks(java.util.List)
-     */
-    @Override
-    public void setExternalLinks(List<IExternalLink> externalLinks) {
-        this.externalLinks = externalLinks;
-    }
-    
-
     /*
      * (non-Javadoc)
      * 

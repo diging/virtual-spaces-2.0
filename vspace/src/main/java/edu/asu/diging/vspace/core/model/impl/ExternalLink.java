@@ -26,11 +26,7 @@ public class ExternalLink extends VSpaceElement implements IExternalLink {
     @ManyToOne(targetEntity=Space.class)
     @JoinColumn(name="space_id", nullable=false)
     private ISpace space;
-    
-    @ManyToOne(targetEntity=Slide.class)
-    @JoinColumn(name="slide_id", nullable=false)
-    private ISlide slide;
-
+  
     private String externalLink;
 
     /* (non-Javadoc)
@@ -47,22 +43,6 @@ public class ExternalLink extends VSpaceElement implements IExternalLink {
     @Override
     public void setId(String id) {
         this.id = id;
-    }
-
-    /* (non-Javadoc)
-     * @see edu.asu.diging.vspace.core.model.impl.IExternalLink#getSlide()
-     */
-    @Override
-    public ISlide getSlide() {
-        return slide;
-    }
-
-    /* (non-Javadoc)
-     * @see edu.asu.diging.vspace.core.model.impl.IExternalLink#setSlide(edu.asu.diging.vspace.core.model.ISlide)
-     */
-    @Override
-    public void setSlide(ISlide slide) {
-        this.slide = slide;
     }
     
     @Override
