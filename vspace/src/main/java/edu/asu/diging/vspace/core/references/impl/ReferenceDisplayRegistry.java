@@ -9,7 +9,7 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import edu.asu.diging.vspace.core.references.IReferenceDisplayMetadataRegistry;
+import edu.asu.diging.vspace.core.references.IReferenceDisplayRegistry;
 import edu.asu.diging.vspace.core.references.ReferenceDisplayType;
 import edu.asu.diging.vspace.core.model.IReference;
 import edu.asu.diging.vspace.core.references.IReferenceDisplayProvider;
@@ -17,7 +17,7 @@ import edu.asu.diging.vspace.core.references.IReferenceMetadataProvider;
 import edu.asu.diging.vspace.core.references.ReferenceMetadataType;
 
 @Service
-public class ReferenceDisplayMetadataRegistry implements IReferenceDisplayMetadataRegistry {
+public class ReferenceDisplayRegistry implements IReferenceDisplayRegistry {
 
     @Autowired
     private List<IReferenceDisplayProvider> referenceDisplayProviders;
@@ -27,7 +27,7 @@ public class ReferenceDisplayMetadataRegistry implements IReferenceDisplayMetada
     @PostConstruct
     public void init() {
         for (IReferenceDisplayProvider refMetaData : referenceDisplayProviders) {
-            map.put(refMetaData.getReferenceDisplayType(), refMetaData.getReferenceDisplayText(null));
+            map.put(refMetaData.getReferenceDisplayType(), refMetaData);
             
             
         }

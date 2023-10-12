@@ -163,10 +163,10 @@
 							<div th:each="contentRef: ${contents.references}">
                                  <li class="list-group-item" style="font-size: 15px">
 									<div th:id="${contentRef.id}" class="referenceDiv">
-									<p class="col-md-10" th:text='${@referenceDisplayDefault.getReferenceDisplayText(contentRef)}'></p>
-									</div> <span class='Z3988'
-									th:title='${@referenceMetadataRegistry.getProvider("default").getReferenceMetadata(contentRef)}'>
-								</span>
+ -->									<p class="col-md-10" th:text='${@referenceDisplayRegistry.getProvider("default").getReferenceDisplayText(contentRef)}'></p>
+									
+									</div> 
+						
                                 </li>
 							</div>
 						</ul>

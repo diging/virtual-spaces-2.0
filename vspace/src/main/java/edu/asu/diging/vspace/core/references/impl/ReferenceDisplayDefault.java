@@ -6,6 +6,7 @@ import edu.asu.diging.vspace.core.model.IReference;
 import edu.asu.diging.vspace.core.references.IReferenceDisplayFormatter;
 import edu.asu.diging.vspace.core.references.IReferenceDisplayProvider;
 import edu.asu.diging.vspace.core.references.ReferenceDisplayType;
+import edu.asu.diging.vspace.core.references.ReferenceMetadataType;
 
 @Service
 public class ReferenceDisplayDefault implements IReferenceDisplayProvider {
@@ -35,8 +36,7 @@ public class ReferenceDisplayDefault implements IReferenceDisplayProvider {
 
     @Override
     public ReferenceDisplayType getReferenceDisplayType() {
-        // TODO Auto-generated method stub
-        return null;
+        return ReferenceDisplayType.DEFAULT;
     }
 
 }
