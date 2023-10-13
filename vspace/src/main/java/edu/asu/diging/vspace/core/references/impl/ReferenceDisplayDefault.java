@@ -24,12 +24,19 @@ public class ReferenceDisplayDefault implements IReferenceDisplayProvider {
         String abstracts = reference.getAbstracts();
         String companyName = reference.getCompanyName();
         IReferenceDisplayFormatter refFormatter = new ReferenceDisplayFormatter();
-        refFormatter.addType(type).addAuthors(
-        author).addYear(year).addTitle(
-        title).addJournal(journal).addPages(
-        pages).addVolume(volume).addIssue(
-        issue).addUrl(url).addAbstracts(
-        abstracts).addCompanyName(companyName);
+            
+        
+        refFormatter.addMetadata(null, type, ". ")
+        .addMetadata(null, author, ". ")
+        .addMetadata("(" , year, ")")
+        .addMetadata(null, title, ". ")
+        .addMetadata("In: " , journal, ". ")
+        .addMetadata("p. ", pages, ". ")
+        .addMetadata(null, volume, ". ")
+        .addMetadata("(", issue, ")")
+        .addMetadata(null, url, null)
+        .addMetadata(null, abstracts, null)
+        .addMetadata(null, companyName, null);
 
         return refFormatter.getReferenceDisplayText();
     }
