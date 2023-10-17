@@ -31,10 +31,7 @@ public abstract class LinkManager<L extends ILink<T>, T extends IVSpaceElement, 
 
     @Autowired
     private ISpaceManager spaceManager;
-    
-    @Autowired
-    private ISlideManager slideManager;
-
+  
     @Autowired
     private IImageFactory imageFactory;
 
@@ -48,20 +45,6 @@ public abstract class LinkManager<L extends ILink<T>, T extends IVSpaceElement, 
     public U createLink(String title, String id, float positionX, float positionY, int rotation, String linkedId,
             String linkLabel, DisplayType displayType, byte[] linkImage, String imageFilename)
             throws SpaceDoesNotExistException, ImageCouldNotBeStoredException, SpaceDoesNotExistException {
-
-        L link = createLinkObject(title, id);
-        T target = getTarget(linkedId);
-        link.setName(linkLabel);
-        link.setTarget(target);
-        U displayLink = createDisplayLink(link);
-        setDisplayProperties(displayLink, id, positionX, positionY, rotation, displayType, linkImage, imageFilename);
-        return updateLinkAndDisplay(link, displayLink);
-
-    }
-    
-    protected U createLinkForSlide(String title, String id, float positionX, float positionY, int rotation, String linkedId,
-            String linkLabel, DisplayType displayType, byte[] linkImage, String imageFilename)
-            throws SlideDoesNotExistException, ImageCouldNotBeStoredException, SlideDoesNotExistException {
 
         L link = createLinkObject(title, id);
         T target = getTarget(linkedId);

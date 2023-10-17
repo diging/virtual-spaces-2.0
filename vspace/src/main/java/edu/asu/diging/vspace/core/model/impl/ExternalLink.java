@@ -10,7 +10,6 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import edu.asu.diging.vspace.core.model.IExternalLink;
-import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.ISpace;
 
 @Entity
