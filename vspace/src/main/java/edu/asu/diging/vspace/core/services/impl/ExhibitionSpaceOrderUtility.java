@@ -17,7 +17,7 @@ import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IExhibitionSpaceOrderUtility;
 
 /**
- * Utility class for Exhibition Spaces custom order
+ * Utility class to order the spaces in the Exhibition using a user defined custom order.
  * @author prachikharge
  *
  */

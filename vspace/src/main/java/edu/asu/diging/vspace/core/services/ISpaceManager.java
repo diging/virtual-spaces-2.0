@@ -41,5 +41,4 @@ public interface ISpaceManager {
     
     List<ISpace> sortPublishedSpacesByGivenOrder(List<ISpace> publishedSpaces);
     
-    void addSpaceToCustomOrders(ISpace space);
 }

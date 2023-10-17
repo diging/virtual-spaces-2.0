@@ -151,6 +151,10 @@ public class SpaceManager implements ISpaceManager {
         spaceDisplay.setSpace(space);
         spaceDisplayRepo.save((SpaceDisplay) spaceDisplay);
         returnValue.setElement(space);
+        
+        //add new space to all custom space orders
+        spacesCustomOrderManager.addSpaceToCustomOrders(space);
+        
         return returnValue;
     }
 
@@ -188,6 +192,9 @@ public class SpaceManager implements ISpaceManager {
         spaceDisplay.setSpace(space);
         spaceDisplayRepo.save((SpaceDisplay) spaceDisplay);
         returnValue.setElement(space);
+        
+        //add new space to all custom space orders
+        spacesCustomOrderManager.addSpaceToCustomOrders(space);
         return returnValue;
     }
 
@@ -331,12 +338,5 @@ public class SpaceManager implements ISpaceManager {
         IExhibition exhibition = exhibitionManager.getStartExhibition();
         return exhibitionSpaceOrderUtility.sortSpaces(publishedSpaces, exhibition.getSpaceOrderMode());
     }
-
-    @Override
-    public void addSpaceToCustomOrders(ISpace space) {
-        spacesCustomOrderManager.addSpaceToCustomOrders(space);
-        
-    }
-
 
 }
