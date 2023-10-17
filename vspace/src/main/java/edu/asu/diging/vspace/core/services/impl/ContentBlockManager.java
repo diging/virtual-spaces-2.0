@@ -162,7 +162,7 @@ public class ContentBlockManager implements IContentBlockManager {
         return videoRepo.save((VSVideo) vidContent);
     }
 
-    public IVSVideo saveVideo(byte[] video, Long size, String filename, String title) {
+    private IVSVideo saveVideo(byte[] video, Long size, String filename, String title) {
         if (video != null && video.length > 0) {
             Tika tika = new Tika();
             String contentType = tika.detect(video);
@@ -264,7 +264,7 @@ public class ContentBlockManager implements IContentBlockManager {
         return returnValue;
     }
 
-    public IVSVideo storeVideo(byte[] video, Long size, String fileName, String url, String title)
+    private IVSVideo storeVideo(byte[] video, Long size, String fileName, String url, String title)
             throws VideoCouldNotBeStoredException {
         IVSVideo slideContentVideo = null;
         

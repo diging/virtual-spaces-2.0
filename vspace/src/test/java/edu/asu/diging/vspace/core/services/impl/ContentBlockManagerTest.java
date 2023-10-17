@@ -282,9 +282,9 @@ public class ContentBlockManagerTest {
 
     @Test
     public void test_updateSpaceBlock_success() {
-        String upadtedSpaceId = "spaceId1";
+        String updatedSpaceId = "spaceId1";
         SpaceBlock spaceBlock = new SpaceBlock();
-        spaceBlock.setId(upadtedSpaceId);
+        spaceBlock.setId(updatedSpaceId);
         Mockito.when(spaceBlockRepo.save(spaceBlock)).thenReturn(spaceBlock);
         managerToTest.saveSpaceBlock(spaceBlock);
         Mockito.verify(spaceBlockRepo).save(spaceBlock);
@@ -516,7 +516,6 @@ public class ContentBlockManagerTest {
         CreationReturnValue returnValue = managerToTest.createImageBlock(slideId, slideContentImage, contentOrder);
         assertEquals(returnValue.getElement().getCreatedBy(), createdBy);
         assertEquals(returnValue.getElement().getId(), slideId);
-        assertNotNull(returnValue);
 
     }
 
@@ -796,9 +795,6 @@ public class ContentBlockManagerTest {
         when(videoRepo.save((VSVideo) slideContentVideo)).thenReturn((VSVideo) slideContentVideo);
         when(videoFactory.createVideo("newFile.mp4", 200L, "application/octet-stream")).thenReturn(slideContentVideo);
         ContentBlockManager contentBlockManager = Mockito.spy(managerToTest);
-        when(contentBlockManager.storeVideo(new byte[20], 200L, "newFile.mp4", "url", "title"))
-                .thenReturn(slideContentVideo);
-        when(contentBlockManager.saveVideo(new byte[20], 200L, "newFile.mp4", "title")).thenReturn(slideContentVideo);
         when(videoBlockRepo.save((VideoBlock) vidBlock)).thenReturn(videoBlock);
         managerToTest.updateVideoBlock(videoBlock, new byte[20], 200L, "url", "newFile.mp4", "video_title");
 
