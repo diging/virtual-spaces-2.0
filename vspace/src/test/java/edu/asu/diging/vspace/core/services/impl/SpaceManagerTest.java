@@ -34,6 +34,7 @@ import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IImageService;
+import edu.asu.diging.vspace.core.services.ISpacesCustomOrderManager;
 import edu.asu.diging.vspace.core.services.impl.model.ImageData;
 
 public class SpaceManagerTest {
@@ -73,6 +74,9 @@ public class SpaceManagerTest {
 
     @Mock
     private ExhibitionManager exhibitionManager;
+    
+    @Mock
+    private ISpacesCustomOrderManager spacesCustomOrderManager;
     
 
 
@@ -175,6 +179,7 @@ public class SpaceManagerTest {
         spaceLink.setTargetSpace(space);
         Mockito.when(spaceRepo.findById(spaceId1)).thenReturn(Optional.of(space));
         Mockito.when(spaceLinkRepo.findByTargetSpace(space)).thenReturn(Arrays.asList(spaceLink));
+        Mockito.when(spacesCustomOrderManager.findAll()).thenReturn(new ArrayList());
         managerToTest.deleteSpaceById(spaceId1);
         Assert.assertEquals(spaceLink.getTargetSpace(), null);
         Mockito.verify(spaceLinkRepo).deleteBySourceSpaceId(spaceId1);
