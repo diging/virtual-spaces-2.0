@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.IExternalLink;
+import edu.asu.diging.vspace.core.model.IExternalLinkSlide;
 import edu.asu.diging.vspace.core.model.IImageBlock;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISequence;
@@ -45,6 +46,10 @@ public class Slide extends VSpaceElement implements ISlide {
     @JsonIgnore
     @ManyToMany(mappedBy = "slides", targetEntity = Sequence.class)
     private List<ISequence> sequence;
+    
+    @JsonIgnore
+    @OneToMany(mappedBy = "slide", targetEntity = ExternalLinkSlide.class)
+    private List<IExternalLinkSlide> externalLinks;
 
     /*
      * (non-Javadoc)
@@ -85,6 +90,28 @@ public class Slide extends VSpaceElement implements ISlide {
     @Override
     public void setModule(IModule module) {
         this.module = module;
+    }
+    
+    /*
+     * (non-Javadoc)
+     * 
+     * @see edu.asu.diging.vspace.core.model.impl.ISlide#getExternalLinks()
+     */
+    @Override
+    public List<IExternalLinkSlide> getExternalLinks() {
+        return externalLinks;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * edu.asu.diging.vspace.core.model.impl.ISlide#setExternalLinks(java.util.
+     * List)
+     */
+    @Override
+    public void setExternalLinks(List<IExternalLinkSlide> externalLinks) {
+        this.externalLinks = externalLinks;
     }
     
     /*

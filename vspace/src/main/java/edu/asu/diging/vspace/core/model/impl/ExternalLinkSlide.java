@@ -1,5 +1,6 @@
 package edu.asu.diging.vspace.core.model.impl;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -11,13 +12,13 @@ import org.hibernate.annotations.Parameter;
 import edu.asu.diging.vspace.core.model.IExternalLink;
 import edu.asu.diging.vspace.core.model.IExternalLinkSlide;
 import edu.asu.diging.vspace.core.model.ISlide;
-
+@Entity
 public class ExternalLinkSlide extends VSpaceElement implements IExternalLinkSlide {
     
     @Id 
     @GeneratedValue(generator = "extlink_id_generator")
     @GenericGenerator(name = "extlink_id_generator", 
-        parameters = @Parameter(name = "prefix", value = "EXL"), 
+        parameters = @Parameter(name = "prefix", value = "SEXL"), 
         strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
 
