@@ -8,6 +8,8 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -24,6 +26,14 @@ public class VSImage extends VSMedia implements IVSImage {
     @GeneratedValue(generator = "image_id_generator")
     @GenericGenerator(name = "image_id_generator", parameters = @Parameter(name = "prefix", value = "IMG"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
+
+ 
+    @Lob
+    private String parentPath;
+
+
+    private int height;
+    private int width;
 
     @OneToMany(targetEntity = Tag.class)
     private List<ITag> tags;
@@ -53,6 +63,49 @@ public class VSImage extends VSMedia implements IVSImage {
     }
 
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see edu.asu.diging.vspace.core.model.impl.IImage#getParentPath()
+     */
+    @Override
+    public String getParentPath() {
+        return parentPath;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * edu.asu.diging.vspace.core.model.impl.IImage#setParentPath(java.lang.String)
+     */
+    @Override
+    public void setParentPath(String parentPath) {
+        this.parentPath = parentPath;
+    }
+
+ 
+
+    @Override
+    public int getHeight() {
+        return height;
+    }
+
+    @Override
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    @Override
+    public int getWidth() {
+        return width;
+    }
+
+    @Override
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
     @Override
     public List<ITag> getTags() {
         return tags;
@@ -72,5 +125,5 @@ public class VSImage extends VSMedia implements IVSImage {
     public void setCategories(List<ImageCategory> categories) {
         this.categories = categories;
     }
-
+  
 }
