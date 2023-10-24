@@ -127,6 +127,7 @@ public class ExhibitionSlideController {
                     ((BranchingPoint) slideManager.getSlide(sequenceHistory.peekBranchingPointId())));
         }
         
+        
         ModuleOverview moduleOverview = sequenceOverviewManager.showModuleMap(moduleId);
         moduleOverview.setName(module.getName());
         moduleOverview.setId(module.getId());

@@ -255,11 +255,13 @@
 							if(seq === sequence.name){
 								let branchSeq = {};
 								branchSeq.name = seq;
+								console.log("branchSeq if block " + branchSeq);
 								slideNode.children.push(branchSeq);
 								continue;
 							}
 							let branchSeq = {};
 							branchSeq.name = seq;
+						
 							slideNode.branchSequences.push(branchSeq);
 							slideNode.sequence = sequence.name;
 						}
@@ -288,10 +290,12 @@
 
 					slideIndex=slideIndex+1;
 				}
-				if(isStartSequence == true){
+			 	if(isStartSequence == true){
+			 		console.log(startNodeSequence + "  startNodesequence");
 					treeData.children.push(startNodeSequence);
 				}
 				sequencesMap.set(sequence.name, startNodeSequence)
+				console.log("tree data" + treeData);
 				return treeData;
 
 			}
