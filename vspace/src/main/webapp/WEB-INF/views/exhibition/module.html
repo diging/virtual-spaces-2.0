@@ -317,10 +317,8 @@
 				}
 			}
 			treeData.name = json.name;
-			console.log(treeData);
+			
 			var margin = {top: 20, right: 120, bottom: 20, left: 120},
-			/* treeData.name = json.name;
-			var margin = {top: 70, right: 110, bottom: 20, left: 120},*/
 			width = 1200 - margin.right - margin.left,
 			height = 500 - margin.top - margin.bottom;
 
@@ -341,6 +339,7 @@
 				.attr("transform", "translate(" + 208 + "," + margin.top + ")");
 
 			root = treeData;
+			
 			root.x0 = height / 2;
 			root.y0 = 0;
 
@@ -365,10 +364,15 @@
 				  .data(nodes, function(d) { return d.id || (d.id = ++i); });
 
 			  // Enter any new nodes at the parent's previous position.
+			  console.log("node" + node);
 			  var nodeEnter = node.enter().append("g")
 				  .attr("class", "node")
-				  .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; });
+				  .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; }); 
 
+			  console.log("nodeEnter" + nodeEnter);
+			/*   if(nodeEnter.group == "slide") { */
+				  
+			 
 			  nodeEnter.append("circle")
 				  .attr("r", function(d){
 					if((d.group=== "slide" && d.sequenceId.normalize() === sequenceId.normalize() )
@@ -378,7 +382,10 @@
 					return 1e-6;
 					}
 						)
-				  .style("fill", function(d) { return d._children ? "orange" : "orange"; });
+				  .style("fill", function(d) { return d._children ? "orange" : "orange"; })
+				  .style("opacity", function(d, i) {
+                       return !d.depth ? 0 : 1;
+                   });
 
 			  nodeEnter.append("text")
 			  .attr("class","text")
@@ -386,8 +393,11 @@
 				  .attr("dy", "2.3em")
 				  .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
 				  .text(function(d) { return d.name; })
-				  .style("fill-opacity", 1e-6);
-
+				  .style("fill-opacity", 1e-6)
+				  .style("opacity", function(d, i) {
+                      return !d.depth ? 0 : 1;
+                  });;;
+			  /* } */
 			  // Transition nodes to their new position.
 			  var nodeUpdate = node.transition()
 				  .duration(duration)
@@ -406,7 +416,10 @@
 						}
 					return 0.5;
 					})
-				  .style("fill", function(d) { return d._children ? "orange" : "orange"; });
+				  .style("fill", function(d) { return d._children ? "orange" : "orange"; })
+				  .style("opacity", function(d, i) {
+        				return !d.depth ? 0 : 1;
+    			  });;
 
 			  nodeUpdate.select("text")
 				  .style("fill-opacity", 1);
@@ -417,7 +430,10 @@
 				  .attr("dy", "1.5em")
 				  .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
 				  .text(function(d) { return d.name; })
-				  .style("fill-opacity", 1e-6);
+				  .style("fill-opacity", 1e-6)
+				  .style("opacity", function(d, i) {
+        					return !d.depth ? 0 : 1;
+    				});;;
 
 			  // Transition exiting nodes to the parent's new position.
 			  var nodeExit = node.exit().transition()
