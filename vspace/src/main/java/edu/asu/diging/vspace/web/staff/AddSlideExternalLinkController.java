@@ -23,6 +23,7 @@ import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.ExternalLinkDisplayMode;
 import edu.asu.diging.vspace.core.model.display.IExternalLinkDisplay;
+import edu.asu.diging.vspace.core.model.display.ISlideExternalLinkDisplay;
 import edu.asu.diging.vspace.core.services.IExternalLinkManager;
 import edu.asu.diging.vspace.core.services.ISlideExternalLinkManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
@@ -58,7 +59,7 @@ public class AddSlideExternalLinkController {
         DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
         ExternalLinkDisplayMode externalLinkOpenMode = howToOpen.isEmpty() ? null
                 : ExternalLinkDisplayMode.valueOf(howToOpen);
-        IExternalLinkDisplay display = slideExternalLinkManager.createLink(title, id, new Float(x), new Float(y), 0,
+        ISlideExternalLinkDisplay display = slideExternalLinkManager.createLink(title, id, new Float(x), new Float(y), 0,
                 externalLink, title, type, linkImage, filename, externalLinkOpenMode);
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode linkNode = mapper.createObjectNode();
