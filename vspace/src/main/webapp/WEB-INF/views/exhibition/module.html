@@ -255,13 +255,11 @@
 							if(seq === sequence.name){
 								let branchSeq = {};
 								branchSeq.name = seq;
-								console.log("branchSeq if block " + branchSeq);
 								slideNode.children.push(branchSeq);
 								continue;
 							}
 							let branchSeq = {};
 							branchSeq.name = seq;
-						
 							slideNode.branchSequences.push(branchSeq);
 							slideNode.sequence = sequence.name;
 						}
@@ -291,11 +289,9 @@
 					slideIndex=slideIndex+1;
 				}
 			 	if(isStartSequence == true){
-			 		console.log(startNodeSequence + "  startNodesequence");
 					treeData.children.push(startNodeSequence);
 				}
 				sequencesMap.set(sequence.name, startNodeSequence)
-				console.log("tree data" + treeData);
 				return treeData;
 
 			}
@@ -337,7 +333,7 @@
 				.attr("height", height + margin.top + margin.bottom)
 			  .append("g")
 				.attr("transform", "translate(" + 208 + "," + margin.top + ")");
-
+ 
 			root = treeData;
 			
 			root.x0 = height / 2;
@@ -347,15 +343,18 @@
 
 			d3.select(self.frameElement).style("height", "500px");
 			
-			
-			
 
 			function update(source) {
 
 			  // Compute the new tree layout.
 			  var nodes = tree.nodes(root).reverse(),
 				  links = tree.links(nodes);
-
+			  nodes = nodes.filter(function(d){
+				    return d.depth != 1;
+				});
+			  links = links.filter(function(d){
+				    return d.depth != 1;
+				})
 			  // Normalize for fixed-depth.
 			  nodes.forEach(function(d) { d.y = d.depth * 110; });
 
@@ -364,12 +363,12 @@
 				  .data(nodes, function(d) { return d.id || (d.id = ++i); });
 
 			  // Enter any new nodes at the parent's previous position.
-			  console.log("node" + node);
+
 			  var nodeEnter = node.enter().append("g")
 				  .attr("class", "node")
 				  .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; }); 
 
-			  console.log("nodeEnter" + nodeEnter);
+
 			/*   if(nodeEnter.group == "slide") { */
 				  
 			 
