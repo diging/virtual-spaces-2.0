@@ -308,6 +308,8 @@
 			}
 			for(branch of branchingPointsSet){
 				for(branchSequence of branch.branchSequences){
+					console.log("branch sequence" + branch.sequence);
+					console.log("branch sequence" + branchSequence.name);
 					if(branch.sequence === branchSequence.name) continue;
 					branch.children.push(sequencesMap.get(branchSequence.name))
 				}
@@ -349,15 +351,18 @@
 			  // Compute the new tree layout.
 			  var nodes = tree.nodes(root).reverse(),
 				  links = tree.links(nodes);
-			  nodes = nodes.filter(function(d){
-				    return d.depth != 1;
-				});
-			  links = links.filter(function(d){
-				    return d.depth != 1;
-				})
+			 
+		
+				
 			  // Normalize for fixed-depth.
 			  nodes.forEach(function(d) { d.y = d.depth * 110; });
 
+			  nodes = nodes.filter(function(d){
+				    return  d.depth && d.depth != 1  ;
+				});
+			   links = links.filter(function(d){
+				    return   d.depth != 1 ;
+				}); 
 			  // Update the nodes…
 			  var node = svg.selectAll("g.node")
 				  .data(nodes, function(d) { return d.id || (d.id = ++i); });
@@ -449,8 +454,8 @@
 			  // Update the links…
 			  var link = svg.selectAll("path.link")
 				  .data(links, function(d) { return d.target.id; })
-
-
+			
+  			
 			  // Enter any new links at the parent's previous position.
 			  link.enter().insert("path", "g")
 				  .attr("class", "link")
