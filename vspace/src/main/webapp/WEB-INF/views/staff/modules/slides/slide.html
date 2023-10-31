@@ -133,7 +133,7 @@
             	if(isModal){
             	    $("#space").append(inactiveSpaceElement);
             	} else{
-            	    $("#main-space").append(inactiveSpaceElement);
+            	    $("#slideSpace").append(inactiveSpaceElement);
             	}
                 }
                 if(isModuleLink && link.link.module.moduleStatus!=null && link.link.module.moduleStatus=="UNPUBLISHED"){
@@ -146,7 +146,7 @@
                     if(isModal){
                         $("#space").append(unpublishedModuleElement);
                     }else{
-                        $("#main-space").append(unpublishedModuleElement);
+                        $("#slideSpace").append(unpublishedModuleElement);
                     }
                 }
                 if(!isTextBlock){
@@ -562,7 +562,7 @@
         	            
         	            externalLinks.forEach(function(link,index){
         	                var spanId= "externallinkId-";
-        	                var divId = "#main-space";
+        	                var divId = "#slideSpace";
         	                generateExternalLinks(link,spanId,divId,false, posX, posY, posXModal, posYModal);
         	            })
         	        }
@@ -2288,10 +2288,22 @@
                 </div>
             </div>
             
-            
+            <div id="space" >
             <div th:each="contents: ${slideContents}">
-            <div id="space" style="max-width: 861px; display: -webkit-box;" th:if="${#strings.equals(contents['class'].simpleName,'ImageBlock')}" class="link-modal flex-spacing">
+            <div style="max-width: 861px; display: -webkit-box;" th:if="${#strings.equals(contents['class'].simpleName,'ImageBlock')}" class="link-modal flex-spacing">
         	<img id="bgImage" style="max-width: 461px;" th:src="@{'/api/image/'+${contents.image.id}}" />
+       	
+			<div id="errorAlert"
+            	class="alert alert-danger alert-dismissible fade show"
+            	role="alert"
+            	style="display: none; position: fixed; top: 10%; right: 50px; z-index: 10">
+            	<strong>Error!</strong> <span id="errorMsg"></span>
+            	<button type="button" class="close" id="closeAlert"
+                	aria-label="Close">
+                	<span aria-hidden="true">&times;</span>
+            	</button>
+        	</div>        	
+        	
         	
         	<div id="createExternalLinkAlert" class="custom_form_style" style="z-index: 1;display: flex;">
 			        <div class="divider"></div>
@@ -2469,10 +2481,11 @@
 		                    
 		                </div>
 		            </form>
+		            </div>
 		        </div>
 		        </div>
 		        </div>
-		        
+		       
 		        
 		        <div id="slideSpace">
                 <div th:each="contents: ${slideContents}">
