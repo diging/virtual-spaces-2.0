@@ -252,11 +252,12 @@
 						slideNode.branchingPoint = true;
 						slideNode.branchingPoints = [];
 						for(seq of slide.sequenceIds){
-							if(seq === sequence.name){
+							console.log("seq" + seq.group);
+							if(seq === sequence.name ){
 								let branchSeq = {};
 								branchSeq.name = seq;
-								slideNode.children.push(branchSeq);
-								continue;
+/* 								slideNode.children.push(branchSeq);
+ */								continue;
 							}
 							let branchSeq = {};
 							branchSeq.name = seq;
@@ -448,27 +449,33 @@
 
 			  nodeExit.select("text")
 				  .style("fill-opacity", 1e-6);
-
+				console.log(links);
+			  
 			  // Update the links…
 			  var link = svg.selectAll("path.link")
 				  .data(links, function(d) { return d.target.id; })
 			
-  			console.log("source x0" + source.x0);
-			  console.log("source y0" + source.y0);
+  				console.log("linl"+ link);
 			  // Enter any new links at the parent's previous position.
 			  link.enter().insert("path", "g")
 				  .attr("class", "link")
 				  .attr("d", function(d) {
 					var o = {x: source.x0, y: source.y0};
+					console.log("group " + d.target.group);
 					return diagonal({source: o, target: o});
+				/* 	if(d.target.group === "sequence" ){
+						console.log("sequence")
+						
+					} */
+					
 				  })
 				  .style("fill-opacity", function(d) { return d._children ? 1e-6 : 1e-6; });//;
 
 			  // Transition links to their new position.
 			  link.transition()
 				  .duration(duration)
-				  .attr("d", diagonal);
-
+ 				  .attr("d", diagonal);
+ 
 
 			  // Stash the old positions for transition.
 			  nodes.forEach(function(d) {
