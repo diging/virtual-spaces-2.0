@@ -252,28 +252,28 @@
 						slideNode.branchingPoint = true;
 						slideNode.branchingPoints = [];
 						for(seq of slide.sequenceIds){
-							console.log("seq" + seq.group);
-							if(seq === sequence.name ){
+							if(seq === sequence.name){
 								let branchSeq = {};
 								branchSeq.name = seq;
-/* 								slideNode.children.push(branchSeq);
- */								continue;
+ 								slideNode.children.push(branchSeq);
+ 								continue;
 							}
 							let branchSeq = {};
 							branchSeq.name = seq;
-							slideNode.branchSequences.push(branchSeq);
-							slideNode.sequence = sequence.name;
+ 							slideNode.branchSequences.push(branchSeq);
+  						slideNode.sequence = sequence.name;
 						}
-						branchingPointsSet.add(slideNode);
-
+ 						branchingPointsSet.add(slideNode);
+ 
 					}
 					slideNode.name = slide.name;
 					slideNode.group = "slide";
 					slideNode.sequenceId = sequence.id;
 					slideNode.slideId = slide.id;
 					slideNode.id = sequence.id + slide.id;
-					startNodeSequenceSlides.push(slideNode);
-
+					console.log( slideNode);
+  					startNodeSequenceSlides.push(slideNode);
+ 
 					if(slideIndex == 0){
 						  let slideLink ={};
 						  slideNode.parent=startNodeSequence.name;
@@ -281,8 +281,8 @@
 						  prev=slideNode;
 
 					  } else {
-						  prev.children.push(slideNode);
-						  slideNode.parent=prev;
+ 						  prev.children.push(slideNode);
+ 					  slideNode.parent=prev;
 						  prev=slideNode;
 					  }
 					  source = slideNode.id;
@@ -292,8 +292,8 @@
 			 	if(isStartSequence == true){
 					treeData.children.push(startNodeSequence);
 				}
-				sequencesMap.set(sequence.name, startNodeSequence)
-				return treeData;
+ 				sequencesMap.set(sequence.name, startNodeSequence)
+ 				return treeData;
 
 			}
                         let treeData = [];
@@ -305,13 +305,13 @@
 			treeData = createFromSequence(startSequence, treeData, isStartSequence);
 			isStartSequence = false;
 			for (sequence of otherSequences) {
-			treeData = createFromSequence(sequence, treeData,isStartSequence);
-			}
+ 			treeData = createFromSequence(sequence, treeData,isStartSequence);
+ 			}
 			for(branch of branchingPointsSet){
 				for(branchSequence of branch.branchSequences){
 					if(branch.sequence === branchSequence.name) continue;
-					branch.children.push(sequencesMap.get(branchSequence.name))
-				}
+ 					branch.children.push(sequencesMap.get(branchSequence.name))
+ 			    }
 			}
 			treeData.name = json.name;
 			
@@ -371,11 +371,7 @@
 			  var nodeEnter = node.enter().append("g")
 				  .attr("class", "node")
 				  .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; }); 
-
-
-			/*   if(nodeEnter.group == "slide") { */
-				  
-			 
+		 
 			  nodeEnter.append("circle")
 				  .attr("r", function(d){
 					if((d.group=== "slide" && d.sequenceId.normalize() === sequenceId.normalize() )
@@ -400,7 +396,7 @@
 				  .style("opacity", function(d, i) {
                       return !d.depth ? 0 : 1;
                   });;;
-			  /* } */
+                  
 			  // Transition nodes to their new position.
 			  var nodeUpdate = node.transition()
 				  .duration(duration)
@@ -456,24 +452,22 @@
 				  .data(links, function(d) { return d.target.id; })
 			
   				console.log("linl"+ link);
+			  
 			  // Enter any new links at the parent's previous position.
 			  link.enter().insert("path", "g")
 				  .attr("class", "link")
 				  .attr("d", function(d) {
 					var o = {x: source.x0, y: source.y0};
 					console.log("group " + d.target.group);
-					return diagonal({source: o, target: o});
-				/* 	if(d.target.group === "sequence" ){
-						console.log("sequence")
-						
-					} */
+					
+					return diagonal({source: o, target: o});			 	
 					
 				  })
 				  .style("fill-opacity", function(d) { return d._children ? 1e-6 : 1e-6; });//;
 
 			  // Transition links to their new position.
 			  link.transition()
-				  .duration(duration)
+				   .duration(duration) 
  				  .attr("d", diagonal);
  
 
