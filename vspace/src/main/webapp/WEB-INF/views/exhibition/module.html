@@ -447,12 +447,33 @@
 				  .style("fill-opacity", 1e-6);
 				console.log(links);
 			  
+				
+
+				links = links.filter(function (d) {
+					 if(d.target.group=="slide" && d.target.sequence != d.source.sequence){
+						 console.log(d.target.x);
+						   d.target.x = d.source.x;
+						   d.target.x0 = d.source.x0;
+						   d.target.y= d.source.y+100;
+						   d.target.y0= d.source.y0+100;
+						   console.log(d.target.x);
+					   }
+					 return d;
+				});
+					
+				
+					  /*  console.log(d.target.group);
+					   if(d.target.group=="slide" && d.target.sequence == d.source.sequence){
+						   
+					   } */
+					
+				
 			  // Update the links…
 			  var link = svg.selectAll("path.link")
 				  .data(links, function(d) { return d.target.id; })
 			
   				console.log("linl"+ link);
-			  
+			   
 			  // Enter any new links at the parent's previous position.
 			  link.enter().insert("path", "g")
 				  .attr("class", "link")
