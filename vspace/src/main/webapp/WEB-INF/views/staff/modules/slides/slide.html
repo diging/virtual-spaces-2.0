@@ -2293,6 +2293,8 @@
             <div id="space" style="max-width: 861px; display: -webkit-box;" th:if="${#strings.equals(contents['class'].simpleName,'ImageBlock')}" class="link-modal flex-spacing">
         	<img id="bgImage" style="max-width: 461px;" th:src="@{'/api/image/'+${contents.image.id}}" />
         	
+        	
+        	
         	<div id="createExternalLinkAlert" class="custom_form_style" style="z-index: 1;display: flex;">
 			        <div class="divider"></div>
 			        <form id="createExternalLinkForm" style="z-index: 1;">
@@ -2473,16 +2475,20 @@
 		        </div>
 		        </div>
 		        
-		        
-		        <div id="slideSpace">
+		        <div id="main-space">
                 <div th:each="contents: ${slideContents}">
                     <div th:attr="data-position=${contents.contentOrder}" th:id="${contents.id}" class="valueDiv tab row" th:if="${#strings.equals(contents['class'].simpleName,'ImageBlock')}">
-                        <img th:id="${contents.id}" class="imgDiv" th:src="@{'/api/image/'+${contents.image.id}}" />
+                        <img id="main-bgImage" th:id="${contents.id}" class="imgDiv" th:src="@{'/api/image/'+${contents.image.id}}" />
                         <input type="hidden" id="deleteImageId" th:value="${contents.id}"> 
                         <a class="btn deleteImage col-md-1" href="javascript:;" style="position:absolute; right:25px;"> 
                         <span class="icon-trash error"></span>
                         </a>
                     </div>
+                  </div>
+                  </div>
+		        
+		        <div id="slideSpace">
+                <div th:each="contents: ${slideContents}">
                      <div th:attr="data-position=${contents.contentOrder}" class="tab vidDiv row" th:id="${contents.id}" th:if="${#strings.equals(contents['class'].simpleName,'VideoBlock')}">
 	                    <div>
 	                    	<h3><strong>[[${contents.video.title}]]</strong></h3>

@@ -75,9 +75,7 @@ public class AddSlideExternalLinkController {
         linkNode.put("x", display.getPositionX());
         linkNode.put("y", display.getPositionY());
         linkNode.put("url", display.getExternalLink().getId());
-       
-        
-
+ 
         return new ResponseEntity<>(mapper.writeValueAsString(linkNode), HttpStatus.OK);
     }
 

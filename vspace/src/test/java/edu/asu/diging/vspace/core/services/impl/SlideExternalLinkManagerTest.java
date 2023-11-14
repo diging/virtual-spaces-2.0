@@ -13,6 +13,7 @@ import edu.asu.diging.vspace.core.data.ExternalLinkRepository;
 import edu.asu.diging.vspace.core.data.SlideExternalLinkDisplayRepository;
 import edu.asu.diging.vspace.core.data.SlideExternalLinkRepository;
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
+import edu.asu.diging.vspace.core.exception.SlideDoesNotExistException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.IExternalLinkDisplayFactory;
 import edu.asu.diging.vspace.core.factory.IExternalLinkFactory;
@@ -23,9 +24,11 @@ import edu.asu.diging.vspace.core.model.IExternalLinkSlide;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.IExternalLinkDisplay;
+import edu.asu.diging.vspace.core.model.display.ISlideDisplay;
 import edu.asu.diging.vspace.core.model.display.ISlideExternalLinkDisplay;
 import edu.asu.diging.vspace.core.model.display.ISpaceDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.ExternalLinkDisplay;
+import edu.asu.diging.vspace.core.model.display.impl.SlideDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.SlideExternalLinkDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.SpaceDisplay;
 import edu.asu.diging.vspace.core.model.impl.ExternalLink;
@@ -69,7 +72,7 @@ public class SlideExternalLinkManagerTest {
     }
 
     @Test
-    public void test_createLink_success() throws SpaceDoesNotExistException, ImageCouldNotBeStoredException {
+    public void test_createLink_success() throws SlideDoesNotExistException, ImageCouldNotBeStoredException {
 
         Slide slide = new Slide();
         slide.setId(slideId1);
@@ -78,14 +81,14 @@ public class SlideExternalLinkManagerTest {
         slideImage.setWidth(1300);
         slide.setImage(slideImage);
 
-        ISpaceDisplay displayAttributes = new SpaceDisplay();
+        ISlideDisplay displayAttributes = new SlideDisplay();
         displayAttributes.setHeight(700);
         displayAttributes.setWidth(1300);
 
-        Mockito.when(slideDisplayManager.getBySpace(slide)).thenReturn(displayAttributes);
+        Mockito.when(slideDisplayManager.getBySlide(slide)).thenReturn(displayAttributes);
         Mockito.when(slideManager.getSlide(slide.getId())).thenReturn(slide);
 
-        IExternalLinkSlide externalLink = new ExternalLink();
+        IExternalLinkSlide externalLink = new ExternalLinkSlide();
         ExternalLinkValue externalLinkValue = new ExternalLinkValue(externalLinkURL);
         externalLink.setId("SEXL001");
         externalLink.setTarget(externalLinkValue);
