@@ -12,8 +12,11 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.annotations.Parameter;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -26,6 +29,7 @@ import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.ITextBlock;
+import edu.asu.diging.vspace.core.model.IVSImage;
 
 @Entity
 public class Slide extends VSpaceElement implements ISlide {
@@ -50,6 +54,10 @@ public class Slide extends VSpaceElement implements ISlide {
     @JsonIgnore
     @OneToMany(mappedBy = "slide", targetEntity = ExternalLinkSlide.class)
     private List<IExternalLinkSlide> externalLinks;
+    
+    @OneToOne(targetEntity = VSImage.class)
+    @NotFound(action = NotFoundAction.IGNORE)
+    private IVSImage image;
 
     /*
      * (non-Javadoc)
@@ -158,6 +166,14 @@ public class Slide extends VSpaceElement implements ISlide {
      */
     public void setSequence(List<ISequence> sequence) {
         this.sequence = sequence;
+    }
+    
+    public IVSImage getImage() {
+        return image;
+    }
+
+    public void setImage(IVSImage image) {
+        this.image = image;
     }
 
     /**
