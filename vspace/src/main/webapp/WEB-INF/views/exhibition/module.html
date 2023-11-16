@@ -370,7 +370,15 @@
 						console.log("n"+d);
 						d.x= d.parent.x;
 						d.x0 = d.parent.x;
-						d.children
+						temp = d;
+						while(temp.children.length > 0){
+							child = temp.children[0];
+							child.x= temp.x;
+							child.x0 = temp.x0;
+							temp = child;
+						}
+						childrenArray = d.children;
+						
 					/* 	d.y= d.parent.y; */
 				/* 		d.y0= d.parent.y0; */
 						
@@ -379,6 +387,24 @@
 					return d;
 					
 				});
+				
+			/* 	
+				temp = root;
+				while(temp!= null ){
+					nodes.filter(function(d){
+						if(d.group == "slide" && d.parent.group == "slide" ){
+							console.log("n"+d);
+							d.x= d.parent.x;
+							d.x0 = d.parent.x;
+			
+							
+						}
+						
+						return d;
+						
+					});
+		
+				} */
 				
 				nodes = nodes.filter(function(d){
 					if(d.group == "slide" && d.parent.group == "slide" ){
@@ -393,6 +419,7 @@
 					return d;
 					
 				});
+			
 			  // Update the nodes…
 			  var node = svg.selectAll("g.node")
 				  .data(nodes, function(d) { return d.id || (d.id = ++i); });
