@@ -316,7 +316,7 @@
 			treeData.name = json.name;
 			
 			var margin = {top: 20, right: 120, bottom: 20, left: 120},
-			width = 1200 - margin.right - margin.left,
+			width = 1500 - margin.right - margin.left,
 			height = 500 - margin.top - margin.bottom;
 
 			var i = 0,
@@ -365,60 +365,26 @@
 			   
 			   
 			   
-				nodes = nodes.filter(function(d){
+			nodes = nodes.filter(function(d){
 					if(d.group == "slide" && d.parent.branchingPoint == true ){
 						console.log("n"+d);
 						d.x= d.parent.x;
 						d.x0 = d.parent.x;
 						temp = d;
-						while(temp.children.length > 0){
+					 	while(temp.children!=null && temp.children.length > 0){
 							child = temp.children[0];
+							console.log("temp"+ temp);
 							child.x= temp.x;
 							child.x0 = temp.x0;
 							temp = child;
-						}
-						childrenArray = d.children;
-						
-					/* 	d.y= d.parent.y; */
-				/* 		d.y0= d.parent.y0; */
+						} 
 						
 					}
-					
+				
 					return d;
 					
 				});
 				
-			/* 	
-				temp = root;
-				while(temp!= null ){
-					nodes.filter(function(d){
-						if(d.group == "slide" && d.parent.group == "slide" ){
-							console.log("n"+d);
-							d.x= d.parent.x;
-							d.x0 = d.parent.x;
-			
-							
-						}
-						
-						return d;
-						
-					});
-		
-				} */
-				
-				nodes = nodes.filter(function(d){
-					if(d.group == "slide" && d.parent.group == "slide" ){
-						console.log("n"+d);
-						d.x= d.parent.x;
-						d.x0 = d.parent.x;
-					/* 	d.y= d.parent.y; */
-				/* 		d.y0= d.parent.y0; */
-						
-					}
-					
-					return d;
-					
-				});
 			
 			  // Update the nodes…
 			  var node = svg.selectAll("g.node")
