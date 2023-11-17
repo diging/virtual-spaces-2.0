@@ -17,12 +17,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.diging.vspace.core.model.IBranchingPoint;
 import edu.asu.diging.vspace.core.model.IContentBlock;
+import edu.asu.diging.vspace.core.model.IImageBlock;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.impl.BranchingPoint;
+import edu.asu.diging.vspace.core.model.impl.ImageBlock;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
 import edu.asu.diging.vspace.core.services.IExternalLinkManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
+import edu.asu.diging.vspace.core.services.ISlideDisplayManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
+import edu.asu.diging.vspace.core.services.ISpaceDisplayManager;
 import edu.asu.diging.vspace.web.staff.forms.SequenceForm;
 
 @Transactional
@@ -40,6 +44,10 @@ public class SlideController {
     
     @Autowired
     private IExternalLinkManager externalLinkManager;
+    
+    @Autowired
+    private ISlideDisplayManager slideDisplayManager;
+   
 
     @RequestMapping("/staff/module/{moduleId}/slide/{id}")
     public String listSlides(@PathVariable("id") String id, @PathVariable("moduleId") String moduleId, Model model) {
@@ -50,7 +58,10 @@ public class SlideController {
         model.addAttribute("externalLinks", externalLinkManager.getLinkDisplays(id));
         model.addAttribute("slideSequences", slideManager.getSlideSequences(id, moduleId));
         List<IContentBlock> slideContents = contentBlockManager.getAllContentBlocks(id);
+        IImageBlock imageblock = contentBlockManager.getImageBlock(slideContents.get(0).getId());
+        slideManager.storeSlideDisplay(slide, imageblock.getImage());
         model.addAttribute("slideContents", slideContents);
+        model.addAttribute("display", slideDisplayManager.getBySlide(slide,imageblock.getImage()));
         model.addAttribute("contentCount",slideContents.size()>0 ? slideContents.get(slideContents.size()-1).getContentOrder() : 0);
         if(slideManager.getSlide(id) instanceof BranchingPoint) {
             model.addAttribute("choices", ((IBranchingPoint)slide).getChoices());

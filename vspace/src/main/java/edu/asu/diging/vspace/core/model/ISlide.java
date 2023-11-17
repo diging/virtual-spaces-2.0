@@ -19,9 +19,6 @@ public interface ISlide extends IVSpaceElement {
     List<IExternalLinkSlide> getExternalLinks();
 
     void setExternalLinks(List<IExternalLinkSlide> externalLinks);
-    
-    IVSImage getImage();
-
-    void setImage(IVSImage image);
+   
     
 }

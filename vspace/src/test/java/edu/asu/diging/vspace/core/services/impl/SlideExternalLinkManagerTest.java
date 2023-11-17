@@ -79,13 +79,12 @@ public class SlideExternalLinkManagerTest {
         IVSImage slideImage = new VSImage();
         slideImage.setHeight(700);
         slideImage.setWidth(1300);
-        slide.setImage(slideImage);
 
         ISlideDisplay displayAttributes = new SlideDisplay();
         displayAttributes.setHeight(700);
         displayAttributes.setWidth(1300);
 
-        Mockito.when(slideDisplayManager.getBySlide(slide)).thenReturn(displayAttributes);
+        Mockito.when(slideDisplayManager.getBySlide(slide, slideImage)).thenReturn(displayAttributes);
         Mockito.when(slideManager.getSlide(slide.getId())).thenReturn(slide);
 
         IExternalLinkSlide externalLink = new ExternalLinkSlide();

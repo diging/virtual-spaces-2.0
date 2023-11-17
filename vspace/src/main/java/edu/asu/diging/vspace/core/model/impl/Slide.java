@@ -55,9 +55,6 @@ public class Slide extends VSpaceElement implements ISlide {
     @OneToMany(mappedBy = "slide", targetEntity = ExternalLinkSlide.class)
     private List<IExternalLinkSlide> externalLinks;
     
-    @OneToOne(targetEntity = VSImage.class)
-    @NotFound(action = NotFoundAction.IGNORE)
-    private IVSImage image;
 
     /*
      * (non-Javadoc)
@@ -168,14 +165,6 @@ public class Slide extends VSpaceElement implements ISlide {
         this.sequence = sequence;
     }
     
-    public IVSImage getImage() {
-        return image;
-    }
-
-    public void setImage(IVSImage image) {
-        this.image = image;
-    }
-
     /**
      * This Method will retrieve the first ImageBlock of a slide if the ImageBlock
      * is present
