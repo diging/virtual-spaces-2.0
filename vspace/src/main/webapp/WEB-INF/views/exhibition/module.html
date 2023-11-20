@@ -271,7 +271,6 @@
 					slideNode.sequenceId = sequence.id;
 					slideNode.slideId = slide.id;
 					slideNode.id = sequence.id + slide.id;
-					console.log( slideNode);
   					startNodeSequenceSlides.push(slideNode);
  
 					if(slideIndex == 0){
@@ -367,13 +366,11 @@
 			   
 			nodes = nodes.filter(function(d){
 					if(d.group == "slide" && d.parent.branchingPoint == true ){
-						console.log("n"+d);
 						d.x= d.parent.x;
 						d.x0 = d.parent.x;
 						temp = d;
 					 	while(temp.children!=null && temp.children.length > 0){
 							child = temp.children[0];
-							console.log("temp"+ temp);
 							child.x= temp.x;
 							child.x0 = temp.x0;
 							temp = child;
@@ -476,16 +473,12 @@
 			  // Update the links…
 			  var link = svg.selectAll("path.link")
 				  .data(links, function(d) { return d.target.id; })
-			
-  				console.log("linl"+ link);
-			   
+						   
 			  // Enter any new links at the parent's previous position.
 			  link.enter().insert("path", "g")
 				  .attr("class", "link")
 				  .attr("d", function(d) {
-					var o = {x: source.x0, y: source.y0};
-					console.log("group " + d.target.group);
-					
+					var o = {x: source.x0, y: source.y0};					
 					return diagonal({source: o, target: o});			 	
 					
 				  })

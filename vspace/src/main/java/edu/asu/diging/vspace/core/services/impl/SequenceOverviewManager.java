@@ -80,7 +80,7 @@ public class SequenceOverviewManager implements ISequenceOverviewManager {
         ModuleOverview moduleOverviewJson = new ModuleOverview();
         moduleOverviewJson.setStartSequence(startSequenceNode);
         moduleOverviewJson.setOtherSequences(otherSequences);
-//        moduleOverviewJson.setStartSlides(startSequence.getSlides());
+        moduleOverviewJson.setStartSlides(startSequence.getSlides());
         //moduleOverviewJson.setOtherSlides(otherSequences);
         return moduleOverviewJson;
     }
