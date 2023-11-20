@@ -469,38 +469,9 @@
 
 			  nodeExit.select("text")
 				  .style("fill-opacity", 1e-6);
-				console.log(nodes);
-			  
-			/* 	nodes = nodes.filter(function(d){
-					if(d.group == "slide" && d.parent.branchingPoint == true ){
-						console.log("n"+d);
-						d.x= d.parent.x;
-						d.x0 = d.parent.x;
-						d.y= d.parent.y;
-						d.y0= d.parent.y0;
-						
-					}
-					
-				}); */
 
-				links = links.filter(function (d) {
-					 if(d.target.group=="slide" && d.target.sequence != d.source.sequence){
-						 console.log(d.target.x);
-					/* 	   d.target.x = d.source.x;
-						   d.target.x0 = d.source.x0;
-						   d.target.y= d.source.y+100;
-						   d.target.y0= d.source.y0+100; */
-						   console.log(d.target.x);
-					   }
-					 return d;
-				});
-					
 				
-					  /*  console.log(d.target.group);
-					   if(d.target.group=="slide" && d.target.sequence == d.source.sequence){
-						   
-					   } */
-					
+	
 				
 			  // Update the links…
 			  var link = svg.selectAll("path.link")
