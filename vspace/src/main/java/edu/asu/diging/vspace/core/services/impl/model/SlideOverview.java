@@ -2,6 +2,11 @@ package edu.asu.diging.vspace.core.services.impl.model;
 
 import java.util.List;
 
+/**
+ * 
+ * @author prachikharge
+ *
+ */
 public class SlideOverview {
 
     private String id;

@@ -29,7 +29,7 @@ import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISequenceManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
-import edu.asu.diging.vspace.core.services.impl.SequenceOverviewManager;
+import edu.asu.diging.vspace.core.services.impl.ModuleOverviewManager;
 import edu.asu.diging.vspace.core.services.impl.SlideManager;
 import edu.asu.diging.vspace.core.services.impl.model.ModuleOverview;
 
@@ -52,7 +52,7 @@ public class ExhibitionSlideController {
     private SequenceHistory sequenceHistory;
     
     @Autowired
-    private SequenceOverviewManager sequenceOverviewManager;
+    private ModuleOverviewManager sequenceOverviewManager;
     
     @Autowired
     private IExhibitionManager exhibitManager;

@@ -12,55 +12,16 @@ import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.impl.BranchingPoint;
 import edu.asu.diging.vspace.core.services.IModuleManager;
-import edu.asu.diging.vspace.core.services.ISequenceOverviewManager;
+import edu.asu.diging.vspace.core.services.IModuleOverviewManager;
 import edu.asu.diging.vspace.core.services.impl.model.ModuleOverview;
 import edu.asu.diging.vspace.core.services.impl.model.SequenceOverview;
 import edu.asu.diging.vspace.core.services.impl.model.SlideOverview;
 
 @Service
-public class SequenceOverviewManager implements ISequenceOverviewManager {
+public class ModuleOverviewManager implements IModuleOverviewManager {
     
     @Autowired
     private IModuleManager moduleManager;
-    
-    /**
-     * This method is used to fetch all Sequences which belong to a module and 
-     * convert this into a SequenceOverview node. The SequenceOverviewNode is added to 
-     * ModuleOverview
-     * @return ModuleOverview which contains the module and the list of sequences and its slides
-     */
-    
-    
-    private SequenceOverview createSequenceOverviewNode(ISequence sequence) {
-        
-        SequenceOverview sequenceOverview = new SequenceOverview();
-        sequenceOverview.setName(sequence.getName());
-        sequenceOverview.setId(sequence.getId());
-        List<SlideOverview> slideOverviews = createSlideOverviewNode(sequence.getSlides());
-        sequenceOverview.setSlideOverviews(slideOverviews);
-        return sequenceOverview;  
-    }
-    
-    private List<SlideOverview> createSlideOverviewNode(List<ISlide> slides){
-        List<SlideOverview> slideOverviews = new ArrayList<SlideOverview>();
-        for(ISlide slide : slides) {
-            SlideOverview slideOverview = new SlideOverview(); 
-            if(slide instanceof BranchingPoint ) {
-                slideOverview.setBranchingPoint(true);
-                List<IChoice> sequenceChoices = ((BranchingPoint)slide).getChoices();
-                List<String> slideOverviewSequenceChoices = new ArrayList<String>();
-                for(IChoice choice : sequenceChoices) {
-                    slideOverviewSequenceChoices.add(choice.getSequence().getName());
-                }
-                slideOverview.setSequenceIds(slideOverviewSequenceChoices);
-            }
-            slideOverview.setId(slide.getId());
-            slideOverview.setName(slide.getName());
-            slideOverviews.add(slideOverview);
-            
-        } 
-        return slideOverviews;
-    }
     
     public ModuleOverview showModuleMap(String id) {
         IModule module = moduleManager.getModule(id);
@@ -77,12 +38,47 @@ public class SequenceOverviewManager implements ISequenceOverviewManager {
             }
         }
         
-        ModuleOverview moduleOverviewJson = new ModuleOverview();
-        moduleOverviewJson.setStartSequence(startSequenceNode);
-        moduleOverviewJson.setOtherSequences(otherSequences);
-        moduleOverviewJson.setStartSlides(startSequence.getSlides());
-        //moduleOverviewJson.setOtherSlides(otherSequences);
-        return moduleOverviewJson;
+        ModuleOverview moduleOverview = new ModuleOverview();
+        moduleOverview.setStartSequence(startSequenceNode);
+        moduleOverview.setOtherSequences(otherSequences);
+        moduleOverview.setStartSlides(startSequence.getSlides());
+        return moduleOverview;
+    }
+    
+    /**
+     * This method is used to fetch all Sequences which belong to a module and 
+     * convert this into a SequenceOverview node. The SequenceOverviewNode is added to 
+     * ModuleOverview
+     * @return ModuleOverview which contains the module and the list of sequences and its slides
+     */   
+    private SequenceOverview createSequenceOverviewNode(ISequence sequence) {
+        
+        SequenceOverview sequenceOverview = new SequenceOverview();
+        sequenceOverview.setName(sequence.getName());
+        sequenceOverview.setId(sequence.getId());
+        List<SlideOverview> slideOverviews = createSlideOverviewNode(sequence.getSlides());
+        sequenceOverview.setSlideOverviews(slideOverviews);
+        return sequenceOverview;  
+    }
+    
+    private List<SlideOverview> createSlideOverviewNode(List<ISlide> slides){
+        List<SlideOverview> slideOverviews = new ArrayList<SlideOverview>();
+        for(ISlide slide : slides) {
+            SlideOverview slideOverview = new SlideOverview(); 
+            slideOverview.setId(slide.getId());
+            slideOverview.setName(slide.getName());
+            if(slide instanceof BranchingPoint ) {
+                slideOverview.setBranchingPoint(true);
+                List<IChoice> sequenceChoices = ((BranchingPoint)slide).getChoices();
+                List<String> slideOverviewSequenceChoices = new ArrayList<String>();
+                sequenceChoices.stream().forEach(sequenceChoice -> slideOverviewSequenceChoices.add(
+                        sequenceChoice.getSequence().getName()));
+                slideOverview.setSequenceIds(slideOverviewSequenceChoices);
+            }
+           
+            slideOverviews.add(slideOverview);          
+        } 
+        return slideOverviews;
     }
  
 }

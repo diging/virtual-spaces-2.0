@@ -4,6 +4,11 @@ import java.util.List;
 
 import edu.asu.diging.vspace.core.model.ISlide;
 
+/**
+ * 
+ * @author prachikharge
+ *
+ */
 public class ModuleOverview {
     
     private String name;

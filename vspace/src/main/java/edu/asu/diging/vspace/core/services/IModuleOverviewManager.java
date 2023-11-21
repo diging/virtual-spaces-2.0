@@ -3,7 +3,7 @@ package edu.asu.diging.vspace.core.services;
 
 import edu.asu.diging.vspace.core.services.impl.model.ModuleOverview;
 
-public interface ISequenceOverviewManager {
+public interface IModuleOverviewManager {
     
     /**
      * This method is used to fetch all Sequences based on the moduleId  which belong to a module and 

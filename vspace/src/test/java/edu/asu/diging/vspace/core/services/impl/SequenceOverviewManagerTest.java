@@ -42,7 +42,7 @@ public class SequenceOverviewManagerTest {
     private ModuleManager moduleManager;
 
     @InjectMocks
-    private SequenceOverviewManager serviceToTest;
+    private ModuleOverviewManager serviceToTest;
 
     private List<ISlide> slides;
 
