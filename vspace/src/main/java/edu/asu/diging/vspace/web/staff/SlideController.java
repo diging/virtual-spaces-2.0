@@ -26,7 +26,6 @@ import edu.asu.diging.vspace.core.services.IExternalLinkManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISlideDisplayManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
-import edu.asu.diging.vspace.core.services.ISpaceDisplayManager;
 import edu.asu.diging.vspace.web.staff.forms.SequenceForm;
 
 @Transactional
