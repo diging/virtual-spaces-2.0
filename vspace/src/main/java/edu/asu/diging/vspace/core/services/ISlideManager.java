@@ -10,6 +10,7 @@ import edu.asu.diging.vspace.core.model.IBranchingPoint;
 import edu.asu.diging.vspace.core.model.IChoice;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISlide;
+import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.display.IExternalLinkDisplay;
 import edu.asu.diging.vspace.core.model.display.SlideType;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
@@ -35,5 +36,7 @@ public interface ISlideManager {
     List<Sequence> getSlideSequences(String slideId, String moduleId);
     
     Page<ISlide> findByNameOrDescription(Pageable requestedPage,String searchText);
+
+    void storeSlideDisplay(ISlide slide, IVSImage image);
     
 }

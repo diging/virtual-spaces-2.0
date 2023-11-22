@@ -20,9 +20,13 @@ import edu.asu.diging.vspace.core.data.ExternalLinkDisplayRepository;
 import edu.asu.diging.vspace.core.data.ExternalLinkRepository;
 import edu.asu.diging.vspace.core.data.SequenceRepository;
 import edu.asu.diging.vspace.core.data.SlideRepository;
+import edu.asu.diging.vspace.core.data.display.SlideDisplayRepository;
+import edu.asu.diging.vspace.core.data.display.SpaceDisplayRepository;
 import edu.asu.diging.vspace.core.exception.SlideDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.IExternalLinkDisplayFactory;
 import edu.asu.diging.vspace.core.factory.IExternalLinkFactory;
+import edu.asu.diging.vspace.core.factory.ISlideDisplayFactory;
+import edu.asu.diging.vspace.core.factory.ISpaceDisplayFactory;
 import edu.asu.diging.vspace.core.factory.impl.ChoiceFactory;
 import edu.asu.diging.vspace.core.factory.impl.SlideFactory;
 import edu.asu.diging.vspace.core.model.IBranchingPoint;
@@ -30,14 +34,21 @@ import edu.asu.diging.vspace.core.model.IChoice;
 import edu.asu.diging.vspace.core.model.IExternalLink;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISlide;
+import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.display.IExternalLinkDisplay;
+import edu.asu.diging.vspace.core.model.display.ISlideDisplay;
+import edu.asu.diging.vspace.core.model.display.ISpaceDisplay;
 import edu.asu.diging.vspace.core.model.display.SlideType;
 import edu.asu.diging.vspace.core.model.display.impl.ExternalLinkDisplay;
+import edu.asu.diging.vspace.core.model.display.impl.SlideDisplay;
+import edu.asu.diging.vspace.core.model.display.impl.SpaceDisplay;
 import edu.asu.diging.vspace.core.model.impl.BranchingPoint;
 import edu.asu.diging.vspace.core.model.impl.Choice;
 import edu.asu.diging.vspace.core.model.impl.ExternalLink;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
 import edu.asu.diging.vspace.core.model.impl.Slide;
+import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 import edu.asu.diging.vspace.web.staff.forms.SlideForm;
 
@@ -49,6 +60,12 @@ public class SlideManager implements ISlideManager {
 
     @Autowired
     private SlideRepository slideRepo;
+    
+    @Autowired
+    private ISlideDisplayFactory slideDisplayFactory;
+    
+    @Autowired
+    private SlideDisplayRepository slideDisplayRepo;
     
     @Autowired
     private IExternalLinkFactory externalLinkFactory;
@@ -81,6 +98,31 @@ public class SlideManager implements ISlideManager {
     public ISlide createSlide(IModule module, SlideForm slideForm, SlideType type) {
         ISlide slide = slideFactory.createSlide(module, slideForm, type);
         return slideRepo.save((Slide) slide);
+    }
+    
+    @Override
+    public void storeSlideDisplay(ISlide slide, IVSImage image) {
+        
+        List<SlideDisplay> displays = null;
+        if (slide.getId() != null) {
+            displays = slideDisplayRepo.getBySlide(slide);
+        }
+        ISlideDisplay slideDisplay;
+        if (displays == null || displays.isEmpty()) {
+            slideDisplay = slideDisplayFactory.createSlideDisplay();
+        } else {
+            slideDisplay = displays.get(0);
+        }
+
+        if (image != null) {
+            //space.setImage(image);
+            slideDisplay.setHeight(image.getHeight());
+            slideDisplay.setWidth(image.getWidth());
+        }
+
+        slideDisplay.setSlide(slide);
+        slideDisplayRepo.save((SlideDisplay) slideDisplay);
+        
     }
 
     @Override

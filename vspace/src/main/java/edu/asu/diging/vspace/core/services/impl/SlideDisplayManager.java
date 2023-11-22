@@ -11,20 +11,14 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.display.SlideDisplayRepository;
-import edu.asu.diging.vspace.core.data.display.SpaceDisplayRepository;
 import edu.asu.diging.vspace.core.factory.ISlideDisplayFactory;
-import edu.asu.diging.vspace.core.factory.ISpaceDisplayFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.ISlide;
-import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.display.ISlideDisplay;
-import edu.asu.diging.vspace.core.model.display.ISpaceDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.SlideDisplay;
-import edu.asu.diging.vspace.core.model.display.impl.SpaceDisplay;
 import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.ISlideDisplayManager;
-import edu.asu.diging.vspace.core.services.ISpaceDisplayManager;
 import edu.asu.diging.vspace.core.services.impl.model.ImageData;
 
 @Service
@@ -52,8 +46,9 @@ public class SlideDisplayManager implements ISlideDisplayManager{
     private IStorageEngine storage;
     
     @Override
-    public ISlideDisplay getBySlide(ISlide slide) {
-        IVSImage image = slide!=null ? slide.getImage():null;
+    public ISlideDisplay getBySlide(ISlide slide, IVSImage img) {
+        
+        IVSImage image = slide!=null ? img:null;
         List<SlideDisplay> displays = slideDisplayRepo.getBySlide(slide);
         ISlideDisplay display = displays.isEmpty() ? null:displays.get(0);
         if(display==null) {
