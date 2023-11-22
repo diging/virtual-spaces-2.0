@@ -52,7 +52,7 @@ public class ExhibitionSlideController {
     private SequenceHistory sequenceHistory;
     
     @Autowired
-    private ModuleOverviewManager sequenceOverviewManager;
+    private ModuleOverviewManager moduleOverviewManager;
     
     @Autowired
     private IExhibitionManager exhibitManager;
@@ -137,7 +137,7 @@ public class ExhibitionSlideController {
         }
         
         
-        ModuleOverview moduleOverview = sequenceOverviewManager.showModuleMap(moduleId);
+        ModuleOverview moduleOverview = moduleOverviewManager.getModuleOverview(moduleId);
         moduleOverview.setName(module.getName());
         moduleOverview.setId(module.getId());
         model.addAttribute("overview", moduleOverview);

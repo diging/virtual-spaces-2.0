@@ -23,11 +23,11 @@ public class ModuleOverviewManager implements IModuleOverviewManager {
     @Autowired
     private IModuleManager moduleManager;
     
-    public ModuleOverview showModuleMap(String id) {
-        IModule module = moduleManager.getModule(id);
+    public ModuleOverview getModuleOverview(String moduleId) {
+        IModule module = moduleManager.getModule(moduleId);
         ISequence startSequence = module.getStartSequence();
         
-        List<ISequence> sequences = moduleManager.getModuleSequences(id);
+        List<ISequence> sequences = moduleManager.getModuleSequences(moduleId);
         
         SequenceOverview startSequenceNode = createSequenceOverviewNode(startSequence);
         List<SequenceOverview> otherSequences = new ArrayList<SequenceOverview>();

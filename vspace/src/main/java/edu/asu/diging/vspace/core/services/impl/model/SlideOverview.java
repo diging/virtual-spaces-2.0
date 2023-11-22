@@ -3,7 +3,7 @@ package edu.asu.diging.vspace.core.services.impl.model;
 import java.util.List;
 
 /**
- * 
+ * Creates a network to overview the current slide within the exhibition.
  * @author prachikharge
  *
  */

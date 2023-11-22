@@ -5,7 +5,7 @@ import java.util.List;
 import edu.asu.diging.vspace.core.model.ISlide;
 
 /**
- * 
+ * Creates a network to overview the current sequence within the exhibition.
  * @author prachikharge
  *
  */

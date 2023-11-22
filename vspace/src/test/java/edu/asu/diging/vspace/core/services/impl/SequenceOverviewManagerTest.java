@@ -75,7 +75,7 @@ public class SequenceOverviewManagerTest {
 
         Mockito.when(moduleManager.getModule(moduleId)).thenReturn(module);
         Mockito.when(moduleManager.getModuleSequences(moduleId)).thenReturn(sequences);
-        ModuleOverview moduleOverview = serviceToTest.showModuleMap("moduleId");
+        ModuleOverview moduleOverview = serviceToTest.getModuleOverview("moduleId");
         assertEquals(sequences.get(0).getId(), moduleOverview.getStartSequence().getId());
 
     }
@@ -119,7 +119,7 @@ public class SequenceOverviewManagerTest {
 
         Mockito.when(moduleManager.getModule(moduleId)).thenReturn(module);
         Mockito.when(moduleManager.getModuleSequences(moduleId)).thenReturn(sequences);
-        ModuleOverview moduleOverview = serviceToTest.showModuleMap("moduleId");
+        ModuleOverview moduleOverview = serviceToTest.getModuleOverview("moduleId");
         assertEquals(sequences.get(0).getId(), moduleOverview.getStartSequence().getId());
 
     }
