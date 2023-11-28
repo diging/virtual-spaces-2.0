@@ -13,6 +13,7 @@ import edu.asu.diging.vspace.core.data.ExternalLinkRepository;
 import edu.asu.diging.vspace.core.data.SlideExternalLinkDisplayRepository;
 import edu.asu.diging.vspace.core.data.SlideExternalLinkRepository;
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
+import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
 import edu.asu.diging.vspace.core.exception.SlideDoesNotExistException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.IExternalLinkDisplayFactory;
@@ -21,6 +22,8 @@ import edu.asu.diging.vspace.core.factory.ISlideExternalLinkDisplayFactory;
 import edu.asu.diging.vspace.core.factory.ISlideExternalLinkFactory;
 import edu.asu.diging.vspace.core.model.IExternalLink;
 import edu.asu.diging.vspace.core.model.IExternalLinkSlide;
+import edu.asu.diging.vspace.core.model.ISlide;
+import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.IExternalLinkDisplay;
@@ -89,7 +92,7 @@ public class SlideExternalLinkManagerTest {
 
         IExternalLinkSlide externalLink = new ExternalLinkSlide();
         ExternalLinkValue externalLinkValue = new ExternalLinkValue(externalLinkURL);
-        externalLink.setId("SEXL001");
+        externalLink.setId("EXLS001");
         externalLink.setTarget(externalLinkValue);
         Mockito.when(slideManager.getSlide(slideId1)).thenReturn(slide);
         Mockito.when(externalLinkFactory.createExternalLink("New External Link", slide)).thenReturn(externalLink);
@@ -97,7 +100,7 @@ public class SlideExternalLinkManagerTest {
         Mockito.when(externalLinkRepo.save((ExternalLinkSlide) externalLink)).thenReturn((ExternalLinkSlide)externalLink);
 
         ISlideExternalLinkDisplay externalDisplayLink = new SlideExternalLinkDisplay();
-        externalDisplayLink.setId("SEXLD001");
+        externalDisplayLink.setId("EXLDS001");
 
         externalDisplayLink.setPositionX(10);
         externalDisplayLink.setPositionY(30);
@@ -109,7 +112,7 @@ public class SlideExternalLinkManagerTest {
         Mockito.when(externalLinkRepo.save((ExternalLinkSlide) externalLink)).thenReturn((ExternalLinkSlide)externalLink);
         Mockito.when(externalLinkDisplayRepo.save((SlideExternalLinkDisplay)externalDisplayLink)).thenReturn((SlideExternalLinkDisplay)externalDisplayLink);
 
-        ISlideExternalLinkDisplay savedExternalLinkDisplay1 = managerToTest.createLink("New External Link", slideId1, 10, 30, 40, "SEXL001", "New External Link", DisplayType.ARROW, null, null,null);
+        ISlideExternalLinkDisplay savedExternalLinkDisplay1 = managerToTest.createLink("New External Link", slideId1, 10, 30, 40, "EXLS001", "New External Link", DisplayType.ARROW, null, null,null);
         Assert.assertEquals(externalDisplayLink.getId(), savedExternalLinkDisplay1.getId());
         Assert.assertEquals(externalDisplayLink.getName(), savedExternalLinkDisplay1.getName());
         Assert.assertEquals(new Double(externalDisplayLink.getPositionX()), new Double(savedExternalLinkDisplay1.getPositionX()));
@@ -120,5 +123,31 @@ public class SlideExternalLinkManagerTest {
         Assert.assertEquals(externalDisplayLink.getExternalLink().getTarget().getValue(), savedExternalLinkDisplay1.getExternalLink().getTarget().getValue());
         Mockito.verify(externalLinkDisplayRepo).save((SlideExternalLinkDisplay)externalDisplayLink);
     }
+    
+    @Test
+    public void test_updateLink_success() throws SlideDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException {
+        ISlide slide = new Slide();
+        slide.setId(slideId1);
+        IVSImage slideImage = new VSImage();
+        slideImage.setHeight(700);
+        slideImage.setWidth(1300);
+        slide.setImage(slideImage);
+
+        ISlideDisplay displayAttributes = new SlideDisplay();
+        displayAttributes.setHeight(700);
+        displayAttributes.setWidth(1300);
+
+        Mockito.when(slideDisplayManager.getBySlide(slide,slideImage)).thenReturn(displayAttributes);
+        SlideExternalLinkDisplay externalLinkDisplay = new SlideExternalLinkDisplay();
+        IExternalLinkSlide externalLink = new ExternalLinkSlide();
+        externalLink.setId("EXLS001");
+        externalLink.setSlide(slide);
+        externalLink.setTarget(new ExternalLinkValue("stackOverflow.com"));
+        externalLinkDisplay.setId("EXLDS001");
+
+        externalLinkDisplay.setExternalLink(externalLink);
+    }
+    
+    
 
 }

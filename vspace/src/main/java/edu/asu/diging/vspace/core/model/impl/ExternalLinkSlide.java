@@ -18,7 +18,7 @@ public class ExternalLinkSlide extends VSpaceElement implements IExternalLinkSli
     @Id 
     @GeneratedValue(generator = "extlink_id_generator")
     @GenericGenerator(name = "extlink_id_generator", 
-        parameters = @Parameter(name = "prefix", value = "SEXL"), 
+        parameters = @Parameter(name = "prefix", value = "EXLS"), 
         strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
 

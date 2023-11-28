@@ -55,6 +55,11 @@ public class Slide extends VSpaceElement implements ISlide {
     @OneToMany(mappedBy = "slide", targetEntity = ExternalLinkSlide.class)
     private List<IExternalLinkSlide> externalLinks;
     
+    @OneToOne(targetEntity = VSImage.class)
+    @NotFound(action = NotFoundAction.IGNORE)
+    private IVSImage image;
+
+    
 
     /*
      * (non-Javadoc)
@@ -117,6 +122,14 @@ public class Slide extends VSpaceElement implements ISlide {
     @Override
     public void setExternalLinks(List<IExternalLinkSlide> externalLinks) {
         this.externalLinks = externalLinks;
+    }
+    
+    public IVSImage getImage() {
+        return image;
+    }
+
+    public void setImage(IVSImage image) {
+        this.image = image;
     }
     
     /*

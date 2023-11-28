@@ -19,19 +19,13 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.exception.SlideDoesNotExistException;
-import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
-import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.ISlide;
-import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.ExternalLinkDisplayMode;
-import edu.asu.diging.vspace.core.model.display.IExternalLinkDisplay;
 import edu.asu.diging.vspace.core.model.display.ISlideExternalLinkDisplay;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
-import edu.asu.diging.vspace.core.services.IExternalLinkManager;
 import edu.asu.diging.vspace.core.services.ISlideExternalLinkManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
-import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Controller
 public class AddSlideExternalLinkController {
