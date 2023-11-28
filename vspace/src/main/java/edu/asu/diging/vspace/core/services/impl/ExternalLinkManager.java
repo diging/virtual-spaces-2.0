@@ -49,15 +49,6 @@ public class ExternalLinkManager extends LinkManager<IExternalLink, ExternalLink
     @Autowired
     private IExternalLinkDisplayFactory externalLinkDisplayFactory;
 
-    @Autowired
-    private IImageFactory imageFactory;
-
-    @Autowired
-    private ImageRepository imageRepo;
-
-    @Autowired
-    private IStorageEngine storage;
-
     @Override
     public List<IExternalLinkDisplay> getLinkDisplays(String spaceId) {
         return externalLinkDisplayRepo.findExternalLinkDisplaysForSpace(spaceId);
@@ -134,7 +125,7 @@ public class ExternalLinkManager extends LinkManager<IExternalLink, ExternalLink
          * automatically persist howToOpen in database.
          */
         IExternalLinkDisplay externalLinkDisplay = createLink(title, id, positionX, positionY, rotation, linkedId,
-                linkLabel,desc, displayType, linkImage, imageFilename, imageId);
+                linkLabel, desc, displayType, linkImage, imageFilename, imageId);
         externalLinkDisplay.setHowToOpen(howToOpen);
         return externalLinkDisplay;
 
@@ -142,8 +133,8 @@ public class ExternalLinkManager extends LinkManager<IExternalLink, ExternalLink
 
     @Override
     public IExternalLinkDisplay updateLink(String title, String id, float positionX, float positionY, int rotation,
-            String linkedId, String linkLabel, String linkId, String linkDisplayId, DisplayType displayType,
-            byte[] linkImage, String imageFilename, ExternalLinkDisplayMode howToOpen)
+            String linkedId, String linkLabel, String desc, String linkId, String linkDisplayId, DisplayType displayType,
+            byte[] linkImage, String imageFilename, String existingImageId,  ExternalLinkDisplayMode howToOpen)
             throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException {
 
         /*
@@ -154,7 +145,7 @@ public class ExternalLinkManager extends LinkManager<IExternalLink, ExternalLink
          * automatically persist howToOpen in database.
          */
         IExternalLinkDisplay externalLinkDisplay = updateLink(title, id, positionX, positionY, rotation, linkedId,
-                linkLabel, linkId, linkDisplayId, displayType, linkImage, imageFilename,howToOpen );
+                linkLabel, desc, linkId, linkDisplayId, displayType, linkImage, imageFilename, existingImageId, howToOpen );
         externalLinkDisplay.setHowToOpen(howToOpen);
         return externalLinkDisplay;
     }

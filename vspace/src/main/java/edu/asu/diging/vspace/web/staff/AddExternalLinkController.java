@@ -59,7 +59,7 @@ public class AddExternalLinkController {
         ExternalLinkDisplayMode externalLinkOpenMode = howToOpen.isEmpty() ? null
                 : ExternalLinkDisplayMode.valueOf(howToOpen);
         IExternalLinkDisplay display = externalLinkManager.createLink(title, id, new Float(x), new Float(y), 0,
-                externalLink, title,desc, type, linkImage, filename, externalLinkOpenMode, imageId);
+                externalLink, title, desc, type, linkImage, filename, externalLinkOpenMode, imageId);
         
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode linkNode = mapper.createObjectNode();
