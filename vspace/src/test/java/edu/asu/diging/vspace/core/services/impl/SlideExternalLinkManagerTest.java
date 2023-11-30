@@ -1,5 +1,7 @@
 package edu.asu.diging.vspace.core.services.impl;
 
+import java.util.Optional;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -146,6 +148,32 @@ public class SlideExternalLinkManagerTest {
         externalLinkDisplay.setId("EXLDS001");
 
         externalLinkDisplay.setExternalLink(externalLink);
+        
+        externalLinkDisplay.setName("TestExternalEdited");
+        externalLinkDisplay.setPositionX(100);
+        externalLinkDisplay.setPositionY(300);
+        externalLinkDisplay.setType(DisplayType.ALERT);
+
+        Mockito.when(slideManager.getSpace(slideId1)).thenReturn(slide);
+        ExternalLink newExternalLink = new ExternalLink(); 
+        newExternalLink.setId("externalLink1");
+        Optional<ExternalLinkSlide> mockExternalLink = Optional.of((ExternalLinkSlide)externalLink);
+        Mockito.when(externalLinkRepo.findById(externalLink.getId())).thenReturn(mockExternalLink);
+
+        Optional<SlideExternalLinkDisplay> mockExternalLinkDisplay = Optional.of((SlideExternalLinkDisplay)externalLinkDisplay);
+        Mockito.when(externalLinkDisplayRepo.findById(externalLinkDisplay.getId())).thenReturn(mockExternalLinkDisplay);
+
+        Mockito.when(externalLinkRepo.save((ExternalLinkSlide) externalLink)).thenReturn((ExternalLinkSlide)externalLink);
+        Mockito.when(externalLinkDisplayRepo.save((SlideExternalLinkDisplay)externalLinkDisplay)).thenReturn((SlideExternalLinkDisplay)externalLinkDisplay);
+
+        ISlideExternalLinkDisplay actualUpdatedLink = managerToTest.updateLink("TestExternalNew", slideId1, 20, 40, 0, "www.google.com", "TestExternalNew", "EXLS001", "EXLDS001", DisplayType.ARROW, null, null,null);
+        Assert.assertEquals(externalLinkDisplay.getId(), actualUpdatedLink.getId());
+        Assert.assertEquals(externalLinkDisplay.getName(), actualUpdatedLink.getName());
+        Assert.assertEquals(new Double(externalLinkDisplay.getPositionX()), new Double(actualUpdatedLink.getPositionX()));
+        Assert.assertEquals(new Double(externalLinkDisplay.getPositionY()), new Double(actualUpdatedLink.getPositionY()));
+        Assert.assertEquals(externalLinkDisplay.getExternalLink().getId(), actualUpdatedLink.getExternalLink().getId());
+        Assert.assertEquals(externalLinkDisplay.getExternalLink().getTarget().getValue(), actualUpdatedLink.getExternalLink().getTarget().getValue());
+        Assert.assertEquals(externalLinkDisplay.getType(), actualUpdatedLink.getType());
     }
     
     

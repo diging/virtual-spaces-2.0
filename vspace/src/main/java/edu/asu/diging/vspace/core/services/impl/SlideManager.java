@@ -115,7 +115,7 @@ public class SlideManager implements ISlideManager {
         }
 
         if (image != null) {
-            //space.setImage(image);
+            slide.setImage(image);
             slideDisplay.setHeight(image.getHeight());
             slideDisplay.setWidth(image.getWidth());
         }
