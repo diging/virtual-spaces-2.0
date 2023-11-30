@@ -76,7 +76,7 @@ public class SequenceOverviewManagerTest {
         Mockito.when(moduleManager.getModule(moduleId)).thenReturn(module);
         Mockito.when(moduleManager.getModuleSequences(moduleId)).thenReturn(sequences);
         ModuleOverview moduleOverview = serviceToTest.getModuleOverview("moduleId");
-        assertEquals(sequences.get(0).getId(), moduleOverview.getStartSequence().getId());
+        assertEquals(sequence1.getId(), moduleOverview.getStartSequence().getId());
 
     }
 
@@ -104,7 +104,8 @@ public class SequenceOverviewManagerTest {
         choice.setId("choiceId");
         choice.setName("choiceName");
         choice.setSequence(sequence1);
-
+        choices.add(choice);
+        
         BranchingPoint branchingPoint = new BranchingPoint();
         branchingPoint.setChoices(choices);
 

@@ -365,22 +365,22 @@
 			   
 			   
 			nodes = nodes.filter(function(d){
-					if(d.group == "slide" && d.parent.branchingPoint == true ){
-						d.x= d.parent.x;
-						d.x0 = d.parent.x;
-						temp = d;
-					 	while(temp.children!=null && temp.children.length > 0){
-							child = temp.children[0];
-							child.x= temp.x;
-							child.x0 = temp.x0;
-							temp = child;
-						} 
-						
-					}
-				
-					return d;
+				if(d.group == "slide" && d.parent.branchingPoint == true ){
+					d.x= d.parent.x;
+					d.x0 = d.parent.x;
+					temp = d;
+				 	while(temp.children!=null && temp.children.length > 0){
+						child = temp.children[0];
+						child.x= temp.x;
+						child.x0 = temp.x0;
+						temp = child;
+					} 
 					
-				});
+				}
+			
+			    return d;
+					
+			});
 				
 			
 			  // Update the nodes…
@@ -496,18 +496,6 @@
 				d.y0 = d.y;
 			  });
 			}
-
-			// Toggle children on click.
-			/* function click(d) {
-			  if (d.children) {
-				d._children = d.children;
-				d.children = null;
-			  } else {
-				d.children = d._children;
-				d._children = null;
-			  }
-			  update(d);
-			}  */
 				        
                         </script>
 					</div>
