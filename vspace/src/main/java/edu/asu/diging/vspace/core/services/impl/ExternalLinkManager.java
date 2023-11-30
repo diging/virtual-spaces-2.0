@@ -135,7 +135,7 @@ public class ExternalLinkManager extends LinkManager<IExternalLink, ExternalLink
     public IExternalLinkDisplay updateLink(String title, String id, float positionX, float positionY, int rotation,
             String linkedId, String linkLabel, String desc, String linkId, String linkDisplayId, DisplayType displayType,
             byte[] linkImage, String imageFilename, String existingImageId,  ExternalLinkDisplayMode howToOpen)
-            throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException {
+            throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException, ImageDoesNotExistException {
 
         /*
          * When updateLink is called then inside updateLinkAndDisplay(link, displayLink)
@@ -145,7 +145,7 @@ public class ExternalLinkManager extends LinkManager<IExternalLink, ExternalLink
          * automatically persist howToOpen in database.
          */
         IExternalLinkDisplay externalLinkDisplay = updateLink(title, id, positionX, positionY, rotation, linkedId,
-                linkLabel, desc, linkId, linkDisplayId, displayType, linkImage, imageFilename, existingImageId, howToOpen );
+                linkLabel, desc, linkId, linkDisplayId, displayType, linkImage, imageFilename, existingImageId);
         externalLinkDisplay.setHowToOpen(howToOpen);
         return externalLinkDisplay;
     }

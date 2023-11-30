@@ -20,7 +20,7 @@ public interface ILinkManager<L extends ILink<T>, T extends IVSpaceElement, U ex
 
     U updateLink(String title, String id, float positionX, float positionY, int rotation, String linkedId,
             String linkLabel, String linkDesc, String linkId, String linkDisplayId, DisplayType displayType, byte[] linkImage,
-            String imageFilename, String existingImageId, ExternalLinkDisplayMode howToOpen)
+            String imageFilename, String existingImageId)
             throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException, ImageDoesNotExistException;
 
     List<U> getLinkDisplays(String spaceId);

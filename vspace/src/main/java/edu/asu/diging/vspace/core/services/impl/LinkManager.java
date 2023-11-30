@@ -83,7 +83,7 @@ public abstract class LinkManager<L extends ILink<T>, T extends IVSpaceElement, 
     @Override
     public U updateLink(String title, String id, float positionX, float positionY, int rotation, String linkedId,
             String linkLabel, String linkDesc, String linkId,  String linkDisplayId, DisplayType displayType, byte[] linkImage,
-            String imageFilename, String existingImageId, ExternalLinkDisplayMode howToOpen)
+            String imageFilename, String existingImageId)
             throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException, ImageDoesNotExistException {
         validateSpace(id);
         L link = getLink(linkId);
