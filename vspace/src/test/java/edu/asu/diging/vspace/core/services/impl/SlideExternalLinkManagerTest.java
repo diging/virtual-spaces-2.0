@@ -1,5 +1,7 @@
 package edu.asu.diging.vspace.core.services.impl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.Assert;
@@ -154,7 +156,7 @@ public class SlideExternalLinkManagerTest {
         externalLinkDisplay.setPositionY(300);
         externalLinkDisplay.setType(DisplayType.ALERT);
 
-        Mockito.when(slideManager.getSpace(slideId1)).thenReturn(slide);
+        Mockito.when(slideManager.getSlide(slideId1)).thenReturn(slide);
         ExternalLink newExternalLink = new ExternalLink(); 
         newExternalLink.setId("externalLink1");
         Optional<ExternalLinkSlide> mockExternalLink = Optional.of((ExternalLinkSlide)externalLink);
@@ -174,6 +176,44 @@ public class SlideExternalLinkManagerTest {
         Assert.assertEquals(externalLinkDisplay.getExternalLink().getId(), actualUpdatedLink.getExternalLink().getId());
         Assert.assertEquals(externalLinkDisplay.getExternalLink().getTarget().getValue(), actualUpdatedLink.getExternalLink().getTarget().getValue());
         Assert.assertEquals(externalLinkDisplay.getType(), actualUpdatedLink.getType());
+    }
+    
+    @Test
+    public void test_deleteLink_linkPresent() {
+        ISlide slide = new Slide();
+        slide.setId(slideId1);
+        SlideExternalLinkDisplay externalLinkDisplay = new SlideExternalLinkDisplay();
+        IExternalLinkSlide externalLink = new ExternalLinkSlide();
+        externalLink.setId("EXLS001");
+        externalLink.setSlide(slide);
+
+        List<IExternalLinkSlide> externalLinks = new ArrayList<IExternalLinkSlide>();
+        externalLinks.add(externalLink);
+
+        slide.setExternalLinks(externalLinks);
+        ExternalLinkValue target = new ExternalLinkValue("www.google.com");
+        target.setId("EXTS001");
+        externalLink.setTarget(target);
+
+        externalLinkDisplay.setId("SPLD001");
+        externalLinkDisplay.setExternalLink(externalLink);
+
+        externalLinkDisplay.setName("TestExternal");
+        externalLinkDisplay.setPositionX(10);
+        externalLinkDisplay.setPositionY(30);
+        externalLinkDisplay.setPositionY(20);
+        externalLinkDisplay.setType(DisplayType.ARROW);
+
+        Optional<ExternalLinkSlide> mockExternalLink = Optional.of((ExternalLinkSlide)externalLink);
+        Mockito.when(externalLinkRepo.findById(externalLink.getId())).thenReturn(mockExternalLink);
+
+        Optional<SlideExternalLinkDisplay> mockExternalLinkDisplay = Optional.of((SlideExternalLinkDisplay)externalLinkDisplay);
+        Mockito.when(externalLinkDisplayRepo.findById(externalLinkDisplay.getId())).thenReturn(mockExternalLinkDisplay);
+
+        managerToTest.deleteLink("EXLS001");
+
+        Mockito.verify(externalLinkDisplayRepo).deleteByExternalLink(externalLink);
+        Mockito.verify(externalLinkRepo).delete((ExternalLinkSlide)externalLink);
     }
     
     
