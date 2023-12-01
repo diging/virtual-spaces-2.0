@@ -29,7 +29,7 @@ public class ModuleOverviewManager implements IModuleOverviewManager {
         
         List<ISequence> sequences = moduleManager.getModuleSequences(moduleId);
         
-        SequenceOverview startSequenceNode = createSequenceOverviewNode(startSequence);
+        SequenceOverview sequenceOverviewNode = createSequenceOverviewNode(startSequence);
         List<SequenceOverview> otherSequences = new ArrayList<SequenceOverview>();
         for(ISequence sequence : sequences) {
             
@@ -39,7 +39,7 @@ public class ModuleOverviewManager implements IModuleOverviewManager {
         }
         
         ModuleOverview moduleOverview = new ModuleOverview();
-        moduleOverview.setStartSequence(startSequenceNode);
+        moduleOverview.setStartSequence(sequenceOverviewNode);
         moduleOverview.setOtherSequences(otherSequences);
         moduleOverview.setStartSlides(startSequence.getSlides());
         return moduleOverview;
@@ -70,10 +70,10 @@ public class ModuleOverviewManager implements IModuleOverviewManager {
             if(slide instanceof BranchingPoint ) {
                 slideOverview.setBranchingPoint(true);
                 List<IChoice> sequenceChoices = ((BranchingPoint)slide).getChoices();
-                List<String> slideOverviewSequenceChoices = new ArrayList<String>();
-                sequenceChoices.stream().forEach(sequenceChoice -> slideOverviewSequenceChoices.add(
+                List<String> slideOverviewSequenceNames = new ArrayList<String>();
+                sequenceChoices.stream().forEach(sequenceChoice -> slideOverviewSequenceNames.add(
                         sequenceChoice.getSequence().getName()));
-                slideOverview.setSequenceIds(slideOverviewSequenceChoices);
+                slideOverview.setSequenceIds(slideOverviewSequenceNames);
             }
            
             slideOverviews.add(slideOverview);          
