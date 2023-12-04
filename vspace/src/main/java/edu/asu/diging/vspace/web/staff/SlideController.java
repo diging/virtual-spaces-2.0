@@ -1,12 +1,15 @@
 package edu.asu.diging.vspace.web.staff;
 
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,6 +28,7 @@ import edu.asu.diging.vspace.core.services.IContentBlockManager;
 import edu.asu.diging.vspace.core.services.IExternalLinkManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISlideDisplayManager;
+import edu.asu.diging.vspace.core.services.ISlideExternalLinkManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 import edu.asu.diging.vspace.web.staff.forms.SequenceForm;
 
@@ -42,7 +46,7 @@ public class SlideController {
     private IContentBlockManager contentBlockManager;
     
     @Autowired
-    private IExternalLinkManager externalLinkManager;
+    private ISlideExternalLinkManager externalLinkManager;
     
     @Autowired
     private ISlideDisplayManager slideDisplayManager;
@@ -74,5 +78,12 @@ public class SlideController {
 
         List<IContentBlock> slideContents = contentBlockManager.getAllContentBlocks(slideId);
         return new ResponseEntity<List<IContentBlock>>(slideContents, HttpStatus.OK);
+    }
+    
+    @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/links", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String,Object>> showSlideLinks(@PathVariable String id, Model model) {
+        Map<String,Object> responseData = new HashMap<String,Object>();
+        responseData.put("externalLinks", externalLinkManager.getLinkDisplays(id));
+        return new ResponseEntity<>(responseData, HttpStatus.OK);
     }
 }
