@@ -64,10 +64,10 @@
    </head>
    <body>
     <div layout:fragment="content">
-        <div th:if="${showAlert == true}"
+         <div th:if="${showAlert == true}"
             class="alert alert-warning center col-md-12"
             style="text-align: center;">[[${message}]] <a
-                th:href="@{'/exhibit/space/'+${spaceId}}">
+                th:href="${isExhPreview == null OR isExhPreview == false}?@{'/exhibit/space/'+${spaceId}}:@{'/preview/'+${previewId}+'/space/'+${spaceId}}">
                 <button class="btn circle-btn" style="margin-left: 10px;">
                     <span class="icon-double-chevron-left"></span> <span
                         class="tooltiptext">Go To Space</span>
@@ -80,7 +80,7 @@
             <p class="slideNumberClass">Slide [[${currentNumOfSlide}]]/[[${numOfSlides}]]</p>
         </div>
          <div class="Group_7_Class" >
-            <a th:if="${!#strings.isEmpty(prevSlide)}" th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${currentSequenceId}+'/slide/'+${prevSlide}}">
+            <a th:if="${!#strings.isEmpty(prevSlide)}" th:href="${isExhPreview == null OR isExhPreview == false}?@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${currentSequenceId}+'/slide/'+${prevSlide}}:@{'/preview/'+${previewId}+'/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${currentSequenceId}+'/slide/'+${prevSlide}}">
                <div class="Slideshow_previous_Class" style="position: fixed; z-index:110; left: 13%; top: 40.3%;">
                   <button class="btn circle-btn-slide-nav">
                          <span class="icon-chevron-left slide-nav"></span>
@@ -88,7 +88,7 @@
                   </button>
                </div>
            </a>
-            <a th:if="${!#strings.isEmpty(nextSlide)}" th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${currentSequenceId}+'/slide/'+${nextSlide}}">
+            <a th:if="${!#strings.isEmpty(nextSlide)}" th:href= "${isExhPreview == null OR isExhPreview == false}?@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${currentSequenceId}+'/slide/'+${nextSlide}}:@{'/preview/'+${previewId}+'/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${currentSequenceId}+'/slide/'+${nextSlide}}">
                <div class="slideshow_next slideshow_next_Class" style="position: fixed; z-index:110; right: 11%; top: 40.3%;">
                     <button class="btn circle-btn-slide-nav">
                          <span class="icon-chevron-right slide-nav"></span>
@@ -104,7 +104,7 @@
 	            </button>
              </div>
          </div>
-         <a th:href="@{'/exhibit/space/'+${spaceId}}">
+         <a th:href="${isExhPreview == null OR isExhPreview == false}?@{'/exhibit/space/'+${spaceId}}:@{'/preview/'+${previewId}+'/space/'+${spaceId}}">
             <div class="exit_to_space_Class" style="position: fixed;  z-index:120;">
                   <button class="btn circle-btn">
                       <span class="icon-double-chevron-left"></span>
@@ -112,7 +112,7 @@
                   </button>
             </div>
          </a>
-         <a th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${startSequenceId}+'?clearHistory=true'}">
+         <a th:href="${isExhPreview == null OR isExhPreview == false}?@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${startSequenceId}+'?clearHistory=true'}:@{'/preview/'+${previewId}+'/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${startSequenceId}+'?clearHistory=true'}">
             <div class="exit_to_branchingPoint_Class" style="position: fixed;  z-index:110;">
                   <button class="btn circle-btn">
                       <span class="icon-rewind-end"></span>
@@ -120,7 +120,7 @@
                   </button>
             </div>
          </a>
-         <a th:if="${showBackToPreviousChoice eq true}" th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${previousSequenceId}+'/slide/'+${previousBranchingPoint.id}+'?back=true'}">
+         <a th:if="${showBackToPreviousChoice eq true}" th:href="${isExhPreview == null OR isExhPreview == false}?@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${previousSequenceId}+'/slide/'+${previousBranchingPoint.id}+'?back=true'}:@{'/preview/'+${previewId}+'/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${previousSequenceId}+'/slide/'+${previousBranchingPoint.id}+'?back=true'}">
             <div class="exit_to_previousChoice_Class" style="position: fixed; z-index:110;">
                   <button class="btn circle-btn">
                       <span class="icon-caret-left"></span>
@@ -136,14 +136,24 @@
                 <div th:if="${contents['class'].simpleName ==  'TextBlock'}" id="${contents.id}" class="textDiv">[(${contents.htmlRenderedText()})]</div>
                 <div th:if="${contents['class'].simpleName == 'ChoiceBlock'}" id="${contents.id}" class="textDiv" style="margin: 1%;">
                     <div th:if="${contents.showsAll eq true}" th:each="choice: ${choices}" class="list-group">
-                        <a th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${choice.sequence.id}+'?branchingPoint='+${slideId}+'&previousSequenceId='+${currentSequenceId}}"
+                        <a th:href="${isExhPreview == null OR isExhPreview == false}?@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${choice.sequence.id}+'?branchingPoint='+${slideId}+'&previousSequenceId='+${currentSequenceId}}:@{'/preview/'+${previewId}+'/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${choice.sequence.id}+'?branchingPoint='+${slideId}+'&previousSequenceId='+${currentSequenceId}}"
                             class="list-group-item list-group-item-action">[[${choice.sequence.name}]]</a>
                     </div>
                     <div class="list-group" th:if="${contents.showsAll eq false}" th:each="choice: ${contents.choices}">
-                        <a th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${choice.sequence.id}+'?branchingPoint='+${slideId}+'&previousSequenceId='+${currentSequenceId}}"
+                        <a th:href="${isExhPreview == null OR isExhPreview == false}?@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${choice.sequence.id}+'?branchingPoint='+${slideId}+'&previousSequenceId='+${currentSequenceId}}:@{'/preview/'+${previewId}+'/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${choice.sequence.id}+'?branchingPoint='+${slideId}+'&previousSequenceId='+${currentSequenceId}}"
                             class="list-group-item list-group-item-action">[[${choice.sequence.name}]]</a>
                     </div>
                 </div>
+                <div style="align-items: center" class="list-group" th:id="${contents.id}" th:if="${#strings.equals(contents['class'].simpleName,'VideoBlock')}">
+                  <br/>[[${contents.video.title}]]
+                    <iframe th:id="${contents.id}" width="800" height="530" th:src="${contents.video.url}" th:if="${contents.video.url}" frameborder="0"
+                        allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen ></iframe>
+                     <video width="800" height="530" th:if="${contents.video.url == null}" controls>
+						  <source th:src="@{'/api/video/'+${contents.video.id}}" />
+						</video>
+						 <br>
+               </div>
             </div>
         </div>
       </div>

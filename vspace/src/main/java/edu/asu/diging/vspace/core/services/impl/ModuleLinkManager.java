@@ -2,6 +2,8 @@ package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -24,7 +26,7 @@ import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Transactional
 @Service
-public class ModuleLinkManager extends LinkManager<IModuleLink,IModule,IModuleLinkDisplay> implements IModuleLinkManager{
+public class ModuleLinkManager extends LinkManager<IModuleLink, IModule, IModuleLinkDisplay> implements IModuleLinkManager {
 
     @Autowired
     private ISpaceManager spaceManager;
@@ -63,28 +65,28 @@ public class ModuleLinkManager extends LinkManager<IModuleLink,IModule,IModuleLi
     @Override
     protected IModuleLinkDisplay updateLinkAndDisplay(IModuleLink link, IModuleLinkDisplay displayLink) {
         moduleLinkRepo.save((ModuleLink) link);
-        return moduleLinkDisplayRepo.save((ModuleLinkDisplay)displayLink);
+        return moduleLinkDisplayRepo.save((ModuleLinkDisplay) displayLink);
     }
 
     @Override
-    protected IModuleLinkDisplay getDisplayLink(String moduleLinkDisplayId){
+    protected IModuleLinkDisplay getDisplayLink(String moduleLinkDisplayId) {
         Optional<ModuleLinkDisplay> moduleLinkDisplay = moduleLinkDisplayRepo.findById(moduleLinkDisplayId);
-        if(moduleLinkDisplay.isPresent()) {
+        if (moduleLinkDisplay.isPresent()) {
             return moduleLinkDisplay.get();
         }
         return null;
     }
 
     @Override
-    protected IModuleLink getLink(String moduleLinkID){
+    protected IModuleLink getLink(String moduleLinkID) {
         Optional<ModuleLink> moduleLink = moduleLinkRepo.findById(moduleLinkID);
-        if(moduleLink.isPresent()) {
+        if (moduleLink.isPresent()) {
             return moduleLink.get();
         }
         return null;
     }
 
-    @Override 
+    @Override
     protected IModuleLinkDisplay createDisplayLink(IModuleLink link) {
         return moduleLinkDisplayFactory.createModuleLinkDisplay(link);
     }
@@ -102,6 +104,12 @@ public class ModuleLinkManager extends LinkManager<IModuleLink,IModule,IModuleLi
     @Override
     protected void deleteLinkRepo(IModuleLink link) {
         moduleLinkRepo.delete((ModuleLink) link);
+    }
+
+    @Override
+    public Set<ISpace> findSpaceListFromModuleId(String moduleId) {
+        List<IModuleLink> moduleLinks = moduleLinkRepo.findModuleLinksByModuleId(moduleId);
+        return moduleLinks.stream().map(s->s.getSpace()).collect(Collectors.toSet());
     }
 
 }
