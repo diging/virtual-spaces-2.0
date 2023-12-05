@@ -18,7 +18,7 @@ import edu.asu.diging.vspace.core.services.IImageService;
 
 @Controller
 public class ImageSearchApiController {
-    
+
     @Autowired
     private IImageService imageService;
 
@@ -30,7 +30,7 @@ public class ImageSearchApiController {
         } else {
             images = imageService.getImages(1);
         }
-        
+
         ObjectMapper mapper = new ObjectMapper();
         ArrayNode idArray = mapper.createArrayNode();
         for (IVSImage image : images) {
@@ -39,10 +39,10 @@ public class ImageSearchApiController {
             if (image.getName() != null && !image.getName().isEmpty()) {
                 imageNode.put("text", image.getName() + " (" + image.getFilename() + ")");
             } else {
-                 imageNode.put("text", image.getFilename());
+                imageNode.put("text", image.getFilename());
             }
             idArray.add(imageNode);
         }
-        return new ResponseEntity<String>(idArray.toString(), HttpStatus.OK);
+        return new ResponseEntity<>(idArray.toString(), HttpStatus.OK);
     }
 }

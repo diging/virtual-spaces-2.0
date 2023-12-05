@@ -27,52 +27,51 @@ import edu.asu.diging.vspace.core.services.ISpaceManager;
 public class ImagesSearchFullApiController {
 
     @Autowired
-	private IImageService imageService;
+    private IImageService imageService;
 
     @Autowired
-	private ISpaceManager spaceManager;
-    
+    private ISpaceManager spaceManager;
+
     private final Logger logger = LoggerFactory.getLogger(getClass());
-  
+
     @RequestMapping("/staff/images/search/full/{page}")
-	public String imageSearchDescription(@PathVariable(required = false) String page,
-			@RequestParam(value = "searchText", required = false) String searchTerm, Model model,
-			RedirectAttributes attributes) {
-    	int pageNo;
-    	page = StringUtils.isEmpty(page) ? "1" : page;
-    	try {
+    public String imageSearchDescription(@PathVariable(required = false) String page,
+            @RequestParam(value = "searchText", required = false) String searchTerm, Model model,
+            RedirectAttributes attributes) {
+        int pageNo;
+        page = StringUtils.isEmpty(page) ? "1" : page;
+        try {
             pageNo = Integer.parseInt(page);
-        }   
-        catch (NumberFormatException numberFormatException) {
+        } catch (NumberFormatException numberFormatException) {
             pageNo = 1;
         }
-    	ImageCategory category = null;
-        if(searchTerm!=null && !searchTerm.isEmpty()) {
+        ImageCategory category = null;
+        if (searchTerm != null && !searchTerm.isEmpty()) {
             try {
                 category = ImageCategory.valueOf(searchTerm);
-            }catch(IllegalArgumentException e) {
-                logger.error("Wrong argument for image category",e);
-                category=null;
+            } catch (IllegalArgumentException e) {
+                logger.error("Wrong argument for image category", e);
+                category = null;
             }
-            
         }
-    	model.addAttribute("totalPages", imageService.getTotalPages(category));
+        model.addAttribute("totalPages", imageService.getTotalPages(category));
         model.addAttribute("currentPageNumber", pageNo);
         model.addAttribute("totalImageCount", imageService.getTotalImageCount(category));
-    	
-        List<VSImage> imageResults = imageService.getPaginatedImagesByCategoryAndSearchTerm(pageNo, category, searchTerm);
-        
-        Map<String, List<ISpace>> imageToSpaces = new HashMap<String, List<ISpace>>();
+
+        List<VSImage> imageResults = imageService.getPaginatedImagesByCategoryAndSearchTerm(pageNo, category,
+                searchTerm);
+
+        Map<String, List<ISpace>> imageToSpaces = new HashMap<>();
         for (IVSImage image : imageResults) {
             List<ISpace> spaces = spaceManager.getSpacesWithImageId(image.getId());
-            if (spaces != null && spaces.size() > 0) {
+            if (spaces != null && !spaces.isEmpty()) {
                 imageToSpaces.put(image.getId(), spaces);
             }
         }
-        
+
         model.addAttribute("imageToSpaces", imageToSpaces);
         model.addAttribute("images", imageResults);
         model.addAttribute("searchTerm", searchTerm);
-        return "staff/images/searchImages";    	
+        return "staff/images/searchImages";
     }
 }
