@@ -15,6 +15,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.services.IPublicSearchManager;
+import edu.asu.diging.vspace.core.services.impl.model.SearchSlideResults;
 import edu.asu.diging.vspace.core.services.impl.model.SearchSpaceResults;
 
 @Controller
@@ -27,9 +28,9 @@ public class PublicSearchSpaceController {
     public ResponseEntity<SearchSpaceResults> searchInVspace(
             @RequestParam(value = "spacePagenum", required = false, defaultValue = "1") String spacePagenum,
             Model model, @RequestParam(name = "searchText") String searchTerm) throws JsonProcessingException {
-
-        SearchSpaceResults publicSearch = publicSearchManager.searchForSpace(spacePagenum, searchTerm);      
-        return new ResponseEntity<SearchSpaceResults>(publicSearch, HttpStatus.OK);
+        
+        return new ResponseEntity<SearchSpaceResults>(publicSearchManager.searchForSpace(spacePagenum, searchTerm), HttpStatus.OK);
+        
     }
 
    

@@ -64,7 +64,7 @@ public interface ISearchManager {
     /**
      * This method is used to search the search string specified in the input
      * parameter(searchTerm) and return the slides corresponding to
-     * the page number specified in the input parameter(spacePagenum) whose name or
+     * the page number specified in the input parameter(slidePagenum) whose name or
      * description contains the search string. This also filters Slides from modules 
      * which are linked to the spaces.
      * 
@@ -72,6 +72,18 @@ public interface ISearchManager {
      * @param searchTerm   This is the search string which is being searched.
      */
     SearchSlideResults searchForSlide(String slidePagenum, String searchTerm);
+    
+    /**
+     * This method is used to search the search string specified in the input
+     * parameter(searchTerm) and return the spaces corresponding to
+     * the page number specified in the input parameter(spacePagenum) whose name or
+     * description contains the search string. This also filters Spaces from modules 
+     * which are linked to the spaces.
+     * 
+     * @param spacePagenum current page number sent as request parameter in the URL.
+     * @param searchTerm   This is the search string which is being searched.
+     */
+    SearchSpaceResults searchForSpace(String spacePagenum, String searchTerm);
 
     /**
      * This method is used to search the searched string specified in the input

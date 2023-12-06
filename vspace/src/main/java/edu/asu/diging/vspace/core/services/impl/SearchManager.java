@@ -151,7 +151,7 @@ public abstract class SearchManager implements ISearchManager {
     /**
      * This method is used to search the search string specified in the input
      * parameter(searchTerm) and return the slides corresponding to
-     * the page number specified in the input parameter(spacePagenum) whose name or
+     * the page number specified in the input parameter(slidePagenum) whose name or
      * description contains the search string. This also filters Slides from modules 
      * which are linked to the spaces.
      * 
@@ -163,6 +163,23 @@ public abstract class SearchManager implements ISearchManager {
         Page<ISlide> slidePage = searchSlidesAndPaginate(searchTerm, Integer.parseInt(slidePagenum));
         return convertToSearchSlideResults(slidePage.getContent());
     }
+    
+    /**
+     * This method is used to search the search string specified in the input
+     * parameter(searchTerm) and return the spaces corresponding to
+     * the page number specified in the input parameter(spacePagenum) whose name or
+     * description contains the search string. This also filters Slides from modules 
+     * which are linked to the spaces.
+     * 
+     * @param slidePagenum current page number sent as request parameter in the URL.
+     * @param searchTerm   This is the search string which is being searched.
+     */
+    @Override
+    public SearchSpaceResults searchForSpace(String spacePagenum, String searchTerm) {
+        Page<ISpace> spacePage = searchSpacesAndPaginate(searchTerm, Integer.parseInt(spacePagenum));
+        return convertToSearchSpaceResults(spacePage);
+    }
+    
 
 
     /**
