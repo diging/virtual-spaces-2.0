@@ -1575,7 +1575,6 @@ $(function(){
                     $("#noLinksOnSpace").hide();
                     $("."+linkData["id"]).remove();
                     form[0].reset();
-                    $('#spaceLinkImage').val('');
                     var newSpaceLinkURL = [[@{|/staff/space/|}]]+spaceId;
                     $("#outgoingLinks").append("<a href="+newSpaceLinkURL+" style='padding: .25rem .25rem;' class='list-group-item' id="+linkData["id"]+">"+label+"  &nbsp;-> &nbsp;"+spaceName+"</a>");
                     if (spaceName == "${space?.name}") {
