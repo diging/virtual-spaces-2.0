@@ -38,7 +38,7 @@ public class AddModuleLinkController {
 		@RequestParam("moduleLinkLabel") String title, @RequestParam("linkedModule") String linkedModuleId,
 		@RequestParam("moduleLinkLabel") String moduleLinkLabel,
 		@RequestParam("moduleLinkDesc") String moduleLinkDesc, @RequestParam("moduleType") String displayType,
-		@RequestParam("moduleLinkImage") MultipartFile file,
+		@RequestParam(value = "moduleLinkImage", required = false) MultipartFile file,
 		@RequestParam(value = "imageId", required = false) String imageId)
 	    throws NumberFormatException, SpaceDoesNotExistException, IOException, ImageCouldNotBeStoredException, ImageDoesNotExistException {
 
