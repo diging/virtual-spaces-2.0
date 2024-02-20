@@ -3,6 +3,7 @@ package edu.asu.diging.vspace.web.staff;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,6 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
@@ -32,15 +36,15 @@ public class EditSpaceLinkController extends EditSpaceLinksController {
 
     @RequestMapping(value = "/staff/space/link/space/{id}", method = RequestMethod.POST)
 	public ResponseEntity<String> editSpaceLink(@PathVariable("id") String id, @RequestParam("x") String x,
-			@RequestParam("y") String y, @RequestParam("rotation") String rotation,
-			@RequestParam("spaceLinkLabel") String title, @RequestParam("linkedSpace") String linkedSpaceId,
-			@RequestParam("spaceLinkLabel") String spaceLinkLabel,@RequestParam("spaceLinkDesc") String spaceLinkDesc,
-			@RequestParam("spaceLinkIdValueEdit") String spaceLinkIdValueEdit,
-			@RequestParam("spaceLinkDisplayId") String spaceLinkDisplayId,
-			@RequestParam(value = "spaceLinkImageIdEdit", required = false) String spaceLinkImageIdEdit,
-			@RequestParam("type") String displayType, @RequestParam("spaceLinkImage") MultipartFile file,
-			@RequestParam(value = "imageId", required = false) String imageId) throws NumberFormatException,
-			SpaceDoesNotExistException, LinkDoesNotExistsException, IOException, ImageCouldNotBeStoredException, ImageDoesNotExistException {
+		@RequestParam("y") String y, @RequestParam("rotation") String rotation,
+		@RequestParam("spaceLinkLabel") String title, @RequestParam("linkedSpace") String linkedSpaceId,
+		@RequestParam("spaceLinkLabel") String spaceLinkLabel,@RequestParam("spaceLinkDesc") String spaceLinkDesc,
+		@RequestParam("spaceLinkIdValueEdit") String spaceLinkIdValueEdit,
+		@RequestParam("spaceLinkDisplayId") String spaceLinkDisplayId,
+		@RequestParam(value = "spaceLinkImageIdEdit", required = false) String spaceLinkImageIdEdit,
+		@RequestParam("type") String displayType, @RequestParam(value="spaceLinkImage", required = false) MultipartFile file,
+		@RequestParam(value = "imageId", required = false) String imageId) throws NumberFormatException,
+		SpaceDoesNotExistException, LinkDoesNotExistsException, IOException, ImageCouldNotBeStoredException, ImageDoesNotExistException {
 
         ResponseEntity<String> validation = checkIfSpaceExists(spaceManager, id, x, y);
         if (validation != null) {
@@ -51,6 +55,12 @@ public class EditSpaceLinkController extends EditSpaceLinksController {
         if (file != null && !file.isEmpty()) {
             linkImage = file.getBytes();
             filename = file.getOriginalFilename();
+        }
+        if (file == null && (imageId == null || imageId.equals(""))) {
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode node = mapper.createObjectNode();
+            node.put("errorMessage", "No image provided for space link.");
+            return new ResponseEntity<String>(mapper.writeValueAsString(node), HttpStatus.BAD_REQUEST);
         }
         DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
         ISpaceLinkDisplay display = (ISpaceLinkDisplay) spaceLinkManager.updateLink(title, id, new Float(x),

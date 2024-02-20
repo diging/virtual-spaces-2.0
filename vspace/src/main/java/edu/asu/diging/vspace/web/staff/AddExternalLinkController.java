@@ -51,6 +51,14 @@ public class AddExternalLinkController {
 
         byte[] linkImage = null;
         String filename = null;
+        
+        if (file == null && imageId == null) {
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode node = mapper.createObjectNode();
+            node.put("errorMessage", "No image provided for space link.");
+            return new ResponseEntity<String>(mapper.writeValueAsString(node), HttpStatus.BAD_REQUEST);
+        }
+        
         if (file != null) {
             linkImage = file.getBytes();
             filename = file.getOriginalFilename();
