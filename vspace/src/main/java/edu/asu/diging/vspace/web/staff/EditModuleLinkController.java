@@ -44,6 +44,7 @@ public class EditModuleLinkController extends EditSpaceLinksController {
         if (validation != null) {
             return validation;
         }else if(imageId==null || imageId.equals("")){
+            System.out.println("Diya " + moduleLinkImageIdEdit);
             String[] token = moduleLinkImageIdEdit.split("/");
             imageId = token[token.length - 1];
         }
