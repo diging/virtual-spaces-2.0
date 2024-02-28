@@ -1354,6 +1354,7 @@ $(function(){
                 e.preventDefault();
                 $("#external-arrow").remove();
                 $("#space_label").remove();
+                $("#space_label_desc").remove();
                 $("#link").remove();
                 var icon;
                 var posX = $(this).position().left;
@@ -1364,6 +1365,12 @@ $(function(){
             });
             hideLinkInfoTabs();
             displayForms("#createSpaceLinkAlert");
+            var spaceLinkType = $("#type").val();
+            if (spaceLinkType=='IMAGE') {
+            	$('#imageOptionsSpace *').prop('disabled', false);
+            } else {
+            	$('#imageOptionsSpace *').prop('disabled', true);
+            }
         });
 
         $("#addModuleLinkButton").click(function(e) {
@@ -1373,6 +1380,7 @@ $(function(){
                 e.preventDefault();
                 $("#external-arrow").remove();
                 $("#module_label").remove();
+                $("#module_label_desc").remove();
                 $("#link").remove();
                 var icon;
                 var posX = $(this).position().left;
@@ -1383,6 +1391,12 @@ $(function(){
             });
             hideLinkInfoTabs();
             displayForms("#createModuleLinkAlert");
+            var moduleLinkType = $("#moduleType").val();
+            if (moduleLinkType=='IMAGE') {
+            	$('#imageOptionsModule *').prop('disabled', false);
+            } else {
+            	$('#imageOptionsModule *').prop('disabled', true);
+            }
         }); 
 
         $("#addExternalLinkButton").click(function(e) {
@@ -1394,6 +1408,7 @@ $(function(){
                 $("#link").remove();
                 $("#external-arrow").remove();
                 $("#ext_label").remove();
+                $("#ext_label_desc").remove();
                 var icon;
                 var posX = $(this).position().left
                 var posY = $(this).position().top;
@@ -1403,6 +1418,12 @@ $(function(){
             });
             hideLinkInfoTabs();
             displayForms("#createExternalLinkAlert");
+            var extLinkType = $("#extType").val();
+            if (extLinkType=='IMAGE') {
+            	$('#imageOptionsExternal *').prop('disabled', false);
+            } else {
+            	$('#imageOptionsExternal *').prop('disabled', true);
+            }
         });
 
         $('#changeBgImgButton').click(function(file) {
@@ -1512,6 +1533,7 @@ $(function(){
             $("#space").scrollTop(0);
             var label = $("#spaceLinkLabel").val();
             var spaceName = $("#linkedSpace option:selected").text();
+            var desc = $("#spaceLinkDesc").val();
             var type = $("#type option:selected").text();
 
             if (label == undefined || label == "") {
@@ -1546,6 +1568,13 @@ $(function(){
             var spaceId = $("#linkedSpace option:selected").val(); 
             var formData = new FormData(form[0]);
             var spaceLinkInfo = createSpaceLinkInfo();
+            var imageSource = $('#selectedImage-spcLink').find('img').attr('src');
+        	var imageId = "";
+        	if(typeof(imageSource) != "undefined"){
+        		imageId = imageSource.split("/").pop().split(".")[0];
+        	}
+        	formData.set('imageId',imageId);
+            formData.delete('uploadRadioBtn')
             $.ajax({
                 type: "POST",
                 url: "[(@{'/staff/space/'+${space?.id}+'/spacelink?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
@@ -1570,6 +1599,7 @@ $(function(){
                     spaceLinkInfo["linkedSpaceStatus"]=linkData["linkedSpaceStatus"];
                     showSpaceLink(spaceLinkInfo, true);
                     $("#space_label").attr("id","");
+                    $("#space_label_desc").attr("id","");
                     $("#link").attr("id","");
                     $("#createSpaceLinkAlert").hide();  
                     $("#errorMsg").text("");
@@ -1577,6 +1607,7 @@ $(function(){
                     $("#noLinksOnSpace").hide();
                     $("."+linkData["id"]).remove();
                     form[0].reset();
+                    $('#spaceLinkImage').val('');
                     var newSpaceLinkURL = [[@{|/staff/space/|}]]+spaceId;
                     $("#outgoingLinks").append("<a href="+newSpaceLinkURL+" style='padding: .25rem .25rem;' class='list-group-item' id="+linkData["id"]+">"+label+"  &nbsp;-> &nbsp;"+spaceName+"</a>");
                     if (spaceName == "${space?.name}") {
@@ -1604,6 +1635,7 @@ $(function(){
             var linkedModules = $("#linkedModule").val();
             var moduleLabel = $("#moduleLinkLabel").val();
             var type = $("#moduleType option:selected").text();
+            var moduleDesc = $("#moduleLinkDesc").val();
             
             if (moduleLabel == undefined || moduleLabel == "") {
                 $("#errorMsg").text("Please enter the label for module.")
@@ -1630,6 +1662,13 @@ $(function(){
             var formData = new FormData(form[0]);
 
             var moduleLinkInfo = createModuleLinkInfo();
+            var imageSource = $('#selectedImage-modLink').find('img').attr('src');
+        	var imageId = "";
+        	if(typeof(imageSource) != "undefined"){
+        		imageId = imageSource.split("/").pop().split(".")[0];
+        	}
+        	formData.set('imageId',imageId);
+            formData.delete('uploadRadioBtn');
 
             $.ajax({
                 type: "POST",
@@ -1655,20 +1694,30 @@ $(function(){
                     moduleLinkInfo["y"]=linkData["y"];
                     showModuleLink(moduleLinkInfo, true);
                     $("#module_label").attr("id","");
+                    $("#module_label_desc").attr("id","");
                     $("#link").attr("id","");
                     $("#createModuleLinkAlert").hide();
                     $("#errorMsg").text("");
                     $('#errorAlert').hide();
                     $("."+linkData["id"]).remove();
                     form[0].reset();
+                    $('#moduleLinkImage').val('');
                     $("#space").css("display", "none");
                     moduleLinkIcon=null;
+                    $('#chooseFromLocal-modLink').click();
                     drawLinks();
                 }
             });
         });
         $("#editModuleLinkBtn").click(function(e) {
             e.preventDefault();
+            var moduleLabel = $("#moduleLinkLabelEdit").val();
+
+            if (moduleLabel == undefined || moduleLabel == "") {
+                $("#errorMsg").text("Please enter the label for module.")
+                $('#errorAlert').show();
+                return;
+            }
             var linkId = $("#moduleLinkIdEdit").val();
             if(storeX == undefined || storeY == undefined){
                 $("#errorMsg").text("Please click on the image to specify where the new link should be located.");
@@ -1733,6 +1782,7 @@ $(function(){
             var form = $("#editSpaceLinkForm");
             var formData = new FormData(form[0]);
             var spaceLinkInfo = editSpaceLinkInfo();
+            formData.delete('uploadRadioBtn');
             $.ajax({
                 type: "POST",
                 url: "[(@{'/staff/space/link/space/'+${space?.id}+'?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
@@ -1763,6 +1813,8 @@ $(function(){
                     hideLinkInfoTabs();
                     $("#space").css("display", "none");
                     selectedSpaceLinkId=undefined;
+                    $('#chooseFromLocal-modLinkEdit').click();
+                    moduleLinkIcon=null;
                     drawLinks();
                 }
             });
@@ -1771,7 +1823,19 @@ $(function(){
         $("#editExternalLinkBtn").click(function(e) {
             e.preventDefault();
             $("#space").scrollTop(0);
+            var externalLinkLabel = $("#externalLinkLabelEdit").val();
+            if (externalLinkLabel == undefined || externalLinkLabel == "") {
+                $("#errorMsg").text("Please enter a label for this external link.");
+                $('#errorAlert').show();
+                return;
+            }
             var linkId = $("#externalLinkIdEdit").val();
+            var label = $("#spaceLinkLabelEdit").val();
+            if (label == undefined || label == "") {
+                $("#errorMsg").text("Please fill the Label field before submitting.")
+                $('#errorAlert').show();
+                return;
+            }
             if (storeX == undefined || storeY == undefined) {
                 $("#errorMsg").text("Please click on the image to specify where the new link should be located.")
                 $('#errorAlert').show();
@@ -1782,6 +1846,7 @@ $(function(){
             $("#externalLinkYEdit").val(storeY - 25);
             var form = $("#editExternalLinkForm");
             var formData = new FormData(form[0]);
+            formData.delete('uploadRadioBtn');
             var externalLinkInfo = editExternalLinkInfo();
             $.ajax({
                 type: "POST",
@@ -1810,7 +1875,10 @@ $(function(){
                     showExternalLinkEdit(editExternalLinkInfo, true);
                     hideLinkInfoTabs();
                     $("#space").css("display", "none");
+                    $('#externalLinkImageEdit').val('');
                     selectedExternalLinkId=undefined;
+                    $('#chooseFromLocal-extLinkEdit').click();
+                    externalLinkIcon=null;
                     drawLinks();
                 }
             });
@@ -1829,6 +1897,7 @@ $(function(){
 
             var externalLink = $("#externalLink").val();
             var externalLinkLabel = $("#externalLinkLabel").val();
+            var externalLinkDesc = $("#externalLinkDesc").val();
             var type = $("#extType option:selected").text();
 
             if (externalLink == undefined || externalLink == "") {
@@ -1854,6 +1923,13 @@ $(function(){
             var form = $("#createExternalLinkForm");
             var formData = new FormData(form[0]);
             var externalLinkInfo = createExternalLinkInfo();
+            var imageSource = $('#selectedImage-extLink').find('img').attr('src');
+        	var imageId = "";
+        	if(typeof(imageSource) != "undefined"){
+        		imageId = imageSource.split("/").pop().split(".")[0];
+        	}
+        	formData.set('imageId',imageId);
+            formData.delete('uploadRadioBtn');
 
             $.ajax({
                 type: "POST",
@@ -1878,6 +1954,7 @@ $(function(){
                     externalLinkInfo["y"]=linkData["y"];
                     showExternalLinks(externalLinkInfo, true);
                     $("#ext_label").attr("id","");
+                    $("#ext_label_desc").attr("id","");
                     $("#link").attr("id","");
                     $("#createExternalLinkAlert").hide();
                     $("#errorMsg").text("");
@@ -1886,7 +1963,9 @@ $(function(){
                     form[0].reset();
                     $("#external-arrow").attr("id","");
                     $("#space").css("display", "none");
+                    $('#externalLinkImage').val('');
                     externalLinkIcon=null;
+                    $('#chooseFromLocal-extLink').click();
                     drawLinks();
                 }
             });
@@ -1907,6 +1986,7 @@ $(function(){
                 success:function(data) {
                     $('[data-link-id="' + linkId + '"]').remove();
                     $('[data-link-id="unpublished-' + linkId + '"]').remove();
+                    $('#spaceLinkIdValueEdit').val("");
                     hideLinkInfoTabs();
                     $('a#'+linkId).remove();
                     if ($("div#outgoingLinks a").length < 2) {
@@ -1917,6 +1997,10 @@ $(function(){
                     }
                     $("#spaceLinkInfo").hide();
                     $("#space").css("display", "none");
+                    $('#chooseFromLocal-spcLinkEdit').click();
+                    linkIcon=null;
+                    storeX = null;
+                    storeY = null;
                     drawLinks();
                 }
             });
@@ -1938,6 +2022,10 @@ $(function(){
                     $('[data-link-id="' + linkId + '"]').remove();
                     hideLinkInfoTabs();
                     $("#space").css("display", "none");
+                    $('#chooseFromLocal-extLinkEdit').click();
+                    externalLinkIcon=null;
+                    storeX = null;
+                    storeY = null;
                     drawLinks();
                 }
             });
