@@ -2,15 +2,15 @@ package edu.asu.diging.vspace.web.staff.forms;
 
 public class LocalizedTextForm {
     
-    String text;
+    private String text;
     
-    String localisedTextId;
+    private String localizedTextId;
     
-    String exhibitionLanguageId;
+    private String exhibitionLanguageId;
     
-    String exhibitionLanguageLabel;  
+    private String exhibitionLanguageLabel;  
     
-    Boolean isDefaultExhibitionLanguage;
+    private Boolean isDefaultExhibitionLanguage;
 
 
     public LocalizedTextForm() {
@@ -21,7 +21,7 @@ public class LocalizedTextForm {
             String exhibitionLanguageLabel) {
         super();
         this.text = text;
-        this.localisedTextId = localisedTextId;
+        this.localizedTextId = localisedTextId;
         this.exhibitionLanguageId = exhibitionLanguageId;
         this.exhibitionLanguageLabel = exhibitionLanguageLabel;
     }
@@ -35,11 +35,11 @@ public class LocalizedTextForm {
     }
 
     public String getLocalisedTextId() {
-        return localisedTextId;
+        return localizedTextId;
     }
 
     public void setLocalisedTextId(String localisedTextId) {
-        this.localisedTextId = localisedTextId;
+        this.localizedTextId = localisedTextId;
     }
 
     public String getExhibitionLanguageId() {

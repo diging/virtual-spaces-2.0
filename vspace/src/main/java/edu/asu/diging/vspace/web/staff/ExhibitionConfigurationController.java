@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 
 import org.javers.common.collections.Arrays;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -46,6 +48,8 @@ public class ExhibitionConfigurationController {
     private ExhibitionLanguageConfig exhibitionLanguageConfig;
      
     public static final String EXH_PREVIEW = "EXH_PREVIEW_";
+    
+    private final Logger logger = LoggerFactory.getLogger(getClass());
   
     @RequestMapping("/staff/exhibit/config")
     public String showExhibitions(Model model) {
@@ -104,6 +108,7 @@ public class ExhibitionConfigurationController {
             attributes.addAttribute("alertType", "failure");
             attributes.addAttribute("message", "Could not delete the Exhibition Language as it has localized data associated to it.");
             attributes.addAttribute("showAlert", "true");
+            logger.info("Could not delete the Exhibition Language as it has localized data associated to it.",e);
             return new RedirectView(request.getContextPath() + "/staff/exhibit/config");
         }
     

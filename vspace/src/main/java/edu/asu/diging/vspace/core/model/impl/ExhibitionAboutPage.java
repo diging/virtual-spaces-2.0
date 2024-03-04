@@ -45,7 +45,6 @@ public class ExhibitionAboutPage extends VSpaceElement {
     @JoinTable(name="AboutPage_LocText_titles",  
         joinColumns = @JoinColumn(name = "ExhibitionAboutPage_Id", referencedColumnName="id")
     )
-
     private List<ILocalizedText> localizedTitles = new ArrayList<ILocalizedText>();
 
     @OneToMany(targetEntity = LocalizedText.class, cascade={CascadeType.ALL})

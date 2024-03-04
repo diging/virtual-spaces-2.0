@@ -3,6 +3,7 @@ package edu.asu.diging.vspace.web.staff;
 
 import java.security.Principal;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,14 +14,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.diging.vspace.core.factory.ISlideFactory;
 import edu.asu.diging.vspace.core.model.IBranchingPoint;
-import edu.asu.diging.vspace.core.model.IChoiceBlock;
-import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.display.SlideType;
 import edu.asu.diging.vspace.core.model.impl.Slide;
-import edu.asu.diging.vspace.core.services.IContentBlockManager;
-import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 import edu.asu.diging.vspace.web.staff.forms.SlideForm;
@@ -33,12 +30,6 @@ public class AddSlideController {
 
     @Autowired
     private IModuleManager moduleManager;
-
-    @Autowired
-    private IContentBlockManager contentBlockManager;
-    
-    @Autowired
-    private IExhibitionManager exhibitionManager;
     
     @Autowired
     private ISlideFactory slideFactory;
@@ -46,8 +37,7 @@ public class AddSlideController {
     @RequestMapping(value = "/staff/module/{id}/slide/add", method = RequestMethod.GET)
     public String showAddSlide(@PathVariable("id") String moduleId, Model model) {
         model.addAttribute("moduleId", moduleId);
-        ISlide slide=new Slide();
-        model.addAttribute("slide", slideFactory.createNewSlideForm(slide));
+        model.addAttribute("slide", slideFactory.createNewSlideForm(new Slide()));
         model.addAttribute("sequences", moduleManager.getModuleSequences(moduleId));
         
         return "staff/modules/slides/add";
@@ -62,7 +52,6 @@ public class AddSlideController {
         String slideId;
         if(type.equals(SlideType.BRANCHING_POINT)) {
             IBranchingPoint branchingPoint = slideManager.createBranchingPoint(module, slideForm, type);
-            IChoiceBlock choiceBlock = contentBlockManager.createChoiceBlock(branchingPoint.getId(), null, 0, true);
             slideId = branchingPoint.getId();
         } 
         else {

@@ -2,10 +2,9 @@ package edu.asu.diging.vspace.core.services;
 
 import java.util.List;
 
-import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
+
 import edu.asu.diging.vspace.core.model.impl.ExhibitionAboutPage;
 import edu.asu.diging.vspace.web.staff.forms.AboutPageForm;
-import edu.asu.diging.vspace.web.staff.forms.LocalizedTextForm;
 /**
  * IExhibitionAboutPageManager allows to store and manage {@link ExhibitionAboutPage}.
  * @author Avirup Biswas

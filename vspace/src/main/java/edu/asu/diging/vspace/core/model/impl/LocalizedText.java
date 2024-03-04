@@ -10,18 +10,13 @@ import org.hibernate.annotations.Parameter;
 
 import edu.asu.diging.vspace.core.model.ILocalizedText;
 
-
-
 @Entity
 public class LocalizedText implements ILocalizedText {
-
-
     
     @Id
     @GeneratedValue(generator = "localized_text_id_generator")
     @GenericGenerator(name = "localized_text_id_generator", parameters = @Parameter(name = "prefix", value = "LOCTEXT"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
-
 
     @ManyToOne
     @JoinColumn(name = "LOC_EXH_LANG")

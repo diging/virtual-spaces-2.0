@@ -1,7 +1,7 @@
 package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.ArrayList;
-import java.util.Collections;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -9,14 +9,11 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import org.apache.tika.Tika;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import org.thymeleaf.util.StringUtils;
 
 import edu.asu.diging.vspace.core.data.ExhibitionLanguageRepository;
@@ -33,9 +30,6 @@ import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceDisplayFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
-import edu.asu.diging.vspace.core.model.IExhibition;
-import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
-import edu.asu.diging.vspace.core.model.ILocalizedText;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.display.ISpaceDisplay;
@@ -96,15 +90,12 @@ public class SpaceManager implements ISpaceManager {
     private SpaceLinkDisplayRepository spaceLinkDisplayRepo;
     
     @Autowired
-    ExhibitionLanguageRepository exhibitionLanguageRepository;
+    private ExhibitionLanguageRepository exhibitionLanguageRepository;
     
     @Autowired
     private LocalizedTextRepository localizedTextRepo;
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-   
     
-
+   
     /*
      * (non-Javadoc)
      * 
@@ -323,15 +314,6 @@ public class SpaceManager implements ISpaceManager {
         return spaceRepo.findDistinctByNameContainingOrDescriptionContaining(requestedPage, searchText,searchText);
     }
     
-    
-    @Override
-    public ISpace createSpace(SpaceForm form) {
-        ISpace space = new Space();
-        space.setName(form.getName());
-        space.setDescription(form.getDescription());
-        return spaceRepo.save((Space) space);
-    }
-    
     /**
      * 
      * Adds name to spaceNames List
@@ -357,38 +339,18 @@ public class SpaceManager implements ISpaceManager {
         }
     }
     
-    /**
-     * Adds description to spaceDescription list.
-     * @param space
-     * @param descriptions
-     */
-    @Override
-    public void addSpaceDescription(ISpace space, LocalizedTextForm description) {
-        if(description!=null && !StringUtils.isEmpty(description.getText())) {
-            LocalizedText localizedText = localizedTextRepo.findById(description.getLocalisedTextId()).orElse(null);
-            if(localizedText != null) {
-                localizedText.setText(description.getText());
-            } else {
-                ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findById(description.getExhibitionLanguageId()).orElse(null);
-                if(exhibitionLanguage != null) {
-                    LocalizedText newLocalizedText = new LocalizedText(exhibitionLanguage, description.getText());
-                    space.getSpaceDescriptions().add(newLocalizedText);
-                }
-            }
-        }
-    }
     @Override
     public void updateNameAndDescription(ISpace space, SpaceForm spaceForm) {
         space.setName(spaceForm.getDefaultName().getText());
         space.setDescription(spaceForm.getDefaultDescription().getText());
         addSpaceName(space,spaceForm.getDefaultName());
-        addSpaceDescription(space,spaceForm.getDefaultDescription());
+        spaceFactory.addSpaceDescription(space,spaceForm.getDefaultDescription());
         
         for(LocalizedTextForm title:spaceForm.getNames()) {        
             addSpaceName(space,title);
         }
         for(LocalizedTextForm text:spaceForm.getDescriptions()) {
-            addSpaceDescription(space,text);
+            spaceFactory.addSpaceDescription(space,text);
         }
     }
     

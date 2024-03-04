@@ -1,9 +1,8 @@
 package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
+import java.util.List;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,11 +10,8 @@ import org.thymeleaf.util.StringUtils;
 
 import edu.asu.diging.vspace.core.data.ExhibitionAboutPageRepository;
 import edu.asu.diging.vspace.core.data.ExhibitionLanguageRepository;
-import edu.asu.diging.vspace.core.data.ExhibitionRepository;
 import edu.asu.diging.vspace.core.data.LocalizedTextRepository;
 import edu.asu.diging.vspace.core.model.IExhibition;
-import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
-import edu.asu.diging.vspace.core.model.ILocalizedText;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionAboutPage;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
@@ -45,7 +41,6 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
     @Autowired
     private LocalizedTextRepository localizedTextRepo;
     
-    
     /* (non-Javadoc)
      * @see edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager#findAll()
      */
@@ -57,7 +52,6 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
         return results;
     }
     
-    
     /* (non-Javadoc)
      * @see edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager#store()
      */
@@ -68,7 +62,6 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
             exhibition.setAboutPageConfigured(true);
             exhibitionManager.storeExhibition((Exhibition)exhibition);
         }
-        
 
         ExhibitionAboutPage exhibitionAboutPage = getExhibitionAboutPage();       
         exhibitionAboutPage.setTitle(aboutPageForm.getTitle());

@@ -9,7 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import edu.asu.diging.vspace.core.data.ExhibitionAboutPageRepository;
-import edu.asu.diging.vspace.core.factory.impl.ExhibitionAboutPageFactory;
+import edu.asu.diging.vspace.core.factory.impl.AboutPageFormFactory;
 import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.ILocalizedText;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
@@ -22,7 +22,7 @@ import edu.asu.diging.vspace.web.staff.forms.AboutPageForm;
 
 public class ExhibitionAboutPageFactoryTest {
     @InjectMocks
-    private ExhibitionAboutPageFactory serviceToTest;
+    private AboutPageFormFactory serviceToTest;
     
     @Mock
     private ExhibitionAboutPageRepository repo;

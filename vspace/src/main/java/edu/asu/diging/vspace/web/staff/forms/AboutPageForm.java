@@ -1,9 +1,8 @@
 package edu.asu.diging.vspace.web.staff.forms;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import edu.asu.diging.vspace.core.model.impl.LocalizedText;
+import java.util.List;
 
 public class AboutPageForm {
     

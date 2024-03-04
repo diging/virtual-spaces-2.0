@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
-import edu.asu.diging.vspace.core.factory.IExhibitionAboutPageFactory;
+import edu.asu.diging.vspace.core.factory.IAboutPageFormFactory;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ILocalizedText;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionAboutPage;
@@ -40,7 +40,7 @@ public class ExhibitionAboutPageController {
     private IExhibitionAboutPageManager aboutPageManager;
     
     @Autowired
-    private IExhibitionAboutPageFactory exhibitionAboutPageFactory;
+    private IAboutPageFormFactory exhibitionAboutPageFactory;
    
     @RequestMapping(value = "/staff/exhibit/about", method = RequestMethod.GET)
     public String showAboutPage(Model model) {    

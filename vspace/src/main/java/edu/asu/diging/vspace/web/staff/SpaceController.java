@@ -65,10 +65,6 @@ public class SpaceController {
         model.addAttribute("display", spaceDisplayManager.getBySpace(space));
         model.addAttribute("moduleList", moduleManager.getAllModules());
         model.addAttribute("spaceTextBlocks", spaceTextBlockManager.getSpaceTextBlockDisplays(id));
-        
-        
-//        model.addAttribute("defaultName" , spaceManager.getDefaultSpaceName(space));
-//        model.addAttribute("defaultDescription" , spaceManager.getDefaultSpaceDescription(space));
         return "staff/spaces/space";
     }
 

@@ -1,6 +1,7 @@
 package edu.asu.diging.vspace.core.model.impl;
 
 import java.util.ArrayList;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -14,7 +15,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -28,7 +28,6 @@ import edu.asu.diging.vspace.core.model.ILocalizedText;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
-import edu.asu.diging.vspace.core.model.ISlideExhibitionLanguageObject;
 import edu.asu.diging.vspace.core.model.ITextBlock;
 
 @Entity
@@ -62,8 +61,6 @@ public class Slide extends VSpaceElement implements ISlide {
         joinColumns = @JoinColumn(name = "Slide_Id", referencedColumnName="id"),
         inverseJoinColumns = @JoinColumn(name = "LocalizedText_Id", referencedColumnName="id"))
     private List<ILocalizedText> slideDescriptions = new ArrayList<ILocalizedText>();
-    
-    
     
     public List<ILocalizedText> getSlideNames() {
         return slideNames;

@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.util.StringUtils;
 
-import edu.asu.diging.vspace.core.factory.IExhibitionAboutPageFactory;
+import edu.asu.diging.vspace.core.factory.IAboutPageFormFactory;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.ILocalizedText;
@@ -16,7 +16,7 @@ import edu.asu.diging.vspace.web.staff.forms.AboutPageForm;
 import edu.asu.diging.vspace.web.staff.forms.LocalizedTextForm;
 
 @Component
-public class ExhibitionAboutPageFactory  implements IExhibitionAboutPageFactory{
+public class AboutPageFormFactory  implements IAboutPageFormFactory{
 
     
     
@@ -35,15 +35,15 @@ public class ExhibitionAboutPageFactory  implements IExhibitionAboutPageFactory{
         IExhibition startExhibtion = exhibitionManager.getStartExhibition();    
         IExhibitionLanguage defaultLanguage = startExhibtion.getDefaultLanguage();
 
-        aboutPageForm.setDefaultTitle(createLocalizedTextForm(exhibitionAboutPage, defaultLanguage, 
+        aboutPageForm.setDefaultTitle(createLocalizedTextForm( defaultLanguage, 
                 exhibitionAboutPage.getExhibitionTitles()));
-        aboutPageForm.setDefaultAboutPageText(createLocalizedTextForm(exhibitionAboutPage, defaultLanguage, 
+        aboutPageForm.setDefaultAboutPageText(createLocalizedTextForm( defaultLanguage, 
                 exhibitionAboutPage.getExhibitionTextDescriptions()));
         startExhibtion.getLanguages().forEach(language -> {
             if(!language.isDefault()) {
-                aboutPageForm.getTitles().add(createLocalizedTextForm(exhibitionAboutPage, language, 
+                aboutPageForm.getTitles().add(createLocalizedTextForm( language, 
                         exhibitionAboutPage.getExhibitionTitles()));               
-                aboutPageForm.getAboutPageTexts().add(createLocalizedTextForm(exhibitionAboutPage, language, 
+                aboutPageForm.getAboutPageTexts().add(createLocalizedTextForm(language, 
                         exhibitionAboutPage.getExhibitionTextDescriptions())); 
             }
         });
@@ -57,8 +57,7 @@ public class ExhibitionAboutPageFactory  implements IExhibitionAboutPageFactory{
      * @param localizedTexts
      * @return
      */
-    private LocalizedTextForm createLocalizedTextForm(ExhibitionAboutPage exhibitionAboutPage,
-            IExhibitionLanguage language, List<ILocalizedText> localizedTexts) {
+    private LocalizedTextForm createLocalizedTextForm( IExhibitionLanguage language, List<ILocalizedText> localizedTexts) {
 
         LocalizedTextForm localizedAboutTextForm = new LocalizedTextForm(null, null,  language.getId(), language.getLabel() );
         ILocalizedText aboutPageText = localizedTexts.stream()

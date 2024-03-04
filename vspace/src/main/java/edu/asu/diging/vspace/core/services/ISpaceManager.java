@@ -2,13 +2,13 @@ package edu.asu.diging.vspace.core.services;
 
 import java.util.List;
 
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
-import edu.asu.diging.vspace.core.model.impl.LocalizedText;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
@@ -44,12 +44,8 @@ public interface ISpaceManager {
 
     void updateNameAndDescription(ISpace space, SpaceForm spaceForm);
 
-    void addSpaceDescription(ISpace space, LocalizedTextForm descriptions);
-
     void addSpaceName(ISpace space, LocalizedTextForm names);
 
     SpaceForm getSpaceForm(String spaceId);
-
-    ISpace createSpace(SpaceForm form);
     
 }

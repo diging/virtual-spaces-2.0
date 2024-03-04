@@ -73,11 +73,8 @@ public class Space extends VSpaceElement implements ISpace {
     )
     private List<ILocalizedText> spaceDescriptions = new ArrayList<ILocalizedText>();
        
-
     @Transient
     private Boolean incomingLinks;
-    
-    
     
     /*
      * (non-Javadoc)
@@ -221,7 +218,6 @@ public class Space extends VSpaceElement implements ISpace {
         return hideIncomingLinks;
     }
 
-
     @Override
     public void setHideIncomingLinks(boolean hideIncomingLinks) {
         this.hideIncomingLinks = hideIncomingLinks;
@@ -243,7 +239,4 @@ public class Space extends VSpaceElement implements ISpace {
         
         this.spaceDescriptions = spaceDescriptions;
     }
-    
-    
-
 }
