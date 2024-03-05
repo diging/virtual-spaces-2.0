@@ -12,7 +12,6 @@ import edu.asu.diging.vspace.web.staff.forms.LocalizedTextForm;
 @Service
 public class LocalizedTextFormCreation {
     
-    
     /**
      * Creates LocalizedTextForm form using provided list of localizedTexts. 
      * @param exhibitionAboutPage
@@ -23,13 +22,13 @@ public class LocalizedTextFormCreation {
     public LocalizedTextForm createLocalizedTextForm( IExhibitionLanguage language, List<ILocalizedText> localizedTexts) {
 
         LocalizedTextForm localizedAboutTextForm = new LocalizedTextForm(null, null,  language.getId(), language.getLabel() );
-        ILocalizedText aboutPageText = localizedTexts.stream()
+        ILocalizedText localizedText = localizedTexts.stream()
                 .filter(exhibitionText -> StringUtils.equals(language.getId(), 
                         exhibitionText.getExhibitionLanguage().getId())).findAny().orElse(null);
 
-        if(aboutPageText != null) {
-            localizedAboutTextForm.setText(aboutPageText.getText());
-            localizedAboutTextForm.setLocalisedTextId( aboutPageText.getId());
+        if(localizedText != null) {
+            localizedAboutTextForm.setText(localizedText.getText());
+            localizedAboutTextForm.setLocalisedTextId( localizedText.getId());
 
         } 
         localizedAboutTextForm.setIsDefaultExhibitionLanguage(language.isDefault());

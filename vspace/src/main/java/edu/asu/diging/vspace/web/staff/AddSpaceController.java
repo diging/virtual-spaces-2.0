@@ -17,18 +17,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.asu.diging.vspace.core.exception.ImageDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.ISpaceFactory;
-import edu.asu.diging.vspace.core.model.IExhibition;
+import edu.asu.diging.vspace.core.factory.ISpaceFormFactory;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
-import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
-import edu.asu.diging.vspace.core.model.impl.LocalizedText;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
-import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
-import edu.asu.diging.vspace.core.services.impl.ExhibitionManager;
 import edu.asu.diging.vspace.web.staff.forms.SpaceForm;
 
 @Controller
@@ -44,11 +40,14 @@ public class AddSpaceController {
 
     @Autowired
     private IImageService imageService;
+    
+    @Autowired
+    private ISpaceFormFactory spaceFormFactory;
    
     @RequestMapping(value = "/staff/space/add", method = RequestMethod.GET)
     public String showAddSpace(Model model) {
         ISpace space = new Space();
-        model.addAttribute("space", spaceFactory.createNewSpaceForm(space));
+        model.addAttribute("space", spaceFormFactory.createNewSpaceForm(space));
         model.addAttribute("images", imageService.getImages(1));          
         
         return "staff/spaces/add";

@@ -6,8 +6,6 @@ import edu.asu.diging.vspace.web.staff.forms.SpaceForm;
 
 public interface ISpaceFactory {
     
-    SpaceForm createNewSpaceForm(ISpace space);
-    
     public ISpace createSpace(SpaceForm form);
     
     public void addSpaceDescription(ISpace space, LocalizedTextForm description);

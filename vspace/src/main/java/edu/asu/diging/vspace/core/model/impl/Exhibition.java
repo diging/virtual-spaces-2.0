@@ -14,6 +14,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import edu.asu.diging.vspace.core.data.ExhibitionLanguageRepository;
 import edu.asu.diging.vspace.core.model.ExhibitionModes;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
@@ -49,6 +52,9 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     private List<IExhibitionLanguage> languages = new ArrayList<IExhibitionLanguage>();
 
     private String previewId;
+    
+    @Autowired
+    private ExhibitionLanguageRepository exhibitionLanguageRepo;
 
     /*
      * (non-Javadoc)
@@ -150,7 +156,7 @@ public class Exhibition extends VSpaceElement implements IExhibition {
      */
     @Override
     public IExhibitionLanguage getDefaultLanguage() {
-        return  this.getLanguages().stream().filter(language -> language.isDefault()).findFirst().orElse(null);
+        return exhibitionLanguageRepo.findDefaultLanguageByExhibition(this);
     }
     
     @Override
