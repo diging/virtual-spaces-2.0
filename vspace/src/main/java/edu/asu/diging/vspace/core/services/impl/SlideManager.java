@@ -1,6 +1,7 @@
 package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.ArrayList;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -23,11 +24,9 @@ import edu.asu.diging.vspace.core.data.SequenceRepository;
 import edu.asu.diging.vspace.core.data.SlideRepository;
 import edu.asu.diging.vspace.core.factory.impl.ChoiceFactory;
 import edu.asu.diging.vspace.core.factory.impl.SlideFactory;
+import edu.asu.diging.vspace.core.factory.impl.SlideFormFactory;
 import edu.asu.diging.vspace.core.model.IBranchingPoint;
 import edu.asu.diging.vspace.core.model.IChoice;
-import edu.asu.diging.vspace.core.model.IExhibition;
-import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
-import edu.asu.diging.vspace.core.model.ILocalizedText;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.display.SlideType;
@@ -47,6 +46,9 @@ public class SlideManager implements ISlideManager {
 
     @Autowired
     private SlideFactory slideFactory;
+    
+    @Autowired
+    private SlideFormFactory slideFormFactory;
 
     @Autowired
     private SlideRepository slideRepo;
@@ -249,7 +251,7 @@ public class SlideManager implements ISlideManager {
     @Override
     public SlideForm getSlideForm(String slideId) {
         ISlide slide = getSlide(slideId);
-        SlideForm slideForm = slideFactory.createNewSlideForm(slide);   
+        SlideForm slideForm = slideFormFactory.createNewSlideForm(slide);   
         slideForm.setName(slide.getName());
         slideForm.setDescription(slide.getDescription());
         return slideForm; 

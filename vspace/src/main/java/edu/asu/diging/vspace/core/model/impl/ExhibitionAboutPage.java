@@ -39,8 +39,6 @@ public class ExhibitionAboutPage extends VSpaceElement {
     @Lob
     private String aboutPageText;
     
-    
-    
     @OneToMany(targetEntity = LocalizedText.class, cascade={CascadeType.ALL})
     @JoinTable(name="AboutPage_LocText_titles",  
         joinColumns = @JoinColumn(name = "ExhibitionAboutPage_Id", referencedColumnName="id")

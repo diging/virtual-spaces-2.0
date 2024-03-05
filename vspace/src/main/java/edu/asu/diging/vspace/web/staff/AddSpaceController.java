@@ -1,10 +1,8 @@
 package edu.asu.diging.vspace.web.staff;
 
 import java.io.IOException;
-import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
 
+import java.security.Principal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +57,7 @@ public class AddSpaceController {
     @RequestMapping(value = "/staff/space/add", method = RequestMethod.POST)
     public String addSpace(Model model, @ModelAttribute SpaceForm spaceForm, @RequestParam("file") MultipartFile file,
             Principal principal, @RequestParam(value = "imageId", required=false) String imageId, RedirectAttributes redirectAttrs) throws IOException {
-        ISpace space = spaceManager.createSpace(spaceForm);
+        ISpace space = spaceFactory.createSpace(spaceForm);
         spaceManager.updateNameAndDescription(space, spaceForm);
         space.setSpaceStatus(SpaceStatus.UNPUBLISHED);      
         byte[] bgImage = null;
