@@ -41,6 +41,6 @@ public interface IExhibitionManager {
     
     boolean checkIfLocalizedTextsExists(IExhibitionLanguage language);
 
-    void deleteEmptyLocalizedTexts(List<LocalizedText> emptyLocalizedTexts);
+    void deleteLocalizedTexts(List<LocalizedText> emptyLocalizedTexts);
 
 }

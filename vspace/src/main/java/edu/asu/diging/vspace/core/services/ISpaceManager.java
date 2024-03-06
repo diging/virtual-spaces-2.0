@@ -45,7 +45,5 @@ public interface ISpaceManager {
     void updateNameAndDescription(ISpace space, SpaceForm spaceForm);
 
     void addSpaceName(ISpace space, LocalizedTextForm names);
-
-    SpaceForm getSpaceForm(String spaceId);
     
 }

@@ -2,16 +2,15 @@ package edu.asu.diging.vspace.core.services;
 
 import java.util.List;
 
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import edu.asu.diging.vspace.core.model.IBranchingPoint;
 import edu.asu.diging.vspace.core.model.IChoice;
-import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.display.SlideType;
-import edu.asu.diging.vspace.core.model.impl.LocalizedText;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.web.staff.forms.LocalizedTextForm;

@@ -2,6 +2,7 @@ package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.ArrayList;
 
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -36,7 +37,6 @@ import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.impl.LocalizedText;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
 import edu.asu.diging.vspace.core.model.impl.Slide;
-import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 import edu.asu.diging.vspace.web.staff.forms.LocalizedTextForm;
 import edu.asu.diging.vspace.web.staff.forms.SlideForm;
@@ -67,9 +67,6 @@ public class SlideManager implements ISlideManager {
     
     @Autowired
     ExhibitionLanguageRepository exhibitionLanguageRepository;
-    
-    @Autowired
-    private IExhibitionManager exhibitionManager;
     
     @Autowired
     private LocalizedTextRepository localizedTextRepo;

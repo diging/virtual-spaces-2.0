@@ -1,6 +1,7 @@
 package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -22,7 +23,6 @@ import edu.asu.diging.vspace.core.exception.LanguageListConfigurationNotFoundExc
 import edu.asu.diging.vspace.core.factory.impl.ExhibitionFactory;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
-import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.impl.LocalizedText;
@@ -131,6 +131,10 @@ public class ExhibitionManager implements IExhibitionManager {
 
         for (IExhibitionLanguage language  : exhibitionLanguageToBeRemoved ) {
             if(checkIfLocalizedTextsExists(language))  {
+                /**
+                 *  ExhibitionLanguageDeletionException is thrown if any IExhibitionLanguage object in the specified list
+                 * does not have associated localized texts.
+                 */
                 throw new ExhibitionLanguageDeletionException() ;
             }
 
@@ -144,14 +148,9 @@ public class ExhibitionManager implements IExhibitionManager {
      */
     @Override
     public boolean checkIfLocalizedTextsExists(IExhibitionLanguage language)  {               
-        List<LocalizedText> localizedTexts = localizedTextRepo.findByExhibitionLanguage(language);
-        List<LocalizedText> emptyLocalizedTexts = localizedTexts.stream()
-                .filter(localizedText -> !StringUtils.hasText(localizedText.getText())).collect(Collectors.toList());
-        deleteEmptyLocalizedTexts(emptyLocalizedTexts);
 
         //This returns true if non empty localized texts exist
-        return localizedTexts.size() > emptyLocalizedTexts.size();
-
+        return localizedTextRepo.findByExhibitionLanguage(language).isEmpty();
     }
     
     /**
@@ -159,11 +158,9 @@ public class ExhibitionManager implements IExhibitionManager {
      * 
      */
     @Override
-    public void deleteEmptyLocalizedTexts(List<LocalizedText> emptyLocalizedTexts) {
-        localizedTextRepo.deleteAll(emptyLocalizedTexts);
+    public void deleteLocalizedTexts(List<LocalizedText> localizedTexts) {
+        localizedTextRepo.deleteAll(localizedTexts);
     }
-
-
 
     /**
      * Adds exhibitionLanguage to exhibition if not already present. If already present, returns exhibitionLanguage from the exhibition.

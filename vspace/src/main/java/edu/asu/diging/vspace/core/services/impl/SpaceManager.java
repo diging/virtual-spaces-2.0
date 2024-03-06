@@ -2,6 +2,7 @@ package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.ArrayList;
 
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -29,7 +30,6 @@ import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceDisplayFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceFactory;
-import edu.asu.diging.vspace.core.factory.ISpaceFormFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
@@ -95,10 +95,6 @@ public class SpaceManager implements ISpaceManager {
     
     @Autowired
     private LocalizedTextRepository localizedTextRepo;
-    
-    @Autowired
-    private ISpaceFormFactory spaceFormFactory;
-    
    
     /*
      * (non-Javadoc)
@@ -356,15 +352,5 @@ public class SpaceManager implements ISpaceManager {
         for(LocalizedTextForm text:spaceForm.getDescriptions()) {
             spaceFactory.addSpaceDescription(space,text);
         }
-    }
-    
-    @Override
-    public SpaceForm getSpaceForm(String spaceId) {
-        ISpace space = getSpace(spaceId);
-        SpaceForm slideForm = spaceFormFactory.createNewSpaceForm(space);   
-        slideForm.setName(space.getName());
-        slideForm.setDescription(space.getDescription());
-        return slideForm; 
-
     }
 }

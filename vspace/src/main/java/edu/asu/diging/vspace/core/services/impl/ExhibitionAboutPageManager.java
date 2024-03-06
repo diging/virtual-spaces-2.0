@@ -12,6 +12,7 @@ import edu.asu.diging.vspace.core.data.ExhibitionAboutPageRepository;
 import edu.asu.diging.vspace.core.data.ExhibitionLanguageRepository;
 import edu.asu.diging.vspace.core.data.LocalizedTextRepository;
 import edu.asu.diging.vspace.core.model.IExhibition;
+import edu.asu.diging.vspace.core.model.ILocalizedText;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionAboutPage;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
@@ -94,25 +95,9 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
     /**
      * This method maps the title in ExhibitionAboutPage, and add that to
      * exhibitionTitles list for each user selected Exhibition Language.
-    */
+    */    
     public void setAboutPageTitle(LocalizedTextForm title, ExhibitionAboutPage exhibitionAboutPage) {
-        if(title!=null && !StringUtils.isEmpty(title.getText())) {
-
-            LocalizedText localizedText = localizedTextRepo.findById(title.getLocalisedTextId()).orElse(null);
-            if(localizedText != null) {            
-                localizedText.setText(title.getText());            
-            } else {
-                ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findById(title.getExhibitionLanguageId())
-                        .orElse(null);
-                if(exhibitionLanguage != null) {
-                    localizedText = new LocalizedText(exhibitionLanguage, title.getText());
-                    exhibitionAboutPage.getExhibitionTitles().add(localizedText);
-
-                }
-            }
-
-        }
-
+        setLocalizedText(title, exhibitionAboutPage.getExhibitionTitles());
     }
     
     /**
@@ -120,21 +105,22 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
      * exhibitionTextDescriptions list for each user selected Exhibition Language.
     */
     public void setAboutPageDescription(LocalizedTextForm aboutPageText, ExhibitionAboutPage exhibitionAboutPage) {
-        if(aboutPageText!=null && !StringUtils.isEmpty(aboutPageText.getText())) {
-            LocalizedText localizedText = localizedTextRepo.findById(aboutPageText.getLocalisedTextId()).orElse(null);
-            
-            if(localizedText != null) {
-                localizedText.setText(aboutPageText.getText());
-            } else {
-                ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findById(aboutPageText.getExhibitionLanguageId())
-                        .orElse(null);
-                if(exhibitionLanguage != null) {
-                    LocalizedText newLocalizedText = new LocalizedText(exhibitionLanguage, aboutPageText.getText());
-                    exhibitionAboutPage.getExhibitionTextDescriptions().add(newLocalizedText);
+        setLocalizedText(aboutPageText, exhibitionAboutPage.getExhibitionTextDescriptions());
+    }
 
+    private void setLocalizedText(LocalizedTextForm textForm, List<ILocalizedText> localizedTextList) {
+        if (textForm != null && !StringUtils.isEmpty(textForm.getText())) {
+            LocalizedText localizedText = localizedTextRepo.findById(textForm.getLocalisedTextId()).orElse(null);
+            if (localizedText != null) {
+                localizedText.setText(textForm.getText());
+            } else {
+                ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findById(textForm.getExhibitionLanguageId()).orElse(null);
+                if (exhibitionLanguage != null) {
+                    localizedText = new LocalizedText(exhibitionLanguage, textForm.getText());
+                    localizedTextList.add(localizedText);
                 }
-            }        
+            }
         }
-    } 
+    }
    
 }
