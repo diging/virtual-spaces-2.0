@@ -41,7 +41,7 @@ $(function () {
     })
 })
             //# sourceURL=click.js
-            let currentSelectedSpace="";
+            //let currentSelectedSpace="";
             var contentCount = [[${#lists.size(slideContents)}]];
             var markDown = null;
             var defaultValue;
@@ -94,7 +94,8 @@ $(function () {
                 	url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space/'})]"+ blockId,
     		type: 'GET',
     		success: function(result) {
-    			$("#selectedSpace").text('');
+    			console.log(result)
+    			//$("#selectedSpace").text('');
     			$("#selectedSpace").text(result.name);
     		    	},
     		error: function(data) {
@@ -110,7 +111,7 @@ $(function () {
             
             function onDoubleClick(e){
                 // get to the nearest divs class attribute
-                $(".EasyMDEContainer").remove();
+                //$(".EasyMDEContainer").remove();
                 var divName = $(e.target).closest('div').attr('class');
                 //if the div is a text content block 
                 if(divName.includes("textDivStaff")){
@@ -570,6 +571,7 @@ $(function () {
             		    },
             		    dataType: 'json',
             		    processResults: function (data) {
+            		    	console.log(data);
             		        return {
             		          results: data,
             		        };
@@ -587,6 +589,8 @@ $(function () {
             		    },
             		    dataType: 'json',
             		    processResults: function (data) {
+            		    	console.log("SpaceName data")
+            		    	console.log(data);
             		        return {
             		          results: data,
             		        };
@@ -597,6 +601,8 @@ $(function () {
                 });
                 
                 function formatSpace (space) {
+                	console.log("space: ");
+                	console.log(space);
                 	if (!space.id) {
                 	    return space.name;
                 	}
@@ -607,6 +613,7 @@ $(function () {
                 }
                 
                 function formatSpaceSelection(space) {
+                	console.log("waaaaaa");
                 	if (!space.id) {
                             return space.name;
                     }
@@ -871,7 +878,9 @@ $(function () {
                         enctype: 'multipart/form-data',
                         success: function(data) {
             
-                            var textblock = $('<div style="word-break:break-word;" id="'+ data +'" class="textDivStaff tab row"><p class="col-md-10">'+text+'</p>'+'<input type="hidden" id="deleteTextId" value="'+data+'" /><a class="btn deleteText col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a></div>');
+                            var textblock = $('<div style="word-break:break-word;" id="'+ data +'" class="textDivStaff tab row"><label>Text Description: </label><p class="col-md-10">'+text+'</p>'+'<input type="hidden" id="deleteTextId" value="'+data+'" /><a class="btn deleteText col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a></div>');
+                            console.log(textblock[0]);
+                            console.log(textblock);
                             $(textblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
                             $('#slideSpace').append(textblock);             
                         },
@@ -897,36 +906,39 @@ $(function () {
                     var text = markDown.value();
                     var title = document.getElementById('spaceTitle').value;
                     var selectedSpace = document.getElementById('spaceName');
-                    var spaceId = selectedSpace.options[selectedSpace.selectedIndex].value;
-                    document.getElementById('spaceTitle').value="";
-                    formData.append('title', title);
-                    formData.append('spaceId', spaceId);
-                    markDown.value('');
-                    $.ajax({
-                        url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space'})]",
-                        type: 'POST',
-                        cache       : false,
-                        contentType : false,
-                        processData : false,
-                        data: formData,
-                        headers:{
-	            			'X-CSRF-Token':token
-	            		},
-                        enctype: 'multipart/form-data',
-                        success: function(data) {
-                            var textblock = $('<div style="word-break:break-word;" id="'+ data +'" class="SpaceDivStaff tab row"><p class="col-md-10">'+title+'</p>'+'<input type="hidden" id="deleteSpaceId" value="'+data+'" /><a class="btn deleteSpace col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a></div>');
-                            $(textblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
-                            $('#slideSpace').append(textblock);             
-                        },
-                        error: function(data) {
-                        	if (data.status == 403){
-                        	    $("#loginAlert").show();
-                        	} else {
-                            	    var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                            	    $('.error').append(alert);
-                        	}
-                         }
-                     });
+                    if (selectedSpace.selectedIndex != -1){
+                    	var spaceId = selectedSpace.options[selectedSpace.selectedIndex].value;
+                    	document.getElementById('spaceTitle').value="";
+                    	formData.append('title', title);
+                    	formData.append('spaceId', spaceId);
+                    	markDown.value('');
+                    	$.ajax({
+                        	url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space'})]",
+                        	type: 'POST',
+                        	cache       : false,
+                        	contentType : false,
+                        	processData : false,
+                        	data: formData,
+                        	headers:{
+	            				'X-CSRF-Token':token
+	            			},
+                        	enctype: 'multipart/form-data',
+                        	success: function(data) {
+                            	var textblock = $('<div style="word-break:break-word;" id="'+ data +'" class="SpaceDivStaff tab row"><label>Title: </label><p class="col-md-10">'+title+'</p>'+'<input type="hidden" id="deleteSpaceId" value="'+data+'" /><a class="btn deleteSpace col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a></div>');
+                            	
+                            	$(textblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+                            	$('#slideSpace').append(textblock);             
+                        	},
+                        	error: function(data) {
+                        		if (data.status == 403){
+                        	    	$("#loginAlert").show();
+                        		} else {
+                            	    	var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                            	    	$('.error').append(alert);
+                        		}
+                         	}
+                     	});
+                    }
                  });
                 
                 $('input:checkbox').click(function() {
@@ -995,7 +1007,7 @@ $(function () {
                 function updateTextBox(blockId, text) {
                     // clear text box and buttons
                     $(".open").empty();
-                    $(".open").append('<p class="col-md-10">'+text+'</p><input type="hidden" id="deleteTextId" value="'+blockId+'" /><a class="btn deleteText col-md-1" href="javascript:;" style="position: absolute; right:0;"><span class="icon-trash error"></span></a>');
+                    $(".open").append('<label>Text Description: </label><p class="col-md-10">'+text+'</p><input type="hidden" id="deleteTextId" value="'+blockId+'" /><a class="btn deleteText col-md-1" href="javascript:;" style="position: absolute; right:0;"><span class="icon-trash error"></span></a>');
                     // reset border of the card
                     //rebind event handlers
                     $('.textDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
@@ -1010,7 +1022,7 @@ $(function () {
                 function updateSpaceBox(blockId, text) {
                     // clear text box and buttons
                     $(".open").empty();
-                    $(".open").append('<p class="col-md-10">'+text+'</p><input type="hidden" id="deleteSpaceId" value="'+blockId+'" /><a class="btn deleteText col-md-1" href="javascript:;" style="position: absolute; right:0;"><span class="icon-trash error"></span></a>');
+                    $(".open").append('<label>Title: </label><p class="col-md-10">'+text+'</p><input type="hidden" id="deleteSpaceId" value="'+blockId+'" /><a class="btn deleteText col-md-1" href="javascript:;" style="position: absolute; right:0;"><span class="icon-trash error"></span></a>');
                     // reset border of the card
                     //rebind event handlers
                     $('.SpaceDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
@@ -1428,7 +1440,7 @@ $(function () {
 						<select id="spaceName" name=spacesNames
 							class="form-control-xs target"
 							style="height: 50px; width: 200px;">
-							<option selected value="">Choose from existing</option>
+							<!-- <option selected value="">Choose from existing</option> -->
 						</select>
 						</div>
 						<div class="modal-footer">
@@ -1489,7 +1501,7 @@ $(function () {
 						<select id="editSpaceName" name=editSpacesNames
 							class="form-control-xs target"
 							style="height: 50px; width: 200px;">
-							<option selected value="">Choose from existing</option>
+							<option selected value="" ></option>
 						</select>
 						<p>
 							Current selected space is <span id="selectedSpace"></span>
