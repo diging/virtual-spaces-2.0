@@ -41,7 +41,7 @@ $(function () {
     })
 })
             //# sourceURL=click.js
-            //let currentSelectedSpace="";
+            let currentSelectedSpace="";
             var contentCount = [[${#lists.size(slideContents)}]];
             var markDown = null;
             var defaultValue;
@@ -111,7 +111,7 @@ $(function () {
             
             function onDoubleClick(e){
                 // get to the nearest divs class attribute
-                //$(".EasyMDEContainer").remove();
+                $(".EasyMDEContainer").remove();
                 var divName = $(e.target).closest('div').attr('class');
                 //if the div is a text content block 
                 if(divName.includes("textDivStaff")){
@@ -374,30 +374,48 @@ $(function () {
             	  });
             	var timeout=null;
             	$('#slideSpace').sortable({
-	            	update: function(event,ui) {
-		            	var jsonObj = [];
-		            	var blockId;
-		            	$(this).children().each(function(index,element){
-			            	if(typeof($(element.innerHTML).filter('div').attr('data-position'))=="undefined") {
-			            		blockId=$(element).attr('id');
-			            	}else {
-			            		blockId = $(element.innerHTML).filter('div').attr('id');
-			            	}
-			            	item = {}
-			            	item ["id"] = blockId;
-			            	item ["contentOrder"] = index;
-			            	jsonObj.push(item);
-			            	$(element.innerHTML).filter('div').attr('data-position',index);
-		            	});
-		            	var token = [[${_csrf.token}]];
-		            	if (jsonObj.length != 0){
-			            	if (timeout != null){
-			            		clearTimeout(timeout);
-			            	}
-			            	timeout = setTimeout(updateContentOrder(jsonObj,token), 1000);
-		            	}
-	            	}
+            	    // This function is called whenever the sorting is updated
+            	    update: function(event, ui) {
+            	        // Array to store the JSON representation of each sortable item
+            	        var jsonObj = [];
+            	        // Variable to store the ID of the current sortable item
+            	        var blockId;
+
+            	        // Loop through each sortable item within the container
+            	        $(this).children().each(function(index, element) {
+            	            // Check if the data-position attribute is undefined
+            	            if (typeof($(element.innerHTML).filter('div').attr('data-position')) == "undefined") {
+            	                // If undefined, set the blockId to the ID attribute of the current element
+            	                blockId = $(element).attr('id');
+            	            } else {
+            	                // If not undefined, set the blockId to the ID attribute of the child div element
+            	                blockId = $(element.innerHTML).filter('div').attr('id');
+            	            }
+            	            // Create an object representing the current sortable item
+            	            var item = {};
+            	            item["id"] = blockId;
+            	            item["contentOrder"] = index;
+            	            // Add the item to the jsonObj array
+            	            jsonObj.push(item);
+            	            // Set the data-position attribute of the child div element to the current index
+            	            $(element.innerHTML).filter('div').attr('data-position', index);
+            	        });
+
+            	        // Retrieve the CSRF token from the server-side
+            	        var token = [[${_csrf.token}]];
+            	        
+            	        // Check if the jsonObj array is not empty
+            	        if (jsonObj.length != 0) {
+            	            // If a previous timeout is set, clear it
+            	            if (timeout != null) {
+            	                clearTimeout(timeout);
+            	            }
+            	            // Set a timeout to update the content order after 1000 milliseconds (1 second)
+            	            timeout = setTimeout(updateContentOrder(jsonObj, token), 1000);
+            	        }
+            	    }
             	});
+
 
             	function updateContentOrder(jsonObj,token){
 	            		$.ajax({
@@ -613,7 +631,6 @@ $(function () {
                 }
                 
                 function formatSpaceSelection(space) {
-                	console.log("waaaaaa");
                 	if (!space.id) {
                             return space.name;
                     }
@@ -766,6 +783,7 @@ $(function () {
                 		        
                 		    },
                 		    error: function(data) {
+                		     console.log(data);
                 			 var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
                 			 $('.error').append(alert); 
                 			 $(".error").delay(4000).slideUp(500, function(){
@@ -1041,8 +1059,20 @@ $(function () {
                 	updateTextBox(blockId, defaultValue);
                 });
                 
+                $('#closeTextBlock').on('click',function(){
+                	$("#editTextAlert").hide();
+                	var blockId = $(this).closest(".open").attr("id");
+                	updateTextBox(blockId, defaultValue);
+                });
+                
              // must add the event to the document since the buttons are added dynamically
                 $('#cancelSpaceBlock').on('click',function(){
+                	$("#editSpaceAlert").hide();
+                	var blockId = $(this).closest(".open").attr("id");
+                	updateSpaceBox(blockId, defaultValue);
+                });
+             
+                $('#closeSpaceBlock').on('click',function(){
                 	$("#editSpaceAlert").hide();
                 	var blockId = $(this).closest(".open").attr("id");
                 	updateSpaceBox(blockId, defaultValue);
@@ -1457,7 +1487,7 @@ $(function () {
 				<div class="modal-content">
 					<div class="modal-header">
 						<h5 class="modal-title">Edit Text Block</h5>
-						<button type="button" class="close" data-bs-dismiss="modal"
+						<button type="button" id="closeTextBlock" data-bs-dismiss="modal"
 							aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
@@ -1485,7 +1515,7 @@ $(function () {
 				<div class="modal-content">
 					<div class="modal-header">
 						<h5 class="modal-title">Edit Space Block</h5>
-						<button type="button" class="close" data-bs-dismiss="modal"
+						<button type="button" id="closeSpaceBlock" data-bs-dismiss="modal"
 							aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
