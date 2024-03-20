@@ -3,6 +3,7 @@ package edu.asu.diging.vspace.core.model.impl;
 import java.util.ArrayList;
 
 
+
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.CascadeType;
@@ -15,6 +16,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import edu.asu.diging.vspace.core.model.ExhibitionModes;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
@@ -33,7 +37,8 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     @GeneratedValue(generator = "exhibit_id_generator")
     @GenericGenerator(name = "exhibit_id_generator", parameters = @Parameter(name = "prefix", value = "EXH"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
-
+    
+    @JsonBackReference()
     @OneToOne(targetEntity = Space.class)
     private ISpace startSpace;
 

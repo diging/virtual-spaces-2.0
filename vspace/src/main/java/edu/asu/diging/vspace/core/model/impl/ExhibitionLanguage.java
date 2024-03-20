@@ -2,12 +2,16 @@ package edu.asu.diging.vspace.core.model.impl;
 
 import java.util.Objects;
 
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
 
 @Entity
@@ -21,6 +25,7 @@ public class ExhibitionLanguage extends VSpaceElement implements IExhibitionLang
     private String label;
     
     @ManyToOne(targetEntity = Exhibition.class)
+    @JsonManagedReference()
     private Exhibition exhibition;
     
     private String code;

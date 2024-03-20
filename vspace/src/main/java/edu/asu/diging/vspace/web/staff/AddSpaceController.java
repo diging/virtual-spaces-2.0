@@ -48,7 +48,8 @@ public class AddSpaceController {
     public String showAddSpace(Model model) {
         ISpace space = new Space();
         model.addAttribute("space", spaceFormFactory.createNewSpaceForm(space));
-        model.addAttribute("images", imageService.getImages(1));          
+        model.addAttribute("images", imageService.getImages(1));     
+        System.out.println(spaceFormFactory.createNewSpaceForm(space).getDefaultName().getText());
         
         return "staff/spaces/add";
     }
@@ -58,6 +59,8 @@ public class AddSpaceController {
             Principal principal, @RequestParam(value = "imageId", required=false) String imageId, RedirectAttributes redirectAttrs) throws IOException {
         ISpace space = spaceFactory.createSpace(spaceForm);
         spaceManager.updateNameAndDescription(space, spaceForm);
+        System.out.println("--------------------------------"+space.getName());
+        spaceForm.getDescriptions().forEach(description -> System.out.println(description.getText()));
         space.setSpaceStatus(SpaceStatus.UNPUBLISHED);      
         byte[] bgImage = null;
         String filename = null;

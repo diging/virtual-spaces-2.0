@@ -1,6 +1,7 @@
 package edu.asu.diging.vspace.core.model.impl;
 
 import java.util.ArrayList;
+
 import java.util.List;
 
 import javax.persistence.Access;
@@ -21,6 +22,7 @@ import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.annotations.Parameter;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import edu.asu.diging.vspace.core.model.IExternalLink;
 import edu.asu.diging.vspace.core.model.ILocalizedText;
@@ -64,13 +66,15 @@ public class Space extends VSpaceElement implements ISpace {
     @JoinTable(name="Space_LangObj_names",  
         joinColumns = @JoinColumn(name = "Space_Id", referencedColumnName="id"),
         inverseJoinColumns = @JoinColumn(name = "LocalizedText_Id", referencedColumnName="id"))
+    @JsonManagedReference()
     private List<ILocalizedText> spaceNames = new ArrayList<ILocalizedText>();
-
+    
     @OneToMany(targetEntity = LocalizedText.class, cascade={CascadeType.ALL})
     @JoinTable(name="Space_LangObj_descriptions",
         joinColumns = @JoinColumn(name = "Space_Id", referencedColumnName="id"),
         inverseJoinColumns = @JoinColumn(name = "LocalizedText_Id", referencedColumnName="id")
     )
+    @JsonManagedReference()
     private List<ILocalizedText> spaceDescriptions = new ArrayList<ILocalizedText>();
        
     @Transient

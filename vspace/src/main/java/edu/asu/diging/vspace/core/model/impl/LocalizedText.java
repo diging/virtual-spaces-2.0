@@ -1,5 +1,7 @@
 package edu.asu.diging.vspace.core.model.impl;
 import javax.persistence.Entity;
+
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -7,6 +9,9 @@ import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import edu.asu.diging.vspace.core.model.ILocalizedText;
 
@@ -17,9 +22,10 @@ public class LocalizedText implements ILocalizedText {
     @GeneratedValue(generator = "localized_text_id_generator")
     @GenericGenerator(name = "localized_text_id_generator", parameters = @Parameter(name = "prefix", value = "LOCTEXT"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
-
+    
     @ManyToOne
     @JoinColumn(name = "LOC_EXH_LANG")
+    @JsonBackReference()
     private ExhibitionLanguage exhibitionLanguage;
     
     private String text;
