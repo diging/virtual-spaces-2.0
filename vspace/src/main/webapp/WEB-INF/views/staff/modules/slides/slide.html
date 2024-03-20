@@ -94,7 +94,6 @@ $(function () {
                 	url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space/'})]"+ blockId,
     		type: 'GET',
     		success: function(result) {
-    			console.log(result)
     			//$("#selectedSpace").text('');
     			$("#selectedSpace").text(result.name);
     		    	},
@@ -576,6 +575,7 @@ $(function () {
                 });
                 
                 $("#addSpace").click(function() {
+                	console.log("add space");
                 	markDown = new EasyMDE({element: $('#spaceBlockText')[0]});
                 	$("#addSpaceAlert").show();
                    
@@ -589,7 +589,6 @@ $(function () {
             		    },
             		    dataType: 'json',
             		    processResults: function (data) {
-            		    	console.log(data);
             		        return {
             		          results: data,
             		        };
@@ -607,8 +606,7 @@ $(function () {
             		    },
             		    dataType: 'json',
             		    processResults: function (data) {
-            		    	console.log("SpaceName data")
-            		    	console.log(data);
+            		    	console.log("SpaceName data");
             		        return {
             		          results: data,
             		        };
@@ -620,7 +618,6 @@ $(function () {
                 
                 function formatSpace (space) {
                 	console.log("space: ");
-                	console.log(space);
                 	if (!space.id) {
                 	    return space.name;
                 	}
@@ -657,13 +654,16 @@ $(function () {
                 
                 $(document).on("click", ".deleteText", function(e) {
             		$("#confirmDeleteTextAlert").show();
+            		console.log("text b,lock del");
             		var alert = $('<input type="hidden" id="deleteTextId">');
             		$(alert).attr( 'value', $(this).siblings('input').val());
             		$('.modal-footer').append(alert); 
               	});
             	
                 $(document).on("click", ".deleteSpace", function(e) {
+                	console.log("show before");
             		$("#confirmDeleteSpaceAlert").show();
+            		console.log("show after");
             		var alert = $('<input type="hidden" id="deleteSpaceId">');
             		$(alert).attr( 'value', $(this).siblings('input').val());
             		$('.modal-footer').append(alert); 
@@ -783,7 +783,6 @@ $(function () {
                 		        
                 		    },
                 		    error: function(data) {
-                		     console.log(data);
                 			 var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
                 			 $('.error').append(alert); 
                 			 $(".error").delay(4000).slideUp(500, function(){
@@ -897,8 +896,7 @@ $(function () {
                         success: function(data) {
             
                             var textblock = $('<div style="word-break:break-word;" id="'+ data +'" class="textDivStaff tab row"><label>Text Description: </label><p class="col-md-10">'+text+'</p>'+'<input type="hidden" id="deleteTextId" value="'+data+'" /><a class="btn deleteText col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a></div>');
-                            console.log(textblock[0]);
-                            console.log(textblock);
+
                             $(textblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
                             $('#slideSpace').append(textblock);             
                         },
@@ -1023,6 +1021,7 @@ $(function () {
                 });
                 
                 function updateTextBox(blockId, text) {
+                	console.log("update_text");
                     // clear text box and buttons
                     $(".open").empty();
                     $(".open").append('<label>Text Description: </label><p class="col-md-10">'+text+'</p><input type="hidden" id="deleteTextId" value="'+blockId+'" /><a class="btn deleteText col-md-1" href="javascript:;" style="position: absolute; right:0;"><span class="icon-trash error"></span></a>');
@@ -1038,9 +1037,10 @@ $(function () {
                 }
                 
                 function updateSpaceBox(blockId, text) {
+                	console.log("update_space");
                     // clear text box and buttons
                     $(".open").empty();
-                    $(".open").append('<label>Title: </label><p class="col-md-10">'+text+'</p><input type="hidden" id="deleteSpaceId" value="'+blockId+'" /><a class="btn deleteText col-md-1" href="javascript:;" style="position: absolute; right:0;"><span class="icon-trash error"></span></a>');
+                    $(".open").append('<label>Title: </label><p class="col-md-10">'+text+'</p><input type="hidden" id="deleteSpaceId" value="'+blockId+'" /><a class="btn deleteSpace col-md-1" href="javascript:;" style="position: absolute; right:0;"><span class="icon-trash error"></span></a>');
                     // reset border of the card
                     //rebind event handlers
                     $('.SpaceDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
@@ -1075,6 +1075,7 @@ $(function () {
                 $('#closeSpaceBlock').on('click',function(){
                 	$("#editSpaceAlert").hide();
                 	var blockId = $(this).closest(".open").attr("id");
+                	console.log(blockId);
                 	updateSpaceBox(blockId, defaultValue);
                 });
             
@@ -1119,6 +1120,7 @@ $(function () {
                    });
                 });   
                 $("#submitSpaceBlock").on("click", function(e){
+                	console.log("create spb");
                 	var token = [[${_csrf.token}]];
                 	e.preventDefault();
                     // ------------- editting text content blocks ------------
@@ -1326,6 +1328,7 @@ $(function () {
 		<p style="margin-top: 0.5rem;">Double click on a block to edit it.
 			Drag and drop blocks to change their order.</p>
 		<div class="sticky" id="contOrdUpdStatus"></div>
+		
 		<!-- Delete Text Modal -->
 		<div id="confirmDeleteTextAlert" class="modal" tabindex="-1"
 			role="dialog" th:draggable="true">
@@ -1348,6 +1351,7 @@ $(function () {
 				</div>
 			</div>
 		</div>
+		
 		<!-- Delete Space Modal -->
 		<div id="confirmDeleteSpaceAlert" class="modal" tabindex="-1"
 			role="dialog" th:draggable="true">
@@ -1668,7 +1672,7 @@ $(function () {
 					class="SpaceDivStaff tab row"
 					th:if="${#strings.equals(contents['class'].simpleName,'SpaceBlock')}">
 					<p class="col-md-10">[[${contents.title}]]</p>
-					<p th:if=${contents.space != null} hidden="true" class="col-md-10">
+					<p th:if="${contents.space != null}" th:hidden="true" class="col-md-10">
 						[[${contents.space.name}]]</p>
 					<input type="hidden" id="deleteSpaceId" th:value="${contents.id}" />
 					<a class="btn deleteSpace col-md-1" href="javascript:;"> <span
