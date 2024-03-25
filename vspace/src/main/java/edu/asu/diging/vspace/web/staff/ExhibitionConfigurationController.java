@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 
 import org.javers.common.collections.Arrays;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +20,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import edu.asu.diging.vspace.config.ExhibitionLanguageConfig;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
+import edu.asu.diging.vspace.core.exception.ExhibitionLanguageDeletionException;
 import edu.asu.diging.vspace.core.factory.impl.ExhibitionFactory;
 import edu.asu.diging.vspace.core.model.ExhibitionModes;
 import edu.asu.diging.vspace.core.model.IExhibition;
@@ -43,15 +46,14 @@ public class ExhibitionConfigurationController {
     
     @Autowired
     private ExhibitionLanguageConfig exhibitionLanguageConfig;
-    
-
-
+     
     public static final String EXH_PREVIEW = "EXH_PREVIEW_";
     
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+  
     @RequestMapping("/staff/exhibit/config")
     public String showExhibitions(Model model) {
         // for now we assume there is just one exhibition
-
         IExhibition exhibition = exhibitManager.getStartExhibition();
         if(exhibition==null) {           
             exhibition = (Exhibition) exhibitFactory.createExhibition();
@@ -77,6 +79,7 @@ public class ExhibitionConfigurationController {
      * @param spaceParam
      * @param attributes
      * @return
+     * @throws ExhibitionLanguageDeletionException 
      */
     @RequestMapping(value = "/staff/exhibit/config", method = RequestMethod.POST)
     public RedirectView createOrUpdateExhibition(HttpServletRequest request,
@@ -86,10 +89,9 @@ public class ExhibitionConfigurationController {
             @RequestParam(value = "customMessage", required = false, defaultValue = "") String customMessage,
             @RequestParam("exhibitLanguage") List<String> languages,
             @RequestParam("defaultExhibitLanguage") String defaultLanguage,
-            RedirectAttributes attributes) throws IOException {
+            RedirectAttributes attributes) throws IOException {     
 
         ISpace startSpace = spaceManager.getSpace(spaceID);
-
         Exhibition exhibition;
         if (exhibitID == null || exhibitID.isEmpty()) {
             exhibition = (Exhibition) exhibitFactory.createExhibition();
@@ -99,7 +101,16 @@ public class ExhibitionConfigurationController {
         exhibition.setStartSpace(startSpace);
         exhibition.setTitle(title);
         exhibition.setMode(exhibitMode);
-        exhibitManager.updateExhibitionLanguages(exhibition,languages,defaultLanguage);
+        try {
+            exhibitManager.updateExhibitionLanguages(exhibition,languages,defaultLanguage);
+            
+        } catch (ExhibitionLanguageDeletionException e) {
+            attributes.addAttribute("alertType", "failure");
+            attributes.addAttribute("message", "Could not delete the Exhibition Language as it has localized data associated to it.");
+            attributes.addAttribute("showAlert", "true");
+            logger.info("Could not delete the Exhibition Language as it has localized data associated to it.",e);
+            return new RedirectView(request.getContextPath() + "/staff/exhibit/config");
+        }
     
         if(exhibitMode.equals(ExhibitionModes.OFFLINE) && !customMessage.equals(ExhibitionModes.OFFLINE.getValue())) {
 

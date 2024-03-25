@@ -1,6 +1,8 @@
 package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.ArrayList;
+
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -8,16 +10,17 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import org.apache.tika.Tika;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.util.StringUtils;
 
+import edu.asu.diging.vspace.core.data.ExhibitionLanguageRepository;
 import edu.asu.diging.vspace.core.data.ExhibitionRepository;
 import edu.asu.diging.vspace.core.data.ImageRepository;
+import edu.asu.diging.vspace.core.data.LocalizedTextRepository;
 import edu.asu.diging.vspace.core.data.SpaceLinkRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.data.display.SpaceDisplayRepository;
@@ -26,12 +29,15 @@ import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceDisplayFactory;
+import edu.asu.diging.vspace.core.factory.ISpaceFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.display.ISpaceDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.SpaceDisplay;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
+import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
+import edu.asu.diging.vspace.core.model.impl.LocalizedText;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
@@ -40,6 +46,8 @@ import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.impl.model.ImageData;
+import edu.asu.diging.vspace.web.staff.forms.LocalizedTextForm;
+import edu.asu.diging.vspace.web.staff.forms.SpaceForm;
 
 @Transactional
 @Service
@@ -63,6 +71,9 @@ public class SpaceManager implements ISpaceManager {
 
     @Autowired
     private IImageFactory imageFactory;
+    
+    @Autowired
+    private ISpaceFactory spaceFactory;
 
     @Autowired
     private IImageService imageService;
@@ -78,9 +89,13 @@ public class SpaceManager implements ISpaceManager {
 
     @Autowired
     private SpaceLinkDisplayRepository spaceLinkDisplayRepo;
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
+    
+    @Autowired
+    private ExhibitionLanguageRepository exhibitionLanguageRepository;
+    
+    @Autowired
+    private LocalizedTextRepository localizedTextRepo;
+   
     /*
      * (non-Javadoc)
      * 
@@ -148,6 +163,7 @@ public class SpaceManager implements ISpaceManager {
      * VSImage)
      */
     @Override
+    @Transactional
     public CreationReturnValue storeSpace(ISpace space, IVSImage image) {
         List<SpaceDisplay> displays = null;
         if (space.getId() != null) {
@@ -296,5 +312,45 @@ public class SpaceManager implements ISpaceManager {
     @Override
     public Page<ISpace> findByNameOrDescription(Pageable requestedPage, String searchText) {
         return spaceRepo.findDistinctByNameContainingOrDescriptionContaining(requestedPage, searchText,searchText);
+    }
+    
+    /**
+     * 
+     * Adds name to spaceNames List
+     * 
+     * 
+     * @param space
+     * @param names
+     */
+    @Override
+    public void addSpaceName(ISpace space, LocalizedTextForm name) {
+        if(name!=null && !StringUtils.isEmpty(name.getText())) {
+            LocalizedText localizedText = localizedTextRepo.findById(name.getLocalisedTextId()).orElse(null);
+            if(localizedText != null) {
+                localizedText.setText(name.getText());
+            }
+            else {
+                ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findById(name.getExhibitionLanguageId()).orElse(null);
+                if(exhibitionLanguage != null) {
+                    localizedText = new LocalizedText(exhibitionLanguage, name.getText());
+                    space.getSpaceNames().add(localizedText);
+                }
+            }
+        }
+    }
+    
+    @Override
+    public void updateNameAndDescription(ISpace space, SpaceForm spaceForm) {
+        space.setName(spaceForm.getDefaultName().getText());
+        space.setDescription(spaceForm.getDefaultDescription().getText());
+        addSpaceName(space,spaceForm.getDefaultName());
+        spaceFactory.addSpaceDescription(space,spaceForm.getDefaultDescription());
+        
+        for(LocalizedTextForm title:spaceForm.getNames()) {   
+            addSpaceName(space,title);
+        }
+        for(LocalizedTextForm text:spaceForm.getDescriptions()) {
+            spaceFactory.addSpaceDescription(space,text);
+        }
     }
 }

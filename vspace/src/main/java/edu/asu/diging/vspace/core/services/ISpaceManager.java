@@ -2,6 +2,7 @@ package edu.asu.diging.vspace.core.services;
 
 import java.util.List;
 
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -12,6 +13,8 @@ import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
+import edu.asu.diging.vspace.web.staff.forms.LocalizedTextForm;
+import edu.asu.diging.vspace.web.staff.forms.SpaceForm;
 
 public interface ISpaceManager {
 
@@ -38,4 +41,9 @@ public interface ISpaceManager {
     Iterable<Space> addIncomingLinkInfoToSpaces(Iterable<Space> spaces);
     
     Page<ISpace> findByNameOrDescription(Pageable requestedPage,String searchText);
+
+    void updateNameAndDescription(ISpace space, SpaceForm spaceForm);
+
+    void addSpaceName(ISpace space, LocalizedTextForm names);
+    
 }

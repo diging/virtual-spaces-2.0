@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import edu.asu.diging.vspace.core.factory.ISpaceFormFactory;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.web.staff.forms.SpaceForm;
@@ -17,16 +18,15 @@ public class EditSpaceController {
 
     @Autowired
     private ISpaceManager spaceManager;
-
+    
+    @Autowired
+    private ISpaceFormFactory spaceFormFactory;
+   
     @RequestMapping(value="/staff/space/{spaceId}/edit", method=RequestMethod.GET)
     public String show(Model model, @PathVariable("spaceId") String spaceId) {
-        ISpace space = spaceManager.getSpace(spaceId);
-        SpaceForm spaceForm = new SpaceForm();
-        spaceForm.setName(space.getName());
-        spaceForm.setDescription(space.getDescription());
-        model.addAttribute("spaceForm", spaceForm);
+
+        model.addAttribute("spaceForm", spaceFormFactory.getSpaceForm(spaceId));
         model.addAttribute("spaceId", spaceId);
-        
         return "staff/spaces/edit";
     }
     
@@ -35,7 +35,7 @@ public class EditSpaceController {
         ISpace space = spaceManager.getSpace(spaceId);
         space.setName(spaceForm.getName());
         space.setDescription(spaceForm.getDescription());
-        
+        spaceManager.updateNameAndDescription(space, spaceForm);
         spaceManager.storeSpace(space, null, null);
         return "redirect:/staff/space/{spaceId}";
     }
