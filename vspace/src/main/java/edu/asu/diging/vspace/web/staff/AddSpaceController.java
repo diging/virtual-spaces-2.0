@@ -2,6 +2,7 @@ package edu.asu.diging.vspace.web.staff;
 
 import java.io.IOException;
 
+
 import java.security.Principal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +26,7 @@ import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
+import edu.asu.diging.vspace.web.staff.forms.LocalizedTextForm;
 import edu.asu.diging.vspace.web.staff.forms.SpaceForm;
 
 @Controller
@@ -49,7 +51,6 @@ public class AddSpaceController {
         ISpace space = new Space();
         model.addAttribute("space", spaceFormFactory.createNewSpaceForm(space));
         model.addAttribute("images", imageService.getImages(1));     
-        System.out.println(spaceFormFactory.createNewSpaceForm(space).getDefaultName().getText());
         
         return "staff/spaces/add";
     }
@@ -57,10 +58,21 @@ public class AddSpaceController {
     @RequestMapping(value = "/staff/space/add", method = RequestMethod.POST)
     public String addSpace(Model model, @ModelAttribute SpaceForm spaceForm, @RequestParam("file") MultipartFile file,
             Principal principal, @RequestParam(value = "imageId", required=false) String imageId, RedirectAttributes redirectAttrs) throws IOException {
-        ISpace space = spaceFactory.createSpace(spaceForm);
-        spaceManager.updateNameAndDescription(space, spaceForm);
-        System.out.println("--------------------------------"+space.getName());
-        spaceForm.getDescriptions().forEach(description -> System.out.println(description.getText()));
+      
+        ISpace space = new Space();
+        if (!spaceForm.getDefaultName().getText().isEmpty()) {
+            SpaceForm nonDefaultSpaceForm = new SpaceForm(); 
+            LocalizedTextForm nameSpace = spaceForm.getNames().stream().filter(name -> name != null).findFirst().orElse(null);
+            LocalizedTextForm descriptionSpace = spaceForm.getDescriptions().stream().filter(description -> description != null).findFirst().orElse(null);
+            nonDefaultSpaceForm.setDefaultDescription(descriptionSpace);
+            nonDefaultSpaceForm.setDefaultName(nameSpace);
+            space = spaceFactory.createSpace(nonDefaultSpaceForm);
+            spaceManager.updateNameAndDescription(space, nonDefaultSpaceForm);
+        } else {
+            space = spaceFactory.createSpace(spaceForm);
+            spaceManager.updateNameAndDescription(space, spaceForm);
+        } 
+        
         space.setSpaceStatus(SpaceStatus.UNPUBLISHED);      
         byte[] bgImage = null;
         String filename = null;

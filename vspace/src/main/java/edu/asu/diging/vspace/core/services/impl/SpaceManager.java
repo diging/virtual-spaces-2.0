@@ -346,7 +346,7 @@ public class SpaceManager implements ISpaceManager {
         addSpaceName(space,spaceForm.getDefaultName());
         spaceFactory.addSpaceDescription(space,spaceForm.getDefaultDescription());
         
-        for(LocalizedTextForm title:spaceForm.getNames()) {        
+        for(LocalizedTextForm title:spaceForm.getNames()) {   
             addSpaceName(space,title);
         }
         for(LocalizedTextForm text:spaceForm.getDescriptions()) {
