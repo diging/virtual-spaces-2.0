@@ -318,7 +318,6 @@ public class SpaceManager implements ISpaceManager {
     public List<ISpace> getSpaces(int pageNo) {
         return getSpaces(pageNo, SortByField.CREATION_DATE.getValue(), Sort.Direction.DESC.toString());
     }
-    
     /**
      * Method to return the requested spaces
      * 
@@ -326,18 +325,17 @@ public class SpaceManager implements ISpaceManager {
      *                page is returned
      * @return list of images in the requested pageNo and requested order.
      */
-
     @Override
     public List<ISpace> getSpaces(int pageNo, String sortedBy, String order) {
         Sort sortingParameters = getSortingParameters(sortedBy, order);
         if(pageNo < 1) {
             pageNo = 1;
         }
-        Pageable sortByRequestedField = PageRequest.of(pageNo - 1, pageSize, sortingParameters);
-        Page<Space> spaces = spaceRepo.findAll(sortByRequestedField);
+        Pageable pagable = PageRequest.of(pageNo - 1, pageSize, sortingParameters);
+        Page<Space> spaces = spaceRepo.findAll(pagable);
         if(spaces.getContent().size() == 0) {
-            sortByRequestedField = PageRequest.of(spaces.getTotalPages() - 1, pageSize, sortingParameters);
-            spaces = spaceRepo.findAll(sortByRequestedField);
+            pagable = PageRequest.of(spaces.getTotalPages() - 1, pageSize, sortingParameters);
+            spaces = spaceRepo.findAll(pagable);
         }
         List<ISpace> results = new ArrayList<>();
         if(spaces != null) {
