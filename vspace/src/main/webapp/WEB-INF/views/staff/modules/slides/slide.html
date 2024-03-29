@@ -142,7 +142,7 @@ $(function () {
                 } else {
                     // store image ID selected by the user to replace, onDoubleClick
 		    		var imgBlockID = $(e.target).attr('id'); 
-		    		if(imgBlockID != '') {
+		    		if(imgBlockID != ''){
 		        		$("#uploadImage").data('value', imgBlockID); // sets image ID value
 		        		$("#addImgAlert").show();
 		    		}
@@ -166,8 +166,8 @@ $(function () {
             		imageId = imageSource.split("/").pop().split(".")[0];
             	}
             	var imageblock = "";
-            	var oldImageBlock = "";
-            			    
+            	var oldImageBlock = "";	
+            		    
             	// Ashmi changes for Story VSPC-64
             			    
             	// checks if image ID is present to replace
@@ -201,29 +201,41 @@ $(function () {
             			$("#uploadImage").data('value', '');
             	}
             	else {
-            		var url = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image/?'+${_csrf.parameterName}+'='+${_csrf.token}})]";
-            		if(!chooseFromExisting){
-            			reader.onload = function (theFile) 
-            			{        	
-            			var image = new Image();
-            			image.src = theFile.target.result;
-            			image.onload = function() 
-            			{
-            				imageblock = createImageBlock(reader, this.width);  
-            				$('#slideSpace').append(imageblock); 
-            				$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
-            			};          
-            			} 
-            		}
-            		else
-            		{
-            			var image = new Image();
-            			image.src = $('#selectedImage').find('img').attr('src');
-            			formData.append('imageId',imageId);
-            			imageblock = createImageBlockWithExistingImage($('#selectedImage').find('img').attr('src'),image.width);  
-            			$('#slideSpace').append(imageblock); 
-            			$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
-            		}
+            		console.log("Else");
+
+            	    var fileInput = document.getElementById('file'); // Assuming you have a file input element with id 'fileInput'
+            	    if (fileInput.files.length === 0) {
+            	    	$('#chooseFromLocal').trigger( "click" );
+                    	// Initialize selected image ID to blank, on clicking cancel button
+                    	$("#uploadImage").data('value', '');
+                        $("#addImgAlert").hide();
+                        $(".open").removeClass("open");
+            	    }
+            	    else{
+            	    	var url = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image/?'+${_csrf.parameterName}+'='+${_csrf.token}})]";
+                		if(!chooseFromExisting){
+                			reader.onload = function (theFile) 
+                			{        	
+                			var image = new Image();
+                			image.src = theFile.target.result;
+                			image.onload = function() 
+                			{
+                				imageblock = createImageBlock(reader, this.width);  
+                				$('#slideSpace').append(imageblock); 
+                				$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+                			};          
+                			} 
+                		}
+                		else
+                		{
+                			var image = new Image();
+                			image.src = $('#selectedImage').find('img').attr('src');
+                			formData.append('imageId',imageId);
+                			imageblock = createImageBlockWithExistingImage($('#selectedImage').find('img').attr('src'),image.width);  
+                			$('#slideSpace').append(imageblock); 
+                			$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+                		}
+            	    }
             	}
             	if (!chooseFromExisting)
             	{
