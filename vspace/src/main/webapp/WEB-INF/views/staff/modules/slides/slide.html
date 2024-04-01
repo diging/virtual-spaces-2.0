@@ -201,9 +201,9 @@ $(function () {
             			$("#uploadImage").data('value', '');
             	}
             	else {
-            		console.log("Else");
 
             	    var fileInput = document.getElementById('file'); // Assuming you have a file input element with id 'fileInput'
+            	    var url = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image/?'+${_csrf.parameterName}+'='+${_csrf.token}})]";
             	    if (fileInput.files.length === 0) {
             	    	$('#chooseFromLocal').trigger( "click" );
                     	// Initialize selected image ID to blank, on clicking cancel button
@@ -212,7 +212,7 @@ $(function () {
                         $(".open").removeClass("open");
             	    }
             	    else{
-            	    	var url = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image/?'+${_csrf.parameterName}+'='+${_csrf.token}})]";
+            	    	
                 		if(!chooseFromExisting){
                 			reader.onload = function (theFile) 
                 			{        	
