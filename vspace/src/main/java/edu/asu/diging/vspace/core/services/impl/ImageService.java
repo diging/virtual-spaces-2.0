@@ -50,8 +50,8 @@ public class ImageService implements IImageService {
     @Value("${page_size}")
     private int pageSize;
 
-    private static final String DEFAULTIMAGEEXCEPTION = "Default image could not be stored: ";
-    private static final String NOIMAGEEXCEPTION = "Image doesn't exist for image id";
+    private static final String DEFAULT_IMAGE_EXCEPTION = "Default image could not be stored: ";
+    private static final String NO_IMAGE_EXCEPTION = "Image doesn't exist for image id";
 
     /*
      * (non-Javadoc)
@@ -232,8 +232,8 @@ public class ImageService implements IImageService {
         if (imageOptional.isPresent()) {
             return imageOptional.get();
         } else {
-            logger.error(NOIMAGEEXCEPTION);
-            throw new ImageDoesNotExistException(NOIMAGEEXCEPTION + imageId);
+            logger.error(NO_IMAGE_EXCEPTION);
+            throw new ImageDoesNotExistException(NO_IMAGE_EXCEPTION + imageId);
         }
     }
 
@@ -284,8 +284,8 @@ public class ImageService implements IImageService {
 
                 relativePath = storage.storeFile(image, filename, defaultImage.getId());
             } catch (FileStorageException e) {
-                logger.error(DEFAULTIMAGEEXCEPTION);
-                returnValue.getErrorMsgs().add(DEFAULTIMAGEEXCEPTION + e.getMessage());
+                logger.error(DEFAULT_IMAGE_EXCEPTION);
+                returnValue.getErrorMsgs().add(DEFAULT_IMAGE_EXCEPTION + e.getMessage());
             }
             defaultImage.setParentPath(relativePath);
             ImageData imageData = getImageData(image);

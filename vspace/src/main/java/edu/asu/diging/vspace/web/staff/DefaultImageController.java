@@ -113,18 +113,9 @@ public class DefaultImageController {
         IVSImage defaultModuleImage = exhibition.getModulelinkDefaultImage();
         IVSImage defaultExternalLinkImage = exhibition.getExternallinkDefaultImage();
 
-        boolean defaultSpaceImageFlag = false;
-        boolean defaultModuleImageFlag = false;
-        boolean defaultExternalLinkImageFlag = false;
-        if (defaultSpaceImage != null) {
-            defaultSpaceImageFlag = true;
-        }
-        if (defaultModuleImage != null) {
-            defaultModuleImageFlag = true;
-        }
-        if (defaultExternalLinkImage != null) {
-            defaultExternalLinkImageFlag = true;
-        }
+        boolean defaultSpaceImageFlag = defaultSpaceImage != null? true : false;
+        boolean defaultModuleImageFlag = defaultModuleImage != null? true : false;
+        boolean defaultExternalLinkImageFlag = defaultExternalLinkImage != null? true : false;
 
         JsonObject jsonObj = new JsonObject();
         jsonObj.addProperty("defaultSpaceImageFlag", defaultSpaceImageFlag);

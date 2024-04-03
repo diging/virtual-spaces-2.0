@@ -120,7 +120,6 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     }
 
     public ExhibitionModes getMode() {
-
         return mode;
     }
 
