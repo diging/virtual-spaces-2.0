@@ -370,7 +370,7 @@
 		function checkDefaultImage() {
 			$.ajax({
 				
-		        url: "[(@{'/api/getdefaultImage/'})]",
+		        url: "[(@{'/api/exhibition/default/link/imageDetails/'})]",
 		        type: 'GET',
 		        cache       : false,
 		        contentType : false,
@@ -418,7 +418,7 @@
     		        	if(defaultSpaceImageFlag === false) {
     		        		linkDisplay = $('<div class="InfoSpace_'+index+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-move Icon_awesome_info_c"></span><span class="tooltiptext">'+link.link.name+'</span></div>');	
     		        	} else {
-    		        		var defaultSpaceURL = [[@{/api/defaultSpaceImage/}]];
+    		        		var defaultSpaceURL = [[@{/api/image/default/link/space/}]];
     		        		linkDisplay = $('<div class="InfoSpace_'+index+' Info_cz_Class"><img class="InfoSpace_'+index+'" src="'+defaultSpaceURL+'" width="30" height="30" border-radius = "50%"/><span class="tooltiptext">'+link.link.name+'</span></div>');
     		        	}
     		        }
@@ -462,7 +462,7 @@
     		        	if(defaultModuleImageFlag === false) {
     		        		linkDisplay = $('<div class="InfoModule_'+index+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_m"></span><span class="tooltiptext">'+link.link.name+'</span></div>');	
     		        	} else {
-    		        		var defaultModuleURL = [[@{/api/defaultModuleImage/}]];
+    		        		var defaultModuleURL = [[@{/api/image/default/link/module/}]];
     		        		linkDisplay = $('<div class="InfoModule_'+index+' Info_cz_Class"><img class="InfoModule_'+index+'" src="'+defaultModuleURL+'" width="30" height="30" border-radius = "100%""/><span class="tooltiptext">'+link.link.name+'</span></div>');
     		        	}
                 	}
@@ -508,7 +508,7 @@
                     	if(defaultExternalLinkImageFlag === false) {
                     		linkDisplay = $('<div class="InfoExt_'+index+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-ext-link Icon_awesome_info_e"></span><span class="tooltiptext">'+link.externalLink.name+'</span></div>');	
                     	} else {
-                    		var defaultExternalLinkURL = [[@{/api/defaultExternalLinkImage/}]];
+                    		var defaultExternalLinkURL = [[@{/api/image/default/link/externalLink/}]];
     		        		linkDisplay = $('<div class="InfoExt_'+index+' Info_cz_Class"><img class="InfoExt_'+index+'" src="'+defaultExternalLinkURL+'" width="30" height="30" border-radius = "50%""/><span class="tooltiptext">'+link.externalLink.name+'</span></div>');
                     	}
                 	}

@@ -27,10 +27,10 @@ import edu.asu.diging.vspace.core.services.IExhibitionManager;
 public class DefaultImageController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
-    public static final String API_DEFAULT_SPACEIMAGE_PATH = "/api/defaultSpaceImage/";
-    public static final String API_DEFAULT_MODULEIMAGE_PATH = "/api/defaultModuleImage/";
-    public static final String API_DEFAULT_EXTERNALIMAGE_PATH = "/api/defaultExternalLinkImage/";
-    public static final String API_DEFAULT_SPACEIMAGE = "/api/getdefaultImage/";
+    public static final String API_DEFAULT_SPACE_IMAGE_PATH = "/api/image/default/link/space/";
+    public static final String API_DEFAULT_MODULEIMAGE_PATH = "/api/image/default/link/module/";
+    public static final String API_DEFAULT_EXTERNALIMAGE_PATH = "/api/image/default/link/externalLink/";
+    public static final String API_DEFAULT_SPACE_IMAGE_DETAILS = "/api/exhibition/default/link/imageDetails/";
 
     @Autowired
     private IStorageEngine storage;
@@ -38,76 +38,29 @@ public class DefaultImageController {
     @Autowired
     private IExhibitionManager exhibitManager;
 
-    @RequestMapping(value = API_DEFAULT_SPACEIMAGE_PATH, method = RequestMethod.GET)
-    public ResponseEntity<byte[]> getSpaceId() {
+    @RequestMapping(value = API_DEFAULT_SPACE_IMAGE_PATH, method = RequestMethod.GET)
+    public ResponseEntity<byte[]> getDefaultSpaceImage() {
         IExhibition exhibition = exhibitManager.getStartExhibition();
         IVSImage spaceImage = exhibition.getSpacelinkDefaultImage();
-        if (spaceImage == null) {
-            return null;
-        }
-        byte[] imageContent = null;
-        try {
-            imageContent = storage.getMediaContent(spaceImage.getId(), spaceImage.getFilename());
-        } catch (IOException e) {
-            logger.error("Could not retrieve image.", e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        HttpHeaders headers = new HttpHeaders();
-        headers.setCacheControl(CacheControl.noCache().getHeaderValue());
-        headers.setContentType(MediaType.parseMediaType(spaceImage.getFileType()));
-        return new ResponseEntity<>(imageContent, headers, HttpStatus.OK);
+        return getResponseWithDefaultHeaders(spaceImage);
     }
 
     @RequestMapping(value = API_DEFAULT_MODULEIMAGE_PATH, method = RequestMethod.GET)
     public ResponseEntity<byte[]> getDefaultModuleImage() {
         IExhibition exhibition = exhibitManager.getStartExhibition();
         IVSImage moduleImage = exhibition.getModulelinkDefaultImage();
-        if (moduleImage == null) {
-            return null;
-        }
-        byte[] imageContent = null;
-
-        try {
-
-            imageContent = storage.getMediaContent(moduleImage.getId(), moduleImage.getFilename());
-
-        } catch (IOException e) {
-            logger.error("Could not retrieve default Module image.", e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        HttpHeaders headers = new HttpHeaders();
-        headers.setCacheControl(CacheControl.noCache().getHeaderValue());
-        headers.setContentType(MediaType.parseMediaType(moduleImage.getFileType()));
-        return new ResponseEntity<>(imageContent, headers, HttpStatus.OK);
-
+        return getResponseWithDefaultHeaders(moduleImage);
     }
 
     @RequestMapping(value = API_DEFAULT_EXTERNALIMAGE_PATH, method = RequestMethod.GET)
     public ResponseEntity<byte[]> getDefaultExternalImage() {
         IExhibition exhibition = exhibitManager.getStartExhibition();
         IVSImage externalLinkImage = exhibition.getExternallinkDefaultImage();
-        if (externalLinkImage == null) {
-            return null;
-        }
-        byte[] imageContent = null;
-
-        try {
-
-            imageContent = storage.getMediaContent(externalLinkImage.getId(), externalLinkImage.getFilename());
-
-        } catch (IOException e) {
-            logger.error("Could not retrieve default External Link image.", e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        HttpHeaders headers = new HttpHeaders();
-        headers.setCacheControl(CacheControl.noCache().getHeaderValue());
-        headers.setContentType(MediaType.parseMediaType(externalLinkImage.getFileType()));
-        return new ResponseEntity<>(imageContent, headers, HttpStatus.OK);
-
+        return getResponseWithDefaultHeaders(externalLinkImage);
     }
 
-    @RequestMapping(value = API_DEFAULT_SPACEIMAGE, method = RequestMethod.GET)
-    public ResponseEntity<String> getDefaultImage() {
+    @RequestMapping(value = API_DEFAULT_SPACE_IMAGE_DETAILS, method = RequestMethod.GET)
+    public ResponseEntity<String> getDefaultImageDetails() {
         IExhibition exhibition = exhibitManager.getStartExhibition();
         IVSImage defaultSpaceImage = exhibition.getSpacelinkDefaultImage();
         IVSImage defaultModuleImage = exhibition.getModulelinkDefaultImage();
@@ -122,7 +75,23 @@ public class DefaultImageController {
         jsonObj.addProperty("defaultModuleImageFlag", defaultModuleImageFlag);
         jsonObj.addProperty("defaultExternalLinkImageFlag", defaultExternalLinkImageFlag);
         return new ResponseEntity<>(jsonObj.toString(), HttpStatus.OK);
+    }
 
+    private ResponseEntity<byte[]> getResponseWithDefaultHeaders(IVSImage image) {
+    	byte[] imageContent = null;
+        if(image == null) {
+            return null;
+        }
+        try {
+            imageContent = storage.getMediaContent(image.getId(), image.getFilename());
+        } catch (IOException e) {
+            logger.error("Could not retrieve image.", e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        HttpHeaders headers = new HttpHeaders();
+        headers.setCacheControl(CacheControl.noCache().getHeaderValue());
+        headers.setContentType(MediaType.parseMediaType(image.getFileType()));
+        return new ResponseEntity<>(imageContent, headers, HttpStatus.OK);
     }
 
 }
