@@ -7,6 +7,10 @@
 <script src="//use.fontawesome.com/releases/v5.8.1/js/all.js"
 	data-auto-replace-svg="nest"></script>
 <script th:src="@{'/resources/extra/space.js'}"></script>
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+<script th:src="@{/assets/bootstrap-colorpicker/js/bootstrap-colorpicker.js}"></script>
 <style type="text/css">
 
 .right-aligned {
@@ -27,6 +31,10 @@ $(function () {
     checkDefaultImage();
 });
 
+$(function () {
+    $('#textColor').colorpicker();
+});
+
 $(window).on("load", function() {
     $( window ).resize(function() {
         drawLinks();
@@ -34,6 +42,20 @@ $(window).on("load", function() {
     });
     drawLinks();
     checkDefaultImage();
+    
+    var textBlockElements = document.getElementsByClassName("textBlock");
+    Array.from(textBlockElements).forEach(function(textBlock, index){
+    	if(textBlock != null) {
+    	   	const color = textBlock.style.borderColor;
+         	textBlock.addEventListener('focus', function(e) {
+       		e.target.style.outline = "2px solid "+ color;
+         	});
+         	textBlock.addEventListener('blur', function(e) {
+         		e.target.style.outline = "none";
+        	});
+    	}
+ 
+    })
 });
 //store where a user clicked on an image
 var storeX;
@@ -263,14 +285,14 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
     if(block != null){
         var height = (block.height*imageHeight)/100;
         var width = (block.width*imageWidth)/100;
-        var textBlock = $('<span id="'+spanId+block.spaceTextBlock.id+'" data-link-id="'+block.spaceTextBlock.id+'" data-blockId="'+block.id+'" data-text="'+block.spaceTextBlock.text+'" data-width="'+block.width+'"  data-height="'+block.height+'" class="textBlockClass spaceLink-'+block.spaceTextBlock.id+'"><textarea class="textBlock" style="height:'+height+'px; width:'+width+'px; resize:none; background: rgba(0, 0, 0, 0.4);" readonly type="textarea">'+block.spaceTextBlock.text+'</textarea></span>');
+        var textBlock = $('<span id="'+spanId+block.spaceTextBlock.id+'" data-link-id="'+block.spaceTextBlock.id+'" data-blockId="'+block.id+'" data-text="'+block.spaceTextBlock.text+'" data-width="'+block.width+'"  data-height="'+block.height+'" class="textBlockClass spaceLink-'+block.spaceTextBlock.id+'"><textarea class="textBlock" style="height:'+height+'px; width:'+width+'px; resize:none; background: rgba(0, 0, 0, 0.4); color:'+block.textColor+'; border-color: '+block.borderColor+';" readonly type="textarea">'+block.spaceTextBlock.text+'</textarea></span>');
         setLinkPosition(textBlock,block,false,isModal,false, posX, posY, posXModal, posYModal, true);
         $(divId).append(textBlock);
         if(spanId === "textBlockId-"){
             $('#'+spanId+block.spaceTextBlock.id).css('cursor', 'pointer');
             $('#'+spanId+block.spaceTextBlock.id).click(function(e) {  
                 var blockData = $('#'+spanId+block.spaceTextBlock.id).data();
-                makeTextBlockEditable(blockData["blockid"],blockData["linkId"],blockData["text"],block.positionX,block.positionY,blockData["width"],blockData["height"]);
+                makeTextBlockEditable(blockData["blockid"],blockData["linkId"],blockData["text"],block.positionX,block.positionY,blockData["width"],blockData["height"], block.textColor, block.borderColor);
             });
         }
         
@@ -428,6 +450,8 @@ function showTextBlockEdit(textBlock){
     $(selectedTextArea).css('width', (textBlock["width"]*imageWidth)/100);
     $(selectedTextArea).css('height', (textBlock["height"]*imageHeight)/100);   
     $(selectedTextArea).text(textBlock["text"]);
+    $(selectedClass).css('color', textBlock["textColor"]);
+    $(selectedClass).css('border-color', textBlock["borderColor"]);
 }
 
 function showSpaceLink(spaceLink, show, x, y) {
@@ -719,6 +743,8 @@ function createTextBlockInfo() {
     info["text"] = $("#textContentID").val();
     info["height"] = $("#textBoxHeightID").val();
     info["width"] = $("#textBoxWidthID").val();
+    info["textColor"] = $("#textColorID").val();
+    info["borderColor"] = $("#borderColorID").val();
     return info;
 }
 
@@ -729,6 +755,8 @@ function editTextBlockInfo() {
     info["text"] = $("#textContentIDForEdit").val();
     info["height"] = $("#textBoxHeightIDEdit").val();
     info["width"] = $("#textBoxWidthIDEdit").val();
+    info["textColor"] = $("#textColorIDEdit").val();
+    info["borderColor"] = $("#borderColorIDEdit").val();
     return info;
 }
 
@@ -874,7 +902,7 @@ function makeExternalLinksEditable(linkName, linkId, externalLinkURL, posXEdit, 
     displayForms("#editExternalLinkInfo");
 }
 
-function makeTextBlockEditable(blockDisplayId,blockId,text,posX,posY,width,height){
+function makeTextBlockEditable(blockDisplayId,blockId,text,posX,posY,width,height, textColor, borderColor){
     selectedTextBlockId=blockId;
     storeX=posX;
     storeY=posY;
@@ -885,6 +913,8 @@ function makeTextBlockEditable(blockDisplayId,blockId,text,posX,posY,width,heigh
     $("#textBoxWidthIDEdit").val(width);
     $("#textBoxHeightIDEdit").val(height);
     $("#textContentIDForEdit").val(text);
+    $("#textColorIDEdit").val(textColor);
+    $("#borderColorIDEdit").val(borderColor);
     resetHighlighting();
     $("#bgImage").on("click", function(e){
         e.preventDefault();
@@ -897,6 +927,7 @@ function makeTextBlockEditable(blockDisplayId,blockId,text,posX,posY,width,heigh
     hideLinkInfoTabs();
     displayForms("#editTextBlockInfo");
 }
+
 function resetHighlighting() {
     // reset icon links
     $('[data-link-id]').css("color", "red");
@@ -1133,6 +1164,7 @@ $(function(){
                     textBlockInfo["y"]=linkData["y"];
                     textBlockInfo["height"]=linkData["height"];
                     textBlockInfo["width"]=linkData["width"];
+                    textBlockInfo["textColor"] = linkData["textColor"];
                     showTextBlockEdit(textBlockInfo);
                     hideLinkInfoTabs();
                     $("#space").css("display", "none");
@@ -1888,580 +1920,520 @@ $(function(){
 							</div>
 						</div>
 					</div>
-				</div>
-
-
-			</div>
-			<div>
-				<label style="margin-right: 10px;">Space Status</label>
-				<form method="POST"
-					th:action="@{'/staff/space/'+${space?.id}+'/status'}">
-					<input type="hidden" th:name="${_csrf.parameterName}"
-						th:value="${_csrf.token}" /> <select class="form-control-sm"
-						name="statusParam" style="width: 200px; display: inline;">
-						<option th:id="Published" th:value="PUBLISHED"
-							th:selected="${#strings.equals(space.spaceStatus,'PUBLISHED')}">Published</option>
-						<option th:id="Unpublished" th:value="UNPUBLISHED"
-							th:selected="${#strings.equals(space.spaceStatus,'UNPUBLISHED')}">Unpublished</option>
-					</select>
-					<p style="display: inline; padding-left: 10px;">
-						<input class="btn primary-btn btn-sm" type="submit" value="Submit" />
-					</p>
-				</form>
-				<label style="margin-right: 10px;">Hide all space links to
-					this space</label>
-				<form method="POST"
-					th:action="@{'/staff/space/links/edit/'+${space.id}+'/incoming'}">
-					<input type="hidden" th:name="${_csrf.parameterName}"
-						th:value="${_csrf.token}" /> <select class="form-control"
-						name="hideSpaceLinksParam" style="width: 200px; display: inline;">
-						<option th:id="No" th:value=false
-							th:selected="${!space.hideIncomingLinks}">No</option>
-						<option th:id="Yes" th:value=true
-							th:selected="${space.hideIncomingLinks}">Yes</option>
-					</select>
-					<p style="display: inline; padding-left: 10px;">
-						<input class="btn primary-btn btn-sm" type="submit" value="Submit" />
-					</p>
-				</form>
-				<label style="margin-right: 10px;">Show Links to Unpublished
-					Spaces</label>
-				<form method="POST"
-					th:action="@{'/staff/space/'+${space?.id}+'/showSpaceLinks'}"
-					name="f">
-					<input type="hidden" th:name="${_csrf.parameterName}"
-						th:value="${_csrf.token}" /> <select class="form-control-sm"
-						name="showSpaceLinksParam" style="width: 200px; display: inline;">
-						<option th:id="No" th:value=false
-							th:selected="${!space.showUnpublishedLinks}">No</option>
-						<option th:id="Yes" th:value=true
-							th:selected="${space.showUnpublishedLinks}">Yes</option>
-					</select>
-					<p style="display: inline; padding-left: 10px;">
-						<input class="btn primary-btn btn-sm" type="submit" value="Submit" />
-					</p>
-				</form>
-			</div>
-
+		        </div>
+		        
+		        
+	    	</div>
+	    	<div>
+                <label style="margin-right: 10px;">Space Status</label> 
+                <form method="POST" th:action="@{'/staff/space/'+${space?.id}+'/status'}">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" /> 
+                    <select class="form-control-sm" name="statusParam" style="width: 200px; display: inline;">
+                        <option th:id="Published" th:value="PUBLISHED" th:selected="${#strings.equals(space.spaceStatus,'PUBLISHED')}">Published</option>
+                        <option th:id="Unpublished" th:value="UNPUBLISHED" th:selected="${#strings.equals(space.spaceStatus,'UNPUBLISHED')}">Unpublished</option>
+                    </select>
+                    <p style="display: inline; padding-left: 10px;">
+                        <input class="btn primary-btn btn-sm" type="submit" value="Submit" />
+                    </p>
+                </form>
+                <label style="margin-right: 10px;">Hide all space links to this space</label>
+                <form method="POST" th:action="@{'/staff/space/links/edit/'+${space.id}+'/incoming'}">
+           		    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    <select class="form-control" name="hideSpaceLinksParam" style="width: 200px; display: inline;">
+                      <option th:id="No" th:value=false th:selected="${!space.hideIncomingLinks}">No</option>
+                      <option th:id="Yes" th:value=true th:selected="${space.hideIncomingLinks}">Yes</option>
+                    </select>
+                    <p style="display: inline; padding-left: 10px;">
+                        <input class="btn primary-btn btn-sm" type="submit" value="Submit" />
+                    </p>
+                </form>
+                <label style="margin-right: 10px;">Show Links to Unpublished Spaces</label>
+                <form method="POST" th:action="@{'/staff/space/'+${space?.id}+'/showSpaceLinks'}" name="f">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />  
+                    <select class="form-control-sm" name="showSpaceLinksParam" style="width: 200px; display: inline;">
+                        <option th:id="No" th:value=false th:selected="${!space.showUnpublishedLinks}">No</option>
+                        <option th:id="Yes" th:value=true th:selected="${space.showUnpublishedLinks}">Yes</option>
+                    </select>
+                    <p style="display: inline; padding-left: 10px;">
+                        <input class="btn primary-btn btn-sm" type="submit" value="Submit" />
+                    </p>
+                </form>
+            </div>
+ 			 
+ 		</div>
+		
+		 <div style="margin: 20px 0">
+            <button type="button" id="addSpaceLinkButton"class="btn primary-btn" data-toggle="tooltip" title="Add Link to Space" data-placement="top">
+            	<i class="fa fa-plus"></i>&emsp;<i class="fa fa-layer-group"></i></button>
+            &nbsp;
+            <button type="button" id="addModuleLinkButton" class="btn primary-btn" data-toggle="tooltip" title="Add Link to Module" data-placement="top">
+            	<i class="fa fa-plus"></i>&emsp;<i class="fa fa-th-large"></i></button>
+            &nbsp;
+            <button type="button" id="addExternalLinkButton" class="btn primary-btn"  data-toggle="tooltip" title="Add Link to External" data-placement="top">
+            	<i class="fa fa-plus"></i>&emsp;<i class="fa fa-external-link-alt"></i></button>
+            &nbsp;
+            <button type="button" id="addTextBlock" class="btn primary-btn" data-toggle="tooltip" title="Add Text Block" data-placement="top">
+            <i class="fa fa-plus"></i>&emsp;<i class="fas fa-file-alt"></i></button>
+            &nbsp;
+            <button type="button" id="changeBgImgButton"  class="btn primary-btn" data-toggle="tooltip" title="Change Background Image" data-placement="top">
+            	<i class="fas fa-pen"></i>&emsp;<i class="fas fa-image"></i></button>
+            &nbsp;
+        </div>
+        <div id="space" th:style="|max-width: ${display.width+400}px;|" th:if="${space.image != null}" class="link-modal flex-spacing">
+        <img id="bgImage" th:style="|max-width: ${display.width}px;|" th:src="@{'/api/image/'+${space.image?.id}}" />
+        <div id="errorAlert"
+            class="alert alert-danger alert-dismissible fade show"
+            role="alert"
+            style="display: none; position: fixed; top: 10%; right: 50px; z-index: 10">
+            <strong>Error!</strong> <span id="errorMsg"></span>
+            <button type="button" class="close" id="closeAlert"
+                aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+		<div id="createSpaceLinkAlert" class="custom_form_style" style="z-index: 1;">
+            <div class="divider"></div>
+			<form id="createSpaceLinkForm" style="z-index: 1;">
+	            <div role="alert" style="margin-top: 30px;">
+                    <div class = "saveLoader" style="font-size: 30px; display: none; text-align: center;">
+                        <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+                    </div>
+	                <div class="row">
+	                    <div class="col">
+	                        <h5 class="alert-heading">Create new Space Link</h5>
+	                        <p>Please click on the image where
+	                            you want to place the new space link. Then
+	                            click "Create Space Link".</p>
+	                    </div>
+	                </div>
+	
+	                <input type="hidden" name="x" id="spaceLinkX" />
+	                <input type="hidden" name="y" id="spaceLinkY" />
+	
+	                <div class="row">
+	                    <div class="col-sm-4">
+	                        <label>Rotation</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <input class="form-control-sm" style="background: var(--base-grey); width: inherit;" type="number" id="spaceLinkRotation" name="rotation" value="0">
+	                    </div>
+	                </div>
+	
+	                <div class="row">
+	                    <div class="col-sm-4">
+	                        <label>Label</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <input class="form-control-sm target" style="background: var(--base-grey); width: inherit;" type="text" name="spaceLinkLabel" id="spaceLinkLabel">
+	                    </div>
+	                </div>
+	
+	                <div class="row">
+	                    <div class="col-sm-4">
+	                        <label>Type</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <select id="type" name="type"  class="form-control-sm target" style="background: var(--base-grey); width: inherit;">
+	                            <option th:selected>Choose...</option>
+	                            <option th:value="IMAGE">Image</option>
+	                            <option th:value="ARROW">Link</option>
+	                            <option th:value="ALERT">Alert</option>
+	                        </select>
+	                    </div>
+	                </div>
+	
+	                <div class="row">
+	                    <div class="col-sm-4" style="padding-right: 0;">
+	                        <label>Linked Space</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <select id="linkedSpace" name="linkedSpace" class="form-control-sm target" style="background: var(--base-grey); width: inherit;">
+	                            <option th:selected>Choose...</option>
+	                            <option th:each="space : ${spaces}" th:value="${space?.id}">[[${space?.name}]]
+	                                <span th:if="${#strings.equals(space.spaceStatus,'UNPUBLISHED')}">(Unpublished)</span></option>
+	                        </select>
+	                    </div>
+	                </div>
+	
+	                <div class="row">
+	                    <div class="col-sm-4" style="padding-right: 0;">
+	                        <label>Image</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <input type="file" class="form-control-sm-xs" name="spaceLinkImage" id="spaceLinkImage" style="width: inherit">
+	                    </div>
+	                </div>
+	                <p class="mt-5 text-center">
+	                    <button type="reset" class="btn btn-light cancelSpaceLinkBtn btn-sm">Cancel</button>
+	                    <button id="createSpaceLinkBtn" type="reset" class="btn primary-btn btn-sm">Create Space Link</button>
+	                </p>
+	            </div>
+	        </form>
 		</div>
-
-		<div style="margin: 20px 0">
-			<button type="button" id="addSpaceLinkButton" class="btn primary-btn"
-				data-toggle="tooltip" title="Add Link to Space" data-placement="top">
-				<i class="fa fa-plus"></i>&emsp;<i class="fa fa-layer-group"></i>
-			</button>
-			&nbsp;
-			<button type="button" id="addModuleLinkButton"
-				class="btn primary-btn" data-toggle="tooltip"
-				title="Add Link to Module" data-placement="top">
-				<i class="fa fa-plus"></i>&emsp;<i class="fa fa-th-large"></i>
-			</button>
-			&nbsp;
-			<button type="button" id="addExternalLinkButton"
-				class="btn primary-btn" data-toggle="tooltip"
-				title="Add Link to External" data-placement="top">
-				<i class="fa fa-plus"></i>&emsp;<i class="fa fa-external-link-alt"></i>
-			</button>
-			&nbsp;
-			<button type="button" id="addTextBlock" class="btn primary-btn"
-				data-toggle="tooltip" title="Add Text Block" data-placement="top">
-				<i class="fa fa-plus"></i>&emsp;<i class="fas fa-file-alt"></i>
-			</button>
-			&nbsp;
-			<button type="button" id="changeBgImgButton" class="btn primary-btn"
-				data-toggle="tooltip" title="Change Background Image"
-				data-placement="top">
-				<i class="fas fa-pen"></i>&emsp;<i class="fas fa-image"></i>
-			</button>
-			&nbsp;
+        
+		<div id="createModuleLinkAlert" class="custom_form_style" style="z-index: 1;">
+	        <div class="divider"></div>
+	        <form id="createModuleLinkForm" style="z-index: 1;">
+	            <div role="alert" style="margin-top: 30px;">
+                    <div class = "saveLoader" style="font-size: 30px; display: none; text-align: center;">
+                        <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+                    </div>
+	                <div class="row">
+	                    <div class="col">
+	                        <h5 class="alert-heading">Create new Module Link</h5>
+	                        <p>Please click on the image where
+	                            you want to place the new module link. Then
+	                            click "Create Module Link".</p>
+	                    </div>
+	                </div>
+	
+	                <input type="hidden" name="x" id="moduleLinkX" /> 
+	                <input type="hidden" name="y" id="moduleLinkY" />
+	
+	                <div class="row">
+	                    <div class="col-sm-4">
+	                        <label>Rotation</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <input class="form-control-sm modulelink-target" style="width: inherit; background: var(--base-grey)" type="number"
+	                            id="moduleLinkRotation" name="rotation"
+	                            value="0">
+	                    </div>
+	                </div>
+	
+	                <div class="row">
+	                    <div class="col-sm-4">
+	                        <label>Label</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <input class="form-control-sm modulelink-target" style="width: inherit; background: var(--base-grey)" type="text"
+	                            name="moduleLinkLabel" id="moduleLinkLabel">
+	                    </div>
+	                </div>
+					
+					<div class="row">
+	                    <div class="col-sm-4">
+	                        <label>Type</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <select id="moduleType" name="moduleType" class="form-control-sm modulelink-target" style="width: inherit; background: var(--base-grey)">
+	                            <option th:selected>Choose...</option>
+	                            <option th:value="IMAGE">Image</option>
+	                            <option th:value="ARROW">Link</option>
+	                        </select>
+	                    </div>
+	                </div>
+	                
+	                <div class="row">
+	                    <div class="col-sm-4">
+	                        <label>Linked Modules</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <select id="linkedModule" name="linkedModule" class="form-control-sm modulelink-target" style="width: inherit; background: var(--base-grey)">
+	                            <option th:selected>Choose...</option>
+	                            <option th:value="${module?.id}"
+	                                th:each="module : ${moduleList}">[[${module?.name}]]</option>
+	                        </select>
+	                    </div>
+	                </div>
+	                
+	
+	                <div class="row">
+	                    <div class="col-sm-4">
+	                        <label>Image</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <input type="file" class="form-control-sm" name="moduleLinkImage" id="moduleLinkImage" style="width: inherit">
+	                    </div>
+	                </div>
+	                <p class="mt-5 text-center">
+	                    <button type="reset" class="btn btn-light cancelModuleLinkBtn btn-sm">Cancel</button>
+	                    <button id="createModuleLinkBtn" type="reset" class="btn primary-btn btn-sm">Create Module Link</button>
+	                </p>
+	            </div>
+	        </form>
 		</div>
-		<div id="space" th:style="|max-width: ${display.width+400}px;|"
-			th:if="${space.image != null}" class="link-modal flex-spacing">
-			<img id="bgImage" th:style="|max-width: ${display.width}px;|"
-				th:src="@{'/api/image/'+${space.image?.id}}" />
-			<div id="errorAlert"
-				class="alert alert-danger alert-dismissible fade show" role="alert"
-				style="display: none; position: fixed; top: 10%; right: 50px; z-index: 10">
-				<strong>Error!</strong> <span id="errorMsg"></span>
-				<button type="button" class="close" id="closeAlert"
-					aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<div id="createSpaceLinkAlert" class="custom_form_style"
-				style="z-index: 1;">
-				<div class="divider"></div>
-				<form id="createSpaceLinkForm" style="z-index: 1;">
-					<div role="alert" style="margin-top: 30px;">
-						<div class="saveLoader"
-							style="font-size: 30px; display: none; text-align: center;">
-							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
-						</div>
-						<div class="row">
-							<div class="col">
-								<h5 class="alert-heading">Create new Space Link</h5>
-								<p>Please click on the image where you want to place the new
-									space link. Then click "Create Space Link".</p>
-							</div>
-						</div>
-
-						<input type="hidden" name="x" id="spaceLinkX" /> <input
-							type="hidden" name="y" id="spaceLinkY" />
-
-						<div class="row">
-							<div class="col-sm-4">
-								<label>Rotation</label>
-							</div>
-							<div class="col-sm-8">
-								<input class="form-control-sm"
-									style="background: var(- -base-grey); width: inherit;"
-									type="number" id="spaceLinkRotation" name="rotation" value="0">
-							</div>
-						</div>
-
-						<div class="row">
-							<div class="col-sm-4">
-								<label>Label</label>
-							</div>
-							<div class="col-sm-8">
-								<input class="form-control-sm target"
-									style="background: var(- -base-grey); width: inherit;"
-									type="text" name="spaceLinkLabel" id="spaceLinkLabel">
-							</div>
-						</div>
-
-						<div class="row">
-							<div class="col-sm-4">
-								<label>Type</label>
-							</div>
-							<div class="col-sm-8">
-								<select id="type" name="type" class="form-control-sm target"
-									style="background: var(- -base-grey); width: inherit;">
-									<option th:selected>Choose...</option>
-									<option th:value="IMAGE">Image</option>
-									<option th:value="ARROW">Link</option>
-									<option th:value="ALERT">Alert</option>
-								</select>
-							</div>
-						</div>
-
-						<div class="row">
-							<div class="col-sm-4" style="padding-right: 0;">
-								<label>Linked Space</label>
-							</div>
-							<div class="col-sm-8">
-								<select id="linkedSpace" name="linkedSpace"
-									class="form-control-sm target"
-									style="background: var(- -base-grey); width: inherit;">
-									<option th:selected>Choose...</option>
-									<option th:each="space : ${spaces}" th:value="${space?.id}">[[${space?.name}]]
-										<span
-											th:if="${#strings.equals(space.spaceStatus,'UNPUBLISHED')}">(Unpublished)</span></option>
-								</select>
-							</div>
-						</div>
-
-						<div class="row">
-							<div class="col-sm-4" style="padding-right: 0;">
-								<label>Image</label>
-							</div>
-							<div class="col-sm-8">
-								<input type="file" class="form-control-sm-xs"
-									name="spaceLinkImage" id="spaceLinkImage"
-									style="width: inherit">
-							</div>
-						</div>
-						<p class="mt-5 text-center">
-							<button type="reset"
-								class="btn btn-light cancelSpaceLinkBtn btn-sm">Cancel</button>
-							<button id="createSpaceLinkBtn" type="reset"
-								class="btn primary-btn btn-sm">Create Space Link</button>
-						</p>
-					</div>
-				</form>
-			</div>
-
-			<div id="createModuleLinkAlert" class="custom_form_style"
-				style="z-index: 1;">
-				<div class="divider"></div>
-				<form id="createModuleLinkForm" style="z-index: 1;">
-					<div role="alert" style="margin-top: 30px;">
-						<div class="saveLoader"
-							style="font-size: 30px; display: none; text-align: center;">
-							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
-						</div>
-						<div class="row">
-							<div class="col">
-								<h5 class="alert-heading">Create new Module Link</h5>
-								<p>Please click on the image where you want to place the new
-									module link. Then click "Create Module Link".</p>
-							</div>
-						</div>
-
-						<input type="hidden" name="x" id="moduleLinkX" /> <input
-							type="hidden" name="y" id="moduleLinkY" />
-
-						<div class="row">
-							<div class="col-sm-4">
-								<label>Rotation</label>
-							</div>
-							<div class="col-sm-8">
-								<input class="form-control-sm modulelink-target"
-									style="width: inherit; background: var(- -base-grey)"
-									type="number" id="moduleLinkRotation" name="rotation" value="0">
-							</div>
-						</div>
-
-						<div class="row">
-							<div class="col-sm-4">
-								<label>Label</label>
-							</div>
-							<div class="col-sm-8">
-								<input class="form-control-sm modulelink-target"
-									style="width: inherit; background: var(- -base-grey)"
-									type="text" name="moduleLinkLabel" id="moduleLinkLabel">
-							</div>
-						</div>
-
-						<div class="row">
-							<div class="col-sm-4">
-								<label>Type</label>
-							</div>
-							<div class="col-sm-8">
-								<select id="moduleType" name="moduleType"
-									class="form-control-sm modulelink-target"
-									style="width: inherit; background: var(- -base-grey)">
-									<option th:selected>Choose...</option>
-									<option th:value="IMAGE">Image</option>
-									<option th:value="ARROW">Link</option>
-								</select>
-							</div>
-						</div>
-
-						<div class="row">
-							<div class="col-sm-4">
-								<label>Linked Modules</label>
-							</div>
-							<div class="col-sm-8">
-								<select id="linkedModule" name="linkedModule"
-									class="form-control-sm modulelink-target"
-									style="width: inherit; background: var(- -base-grey)">
-									<option th:selected>Choose...</option>
-									<option th:value="${module?.id}"
-										th:each="module : ${moduleList}">[[${module?.name}]]</option>
-								</select>
-							</div>
-						</div>
-
-
-						<div class="row">
-							<div class="col-sm-4">
-								<label>Image</label>
-							</div>
-							<div class="col-sm-8">
-								<input type="file" class="form-control-sm"
-									name="moduleLinkImage" id="moduleLinkImage"
-									style="width: inherit">
-							</div>
-						</div>
-						<p class="mt-5 text-center">
-							<button type="reset"
-								class="btn btn-light cancelModuleLinkBtn btn-sm">Cancel</button>
-							<button id="createModuleLinkBtn" type="reset"
-								class="btn primary-btn btn-sm">Create Module Link</button>
-						</p>
-					</div>
-				</form>
-			</div>
-
-			<div id="createExternalLinkAlert" class="custom_form_style"
-				style="z-index: 1;">
-				<div class="divider"></div>
-				<form id="createExternalLinkForm" style="z-index: 1;">
-					<div role="alert" style="margin-top: 30px;">
-						<div class="saveLoader"
-							style="font-size: 30px; display: none; text-align: center;">
-							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
-						</div>
-						<div class="row">
-							<div class="col">
-								<h5 class="alert-heading">Create new External Link</h5>
-								<p>Please click on the image where you want to place the new
-									external link. Then click "Create External Link".</p>
-							</div>
-						</div>
-
-						<input type="hidden" name="x" id="externalLinkX" /> <input
-							type="hidden" name="y" id="externalLinkY" />
-
-						<div class="row">
-							<div class="col-sm-4">
-								<label>Label</label>
-							</div>
-							<div class="col-sm-8">
-								<input class="form-control-sm extlink-target" type="text"
-									style="width: inherit; background: var(- -base-grey)"
-									name="externalLinkLabel" id="externalLinkLabel">
-							</div>
-						</div>
-
-						<div class="row">
-							<div class="col-sm-4">
-								<label>External Link</label>
-							</div>
-							<div class="col-sm-8">
-								<input class="form-control-sm extlink-target" type="text"
-									style="width: inherit; background: var(- -base-grey)" size="15"
-									name="url" id="externalLink">
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-sm-4">
-								<label>How To Open:</label>
-							</div>
-							<div class="col-sm-8">
-								<select id="extTabOpen" name="tabOpen"
-									class="form-control-sm extlink-target"
-									style="width: inherit; background: var(- -base-grey)">
-									<option th:selected>Choose...</option>
-									<option th:value="NEWWINDOW">New Window</option>
-									<option th:value="SAMEWINDOW">Same Window</option>
-								</select>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-sm-4">
-								<label>Type</label>
-							</div>
-							<div class="col-sm-8">
-								<select id="extType" name="type"
-									class="form-control-sm extlink-target"
-									style="width: inherit; background: var(- -base-grey)">
-									<option th:selected>Choose...</option>
-									<option th:value="IMAGE">Image</option>
-									<option th:value="ARROW">Link</option>
-								</select>
-							</div>
-						</div>
-
-						<div class="row">
-							<div class="col-sm-4">
-								<label>Image</label>
-							</div>
-							<div class="col-sm-8">
-								<input type="file" class="form-control-sm"
-									name="externalLinkImage" id="externalLinkImage"
-									style="width: inherit">
-							</div>
-						</div>
-						<p class="mt-5 text-center">
-							<button type="reset"
-								class="btn btn-light cancelExternalLinkBtn btn-sm">Cancel</button>
-							<button id="createExternalLinkBtn" type="submit"
-								class="btn primary-btn btn-sm">Create External Link</button>
-						</p>
-					</div>
-				</form>
-			</div>
-
-			<div id="addTextFormInfo" class="custom_form_style"
-				style="z-index: 1;">
-				<div class="divider"></div>
-				<form id="addTextForm" style="z-index: 1;">
-					<div role="alert" style="margin-top: 30px;">
-						<div class="saveLoader"
-							style="font-size: 30px; display: none; text-align: center;">
-							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
-						</div>
-						<div class="row">
-							<div class="col">
-								<h5 class="alert-heading">Create Text Block</h5>
-								<p>Please click on the image where you want to place the new
-									text block. Then click "Create Text Block".</p>
-							</div>
-						</div>
-
-						<input type="hidden" name="x" id="addTextX" /> <input
-							type="hidden" name="y" id="addTextY" />
-
-
-						<div class="row">
-							<div class="col-sm-4">
-								<label>Width:</label>
-							</div>
-							<div class="col-sm-8">
-								<input class="form-control-xs textBoxWidth" type="number"
-									min="20" step="any" oninput="validity.valid||(value='')"
-									id="textBoxWidthID" name="width" style="width: inherit;"><br>
-							</div>
-						</div>
-
-						<div class="row">
-							<div class="col-sm-4">
-								<label>Height:</label>
-							</div>
-							<div class="col-sm-8">
-								<input class="form-control-xs textBoxHeight" type="number"
-									min="5" step="any" oninput="validity.valid||(value='')"
-									id="textBoxHeightID" name="height" style="width: inherit;"><br>
-							</div>
-						</div>
-
-						<div class="row" style="height: 32%;">
-							<div class="col-sm-4">
-								<label>Text:</label>
-							</div>
-							<div class="col-sm-8">
-								<textarea class="form-control-xs textContent" name="textContent"
-									id="textContentID" style="width: 140%; height: 400%;"></textarea>
-								<br>
-							</div>
-						</div>
-						<div class="row">
-							<p class="mt-5 text-center" style="padding-top: 80%">
-								<button type="reset"
-									class="btn btn-light btn-sm cancelAddTextBlockBtn">Cancel</button>
-								<button id="addTextBlockBtn" type="submit"
-									class="btn primary-btn btn-sm">Create Text Block</button>
-							</p>
+		
+		<div id="createExternalLinkAlert" class="custom_form_style" style="z-index: 1;">
+	        <div class="divider"></div>
+	        <form id="createExternalLinkForm" style="z-index: 1;">
+	            <div role="alert" style="margin-top: 30px;">
+                    <div class = "saveLoader" style="font-size: 30px; display: none; text-align: center;">
+                        <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+                    </div>
+	            	<div class="row">	
+	            		<div class="col">
+	            			<h5 class="alert-heading">Create new External Link</h5>
+			                <p>Please click on the image where you
+			                   want to place the new external link. Then click
+			                   "Create External Link".</p>
+	            		</div>
+	                </div>
+	
+	                <input type="hidden" name="x" id="externalLinkX" /> 
+	                <input type="hidden" name="y" id="externalLinkY" /> 
+	                
+	                <div class="row">
+	                	<div class="col-sm-4">
+	                		<label>Label</label>
+	                	</div>
+	                	<div class="col-sm-8">
+	                		<input class="form-control-sm extlink-target" type="text" style="width: inherit; background: var(--base-grey)"
+	                			 name="externalLinkLabel" id="externalLinkLabel">	
+	                	</div>
+	                </div>
+	                 
+	                <div class="row">
+	                	<div class="col-sm-4">
+	                		<label>External Link</label>
+	                	</div>
+	                	<div class="col-sm-8">
+	                		<input class="form-control-sm extlink-target" type="text" style="width: inherit; background: var(--base-grey)"
+	                    		size="15" name="url" id="externalLink">	
+	                	</div>
+	                </div>               
+					<div class="row">
+	                    <div class="col-sm-4">
+	                        <label>How To Open:</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <select id="extTabOpen" name="tabOpen" class="form-control-sm extlink-target" style="width: inherit; background: var(--base-grey)">
+	                            <option th:selected>Choose...</option>
+	                            <option th:value="NEWWINDOW">New Window</option>
+	                            <option th:value="SAMEWINDOW">Same Window</option>
+	                        </select>
+	                    </div>
+	                </div>
+	                <div class="row">
+	                    <div class="col-sm-4">
+	                        <label>Type</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <select id="extType" name="type" class="form-control-sm extlink-target" style="width: inherit; background: var(--base-grey)">
+	                            <option th:selected>Choose...</option>
+	                            <option th:value="IMAGE">Image</option>
+	                            <option th:value="ARROW">Link</option>
+	                        </select>
+	                    </div>
+	                </div>
+	
+	                <div class="row">
+	                    <div class="col-sm-4">
+	                        <label>Image</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <input type="file" class="form-control-sm" name="externalLinkImage" id="externalLinkImage" style="width: inherit">
+	                    </div>
+	                </div>
+	                <p class="mt-5 text-center">
+	                    <button type="reset" class="btn btn-light cancelExternalLinkBtn btn-sm">Cancel</button>
+	                    <button id="createExternalLinkBtn" type="submit" class="btn primary-btn btn-sm">Create External Link</button>
+	                </p>
+	            </div>
+	        </form>
+		</div>
+        
+        <div id="addTextFormInfo" class="custom_form_style" style="z-index: 1;">
+            <div class="divider"></div>
+            <form id="addTextForm" style="z-index: 1;">
+                <div role="alert" style="margin-top: 30px;">
+                    <div class = "saveLoader" style="font-size: 30px; display: none; text-align: center;">
+                        <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+                    </div>
+                    <div class="row">   
+                        <div class="col">
+                            <h5 class="alert-heading">Create Text Block</h5>
+                            <p>Please click on the image where you
+                               want to place the new text block. Then click
+                               "Create Text Block".</p>
+                        </div>
+                    </div>
+    
+                    <input type="hidden" name="x" id="addTextX" /> <input
+                        type="hidden" name="y" id="addTextY" />
+    
+    
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label>Width:</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <input class="form-control-xs textBoxWidth"
+                                type="number" min="20" step="any" oninput="validity.valid||(value='')" id="textBoxWidthID"
+                                name="width" style="width: inherit;"><br>
+                        </div>
+                    </div>
+    
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label>Height:</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <input class="form-control-xs textBoxHeight"
+                                type="number" min="5" step="any" oninput="validity.valid||(value='')" id="textBoxHeightID"
+                                name="height" style="width: inherit;"><br>
+                        </div>
+                    </div>
+            		<div class="row" style="height: 32%;">
+                        <div class="col-sm-4">
+                            <label>Text Color:</label>
+                        </div>
+                        <div class="col-sm-8" >
+                        	<input type="color" class="form-control input-lg" name="textColor" id="textColorID"/>
+                                <br>
+                        </div>
+                    </div>
+                    <div class="row" style="height: 32%;">
+                        <div class="col-sm-4">
+                            <label>Border Color:</label>
+                        </div>
+                        <div class="col-sm-8" >
+                        	<input type="color" class="form-control input-lg" name="borderColor" id="borderColorID"/>
+                                <br>
+                        </div>
+                    </div>
+                    <div class="row" style="height: 32%;">
+                        <div class="col-sm-4">
+                            <label>Text:</label>
+                        </div>
+                        <div class="col-sm-8">
+                   		 <textarea class="form-control-xs textContent"
+                                 name="textContent"
+                                id="textContentID" style="width: 140%; height: 400%;"></textarea><br>
+                        </div>
+                    </div>
+            
+                    <div class="row">
+                        <p class="mt-5 text-center" style="padding-top: 80%">
+                            <button type="reset" class="btn btn-light btn-sm cancelAddTextBlockBtn">Cancel</button>
+                            <button id="addTextBlockBtn" type="submit" class="btn primary-btn btn-sm">Create Text Block</button>
+                        </p>
+                    </div>
+                </div>
+            </form>
+        </div>
+		
+		<div id="editSpaceLinkInfo" class="custom_form_style" style="z-index: 1;">
+	        <div class="divider"></div>
+	        <form id="editSpaceLinkForm" style="z-index: 1;">
+                <p class="float-right">
+                    <a href="#" id="closeEditSpaceLinkInfo" class="icon-circle-close"></a>
+                </p>
+	            <div role="alert" style="margin-top: 30px;">
+                    <div class = "saveLoader" style="font-size: 30px; display: none; text-align: center;">
+                        <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+                    </div>
+					<div class="row">
+						<div class="col">
+							<h6 class="alert-heading"><span style="color: var(--dark-grey)"> Space Link:</span> <span id="spaceLinkInfoLabelEdit"></span></h6>
+							<p>Please click on the image where
+	                            you want to place the selected space link.
+	                            Then click "Edit Space Link".</p>
 						</div>
 					</div>
-				</form>
-			</div>
-
-			<div id="editSpaceLinkInfo" class="custom_form_style"
-				style="z-index: 1;">
-				<div class="divider"></div>
-				<form id="editSpaceLinkForm" style="z-index: 1;">
-					<p class="float-right">
-						<a href="#" id="closeEditSpaceLinkInfo" class="icon-circle-close"></a>
-					</p>
-					<div role="alert" style="margin-top: 30px;">
-						<div class="saveLoader"
-							style="font-size: 30px; display: none; text-align: center;">
-							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
-						</div>
-						<div class="row">
-							<div class="col">
-								<h6 class="alert-heading">
-									<span style="color: var(- -dark-grey)"> Space Link:</span> <span
-										id="spaceLinkInfoLabelEdit"></span>
-								</h6>
-								<p>Please click on the image where you want to place the
-									selected space link. Then click "Edit Space Link".</p>
-							</div>
-						</div>
-
-						<input type="hidden" name="spaceLinkIdValueEdit"
-							id="spaceLinkIdValueEdit" /> <input type="hidden" name="x"
-							id="spaceLinkXEdit" /> <input type="hidden" name="y"
-							id="spaceLinkYEdit" /> <input type="hidden"
-							name="spaceLinkDisplayId" id="spaceLinkDisplayId" />
-
-
-						<div class="row">
-							<div class="col-sm-4">
-								<label>Rotation</label>
-							</div>
-							<div class="col-sm-8">
-								<input class="form-control-sm spacelink-targetEdit"
-									type="number" id="spaceLinkRotationEdit" name="rotation"
-									style="width: inherit; background: var(- -base-grey)" />
-							</div>
-						</div>
-
-						<div class="row">
-							<div class="col-sm-4">
-								<label>Label</label>
-							</div>
-							<div class="col-sm-8">
-								<input class="form-control-sm spacelink-targetEdit" type="text"
-									name="spaceLinkLabel" id="spaceLinkLabelEdit"
-									style="width: inherit; background: var(- -base-grey)" />
-							</div>
-						</div>
-
-						<div class="row">
-							<div class="col-sm-4">
-								<label>Type</label>
-							</div>
-							<div class="col-sm-8">
-								<select id="typeSpaceEdit" name="type"
-									class="form-control-sm spacelink-targetEdit"
-									style="width: inherit; background: var(- -base-grey)">
-									<option th:value="IMAGE">Image</option>
-									<option th:value="ARROW">Link</option>
-									<option th:value="ALERT">Alert</option>
-								</select>
-							</div>
-						</div>
-
-						<div class="row">
-							<div class="col-sm-4">
-								<label>Linked Space</label>
-							</div>
-							<div class="col-sm-8">
-								<select id="spaceLinkIdEdit" name="linkedSpace"
-									class="form-control-sm spacelink-targetEdit"
-									style="width: inherit; background: var(- -base-grey)">
-									<option th:each=" space : ${spaces}" th:value="${space?.id}">[[${space?.name}]]
-										<span
-											th:if="${#strings.equals(space.spaceStatus,'UNPUBLISHED')}">(Unpublished)</span>
-									</option>
-
-								</select>
-							</div>
-						</div>
-
-						<div class="row">
-							<div class="col-sm-4">
-								<label>Image</label>
-							</div>
-							<div class="col-sm-8">
-								<input type="file" class="form-control-sm" name="spaceLinkImage"
-									id="spaceLinkImageEdit" style="width: inherit" />
-							</div>
-						</div>
-
-						<p class="mt-5 text-center">
-							<button id="deleteSpaceLinkButton" type="reset"
-								class="btn delete-btn btn-sm">
-								<i class="fa fa-trash"></i>Delete
-							</button>
-							<button id="editSpaceLinkBtn" type="reset"
-								class="btn primary-btn btn-sm">Save Changes</button>
-						</p>
-
-					</div>
-				</form>
-			</div>
-			<div id="editModuleLinkInfo" class="custom_form_style"
-				style="z-index: 1;">
-				<div class="divider"></div>
-				<form id="editModuleLinkForm" style="z-index: 1;">
-					<p class="float-right">
-						<a href="#" id="closeEditModuleLinkInfo" class="icon-circle-close"></a>
-					</p>
-					<div role="alert" style="margin-top: 30px;">
-						<div class="saveLoader"
-							style="font-size: 30px; display: none; text-align: center;">
-							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
-						</div>
-						<div class="row">
-							<div class="col">
-								<h6 class="alert-heading">
-									<span style="color: var(- -dark-grey)"> Module Link:</span> <span
-										id="moduleLinkInfoLabelEdit"></span>
-								</h6>
-								<p>Please click on the image where you want to place the
-									existing module link. Then click "Edit Module".</p>
-							</div>
-						</div>
-						<input type="hidden" name="moduleLinkIdValueEdit"
-							id="moduleLinkIdValueEdit" /> <input type="hidden" name="x"
-							id="moduleLinkXEdit" /> <input type="hidden" name="y"
-							id="moduleLinkYEdit" /> <input type="hidden"
-							name="moduleLinkDisplayId" id="moduleLinkDisplayId" />
+	                
+	                <input type="hidden" name="spaceLinkIdValueEdit" id="spaceLinkIdValueEdit" />
+	
+	                <input type="hidden" name="x" id="spaceLinkXEdit" /> 
+	                <input type="hidden" name="y" id="spaceLinkYEdit" /> 
+	                <input type="hidden" name="spaceLinkDisplayId" id="spaceLinkDisplayId" />
+	
+	
+	                <div class="row">
+	                    <div class="col-sm-4">
+	                        <label>Rotation</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <input class="form-control-sm spacelink-targetEdit"
+	                            type="number" id="spaceLinkRotationEdit"
+	                            name="rotation" style="width: inherit; background: var(--base-grey)" />
+	                    </div>
+	                </div>
+	
+	                <div class="row">
+	                    <div class="col-sm-4">
+	                        <label>Label</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <input class="form-control-sm spacelink-targetEdit"
+	                            type="text" name="spaceLinkLabel"
+	                            id="spaceLinkLabelEdit" style="width: inherit; background: var(--base-grey)" />
+	                    </div>
+	                </div>
+	
+	                <div class="row">
+	                    <div class="col-sm-4">
+	                        <label>Type</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <select id="typeSpaceEdit" name="type" class="form-control-sm spacelink-targetEdit"
+	                            style="width: inherit; background: var(--base-grey)">
+	                            <option th:value="IMAGE">Image</option>
+	                            <option th:value="ARROW">Link</option>
+	                            <option th:value="ALERT">Alert</option>
+	                        </select>
+	                    </div>
+	                </div>
+	
+	                <div class="row">
+	                    <div class="col-sm-4">
+	                        <label>Linked Space</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <select id="spaceLinkIdEdit" name="linkedSpace" class="form-control-sm spacelink-targetEdit"
+	                            style="width: inherit; background: var(--base-grey)">
+	                            <option th:each=" space : ${spaces}" th:value="${space?.id}">[[${space?.name}]]
+	                            	<span th:if="${#strings.equals(space.spaceStatus,'UNPUBLISHED')}">(Unpublished)</span>
+	                           	</option>
+	
+	                        </select>
+	                    </div>
+	                </div>
+	
+	                <div class="row">
+	                    <div class="col-sm-4">
+	                        <label>Image</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <input type="file" class="form-control-sm" name="spaceLinkImage" id="spaceLinkImageEdit" style="width: inherit"/>
+	                    </div>
+	                </div>
+	                
+	                <p class="mt-5 text-center">
+	                    <button id="deleteSpaceLinkButton" type="reset" class="btn delete-btn btn-sm"><i class="fa fa-trash"></i>Delete</button>
+	                    <button id="editSpaceLinkBtn" type="reset" class="btn primary-btn btn-sm">Save Changes</button>
+	                </p>
+	                
+	            </div>
+	        </form>
+		</div>
+        <div id="editModuleLinkInfo" class="custom_form_style" style="z-index: 1;">
+            <div class="divider"></div>
+            <form id="editModuleLinkForm" style="z-index: 1;">
+                <p class="float-right">
+                    <a href="#" id="closeEditModuleLinkInfo" class="icon-circle-close"></a>
+                </p>
+                <div role="alert" style="margin-top: 30px;">
+                    <div class = "saveLoader" style="font-size: 30px; display: none; text-align: center;">
+                        <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <h6 class="alert-heading">
+                                <span style="color: var(--dark-grey)">
+                                    Module Link:</span> <span
+                                    id="moduleLinkInfoLabelEdit"></span>
+                            </h6>
+                            <p>Please click on the image
+                                where you want to place the existing
+                                module link. Then click "Edit Module".
+                            </p>
+                        </div>
+                    </div>
+                    <input type="hidden" name="moduleLinkIdValueEdit" id="moduleLinkIdValueEdit" /> 
+                    <input type="hidden" name="x" id="moduleLinkXEdit" />
+                    <input type="hidden" name="y" id="moduleLinkYEdit" />
+                    <input type="hidden" name="moduleLinkDisplayId" id="moduleLinkDisplayId" />
 
 						<div class="row">
 							<div class="col-sm-4">
@@ -2607,169 +2579,175 @@ $(function(){
 							</div>
 						</div>
 
-						<div class="row">
-							<div class="col-sm-3" style="padding-right: 0;">
-								<label>Image:</label>
-							</div>
-							<div class="col-sm-9">
-								<input type="file" class="form-control-sm"
-									name="externalLinkImage" id="externalLinkImageEdit"
-									style="width: inherit" />
-							</div>
-						</div>
-
-						<p class="mt-5 text-center">
-							<button id="deleteExternalLinkButton" type="reset"
-								class="btn delete-btn btn-sm">
-								<i class="fa fa-trash"></i>Delete
-							</button>
-							<button id="editExternalLinkBtn" type="reset"
-								class="btn primary-btn btn-sm">Save External Link</button>
-						</p>
-
-					</div>
-				</form>
-			</div>
-			<div id="editTextBlockInfo" class="custom_form_style"
-				style="z-index: 1;">
-				<div class="divider"></div>
-				<form id="editTextBlockForm" style="z-index: 1;">
-					<p class="float-right">
-						<a href="#" id="closeEditTextBlockInfo" class="icon-circle-close"></a>
-					</p>
-					<div role="alert" style="margin-top: 30px;">
-						<div class="saveLoader"
-							style="font-size: 30px; display: none; text-align: center;">
-							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
-						</div>
-						<input type="hidden" name="textBlockId" id="textBlockId" />
-
-						<div class="row">
-							<div class="col">
-								<h6 class="alert-heading">
-									<span style="color: var(- -dark-grey)">Modify Text Block
-									</span><span id="textBlockId"></span>
-								</h6>
-								<p>Please click on the image where you want to place the
-									existing text block. Then click "Save".</p>
-							</div>
-						</div>
-						<input type="hidden" name="x" id="textBlockXEdit" /> <input
-							type="hidden" name="y" id="textBlockYEdit" /> <input
-							type="hidden" name="textBlockDisplayId" id="textBlockDisplayId" />
-
-						<div class="row">
-							<div class="col-sm-4">
-								<label>Width:</label>
-							</div>
-							<div class="col-sm-8">
-								<input class="form-control-xs textBoxWidth" type="number"
-									min="20" step="any" oninput="validity.valid||(value='')"
-									id="textBoxWidthIDEdit" name="width" style="width: inherit;"><br>
-							</div>
-						</div>
-
-						<div class="row">
-							<div class="col-sm-4">
-								<label>Height:</label>
-							</div>
-							<div class="col-sm-8">
-								<input class="form-control-xs textBoxHeight" type="number"
-									min="5" step="any" oninput="validity.valid||(value='')"
-									id="textBoxHeightIDEdit" name="height" style="width: inherit;"><br>
-							</div>
-						</div>
-
-						<div class="row" style="height: 32%;">
-							<div class="col-sm-4">
-								<label>Text:</label>
-							</div>
-							<div class="col-sm-8">
-								<textarea class="form-control-xs textContent"
-									name="textContentEdit" id="textContentIDForEdit"
-									style="width: 140%; height: 400%;"></textarea>
-								<br>
-							</div>
-						</div>
-
-						<p class="mt-5 text-center"
-							style="padding-top: 80%; padding-bottom: 10%">
-							<button id="deleteTextBlockButton" type="reset"
-								class="btn delete-btn btn-sm">
-								<i class="fa fa-trash"></i>Delete
-							</button>
-							<button id="editTextBlockBtn" type="reset"
-								class="btn primary-btn btn-sm">Save</button>
-						</p>
-					</div>
-				</form>
-			</div>
-		</div>
-		<form method="post"
-			th:action="@{|/staff/space/update/${space?.id}?${_csrf.parameterName}=${_csrf.token}|}"
-			enctype="multipart/form-data">
-			<input type="hidden" th:name="${_csrf.parameterName}"
-				th:value="${_csrf.token}" />
-			<div id="changeBgImgAlert" class="alert alert-secondary" role="alert"
-				style="background: white; display: none;">
-				<h6>Change Background Image</h6>
-				<input type="file" name="file" rows="5" cols="500" id="file" />
-				<p class="mb-0 text-right">
-					<button type="submit" id="changeBgImgBtn"
-						class="btn primary-btn btn-sm btn-sm">Upload Image</button>
-					&nbsp;
-					<button id="cancelBgImgBtn" type="button"
-						class="btn light btn-sm btn-sm">Cancel</button>
-				</p>
-			</div>
-		</form>
-		<div class="modal fade" id="confirm-space-delete" tabindex="-1"
-			role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title" id="deleteModalTitle">Confirm
-							[[${space?.name}]] Deletion?</h5>
-						<button type="button" class="close" data-dismiss="modal"
-							aria-hidden="true">
-							<span class="icon-circle-close"></span>
-						</button>
-					</div>
-					<div class="modal-body">
-						<p>Are you sure you want to delete [[${space?.name}]]?</p>
-						<div id="warningMessage">
-							<div class="text-danger">Other spaces have links to this
-								space!</div>
-						</div>
-						<div id="exhibitionMessage">
-							<div class="text-danger">This space is the start of the
-								exhibition. Deleting it will make your exhibition unavailable.</div>
-						</div>
-						<div id="finalWarning">
-							<div class="text-danger">Do you want to continue?</div>
-						</div>
-					</div>
-					<div class="modal-footer">
-						<button type="button" id="closeButton" class="btn btn-default"
-							data-dismiss="modal">Cancel</button>
-						<button type="button" class="btn btn-danger btn-ok">Yes,
-							delete!</button>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div id="main-space" th:if="${space.image != null}">
-			<div id="loader" style="position: absolute; font-size: 30px;">
-				<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
-			</div>
-			<img id="main-bgImage" th:style="|max-width: ${display.width}px;|"
-				th:src="@{'/api/image/'+${space.image?.id}}" />
-		</div>
-		<p class="text-right" style="margin-top: 50px">
-			<button type="button" id="deleteSpace" class="btn primary-btn btn-sm">
-				<i class="fa fa-trash"></i>&emsp;Delete Space
-			</button>
-		</p>
-	</div>
+                    <div class="row">
+                        <div class="col-sm-3" style="padding-right: 0;">
+                            <label>Image:</label>
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="file" class="form-control-sm"
+                                name="externalLinkImage"
+                                id="externalLinkImageEdit" style="width: inherit" />
+                        </div>
+                    </div>
+                    
+                    <p class="mt-5 text-center">
+                        <button id="deleteExternalLinkButton" type="reset" class="btn delete-btn btn-sm"><i class="fa fa-trash"></i>Delete</button>
+                        <button id="editExternalLinkBtn" type="reset" class="btn primary-btn btn-sm">Save External Link</button>
+                    </p>
+                    
+                </div>
+            </form>
+        </div>
+        <div id="editTextBlockInfo" class="custom_form_style" style="z-index: 1;">
+            <div class="divider"></div>
+            <form id="editTextBlockForm" style="z-index: 1;">
+                <p class="float-right">
+                    <a href="#" id="closeEditTextBlockInfo" class="icon-circle-close"></a>
+                </p>
+                <div role="alert" style="margin-top: 30px;">
+                    <div class = "saveLoader" style="font-size: 30px; display: none; text-align: center;">
+                        <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+                    </div>
+                    <input type="hidden" name="textBlockId"
+                        id="textBlockId" />
+                        
+                    <div class="row">
+                        <div class="col">
+                            <h6 class="alert-heading">
+                                <span style="color: var(--dark-grey)">Modify Text 
+                                    Block </span><span
+                                    id="textBlockId"></span>
+                            </h6>
+                            <p>Please click on the image where you
+                                want to place the existing text
+                                block. Then click "Save".</p>
+                        </div>
+                    </div>
+                    <input type="hidden" name="x" id="textBlockXEdit" /> <input
+                        type="hidden" name="y" id="textBlockYEdit" /> <input
+                        type="hidden" name="textBlockDisplayId"
+                        id="textBlockDisplayId" />
+    
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label>Width:</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <input class="form-control-xs textBoxWidth"
+                                type="number" min="20" step="any" oninput="validity.valid||(value='')" id="textBoxWidthIDEdit"
+                                name="width" style="width: inherit;"><br>
+                        </div>
+                    </div>
+    
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label>Height:</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <input class="form-control-xs textBoxHeight"
+                                type="number" min="5" step="any" oninput="validity.valid||(value='')" id="textBoxHeightIDEdit"
+                                name="height" style="width: inherit;"><br>
+                        </div>
+                    </div>
+              		<div class="row" style="height: 32%;">
+                        <div class="col-sm-4">
+                            <label>Text Color:</label>
+                        </div>
+                        <div class="col-sm-8" >
+                        	<input type="color" class="form-control input-lg" name="textColor" id="textColorIDEdit"/>
+                                <br>
+                        </div>
+                    </div>
+                    <div class="row" style="height: 32%;">
+                        <div class="col-sm-4">
+                            <label>Border Color:</label>
+                        </div>
+                        <div class="col-sm-8" >
+                        	<input type="color" class="form-control input-lg" name="borderColor" id="borderColorIDEdit"/>
+                                <br>
+                        </div>
+                    </div>
+                    <div class="row" style="height: 32%;">
+                        <div class="col-sm-4">
+                            <label>Text:</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <textarea class="form-control-xs textContent"
+                                name="textContentEdit"
+                                id="textContentIDForEdit" style="width: 140%; height: 400%;"></textarea><br>
+                        </div>
+                    </div>
+          
+                    <p class="mt-5 text-center" style="padding-top: 80%; padding-bottom: 10%">
+                        <button id="deleteTextBlockButton" type="reset" class="btn delete-btn btn-sm"><i class="fa fa-trash"></i>Delete</button>
+                        <button id="editTextBlockBtn" type="reset" class="btn primary-btn btn-sm">Save</button>
+                    </p>
+                </div>
+            </form>
+        </div>
+        </div>
+        <form method="post"
+            th:action="@{|/staff/space/update/${space?.id}?${_csrf.parameterName}=${_csrf.token}|}"
+            enctype="multipart/form-data">
+            <input type="hidden"  th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <div id="changeBgImgAlert" class="alert alert-secondary"
+                role="alert" style="background: white; display: none;">
+                <h6>Change Background Image</h6>
+                <input type="file" name="file" rows="5" cols="500" id="file" />
+                <p class="mb-0 text-right">
+                    <button type="submit" id="changeBgImgBtn" class="btn primary-btn btn-sm btn-sm">Upload Image</button>
+                    &nbsp;
+                    <button id="cancelBgImgBtn" type="button" class="btn light btn-sm btn-sm">Cancel</button>
+                </p>
+            </div>
+        </form>
+        <div class="modal fade" id="confirm-space-delete" tabindex="-1"
+            role="dialog" aria-labelledby="myModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteModalTitle">Confirm
+                            [[${space?.name}]] Deletion?</h5>
+                        <button type="button" class="close"
+                            data-dismiss="modal" aria-hidden="true"><span class="icon-circle-close"></span></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to delete
+                            [[${space?.name}]]?</p>
+                        <div id="warningMessage">
+                            <div class="text-danger">Other spaces
+                                have links to this space!</div>
+                        </div>
+                        <div id="exhibitionMessage">
+                            <div class="text-danger">This space is
+                                the start of the exhibition. Deleting it
+                                will make your exhibition unavailable.</div>
+                        </div>
+                        <div id="finalWarning">
+                            <div class="text-danger">Do you want
+                                to continue?</div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="closeButton"
+                            class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="button"
+                            class="btn btn-danger btn-ok">Yes,
+                            delete!</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="main-space" th:if="${space.image != null}">
+            <div id="loader" style="position: absolute; font-size: 30px;">
+                <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+            </div>
+            <img id="main-bgImage" th:style="|max-width: ${display.width}px;|"  th:src="@{'/api/image/'+${space.image?.id}}" />
+        </div>
+        <p class="text-right" style="margin-top: 50px">
+            <button type="button" id="deleteSpace"  class="btn primary-btn btn-sm"><i class="fa fa-trash"></i>&emsp;Delete Space</button>
+        </p>
+   </div> 
 </body>
 </html>
