@@ -240,7 +240,6 @@ public class Space extends VSpaceElement implements ISpace {
     }
 
     public void setSpaceDescriptions(List<ILocalizedText> spaceDescriptions) {
-        
         this.spaceDescriptions = spaceDescriptions;
     }
 }

@@ -12,8 +12,6 @@ import edu.asu.diging.vspace.web.staff.forms.AboutPageForm;
 @Component
 public class AboutPageFormFactory  implements IAboutPageFormFactory{
 
-    
-    
     @Autowired
     private IExhibitionManager exhibitionManager;
     
@@ -46,5 +44,4 @@ public class AboutPageFormFactory  implements IAboutPageFormFactory{
         });
         return aboutPageForm;
     }
-
 }

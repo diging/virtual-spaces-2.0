@@ -56,6 +56,5 @@ public class SpaceFormFactory implements ISpaceFormFactory {
         slideForm.setName(space.getName());
         slideForm.setDescription(space.getDescription());
         return slideForm; 
-
     }
 }

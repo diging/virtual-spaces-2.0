@@ -29,10 +29,8 @@ public class LocalizedTextFormCreation {
         if(localizedText != null) {
             localizedAboutTextForm.setText(localizedText.getText());
             localizedAboutTextForm.setLocalisedTextId( localizedText.getId());
-
         } 
         localizedAboutTextForm.setIsDefaultExhibitionLanguage(language.isDefault());
         return localizedAboutTextForm;
     }
-
 }

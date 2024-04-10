@@ -1,15 +1,11 @@
 package edu.asu.diging.vspace.core.model.impl;
 import javax.persistence.Entity;
-
-
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import edu.asu.diging.vspace.core.model.ILocalizedText;
 
@@ -61,5 +57,4 @@ public class LocalizedText implements ILocalizedText {
     public void setText(String text) {
         this.text = text;
     }
-
 }
