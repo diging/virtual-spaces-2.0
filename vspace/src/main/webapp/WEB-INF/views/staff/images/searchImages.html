@@ -212,29 +212,23 @@
          <div id="page-selection"></div>
          <script>
             $(document).on('input', '#searchImageField', function(e){
-             
-             if($("#searchImageField").val().trim()) {
-            	 
-                     $('#searchImageButton').removeAttr('disabled');
-             }
-             else {
-                    $('#searchImageButton').attr('disabled','true');
-             }
-             if (!$('#searchImageButton').attr('disabled') && $("#searchImageField").val().trim()){
-            	 
-            		$("#searchImageLink").attr('href','[[@{/staff/images/search/full?searchText=}]]'+$("#searchImageField").val());
-            		
-             } 
-             else{
-            	 $("#searchImageLink").attr('href','');
-             }
+               if($("#searchImageField").val().trim()) {
+                  $('#searchImageButton').removeAttr('disabled');
+               }
+               else {
+                  $('#searchImageButton').attr('disabled','true');
+               }
+               if (!$('#searchImageButton').attr('disabled') && $("#searchImageField").val().trim()){
+                  $("#searchImageLink").attr('href','[[@{/staff/images/search/full?searchText=}]]'+$("#searchImageField").val());
+               } 
+               else{
+                  $("#searchImageLink").attr('href','');
+               }
             });
             $(document).on('keydown', function(e) { 
-            
-                if((e.key  === 'Enter' || e.keyCode === 13) && $("#searchImageField").val().trim()) {
-               	 
-                    $("#searchImageButton").trigger('click');
-                }
+               if((e.key  === 'Enter' || e.keyCode === 13) && $("#searchImageField").val().trim()) { 
+                  $("#searchImageButton").trigger('click');
+               }
             }) 
          </script>
       </div>
