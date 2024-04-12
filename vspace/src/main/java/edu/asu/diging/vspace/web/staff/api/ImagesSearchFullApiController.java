@@ -60,9 +60,9 @@ public class ImagesSearchFullApiController {
             }
         }
         if(category == null) {
-        	model.addAttribute("totalPages", imageService.getTotalPagesOnSearchText(searchTerm));
+            model.addAttribute("totalPages", imageService.getTotalPagesOnSearchText(searchTerm));
         } else {
-        	model.addAttribute("totalPages", imageService.getTotalPages(category));
+            model.addAttribute("totalPages", imageService.getTotalPages(category));
         }
         model.addAttribute("searchText", searchTerm);
         model.addAttribute("currentPageNumber", pageNo);
