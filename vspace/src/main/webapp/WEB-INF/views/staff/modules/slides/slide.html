@@ -700,6 +700,7 @@ $(document).ready(function() {
 
     
     $("#submitBiblio").on("click", function(e) {
+    	console.log("submitBiblio");
         e.preventDefault();
         // ------------- creating Bibliography content blocks ------------
         
@@ -712,6 +713,12 @@ $(document).ready(function() {
         ++contentCount;
         formData.append('contentOrder', contentCount);
         
+        
+        console.log("data:");
+        console.log(biblioTitle);
+        console.log(description);
+        
+        
         $("#titleBiblio").val('');
         $("#descriptionBiblio").val('');
         $("#addBiblioAlert").hide();
@@ -719,8 +726,8 @@ $(document).ready(function() {
         var object = {};
         formData.forEach((value, key) => object[key] = value);
         var jsonData = JSON.stringify(object);
+        console.log(jsonData);
         var token =  $('input[name="_csrf"]').attr('value');
-        
         $.ajax({
             url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/bibliography'})]",
             type: 'POST',
@@ -844,7 +851,7 @@ $(document).ready(function() {
         } else {
         if ($('.choiceOptions').filter(':checked').length < 1){
         	$('#submitChoices').attr('disabled',true);}
-        }
+        }ge
     });
     
     $("#submitChoices").on("click", function(e) {

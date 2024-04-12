@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,8 +25,10 @@ public class AddBiblioBlockController {
 
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/bibliography", method = RequestMethod.POST)
     public ResponseEntity<String> addTextBlock(@PathVariable("id") String slideId,
-            @PathVariable("moduleId") String moduleId, @RequestBody BiblioBlock biblioBlockData) throws JsonProcessingException {
-
+            @PathVariable("moduleId") String moduleId, BiblioBlock biblioBlockData, @RequestParam("biblioTitle") String title, @RequestParam("description") String description) throws JsonProcessingException {
+        
+        biblioBlockData.setBiblioTitle(title);
+        biblioBlockData.setDescription(description);
         IBiblioBlock biblioBlock = contentBlockManager.createBiblioBlock(slideId, biblioBlockData);
         ObjectMapper mapper = new ObjectMapper();
         return new ResponseEntity<>(mapper.writeValueAsString(biblioBlock), HttpStatus.OK);
