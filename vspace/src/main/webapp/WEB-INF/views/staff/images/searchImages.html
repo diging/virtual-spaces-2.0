@@ -126,7 +126,7 @@
             contains the following images.
          </div>
          <div class="searchInput">
-            <input class="form-control" style="background: none; margin-left: 70%;width: 20%;" type="text" id="searchImageField" placeholder="Search..." th:value="${searchWord}">
+            <input class="form-control" style="background: none; margin-left: 70%;width: 20%;" type="text" id="searchImageField" placeholder="Search..." th:value="${searchText}">
             <a id="searchImageLink"><button class="btn primary-btn" type="submit" id="searchImageButton">
             <span class="icon-search"></span></button></a>
          </div>
@@ -210,6 +210,7 @@
             </tbody>
          </table>
          <div id="page-selection"></div>
+         <a class="btn-sm " style="text-decoration: underline;" th:href="@{/staff/images/list}"> Clear Search</a>
          <script>
             $(document).on('input', '#searchImageField', function(e){
                if($("#searchImageField").val().trim()) {

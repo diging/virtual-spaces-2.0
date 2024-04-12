@@ -268,4 +268,21 @@ public class ImageService implements IImageService {
             likeSearchTerm, likeSearchTerm, likeSearchTerm);
         return result.getContent();
     }
+    
+    
+    /**
+     * Method to return the total pages sufficient to display all images
+     * with respect to the search text
+     * 
+     * @param searchTerm - This is the search string which is being searched.
+     * 
+     * @return totalPages required to display images with filename, name or description
+     * matching the search text 
+     */
+    @Override
+    public long getTotalPagesOnSearchText(String searchTerm) {
+    	String likeSearchTerm = "%" + searchTerm + "%";
+    	long count = imageRepo.countByFilenameLikeOrNameLikeOrDescriptionLike(likeSearchTerm, likeSearchTerm, likeSearchTerm);
+    	return (count % pageSize == 0) ? count / pageSize : (count / pageSize) + 1;
+    }
 }
