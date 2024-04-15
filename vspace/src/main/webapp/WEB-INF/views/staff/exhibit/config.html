@@ -1,20 +1,20 @@
 <html layout:decorate="~{layouts/main_staff}">
 <head>
 <script th:inline="javascript">
-		$(document).ready(function() {
-		    var offlineMessage = $('#offlineMessage');
-		    var moduleLinkImageupload = $('#moduleLinkImageupload');
+		$(document).ready(function(){
+			var offlineMessage = $('#offlineMessage');
+			var moduleLinkImageupload = $('#moduleLinkImageupload');
 			var spaceLinkImageUpload = $('#spaceLinkImageUpload');
 			var externalLinkImageupload = $('#externalLinkImageupload');
 			var spaceParamExihibit = $('#spaceParamExihibit');
 			var defaultImages = $('#defaultImages');
-		    if ('[(${exhibition})]' != null && '[(${exhibition.mode})]' == 'OFFLINE') {
-		        offlineMessage.show();
-		    }
-		    else {
-		        offlineMessage.hide();
-		    }
-		    moduleLinkImageupload.hide();
+			if ('[(${exhibition})]' != null
+					&& '[(${exhibition.mode})]' == 'OFFLINE') {
+				offlineMessage.show();
+			} else {
+				offlineMessage.hide();
+			}
+			moduleLinkImageupload.hide();
 			spaceLinkImageUpload.hide();
 			externalLinkImageupload.hide();
 			defaultImages.hide();

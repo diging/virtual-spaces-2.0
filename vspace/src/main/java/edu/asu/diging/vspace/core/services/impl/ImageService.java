@@ -50,8 +50,8 @@ public class ImageService implements IImageService {
     @Value("${page_size}")
     private int pageSize;
 
-    private static final String DEFAULT_IMAGE_EXCEPTION = "Default image could not be stored: ";
-    private static final String NO_IMAGE_EXCEPTION = "Image doesn't exist for image id";
+    private final String DEFAULT_IMAGE_EXCEPTION = "Default image could not be stored: ";
+    private final String NO_IMAGE_EXCEPTION = "Image doesn't exist for image id";
 
     /*
      * (non-Javadoc)
@@ -232,7 +232,6 @@ public class ImageService implements IImageService {
         if (imageOptional.isPresent()) {
             return imageOptional.get();
         } else {
-            logger.error(NO_IMAGE_EXCEPTION);
             throw new ImageDoesNotExistException(NO_IMAGE_EXCEPTION + imageId);
         }
     }
