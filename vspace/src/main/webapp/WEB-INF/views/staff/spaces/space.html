@@ -100,20 +100,18 @@ externalLinkIconReader.onload = function(e) {
 
 function checkDefaultImage() {
 	$.ajax({
-		
-        url: "[(@{'/api/exhibition/default/link/imageDetails/'})]",
-        type: 'GET',
-        cache       : false,
-        contentType : false,
-        success: function(data) {
-        	if(data.length > 0){
-        		defaultSpaceImageFlag = JSON.parse(data).defaultSpaceImageFlag; 
-        		defaultModuleImageFlag = JSON.parse(data).defaultModuleImageFlag
-        		defaultExternalLinkImageFlag = JSON.parse(data).defaultExternalLinkImageFlag;
-            }    
-        }
-    });
-	
+	     url: "[(@{'/api/exhibition/default/link/imageDetails/'})]",
+	     type: 'GET',
+	     cache       : false,
+	     contentType : false,
+	     success: function(data) {
+	     	if(data.length > 0){
+	     		defaultSpaceImageFlag = JSON.parse(data).defaultSpaceImageFlag; 
+	     		defaultModuleImageFlag = JSON.parse(data).defaultModuleImageFlag
+	     		defaultExternalLinkImageFlag = JSON.parse(data).defaultExternalLinkImageFlag;
+	         }    
+	     }
+	});
 }
 
 function setLinkPosition(modalLink, link, isSpaceLink, isModal, isExternalLink, posX, posY, posXModal, posYModal, isTextBlock, isModuleLink){
