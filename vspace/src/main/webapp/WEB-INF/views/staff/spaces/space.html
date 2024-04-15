@@ -2,10 +2,10 @@
 <html layout:decorate="~{layouts/main_staff}">
 <head>
 <link rel="stylesheet" type="text/css" id="applicationStylesheet"
-	th:href="@{/resources/extra/Home.css}" />
+    th:href="@{/resources/extra/Home.css}" />
 
 <script src="//use.fontawesome.com/releases/v5.8.1/js/all.js"
-	data-auto-replace-svg="nest"></script>
+    data-auto-replace-svg="nest"></script>
 <script th:src="@{'/resources/extra/space.js'}"></script>
 <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
 <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
@@ -111,7 +111,7 @@ function checkDefaultImage() {
         		defaultModuleImageFlag = JSON.parse(data).defaultModuleImageFlag
         		defaultExternalLinkImageFlag = JSON.parse(data).defaultExternalLinkImageFlag;
             }    
-            }
+        }
     });
 	
 }
@@ -184,7 +184,6 @@ function setLabelPosition(link,id, positionX, positionY){
 }
 
 function generateSpaceLinks(link,spanId,divId,isModal, posX, posY, posXModal, posYModal){
-	
     if(link != null){
         var spaceLink;
         if(link.type == "ALERT"){
@@ -250,25 +249,19 @@ function generateModuleLinks(link,spanId,divId,isModal, posX, posY, posXModal, p
 }
 
 function generateExternalLinks(link,spanId,divId,isModal, posX, posY, posXModal, posYModal){
-	
 	if(link != null){
 		var externalLink;
 		if(link.type=="IMAGE" && link.image != null){
 			var imageURL = [[@{/api/image/}]]+link.image.id;
 			externalLink = $('<img id="'+spanId+link.externalLink.id+'" data-linkTarget="'+link.externalLink.externalLink+'" data-linkType="'+link.type+'"  data-howToOpen="'+ link.howToOpen+'" data-linkLabel="'+link.externalLink.name+'" class="externalLink-'+link.externalLink.id+' imageLink" data-link-id="'+link.externalLink.id+'" src="'+imageURL+'" />');
-		}else{
-			
-			if(defaultExternalLinkImageFlag === false){
-				
-				externalLink = $('<span id="'+spanId+link.externalLink.id+'" data-link-id="'+link.externalLink.id+'" data-linkTarget="'+link.externalLink.externalLink+'" data-linkType="'+link.type+'"  data-howToOpen="'+ link.howToOpen+'" data-linkLabel="'+link.externalLink.name+'" class="externalLink-'+link.externalLink.id+' Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-ext-link Icon_awesome_info_staff_e"></span><p class="label-'+link.externalLink.id+'" data-link-id="'+link.externalLink.id+'"><span class="tooltiptext">'+link.externalLink.name+'</span></p></span>');
-             }
-             else{
-            	
-            	var externalLinkImageUrl = [[@{/api/image/default/link/externalLink/}]];
-            	externalLink = $('<div id="'+spanId+link.externalLink.id+'" data-linkTarget="'+link.externalLink.externalLink+'" data-linkType="'+link.type+'"  data-howToOpen="'+ link.howToOpen+'" data-linkLabel="'+link.externalLink.name+'" class="externalLink-'+link.externalLink.id+' imageLink Info_cz_Class" data-link-id="'+link.externalLink.id+'"><img src="'+externalLinkImageUrl+'" width="30" height="30" border-radius = "50%"/><p class="label-'+link.externalLink.id+'" data-link-id="'+link.externalLink.id+'"><span class="tooltiptext">'+link.externalLink.name+'</span></p></div>');
-        		
-            }
-			}
+		}
+		else if(defaultExternalLinkImageFlag === false){
+			externalLink = $('<span id="'+spanId+link.externalLink.id+'" data-link-id="'+link.externalLink.id+'" data-linkTarget="'+link.externalLink.externalLink+'" data-linkType="'+link.type+'"  data-howToOpen="'+ link.howToOpen+'" data-linkLabel="'+link.externalLink.name+'" class="externalLink-'+link.externalLink.id+' Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-ext-link Icon_awesome_info_staff_e"></span><p class="label-'+link.externalLink.id+'" data-link-id="'+link.externalLink.id+'"><span class="tooltiptext">'+link.externalLink.name+'</span></p></span>');
+		}
+		else{
+		    var externalLinkImageUrl = [[@{/api/image/default/link/externalLink/}]];
+		    externalLink = $('<div id="'+spanId+link.externalLink.id+'" data-linkTarget="'+link.externalLink.externalLink+'" data-linkType="'+link.type+'"  data-howToOpen="'+ link.howToOpen+'" data-linkLabel="'+link.externalLink.name+'" class="externalLink-'+link.externalLink.id+' imageLink Info_cz_Class" data-link-id="'+link.externalLink.id+'"><img src="'+externalLinkImageUrl+'" width="30" height="30" border-radius = "50%"/><p class="label-'+link.externalLink.id+'" data-link-id="'+link.externalLink.id+'"><span class="tooltiptext">'+link.externalLink.name+'</span></p></div>');	
+		}
 		setLinkPosition(externalLink,link,false,isModal,true, posX, posY, posXModal, posYModal);
 		$(divId).append(externalLink);
 		if(spanId === "externallinkId-"){
@@ -1838,18 +1831,18 @@ $(function(){
 </script>
 <style>
 .Info_cz_Class .tooltiptext {
-	visibility: hidden;
-	width: 120px;
-	color: white;
-	text-align: center;
-	font-size: 12px;
-	padding: 3px 0;
-	border-radius: 6px;
-	position: absolute;
-	z-index: 1;
-	left: -38px;
-	top: 31px;
-	background: rgba(0, 0, 0, 0.6);
+    visibility: hidden;
+    width: 120px;
+    color: white;
+    text-align: center;
+    font-size: 12px;
+    padding: 3px 0;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1;
+    left: -38px;
+    top: 31px;
+    background: rgba(0, 0, 0, 0.6);
 }
 
 .Info_cz_Class:hover {
@@ -1857,68 +1850,54 @@ $(function(){
 }
 
 .Info_cz_Class:hover .tooltiptext {
-	visibility: visible;
+    visibility: visible;
 }
-
 #space {
-	max-width: 1800px;
+    max-width: 1800px;
 }
 </style>
 </head>
 
 <body>
-	<div layout:fragment="content" class="main-content">
-		<div class="flex-spacing">
-			<div>
-				<h2>
-					<span style="color: var(- -dark-grey)">Space:</span>
-					[[${space?.name}]] <i class="fa fa-info-circle black"
-						data-toggle="tooltip" data-html="true" data-placement="top"
+    <div layout:fragment="content" class="main-content">
+ 		<div class="flex-spacing">
+ 			<div>
+	    		<h2>
+		            <span style="color: var(--dark-grey)">Space:</span> [[${space?.name}]]
+		            <i class="fa fa-info-circle black" data-toggle="tooltip" data-html="true" data-placement="top" 
 						th:title="|Created on <span class='date'>${space.creationDate}</span> by ${space.createdBy}|"></i>
-					<a th:href="@{'/staff/space/'+${space?.id}+'/edit'}"><span
-						class="icon-edit"></span></a> <a
-						th:href="@{'/exhibit/space/'+${space?.id}}" data-toggle="tooltip"
-						title="Link to the public space"><span class="icon-link"></span></a>
-				</h2>
-				<p>[[${space.description}]]</p>
-				<div class="flex-spacing">
-					<div class="dropdown">
-						<button class="btn form-control btn-sm dropdown-toggle"
-							type="button" id="incominglinks" data-toggle="dropdown"
-							aria-haspopup="true" aria-expanded="false">Incoming
-							space links</button>
-						<div class="dropdown-menu" aria-labelledby="incominglinks">
-							<span th:if="${#lists.isEmpty(linksToThisSpace)}"><small>There
-									are no links to this space.</small></span>
-							<div th:each="spaceLinks : ${linksToThisSpace}">
-								<a th:href="@{'/staff/space/'+${spaceLinks.sourceSpace?.id}}"
-									style="padding: .25rem; color: var(- -secondary);"
-									th:id="${spaceLinks?.id}"><small>[[${spaceLinks.sourceSpace?.name}]]</small>
-									<span class="icon-warning secondary unpublishedSpaceClass"
-									th:if="${#strings.equals(spaceLinks.sourceSpace?.spaceStatus,'UNPUBLISHED')}"
-									style="font-size: 100%; font-weight: 400;"></span></a>
-							</div>
-						</div>
+		            <a th:href="@{'/staff/space/'+${space?.id}+'/edit'}"><span class="icon-edit"></span></a>
+		            <a th:href="@{'/exhibit/space/'+${space?.id}}" data-toggle="tooltip" title="Link to the public space"><span class="icon-link"></span></a>
+		            </h2>
+		        <p>[[${space.description}]]</p>
+		        <div class="inline-spacing">
+		        	<div class="dropdown">
+					  <button class="btn form-control btn-sm dropdown-toggle" type="button" id="incominglinks" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					    Incoming space links
+					  </button>
+					  <div class="dropdown-menu" aria-labelledby="incominglinks">
+					    <span th:if="${#lists.isEmpty(linksToThisSpace)}"><small>There are no links to this space.</small></span>
+			            <div th:each="spaceLinks : ${linksToThisSpace}">          	
+			                <a th:href="@{'/staff/space/'+${spaceLinks.sourceSpace?.id}}" style="padding: .25rem; color: var(--secondary);"
+			                    th:id="${spaceLinks?.id}"><small>[[${spaceLinks.sourceSpace?.name}]]</small> <span class="icon-warning secondary unpublishedSpaceClass"
+                            th:if="${#strings.equals(spaceLinks.sourceSpace?.spaceStatus,'UNPUBLISHED')}" style="font-size: 100%; font-weight: 400;"></span></a>
+			            </div>
+					  </div>
 					</div>
-
-					<div class="dropdown">
-						<button class="btn form-control btn-sm dropdown-toggle"
-							type="button" id="outgoinglinks" data-toggle="dropdown"
-							aria-haspopup="true" aria-expanded="false">Outgoing
-							space links</button>
-						<div class="dropdown-menu" aria-labelledby="outgoinglinks">
-							<span th:if="${#lists.isEmpty(linksOnThisSpace)}"><small>There
-									are no links from this space.</small></span>
-							<div th:each="spaceLinks : ${linksOnThisSpace}">
-								<a th:href="@{'/staff/space/'+${spaceLinks.targetSpace?.id}}"
-									style="padding: .25rem; color: var(- -secondary);"
-									th:if="${spaceLinks.targetSpace != null}"
-									th:id="${spaceLinks?.id}"><small>[[${spaceLinks.targetSpace?.name}]]</small>
-									<span class="icon-warning secondary unpublishedSpaceClass"
-									th:if="${#strings.equals(spaceLinks.targetSpace?.spaceStatus,'UNPUBLISHED')}"
-									style="font-size: 100%; font-weight: 400;"></span></a>
-							</div>
+					
+					<div class="dropdown right-aligned">
+					  <button class="btn form-control btn-sm dropdown-toggle" type="button" id="outgoinglinks" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					    Outgoing space links
+					  </button>
+					  <div class="dropdown-menu" aria-labelledby="outgoinglinks">
+					    <span th:if="${#lists.isEmpty(linksOnThisSpace)}"><small>There are no links from this space.</small></span>
+			            <div th:each="spaceLinks : ${linksOnThisSpace}">              	
+		                    <a th:href="@{'/staff/space/'+${spaceLinks.targetSpace?.id}}" style="padding: .25rem; color: var(--secondary);"
+		                        th:if="${spaceLinks.targetSpace != null}"
+		                        th:id="${spaceLinks?.id}"><small>[[${spaceLinks.targetSpace?.name}]]</small> <span class="icon-warning secondary unpublishedSpaceClass"
+                            th:if="${#strings.equals(spaceLinks.targetSpace?.spaceStatus,'UNPUBLISHED')}" style="font-size: 100%; font-weight: 400;"></span></a>
 						</div>
+					  </div>
 					</div>
 		        </div>
 		        
@@ -2435,149 +2414,155 @@ $(function(){
                     <input type="hidden" name="y" id="moduleLinkYEdit" />
                     <input type="hidden" name="moduleLinkDisplayId" id="moduleLinkDisplayId" />
 
-						<div class="row">
-							<div class="col-sm-4">
-								<label>Rotation: </label>
-							</div>
-							<div class="col-sm-8">
-								<input class="form-control-sm modulelink-targetEdit"
-									type="number" id="moduleLinkRotationEdit" name="rotation"
-									style="width: inherit; background: var(- -base-grey)"><br>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-sm-4">
-								<label>Label:</label>
-							</div>
-							<div class="col-sm-8">
-								<input class="form-control-sm modulelink-targetEdit" type="text"
-									name="moduleLinkLabel" id="moduleLinkLabelEdit"
-									style="width: inherit; background: var(- -base-grey)"><br>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-sm-4">
-								<label>Type:</label>
-							</div>
-							<div class="col-sm-8">
-								<select id="moduleTypeEdit" name="type"
-									class="form-control-sm modulelink-targetEdit">
-									<option th:value="IMAGE">Image</option>
-									<option th:value="ARROW" th:selected>Link</option>
-								</select>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-sm-4" style="padding-right: 0;">
-								<label>Linked Modules:</label>
-							</div>
-							<div class="col-sm-8">
-								<select id="moduleLinkIdEdit" name="linkedModule"
-									class="form-control-sm modulelink-targetEdit"
-									style="width: inherit; background: var(- -base-grey)">
-									<option th:each=" module : ${moduleList}"
-										th:value="${module?.id}">[[${module?.name}]]</option>
-								</select>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-sm-3" style="padding-right: 0;">
-								<label>Image:</label>
-							</div>
-							<div class="col-sm-9">
-								<input type="file" class="form-control-sm"
-									name="moduleLinkImage" id="moduleLinkImageEdit"
-									style="width: inherit" />
-							</div>
-						</div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label>Rotation: </label>
+                        </div>
+                        <div class="col-sm-8">
+                            <input
+                                class="form-control-sm modulelink-targetEdit"
+                                type="number"
+                                id="moduleLinkRotationEdit"
+                                name="rotation" style="width: inherit;  background: var(--base-grey)"><br>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label>Label:</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <input
+                                class="form-control-sm modulelink-targetEdit"
+                                type="text" name="moduleLinkLabel"
+                                id="moduleLinkLabelEdit"
+                                style="width: inherit;  background: var(--base-grey)"><br>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label>Type:</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <select id="moduleTypeEdit" name="type"
+                                class="form-control-sm modulelink-targetEdit">
+                                <option th:value="IMAGE">Image</option>
+                                <option th:value="ARROW" th:selected>Link</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4" style="padding-right: 0;">
+                            <label>Linked
+                                    Modules:</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <select id="moduleLinkIdEdit"
+                                name="linkedModule"
+                                class="form-control-sm modulelink-targetEdit"
+                                style="width: inherit; background: var(--base-grey)">
+                                <option
+                                    th:each=" module : ${moduleList}"
+                                    th:value="${module?.id}">[[${module?.name}]]</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3" style="padding-right: 0;">
+                            <label>Image:</label>
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="file" class="form-control-sm"
+                                name="moduleLinkImage"
+                                id="moduleLinkImageEdit" style="width: inherit" />
+                        </div>
+                    </div>
+                    
+                    
+                    <p class="mt-5 text-center">
+                        <button id="deleteModuleLinkButton" type="reset" class="btn delete-btn btn-sm"><i class="fa fa-trash"></i>Delete</button>
+                        <button id="editModuleLinkBtn" type="reset" class="btn primary-btn btn-sm">Save Module Link</button>
+                    </p>
+                </div>
+            </form>
+        </div>
+        <div id="editExternalLinkInfo" class="custom_form_style" style="z-index: 1;">
+            <div class="divider"></div>
+            <form id="editExternalLinkForm" style="z-index: 1;">
+                <p class="float-right">
+                    <a href="#" id="closeEditExternalLinkInfo" class="icon-circle-close"></a>
+                </p>
+                <div role="alert" style="margin-top: 30px;">
+                    <div class = "saveLoader" style="font-size: 30px; display: none; text-align: center;">
+                        <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <h6 class="alert-heading">
+                                <span style="color: var(--dark-grey)">Modify External
+                                    Link: </span><span
+                                    id="externalLinkInfoLabelEdit"></span>
+                            </h6>
+                            <p>Please click on the image where you
+                                want to place the existing external
+                                link. Then click "Edit External Link".</p>
+                        </div>
+                    </div>
+                    <input type="hidden" name="externalLinkIdValueEdit"
+                        id="externalLinkIdValueEdit" />
+                    <input type="hidden" name="x" id="externalLinkXEdit" />
+                    <input type="hidden" name="y" id="externalLinkYEdit" />
+                    <input type="hidden" name="externalLinkDisplayId"
+                        id="externalLinkDisplayId" />
 
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label>Label:</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <input
+                                class="form-control-sm externallink-targetEdit"
+                                type="text" name="externalLinkLabel"
+                                id="externalLinkLabelEdit"
+                                style="width: inherit; background: var(--base-grey)"><br>
+                        </div>
+                    </div>
 
-						<p class="mt-5 text-center">
-							<button id="deleteModuleLinkButton" type="reset"
-								class="btn delete-btn btn-sm">
-								<i class="fa fa-trash"></i>Delete
-							</button>
-							<button id="editModuleLinkBtn" type="reset"
-								class="btn primary-btn btn-sm">Save Module Link</button>
-						</p>
-					</div>
-				</form>
-			</div>
-			<div id="editExternalLinkInfo" class="custom_form_style"
-				style="z-index: 1;">
-				<div class="divider"></div>
-				<form id="editExternalLinkForm" style="z-index: 1;">
-					<p class="float-right">
-						<a href="#" id="closeEditExternalLinkInfo"
-							class="icon-circle-close"></a>
-					</p>
-					<div role="alert" style="margin-top: 30px;">
-						<div class="saveLoader"
-							style="font-size: 30px; display: none; text-align: center;">
-							<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
-						</div>
-						<div class="row">
-							<div class="col">
-								<h6 class="alert-heading">
-									<span style="color: var(- -dark-grey)">Modify External
-										Link: </span><span id="externalLinkInfoLabelEdit"></span>
-								</h6>
-								<p>Please click on the image where you want to place the
-									existing external link. Then click "Edit External Link".</p>
-							</div>
-						</div>
-						<input type="hidden" name="externalLinkIdValueEdit"
-							id="externalLinkIdValueEdit" /> <input type="hidden" name="x"
-							id="externalLinkXEdit" /> <input type="hidden" name="y"
-							id="externalLinkYEdit" /> <input type="hidden"
-							name="externalLinkDisplayId" id="externalLinkDisplayId" />
-
-						<div class="row">
-							<div class="col-sm-4">
-								<label>Label:</label>
-							</div>
-							<div class="col-sm-8">
-								<input class="form-control-sm externallink-targetEdit"
-									type="text" name="externalLinkLabel" id="externalLinkLabelEdit"
-									style="width: inherit; background: var(- -base-grey)"><br>
-							</div>
-						</div>
-
-						<div class="row">
-							<div class="col-sm-4" style="padding-right: 0;">
-								<label>External Link </label>
-							</div>
-							<div class="col-sm-8">
-								<input class="form-control-sm externallink-targetEdit"
-									type="text" name="url" id="externalLinkURLEdit"
-									style="width: inherit; background: var(- -base-grey)">
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-sm-4">
-								<label>How To Open:</label>
-							</div>
-							<div class="col-sm-8">
-								<select id="extTabOpenEdit" name="tabOpen"
-									class="form-control-sm extlink-target"
-									style="width: inherit; background: var(- -base-grey)">
-									<option th:value="NEWWINDOW">New Window</option>
-									<option th:value="SAMEWINDOW">Same Window</option>
-								</select>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-sm-4">
-								<label>Type:</label>
-							</div>
-							<div class="col-sm-8">
-								<select id="extTypeEdit" name="type"
-									class="form-control-sm externallink-targetEdit">
-									<option th:value="IMAGE">Image</option>
-									<option th:value="ARROW">Link</option>
-								</select>
-							</div>
-						</div>
+                    <div class="row">
+                        <div class="col-sm-4" style="padding-right: 0;">
+                            <label>External Link
+                            </label>
+                        </div>
+                        <div class="col-sm-8">
+                            <input
+                                class="form-control-sm externallink-targetEdit"
+                                type="text" name="url"
+                                id="externalLinkURLEdit"
+                                style="width: inherit; background: var(--base-grey)">
+                        </div>
+                    </div>
+					<div class="row">
+	                    <div class="col-sm-4">
+	                        <label>How To Open:</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <select id="extTabOpenEdit" name="tabOpen" class="form-control-sm extlink-target" style="width: inherit; background: var(--base-grey)">
+	                            <option th:value="NEWWINDOW">New Window</option>
+	                            <option th:value="SAMEWINDOW">Same Window</option>
+	                        </select>
+	                    </div>
+	                </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label>Type:</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <select id="extTypeEdit" name="type"
+                                class="form-control-sm externallink-targetEdit">
+                                <option th:value="IMAGE">Image</option>
+                                <option th:value="ARROW">Link</option>
+                            </select>
+                        </div>
+                    </div>
 
                     <div class="row">
                         <div class="col-sm-3" style="padding-right: 0;">

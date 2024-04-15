@@ -16,9 +16,11 @@
     background: rgba(0, 0, 0, 0.6);
 }
 
+.Info_cz_Class:hover {
+    z-index: 999;
+}
 
 .Info_cz_Class:hover .tooltiptext {
-	z-index: 999;
     visibility: visible;
 }
 
@@ -381,12 +383,12 @@
 		        cache       : false,
 		        contentType : false,
 		        success: function(data) {
-		        	if(data.length > 0){
-		        		defaultSpaceImageFlag = JSON.parse(data).defaultSpaceImageFlag; 
-		        		defaultModuleImageFlag = JSON.parse(data).defaultModuleImageFlag
-		        		defaultExternalLinkImageFlag = JSON.parse(data).defaultExternalLinkImageFlag;
-		            }    
-		            }
+				if(data.length > 0){
+					defaultSpaceImageFlag = JSON.parse(data).defaultSpaceImageFlag; 
+					defaultModuleImageFlag = JSON.parse(data).defaultModuleImageFlag
+					defaultExternalLinkImageFlag = JSON.parse(data).defaultExternalLinkImageFlag;
+				}    
+			}
 		    });
 			
 		}
