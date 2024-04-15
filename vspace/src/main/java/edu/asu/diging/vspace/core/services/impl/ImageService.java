@@ -266,36 +266,36 @@ public class ImageService implements IImageService {
     @Override
     public IVSImage storeImage(byte[] image, String filename) {
 
-        IVSImage defaultImage = null;
+        IVSImage storedImage = null;
         if (image != null && image.length > 0) {
             Tika tika = new Tika();
             String contentType = tika.detect(image);
-            defaultImage = imageFactory.createImage(filename, contentType);
-            defaultImage = imageRepo.save((VSImage) defaultImage);
+            storedImage = imageFactory.createImage(filename, contentType);
+            storedImage = imageRepo.save((VSImage) storedImage);
         }
 
         CreationReturnValue returnValue = new CreationReturnValue();
         returnValue.setErrorMsgs(new ArrayList<>());
 
-        if (defaultImage != null) {
+        if (storedImage != null) {
             String relativePath = null;
             try {
 
-                relativePath = storage.storeFile(image, filename, defaultImage.getId());
+                relativePath = storage.storeFile(image, filename, storedImage.getId());
             } catch (FileStorageException e) {
-                logger.error(DEFAULT_IMAGE_EXCEPTION);
+                logger.error(DEFAULT_IMAGE_EXCEPTION,e);
                 returnValue.getErrorMsgs().add(DEFAULT_IMAGE_EXCEPTION + e.getMessage());
             }
-            defaultImage.setParentPath(relativePath);
+            storedImage.setParentPath(relativePath);
             ImageData imageData = getImageData(image);
 
             if (imageData != null) {
-                defaultImage.setHeight(imageData.getHeight());
-                defaultImage.setWidth(imageData.getWidth());
+                storedImage.setHeight(imageData.getHeight());
+                storedImage.setWidth(imageData.getWidth());
             }
-            imageRepo.save((VSImage) defaultImage);
+            imageRepo.save((VSImage) storedImage);
 
         }
-        return defaultImage;
+        return storedImage;
     }
 }
