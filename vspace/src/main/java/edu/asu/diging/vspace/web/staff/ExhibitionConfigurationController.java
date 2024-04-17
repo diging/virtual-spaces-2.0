@@ -98,47 +98,21 @@ public class ExhibitionConfigurationController {
             RedirectAttributes attributes) throws IOException {
 
         ISpace startSpace = spaceManager.getSpace(spaceID);
-        IVSImage spaceDefaultImage = null;
-        IVSImage moduleDefaultImage = null;
-        IVSImage externalDefaultImage = null;
-
+        
         Exhibition exhibition;
         if (exhibitID == null || exhibitID.isEmpty()) {
             exhibition = (Exhibition) exhibitFactory.createExhibition();
         } else {
             exhibition = (Exhibition) exhibitManager.getExhibitionById(exhibitID);
         }
-        byte[] spaceImage = null;
-        String spaceLinkFilename = null;
-        if (spacelinkImage != null) {
-            spaceImage = spacelinkImage.getBytes();
-            spaceLinkFilename = spacelinkImage.getOriginalFilename();
-            spaceDefaultImage = imageService.storeImage(spaceImage, spaceLinkFilename);
-
-        }
-
-        byte[] moduleImage = null;
-        String moduleLinkFilename = null;
-
-        if (moduleLinkImage != null) {
-            moduleImage = moduleLinkImage.getBytes();
-            moduleLinkFilename = moduleLinkImage.getOriginalFilename();
-            moduleDefaultImage = imageService.storeImage(moduleImage, moduleLinkFilename);
-
-        }
-
-        byte[] externalImage = null;
-        String externalLinkFilename = null;
-        if (externalLinkImage != null) {
-            externalImage = externalLinkImage.getBytes();
-            externalLinkFilename = externalLinkImage.getOriginalFilename();
-            externalDefaultImage = imageService.storeImage(externalImage, externalLinkFilename);
-        }
-        List<IVSImage> defaultImagelist = new ArrayList<>();
-        defaultImagelist.add(spaceDefaultImage);
-        defaultImagelist.add(moduleDefaultImage);
-        defaultImagelist.add(externalDefaultImage);
-
+        
+        IVSImage spaceDefaultImage = spacelinkImage != null ? 
+                imageService.storeImage(spacelinkImage.getBytes(), spacelinkImage.getOriginalFilename()) : null; 
+        IVSImage moduleDefaultImage = moduleLinkImage != null ? 
+                imageService.storeImage(moduleLinkImage.getBytes(), moduleLinkImage.getOriginalFilename()) : null; 
+        IVSImage externalDefaultImage = externalLinkImage != null ? 
+                imageService.storeImage(externalLinkImage.getBytes(), externalLinkImage.getOriginalFilename()) : null; 
+        
         exhibition.setStartSpace(startSpace);
         exhibition.setTitle(title);
         exhibition.setMode(exhibitMode);
