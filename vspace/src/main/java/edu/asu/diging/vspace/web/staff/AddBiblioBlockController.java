@@ -25,13 +25,12 @@ public class AddBiblioBlockController {
 
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/bibliography", method = RequestMethod.POST)
     public ResponseEntity<String> addTextBlock(@PathVariable("id") String slideId,
-            @PathVariable("moduleId") String moduleId, BiblioBlock biblioBlockData, @RequestParam("biblioTitle") String title, @RequestParam("description") String description) throws JsonProcessingException {
+            @PathVariable("moduleId") String moduleId, @RequestBody String biblioBlockData) throws JsonProcessingException {
         
-        biblioBlockData.setBiblioTitle(title);
-        biblioBlockData.setDescription(description);
-        IBiblioBlock biblioBlock = contentBlockManager.createBiblioBlock(slideId, biblioBlockData);
+        //IBiblioBlock biblioBlock = contentBlockManager.createBiblioBlock(slideId, biblioBlockData);
         ObjectMapper mapper = new ObjectMapper();
-        return new ResponseEntity<>(mapper.writeValueAsString(biblioBlock), HttpStatus.OK);
+        System.out.print("asdfghjkl;hgfdsasdfghjkjgfdsasdfghjhgfds ");
+        return new ResponseEntity<String>(mapper.writeValueAsString(biblioBlockData), HttpStatus.OK);
     }
 
 }
