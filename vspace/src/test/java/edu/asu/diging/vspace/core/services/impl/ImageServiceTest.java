@@ -121,23 +121,22 @@ public class ImageServiceTest {
         Assert.assertEquals(333, data.getWidth());
         Assert.assertEquals(200, data.getHeight());
     }
-
+    
     @Test
     public void test_getTotalPages_success() {
         when(imageRepo.count()).thenReturn(12L);
         assertEquals(2, serviceToTest.getTotalPages(null));
     }
-
+    
     @Test
     public void test_getTotalPages_whenZeroImages() {
         when(imageRepo.count()).thenReturn(0L);
         assertEquals(0, serviceToTest.getTotalPages(null));
     }
-
+   
     @Test
-    public void test_getImages_success() {
-        Pageable sortByRequestedField = PageRequest.of(0, 10,
-                Sort.by(SortByField.CREATION_DATE.getValue()).descending());
+    public void test_getImages_success() { 
+        Pageable sortByRequestedField = PageRequest.of(0, 10, Sort.by(SortByField.CREATION_DATE.getValue()).descending());
         when(imageRepo.count()).thenReturn(1L);
         when(imageRepo.findAll(sortByRequestedField)).thenReturn(new PageImpl<VSImage>(images));
         List<IVSImage> requestedImages = serviceToTest.getImages(1);
@@ -145,108 +144,101 @@ public class ImageServiceTest {
         assertEquals(IMG_ID1, requestedImages.get(0).getId());
         verify(imageRepo).findAll(sortByRequestedField);
     }
-
+  
     @Test
-    public void test_getImages_negativePage() {
-        Pageable sortByRequestedField = PageRequest.of(0, 10,
-                Sort.by(SortByField.CREATION_DATE.getValue()).descending());
+    public void test_getImages_negativePage() { 
+        Pageable sortByRequestedField = PageRequest.of(0, 10, Sort.by(SortByField.CREATION_DATE.getValue()).descending());
         when(imageRepo.count()).thenReturn(1L);
         when(imageRepo.findAll(sortByRequestedField)).thenReturn(new PageImpl<VSImage>(images));
         List<IVSImage> requestedImages = serviceToTest.getImages(-2);
         assertEquals(IMG_ID1, requestedImages.get(0).getId());
         verify(imageRepo).findAll(sortByRequestedField);
     }
-
+    
     @Test
-    public void test_getImages_pageGreaterThanTotalPages() {
+    public void test_getImages_pageGreaterThanTotalPages() { 
         ReflectionTestUtils.setField(serviceToTest, "pageSize", 1);
-        Pageable sortByRequestedField = PageRequest.of(4, 1,
-                Sort.by(SortByField.CREATION_DATE.getValue()).descending());
+        Pageable sortByRequestedField = PageRequest.of(4, 1, Sort.by(SortByField.CREATION_DATE.getValue()).descending());
         when(imageRepo.count()).thenReturn(5L);
         when(imageRepo.findAll(sortByRequestedField)).thenReturn(new PageImpl<VSImage>(images));
         List<IVSImage> requestedImages = serviceToTest.getImages(7);
         assertEquals(IMG_ID1, requestedImages.get(0).getId());
         verify(imageRepo).findAll(sortByRequestedField);
     }
-
+    
     @Test
     public void test_getImages_sorted_success() {
         Pageable sortByRequestedField = PageRequest.of(0, 10, Sort.by(SortByField.FILENAME.getValue()).descending());
         when(imageRepo.count()).thenReturn(1L);
         when(imageRepo.findAll(sortByRequestedField)).thenReturn(new PageImpl<VSImage>(images));
-        List<IVSImage> requestedImages = serviceToTest.getImages(1, null, SortByField.FILENAME.getValue(),
-                Sort.Direction.DESC.toString());
+        List<IVSImage> requestedImages = serviceToTest.getImages(1, null, SortByField.FILENAME.getValue(), Sort.Direction.DESC.toString());
         assertEquals(true, checkSortByFileNameDesc(requestedImages));
         assertEquals(2, requestedImages.size());
         assertEquals(IMG_ID1, requestedImages.get(0).getId());
     }
-
+    
     @Test
-    public void test_getImages_sorted_negativePage() {
+    public void test_getImages_sorted_negativePage() { 
         Pageable sortByRequestedField = PageRequest.of(0, 10, Sort.by(SortByField.FILENAME.getValue()).descending());
         when(imageRepo.count()).thenReturn(1L);
         when(imageRepo.findAll(sortByRequestedField)).thenReturn(new PageImpl<VSImage>(images));
-        List<IVSImage> requestedImages = serviceToTest.getImages(-2, null, SortByField.FILENAME.getValue(),
-                Sort.Direction.DESC.toString());
+        List<IVSImage> requestedImages = serviceToTest.getImages(-2, null, SortByField.FILENAME.getValue(), Sort.Direction.DESC.toString());
         assertEquals(true, checkSortByFileNameDesc(requestedImages));
         assertEquals(IMG_ID1, requestedImages.get(0).getId());
     }
-
+    
     @Test
-    public void test_getImages_sorted_pageGreaterThanTotalPages() {
+    public void test_getImages_sorted_pageGreaterThanTotalPages() { 
         ReflectionTestUtils.setField(serviceToTest, "pageSize", 1);
         Pageable sortByRequestedField = PageRequest.of(4, 1, Sort.by(SortByField.FILENAME.getValue()).descending());
         when(imageRepo.count()).thenReturn(5L);
         when(imageRepo.findAll(sortByRequestedField)).thenReturn(new PageImpl<VSImage>(images));
-        List<IVSImage> requestedImages = serviceToTest.getImages(7, null, SortByField.FILENAME.getValue(),
-                Sort.Direction.DESC.toString());
+        List<IVSImage> requestedImages = serviceToTest.getImages(7, null, SortByField.FILENAME.getValue(), Sort.Direction.DESC.toString());
         assertEquals(true, checkSortByFileNameDesc(requestedImages));
         assertEquals(IMG_ID1, requestedImages.get(0).getId());
     }
-
+    
     @Test
-    public void test_getImages_sorted_noResult() {
+    public void test_getImages_sorted_noResult() { 
         ReflectionTestUtils.setField(serviceToTest, "pageSize", 1);
-        Pageable sortByRequestedField = PageRequest.of(4, 1,
-                Sort.by(SortByField.CREATION_DATE.getValue()).descending());
+        Pageable sortByRequestedField = PageRequest.of(4, 1, Sort.by(SortByField.CREATION_DATE.getValue()).descending());
         when(imageRepo.count()).thenReturn(5L);
         when(imageRepo.findAll(sortByRequestedField)).thenReturn(new PageImpl<VSImage>(new ArrayList<>()));
-        List<IVSImage> requestedImages = serviceToTest.getImages(1, null, SortByField.CREATION_DATE.getValue(),
-                Sort.Direction.DESC.toString());
+        List<IVSImage> requestedImages = serviceToTest.getImages(1, null, SortByField.CREATION_DATE.getValue(), Sort.Direction.DESC.toString());
         assertEquals(true, requestedImages.isEmpty());
     }
-
+    
     @Test
     public void test_getTotalImageCount_success() {
         when(imageRepo.count()).thenReturn(5L);
         assertEquals(5L, serviceToTest.getTotalImageCount(null));
     }
-
+    
     @Test
     public void test_getTotalImageCount_whenZeroImages() {
         when(imageRepo.count()).thenReturn(0L);
         assertEquals(0L, serviceToTest.getTotalImageCount(null));
     }
-
+    
     @Test
     public void test_validatePageNumber_success() {
         when(imageRepo.count()).thenReturn(40L);
         assertEquals(2, serviceToTest.validatePageNumber(2, null));
     }
-
+    
     @Test
     public void test_validatePageNumber_whenPageIsNegative() {
         when(imageRepo.count()).thenReturn(1L);
         assertEquals(1, serviceToTest.validatePageNumber(-1, null));
     }
-
+    
     @Test
     public void test_validatePageNumber_pageGreaterThanTotalPages() {
         ReflectionTestUtils.setField(serviceToTest, "pageSize", 1);
         when(imageRepo.count()).thenReturn(5L);
         assertEquals(5, serviceToTest.validatePageNumber(20, null));
     }
-
+    
     @Test
     public void test_editImage_success() throws ImageDoesNotExistException {
         Mockito.when(imageRepo.findById(IMG_ID)).thenReturn(Optional.of(images.get(1)));
@@ -254,19 +246,19 @@ public class ImageServiceTest {
         Assert.assertEquals(imageForm.getName(), image.getName());
         Assert.assertEquals(imageForm.getDescription(), image.getDescription());
     }
-
+    
     @Test(expected = ImageDoesNotExistException.class)
-    public void test_editImage_whenNoImageExist() throws ImageDoesNotExistException {
+    public void test_editImage_whenNoImageExist() throws ImageDoesNotExistException{
         Mockito.when(imageRepo.findById(IMG_ID)).thenReturn(Optional.empty());
         serviceToTest.editImage(IMG_ID, imageForm);
     }
-
+    
     @Test
     public void test_getImageById_success() throws ImageDoesNotExistException {
         Mockito.when(imageRepo.findById(IMG_ID)).thenReturn(Optional.of(images.get(0)));
         assertEquals(images.get(0).getId(), serviceToTest.getImageById(IMG_ID).getId());
     }
-
+    
     @Test(expected = ImageDoesNotExistException.class)
     public void test_getImageById_whenNoImageExist() throws ImageDoesNotExistException {
         Mockito.when(imageRepo.findById(IMG_ID)).thenReturn(Optional.empty());
@@ -274,8 +266,8 @@ public class ImageServiceTest {
     }
 
     private Boolean checkSortByFileNameDesc(List<IVSImage> images) {
-        for (int i = 0; i < images.size() - 1; ++i) {
-            if (images.get(i).getFilename().compareTo(images.get(i + 1).getFilename()) < 0) {
+        for(int i=0; i<images.size() - 1; ++i) {
+            if (images.get(i).getFilename().compareTo(images.get(i+1).getFilename()) < 0) {
                 return false;
             }
         }
