@@ -280,7 +280,6 @@ public class ImageService implements IImageService {
         if (storedImage != null) {
             String relativePath = null;
             try {
-
                 relativePath = storage.storeFile(image, filename, storedImage.getId());
             } catch (FileStorageException e) {
                 logger.error(DEFAULT_IMAGE_EXCEPTION,e);
@@ -294,7 +293,6 @@ public class ImageService implements IImageService {
                 storedImage.setWidth(imageData.getWidth());
             }
             imageRepo.save((VSImage) storedImage);
-
         }
         return storedImage;
     }

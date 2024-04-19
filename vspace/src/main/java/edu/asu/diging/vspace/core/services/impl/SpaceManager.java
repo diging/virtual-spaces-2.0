@@ -189,7 +189,6 @@ public class SpaceManager implements ISpaceManager {
     public ISpace getFullyLoadedSpace(String id) {
         ISpace space = getSpace(id);
         if (space == null) {
-            
             return null;
         }
         // load lazy collections
@@ -297,5 +296,5 @@ public class SpaceManager implements ISpaceManager {
     @Override
     public Page<ISpace> findByNameOrDescription(Pageable requestedPage, String searchText) {
         return spaceRepo.findDistinctByNameContainingOrDescriptionContaining(requestedPage, searchText,searchText);
-    }   
+    }
 }

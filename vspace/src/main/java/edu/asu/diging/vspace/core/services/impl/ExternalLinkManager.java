@@ -47,7 +47,6 @@ public class ExternalLinkManager extends LinkManager<IExternalLink, ExternalLink
     private IExternalLinkDisplayFactory externalLinkDisplayFactory;
 
     
-
     @Override
     public List<IExternalLinkDisplay> getLinkDisplays(String spaceId) {
         return externalLinkDisplayRepo.findExternalLinkDisplaysForSpace(spaceId);

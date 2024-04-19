@@ -117,12 +117,6 @@ public class ExhibitionManagerTest {
         assertEquals(exhibitionTest, exhibition);
         verify(exhibitRepo).findAllByOrderByIdAsc();
     }
-    
-    
-
-    
-    
-
 
     @Test
     public void test_updateExhibitionLanguages_success() {
