@@ -28,7 +28,6 @@ import edu.asu.diging.vspace.core.services.ISpaceTextBlockManager;
 public class SpaceController {
 
     public static final String STAFF_SPACE_PATH = "/staff/space/";
- 
 
     @Autowired
     private ISpaceManager spaceManager;
@@ -51,12 +50,12 @@ public class SpaceController {
     @Autowired
     private ISpaceTextBlockManager spaceTextBlockManager;
 
-    @RequestMapping(STAFF_SPACE_PATH + "{id}")
+    @RequestMapping(STAFF_SPACE_PATH+"{id}")
     public String showSpace(@PathVariable String id, Model model) {
 
         ISpace space = spaceManager.getFullyLoadedSpace(id);
         model.addAttribute("linksOnThisSpace", spaceManager.getOutgoingLinks(id));
-        model.addAttribute("linksToThisSpace", spaceManager.getIncomingLinks(id));
+        model.addAttribute("linksToThisSpace",spaceManager.getIncomingLinks(id));
         model.addAttribute("space", space);
         model.addAttribute("spaceLinks", spaceLinkManager.getLinkDisplays(id));
         model.addAttribute("externalLinks", externalLinkManager.getLinkDisplays(id));
@@ -64,6 +63,7 @@ public class SpaceController {
         model.addAttribute("spaces", spaceManager.getAllSpaces());
         model.addAttribute("display", spaceDisplayManager.getBySpace(space));
         model.addAttribute("moduleList", moduleManager.getAllModules());
+        model.addAttribute("spaceTextBlocks", spaceTextBlockManager.getSpaceTextBlockDisplays(id));
         return "staff/spaces/space";
     }
 
@@ -72,13 +72,11 @@ public class SpaceController {
         List<SpaceLink> spaceLinkPresent = spaceManager.getIncomingLinks(spaceId);
         return new ResponseEntity<>(spaceLinkPresent, HttpStatus.OK);
     }
-
-    @RequestMapping(value = STAFF_SPACE_PATH + "{id}/links", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, Object>> showSpaceLinks(@PathVariable String id, Model model) {
-        Map<String, Object> responseData = new HashMap<String, Object>();
-
+    
+    @RequestMapping(value = STAFF_SPACE_PATH+"{id}/links", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String,Object>> showSpaceLinks(@PathVariable String id, Model model) {
+        Map<String,Object> responseData = new HashMap<String,Object>();
         responseData.put("spaceLinks", spaceLinkManager.getLinkDisplays(id));
-
         responseData.put("externalLinks", externalLinkManager.getLinkDisplays(id));
         responseData.put("moduleLinks", moduleLinkManager.getLinkDisplays(id));
         responseData.put("textBlocks", spaceTextBlockManager.getSpaceTextBlockDisplays(id));
