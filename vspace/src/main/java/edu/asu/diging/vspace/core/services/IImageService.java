@@ -39,4 +39,6 @@ public interface IImageService {
 
     IVSImage storeImage(byte[] image, String filename);
 
+    byte[] getImageContent(IVSImage image);
+
 }

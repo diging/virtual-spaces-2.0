@@ -1,6 +1,5 @@
 package edu.asu.diging.vspace.web.staff;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,10 +17,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.google.gson.JsonObject;
 
-import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
+import edu.asu.diging.vspace.core.services.IImageService;
 
 @Controller
 public class DefaultImageController {
@@ -33,7 +32,7 @@ public class DefaultImageController {
     public static final String API_DEFAULT_SPACE_IMAGE_DETAILS = "/api/exhibition/default/link/imageDetails/";
 
     @Autowired
-    private IStorageEngine storage;
+    private IImageService imageService;
 
     @Autowired
     private IExhibitionManager exhibitManager;
@@ -82,12 +81,7 @@ public class DefaultImageController {
         if(image == null) {
             return null;
         }
-        try {
-            imageContent = storage.getMediaContent(image.getId(), image.getFilename());
-        } catch (IOException e) {
-            logger.error("Could not retrieve image.", e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        imageContent = imageService.getImageContent(image);
         HttpHeaders headers = new HttpHeaders();
         headers.setCacheControl(CacheControl.noCache().getHeaderValue());
         headers.setContentType(MediaType.parseMediaType(image.getFileType()));

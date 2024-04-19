@@ -298,4 +298,18 @@ public class ImageService implements IImageService {
         }
         return storedImage;
     }
+
+    @Override
+    public byte[] getImageContent(IVSImage image) {
+        byte[] imageContent = null;
+        CreationReturnValue returnValue = new CreationReturnValue();
+        returnValue.setErrorMsgs(new ArrayList<>());
+        try {
+            imageContent = storage.getMediaContent(image.getId(), image.getFilename());
+        } catch (IOException e) {
+            logger.error("Could not retrieve the image",e);  
+            returnValue.getErrorMsgs().add("Could not retrieve the image" + e.getMessage());
+        }
+        return imageContent;
+    }
 }
