@@ -52,6 +52,7 @@ public class AddSpaceLinkController {
             node.put("errorMessage", "No link coordinates specified.");
             return new ResponseEntity<String>(mapper.writeValueAsString(node), HttpStatus.BAD_REQUEST);
         }
+
         byte[] linkImage = null;
         String filename = null;
         if (file != null) {
