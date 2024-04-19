@@ -82,9 +82,7 @@ public class ExhibitionManagerTest {
         Exhibition exhibition = new Exhibition();
         exhibition.setId(ID);
         Optional<Exhibition> exhibitionOptional = Optional.of(exhibition);
-        ;
         when(exhibitRepo.findById(ID)).thenReturn(exhibitionOptional);
-
         IExhibition exhibitionTest = serviceToTest.getExhibitionById(ID);
         assertEquals(exhibitionTest, exhibition);
         verify(exhibitRepo).findById(ID);
