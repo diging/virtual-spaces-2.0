@@ -1,73 +1,71 @@
 <html layout:decorate="~{layouts/main_staff}">
 <head>
 <script th:inline="javascript">
-		$(document).ready(function(){
-			var offlineMessage = $('#offlineMessage');
-			var moduleLinkImageupload = $('#moduleLinkImageupload');
-			var spaceLinkImageUpload = $('#spaceLinkImageUpload');
-			var externalLinkImageupload = $('#externalLinkImageupload');
-			var spaceParamExihibit = $('#spaceParamExihibit');
-			var defaultImages = $('#defaultImages');
-			if ('[(${exhibition})]' != null
-					&& '[(${exhibition.mode})]' == 'OFFLINE') {
-				offlineMessage.show();
-			} else {
-				offlineMessage.hide();
-			}
-			moduleLinkImageupload.hide();
+	$(document).ready(function() {
+		var offlineMessage = $('#offlineMessage');
+		var moduleLinkImageupload = $('#moduleLinkImageupload');
+		var spaceLinkImageUpload = $('#spaceLinkImageUpload');
+		var externalLinkImageupload = $('#externalLinkImageupload');
+					
+		var spaceParamExihibit = $('#spaceParamExihibit');
+		var defaultImages = $('#defaultImages');
+		if ('[(${exhibition})]' != null
+				&& '[(${exhibition.mode})]' == 'OFFLINE') {
+			offlineMessage.show();
+		} else {
+			offlineMessage.hide();
+		}
+		moduleLinkImageupload.hide();
+		spaceLinkImageUpload.hide();
+		externalLinkImageupload.hide();
+		defaultImages.hide();
+		$("#changeBgImgAlert").show();
+			
+		$("#cancelSpaceImgBtn").click(function() {
 			spaceLinkImageUpload.hide();
-			externalLinkImageupload.hide();
-			defaultImages.hide();
-			$("#changeBgImgAlert").show();
-
-			$("#cancelSpaceImgBtn").click(function() {
-				spaceLinkImageUpload.hide();
-			});
-
-			$("#cancelModuleImgBtn").click(function() {
-				moduleLinkImageupload.hide();
-			});
-
-			$("#cancelExternalImgBtn").click(function() {
-				externalLinkImageupload.hide();
-			});
-
-			$("#cancelModuleImgBtn").click(function() {
-				moduleLinkImageupload.hide();
-			});
 		});
 		
-		function modeChange(modeChosen) {
-		    var offlineMessage = $('#offlineMessage');
-		    if (modeChosen == 'OFFLINE') {
-		        offlineMessage.show();
-		    }
-		    else {
-		        offlineMessage.hide();
-		    }
-		    
-	
+		$("#cancelModuleImgBtn").click(function() {
+			moduleLinkImageupload.hide();
+		});
+		
+		$("#cancelExternalImgBtn").click(function() {
+			externalLinkImageupload.hide();
+		});
+		
+		$("#cancelModuleImgBtn").click(function() {
+			moduleLinkImageupload.hide();
+		});
+	});
+
+	function modeChange(modeChosen) {
+		var offlineMessage = $('#offlineMessage');
+		if (modeChosen == 'OFFLINE') {
+			offlineMessage.show();
+		} else {
+			offlineMessage.hide();
+		}
 	}
-		function defaultLinkImages() {
-			var defaultImages = $('#defaultImages');
-			defaultImages.show();
+	
+	function defaultLinkImages() {
+		var defaultImages = $('#defaultImages');
+		defaultImages.show();
+	}
+	
+	function defaultLinkSpaceImages() {
+		var spaceLinkImageUpload = $('#spaceLinkImageUpload');
+		spaceLinkImageUpload.show();
+	}
 
-		}
-		function defaultLinkSpaceImages() {
-			var spaceLinkImageUpload = $('#spaceLinkImageUpload');
-			spaceLinkImageUpload.show();
+	function defaultLinkModuleImages() {
+		var moduleLinkImageupload = $('#moduleLinkImageupload');
+		moduleLinkImageupload.show();
+	}
 
-		}
-
-		function defaultLinkModuleImages() {
-			var moduleLinkImageupload = $('#moduleLinkImageupload');
-			moduleLinkImageupload.show();
-		}
-
-		function defaultLinkExternalImages() {
-			var externalLinkImageupload = $('#externalLinkImageupload');
-			externalLinkImageupload.show();
-		}
+	function defaultLinkExternalImages() {
+		var externalLinkImageupload = $('#externalLinkImageupload');
+		externalLinkImageupload.show();
+	}
 </script>
 <style>
 .tooltiptext {
@@ -140,61 +138,55 @@
 		            <input type="text" class="form-control" name="customMessage"
 		                th:value="${exhibition.customMessage}" placeholder ="This exhibition is currently offline. Please check back later."/>
 		        </div>
-				<div>
-		        <div style="padding-top: 20px;">
-						<button id="spaceLinkbtnDisplay" type="button"
-							onClick="defaultLinkSpaceImages()" class="btn primary-btn btn-sm">Default
-							Space Link Image</button>
+				<div style="padding-top: 20px;">
+					<button id="spaceLinkbtnDisplay" type="button"
+						onClick="defaultLinkSpaceImages()" class="btn primary-btn btn-sm">Default
+						Space Link Image</button>
+				</div>
+				<br>
+				<div id="spaceLinkImageUpload" class="alert alert-secondary"
+					style="background: white; display: block;">
 
-					</div>
-					<br>
-		        <div id="spaceLinkImageUpload" class="alert alert-secondary"
-						style="background: white; display: block;">
+					<input type="file" name="spacelinkImage" rows="5" cols="500"
+						id="spacelinkImage" class="form-control-file" />
+					<p class="form-control mb-0 text-right">
+						<!--  <button type="submit" id="changeBgImgBtn" class="btn primary-btn btn-sm btn-sm">Upload Image</button>-->
+						<button id="cancelSpaceImgBtn" type="button"
+							class="btn light btn-sm btn-sm">Cancel</button>
+					</p>
+				</div>
 
-						<input type="file" name="spacelinkImage" rows="5" cols="500"
-							id="spacelinkImage" class="form-control-file" />
-						<p class="form-control mb-0 text-right">
-							<!--  <button type="submit" id="changeBgImgBtn" class="btn primary-btn btn-sm btn-sm">Upload Image</button>-->
-							<button id="cancelSpaceImgBtn" type="button"
-								class="btn light btn-sm btn-sm">Cancel</button>
-						</p>
-					</div>
-					
-					<div style="padding-top: 20px;">
-						<button id="moduleLinkbtn" type="button"
-							onClick="defaultLinkModuleImages()"
-							class="btn primary-btn btn-sm">Default Module Link Image</button>
+				<div style="padding-top: 20px;">
+					<button id="moduleLinkbtn" type="button"
+						onClick="defaultLinkModuleImages()" class="btn primary-btn btn-sm">Default
+						Module Link Image</button>
+				</div>
+				<br>
+				<div id="moduleLinkImageupload" class="alert alert-secondary"
+					style="background: white;">
 
-					</div>
-					<br>
-					<div id="moduleLinkImageupload" class="alert alert-secondary"
-						style="background: white;">
-
-						<input type="file" name="moduleLinkImage" rows="5" cols="500"
-							id="moduleLinkImage" />
-						<p class="mb-0 text-right">
-							<button id="cancelModuleImgBtn" type="button"
-								class="btn light btn-sm btn-sm">Cancel</button>
-						</p>
-					</div>
-					<div style="padding-top: 20px;">
-						<button id="externalLinkbtn" type="button"
-							onClick="defaultLinkExternalImages()"
-							class="btn primary-btn btn-sm">Default external Link
-							Image</button>
-
-					</div>
-					<div id="externalLinkImageupload" class="alert alert-secondary"
-						style="background: white; display: block;">
-						<input type="file" name="externalLinkImage" rows="5" cols="500"
-							id="externalLinkImage" />
-						<p class="mb-0 text-right">
-							<button id="cancelExternalImgBtn" type="button"
-								class="btn light btn-sm btn-sm">Cancel</button>
-						</p>
-
-
-					</div>
+					<input type="file" name="moduleLinkImage" rows="5" cols="500"
+						id="moduleLinkImage" />
+					<p class="mb-0 text-right">
+						<button id="cancelModuleImgBtn" type="button"
+							class="btn light btn-sm btn-sm">Cancel</button>
+					</p>
+				</div>
+				<div style="padding-top: 20px;">
+					<button id="externalLinkbtn" type="button"
+						onClick="defaultLinkExternalImages()"
+						class="btn primary-btn btn-sm">Default external Link
+						Image</button>
+				</div>
+				<div id="externalLinkImageupload" class="alert alert-secondary"
+					style="background: white; display: block;">
+					<input type="file" name="externalLinkImage" rows="5" cols="500"
+						id="externalLinkImage" />
+					<p class="mb-0 text-right">
+						<button id="cancelExternalImgBtn" type="button"
+							class="btn light btn-sm btn-sm">Cancel</button>
+					</p>
+				</div>
 		        <p style="padding-top: 20px;">
 		            <input class="btn primary-btn" type="submit" value="Submit" />
 		        </p>	
