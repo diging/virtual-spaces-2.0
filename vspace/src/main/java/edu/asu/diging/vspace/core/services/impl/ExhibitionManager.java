@@ -1,3 +1,4 @@
+
 package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.ArrayList;
@@ -30,10 +31,10 @@ public class ExhibitionManager implements IExhibitionManager {
 
     @Autowired
     private ExhibitionRepository exhibitRepo;
-
+    
     @Autowired
     private ExhibitionLanguageConfig exhibitionLanguageConfig;
-
+    
     @Autowired
     private ExhibitionFactory exhibitFactory;
 
@@ -80,7 +81,7 @@ public class ExhibitionManager implements IExhibitionManager {
         if (exhibitions.size() > 0) {
             Exhibition exhibition = exhibitions.get(0);
             String previewId = exhibition.getPreviewId();
-            if (previewId == null || previewId.isEmpty()) {
+            if(previewId==null || previewId.isEmpty()) {
                 exhibitFactory.updatePreviewId(exhibition);
             }
             return exhibition;
@@ -89,35 +90,34 @@ public class ExhibitionManager implements IExhibitionManager {
     }
 
     /**
-     * Updates the Exhibition with given list of languages. It fetches the language
-     * from exhibitionLanguageConfig using code.
-     * 
+     * Updates the Exhibition with given list of languages. It fetches the language from exhibitionLanguageConfig using code.
+     *  
      * @param exhibition
-     * @param defaultLanguage
+     * @param defaultLanguage 
      * @param languages
-     * @throws LanguageListConfigurationNotFoundException
+     * @throws LanguageListConfigurationNotFoundException 
      */
     @Override
     public void updateExhibitionLanguages(Exhibition exhibition, List<String> codes, String defaultLanguage) {
-        if (CollectionUtils.isEmpty(exhibitionLanguageConfig.getExhibitionLanguageList())) {
+        if(CollectionUtils.isEmpty(exhibitionLanguageConfig.getExhibitionLanguageList())) {
             throw new LanguageListConfigurationNotFoundException("Exhibition Language Configuration not found");
         }
 
-        if (CollectionUtils.isEmpty(codes)) {
+        if(CollectionUtils.isEmpty(codes) ) {
             return;
         }
 
         // Adds defaultLanguage to codes list if not already exists.
-        if (!StringUtils.isEmpty(defaultLanguage) && !codes.contains(defaultLanguage)) {
+        if(!StringUtils.isEmpty(defaultLanguage) && !codes.contains(defaultLanguage)) {
             codes.add(defaultLanguage);
         }
 
         exhibitionLanguageConfig.getExhibitionLanguageList().stream()
             .filter(languageConfig -> codes.contains(languageConfig.get(ConfigConstants.CODE)))
             .forEach(languageMap -> {
-                IExhibitionLanguage exhibitionLanguage = addExhibitionLanguage(exhibition, languageMap);
+                IExhibitionLanguage exhibitionLanguage =  addExhibitionLanguage(exhibition , languageMap);  
                 exhibitionLanguage.setDefault(exhibitionLanguage.getCode().equalsIgnoreCase(defaultLanguage));
-            });
+            });  
 
         // Removes exhibition langauge if unselected.
         exhibition.getLanguages().removeAll(exhibition.getLanguages().stream()
@@ -126,19 +126,18 @@ public class ExhibitionManager implements IExhibitionManager {
     }
 
     /**
-     * Adds exhibitionLanguage to exhibition if not already present. If already
-     * present, returns exhibitionLanguage from the exhibition.
+     * Adds exhibitionLanguage to exhibition if not already present. If already present, returns exhibitionLanguage from the exhibition.
      * 
      * @param exhibition
      * @param languageMap
      * @return
      */
     private IExhibitionLanguage addExhibitionLanguage(Exhibition exhibition, Map languageMap) {
-        IExhibitionLanguage exhibitionLanguage = new ExhibitionLanguage((String) languageMap.get(ConfigConstants.LABEL),
+        IExhibitionLanguage exhibitionLanguage =   new ExhibitionLanguage((String) languageMap.get(ConfigConstants.LABEL),
                 (String) languageMap.get(ConfigConstants.CODE), exhibition);
 
-        int index = exhibition.getLanguages().indexOf(exhibitionLanguage);
-        if (index < 0) {
+        int index =  exhibition.getLanguages().indexOf(exhibitionLanguage);
+        if( index < 0 ) {
             exhibition.getLanguages().add(exhibitionLanguage);
         } else {
             exhibitionLanguage = exhibition.getLanguages().get(index);
