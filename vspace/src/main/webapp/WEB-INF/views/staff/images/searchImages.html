@@ -1,237 +1,220 @@
 <html layout:decorate="~{layouts/main_staff}">
-   <head>
-      <script th:src="@{/resources/bootpag/js/bootpag.min.js}"></script>
-      <script th:inline="javascript">
-         //# sourceURL=js.js
-         function removeTag(event) {
-             var imageId = $(event.target).data("image-id");
-             var category = $(event.target).data("category");
-             $.ajax({
-                   url: "[(@{'/staff/images/'})]" + imageId + '/tag?' + [[${_csrf.parameterName}]]+'='+[[${_csrf.token}]]+'&tag=' + category,
-                   method: "DELETE",
-                }).done(function() {
-                     $("#category-badge-" + imageId + "-" + category).remove();
-                });
-         }      
-         function toggleChange(form, imageId) {
-         	var catValue = $(form).find("option:selected").val();
-             $.post($(form).attr('action') + "&tag=" + catValue, function( data ) {
-                 var category = $('<span class="badge badge-warning"></span>');
-                 category.attr('id', 'category-badge-' + imageId + "-" + catValue);
-                 category.attr("data-category", catValue);
-                 var catText = $(form).find("option:selected").text();
-                 category.append(catText + " ");
-                 var removeTagButton = $('<i data-image-id="' + imageId + '" data-category="' + catValue + '" class="fas fa-times removeTag"></i>');
-                 removeTagButton.click(removeTag);
-                 removeTagButton.css('cursor', 'pointer');
-                 category.append(removeTagButton);
-                 var isDuplicate = false;
-                 $("#tags-" + imageId).children().each(function(idx,elem) {
-                     if ($(elem).data('category') == catValue) {
-                         isDuplicate = true;
-                     }
-                 });
-                 if (!isDuplicate) {
-                     $("#tags-" + imageId).append(category);
-                 }
-                 
-                 $(form)[0].reset();
-             });
-         }
-         
-         $( document ).ready(function() {
-             $(".removeTag").click(function(e) {
-             	removeTag(e);
-             });
-         
-             $(".removeTag").css('cursor', 'pointer');
-             $('#page-selection').bootpag({
-                 total: [(${totalPages})],
-                 page: [(${currentPageNumber})],
-                 maxVisible: 10,
-                 leaps: true,
-                 firstLastUse: true,
-                 first: '|<',
-                 last: '>|',
-                 wrapClass: 'pagination',
-                 activeClass: 'active',
-                 disabledClass: 'disabled',
-                 nextClass: 'next',
-                 prevClass: 'prev',
-                 lastClass: 'last',
-                 firstClass: 'first'
-             }).on("page", function(event, num){
-                 window.location.assign("./"+num+"?searchText="+[[${searchTerm}]]);
-             });
-         
-           $("table.table thead th").each(function(){
-               var head = $(this);
-               if(head.attr('sort-prop')=='[(${sortProperty})]'){
-                   head.append([[${order}]]=='desc'?'<i class="fas fa-sort-down"></i>':'<i class="fas fa-sort-up"></i>')
-               }
-               });
-         
-            //set click action, reload page on clicking with all query params
-            $("table.table thead th").click(function() {
-             var headerSortPropName = $(this).attr("sort-prop");
-             if(headerSortPropName != 'tag') {
-                 if(headerSortPropName=='[(${sortProperty})]'){
-                     window.location.href = window.location.pathname+
-                     '?imageCat=[(${imageCategory})]&sort='+ headerSortPropName+'&order='+
-                     ('[(${order})]' == 'desc'?'asc':'desc');
-                 }else{
-                     window.location.href = window.location.pathname+
-                     '?imageCat=[(${imageCategory})]&sort='+ headerSortPropName+'&order=asc';
-                 }
-             }
-             });
-            
-            $("#filterTag").on("change", function(e) {
-                e.preventDefault();
-                var selectedId=e.target.value;
-                var formData = new FormData();
-                if(selectedId === "all"){
-                    var url = "[(@{'/staff/images/list/'})]"+'?imageCat=&sort='+[[${sortProperty}]]+'&order='+[[${order}]];
-                    window.location = url;
-                }else{
-                    var url = "[(@{'/staff/images/list/'})]"+'?imageCat='+selectedId+'&sort='+[[${sortProperty}]]+'&order='+[[${order}]];
-                    window.location = url;
+
+<head>
+<script th:src="@{/resources/bootpag/js/bootpag.min.js}"></script>
+<script th:inline="javascript">
+    //# sourceURL=js.js
+    function removeTag(event) {
+        var imageId = $(event.target).data("image-id");
+        var category = $(event.target).data("category");
+        $.ajax({
+            url: "[(@{'/staff/images/'})]" + imageId + '/tag?' + [[${ _csrf.parameterName }]] + '=' + [[${ _csrf.token }]] + '&tag=' + category,
+            method: "DELETE",
+        }).done(function () {
+            $("#category-badge-" + imageId + "-" + category).remove();
+        });
+    }
+
+    function toggleChange(form, imageId) {
+        var catValue = $(form).find("option:selected").val();
+        $.post($(form).attr('action') + "&tag=" + catValue, function (data) {
+            var category = $('<span class="badge badge-warning"></span>');
+            category.attr('id', 'category-badge-' + imageId + "-" + catValue);
+            category.attr("data-category", catValue);
+            var catText = $(form).find("option:selected").text();
+            category.append(catText + " ");
+            var removeTagButton = $('<i data-image-id="' + imageId + '" data-category="' + catValue + '" class="fas fa-times removeTag"></i>');
+            removeTagButton.click(removeTag);
+            removeTagButton.css('cursor', 'pointer');
+            category.append(removeTagButton);
+            var isDuplicate = false;
+            $("#tags-" + imageId).children().each(function (idx, elem) {
+                if ($(elem).data('category') == catValue) {
+                    isDuplicate = true;
                 }
-                
             });
-         });
-      </script>
-      <style>
-         .pagination>li>a {
-         border: 1px solid var(--primary);
-         padding: 5px;
-         color: var(--primary);
-         font-size: 15px;
-         }
-         .pagination>li.active>a {
-         background: var(--primary);
-         color: #fff;
-         font-size: 15px;
-         }
-         .img-thumbnail {
-         height: 100px;
-         width: 140px;
-         }
-      </style>
-   </head>
-   <body>
-      <div layout:fragment="content" class="main-content">
-         <h2>Images</h2>
-         <div style="padding-bottom: 20px;">This virtual exhibition
-            contains the following images.
-         </div>
-         <div class="searchInput">
-            <input class="form-control" style="background: none; margin-left: 70%;width: 20%;" type="text" id="searchImageField" placeholder="Search..." th:value="${searchText}">
+            if (!isDuplicate) {
+                $("#tags-" + imageId).append(category);
+            }
+
+            $(form)[0].reset();
+        });
+    }
+
+    $(document).ready(function () {
+        $(".removeTag").click(function (e) {
+            removeTag(e);
+        });
+
+        $(".removeTag").css('cursor', 'pointer');
+        $('#page-selection').bootpag({
+            total: [(${ totalPages })],
+            page: [(${ currentPageNumber })],
+                maxVisible: 10,
+                leaps: true,
+                firstLastUse: true,
+                first: '|<',
+                last: '>|',
+                wrapClass: 'pagination',
+                activeClass: 'active',
+                disabledClass: 'disabled',
+                nextClass: 'next',
+                prevClass: 'prev',
+                lastClass: 'last',
+                firstClass: 'first'
+            }).on("page", function (event, num) {
+                window.location.assign("./" + num + "?searchText=" + [[${ searchTerm }]]);
+            });
+
+        $("table.table thead th").each(function () {
+            var head = $(this);
+            if (head.attr('sort-prop') == '[(${sortProperty})]') {
+                head.append([[${ order }]] == 'desc' ? '<i class="fas fa-sort-down"></i>' : '<i class="fas fa-sort-up"></i>')
+            }
+        });
+
+        //set click action, reload page on clicking with all query params
+        $("table.table thead th").click(function () {
+            var headerSortPropName = $(this).attr("sort-prop");
+            if (headerSortPropName != 'tag') {
+                if (headerSortPropName == '[(${sortProperty})]') {
+                    window.location.href = window.location.pathname +
+                        '?imageCat=[(${imageCategory})]&sort=' + headerSortPropName + '&order=' +
+                        ('[(${order})]' == 'desc' ? 'asc' : 'desc');
+                } else {
+                    window.location.href = window.location.pathname +
+                        '?imageCat=[(${imageCategory})]&sort=' + headerSortPropName + '&order=asc';
+                }
+            }
+        });
+
+        $("#filterTag").on("change", function (e) {
+            e.preventDefault();
+            var selectedId = e.target.value;
+            var formData = new FormData();
+            if (selectedId === "all") {
+                var url = "[(@{'/staff/images/list/'})]" + '?imageCat=&sort=' + [[${ sortProperty }]] + '&order=' + [[${ order }]];
+                window.location = url;
+            } else {
+                var url = "[(@{'/staff/images/list/'})]" + '?imageCat=' + selectedId + '&sort=' + [[${ sortProperty }]] + '&order=' + [[${ order }]];
+                window.location = url;
+            }
+
+        });
+    });
+</script>
+<style>
+.pagination>li>a {
+    border: 1px solid var(- -primary);
+    padding: 5px;
+    color: var(- -primary);
+    font-size: 15px;
+}
+
+.pagination>li.active>a {
+    background: var(- -primary);
+    color: #fff;
+    font-size: 15px;
+}
+
+.img-thumbnail {
+    height: 100px;
+    width: 140px;
+}
+</style>
+</head>
+
+<body>
+    <div layout:fragment="content" class="main-content">
+        <h2>Images</h2>
+        <div style="padding-bottom: 20px;">This virtual exhibition
+            contains the following images.</div>
+        <div class="searchInput">
+            <input class="form-control" style="background: none; margin-left: 70%; width: 20%;" type="text"
+                id="searchImageField" placeholder="Search..." th:value="${searchText}">
             <a id="searchImageLink"><button class="btn primary-btn" type="submit" id="searchImageButton">
-            <span class="icon-search"></span></button></a>
-         </div>
-         <table class="table">
+                    <span class="icon-search"></span>
+                </button></a>
+        </div>
+        <table class="table">
             <thead>
-               <tr>
-                  <th scope="col" sort-prop="filename"><a
-                     href="#">Filename</a></th>
-                  <th scope="col" sort-prop="name"><a href="#">Name</a></th>
-                  <th scope="col" sort-prop="space">Space</th>
-                  <th scope="col" sort-prop="createdBy"><a
-                     href="#">Created By</a></th>
-                  <th scope="col" sort-prop="creationDate"><a
-                     href="#">Created Date</a></th>
-                  <th scope="col" sort-prop="tag">
-                     Tag
-                     <select
-                        id="filterTag" name="tagFilter"
-                        class="form-control form-control-sm">
-                        <option th:value="all">Show All</option>
-                        <option th:each="catTag:${imageCategories}"
-                           th:value="${catTag}"
-                           th:selected="${#strings.equals(catTag,imageCategory)}">
-                           [[${@environment.getProperty('image_category_' + catTag)}]]
-                        </option>
-                     </select>
-                  </th>
-               </tr>
+                <tr>
+                    <th scope="col" sort-prop="filename"><a href="#">Filename</a></th>
+                    <th scope="col" sort-prop="name"><a href="#">Name</a></th>
+                    <th scope="col" sort-prop="space">Space</th>
+                    <th scope="col" sort-prop="createdBy"><a href="#">Created By</a></th>
+                    <th scope="col" sort-prop="creationDate"><a href="#">Created Date</a></th>
+                    <th scope="col" sort-prop="tag">Tag <select id="filterTag" name="tagFilter"
+                            class="form-control form-control-sm">
+                            <option th:value="all">Show All</option>
+                            <option th:each="catTag:${imageCategories}" th:value="${catTag}"
+                                th:selected="${#strings.equals(catTag,imageCategory)}">
+                                [[${@environment.getProperty('image_category_'
+                                + catTag)}]]</option>
+                        </select>
+                    </th>
+                </tr>
             </thead>
             <tbody class="tableBody">
-               <tr th:each="image: ${images}" th:class="${catTag}">
-                  <th scope="row"><a
-                     th:href="@{'/staff/display/image/'+${image.id}}"><img
-                     th:src="@{'/api/image/'+${image.id}}"
-                     class="img-thumbnail">
-                     [[${image.filename}]]</a>
-                  </th>
-                  <td>[[${image.name}]]</td>
-                  <td><a
-                     th:each="space,stat:${imageToSpaces[image.id]}"
-                     th:href="@{'/staff/space/'+${space.id}}">[[${space.name}]]<span
-                     th:if="${stat.count < #lists.size(imageToSpaces[image.id])}">,<br></span></a>
-                  </td>
-                  <td>[[${image.createdBy}]]</td>
-                  <td><span class="date">[[${image.creationDate}]]</span></td>
-                  <td>
-                     <span th:id="'tags-'+${image.id}"><span
-                        th:each="cat:${image.categories}"
-                        th:id="'category-badge-'+${image.id}+'-'+${cat}"
-                        th:data-category="${cat}"
-                        class="badge badge-warning">[[${@environment.getProperty('image_category_'
-                     + cat)}]] <i
-                        th:data-image-id="${image.id}"
-                        th:data-category="${cat}"
-                        class="fas fa-times removeTag"></i>
-                     </span>
-                     </span>
-                     <form id="changeTagForm"
-                        th:action="@{'/staff/images/'+${image.id}+'/tag?'+${_csrf.parameterName}+'='+${_csrf.token}}"
-                        method="post">
-                        <input type="hidden" name="imageID"
-                           th:value="${image.id}" id="imageID" />
-                        <select id="changeTag" name="tag"
-                           th:onChange="toggleChange(this.form, '[(${image.id})]')"
-                           class="form-control form-control-sm"
-                           style="width: 68px;">
-                           <option>Assign a tag</option>
-                           <option
-                              th:each="catTag:${imageCategories}"
-                              th:value="${catTag}">[[${@environment.getProperty('image_category_'
-                              + catTag)}]]
-                           </option>
-                        </select>
-                     </form>
-                  </td>
-                  <td style="display:none;" class="filteredData"><span
-                     th:each="cat:${image.categories}">[[${cat}]]
-                     </span>
-                  </td>
-               </tr>
+                <tr th:each="image: ${images}" th:class="${catTag}">
+                    <th scope="row"><a th:href="@{'/staff/display/image/'+${image.id}}"><img
+                                th:src="@{'/api/image/'+${image.id}}" class="img-thumbnail">
+                            [[${image.filename}]]</a></th>
+                    <td>[[${image.name}]]</td>
+                    <td><a th:each="space,stat:${imageToSpaces[image.id]}"
+                            th:href="@{'/staff/space/'+${space.id}}">[[${space.name}]]<span
+                                th:if="${stat.count < #lists.size(imageToSpaces[image.id])}">,<br></span></a>
+                    </td>
+                    <td>[[${image.createdBy}]]</td>
+                    <td><span class="date">[[${image.creationDate}]]</span></td>
+                    <td><span th:id="'tags-'+${image.id}"><span th:each="cat:${image.categories}"
+                                th:id="'category-badge-'+${image.id}+'-'+${cat}" th:data-category="${cat}"
+                                class="badge badge-warning">[[${@environment.getProperty('image_category_'
+                                + cat)}]] <i th:data-image-id="${image.id}" th:data-category="${cat}"
+                                    class="fas fa-times removeTag"></i>
+                            </span> </span>
+                        <form id="changeTagForm"
+                            th:action="@{'/staff/images/'+${image.id}+'/tag?'+${_csrf.parameterName}+'='+${_csrf.token}}"
+                            method="post">
+                            <input type="hidden" name="imageID" th:value="${image.id}" id="imageID" />
+                            <select id="changeTag" name="tag" th:onChange="toggleChange(this.form, '[(${image.id})]')"
+                                class="form-control form-control-sm" style="width: 68px;">
+                                <option>Assign a tag</option>
+                                <option th:each="catTag:${imageCategories}" th:value="${catTag}">
+                                    [[${@environment.getProperty('image_category_'
+                                    + catTag)}]]</option>
+                            </select>
+                        </form>
+                    </td>
+                    <td style="display: none;" class="filteredData"><span th:each="cat:${image.categories}">[[${cat}]]
+                        </span></td>
+                </tr>
             </tbody>
-         </table>
-         <div id="page-selection"></div>
-         <a class="btn-sm " style="text-decoration: underline;" th:href="@{/staff/images/list}"> Clear Search</a>
-         <script>
-            $(document).on('input', '#searchImageField', function(e){
-               if($("#searchImageField").val().trim()) {
-                  $('#searchImageButton').removeAttr('disabled');
-               }
-               else {
-                  $('#searchImageButton').attr('disabled','true');
-               }
-               if (!$('#searchImageButton').attr('disabled') && $("#searchImageField").val().trim()){
-                  $("#searchImageLink").attr('href','[[@{/staff/images/search/full?searchText=}]]'+$("#searchImageField").val());
-               } 
-               else{
-                  $("#searchImageLink").attr('href','');
-               }
+        </table>
+        <div id="page-selection"></div>
+        <a class="btn-sm " style="text-decoration: underline;" th:href="@{/staff/images/list}"> Clear Search</a>
+        <script>
+            $(document).on('input', '#searchImageField', function (e) {
+                if ($("#searchImageField").val().trim()) {
+                    $('#searchImageButton').removeAttr('disabled');
+                }
+                else {
+                    $('#searchImageButton').attr('disabled', 'true');
+                }
+                if (!$('#searchImageButton').attr('disabled') && $("#searchImageField").val().trim()) {
+                    $("#searchImageLink").attr('href', '[[@{/staff/images/search/full?searchText=}]]' + $("#searchImageField").val());
+                }
+                else {
+                    $("#searchImageLink").attr('href', '');
+                }
             });
-            $(document).on('keydown', function(e) { 
-               if((e.key  === 'Enter' || e.keyCode === 13) && $("#searchImageField").val().trim()) { 
-                  $("#searchImageButton").trigger('click');
-               }
+            $(document).on('keydown', function (e) {
+                if ((e.key === 'Enter' || e.keyCode === 13) && $("#searchImageField").val().trim()) {
+                    $("#searchImageButton").trigger('click');
+                }
             }) 
-         </script>
-      </div>
-   </body>
+        </script>
+    </div>
+</body>
+
 </html>
