@@ -20,7 +20,7 @@ public interface IContentBlockManager {
     CreationReturnValue createImageBlock(String slideId, byte[] image, String filename, Integer contentOrder)
             throws ImageCouldNotBeStoredException;
     
-    IBiblioBlock createBiblioBlock(String slideId, IBiblioBlock biblioData);
+    IBiblioBlock createBiblioBlock(String slideId, String title, String description, Integer contentOrder);
 
     List<IContentBlock> getAllContentBlocks(String slideId);
 

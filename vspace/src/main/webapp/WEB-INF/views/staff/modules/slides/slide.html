@@ -746,9 +746,20 @@ $(document).ready(function() {
             	data = JSON.parse(data);
             	console.log("Success");
             	console.log(data);
-            	var biblioblock = $('<div id="'+ data.id +'" class="biblioDivStaff tab row"><p> Bibliography Title: <span>' + data.biblioTitle + '</span>, Description: <span>' + data.description + '</span>'
-                		+ '<input type="hidden" id="deleteBiblioId" value="'+ data.id +'" /><a class="btn deleteBiblio" href="javascript:;" style="position: absolute; right:0px;">' +
-                		+ '<a id="addReference" class="btn primary-btn btn-sm" style="padding-top: 8px;">+ New Reference</a><i style="color: var(--error);" class="fas fa-trash-alt"></i></a></p></div>');
+            	var biblioblock = $('<div id="' + data.id + '" class="biblioDivStaff tab row"> \
+                <p>\
+                Bibliography Title: <span>' + data.biblioTitle + '</span>,\
+                Description: <span>' + data.description + '</span>\
+                <input type="hidden" id="deleteBiblioId" value="' + data.id + '" />\
+                <a class="btn deleteBiblio" href="javascript:;" style="position: absolute; right: 0px;">\
+                    <i style="color: var(--error);" class="fas fa-trash-alt"></i>\
+                </a> \
+                <a id="addReference" class="btn primary-btn btn-sm" style="padding-top: 8px;">\
+                    + New Reference \
+                </a> \
+            </p> \
+        </div> \
+');
 
             	$(biblioblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
                 $('#slideSpace').append(biblioblock);             
@@ -941,8 +952,18 @@ $(document).ready(function() {
     function updateBiblioBox(blockId, formData) {
         // clear biblio box and buttons
         $(".open").empty();
-       	$(".open").append('<p class="col-md-10">Bibliography Title: <span>' + formData.get('biblioTitle')+ '</span>, Description: <span>' + formData.get('description')
-       			+ '</span></p><input type="hidden" id="deleteBiblioId" value="'+blockId+'" /><a class="btn deleteBiblio col-md-1" href="javascript:;" style="position: absolute; right:0px;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a>');
+       	$(".open").append('<p class="col-md-10"> \
+       		    Bibliography Title: <span>' + formData.get('biblioTitle')+ '</span>, \
+       		    Description: <span>' + formData.get('description') + '</span> \
+       		</p> \
+       		<input type="hidden" id="deleteBiblioId" value="' + blockId + '" /> \
+       			<a class="btn deleteBiblio" href="javascript:;" style="position: absolute; right: 0px;">\
+                <i style="color: var(--error);" class="fas fa-trash-alt"></i>\
+            </a> \
+            <a id="addReference" class="btn primary-btn btn-sm" style="padding-top: 8px;">\
+                + New Reference \
+            </a> \
+');
 
        	//reset border of the card
         //rebind event handlers
