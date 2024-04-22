@@ -36,7 +36,8 @@ public class ImagesSearchFullApiController {
 
     @RequestMapping("/staff/images/search/full")
     public String imageSearchDescription(@RequestParam(value = "searchText", required = false) String searchTerm) {
-        return String.format("redirect:/staff/images/search/full/1?searchText=%s",(searchTerm == null ? "" : searchTerm));
+        return String.format("redirect:/staff/images/search/full/1?searchText=%s",
+                (searchTerm == null ? "" : searchTerm));
     }
 
     @RequestMapping("/staff/images/search/full/{page}")
@@ -59,12 +60,14 @@ public class ImagesSearchFullApiController {
                 category = null;
             }
         }
-        model.addAttribute("totalPages", category == null ? imageService.getTotalPagesOnSearchText(searchTerm): imageService.getTotalPages(category));
+        model.addAttribute("totalPages", category == null ? imageService.getTotalPagesOnSearchText(searchTerm)
+                : imageService.getTotalPages(category));
         model.addAttribute("searchText", searchTerm);
         model.addAttribute("currentPageNumber", pageNo);
         model.addAttribute("totalImageCount", imageService.getTotalImageCount(category));
 
-        List<VSImage> imageResults = imageService.getPaginatedImagesByCategoryAndSearchTerm(pageNo, category, searchTerm);
+        List<VSImage> imageResults = imageService.getPaginatedImagesByCategoryAndSearchTerm(pageNo, category,
+                searchTerm);
 
         Map<String, List<ISpace>> imageToSpaces = new HashMap<>();
         for (IVSImage image : imageResults) {
