@@ -137,8 +137,6 @@ public class ExhibitionSlideController {
         model.addAttribute("spaceName", spaceManager.getSpace(spaceId).getName());
 
         return "exhibition/module";
-
-
     }
 
     private void handleBranchingPoint(Model model, String slideId, boolean back, ISlide currentSlide) {

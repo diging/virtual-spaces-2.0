@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.exception.FileStorageException;
@@ -18,6 +17,8 @@ import edu.asu.diging.vspace.core.model.IVSImage;
 @Service
 public class StorageManager implements IStorageManager{
     
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+    
     @Autowired
     @Qualifier("storageEngineUploads")
     private IStorageEngine storageEngineUploads;
@@ -25,13 +26,7 @@ public class StorageManager implements IStorageManager{
     @Autowired
     @Qualifier("storageEngineDownloads")
     private IStorageEngine storageEngineDownloads;
-    
-
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
-    
-    
+       
     /**
      * Copies given image to imagesFolderPath
      * 

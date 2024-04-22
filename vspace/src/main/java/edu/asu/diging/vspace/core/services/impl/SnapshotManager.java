@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,13 +97,13 @@ public class SnapshotManager implements ISnapshotManager {
     private IStorageManager storageManager;
     
     
-    public final String IMAGES_FOLDER_NAME = "images";
+    private final String IMAGES_FOLDER_NAME = "images";
 
     private final String RESOURCES_FOLDER_NAME = "resources";
        
-    public final  String SPACE_TEMPLATE_DOWNLOAD_API = "exhibition/downloads/spaceDownloadTemplate";
+    private final  String SPACE_TEMPLATE_DOWNLOAD_API = "exhibition/downloads/spaceDownloadTemplate";
     
-    public final  String SLIDE_TEMPLATE_DOWNLOAD_API = "exhibition/downloads/slideDownloadTemplate";
+    private final  String SLIDE_TEMPLATE_DOWNLOAD_API = "exhibition/downloads/slideDownloadTemplate";
     
     @Async
     @Override
@@ -160,7 +159,7 @@ public class SnapshotManager implements ISnapshotManager {
      * @param context
      * @throws FileStorageException 
      */
-    private void storeTemplateForSpace(String spaceId, String spaceFolderPath,  SequenceHistory sequenceHistory) throws FileStorageException {
+    public void storeTemplateForSpace(String spaceId, String spaceFolderPath,  SequenceHistory sequenceHistory) throws FileStorageException {
 
         Context thymeleafContext = new Context();
         populateContextForSpace(thymeleafContext, spaceId, sequenceHistory);
@@ -181,7 +180,7 @@ public class SnapshotManager implements ISnapshotManager {
      * @param spaceFolderPath
      * @param context
      */
-    private void downloadModule(IModule module, ISpace space, String imagesFolderPath, String spaceFolderPath) {
+    public void downloadModule(IModule module, ISpace space, String imagesFolderPath, String spaceFolderPath) {
         ISequence startSequence = module.getStartSequence();
         if(startSequence!= null) {
             try {
@@ -203,7 +202,7 @@ public class SnapshotManager implements ISnapshotManager {
      * @param imagesFolderPath
      * @param context
      */
-    private void downloadSequences(ISequence startSequence, IModule module, ISpace space, String spaceFolderPath,
+    public void downloadSequences(ISequence startSequence, IModule module, ISpace space, String spaceFolderPath,
             String imagesFolderPath) throws FileStorageException {
         List<ISlide> slides = startSequence.getSlides();
         slides.forEach(slide -> {
@@ -251,7 +250,7 @@ public class SnapshotManager implements ISnapshotManager {
      * @param sequenceId
      * @throws FileStorageException 
      */
-    private void storeTemplateForSlide(String slideId, String spaceFolderPath, String spaceId, String moduleId, String sequenceId ) throws FileStorageException {
+    public void storeTemplateForSlide(String slideId, String spaceFolderPath, String spaceId, String moduleId, String sequenceId ) throws FileStorageException {
         try {      
             Context thymeleafContext = new Context();
 

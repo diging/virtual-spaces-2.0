@@ -28,6 +28,7 @@ import org.mockito.Spy;
 import edu.asu.diging.vspace.core.data.ExhibitionDownloadRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.exception.ExhibitionDownloadNotFoundException;
+import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.file.impl.StorageEngine;
 import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.IImageBlock;
@@ -97,7 +98,7 @@ public class DownloadsManagerTest {
     
     
     @Test
-    public void test_triggerDownloadExhibition_success() throws IOException, InterruptedException, ExecutionException {
+    public void test_triggerDownloadExhibition_success() throws IOException, InterruptedException, ExecutionException, FileStorageException {
         String resourcesPath = "/Resources";
         String exhibitionFolderName = "folderName";
 

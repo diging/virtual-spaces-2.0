@@ -57,8 +57,7 @@ public class DownloadsController {
         model.addAttribute("downloadsCurrentPageNumber", Integer.parseInt(downloadsPagenum));
         model.addAttribute("downloadsTotalPages", downloadsPage.getTotalPages());
         model.addAttribute("downloadsCount", downloadsPage.getTotalElements());
-
-
+        
         return "exhibition/downloads/downloadList";
     }
 
@@ -75,13 +74,10 @@ public class DownloadsController {
             return  ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_TYPE, "application/json")
                     .body(exhibitionDownload);
-
         } 
         catch (Exception e) {
             logger.error("Could not download exhibition", e);
             return new ResponseEntity<ExhibitionDownload>(exhibitionDownload, HttpStatus.INTERNAL_SERVER_ERROR);
-
-
         }
     }
 
@@ -101,9 +97,7 @@ public class DownloadsController {
         } catch (ExhibitionDownloadNotFoundException |  IOException e) {
             logger.error("Could not download exhibition", e);
             return new ResponseEntity<Resource>(resource, HttpStatus.INTERNAL_SERVER_ERROR);
-
         }
-
     }
 
     
