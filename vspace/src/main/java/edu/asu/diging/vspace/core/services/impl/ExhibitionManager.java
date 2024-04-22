@@ -23,6 +23,7 @@ import edu.asu.diging.vspace.core.exception.LanguageListConfigurationNotFoundExc
 import edu.asu.diging.vspace.core.factory.impl.ExhibitionFactory;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
+import edu.asu.diging.vspace.core.model.ILocalizedText;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.impl.LocalizedText;
@@ -158,8 +159,12 @@ public class ExhibitionManager implements IExhibitionManager {
      * 
      */
     @Override
-    public void deleteLocalizedTexts(List<LocalizedText> localizedTexts) {
-        localizedTextRepo.deleteAll(localizedTexts);
+    public void deleteLocalizedTexts(List<ILocalizedText> emptyLocalizedTexts) {
+        
+        List<LocalizedText> convertedLocalizedTextsList = emptyLocalizedTexts.stream()
+                .map(localizedText -> (LocalizedText) localizedText)
+                .collect(Collectors.toList());
+        localizedTextRepo.deleteAll(convertedLocalizedTextsList);
     }
 
     /**

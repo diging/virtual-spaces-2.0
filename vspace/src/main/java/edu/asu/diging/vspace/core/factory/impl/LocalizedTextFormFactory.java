@@ -10,7 +10,7 @@ import edu.asu.diging.vspace.core.model.ILocalizedText;
 import edu.asu.diging.vspace.web.staff.forms.LocalizedTextForm;
 
 @Service
-public class LocalizedTextFormCreation {
+public class LocalizedTextFormFactory {
     
     /**
      * Creates LocalizedTextForm form using provided list of localizedTexts. 

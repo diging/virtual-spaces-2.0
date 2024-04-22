@@ -2,9 +2,11 @@ package edu.asu.diging.vspace.core.services;
 
 import java.util.List;
 
+
 import edu.asu.diging.vspace.core.exception.ExhibitionLanguageDeletionException;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
+import edu.asu.diging.vspace.core.model.ILocalizedText;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.LocalizedText;
 
@@ -41,6 +43,6 @@ public interface IExhibitionManager {
     
     boolean checkIfLocalizedTextsExists(IExhibitionLanguage language);
 
-    void deleteLocalizedTexts(List<LocalizedText> emptyLocalizedTexts);
-
+    void deleteLocalizedTexts(List<ILocalizedText> emptyLocalizedTexts);
+    
 }

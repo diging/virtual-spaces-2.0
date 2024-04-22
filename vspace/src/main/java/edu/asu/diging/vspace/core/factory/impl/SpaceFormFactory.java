@@ -20,7 +20,7 @@ public class SpaceFormFactory implements ISpaceFormFactory {
     private ISpaceManager spaceManager;
     
     @Autowired
-    private LocalizedTextFormCreation localizedTextFormCreation;
+    private LocalizedTextFormFactory localizedTextFormCreation;
 
     /**
      * 

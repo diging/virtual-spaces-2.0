@@ -10,6 +10,6 @@ public interface IExhibitionAboutPageFactory {
     /**
      * Creates Exhibition About Page
      */
-    ExhibitionAboutPage createAboutPageForm(String title, String aboutPageText,  List<ILocalizedText> localizedTitles, List<ILocalizedText> localizedDescriptions);
+    ExhibitionAboutPage createExhibitionAboutPage(String title, String aboutPageText,  List<ILocalizedText> localizedTitles, List<ILocalizedText> localizedDescriptions);
 
 }

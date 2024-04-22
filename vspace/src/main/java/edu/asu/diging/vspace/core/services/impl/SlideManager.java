@@ -69,6 +69,9 @@ public class SlideManager implements ISlideManager {
     ExhibitionLanguageRepository exhibitionLanguageRepository;
     
     @Autowired
+    private ExhibitionManager exhibitionManager;
+    
+    @Autowired
     private LocalizedTextRepository localizedTextRepo;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -248,7 +251,7 @@ public class SlideManager implements ISlideManager {
     @Override
     public SlideForm getSlideForm(String slideId) {
         ISlide slide = getSlide(slideId);
-        SlideForm slideForm = slideFormFactory.createNewSlideForm(slide);   
+        SlideForm slideForm = slideFormFactory.createNewSlideForm(slide, exhibitionManager.getStartExhibition());   
         slideForm.setName(slide.getName());
         slideForm.setDescription(slide.getDescription());
         return slideForm; 

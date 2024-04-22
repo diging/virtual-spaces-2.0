@@ -12,7 +12,7 @@ import edu.asu.diging.vspace.core.model.impl.ExhibitionAboutPage;
 public class ExhibitionAboutPageFactory implements IExhibitionAboutPageFactory{
 
     @Override
-    public ExhibitionAboutPage createAboutPageForm(String title, String aboutPageText,
+    public ExhibitionAboutPage createExhibitionAboutPage(String title, String aboutPageText,
             List<ILocalizedText> localizedTitles, List<ILocalizedText> localizedDescriptions) {
         
         ExhibitionAboutPage exhibitionAboutPage = new ExhibitionAboutPage();

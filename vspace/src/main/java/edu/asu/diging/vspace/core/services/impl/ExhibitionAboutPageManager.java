@@ -109,16 +109,14 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
     }
 
     private void setLocalizedText(LocalizedTextForm textForm, List<ILocalizedText> localizedTextList) {
-        if (textForm != null && !StringUtils.isEmpty(textForm.getText())) {
+        if (!StringUtils.isEmpty(textForm.getText())) {
             LocalizedText localizedText = localizedTextRepo.findById(textForm.getLocalisedTextId()).orElse(null);
             if (localizedText != null) {
                 localizedText.setText(textForm.getText());
             } else {
                 ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findById(textForm.getExhibitionLanguageId()).orElse(null);
-                if (exhibitionLanguage != null) {
-                    localizedText = new LocalizedText(exhibitionLanguage, textForm.getText());
-                    localizedTextList.add(localizedText);
-                }
+                localizedText = new LocalizedText(exhibitionLanguage, textForm.getText());
+                localizedTextList.add(localizedText);
             }
         }
     }

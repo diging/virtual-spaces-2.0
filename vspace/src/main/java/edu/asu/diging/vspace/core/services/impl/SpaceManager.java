@@ -3,6 +3,7 @@ package edu.asu.diging.vspace.core.services.impl;
 import java.util.ArrayList;
 
 
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -29,7 +30,6 @@ import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceDisplayFactory;
-import edu.asu.diging.vspace.core.factory.ISpaceFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
@@ -71,9 +71,6 @@ public class SpaceManager implements ISpaceManager {
 
     @Autowired
     private IImageFactory imageFactory;
-    
-    @Autowired
-    private ISpaceFactory spaceFactory;
 
     @Autowired
     private IImageService imageService;
@@ -344,13 +341,32 @@ public class SpaceManager implements ISpaceManager {
         space.setName(spaceForm.getDefaultName().getText());
         space.setDescription(spaceForm.getDefaultDescription().getText());
         addSpaceName(space,spaceForm.getDefaultName());
-        spaceFactory.addSpaceDescription(space,spaceForm.getDefaultDescription());
+        addSpaceDescription(space,spaceForm.getDefaultDescription());
         
         for(LocalizedTextForm title:spaceForm.getNames()) {   
             addSpaceName(space,title);
         }
         for(LocalizedTextForm text:spaceForm.getDescriptions()) {
-            spaceFactory.addSpaceDescription(space,text);
+            addSpaceDescription(space,text);
+        }
+    }
+    
+    /**
+     * Adds description to spaceDescription list.
+     * @param space
+     * @param descriptions
+     */
+    @Override
+    public void addSpaceDescription(ISpace space, LocalizedTextForm description) {
+        if(!StringUtils.isEmpty(description.getText())) {
+            LocalizedText localizedText = localizedTextRepo.findById(description.getLocalisedTextId()).orElse(null);
+            if(localizedText != null) {
+                localizedText.setText(description.getText());
+            } else {
+                ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findById(description.getExhibitionLanguageId()).orElse(null);
+                LocalizedText newLocalizedText = new LocalizedText(exhibitionLanguage, description.getText());
+                space.getSpaceDescriptions().add(newLocalizedText);
+            }
         }
     }
 }

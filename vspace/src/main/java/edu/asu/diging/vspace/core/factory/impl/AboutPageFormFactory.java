@@ -16,7 +16,7 @@ public class AboutPageFormFactory  implements IAboutPageFormFactory{
     private IExhibitionManager exhibitionManager;
     
     @Autowired
-    private LocalizedTextFormCreation localizedTextFormCreation;
+    private LocalizedTextFormFactory localizedTextFormCreation;
     
     /**
      * Creates About Page form object
