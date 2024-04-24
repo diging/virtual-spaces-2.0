@@ -67,14 +67,14 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
         ExhibitionAboutPage exhibitionAboutPage = getExhibitionAboutPage();       
         exhibitionAboutPage.setTitle(aboutPageForm.getTitle());
         exhibitionAboutPage.setAboutPageText(aboutPageForm.getAboutPageText());
-        setAboutPageTitle(aboutPageForm.getDefaultTitle(),exhibitionAboutPage);
-        setAboutPageDescription(aboutPageForm.getDefaultAboutPageText(),exhibitionAboutPage);
-
+        setLocalizedText(aboutPageForm.getDefaultTitle(), exhibitionAboutPage.getExhibitionTitles());
+        setLocalizedText(aboutPageForm.getDefaultAboutPageText(), exhibitionAboutPage.getExhibitionTextDescriptions());
+        
         for(LocalizedTextForm title:aboutPageForm.getTitles()) {        
             setLocalizedText(title, exhibitionAboutPage.getExhibitionTitles());
         }
         for(LocalizedTextForm aboutPageText:aboutPageForm.getAboutPageTexts()) {
-            setAboutPageDescription(aboutPageText,exhibitionAboutPage);
+            setLocalizedText(aboutPageText, exhibitionAboutPage.getExhibitionTextDescriptions());
         }
         
         return repo.save(exhibitionAboutPage);
@@ -90,22 +90,6 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
     public ExhibitionAboutPage getExhibitionAboutPage() {
         List<ExhibitionAboutPage> aboutPageList = findAll();
         return aboutPageList != null && !aboutPageList.isEmpty() ? aboutPageList.get(0):new ExhibitionAboutPage();
-    }
-    
-    /**
-     * This method maps the title in ExhibitionAboutPage, and add that to
-     * exhibitionTitles list for each user selected Exhibition Language.
-    */    
-    public void setAboutPageTitle(LocalizedTextForm title, ExhibitionAboutPage exhibitionAboutPage) {
-        setLocalizedText(title, exhibitionAboutPage.getExhibitionTitles());
-    }
-    
-    /**
-     * This method maps the description in ExhibitionAboutPage, and add that to
-     * exhibitionTextDescriptions list for each user selected Exhibition Language.
-    */
-    public void setAboutPageDescription(LocalizedTextForm aboutPageText, ExhibitionAboutPage exhibitionAboutPage) {
-        setLocalizedText(aboutPageText, exhibitionAboutPage.getExhibitionTextDescriptions());
     }
 
     private void setLocalizedText(LocalizedTextForm textForm, List<ILocalizedText> localizedTextList) {

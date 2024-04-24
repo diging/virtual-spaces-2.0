@@ -38,9 +38,7 @@ public interface ISlideManager {
     
     void updateNameAndDescription(ISlide slide, SlideForm slideForm);
 
-    void addSlideDescription(ISlide slide, LocalizedTextForm description);
-
-    void addSlideName(ISlide slide, LocalizedTextForm name);
+    void addSlideDetails(ISlide slide, LocalizedTextForm name);
 
     SlideForm getSlideForm(String slideId);
 

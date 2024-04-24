@@ -133,8 +133,8 @@ public class ExhibitionManager implements IExhibitionManager {
         for (IExhibitionLanguage language  : exhibitionLanguageToBeRemoved ) {
             if(checkIfLocalizedTextsExists(language))  {
                 /**
-                 *  ExhibitionLanguageDeletionException is thrown if any IExhibitionLanguage object in the specified list
-                 * does not have associated localized texts.
+                 *  ExhibitionLanguageDeletionException is thrown to let the user know that the 
+                 *  particular language has some information associated with it and that it cannot be deleted.
                  */
                 throw new ExhibitionLanguageDeletionException() ;
             }
