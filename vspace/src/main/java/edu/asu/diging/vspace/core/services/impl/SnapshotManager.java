@@ -110,7 +110,6 @@ public class SnapshotManager implements ISnapshotManager {
     @Override
     @Transactional
     public void createSnapshot(String resourcesPath, String exhibitionFolderName,SequenceHistory sequenceHistory, ExhibitionDownload exhibitionDownload)  throws IOException, InterruptedException, FileStorageException {
-        logger.debug("Creating snapshot"+exhibitionFolderName + File.separator + RESOURCES_FOLDER_NAME, resourcesPath);
         storageEngineDownloads.copyToFolder(exhibitionFolderName + File.separator + RESOURCES_FOLDER_NAME, resourcesPath);
         List<Space> spaces= spaceRepository.findAllBySpaceStatus(SpaceStatus.PUBLISHED);
 
