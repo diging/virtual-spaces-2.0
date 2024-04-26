@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import edu.asu.diging.vspace.core.model.IBiblioBlock;
 import edu.asu.diging.vspace.core.model.impl.BiblioBlock;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
@@ -23,10 +26,19 @@ public class EditBiblioBlockController {
 
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/biblio/edit", method = RequestMethod.POST)
     public ResponseEntity<String> editTextBlock(@PathVariable("id") String slideId,
-            @PathVariable("moduleId") String moduleId, @RequestBody BiblioBlock biblioBlockData) throws IOException {
-        IBiblioBlock biblioBlock = contentBlockManager.getBiblioBlock(biblioBlockData.getId());
-        biblioBlock.setBiblioTitle(biblioBlockData.getBiblioTitle());
-        biblioBlock.setDescription(biblioBlockData.getDescription());
+            @PathVariable("moduleId") String moduleId, @RequestBody String biblioBlockData) throws IOException {
+
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode rootNode = mapper.readTree(biblioBlockData);
+
+        // Extract biblioTitle and description from the JSON
+        String biblioTitle = rootNode.get("biblioTitle").asText();
+        String description = rootNode.get("description").asText();
+        String id = rootNode.get("id").asText();
+        
+        IBiblioBlock biblioBlock = contentBlockManager.getBiblioBlock(id);
+        biblioBlock.setBiblioTitle(biblioTitle);
+        biblioBlock.setDescription(description);
         contentBlockManager.updateBiblioBlock((BiblioBlock) biblioBlock);
 
         return new ResponseEntity<String>(HttpStatus.OK);

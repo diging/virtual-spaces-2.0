@@ -1082,6 +1082,7 @@ $(document).ready(function() {
                 //replace Biblio box with new values
                 updateBiblioBox(blockId, formData)
                 $(".open").removeClass("open");
+                location.reload();
            },
            error: function(data) {
 	       if (data.status == 403) {

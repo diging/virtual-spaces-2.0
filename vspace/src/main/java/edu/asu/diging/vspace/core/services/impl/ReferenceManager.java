@@ -25,7 +25,21 @@ public class ReferenceManager implements IReferenceManager {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
-    public IReference createReference(IBiblioBlock biblio, Reference reference) {
+    public IReference createReference(IBiblioBlock biblio, String title, String author,String year,String journal, String url, String volume,String issue, String pages,String editor, String type, String note) {
+        
+        IReference reference = new Reference();
+        reference.setAuthor(author);
+        reference.setTitle(title);
+        reference.setYear(year);
+        reference.setJournal(journal);
+        reference.setUrl(url);
+        reference.setVolume(volume);
+        reference.setIssue(issue);
+        reference.setPages(pages);
+        reference.setEditors(editor);
+        reference.setType(type);
+        reference.setNote(note);
+        
         reference.getBiblios().add((BiblioBlock) biblio);
         return referenceRepo.save((Reference) reference);
     }

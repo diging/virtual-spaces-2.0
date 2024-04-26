@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.asu.diging.vspace.core.model.IBiblioBlock;
@@ -31,11 +32,26 @@ public class AddReferenceController {
     @RequestMapping(value = "/staff/module/{id}/slide/{slideId}/biblio/{biblioId}/reference/add", method = RequestMethod.POST)
     public ResponseEntity<String> addReference(@PathVariable("id") String moduleId, @PathVariable("slideId") String slideId, 
             @PathVariable("biblioId") String biblioId, 
-            @RequestBody Reference reference, Model model) throws JsonProcessingException {
+            @RequestBody String reference, Model model) throws JsonProcessingException {
+        
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode rootNode = mapper.readTree(reference);
+        
+        String title = rootNode.get("title").asText();
+        String author = rootNode.get("author").asText();
+        String year = rootNode.get("year").asText();
+        String journal = rootNode.get("journal").asText();
+        String url = rootNode.get("url").asText();
+        String volume = rootNode.get("volume").asText();
+        String issue = rootNode.get("issue").asText();
+        String pages = rootNode.get("pages").asText();
+        String editor = rootNode.get("editors").asText();
+        String type = rootNode.get("type").asText();
+        String note = rootNode.get("note").asText();
         
         IBiblioBlock biblio = contentBlockManager.getBiblioBlock(biblioId);
-        IReference ref = referenceManager.createReference(biblio, reference);
-        ObjectMapper mapper = new ObjectMapper();
+        IReference ref = referenceManager.createReference(biblio, title, author,year,journal,url,volume,issue,pages,editor,type,note);
+        System.out.println("asfgdjnhmfhdnsvwVLJ"+ biblio);
         return new ResponseEntity<>(mapper.writeValueAsString(ref), HttpStatus.OK);
     }
 

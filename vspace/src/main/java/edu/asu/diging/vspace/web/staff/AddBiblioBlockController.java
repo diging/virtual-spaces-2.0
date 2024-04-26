@@ -43,7 +43,6 @@ public class AddBiblioBlockController {
         
         IBiblioBlock biblioBlock = contentBlockManager.createBiblioBlock(slideId, biblioTitle, description, contentOrder);
       
-        System.out.print("asdfghjkl;hgfdsasdfghjkjgfdsasdfghjhgfds "+biblioBlockData);
         return new ResponseEntity<String>(mapper.writeValueAsString(biblioBlock), HttpStatus.OK);
     }
 
