@@ -42,8 +42,6 @@ public class DownloadsManager  implements  IDownloadsManager {
     @Qualifier("storageEngineDownloads")
     private IStorageEngine storageEngineDownloads;
 
- 
-
     @Autowired
     private ISnapshotManager snapshotManager;
 
@@ -58,7 +56,7 @@ public class DownloadsManager  implements  IDownloadsManager {
 
 
     /**
-     * Triggers the snapshot creation process asychronously. 
+     * Triggers the snapshot creation process asynchronously. 
      * 
      * @param resourcesPath
      * @param exhibitionFolderName
@@ -69,7 +67,6 @@ public class DownloadsManager  implements  IDownloadsManager {
      * @throws ExecutionException 
      */
 
-
     @Override
     @Transactional
     public ExhibitionDownload triggerDownloadExhibition(String resourcesPath, String exhibitionFolderName) throws IOException, InterruptedException, ExecutionException {                 
@@ -77,7 +74,6 @@ public class DownloadsManager  implements  IDownloadsManager {
         if(exhibitionDownload == null ) {
             exhibitionDownload = new ExhibitionDownload();
         }
-
         createFolderAndUpdateExhibitionDownload(exhibitionDownload, exhibitionFolderName);
 
         SnapshotTask snapshotTask =  createSnapshotTask(exhibitionDownload);
@@ -88,11 +84,9 @@ public class DownloadsManager  implements  IDownloadsManager {
         try {
             snapshotManager.createSnapshot(resourcesPath, exhibitionFolderName, sequenceHistory, exhibitionDownload);
         } catch (IOException | InterruptedException | FileStorageException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.error("Could not create a snapshot",e);
         }
         return exhibitionDownload;
-
     }
 
     /**
@@ -105,7 +99,6 @@ public class DownloadsManager  implements  IDownloadsManager {
         snapshotTask.setExhibitionDownload(exhibitionDownload);        
         snapshotTaskRepository.save(snapshotTask);
         return snapshotTask;
-
     }
 
     /**
@@ -147,7 +140,6 @@ public class DownloadsManager  implements  IDownloadsManager {
         } else {
             throw new ExhibitionDownloadNotFoundException(id);
         }
-
     }
  
 
@@ -158,20 +150,18 @@ public class DownloadsManager  implements  IDownloadsManager {
     @Override
     @Transactional
     public Boolean checkIfSnapshotCreated(String id) {
-        Optional<ExhibitionDownload> exhibitionDownlaod = exhibitionDownloadRepository.findById(id);
-        if(exhibitionDownlaod.isPresent()) {
-
-            return exhibitionDownlaod.get().getSnapshotTask().isTaskComplete();            
-
+        Optional<ExhibitionDownload> exhibitionDownload = exhibitionDownloadRepository.findById(id);
+        if(exhibitionDownload.isPresent()) {
+            return exhibitionDownload.get().getSnapshotTask().isTaskComplete();            
         }
         return false;
     }
 
     @Override
     public String getExhibitionFolderName() {
-        return  "Exhibition"+ LocalDateTime.now();
+        String folderName = "Exhibition"+ LocalDateTime.now().toString();
+        return folderName.replace( ":" , "." )+"Z";
     }
-
 
     @Override
     public Page<ExhibitionDownload> getAllExhibitionDownloads(int filesPagenum) {
@@ -183,7 +173,6 @@ public class DownloadsManager  implements  IDownloadsManager {
 
         Page<ExhibitionDownload> page =   exhibitionDownloadRepository.findAllByOrderByCreationDateDesc(requestedPageForFiles);
         return page.map(exhibitionDownload-> { return (ExhibitionDownload) exhibitionDownload; } );
-
     }
 
 }
