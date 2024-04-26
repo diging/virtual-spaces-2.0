@@ -18,7 +18,19 @@ import edu.asu.diging.vspace.core.model.impl.Space;
 
 public interface ISnapshotManager {
     
-    void createSnapshot(String resourcesPath, String exhibitionFolderName, SequenceHistory sequenceHistory, ExhibitionDownload exhibitionDownload) throws IOException, InterruptedException, FileStorageException ;
+    /**
+     * Creates a snapshot and copies the spaces to exhibitionFolderPath
+     * 
+     * @param resourcesPath
+     * @param exhibitionFolderName
+     * @param sequenceHistory
+     * @param exhibitionDownload
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws FileStorageException
+     */
+    void createSnapshot(String resourcesPath, String exhibitionFolderName, SequenceHistory sequenceHistory, ExhibitionDownload exhibitionDownload) 
+            throws IOException, InterruptedException, FileStorageException ;
 
     /**
      * Populates the context with variables for slide template.

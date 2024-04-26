@@ -1,14 +1,6 @@
 package edu.asu.diging.vspace.web.staff;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.Base64;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
-import java.util.concurrent.FutureTask;
-
-import javax.servlet.AsyncContext;
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -21,20 +13,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.thymeleaf.context.WebContext;
-
-import edu.asu.diging.vspace.core.data.ExhibitionDownloadRepository;
 import edu.asu.diging.vspace.core.exception.ExhibitionDownloadNotFoundException;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionDownload;
 import edu.asu.diging.vspace.core.services.IDownloadsManager;
-import edu.asu.diging.vspace.core.services.impl.DownloadsManager;
 
 @Controller
 public class DownloadsController {
@@ -65,8 +52,7 @@ public class DownloadsController {
     public ResponseEntity<ExhibitionDownload> downloadExhibitionTrigger(HttpServletRequest request, HttpServletResponse response,  Model model) {
         ExhibitionDownload exhibitionDownload = null;
         try {     
-            String pathToResources = request.getServletContext().getRealPath("") + "/resources";
-
+            String pathToResources = request.getServletContext().getRealPath("") + "resources";
             String exhibitionFolderName= downloadsManager.getExhibitionFolderName();        
             exhibitionDownload =
                     downloadsManager.triggerDownloadExhibition(pathToResources, exhibitionFolderName);
@@ -106,9 +92,8 @@ public class DownloadsController {
     {
         try {
             return new ResponseEntity<Boolean>(downloadsManager.checkIfSnapshotCreated(id), HttpStatus.OK);
-
         } catch (Exception e) {
-
+            logger.error("Could not check the exhibition Download status ",e);
             return new ResponseEntity<Boolean>(false, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

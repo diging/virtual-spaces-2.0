@@ -51,6 +51,7 @@ import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Service
 public class SnapshotManager implements ISnapshotManager {
+    
     private final Logger logger = LoggerFactory.getLogger(getClass());
     
     @Autowired
@@ -101,20 +102,21 @@ public class SnapshotManager implements ISnapshotManager {
 
     private final String RESOURCES_FOLDER_NAME = "resources";
        
-    private final  String SPACE_TEMPLATE_DOWNLOAD_API = "exhibition/downloads/spaceDownloadTemplate";
+    private final String SPACE_TEMPLATE_DOWNLOAD_API = "exhibition/downloads/spaceDownloadTemplate";
     
-    private final  String SLIDE_TEMPLATE_DOWNLOAD_API = "exhibition/downloads/slideDownloadTemplate";
+    private final String SLIDE_TEMPLATE_DOWNLOAD_API = "exhibition/downloads/slideDownloadTemplate";
     
     @Async
     @Override
     @Transactional
     public void createSnapshot(String resourcesPath, String exhibitionFolderName,SequenceHistory sequenceHistory, ExhibitionDownload exhibitionDownload)  throws IOException, InterruptedException, FileStorageException {
+        logger.debug("Creating snapshot"+exhibitionFolderName + File.separator + RESOURCES_FOLDER_NAME, resourcesPath);
         storageEngineDownloads.copyToFolder(exhibitionFolderName + File.separator + RESOURCES_FOLDER_NAME, resourcesPath);
         List<Space> spaces= spaceRepository.findAllBySpaceStatus(SpaceStatus.PUBLISHED);
 
         for(Space space : spaces) {
             downloadSpace(space, exhibitionFolderName, sequenceHistory);                
-        }        
+        }
         SnapshotTask snapshotTask = exhibitionDownload.getSnapshotTask();
         snapshotTask.setTaskComplete(true);
         snapshotTaskRepository.save(snapshotTask);   
@@ -128,7 +130,7 @@ public class SnapshotManager implements ISnapshotManager {
      * @param context
      * @throws FileStorageException 
      */
-    private void downloadSpace(Space space, String exhibitionFolderName,  SequenceHistory sequenceHistory) throws FileStorageException {
+    public void downloadSpace(Space space, String exhibitionFolderName,  SequenceHistory sequenceHistory) throws FileStorageException {
 
         String spaceFolderPath = exhibitionFolderName + File.separator + space.getId();
         storageEngineDownloads.createFolder(spaceFolderPath);
@@ -167,8 +169,6 @@ public class SnapshotManager implements ISnapshotManager {
         String response = springTemplateEngine.process(SPACE_TEMPLATE_DOWNLOAD_API, thymeleafContext);
         byte[] fileContent = response.getBytes();
         storageEngineDownloads.storeFile(fileContent, spaceId+".html",spaceFolderPath );
-
-
     }
 
     /**
@@ -234,7 +234,6 @@ public class SnapshotManager implements ISnapshotManager {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
-                
             }
         });
     }
@@ -313,7 +312,6 @@ public class SnapshotManager implements ISnapshotManager {
         context.setVariable("currentNumOfSlide", slideIndex + 1);
         context.setVariable("spaceId", spaceId);
         context.setVariable("spaceName", spaceManager.getSpace(spaceId).getName());
-
 
     }
     

@@ -21,16 +21,12 @@ public class StorageEngineConfig {
     
     @Bean(name = "storageEngineDownloads")
     public IStorageEngine storageEngineDownloads(){
-        
         return new StorageEngine(downloadsPath);
-        
     }
     
     @Bean(name = "storageEngineUploads")
     public IStorageEngine storageEngineUploads(){
-        
-        return new StorageEngine(uploadsPath);
-        
+        return new StorageEngine(uploadsPath); 
     }
 
 }

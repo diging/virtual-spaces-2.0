@@ -40,7 +40,6 @@ public class ExhibitionDownload extends VSpaceElement implements IExhibitionDown
     @Override
     public void setId(String id) {
         this.id = id;
-
     }
 
     @Override
@@ -62,5 +61,4 @@ public class ExhibitionDownload extends VSpaceElement implements IExhibitionDown
     public void setSnapshotTask(SnapshotTask snapshotTask) {
         this.snapshotTask = snapshotTask;
     }
-
 }
