@@ -23,6 +23,7 @@ import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
+import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
@@ -45,11 +46,14 @@ public class AddSpaceController {
     
     @Autowired
     private ISpaceFormFactory spaceFormFactory;
-   
+    
+    @Autowired
+    private IExhibitionManager exhibitionManager;
+    
     @RequestMapping(value = "/staff/space/add", method = RequestMethod.GET)
     public String showAddSpace(Model model) {
         ISpace space = new Space();
-        model.addAttribute("space", spaceFormFactory.createNewSpaceForm(space));
+        model.addAttribute("space", spaceFormFactory.createNewSpaceForm(space, exhibitionManager.getStartExhibition()));
         model.addAttribute("images", imageService.getImages(1));     
         
         return "staff/spaces/add";
@@ -60,6 +64,9 @@ public class AddSpaceController {
             Principal principal, @RequestParam(value = "imageId", required=false) String imageId, RedirectAttributes redirectAttrs) throws IOException {
       
         ISpace space = new Space();
+        /*
+         * Check if the default name is provided. If a non-default name is provided, create a new form without default values
+         */
         if (!spaceForm.getDefaultName().getText().isEmpty()) {
             SpaceForm nonDefaultSpaceForm = new SpaceForm(); 
             LocalizedTextForm nameSpace = spaceForm.getNames().stream().filter(name -> name != null).findFirst().orElse(null);
@@ -69,6 +76,7 @@ public class AddSpaceController {
             space = spaceFactory.createSpace(nonDefaultSpaceForm);
             spaceManager.updateNameAndDescription(space, nonDefaultSpaceForm);
         } else {
+            // If only the default name is provided, create the space with the default form
             space = spaceFactory.createSpace(spaceForm);
             spaceManager.updateNameAndDescription(space, spaceForm);
         } 

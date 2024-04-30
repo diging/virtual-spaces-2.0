@@ -1,27 +1,18 @@
 package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.ArrayList;
-
-
-
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
-
 import javax.transaction.Transactional;
-
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.util.StringUtils;
-
-import edu.asu.diging.vspace.core.data.ExhibitionLanguageRepository;
 import edu.asu.diging.vspace.core.data.ExhibitionRepository;
 import edu.asu.diging.vspace.core.data.ImageRepository;
-import edu.asu.diging.vspace.core.data.LocalizedTextRepository;
 import edu.asu.diging.vspace.core.data.SpaceLinkRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.data.display.SpaceDisplayRepository;
@@ -36,14 +27,13 @@ import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.display.ISpaceDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.SpaceDisplay;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
-import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
-import edu.asu.diging.vspace.core.model.impl.LocalizedText;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IImageService;
+import edu.asu.diging.vspace.core.services.ILocalizedTextFormDataManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.impl.model.ImageData;
 import edu.asu.diging.vspace.web.staff.forms.LocalizedTextForm;
@@ -86,12 +76,9 @@ public class SpaceManager implements ISpaceManager {
 
     @Autowired
     private SpaceLinkDisplayRepository spaceLinkDisplayRepo;
-    
+
     @Autowired
-    private ExhibitionLanguageRepository exhibitionLanguageRepository;
-    
-    @Autowired
-    private LocalizedTextRepository localizedTextRepo;
+    private ILocalizedTextFormDataManager localizedTextFormDataManager;
    
     /*
      * (non-Javadoc)
@@ -312,61 +299,28 @@ public class SpaceManager implements ISpaceManager {
     }
     
     /**
-     * 
-     * Adds name to spaceNames List
-     * 
-     * 
-     * @param space
-     * @param names
+     * Adds name to spaceNames List of the given space object.
+     * @param space The space to which the name will be added.
+     * @param name The localized text form containing the name to be added.
      */
     @Override
-    public void addSpaceName(ISpace space, LocalizedTextForm name) {
-        if(name!=null && !StringUtils.isEmpty(name.getText())) {
-            LocalizedText localizedText = localizedTextRepo.findById(name.getLocalisedTextId()).orElse(null);
-            if(localizedText != null) {
-                localizedText.setText(name.getText());
-            }
-            else {
-                ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findById(name.getExhibitionLanguageId()).orElse(null);
-                if(exhibitionLanguage != null) {
-                    localizedText = new LocalizedText(exhibitionLanguage, name.getText());
-                    space.getSpaceNames().add(localizedText);
-                }
-            }
-        }
+    public void addSpaceDetails(ISpace space, LocalizedTextForm name) {
+        localizedTextFormDataManager.addLocalizedDetails(space, name, space.getSpaceNames());
     }
     
     @Override
     public void updateNameAndDescription(ISpace space, SpaceForm spaceForm) {
         space.setName(spaceForm.getDefaultName().getText());
         space.setDescription(spaceForm.getDefaultDescription().getText());
-        addSpaceName(space,spaceForm.getDefaultName());
-        addSpaceDescription(space,spaceForm.getDefaultDescription());
+        addSpaceDetails(space,spaceForm.getDefaultName());
+        addSpaceDetails(space,spaceForm.getDefaultDescription());
         
         for(LocalizedTextForm title:spaceForm.getNames()) {   
-            addSpaceName(space,title);
+            addSpaceDetails(space,title);
         }
         for(LocalizedTextForm text:spaceForm.getDescriptions()) {
-            addSpaceDescription(space,text);
+            addSpaceDetails(space,text);
         }
     }
-    
-    /**
-     * Adds description to spaceDescription list.
-     * @param space
-     * @param descriptions
-     */
-    @Override
-    public void addSpaceDescription(ISpace space, LocalizedTextForm description) {
-        if(!StringUtils.isEmpty(description.getText())) {
-            LocalizedText localizedText = localizedTextRepo.findById(description.getLocalisedTextId()).orElse(null);
-            if(localizedText != null) {
-                localizedText.setText(description.getText());
-            } else {
-                ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findById(description.getExhibitionLanguageId()).orElse(null);
-                LocalizedText newLocalizedText = new LocalizedText(exhibitionLanguage, description.getText());
-                space.getSpaceDescriptions().add(newLocalizedText);
-            }
-        }
-    }
+   
 }

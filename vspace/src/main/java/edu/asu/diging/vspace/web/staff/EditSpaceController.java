@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.diging.vspace.core.factory.ISpaceFormFactory;
 import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.web.staff.forms.SpaceForm;
 
@@ -21,11 +22,14 @@ public class EditSpaceController {
     
     @Autowired
     private ISpaceFormFactory spaceFormFactory;
+    
+    @Autowired
+    private IExhibitionManager exhibitionManager;
    
     @RequestMapping(value="/staff/space/{spaceId}/edit", method=RequestMethod.GET)
     public String show(Model model, @PathVariable("spaceId") String spaceId) {
 
-        model.addAttribute("spaceForm", spaceFormFactory.getSpaceForm(spaceId));
+        model.addAttribute("spaceForm", spaceFormFactory.getSpaceForm(spaceManager.getSpace(spaceId), exhibitionManager.getStartExhibition()));
         model.addAttribute("spaceId", spaceId);
         return "staff/spaces/edit";
     }

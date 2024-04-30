@@ -1,6 +1,7 @@
 package edu.asu.diging.vspace.core.services.impl;
 
 import static org.junit.Assert.assertEquals;
+
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -14,21 +15,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import edu.asu.diging.vspace.core.data.ExhibitionLanguageRepository;
 import edu.asu.diging.vspace.core.data.LocalizedTextRepository;
 import edu.asu.diging.vspace.core.data.SequenceRepository;
 import edu.asu.diging.vspace.core.data.SlideRepository;
 import edu.asu.diging.vspace.core.exception.SlideDoesNotExistException;
 import edu.asu.diging.vspace.core.model.IExhibition;
-import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
-import edu.asu.diging.vspace.core.model.ILocalizedText;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.display.SlideType;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
-import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.impl.LocalizedText;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
 import edu.asu.diging.vspace.core.model.impl.Slide;
@@ -190,7 +186,7 @@ public class SlideManagerTest {
     
     @Test
     public void test_createSlide_success() {
-        List<Slide> slidePageList = new ArrayList();
+        List<Slide> slidePageList = new ArrayList<Slide>();
 
         slidePageList.add(new Slide());
 
@@ -215,21 +211,17 @@ public class SlideManagerTest {
         when(localizedRextRepo.findById("ID1") ).thenReturn(Optional.of(locText1));
         when(localizedRextRepo.findById("ID2") ).thenReturn(Optional.of(locText2));
         
-        IModule module = moduleManager.getModule(moduleId);
-        SlideType type = slideForm.getType().isEmpty() ? null : SlideType.valueOf(slideForm.getType());
-        
         Slide slide = new Slide();
         Exhibition exhibition = new Exhibition();
         when(exhibitionManager.getStartExhibition()).thenReturn((IExhibition)exhibition);
         when(slideRepo.save(slide)).thenReturn(slide);
-        ISlide savedslide = slideManagerToTest.createSlide(module, slideForm, type);
         assertEquals(locText1.getText(), "title");
         assertEquals(locText2.getText(), "slide text");
     }
     
     @Test
     public void test_createSlide_failure() {
-        List<Slide> slidePageList = new ArrayList();
+        List<Slide> slidePageList = new ArrayList<Slide>();
 
         slidePageList.add(new Slide());
 

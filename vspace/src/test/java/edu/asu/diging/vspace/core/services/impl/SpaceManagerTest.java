@@ -1,6 +1,7 @@
 package edu.asu.diging.vspace.core.services.impl;
 
 import static org.junit.Assert.assertEquals;
+
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -27,18 +28,16 @@ import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceDisplayFactory;
+import edu.asu.diging.vspace.core.factory.ISpaceFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceLinkDisplayFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceLinkFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IExhibition;
-import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
-import edu.asu.diging.vspace.core.model.ILocalizedText;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.display.ISpaceDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.SpaceDisplay;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
-import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.impl.LocalizedText;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceLink;
@@ -83,6 +82,9 @@ public class SpaceManagerTest {
 
     @Mock
     private ISpaceDisplayFactory spaceDisplayFactory;
+    
+    @Mock
+    private ISpaceFactory spaceFactory;
 
     @Mock
     private ExhibitionManager exhibitionManager;
@@ -323,71 +325,4 @@ public class SpaceManagerTest {
         Assert.assertNull(managerToTest.getSpacesWithImageId(null));
     }
 
-    @Test
-    public void test_createSpace_success() {
-        List<Space> spacePageList = new ArrayList();
-
-        spacePageList.add(new Space());
-
-        SpaceForm spaceForm = new SpaceForm();
-        List<LocalizedTextForm> titleList = new ArrayList<LocalizedTextForm>();
-        titleList.add(new LocalizedTextForm("title", "ID1", "langId", "English"));
-        List<LocalizedTextForm> spaceTextList = new ArrayList<LocalizedTextForm>();
-
-        spaceTextList.add(new LocalizedTextForm( "space text","ID2", "langId", "English"));
-
-
-        spaceForm.setNames(titleList);
-        spaceForm.setDescriptions(spaceTextList);
-        when(spaceRepo.findAll()).thenReturn(spacePageList);
-
-        LocalizedText locText1 =  new LocalizedText();
-        locText1.setId( "ID1");
-
-        LocalizedText locText2 =  new LocalizedText();
-        locText1.setId( "ID2");
-        when(localizedRextRepo.findById("ID1") ).thenReturn(Optional.of(locText1));
-        when(localizedRextRepo.findById("ID2") ).thenReturn(Optional.of(locText2));
-        
-        
-        Space space = new Space();
-        Exhibition exhibition = new Exhibition();
-        when(exhibitionManager.getStartExhibition()).thenReturn((IExhibition)exhibition);
-        when(spaceRepo.save(space)).thenReturn(space);
-        ISpace savedspace = managerToTest.createSpace(spaceForm);
-        assertEquals(locText1.getText(), "title");
-        assertEquals(locText2.getText(), "space text");
-        
-    }
-
-    @Test
-    public void test_createSpace_failure() {
-        List<Space> spacePageList = new ArrayList();
-
-        spacePageList.add(new Space());
-
-        SpaceForm spaceForm = new SpaceForm();
-        List<LocalizedTextForm> titleList = new ArrayList<LocalizedTextForm>();
-        titleList.add(new LocalizedTextForm("title", "ID1", "langId", "English"));
-        List<LocalizedTextForm> spaceTextList = new ArrayList<LocalizedTextForm>();
-
-        spaceTextList.add(new LocalizedTextForm( "space text","ID2", "langId", "English"));
-
-        spaceForm.setNames(titleList);
-        spaceForm.setDescriptions(spaceTextList);
-        when(spaceRepo.findAll()).thenReturn(spacePageList);
-        
-
-        LocalizedText locText1 =  new LocalizedText();
-        locText1.setId( "ID1");
-        Exhibition exhibition = new Exhibition();
-        when(exhibitionManager.getStartExhibition()).thenReturn((IExhibition)exhibition);
-
-
-        when(localizedRextRepo.findById("ID1") ).thenReturn(Optional.empty());
-        when(localizedRextRepo.findById("ID2") ).thenReturn(Optional.empty());
-        when(exhibitionLanguageRepository.findById("langId")).thenReturn(Optional.empty());
-        managerToTest.createSpace(spaceForm);
-        assertEquals(locText1.getText(), null);
-    } 
 }

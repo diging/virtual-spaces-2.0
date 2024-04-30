@@ -1,13 +1,10 @@
 package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.ArrayList;
-
-
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,12 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.util.StringUtils;
-
 import edu.asu.diging.vspace.core.data.BranchingPointRepository;
 import edu.asu.diging.vspace.core.data.ChoiceRepository;
-import edu.asu.diging.vspace.core.data.ExhibitionLanguageRepository;
-import edu.asu.diging.vspace.core.data.LocalizedTextRepository;
 import edu.asu.diging.vspace.core.data.SequenceRepository;
 import edu.asu.diging.vspace.core.data.SlideRepository;
 import edu.asu.diging.vspace.core.factory.impl.ChoiceFactory;
@@ -33,10 +26,9 @@ import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.display.SlideType;
 import edu.asu.diging.vspace.core.model.impl.BranchingPoint;
 import edu.asu.diging.vspace.core.model.impl.Choice;
-import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
-import edu.asu.diging.vspace.core.model.impl.LocalizedText;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
 import edu.asu.diging.vspace.core.model.impl.Slide;
+import edu.asu.diging.vspace.core.services.ILocalizedTextFormDataManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 import edu.asu.diging.vspace.web.staff.forms.LocalizedTextForm;
 import edu.asu.diging.vspace.web.staff.forms.SlideForm;
@@ -66,18 +58,15 @@ public class SlideManager implements ISlideManager {
     private ChoiceFactory choiceFactory;
     
     @Autowired
-    private ExhibitionLanguageRepository exhibitionLanguageRepository;
-    
-    @Autowired
     private ExhibitionManager exhibitionManager;
     
     @Autowired
-    private LocalizedTextRepository localizedTextRepo;
+    private ILocalizedTextFormDataManager localizedTextFormDataManager;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
-    public ISlide createSlide(IModule module, SlideForm slideForm, SlideType type) {
+    public ISlide createSlide(IModule module, SlideForm slideForm, SlideType type){
         ISlide slide = slideFactory.createSlide(module, slideForm, type);
         return slideRepo.save((Slide) slide);
     }
@@ -205,24 +194,13 @@ public class SlideManager implements ISlideManager {
     }
     
     /**
-     * Adds name to slideNames List
+     * Adds name or descriptions to slideNames List
      * @param slide
      * @param names
      */
     @Override
     public void addSlideDetails(ISlide slide, LocalizedTextForm localizedTextFormData) {
-        if(!StringUtils.isEmpty(localizedTextFormData.getText())) {
-            LocalizedText localizedText = localizedTextRepo.findById(localizedTextFormData.getLocalisedTextId()).orElse(null);
-            if(localizedText != null) {
-                localizedText.setText(localizedTextFormData.getText());
-            } else {
-                ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findById(localizedTextFormData.getExhibitionLanguageId())
-                        .orElse(null);
-                localizedText = new LocalizedText(exhibitionLanguage, localizedTextFormData.getText());
-                slide.getSlideNames().add(localizedText);
-                
-            }
-        }
+        localizedTextFormDataManager.addLocalizedDetails(slide, localizedTextFormData, slide.getSlideNames());
     }
     
     @Override
@@ -234,5 +212,3 @@ public class SlideManager implements ISlideManager {
         return slideForm; 
     }
 }
-    
-    

@@ -27,19 +27,15 @@ public class SlideFormFactory implements ISlideFormFactory{
         SlideForm slideForm = new SlideForm();
         slideForm.setName(slide.getName());
         slideForm.setDescription(slide.getDescription());
-
         IExhibitionLanguage defaultLanguage = startExhibition.getDefaultLanguage();
-
         slideForm.setDefaultName(localizedTextFormCreation.createLocalizedTextForm(defaultLanguage, slide.getSlideNames()));
         slideForm.setDefaultDescription(localizedTextFormCreation.createLocalizedTextForm(defaultLanguage, slide.getSlideDescriptions()));
-
         startExhibition.getLanguages().forEach(language -> {
             if(!language.isDefault()) {
                 slideForm.getNames().add(localizedTextFormCreation.createLocalizedTextForm(language, slide.getSlideNames()));               
                 slideForm.getDescriptions().add(localizedTextFormCreation.createLocalizedTextForm(language, slide.getSlideDescriptions())); 
             }
         });
-
         return slideForm;      
     }
 }

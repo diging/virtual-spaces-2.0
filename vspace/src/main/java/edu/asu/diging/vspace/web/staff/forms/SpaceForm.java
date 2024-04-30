@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SpaceForm {
-
-	private String name;
+    
+    private String name;
 	private String description;
 	
     private LocalizedTextForm defaultName;

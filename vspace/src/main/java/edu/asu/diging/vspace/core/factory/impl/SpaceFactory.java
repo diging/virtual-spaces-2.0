@@ -17,7 +17,6 @@ public class SpaceFactory implements ISpaceFactory {
     
     /**
      * Creates a new space based on the provided form.
-     *
      * @param form The form containing details for creating the space.
      * @return The newly created space and saves it to the repository.
      */

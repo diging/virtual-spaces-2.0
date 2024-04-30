@@ -12,6 +12,7 @@ import org.mockito.Mock;
 
 import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.factory.impl.SpaceFactory;
+import edu.asu.diging.vspace.core.factory.impl.SpaceFormFactory;
 import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.ILocalizedText;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
@@ -28,6 +29,9 @@ public class SpaceFactoryTest {
     @Mock
     private ExhibitionManager exhibitionManager;
     
+    @Mock
+    private SpaceFormFactory spaceFormFactory;
+    
     @InjectMocks
     private SpaceFactory serviceToTest;
     
@@ -43,7 +47,7 @@ public class SpaceFactoryTest {
         languageList.add(language2);
         exhibition.setLanguages(languageList);
 
-        List<Space> spacePageList = new ArrayList();
+        List<Space> spacePageList = new ArrayList<Space>();
         Space spacePage = new Space();        
         LocalizedText locText1 =  new LocalizedText();
         locText1.setId( "ID1");        
@@ -59,7 +63,7 @@ public class SpaceFactoryTest {
 
         when(exhibitionManager.getStartExhibition()).thenReturn(exhibition);      
 
-        SpaceForm  spaceForm =   serviceToTest.createNewSpaceForm(spacePage);
+        SpaceForm  spaceForm =   spaceFormFactory.createNewSpaceForm(spacePage, exhibitionManager.getStartExhibition());
         assertEquals(spaceForm.getDescriptions().size(), 1);
 
         assertEquals(spaceForm.getNames().size(), 1);
