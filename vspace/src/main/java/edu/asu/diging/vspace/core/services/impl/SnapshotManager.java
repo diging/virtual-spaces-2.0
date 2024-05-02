@@ -108,8 +108,7 @@ public class SnapshotManager implements ISnapshotManager {
     @Async
     @Override
     @Transactional
-    public void createSnapshot(String resourcesPath, String exhibitionFolderName,SequenceHistory sequenceHistory, ExhibitionDownload exhibitionDownload)  throws IOException, InterruptedException, FileStorageException {
-        storageEngineDownloads.copyToFolder(exhibitionFolderName + File.separator + RESOURCES_FOLDER_NAME, resourcesPath);
+    public void createSnapshot(String exhibitionFolderName,SequenceHistory sequenceHistory, ExhibitionDownload exhibitionDownload)  throws IOException, InterruptedException, FileStorageException {
         List<Space> spaces= spaceRepository.findAllBySpaceStatus(SpaceStatus.PUBLISHED);
 
         for(Space space : spaces) {
@@ -144,11 +143,9 @@ public class SnapshotManager implements ISnapshotManager {
         List<IModuleLink> moduleLinks = space.getModuleLinks();
 
         moduleLinks.forEach(moduleLink -> {
-
             IModule module =   moduleLink.getModule();
             downloadModule(module, space,  imagesFolderPath, spaceFolderPath);
-
-        });        
+        });
     }
     
     /**

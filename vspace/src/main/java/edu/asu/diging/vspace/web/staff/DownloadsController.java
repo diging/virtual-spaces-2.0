@@ -51,11 +51,10 @@ public class DownloadsController {
     @RequestMapping(value = "/staff/exhibit/download", method = RequestMethod.POST) 
     public ResponseEntity<ExhibitionDownload> downloadExhibitionTrigger(HttpServletRequest request, HttpServletResponse response,  Model model) {
         ExhibitionDownload exhibitionDownload = null;
-        try {     
-            String pathToResources = request.getServletContext().getRealPath("") + "resources";
+        try {
             String exhibitionFolderName= downloadsManager.getExhibitionFolderName();        
             exhibitionDownload =
-                    downloadsManager.triggerDownloadExhibition(pathToResources, exhibitionFolderName);
+                    downloadsManager.triggerDownloadExhibition(exhibitionFolderName);
 
             return  ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_TYPE, "application/json")
