@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import edu.asu.diging.vspace.core.data.SpaceRepository;
+import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.data.SnapshotTaskRepository;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.file.IStorageManager;
@@ -77,7 +78,7 @@ public class SnapshotManagerTest {
 
     
     @Test
-    public void test_downloadSpace_success() {
+    public void test_downloadSpace_success() throws FileStorageException {
         Space space = new Space();
         space.setId("SPACE_ID");
         space.setModuleLinks(new ArrayList());
@@ -112,7 +113,7 @@ public class SnapshotManagerTest {
     
 
     @Test
-    public void test_downloadModule_success() {
+    public void test_downloadModule_success() throws FileStorageException {
         Space space = new Space();
         space.setId("SPACE_ID");
         space.setModuleLinks(new ArrayList());
@@ -138,7 +139,7 @@ public class SnapshotManagerTest {
     }
 
     @Test
-    public void test_downloadSequence_success() {
+    public void test_downloadSequence_success() throws FileStorageException {
         Space space = new Space();
         space.setId("SPACE_ID");
         space.setModuleLinks(new ArrayList());

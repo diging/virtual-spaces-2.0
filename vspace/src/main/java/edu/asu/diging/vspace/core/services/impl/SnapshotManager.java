@@ -97,7 +97,6 @@ public class SnapshotManager implements ISnapshotManager {
     @Autowired
     private IStorageManager storageManager;
     
-    
     private final String IMAGES_FOLDER_NAME = "images";
 
     private final String RESOURCES_FOLDER_NAME = "resources";
