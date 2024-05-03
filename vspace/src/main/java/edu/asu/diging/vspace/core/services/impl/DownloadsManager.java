@@ -70,6 +70,7 @@ public class DownloadsManager  implements  IDownloadsManager {
     @Override
     @Transactional
     public ExhibitionDownload triggerDownloadExhibition(String exhibitionFolderName) throws IOException, InterruptedException, ExecutionException {                 
+        String resourcesPath = getClass().getResource("/../../resources/").getPath();
         ExhibitionDownload exhibitionDownload = exhibitionDownloadRepository.findByFolderName(exhibitionFolderName);        
         if(exhibitionDownload == null ) {
             exhibitionDownload = new ExhibitionDownload();
@@ -82,7 +83,7 @@ public class DownloadsManager  implements  IDownloadsManager {
         exhibitionDownloadRepository.save(exhibitionDownload);
 
         try {
-            snapshotManager.createSnapshot(exhibitionFolderName, sequenceHistory, exhibitionDownload);
+            snapshotManager.createSnapshot(resourcesPath, exhibitionFolderName, sequenceHistory, exhibitionDownload);
         } catch (IOException | InterruptedException | FileStorageException e) {
             logger.error("Could not create a snapshot",e);
         }

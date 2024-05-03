@@ -108,7 +108,8 @@ public class SnapshotManager implements ISnapshotManager {
     @Async
     @Override
     @Transactional
-    public void createSnapshot(String exhibitionFolderName,SequenceHistory sequenceHistory, ExhibitionDownload exhibitionDownload)  throws IOException, InterruptedException, FileStorageException {
+    public void createSnapshot(String resourcesPath, String exhibitionFolderName,SequenceHistory sequenceHistory, ExhibitionDownload exhibitionDownload)  throws IOException, InterruptedException, FileStorageException {
+        storageEngineDownloads.copyToFolder(exhibitionFolderName + File.separator + RESOURCES_FOLDER_NAME, resourcesPath);
         List<Space> spaces= spaceRepository.findAllBySpaceStatus(SpaceStatus.PUBLISHED);
 
         for(Space space : spaces) {

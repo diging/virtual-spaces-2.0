@@ -29,7 +29,7 @@ public interface ISnapshotManager {
      * @throws InterruptedException
      * @throws FileStorageException
      */
-    void createSnapshot(String exhibitionFolderName, SequenceHistory sequenceHistory, ExhibitionDownload exhibitionDownload) 
+    void createSnapshot(String resourcesPath, String exhibitionFolderName, SequenceHistory sequenceHistory, ExhibitionDownload exhibitionDownload) 
             throws IOException, InterruptedException, FileStorageException ;
 
     /**
