@@ -161,7 +161,7 @@ function onDoubleClick(e){
         //remove card border
         $(".open").css('display', 'none');
         $(".open").css('overflow-y', 'scroll');
-        $(".open").css('height', '400px');
+        $(".open").css('max-height', '200px');
     } else if(divName.includes("biblioDivStaff")){
 	   $(e.target).closest('.biblioDivStaff').addClass("open");
 	   var description = $("div.open p:eq(0)").text();
@@ -751,67 +751,6 @@ $(document).ready(function() {
         $("#addImgAlert").hide();
         $(".open").removeClass("open");
     });
-    
-    $("#submitText").on("click", function(e) {
-        $("#addTextAlert").hide();
-        e.preventDefault();
-        // ------------- creating text content blocks ------------
-        
-        var formData = new FormData();
-        var text = markDown.value();
-        formData.append('content', text);
-        ++contentCount;
-        formData.append('contentOrder', contentCount);
-        markDown.value('');
-        $.ajax({
-            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/textcontent?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
-            type: 'POST',
-            cache       : false,
-            contentType : false,
-            processData : false,
-            data: formData,
-            enctype: 'multipart/form-data',
-            success: function(data) {
-
-                var textblock = $('<div id="'+ data +'" class="textDivStaff tab row"><p>'+text+'<input type="hidden" id="deleteTextId" value="'+data+'" /><a class="btn deleteText" href="javascript:;" style="position: absolute; right:0;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a></p></div>');
-                $(textblock).css({
-                    'margin': "10px"
-                });
-                $(textblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
-                $('#slideSpace').append(textblock);             
-            },
-            error: function(data) {
-            	if (data.status == 403){
-            		$("#loginAlert").show();
-            	}
-            	else {
-            		var url = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image/?'+${_csrf.parameterName}+'='+${_csrf.token}})]";
-            		if(!chooseFromExisting){
-            			reader.onload = function (theFile) 
-            			{        	
-            			var image = new Image();
-            			image.src = theFile.target.result;
-            			image.onload = function() 
-            			{
-            				imageblock = createImageBlock(reader, this.width);  
-            				$('#slideSpace').append(imageblock); 
-            				$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
-            			};          
-            			} 
-            		}
-            		else
-            		{
-            			var image = new Image();
-            			image.src = $('#selectedImage').find('img').attr('src');
-            			formData.append('imageId',imageId);
-            			imageblock = createImageBlockWithExistingImage($('#selectedImage').find('img').attr('src'),image.width);  
-            			$('#slideSpace').append(imageblock); 
-            			$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
-            		}
-            	}
-            }
-        });
-    });
 
     
     $("#submitBiblio").on("click", function(e) {
@@ -862,18 +801,18 @@ $(document).ready(function() {
             	console.log("Success");
             	console.log(data);
             	var biblioblock = $('<div id="' + data.id + '" class="biblioDivStaff tab row"> \
-                <p>\
-                Bibliography Title: <span>' + data.biblioTitle + '</span>,\
-                Description: <span>' + data.description + '</span>\
-                <input type="hidden" id="deleteBiblioId" value="' + data.id + '" />\
-                <a class="btn deleteBiblio" href="javascript:;" style="position: absolute; right: 0px;">\
-                    <i style="color: var(--error);" class="fas fa-trash-alt"></i>\
-                </a> \
-                <a id="addReference" class="btn primary-btn btn-sm" style="padding-top: 8px;">\
-                    + New Reference \
-                </a> \
-            </p> \
-        </div> \
+                        <p class="col-md-10">\
+                        Bibliography Title: <span>' + data.biblioTitle + '</span>,\
+                        Description: <span>' + data.description + '</span>\
+                        </p> \
+                        <input type="hidden" id="deleteBiblioId" value="' + data.id + '" />\
+                        <a class="btn deleteBiblio" href="javascript:;" style="position: absolute; right: 0px;">\
+                        <span class="icon-trash error"></span>\
+                        </a> \
+                        <a id="addReference" class="btn primary-btn btn-sm" style="padding-top: 8px;">\
+                            + New Reference \
+                        </a> \
+                </div> \
 ');
 
             	$(biblioblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
@@ -1047,7 +986,9 @@ $(document).ready(function() {
     function updateTextBox(blockId, text) {
         // clear text box and buttons
         $(".open").empty();
-        $(".open").append('<p class="col-md-10">'+text+'</p><input type="hidden" id="deleteTextId" value="'+blockId+'" /><a class="btn deleteText col-md-1" href="javascript:;" style="position: absolute; right:0;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a>');
+        $(".open").append('<p class="col-md-10">'+text+'</p>'+'<input type="hidden" id="deleteTextId" value="'+blockId+'" /> \
+        		<a class="btn deleteText col-md-1" href="javascript:;" style="position: absolute; right: 0px;"> \
+        <span class="icon-trash error"></span></a>');
         // reset border of the card
         //rebind event handlers
         
@@ -1062,7 +1003,7 @@ $(document).ready(function() {
     	$("#editTextAlert").hide();
     	var blockId = $(this).closest(".open").attr("id");
     	updateTextBox(blockId, defaultValue);
-    });
+    }); 
     
     function updateBiblioBox(blockId, formData) {
         // clear biblio box and buttons
@@ -1126,10 +1067,10 @@ $(document).ready(function() {
     $('.textDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
     $('.biblioDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
     $('.referenceDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
-
+    
     $("#submitTextBlock").on("click", function(e){
     	e.preventDefault();
-        // -----/------- editting text content blocks ------------
+        // ------------- editting text content blocks ------------
         
         var formData = new FormData();
         var text = markDown.value();
@@ -1796,35 +1737,7 @@ function embedVideo() {
             		$("#confirmDeleteImageAlert").hide();	
             	});
             	
-                	// ---------- Delete Text Block -------------
-            	
-            		$("#deleteText").on("click", function(e) {
-            		e.preventDefault();
-            		$("#confirmDeleteImageAlert").find('input').remove();
-            		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
-            		$("#confirmDeleteTextAlert").hide();
-            		var blockId = $('#deleteTextId').attr('value');
-            		$('#deleteTextId').remove()
-            		
-            		// ------------- delete text content blocks ------------
-            		$.ajax({
-            		    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/text/'})]"+blockId+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
-            		    type: 'DELETE',
-            		    success: function(result) {
-            		        $('#' + blockId).remove();
-            		        
-            		    },
-            			error: function(data) {
-            				var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-            				$('.error').append(alert); 
-            				$(".error").delay(4000).slideUp(500, function(){
-            				    $(".error").empty();
-            				});
-            			}
-            		});
-            	});
-            	
-            	// ---------- Delete Image Block -----------
+/*             	// ---------- Delete Image Block -----------
             	
             	$("#deleteImage").on("click", function(e) {
             		e.preventDefault();
@@ -1856,7 +1769,7 @@ function embedVideo() {
             				}
             			});
             		}
-            	});
+            	}); */
             	
             	// ---------- Delete Video Block -----------
             	
@@ -2150,20 +2063,18 @@ function embedVideo() {
  					}
  				}); 
                 
-                function updateTextBox(blockId, text) {
-                    // clear text box and buttons
-                    $(".open").empty();
-                    $(".open").append('<p class="col-md-10">'+text+'</p><input type="hidden" id="deleteTextId" value="'+blockId+'" /><a class="btn deleteText col-md-1" href="javascript:;" style="position: absolute; right:0;"><span class="icon-trash error"></span></a>');
-                    // reset border of the card
-                    //rebind event handlers
-                    $('.textDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
-                    //resetting the height and overflow-y so that the TextBlock doesn't expand
-                    $('.textDivStaff').css('height', 'auto');
-                    $('.textDivStaff').css('overflow-y', 'visible');
-                    $(".open").css('display', 'flex');
-                    // remove id from storage so its not there on refresh
-                    $(".open").removeClass("open");
-                }
+/*  			    function updateTextBox(blockId, text) {
+ 			        // clear text box and buttons
+ 			        $(".open").empty();
+ 			        $(".open").append('<p class="col-md-10">'+text+'</p><input type="hidden" id="deleteTextId" value="'+blockId+'" /><a class="btn deleteText col-md-1" href="javascript:;" style="position: absolute; right:0;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a>');
+ 			        // reset border of the card
+ 			        //rebind event handlers
+ 			        
+ 			        $('.textDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+ 			        $(".open").css('display', 'flex');
+ 			        // remove id from storage so its not there on refresh
+ 			        $(".open").removeClass("open");
+ 			    } */
                 
                 // must add the event to the document since the buttons are added dynamically
                 $('#cancelTextBlock').on('click',function(){
@@ -2175,43 +2086,7 @@ function embedVideo() {
                 $('.valueDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
                 $('.textDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
                 $('.vidDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave);//.dblclick(onDoubleClick);
-            
-/*                 $("#submitTextBlock").on("click", function(e){
-                	e.preventDefault();
-                    // -----//------- editting text content blocks ------------
-                    
-                    var formData = new FormData();
-                    var text = markDown.value();
-                    markDown.value('');
-                    var formData = new FormData();
-                    var blockId = $(".open").attr("id");
-                    formData.append('textBlockDesc', text);
-                    formData.append('textBlockId', blockId);
-                	$("#editTextAlert").hide();
-                    $.ajax({
-                        url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/text/edit?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
-                        type: 'POST',
-                        cache       : false,
-                        contentType : false,
-                        processData : false,
-                        data: formData,
-                        enctype: 'multipart/form-data',
-                        success: function(data) {
-                            // replace text box with new description
-                           updateTextBox(blockId, text)
-                           $(".open").removeClass("open");
-                       },
-                       error: function(data) {
-                    		if (data.status == 403) {
-                       			$("#loginAlert").show();
-                       		}
-                       		else {
-                           		var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                           		$('.error').append(alert);
-                       		}
-                       }
-                   });
-                }); */    
+           
                 
                 $("#imageId").select2({
             		ajax: {
@@ -2449,34 +2324,6 @@ function embedVideo() {
 				</div>
 			</div>
 		</div>
-
-<!--         Delete Text Modal
-        <div id="confirmDeleteChoiceBlockAlert" class="modal"
-            tabindex="-1" role="dialog" th:draggable="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Confirm Delete</h5>
-                        <button type="button" class="close"
-                            data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <h6>Are you sure you want to delete this
-                                text block?
-                            </h6>
-                        </div>
-                        <div class="modal-footer">
-                            <button id="cancelDeleteText" type="reset"
-                                class="btn light">Cancel</button>
-                            <button type="submit" id="deleteText"
-                                class="btn btn-primary">Submit</button>
-                    </div>
-                </div>
-            </div>
-        </div> -->
-
             <!-- Delete Video Modal -->
             <div id="confirmDeleteVideoAlert" class="modal"
                 tabindex="-1" role="dialog" th:draggable="true">
