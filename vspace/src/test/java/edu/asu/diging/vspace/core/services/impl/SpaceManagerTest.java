@@ -132,14 +132,16 @@ public class SpaceManagerTest {
     }
 
     @Test
-    public void test_deleteSpaceById_forNonExistentId() {  
+    public void test_deleteSpaceById_forNonExistentId() {
+        Mockito.when(spaceRepo.findById(spaceId)).thenReturn(Optional.empty());
         managerToTest.deleteSpaceById(spaceId);
         Mockito.verify(spaceDisplayRepo).deleteBySpaceId(spaceId);
         Mockito.verify(spaceRepo).deleteById(spaceId);
     }
 
     @Test
-    public void test_deleteSpaceById_forSuccess() {  
+    public void test_deleteSpaceById_forSuccess() { 
+        Mockito.when(spaceRepo.findById(spaceId1)).thenReturn(Optional.empty());
         managerToTest.deleteSpaceById(spaceId1);
         Mockito.verify(spaceDisplayRepo).deleteBySpaceId(spaceId1);
         Mockito.verify(spaceRepo).deleteById(spaceId1);
@@ -152,6 +154,7 @@ public class SpaceManagerTest {
         space.setId(spaceId2);
         spaceLink.setId(spaceLinkId1);
         spaceLink.setTargetSpace(space);
+        Mockito.when(spaceRepo.findById(spaceId1)).thenReturn(Optional.empty());
         Mockito.when(spaceLinkRepo.getLinkedSpaces(spaceId1)).thenReturn(Arrays.asList(spaceLink));
         managerToTest.deleteSpaceById(spaceId1);
         Mockito.verify(spaceLinkRepo).deleteBySourceSpaceId(spaceId1);
@@ -167,7 +170,8 @@ public class SpaceManagerTest {
         space.setId(spaceId1);
         spaceLink.setId(spaceLinkId1);
         spaceLink.setTargetSpace(space);
-        Mockito.when(spaceLinkRepo.getLinkedFromSpaces(spaceId1)).thenReturn(Arrays.asList(spaceLink));
+        Mockito.when(spaceRepo.findById(spaceId1)).thenReturn(Optional.of(space));
+        Mockito.when(spaceLinkRepo.findByTargetSpace(space)).thenReturn(Arrays.asList(spaceLink));
         managerToTest.deleteSpaceById(spaceId1);
         Assert.assertEquals(spaceLink.getTargetSpace(), null);
         Mockito.verify(spaceLinkRepo).deleteBySourceSpaceId(spaceId1);

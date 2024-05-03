@@ -12,6 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.ExhibitionRepository;
@@ -78,6 +80,7 @@ public class SpaceManager implements ISpaceManager {
     private SpaceLinkDisplayRepository spaceLinkDisplayRepo;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
+
     /*
      * (non-Javadoc)
      * 
@@ -141,7 +144,8 @@ public class SpaceManager implements ISpaceManager {
      * 
      * @see
      * edu.asu.diging.vspace.core.services.impl.ISpaceManager#storeSpace(edu.asu.
-     * diging.vspace.core.model.ISpace,edu.asu.diging.vspace.core.model.impl.VSImage)
+     * diging.vspace.core.model.ISpace,edu.asu.diging.vspace.core.model.impl.
+     * VSImage)
      */
     @Override
     public CreationReturnValue storeSpace(ISpace space, IVSImage image) {
@@ -201,7 +205,6 @@ public class SpaceManager implements ISpaceManager {
         return spaces;
     }
 
-
     @Override
     public List<ISpace> getSpacesWithStatus(SpaceStatus status) {
         List<ISpace> spaces = new ArrayList<>();
@@ -212,28 +215,34 @@ public class SpaceManager implements ISpaceManager {
     /**
      * Method to delete space based on id
      * 
-     * @param id if id is null throws exception, else delete corresponding space
+     * @param id
+     *            if id is null throws exception, else delete corresponding space
      * @throws SpaceDoesNotExistException
      */
     @Override
     public void deleteSpaceById(String id) {
-        if(id != null) {
+        if (id != null) {
             List<SpaceLink> spaceLinks = spaceLinkRepo.getLinkedSpaces(id);
-            List<SpaceLink> fromSpaceLinks = spaceLinkRepo.getLinkedFromSpaces(id);
+            List<SpaceLink> fromSpaceLinks = new ArrayList<>();
+            Optional<Space> space = spaceRepo.findById(id);
+            if (space.isPresent()) {
+                fromSpaceLinks = spaceLinkRepo.findByTargetSpace(space.get());
+            } 
             Exhibition exhibition = (Exhibition) exhibitionManager.getStartExhibition();
             // When space has other links attached to it
-            // To delete links that access to the space getting deleted and replacing it as null
-            for(SpaceLink spaceLink : fromSpaceLinks) {
+            // To delete links that access to the space getting deleted and replacing it as
+            // null
+            for (SpaceLink spaceLink : fromSpaceLinks) {
                 spaceLink.setTargetSpace(null);
                 spaceLinkRepo.save(spaceLink);
             }
             // To delete the links on the space getting deleted
-            for(SpaceLink spaceLink : spaceLinks) {
+            for (SpaceLink spaceLink : spaceLinks) {
                 spaceLinkDisplayRepo.deleteBySpaceLinkId(spaceLink.getId());
             }
             spaceLinkRepo.deleteBySourceSpaceId(id);
             // If the space is startSpace, we delete the space from the exhibition first.
-            if(exhibition != null && exhibition.getStartSpace() != null
+            if (exhibition != null && exhibition.getStartSpace() != null
                     && exhibition.getStartSpace().getId().equalsIgnoreCase(id)) {
                 exhibition.setStartSpace(null);
                 exhibitRepo.save(exhibition);
@@ -252,17 +261,21 @@ public class SpaceManager implements ISpaceManager {
 
     @Override
     public List<SpaceLink> getIncomingLinks(String id) {
-
-        return spaceLinkRepo.getLinkedFromSpaces(id);
+        Optional<Space> space = spaceRepo.findById(id);
+        if (space.isPresent()) {
+            return spaceLinkRepo.findByTargetSpace(space.get());
+        } else {
+            return new ArrayList<>();
+        }
     }
 
     @Override
     public List<ISpace> getSpacesWithImageId(String imageId) {
-        if(imageId == null) {
+        if (imageId == null) {
             return null;
         }
         Optional<VSImage> vsImage = imageRepo.findById(imageId);
-        if(!vsImage.isPresent()) {
+        if (!vsImage.isPresent()) {
             return null;
         }
         List<ISpace> spaces = new ArrayList<>();
@@ -270,14 +283,18 @@ public class SpaceManager implements ISpaceManager {
         return spaces;
     }
 
-
     @Override
     public Iterable<Space> addIncomingLinkInfoToSpaces(Iterable<Space> spaces) {
         Iterator<Space> iterator = spaces.iterator();
-        while(iterator.hasNext()) {
+        while (iterator.hasNext()) {
             Space space = iterator.next();
-            space.setIncomingLinks( (spaceLinkRepo.getLinkedFromSpaces(space.getId())).size() > 0 ? true : false );
+            space.setIncomingLinks((spaceLinkRepo.findByTargetSpace(space)).size() > 0 ? true : false);
         }
         return spaces;
+    }
+    
+    @Override
+    public Page<ISpace> findByNameOrDescription(Pageable requestedPage, String searchText) {
+        return spaceRepo.findDistinctByNameContainingOrDescriptionContaining(requestedPage, searchText,searchText);
     }
 }

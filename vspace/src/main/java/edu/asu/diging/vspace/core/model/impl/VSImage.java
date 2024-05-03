@@ -8,6 +8,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
 import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 
@@ -19,18 +20,17 @@ import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.ImageCategory;
 
 @Entity
-public class VSImage extends VSpaceElement implements IVSImage {
+public class VSImage extends VSMedia implements IVSImage {
 
     @Id
     @GeneratedValue(generator = "image_id_generator")
     @GenericGenerator(name = "image_id_generator", parameters = @Parameter(name = "prefix", value = "IMG"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
 
-    @Lob
-    private String filename;
+ 
     @Lob
     private String parentPath;
-    private String fileType;
+
 
     private int height;
     private int width;
@@ -62,26 +62,6 @@ public class VSImage extends VSpaceElement implements IVSImage {
         this.id = id;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see edu.asu.diging.vspace.core.model.impl.IImage#getFilename()
-     */
-    @Override
-    public String getFilename() {
-        return filename;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * edu.asu.diging.vspace.core.model.impl.IImage#setFilename(java.lang.String)
-     */
-    @Override
-    public void setFilename(String filename) {
-        this.filename = filename;
-    }
 
     /*
      * (non-Javadoc)
@@ -104,15 +84,7 @@ public class VSImage extends VSpaceElement implements IVSImage {
         this.parentPath = parentPath;
     }
 
-    @Override
-    public String getFileType() {
-        return fileType;
-    }
-
-    @Override
-    public void setFileType(String fileType) {
-        this.fileType = fileType;
-    }
+ 
 
     @Override
     public int getHeight() {
@@ -153,5 +125,5 @@ public class VSImage extends VSpaceElement implements IVSImage {
     public void setCategories(List<ImageCategory> categories) {
         this.categories = categories;
     }
-
+  
 }

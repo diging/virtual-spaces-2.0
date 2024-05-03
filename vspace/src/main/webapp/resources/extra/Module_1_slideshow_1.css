@@ -194,6 +194,11 @@ a, a:hover, a:focus {
     margin: auto;
 }
 
+.vidDiv {
+    position: relative;
+    overflow: visible;
+}
+
 .slideNumberClass {
     position: absolute;
     width: 84%;

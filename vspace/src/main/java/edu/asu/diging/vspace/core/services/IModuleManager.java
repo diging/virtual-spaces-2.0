@@ -2,6 +2,10 @@ package edu.asu.diging.vspace.core.services;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import edu.asu.diging.vspace.core.exception.ModuleNotFoundException;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
@@ -19,5 +23,8 @@ public interface IModuleManager {
     List<ISequence> getModuleSequences(String moduleId);
 
     ISequence checkIfSequenceExists(String moduleId, String sequenceId);
+    
+    Page<IModule> findByNameOrDescription(Pageable requestedPage,String searchText);
 
+    void deleteModule(String moduleId) throws ModuleNotFoundException;
 }

@@ -31,6 +31,7 @@
     overflow-x: hidden;
     transition: 0.5s;
     padding-top: 60px;
+
 }
 
 .sidenav a {
@@ -40,6 +41,9 @@
     color: #818181;
     display: block;
     transition: 0.3s;
+    white-space: normal; /* Add this property to allow text wrapping */
+    word-break: normal;
+  
 }
 
 .sidenav .closebtn {
@@ -53,14 +57,86 @@
 @media screen and (max-height: 450px) {
     .sidenav {
         padding-top: 15px;
+  
     }
     .sidenav a {
         font-size: 18px;
     }
 }
 
+.imgResizeDiv {
+    position: absolute;
+    z-index: 1;
+    width: 50px;
+    height: 44px;
+    left: 90%;
+    top: 8%;
+    overflow: visible;
+    cursor: pointer;
+}
+
+.imgResizeDiv:hover .tooltiptext {
+    visibility: visible;
+}
+
+.imgFullScreen {
+    position: absolute;
+    z-index: 1;
+    width: 50px;
+    height: 44px;
+    left: 85%;
+    top: 8%;
+    overflow: visible;
+    cursor: pointer;
+}
+
+.imgFullScreen:hover .tooltiptext {
+    visibility: visible;
+}
+
+
+
+
+.exitfullscreen:hover .tooltiptextForExitFullscreen {
+    visibility: visible;
+}
+.tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    color: white;
+    text-align: center;
+    font-size: 12px;
+    padding: 3px 0;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1;
+    left: -38px;
+    top: 46px;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+
+
+.tooltiptextForExitFullscreen {
+    visibility: hidden;
+    width: 120px;
+    color: white;
+    text-align: center;
+    font-size: 12px;
+    padding: 3px 0;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1;
+    left: -138px;
+    top: -15px;
+    background: rgba(0, 0, 0, 0.6);
+}
+
 .barPosition {
     top: 25px;
+}
+#previewNavBarItem {
+	display: inline-flex;
 }
 
 @media only screen and (max-width: 800px) { /* For mobile phones: */
@@ -100,6 +176,7 @@
     /* top layer */
     z-index: 9999;
     transition: all 0.5s;
+
 }
 
 #sidebar.active {
@@ -128,19 +205,103 @@
     }
 }
 </style>
+
+<script th:inline="javascript">
+$(document).ready(function() {
+	const textBlock = document.getElementByClassName("textBlock");
+	const color = textBlock.style.borderColor;
+	console.log("color" + color);
+	textBlock.addEventListener('focus-visible', function(e) {
+		e.target.style.outline = "2px solid blue";
+	});
+
+}
+
+</script>
 </head>
 
 <body>
-    <div layout:fragment="content">
+    <div id="mainDivContent" layout:fragment="content">
         <script th:inline="javascript">
 		//# sourceURL=click.js
+			
+		function toggleImgSize(isClicked){
+			var maxImgWidth = $(window).width();
+			var spaceWidth = $("#bgImage").css("width");
+			var maxImgWidthOrig = parseFloat($("#bgImage").css("max-width"));
+			var isResizeImgBtnClicked = getCookie('isResizeImgBtnClicked');
+			
+			if(isClicked) {
+				isResizeImgBtnClicked = -isResizeImgBtnClicked;
+				setCookie('isResizeImgBtnClicked', isResizeImgBtnClicked, null);
+			}
+			// resize the image to max width
+			if ( isResizeImgBtnClicked == 1) {
+				$("#toggleImgClass").attr('class', "icon-collapse secondary");
+				if(maxImgWidthOrig > maxImgWidth) {
+					$(".spaceClass").css("display", ""); 
+					$(".spaceClass").css("justify-content", "");
+					$("#bgImage").css("width", maxImgWidth);
+					$(".spaceClass").css("height", "");
+					$("#Module_1").css("height", "");
+					$("#Module_1").css("min-height", "0");
+					$("#Module_1").css("margin-bottom", "0px");
+				}
+        		}
+			else {
+				$("#toggleImgClass").attr('class', "icon-expand secondary");
+				if(maxImgWidthOrig > maxImgWidth) {
+					$(".spaceClass").css("display", "flex"); 
+					$(".spaceClass").css("justify-content", "");
+					$("#bgImage").css("width", spaceWidth);
+					$('#bgImage').width('100%');
+					$(".spaceClass").css("height", "800px");
+					$("#Module_1").css("margin-bottom", "60px");
+				}
+			}
+			$("#space a").remove(); 
+			$(".Info_cz_Class").remove();
+			drawLinks();
+		}
+		
+		function imageFullScreen(){
+			   var elem = document.getElementById("spaceDiv");
+			   $(".text-Div").hide();
+			   if (elem.requestFullscreen) {
+				    elem.requestFullscreen();
+			   }else if (elem.webkitRequestFullscreen) { 
+				    elem.webkitRequestFullscreen();
+			   }else if (elem.msRequestFullscreen) { 
+				    elem.msRequestFullscreen();
+			   }
+			   $('#bgImage').width('100%');
+			   $('#spaceDiv').css("padding-top", "0px");
+			   $("#space").append('<div class = "exitfullscreen"><button class="btn circle-btn" style="padding: 3px;width: 35px;height: 35px;position: fixed;right: 0;bottom: 0;margin: 0 2rem 2rem 0;" onclick="exitFullScreen()"><span class="icon-collapse secondary"></span><span class="tooltiptextForExitFullscreen">Exit Full screen</span></button></div>')
+		}
 
+		function exitFullScreen()
+		{
+			$(".exitfullscreen").remove();
+			$(".text-Div").show();
+			$('#spaceDiv').css("padding-top", "10px");
+			if (document.exitFullscreen) {
+			    document.exitFullscreen();
+			  } else if (document.webkitExitFullscreen) { /* Safari */
+				    document.webkitExitFullscreen();
+			  } else if (document.msExitFullscreen) { /* IE11 */
+				    document.msExitFullscreen();
+			  }
+			toggleImgSize(false);
+		}
 		let maxWidth='(max-width: 1200px)';
 		function openNav(){
-			$("#mySidenav").css("width", "250px");
-        }
+		  $("#mySidenav").css("width", "250px");
+		  $("#mySidenav").css("overflow", "visible");
+		  
+		}
         function closeNav(){
         	$("#mySidenav").css("width", "0");
+        	 $("#mySidenav").css("overflow", "hidden");
 		}
 		function openModuleNav(){
 		    if (window.matchMedia(maxWidth).matches){
@@ -172,29 +333,65 @@
 		    }
 		}
 		
+		function setCookie(name,value,days) {
+		    var expires = "";
+		    if (days) {
+		        var date = new Date();
+		        date.setTime(date.getTime() + (days*24*60*60*1000));
+		        expires = "; expires=" + date.toUTCString();
+		    }
+		    document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+		}
+		
+		function getCookie(name) {
+		    var nameEq = name + "=";
+		    var cookieArray = document.cookie.split(';');
+		    for(var i=0;i < cookieArray.length;i++) {
+		        var currCookie = cookieArray[i].trim();
+		        if (currCookie.startsWith(nameEq)) {
+		        	return currCookie.substring(nameEq.length,currCookie.length);
+		        }
+		    }
+		    return null;
+		}
+		
 		$(window).on("load", function() {
-		    let spaceHeight = $("#bgImage").css("height");
-		    $("#Module_1").css("height",spaceHeight);
+			var isResizeImgBtnClicked = getCookie('isResizeImgBtnClicked');
+			if(isResizeImgBtnClicked == null || isResizeImgBtnClicked == "") {
+				setCookie('isResizeImgBtnClicked', -1, null);
+			} 
+		    	let spaceHeight = $("#bgImage").css("height");
+		    	$("#Module_1").css("height",spaceHeight);
 			$( window ).resize(function() {
-				$("#space a").remove();
+					$("#space a").remove();
+					$(".Info_cz_Class").remove();
+			    	drawLinks();
+		    	});
 		    	drawLinks();
-		    });
-		    drawLinks();
+		    	toggleImgSize(false);
 		});
 		
 		function drawLinks() {
 			var spaceLinks = [[${spaceLinks}]];
 			var moduleLinks = [[${moduleList}]];
+			var isExhPreview  =[[${isExhPreview}]];
 			var externalLinks = [[${externalLinkList}]];
+			var spaceTextBlocks = [[${spaceTextBlocks}]];
 			var height = parseInt($("#bgImage").css("height"));
 			var width = parseInt($("#bgImage").css("width"));
-			let relativeHeight = ([(${display.width})]/width)*height;
-		    spaceLinks.forEach(function(link,index){
+			let relativeHeight = ([(${display?.width})]/width)*height;
+			spaceLinks.forEach(function(link,index) {
                 if(link!=null){
                     var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 
     		        var posY = $("#space").position().top;
     		        var spaceLink = $('<a></a>');
-    		        spaceLink.attr("href", link.link.targetSpace.id);
+    		        if(isExhPreview=== true){
+    		        	spaceLink.attr("href",[[@{|/preview/${previewId}/space/|}]]+link.link.targetSpace.id);
+    		        }
+    		        else{
+    		        	spaceLink.attr("href", link.link.targetSpace.id);
+    		        }
+    		        
     		        var linkDisplay;
     		        if(link.type=="ALERT"){
     		            linkDisplay = $('<div class="InfoSpace_'+index+' alert alert-primary" role="alert"><span class="tooltiptextalert">'+link.link.name+'</span></div>');
@@ -210,7 +407,7 @@
     		        linkDisplay.css('transform', 'rotate('+link.rotation+'deg)');
     		        linkDisplay.css('fill', 'grey'); 
     		        linkDisplay.css('color', 'rgba(128,128,128,1)');
-    		        var	linkPosX=(width*link.positionX)/[(${display.width})];
+    		        var	linkPosX=(width*link.positionX)/[(${display?.width})];
     		        var	linkPosY=(height*link.positionY)/relativeHeight;
     		        linkDisplay.css('left',linkPosX + posX);
     		        linkDisplay.css('top', linkPosY + posY);
@@ -225,20 +422,31 @@
     		          'overflow': 'visible'
     		        });
                 }
-            })
+            });
             moduleLinks.forEach(function(link,index){
                 if(link!=null){
                     var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 
     		        var posY = $("#space").position().top;
     		        var moduleLink = $('<a></a>');
-    		        var moduleLinkURL = [[@{|/exhibit/${space.id}/module/|}]]+link.link.module.id;
+    		        var moduleLinkURL = null;
+    		        if(isExhPreview=== true){
+    		        	moduleLinkURL = [[@{|/preview/${previewId}/${space?.id}/module/|}]]+link.link.module.id;
+    		        } else{
+    		        	 moduleLinkURL = [[@{|/exhibit/${space?.id}/module/|}]]+link.link.module.id;
+    		        }
     		        moduleLink.attr("href", moduleLinkURL);
-    		        var linkDisplay = $('<div class="InfoModule_'+index+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_m"></span><span class="tooltiptext">'+link.link.name+'</span></div>');
+    		        var linkDisplay;
+    		        if(link.type=="IMAGE" && link.image != null){
+                        var moduleImageURL = [[@{/api/image/}]]+link.image.id;
+                        linkDisplay = $('<img class="InfoModule_'+index+'" src="'+moduleImageURL+'" />');
+    		        } else {
+    		        	linkDisplay = $('<div class="InfoModule_'+index+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_m"></span><span class="tooltiptext">'+link.link.name+'</span></div>');
+                	}
     		        linkDisplay.css('position', 'absolute');
     		        linkDisplay.css('transform', 'rotate('+link.rotation+'deg)');
     		        linkDisplay.css('fill', 'grey'); 
     		        linkDisplay.css('color', 'rgba(128,128,128,1)');
-    		        var	linkPosX=(width*link.positionX)/[(${display.width})];
+    		        var	linkPosX=(width*link.positionX)/[(${display?.width})];
     		        var	linkPosY=(height*link.positionY)/relativeHeight;
     		        linkDisplay.css('left',linkPosX + posX);
     		        linkDisplay.css('top', linkPosY + posY);
@@ -256,41 +464,122 @@
             externalLinks.forEach(function(link,index){
                 if(link!=null){
                     var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 
-    		        var posY = $("#space").position().top;
-    		        var externalLink = $('<a></a>');
-    		        externalLink.attr('href', link.externalLink.externalLink);
-    		        externalLink.attr('target', "_blank");
-    		        if(link.type=="ALERT"){
-    		            linkDisplay = $('<div class="InfoExt_'+index+'  alert alert-primary" role="alert"><span class="tooltiptextalert">'+link.externalLink.name+'</span></div>');
-    		        }
-    		        else if(link.type=="IMAGE" && link.image != null){
-                        var extImageURL = [[@{/api/image/}]]+link.image.id;
-                        linkDisplay = $('<img class="InfoExt_'+index+'" src="'+extImageURL+'" />');
-    		        }
-    		        else{
-        		        var linkDisplay = $('<div class="InfoExt_'+index+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-ext-link Icon_awesome_info_e"></span><span class="tooltiptext">'+link.externalLink.name+'</span></div>');
-    		        } 
-    		        linkDisplay.css('position', 'absolute');
-    		        linkDisplay.css('transform', 'rotate('+link.rotation+'deg)');
-    		        linkDisplay.css('fill', 'grey'); 
-    		        linkDisplay.css('color', 'rgba(128,128,128,1)');
-    		        var	linkPosX=(width*link.positionX)/[(${display.width})];
-    		        var	linkPosY=(height*link.positionY)/relativeHeight;
-    		        linkDisplay.css('left',linkPosX + posX);
-    		        linkDisplay.css('top', linkPosY + posY);
-    		        externalLink.append(linkDisplay);
-    		        $("#space").append(externalLink);
-    		        $(".externalLabel-"+index).css({
+                    var posY = $("#space").position().top;
+                    var externalLink = $('<a></a>');
+                    externalLink.attr('href', link.externalLink.externalLink);
+                    if(link.howToOpen == null || link.howToOpen == "NEWWINDOW" ){
+    		        	externalLink.attr('target', "_blank");
+    		        } else {
+    		        	externalLink.attr('target', "_self"); 
+                	}
+                    if(link.type=="ALERT"){
+    		        	linkDisplay = $('<div class="InfoExt_'+index+'  alert alert-primary" role="alert"><span class="tooltiptextalert">'+link.externalLink.name+'</span></div>');
+                	}
+                    else if(link.type=="IMAGE" && link.image != null){
+    		        	var extImageURL = [[@{/api/image/}]]+link.image.id;
+    		        	linkDisplay = $('<img class="InfoExt_'+index+'" src="'+extImageURL+'" />');
+                	}
+                    else{
+    		        	var linkDisplay = $('<div class="InfoExt_'+index+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-ext-link Icon_awesome_info_e"></span><span class="tooltiptext">'+link.externalLink.name+'</span></div>');
+                	}
+                    linkDisplay.css('position', 'absolute');
+                    linkDisplay.css('transform', 'rotate('+link.rotation+'deg)');
+                    linkDisplay.css('fill', 'grey'); 
+                    linkDisplay.css('color', 'rgba(128,128,128,1)');
+                    var linkPosX=(width*link.positionX)/[(${display?.width})];
+                    var linkPosY=(height*link.positionY)/relativeHeight;
+                    linkDisplay.css('left',linkPosX + posX);
+                    linkDisplay.css('top', linkPosY + posY);
+                    externalLink.append(linkDisplay);
+                    $("#space").append(externalLink);
+                    $(".externalLabel-"+index).css({
     		            'transform': 'rotate(0deg)',
     		            'left': link.positionX + posX - 10,
     		            'padding-top': '30px',
     		            'color': 'rgba(150, 45, 62, 1)',
     		            'font-size': '12px'
-    		          });
+  		          });
                 }
             })
+            
+            spaceTextBlocks.forEach(function(block,index){
+                if(block!=null){
+                    var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left;
+                    var posY = $("#space").position().top;
+                    var heightText = (block.height*height)/100;
+                    var widthText = (block.width*width)/100;
+                    var textBlock = $('<span data-link-id="'+block.id+'" class="spaceLink-'+block.id+' Info_cz_Class"><textarea class="textBlock" style="height:'+heightText+'px; width:'+widthText+'px; resize:none; color: '+block.textColor+'; border-color:'+block.borderColor+';" readonly>'+block.spaceTextBlock.text+'</textarea></span>');
+                    textBlock.css('position', 'absolute');   
+                    
+                    var	linkPosX=(width*block.positionX)/[(${display.width})];
+                    var	linkPosY=(height*block.positionY)/relativeHeight;
+                    textBlock.css('left', linkPosX + posX);
+                    textBlock.css('top', linkPosY + posY);
+                    
+               
+                    $("#space").append(textBlock);
+                    
+                    
+                }
+            })
+            
+            var textBlockElements = document.getElementsByClassName("textBlock");
+            Array.from(textBlockElements).forEach(function(textBlock, index){
+            	if(textBlock != null) {
+            	   	const color = textBlock.style.borderColor;
+                 	console.log("color" + color);
+                 	textBlock.addEventListener('focus', function(e) {
+               		e.target.style.outline = "2px solid "+ color;
+                 	});
+                 	textBlock.addEventListener('blur', function(e) {
+                 		e.target.style.outline = "none";
+                	});
+            	}
+         
+            })
+              
+                	
 		}
 		</script>
+		
+		<div sec:authorize="hasAnyRole('ROLE_STAFF','ROLE_ADMIN')" class="alert alert-warning alert-dismissible fade show" role="alert" style="margin: -60px 0 60px; z-index: 2;">
+		  <span class="icon-warning secondary"></span> You are viewing the public page. Go to the staff home 
+		  	<span class="icon-home secondary"></span> to make changes.
+		  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+		    <span aria-hidden="true">&times;</span>
+		  </button>
+		</div>
+		<div>
+		
+	    <div th:if="${!isSpacePublished}" class="alert alert-warning alert-dismissible fade show" role="alert" style="margin: -60px 0 60px; z-index: 2;">
+           <span class="icon-warning secondary"></span> This space has not been published.
+		   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+		   <span aria-hidden="true">&times;</span>
+		  </button>
+		</div>
+		
+		</div>
+
+     
+		<div class="imgResizeDiv">
+                <button class="btn circle-btn" id="toggleBtn" style="width: 35px; height: 35px; margin-left: 10px; margin-top: 5px; padding: 3px;"
+                    onclick="toggleImgSize(1)">
+                    <span class="icon-expand secondary"
+                        id="toggleImgClass" style="left: -4px;"></span> <span
+                        class="tooltiptext">Resize Image</span>
+                </button>
+            </div>
+        
+        <div class="imgFullScreen">
+                <button class="btn circle-btn" id="toggleFullscreenBtn" style="width: 35px; height: 35px; margin-left: 10px; margin-top: 5px; padding: 3px;"
+                    onclick="imageFullScreen()">
+                    <span class="icon-visible secondary"
+                         style="float:right;left: -4px;"></span> <span
+                        class="tooltiptext">Full screen option</span>
+                </button>
+            </div>
+            
+           
         <div class="container-fluid"
             th:style="${showAlert} ? 'display:none' : 'display:block'">
             <div class="modalDown alert alert-warning center col-md-12"
@@ -299,22 +588,33 @@
                 <h6
                     th:if="${exhibitionConfig.customMessage != '' && exhibitionConfig.mode == 'OFFLINE'}">[[${exhibitionConfig.customMessage}]]</h6>
                 <h6
-                    th:unless="${exhibitionConfig.customMessage != '' && exhibitionConfig.mode == 'OFFLINE'}">[[${exhibitionConfig.mode.value}]]</h6>
+                    th:unless="${exhibitionConfig.customMessage != '' && exhibitionConfig.mode == 'OFFLINE'}">[[${exhibitionConfig.mode?.value}]]</h6>
             </div>
             <div id="Module_1" class="Home_Class" style="margin: -45px 0 60px auto;">
-                <div id="mySidenav" class="sidenav">
+             
+                <div  th:if="${isExhPreview} == null OR ${isExhPreview} == false" id="mySidenav" class="sidenav">
                     <a href="javascript:void(0)" class="closebtn"
                         onclick="closeNav()">&times;</a>
                     <ul th:each="space: ${publishedSpaces}">
                         <li><a class="dropdown-item"
-                            th:href="@{'/exhibit/space/'+${space.id}}">[[${space.name}]]</a>
+                            th:href="@{'/exhibit/space/'+${space?.id}}">[[${space.name}]]</a> 
+                             
+                            
                         </li>
                     </ul>
                 </div>
-                <span style="font-size: 30px; cursor: pointer"
-                    onclick="openNav()">&#9776;</span>
+              	   
+                <div  th:if="${isExhPreview} == true" id="mySidenav" class="sidenav">
+                  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+                    <ul th:each="space: ${publishedSpaces}">
+                        <li><a class="dropdown-item" id="previewNavBarItem" th:href="@{'/preview/'+${previewId}+'/space/'+${space?.id}}">[[${space.name}]]
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <span style="font-size: 30px; cursor: pointer" onclick="openNav()">&#9776;</span>
                 <div class="spaceClass" id="spaceDiv"
-                    style="width: 80%; margin-left: 10px; margin-top: -50px; display: flex; justify-content: center; padding-top: 10px;">
+                    style="width: 80%; display: flex; margin-left: 10px; margin-top: -50px; justify-content: center; padding-top: 10px;">
                     <div>
                         <div class=dropdown  th:if="${moduleList.size() > 0}">
                             <div id="mySideModulenav"
@@ -325,13 +625,21 @@
                                     <ul style="list-style: none;"
                                         th:each="module: ${moduleList}">
                                         <li
-                                            th:if="${!#strings.isEmpty(module.link.name)}"><a
+                                            th:if="${!#strings.isEmpty(module.link.name) AND (isExhPreview == null OR isExhPreview== false)}"><a
                                             class="dropdown-item"
-                                            th:href="@{'/exhibit/'+${space.id}+'/module/'+${module.link.module.id}}"><div class="Info Info_cz_module_Class"><svg class="Ellipse_8_module_c_sidenav"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_module_c_sidenav"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_module_c_sidenav"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_module_m_sidenav"></span></div>[[${module.link.name}]]</a></li>
+                                            th:href="@{'/exhibit/'+${space?.id}+'/module/'+${module.link.module?.id}}"><div class="Info Info_cz_module_Class"><svg class="Ellipse_8_module_c_sidenav"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_module_c_sidenav"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_module_c_sidenav"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_module_m_sidenav"></span></div>[[${module.link.name}]]</a></li>
                                         <li
-                                            th:if="${#strings.isEmpty(module.link.name)}"><a
+                                            th:if="${#strings.isEmpty(module.link.name) AND (isExhPreview == null OR isExhPreview== false)}"><a
                                             class="dropdown-item"
-                                            th:href="@{'/exhibit/'+${space.id}+'/module/'+${module.link.module.id}}"><div class="Info Info_cz_module_Class"><svg class="Ellipse_8_module_c_sidenav"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_module_c_sidenav"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_module_c_sidenav"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_module_m_sidenav"></span></div>[[${module.link.module.name}]]</a></li>
+                                            th:href="@{'/exhibit/'+${space?.id}+'/module/'+${module.link.module?.id}}"><div class="Info Info_cz_module_Class"><svg class="Ellipse_8_module_c_sidenav"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_module_c_sidenav"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_module_c_sidenav"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_module_m_sidenav"></span></div>[[${module.link.module.name}]]</a></li>
+                                       <li
+                                            th:if="${!#strings.isEmpty(module.link.name) AND isExhPreview == true}"><a
+                                            class="dropdown-item"
+                                            th:href="@{'/preview/'+${previewId}+'/'+${space?.id}+'/module/'+${module.link.module?.id}}"><div class="Info Info_cz_module_Class"><svg class="Ellipse_8_module_c_sidenav"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_module_c_sidenav"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_module_c_sidenav"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_module_m_sidenav"></span></div>[[${module.link.name}]]</a></li>
+                                        <li
+                                            th:if="${#strings.isEmpty(module.link.name) AND isExhPreview == true}"><a
+                                            class="dropdown-item"
+                                            th:href="@{'/preview/'+${previewId}+'/'+${space?.id}+'/module/'+${module.link.module?.id}}"><div class="Info Info_cz_module_Class"><svg class="Ellipse_8_module_c_sidenav"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_module_c_sidenav"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_module_c_sidenav"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_module_m_sidenav"></span></div>[[${module.link.module.name}]]</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -361,7 +669,7 @@
                                 <span class="icon-grid-dots moduleBarPosition"></span>
                             </div>
                         </div>
-                        <div class="text-Div">
+                        <div class="text-Div" >
                             <h3 class="spaceName">
                                 [[${space.name}]] <span
                                     th:if="${!#strings.isEmpty(space.description)}"
@@ -369,7 +677,7 @@
                                     style="font-size: 20px; color: rgba(150, 45, 62, 1);"
                                     th:onclick="openSpaceDescription()"></span>
                                 <a sec:authorize="isAuthenticated()"
-                                    th:href="@{|/staff/space/${space.id}|}"><span
+                                    th:href="@{|/staff/space/${space?.id}|}"><span
                                     style="display: inline-block; color: rgba(150, 45, 62, 1);">
                                     <span class="icon-esit" style="display: inline-block;"></span></span></a>
                             </h3>

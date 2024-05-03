@@ -17,6 +17,8 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import edu.asu.diging.vspace.core.data.ExhibitionAboutPageRepository;
+import edu.asu.diging.vspace.core.model.IExhibition;
+import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionAboutPage;
 
 /**
@@ -31,6 +33,9 @@ public class ExhibitionAboutPageManagerTest {
         
     @Mock
     private ExhibitionAboutPageRepository repo;
+    
+    @Mock
+    private ExhibitionManager exhibitionManager;
 
     @InjectMocks
     private ExhibitionAboutPageManager serviceToTest;
@@ -43,7 +48,9 @@ public class ExhibitionAboutPageManagerTest {
     @Test
     public void test_store_success() {
         ExhibitionAboutPage aboutPage = new ExhibitionAboutPage();
+        Exhibition exhibition = new Exhibition();
         aboutPage.setId("EXHABT000000001");
+        when(exhibitionManager.getStartExhibition()).thenReturn((IExhibition)exhibition);
         when(repo.save(aboutPage)).thenReturn(aboutPage);
         ExhibitionAboutPage savedExhibAbtPage = serviceToTest.store(aboutPage);
         assertNotNull(savedExhibAbtPage.getId());
