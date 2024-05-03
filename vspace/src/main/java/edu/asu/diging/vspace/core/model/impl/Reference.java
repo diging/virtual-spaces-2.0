@@ -173,14 +173,13 @@ public class Reference extends VSpaceElement implements IReference {
     }
 
     @Override
-    @Transient
     public String toString() {
         return "Reference title=" + title + ", author=" + author + ", year=" + year + ", journal=" + journal + ", url=" + url
                 + ", volume=" + volume + ", issue=" + issue + ", pages=" + pages + ", editors=" + editors + ", type="
                 + type + ", note=" + note;
     }
 
-    @Transient
+
     public String htmlRenderedReference() {
         Parser parser = Parser.builder().build();
         Node document = parser.parse(toString());
@@ -188,7 +187,7 @@ public class Reference extends VSpaceElement implements IReference {
         return renderer.render(document);
     }
 
-    @Transient
+
     public String urlEncodedRefMetaData() {
         ReferenceContext biblioContext = new ReferenceContext(new CitationStyleDefault(), this); //currently default citation 
         return biblioContext.executeBiblioMetadata(this);

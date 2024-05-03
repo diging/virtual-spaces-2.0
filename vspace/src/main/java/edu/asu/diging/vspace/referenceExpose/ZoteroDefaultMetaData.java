@@ -4,8 +4,11 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
+import org.springframework.context.annotation.PropertySource;
+
 import edu.asu.diging.vspace.core.model.IReference;
 
+@PropertySource("classpath:config.properties")
 public class ZoteroDefaultMetaData implements IReferenceMetadata {
 
     String biblioMetadataStyle = "defaultZoteroMetadata";
@@ -16,13 +19,13 @@ public class ZoteroDefaultMetaData implements IReferenceMetadata {
     IReference reference;
     
     //These all values are fixed for default metadata 
-    String urlVersion = "url_ver=Z39.88-2004";
+    String urlVersion = "${urlVersion}";
     
-    String ctxVersion = "ctx_ver=Z39.88-2004";
+    String ctxVersion = "${ctxVersion}";
     
-    String rfrId = "info:sid/zotero.org:2";
+    String rfrId = "${rfrId}";
     
-    String rftValFmt = "info:ofi/fmt:kev:mtx:dissertation";
+    String rftValFmt = "${rftValFmt}";
     
     ZoteroDefaultMetaData(ICitationStyle citationStyle, IReference reference) {
         this.citationStyle = citationStyle;

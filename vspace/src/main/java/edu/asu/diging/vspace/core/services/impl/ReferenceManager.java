@@ -19,10 +19,10 @@ import edu.asu.diging.vspace.core.services.IReferenceManager;
 @Service
 public class ReferenceManager implements IReferenceManager {
 
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+    
     @Autowired
     private ReferenceRepository referenceRepo;
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
     public IReference createReference(IBiblioBlock biblio, String title, String author,String year,String journal, String url, String volume,String issue, String pages,String editor, String type, String note) {
@@ -59,9 +59,9 @@ public class ReferenceManager implements IReferenceManager {
     }
 
     @Override
-    public void deleteReferenceById(String referenceId, String BiblioId) {
+    public void deleteReferenceById(String referenceId, String biblioId) {
         if (referenceId == null) {
-            logger.error("Reference Id cannot be null.");
+            logger.warn("Reference Id cannot be null.");
             return;
         }
 
@@ -73,9 +73,9 @@ public class ReferenceManager implements IReferenceManager {
     }
 
     @Override
-    public void deleteReferences(List<IReference> references, String BiblioId) {
+    public void deleteReferences(List<IReference> references, String biblioId) {
         for(IReference ref : references) {
-            deleteReferenceById(ref.getId(), BiblioId);
+            deleteReferenceById(ref.getId(), biblioId);
         }
         
     }

@@ -804,14 +804,16 @@
                                  <a class="btn deleteBiblio" href="javascript:;" style="position: absolute; right: 0px;">\
                                  <span class="icon-trash error"></span>\
                                  </a> \
-                                 <a id="addReference" class="btn primary-btn btn-sm" style="padding-top: 8px;">\
+                                 <a class="btn addReference primary-btn btn-sm" style="padding-top: 8px;">\
                                      + New Reference \
                                  </a> \
+                                 <div id="referenceSpace" class="col-md-10">\
+                                 </div>\
                          </div> \
          ');
          
                      	$(biblioblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
-                         $('#slideSpace').append(biblioblock);             
+                         $('#slideSpace').append(biblioblock); 
                      },
                      error: function(data) {
                      	console.log("fail");

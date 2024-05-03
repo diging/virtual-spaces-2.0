@@ -66,7 +66,6 @@ public class BiblioBlock extends ContentBlock implements IBiblioBlock {
         return "Bibliography title=" + biblioTitle + ", description=" + description ;
     }
     
-    @Transient
     public String htmlRenderedBiblio() {
         Parser parser = Parser.builder().build();
         Node document = parser.parse(toString());
