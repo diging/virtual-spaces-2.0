@@ -30,7 +30,7 @@ public interface ISpaceManager {
     List<ISpace> getSpacesWithStatus(SpaceStatus status);
 
     List<ISpace> getSpacesWithImageId(String imageId);
-
+ 
     void deleteSpaceById(String id) throws SpaceDoesNotExistException;
 
     List<SpaceLink> getIncomingLinks(String id);
