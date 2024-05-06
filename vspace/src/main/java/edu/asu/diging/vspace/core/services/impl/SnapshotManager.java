@@ -182,8 +182,7 @@ public class SnapshotManager implements ISnapshotManager {
             try {
                 downloadSequences(startSequence, module, space, spaceFolderPath,imagesFolderPath );
             } catch (FileStorageException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                logger.error("Could not download Module",e);
             }
         }
     }
@@ -212,8 +211,7 @@ public class SnapshotManager implements ISnapshotManager {
                         try {
                             downloadSequences(choice.getSequence(), module, space, spaceFolderPath, imagesFolderPath);
                         } catch (FileStorageException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
+                            logger.error("Could not download Sequence",e);
                         } 
                     }
                 });
@@ -222,13 +220,11 @@ public class SnapshotManager implements ISnapshotManager {
                 if(contentBlock!= null) {
                     IVSImage image = slide.getFirstImageBlock().getImage();
                     storageManager.copyImageUploadsToDownloads(image, imagesFolderPath);
-
                 }
                 try {
                     storeTemplateForSlide(slide.getId(), spaceFolderPath ,  space.getId(), module.getId(), startSequence.getId());
                 } catch (FileStorageException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    logger.error("Could not store template for the slide", e);
                 }
             }
         });
@@ -258,7 +254,6 @@ public class SnapshotManager implements ISnapshotManager {
             logger.error("Could not add html page for slide" , e);
         }       
     }
-
 
     @Override
     public void populateContextForSlide(Context context, String spaceId, String moduleId, String sequenceId, String slideId) throws SlidesInSequenceNotFoundException, SequenceNotFoundException, SlideNotFoundException {
@@ -339,6 +334,5 @@ public class SnapshotManager implements ISnapshotManager {
         context.setVariable("spaceLinks", filteredSpaceLinks);
         context.setVariable("display", spaceDisplayManager.getBySpace(space));
         context.setVariable("externalLinkList", externalLinkManager.getLinkDisplays(id));
-
     }
 }

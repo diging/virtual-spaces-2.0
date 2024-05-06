@@ -28,13 +28,15 @@ import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IVSImage;
 
-public class StorageEngine  implements IStorageEngine {
+public class StorageEngine implements IStorageEngine {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Value("${uploads_path}")
     private String path;
-
+    
+    public StorageEngine(String path) {
+        this.path = path;
+    }
 
     /* (non-Javadoc)
     * @see edu.asu.diging.vspace.core.file.impl.IStorageEngine#storeFile(byte[], java.lang.String, java.lang.String)
@@ -46,7 +48,7 @@ public class StorageEngine  implements IStorageEngine {
         try {
             stream = new BufferedOutputStream(new FileOutputStream(file));
         } catch (FileNotFoundException e) {
-	        throw new FileStorageException("Could not store file.", e);
+            throw new FileStorageException("Could not store file.", e);
         }
         try {
             stream.write(fileContent);
@@ -162,18 +164,46 @@ public class StorageEngine  implements IStorageEngine {
                         Files.copy(path, responseZipStream);
                         responseZipStream.closeEntry();
                     } catch (IOException e) {
-                        logger.error("Could not generate Zip folder");
+                        logger.error("Could not generate Zip folder", e);
                     }
                 });
             byteArrayOutputStreamResult = byteArrayOutputStream;
         }
-        
         return byteArrayOutputStreamResult.toByteArray();
     }
-
+    
+    /**
+     * Gets the list of directories 
+     * and copies only the folder with .css or .img files in it
+     */
     @Override
     public void copyToFolder(String relativePath, String folderToCopy) throws IOException {
-        FileUtils.copyDirectory(new File(folderToCopy), new File(path + File.separator+ relativePath));        
+        String [] list = new File(folderToCopy).list();
+        for(String file : list) {
+            String folderWithCssOrImg = folderToCopy.replaceFirst("/","")+file;
+            String newRelativePath = relativePath+File.separator+file;
+            boolean copyFolder = containsImageOrCSSFiles(folderWithCssOrImg);
+            if(copyFolder) {
+                FileUtils.copyDirectory(new File(folderWithCssOrImg), new File(path + File.separator+ newRelativePath));
+            }
+        } 
     }
-
+    
+    // Method to check if a folder contains image or CSS files
+    private boolean containsImageOrCSSFiles(String folderPath) {
+        try (Stream<Path> paths = Files.walk(Paths.get(folderPath))) {
+            
+            return paths.anyMatch(path -> {
+                String fileName = path.getFileName().toString().toLowerCase();
+                
+                return fileName.endsWith(".jpg") ||
+                       fileName.endsWith(".jpeg") ||
+                       fileName.endsWith(".png") ||
+                       fileName.endsWith(".css");
+            });
+        } catch (Exception e) {
+            logger.debug("Could not check the directory for css or Image Files ", e);;
+            return false;
+        }
+    }
 }

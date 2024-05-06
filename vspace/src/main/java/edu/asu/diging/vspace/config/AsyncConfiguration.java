@@ -9,8 +9,8 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-@EnableAsync
 @Configuration
+@EnableAsync
 public class AsyncConfiguration {
     
     @Value("${async_core_pool_size}")

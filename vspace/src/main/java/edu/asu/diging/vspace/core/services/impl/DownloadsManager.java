@@ -54,7 +54,6 @@ public class DownloadsManager  implements  IDownloadsManager {
     @Autowired
     private SnapshotTaskRepository snapshotTaskRepository;
 
-
     /**
      * Triggers the snapshot creation process asynchronously. 
      * 
@@ -66,7 +65,6 @@ public class DownloadsManager  implements  IDownloadsManager {
      * @throws InterruptedException 
      * @throws ExecutionException 
      */
-
     @Override
     @Transactional
     public ExhibitionDownload triggerDownloadExhibition(String exhibitionFolderName) throws IOException, InterruptedException, ExecutionException {                 
@@ -116,7 +114,6 @@ public class DownloadsManager  implements  IDownloadsManager {
         return exhibitionFolderName;
     }
 
-
     /**
      * Downloads the given exhibition folder by the given ExhibitionDownload id
      * 
@@ -142,8 +139,6 @@ public class DownloadsManager  implements  IDownloadsManager {
             throw new ExhibitionDownloadNotFoundException(id);
         }
     }
- 
-
 
     /**
      * Return true is corresponding snapshot is created. Else return false.
@@ -175,5 +170,4 @@ public class DownloadsManager  implements  IDownloadsManager {
         Page<ExhibitionDownload> page =   exhibitionDownloadRepository.findAllByOrderByCreationDateDesc(requestedPageForFiles);
         return page.map(exhibitionDownload-> { return (ExhibitionDownload) exhibitionDownload; } );
     }
-
 }

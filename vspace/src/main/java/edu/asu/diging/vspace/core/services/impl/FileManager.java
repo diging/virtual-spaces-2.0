@@ -10,6 +10,7 @@ import org.apache.tika.Tika;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -24,6 +25,7 @@ import edu.asu.diging.vspace.core.data.FileRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.factory.IFileFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
+import edu.asu.diging.vspace.core.file.impl.StorageEngine;
 import edu.asu.diging.vspace.core.model.IVSFile;
 import edu.asu.diging.vspace.core.model.impl.VSFile;
 import edu.asu.diging.vspace.core.services.IFileManager;
@@ -37,6 +39,7 @@ public class FileManager implements IFileManager {
     private int pageSize;
 
     @Autowired
+    @Qualifier("storageEngineUploads")
     private IStorageEngine storageEngine;
     
     @Autowired
