@@ -33,7 +33,7 @@ public interface IContentBlockManager {
 
     CreationReturnValue createImageBlock(String slideId, IVSImage image, Integer contentOrder);
     
-    IBiblioBlock createBiblioBlock(String slideId, IBiblioBlock biblioData, Integer contentOrder);
+    IBiblioBlock createBiblioBlock(String slideId, String biblioTitle, String description, Integer contentOrder);
 
     public CreationReturnValue createVideoBlock(String slideId, byte[] video, Long size, String fileName, String url,
             Integer contentOrder, String title) throws VideoCouldNotBeStoredException;

@@ -23,6 +23,9 @@ import edu.asu.diging.vspace.core.references.impl.ReferenceDisplayDefault;
 import edu.asu.diging.vspace.core.services.IReferenceManager;
 import edu.asu.diging.vspace.web.model.ReferenceBlock;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 @Controller
 public class EditReferenceController {
     
@@ -69,22 +72,62 @@ public class EditReferenceController {
     /**
      * This method allows updating References when a user is on the slide page.
      */
+
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/biblio/{biblioId}/reference/{refId}/edit", method = RequestMethod.POST)
-    public ResponseEntity<ReferenceBlock> editReference(@PathVariable("id") String slideId,
+    public ResponseEntity<String> editReference(@PathVariable("id") String slideId,
             @PathVariable("moduleId") String moduleId, @PathVariable("biblioId") String biblioId, 
-            @PathVariable("refId") String refId, @RequestBody Reference ref, RedirectAttributes attributes) throws IOException {
-        IReference reference = referenceManager.getReference(refId);
-        if(reference!=null) {
-            ref.setId(reference.getId());
-            ref.setCreatedBy(reference.getCreatedBy());
-            ref.setCreationDate(reference.getCreationDate());
-            referenceManager.updateReference(ref);
-            String refDisplayText = referenceDisplayProvider.getReferenceDisplayText(ref);
-            ReferenceBlock refBlock = new ReferenceBlock(ref, refDisplayText);
-            return new ResponseEntity<ReferenceBlock>(refBlock, HttpStatus.OK);
-        }
-        logger.warn(REFERENCE_DEBUG_INFO);
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            @RequestBody String ref) throws IOException {
+        
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode rootNode = mapper.readTree(ref);
+        
+        String title = rootNode.get("title").asText();
+        String author = rootNode.get("author").asText();
+        String year = rootNode.get("year").asText();
+        String journal = rootNode.get("journal").asText();
+        String url = rootNode.get("url").asText();
+        String volume = rootNode.get("volume").asText();
+        String issue = rootNode.get("issue").asText();
+        String pages = rootNode.get("pages").asText();
+        String editor = rootNode.get("editors").asText();
+        String type = rootNode.get("type").asText();
+        String note = rootNode.get("note").asText();
+        String id = rootNode.get("id").asText();
+        
+        IReference reference = referenceManager.getReference(id);
+        reference.setTitle(title);
+        reference.setAuthor(author);
+        reference.setYear(year);
+        reference.setJournal(journal);
+        reference.setUrl(url);
+        reference.setVolume(volume);
+        reference.setIssue(issue);
+        reference.setPages(pages);
+        reference.setEditors(editor);
+        reference.setType(type);
+        reference.setNote(note);
+        referenceManager.updateReference((Reference) reference);
+
+        return new ResponseEntity<String>(HttpStatus.OK);
     }
+
+    
+//    @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/biblio/{biblioId}/reference/{refId}/edit", method = RequestMethod.POST)
+//    public ResponseEntity<ReferenceBlock> editReference(@PathVariable("id") String slideId,
+//            @PathVariable("moduleId") String moduleId, @PathVariable("biblioId") String biblioId, 
+//            @PathVariable("refId") String refId, @RequestBody Reference ref, RedirectAttributes attributes) throws IOException {
+//        IReference reference = referenceManager.getReference(refId);
+//        if(reference!=null) {
+//            ref.setId(reference.getId());
+//            ref.setCreatedBy(reference.getCreatedBy());
+//            ref.setCreationDate(reference.getCreationDate());
+//            referenceManager.updateReference(ref);
+//            String refDisplayText = referenceDisplayProvider.getReferenceDisplayText(ref);
+//            ReferenceBlock refBlock = new ReferenceBlock(ref, refDisplayText);
+//            return new ResponseEntity<ReferenceBlock>(refBlock, HttpStatus.OK);
+//        }
+//        logger.warn(REFERENCE_DEBUG_INFO);
+//        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//    }
 
 }

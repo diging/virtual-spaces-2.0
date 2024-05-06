@@ -31,4 +31,7 @@ public interface IReferenceManager {
 
     int validatePageNumber(int pageNo);
 
+    IReference createReference(IBiblioBlock biblio, String title, String author, String year, String journal,
+            String url, String volume, String issue, String pages, String editor, String type, String note);
+
 }

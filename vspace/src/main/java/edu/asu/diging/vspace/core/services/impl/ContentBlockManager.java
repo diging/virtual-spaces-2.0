@@ -486,11 +486,14 @@ public class ContentBlockManager implements IContentBlockManager {
     }
 
     @Override
-    public IBiblioBlock createBiblioBlock(String slideId, IBiblioBlock biblio, Integer contentOrder) {
+    public IBiblioBlock createBiblioBlock(String slideId, String title, String description, Integer contentOrder) {
         ISlide slide = slideManager.getSlide(slideId);
-        biblio.setSlide(slide);
-        biblio.setContentOrder(contentOrder);
-        return biblioBlockRepo.save((BiblioBlock) biblio);
+        IBiblioBlock bilioBlock = new BiblioBlock();
+        bilioBlock.setDescription(title);
+        bilioBlock.setBiblioTitle(description);
+        bilioBlock.setSlide(slide);
+        bilioBlock.setContentOrder(contentOrder);
+        return biblioBlockRepo.save((BiblioBlock) bilioBlock);
     }
 
     @Override
