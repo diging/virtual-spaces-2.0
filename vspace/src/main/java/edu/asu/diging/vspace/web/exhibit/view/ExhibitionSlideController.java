@@ -135,8 +135,7 @@ public class ExhibitionSlideController {
             model.addAttribute("previousBranchingPoint",
                     ((BranchingPoint) slideManager.getSlide(sequenceHistory.peekBranchingPointId())));
         }
-        
-        
+             
         ModuleOverview moduleOverview = moduleOverviewManager.getModuleOverview(moduleId);
         moduleOverview.setName(module.getName());
         moduleOverview.setId(module.getId());
@@ -160,5 +159,4 @@ public class ExhibitionSlideController {
         model.addAttribute("message", "Sorry, module has not been configured yet.");
         return "/exhibition/module";
     }
-    
 }
