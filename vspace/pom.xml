@@ -188,6 +188,8 @@
             </exclusions>
             <scope>runtime</scope>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api -->
         <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
@@ -205,6 +207,8 @@
             <artifactId>jaxb-impl</artifactId>
             <version>3.0.2</version>
         </dependency>
+
+
         <!-- MarkDown -->
         <dependency>
             <groupId>com.atlassian.commonmark</groupId>
