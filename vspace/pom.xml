@@ -26,6 +26,7 @@
         <db.user>vspace</db.user>
         <db.password>vspace</db.password>
         <uploaded.files.path></uploaded.files.path>
+        
         <email.user></email.user>
         <email.password></email.password>
         <email.host></email.host>
@@ -36,6 +37,7 @@
         <tomcat.deploy.path></tomcat.deploy.path>
         <tomcat.app.name>vspace</tomcat.app.name>
         <tomcat.server.id>TomcatServer</tomcat.server.id>
+
         <hibernate.show_sql></hibernate.show_sql>
         <buildNumber>v0.16.1</buildNumber>
     </properties>
@@ -79,6 +81,7 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
         </dependency>
+        
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
