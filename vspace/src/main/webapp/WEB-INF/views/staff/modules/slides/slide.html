@@ -89,7 +89,6 @@
                 	url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space/'})]"+ blockId,
     		type: 'GET',
     		success: function(result) {
-    			//$("#selectedSpace").text('');
     			$("#selectedSpace").text(result.name);
     		    	},
     		error: function(data) {
@@ -123,25 +122,24 @@
                 } else if(divName.includes("SpaceDivStaff")){
                     let spaceId = e.target.closest('div').id;
                     $(e.target).closest('.SpaceDivStaff').addClass("open");
-                    var description = $("div.open p:eq(0)").text();
-                    defaultValue = description;
+                    defaultValue = $("div.open p:eq(0)").text();
                     var editSpaceAlertHTML = document.getElementById('#editSpaceAlert')
                     var blockId = $(this).closest("div").attr("id");
                     getSelectedSpace(blockId);
                     $("#editSpaceAlert").show();
                     markDown = new EasyMDE({element: $('#editSpaceBlock')[0]});
-                    markDown.value(description.trim());
+                    markDown.value(defaultValue.trim());
                     //remove card border
                     $(".open").css('display', 'none');
                     $(".open").css('overflow-y', 'scroll');
                     $(".open").css('height', '400px');
                 } else {
-                    // store image ID selected by the user to replace, onDoubleClick
-		    		var imgBlockID = $(e.target).attr('id'); 
-		    		if(imgBlockID != ''){
-		        		$("#uploadImage").data('value', imgBlockID); // sets image ID value
-		        		$("#addImgAlert").show();
-		    		}
+                	// store image ID selected by the user to replace, onDoubleClick
+                	var imgBlockID = $(e.target).attr('id'); 
+                	if(imgBlockID != ''){
+                    	$("#uploadImage").data('value', imgBlockID); // sets image ID value
+                    	$("#addImgAlert").show();
+                	}
             	
                 }
             }
@@ -417,6 +415,7 @@
             	                clearTimeout(timeout);
             	            }
             	            // Set a timeout to update the content order after 1000 milliseconds (1 second)
+            	            console.log("first chain");
             	            timeout = setTimeout(updateContentOrder(jsonObj, token), 1000);
             	        }
             	    }
@@ -429,12 +428,14 @@
 		            		url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/blocks/order/update'})]",
 		            		type: 'POST',
 		            		beforeSend: function(){
+		            			console.log("before send");
 			            		$(".loader").remove();
 			            		$('#contOrdUpdStatus').empty();
 			            		$('#contOrdUpdStatus').append($('<div class="loader" style="font-size: 30px;display: none; text-align: center;"><i class="icon-spinner" aria-hidden="true">Saving...</i></div>'));
 			            		$(".loader").show();
 		            		},
 		            		complete: function(){
+		            			console.log("after send");
 			            		$(".loader").hide();
 			            		timeout = null;
 		            		},
@@ -446,7 +447,9 @@
 		            		},
 		            		data: JSON.stringify(jsonObj),
 		            		success: function(data) {
+		            			console.log("1");
 			            		$(".save").remove();
+			            		console.log("1");
 			            		for(let i=0;i<data.length;i++) {
 				            		$('#'+data[i].id).attr('data-position',data[i].contentOrder);
 			            		} 
@@ -458,6 +461,7 @@
 			            		$('#contOrdUpdStatus').append(successDiv);
 		            		},
 		            		error: function(data) {
+		            			console.log("11");
 			            		$(".errInSave").remove();
 			            		var errorDiv = $('<div style="width: 100%;height: 50px;" class="errInSave alert alert-danger alert-dismissible fade show" role="alert">');
 			            		errorDiv.append('<p>We are sorry but something went wrong. Please try again later.</p>');
@@ -864,10 +868,10 @@
                     $("#addChoiceAlert").hide();	
                 });
             	
-                $("#cancelImageBtn").click(function() {
-                	$('#chooseFromLocal').trigger( "click" );
-                	// Initialize selected image ID to blank, on clicking cancel button
-                	$("#uploadImage").data('value', '');
+            	$("#cancelImageBtn").click(function() {
+                    $('#chooseFromLocal').trigger( "click" );
+                    // Initialize selected image ID to blank, on clicking cancel button
+                    $("#uploadImage").data('value', '');
                     $("#addImgAlert").hide();
                     $(".open").removeClass("open");
                 });
@@ -1658,7 +1662,7 @@
 					style="word-break: break-word;" th:id="${contents.id}"
 					class="textDivStaff tab row"
 					th:if="${#strings.equals(contents['class'].simpleName,'TextBlock')}">
-					<p class="col-md-10">[[${contents.text}]]</p>
+					<p class="col-md-10">Text description: [[${contents.text}]]</p>
 					<input type="hidden" id="deleteTextId" th:value="${contents.id}" />
 					<a class="btn deleteText col-md-1" href="javascript:;"> <span
 						class="icon-trash error"></span>
@@ -1668,7 +1672,7 @@
 					style="word-break: break-word;" th:id="${contents.id}"
 					class="SpaceDivStaff tab row"
 					th:if="${#strings.equals(contents['class'].simpleName,'SpaceBlock')}">
-					<p class="col-md-10">[[${contents.title}]]</p>
+					<p class="col-md-10">Title: [[${contents.title}]]</p>
 					<p th:if="${contents.space != null}" th:hidden="true" class="col-md-10">
 						[[${contents.space.name}]]</p>
 					<input type="hidden" id="deleteSpaceId" th:value="${contents.id}" />
