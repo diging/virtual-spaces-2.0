@@ -121,9 +121,7 @@ public class SequenceOverviewManagerTest {
         Mockito.when(moduleManager.getModule(moduleId)).thenReturn(module);
         Mockito.when(moduleManager.getModuleSequences(moduleId)).thenReturn(sequences);
         ModuleOverview moduleOverview = serviceToTest.getModuleOverview("moduleId");
-        assertEquals(sequence1.getId(), moduleOverview.getStartSequence().getId());
-        
-        
+        assertEquals(sequence1.getId(), moduleOverview.getStartSequence().getId());  
     }
     
     @Test
