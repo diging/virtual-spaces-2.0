@@ -283,12 +283,13 @@ public class ContentBlockManagerTest {
     @Test
     public void test_updateSpaceBlock_success() {
         String updatedSpaceId = "spaceId1";
+        String updatedTitle = "Title1";
         SpaceBlock spaceBlock = new SpaceBlock();
         spaceBlock.setId(updatedSpaceId);
+        spaceBlock.setTitle(updatedTitle);
         Mockito.when(spaceBlockRepo.save(spaceBlock)).thenReturn(spaceBlock);
         managerToTest.saveSpaceBlock(spaceBlock);
         Mockito.verify(spaceBlockRepo).save(spaceBlock);
-
     }
 
     @Test
