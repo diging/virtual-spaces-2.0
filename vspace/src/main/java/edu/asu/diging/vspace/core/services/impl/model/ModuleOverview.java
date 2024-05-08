@@ -15,24 +15,26 @@ public class ModuleOverview {
     private String id;
     private SequenceOverview startSequence;
     private List<SequenceOverview> otherSequences;
-    public List<ISlide> startSlides;
-    public List<ISlide> otherSlides;
     
     public String getName() {
         return name;
     }
+    
     public void setName(String name) {
         this.name = name;
     }
+    
     public String getId() {
         return id;
     }
     public void setId(String id) {
         this.id = id;
     }
+    
     public SequenceOverview getStartSequence() {
         return startSequence;
     }
+    
     public void setStartSequence(SequenceOverview startSequence) {
         this.startSequence = startSequence;
     }
@@ -43,18 +45,4 @@ public class ModuleOverview {
     public void setOtherSequences(List<SequenceOverview> otherSequences) {
         this.otherSequences = otherSequences;
     }
-    public List<ISlide> getStartSlides() {
-        return startSlides;
-    }
-    public void setStartSlides(List<ISlide> startSlides) {
-        this.startSlides = startSlides;
-    }
-    public List<ISlide> getOtherSlides() {
-        return otherSlides;
-    }
-    public void setOtherSlides(List<ISlide> otherSlides) {
-        this.otherSlides = otherSlides;
-    }
-    
-
 }

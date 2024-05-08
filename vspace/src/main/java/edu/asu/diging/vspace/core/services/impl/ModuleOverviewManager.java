@@ -41,7 +41,6 @@ public class ModuleOverviewManager implements IModuleOverviewManager {
         ModuleOverview moduleOverview = new ModuleOverview();
         moduleOverview.setStartSequence(sequenceOverviewNode);
         moduleOverview.setOtherSequences(otherSequences);
-        moduleOverview.setStartSlides(startSequence.getSlides());
         return moduleOverview;
     }
     
@@ -67,15 +66,14 @@ public class ModuleOverviewManager implements IModuleOverviewManager {
             SlideOverview slideOverview = new SlideOverview(); 
             slideOverview.setId(slide.getId());
             slideOverview.setName(slide.getName());
-            if(slide instanceof BranchingPoint ) {
+            if(slide instanceof BranchingPoint) {
                 slideOverview.setBranchingPoint(true);
                 List<IChoice> sequenceChoices = ((BranchingPoint)slide).getChoices();
                 List<String> slideOverviewSequenceNames = new ArrayList<String>();
-                sequenceChoices.stream().forEach(sequenceChoice -> slideOverviewSequenceNames.add(
-                        sequenceChoice.getSequence().getName()));
-                slideOverview.setSequenceIds(slideOverviewSequenceNames);
-            }
-           
+                sequenceChoices.stream().forEach(sequenceChoice -> 
+                    slideOverviewSequenceNames.add(sequenceChoice.getSequence().getName()));
+                slideOverview.setChoiceSequenceNames(slideOverviewSequenceNames);
+            } 
             slideOverviews.add(slideOverview);          
         } 
         return slideOverviews;

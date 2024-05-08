@@ -28,83 +28,83 @@
 }
 
 .imgFullScreen:hover .tooltiptext {
-	visibility: visible;
+    visibility: visible;
 }
 
 .exitfullscreen:hover .tooltiptextForExitFullscreen {
-	visibility: visible;
+    visibility: visible;
 }
 
 .module_map:hover .tooltiptext {
-	visibility: visible;
+    visibility: visible;
 }
 
 .tooltiptextForExitFullscreen {
-	visibility: hidden;
-	width: 120px;
-	color: white;
-	text-align: center;
-	font-size: 12px;
-	padding: 3px 0;
-	border-radius: 6px;
-	position: absolute;
-	z-index: 1;
-	left: -138px;
-	top: -15px;
-	background: rgba(0, 0, 0, 0.6);
+    visibility: hidden;
+    width: 120px;
+    color: white;
+    text-align: center;
+    font-size: 12px;
+    padding: 3px 0;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1;
+    left: -138px;
+    top: -15px;
+    background: rgba(0, 0, 0, 0.6);
 }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
 <script th:inline="javascript">
-      var json =[[${overview}]];
-      var currentSlide = [[${currentSlideCon}]];
-      var sequenceId = [[${currentSequenceId}]];
+        var json =[[${overview}]];
+        var currentSlide = [[${currentSlideCon}]];
+        var sequenceId = [[${currentSequenceId}]];
          $( document ).ready(function() {
             $("#blocks a").css('color','rgb(150, 45, 62)').css('font-weight','bold');
             $(".nav-bar").css('position','fixed').css('width','100%').css('z-index','125');
          });
          
+         function imageFullScreen(){
+			   var elem = document.getElementById("Module_1");
+			   $(".imgFullScreen").hide();
+			   $("#Module_1").css('overflow-y','scroll');
+			   $("#Module_1").css('background-color','white');
+			   if (elem.requestFullscreen) {
+				    elem.requestFullscreen();
+				    } else if (elem.webkitRequestFullscreen) { 
+				    elem.webkitRequestFullscreen();
+				  } else if (elem.msRequestFullscreen) { 
+				    elem.msRequestFullscreen();
+				  }
+			   $("#Module_1").append('<div class = "exitfullscreen"><button class="btn circle-btn" style="padding: 3px;width: 35px;height: 35px;position: fixed;right: 0;bottom: 0;margin: 0 2rem 2rem 0;" onclick="exitFullScreen()"><span class="icon-collapse secondary"></span><span class="tooltiptextForExitFullscreen">Exit Full screen</span></button></div>')
+		}
+         
+         function exitFullScreen()
+ 		{
+ 			$(".exitfullscreen").remove();
+ 			$(".imgFullScreen").show();
+ 			$("#Module_1").css('overflow-y','hidden')
+ 			if (document.exitFullscreen) {
+ 			    document.exitFullscreen();
+ 			  } else if (document.webkitExitFullscreen) { /* Safari */
+ 			    document.webkitExitFullscreen();
+ 			  } else if (document.msExitFullscreen) { /* IE11 */
+ 			    document.msExitFullscreen();
+ 			  }
+ 		}
+         
 	function showModuleMapModal(){
 		$("#moduleOverviewModal").show();
 	}
          
-        function closeModuleOverview(){
- 		$("#moduleOverviewModal").hide();   
+    function closeModuleOverview(){
+    	$("#moduleOverviewModal").hide();   
  	}
          
 	function closeModal(){
-        	$("#moduleOverviewModal").hide();
-    	}
-        
-	function imageFullScreen(){
-        var elem = document.getElementById("Module_1");
-        $(".imgFullScreen").hide();
-        $("#Module_1").css('overflow-y','scroll');
-        $("#Module_1").css('background-color','white');
-        if (elem.requestFullscreen) {
-        	elem.requestFullscreen();
-        } else if (elem.webkitRequestFullscreen) { 
-        	elem.webkitRequestFullscreen();
-        } else if (elem.msRequestFullscreen) { 
-        	elem.msRequestFullscreen();
-        }
-        $("#Module_1").append('<div class = "exitfullscreen"><button class="btn circle-btn" style="padding: 3px;width: 35px;height: 35px;position: fixed;right: 0;bottom: 0;margin: 0 2rem 2rem 0;" onclick="exitFullScreen()"><span class="icon-collapse secondary"></span><span class="tooltiptextForExitFullscreen">Exit Full screen</span></button></div>')
+    	$("#moduleOverviewModal").hide();
 	}
-
-	function exitFullScreen()
-	{
-		$(".exitfullscreen").remove();
-		$(".imgFullScreen").show();
-		$("#Module_1").css('overflow-y','hidden')
-		if (document.exitFullscreen) {
-		    document.exitFullscreen();
-		} else if (document.webkitExitFullscreen) { /* Safari */
-			document.webkitExitFullscreen();
-		} else if (document.msExitFullscreen) { /* IE11 */
-			document.msExitFullscreen();
-		}
-	}
-      </script>
+</script>
 </head>
 <body>
 	<div layout:fragment="content">
@@ -113,8 +113,8 @@
 			style="text-align: center;">
 			[[${message}]] <a th:href="@{'/exhibit/space/'+${spaceId}}">
 				<button class="btn circle-btn" style="margin-left: 10px;">
-					<span class="icon-double-chevron-left"></span> <span
-						class="tooltiptext">Go To Space</span>
+					<span class="icon-double-chevron-left"></span> 
+                    <span class="tooltiptext">Go To Space</span>
 				</button>
 			</a>
 		</div>
@@ -219,19 +219,20 @@
 				</div>
 			</div>
 		</div>
-		<div id="moduleOverviewModal" class="modal" role="dialog">
-			<div class="modal-dialog" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title">Module Map</h5>
-						<button type="button" class="close" id="close"
-							data-dismiss="modal" aria-label="Close" onClick="closeModal()">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</div>
-					<div id="graph" class="modal-body"
-						style="width: 2000px; height: 2000px">
-						<script>
+        <div id="moduleOverviewModal" class="modal" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Module Map</h5>
+                        <button type="button" class="close" id="close"
+                            data-dismiss="modal" aria-label="Close"
+                            onClick="closeModal()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div id="graph" class="modal-body"
+                        style="width: 2000px; height: 2000px">
+                        <script>
 			 const branchingPointsSet = new Set();
 			 const sequencesMap = new Map();
 			 function createFromSequence(sequence, treeData, isStartSequence){
@@ -251,7 +252,7 @@
 						slideNode.branchSequences = [];
 						slideNode.branchingPoint = true;
 						slideNode.branchingPoints = [];
-						for(seq of slide.sequenceIds){
+						for(seq of slide.choiceSequenceNames){
 							if(seq === sequence.name){
 								let branchSeq = {};
 								branchSeq.name = seq;
@@ -261,10 +262,9 @@
 							let branchSeq = {};
 							branchSeq.name = seq;
  							slideNode.branchSequences.push(branchSeq);
-  						slideNode.sequence = sequence.name;
+  							slideNode.sequence = sequence.name;
 						}
  						branchingPointsSet.add(slideNode);
- 
 					}
 					slideNode.name = slide.name;
 					slideNode.group = "slide";
@@ -274,27 +274,26 @@
   					startNodeSequenceSlides.push(slideNode);
  
 					if(slideIndex == 0){
-						  let slideLink ={};
-						  slideNode.parent=startNodeSequence.name;
-						  startNodeSequence.children.push(slideNode);
-						  prev=slideNode;
+					  let slideLink ={};
+					  slideNode.parent=startNodeSequence.name;
+					  startNodeSequence.children.push(slideNode);
+					  prev=slideNode;
 
-					  } else {
- 						  prev.children.push(slideNode);
- 					  slideNode.parent=prev;
-						  prev=slideNode;
-					  }
-					  source = slideNode.id;
-
-					slideIndex=slideIndex+1;
+				  	} else {
+					  prev.children.push(slideNode);
+					  slideNode.parent=prev;
+					  prev=slideNode;
+					}
+				  source = slideNode.id;
+				  slideIndex=slideIndex+1;
 				}
 			 	if(isStartSequence == true){
 					treeData.children.push(startNodeSequence);
 				}
  				sequencesMap.set(sequence.name, startNodeSequence)
  				return treeData;
-
 			}
+			
             let treeData = [];
             treeData.children=[];
             let startSequence = json['startSequence'];
@@ -304,7 +303,7 @@
 			treeData = createFromSequence(startSequence, treeData, isStartSequence);
 			isStartSequence = false;
 			for (sequence of otherSequences) {
- 			treeData = createFromSequence(sequence, treeData,isStartSequence);
+			    treeData = createFromSequence(sequence, treeData,isStartSequence);
  			}
 			for(branch of branchingPointsSet){
 				for(branchSequence of branch.branchSequences){
@@ -318,20 +317,15 @@
 			width = 1500 - margin.right - margin.left,
 			height = 500 - margin.top - margin.bottom;
 
-			var i = 0,
-				duration = 750,
-				root;
+			var i = 0, duration = 750, root;
 
-			var tree = d3.layout.tree()
-				.size([height, width]);
+			var tree = d3.layout.tree().size([height, width]);
 
-			var diagonal = d3.svg.diagonal()
-				.projection(function(d) { return [d.y, d.x]; });
+			var diagonal = d3.svg.diagonal().projection(function(d) { return [d.y, d.x]; });
 
-			var svg = d3.select("#graph").append("svg")
-				.attr("width", width + margin.right + margin.left)
+			var svg = d3.select("#graph").append("svg").attr("width", width + margin.right + margin.left)
 				.attr("height", height + margin.top + margin.bottom)
-			  .append("g")
+				.append("g")
 				.attr("transform", "translate(" + 208 + "," + margin.top + ")");
  
 			root = treeData;
@@ -343,72 +337,48 @@
 
 			d3.select(self.frameElement).style("height", "500px");
 			
-
 			function update(source) {
-
 			  // Compute the new tree layout.
-			  var nodes = tree.nodes(root).reverse(),
-				  links = tree.links(nodes);
-			 
-		
-				
+			  var nodes = tree.nodes(root).reverse(),links = tree.links(nodes);
+			   
 			  // Normalize for fixed-depth.
 			  nodes.forEach(function(d) { d.y = d.depth * 110; });
-
 			  nodes = nodes.filter(function(d){
-				    return  d.depth && d.depth != 1  ;
-				});
-			   links = links.filter(function(d){
-				    return   d.depth != 1 ;
-				}); 
-			   
-			   
-			   
-			nodes = nodes.filter(function(d){
-				if(d.group == "slide" && d.parent.branchingPoint == true ){
-					d.x= d.parent.x;
-					d.x0 = d.parent.x;
-					temp = d;
-				 	while(temp.children!=null && temp.children.length > 0){
-						child = temp.children[0];
-						child.x= temp.x;
-						child.x0 = temp.x0;
-						temp = child;
-					} 
+				  return  d.depth && d.depth != 1;
+			  });
+			  links = links.filter(function(d){ return   d.depth != 1 ; }); 		   
+			  nodes = nodes.filter(function(d){
+    			  if(d.group == "slide" && d.parent.branchingPoint == true ){
+    				  d.x= d.parent.x;
+    				  d.x0 = d.parent.x;
+    				  temp = d;
+    				  while(temp.children!=null && temp.children.length > 0){
+            			child = temp.children[0];
+            			child.x= temp.x;
+            			child.x0 = temp.x0;
+            			temp = child;
+            		  }
+    			 }
+    			 return d;
+    		 });
 					
-				}
-			
-			    return d;
-					
-			});
-				
-			
 			  // Update the nodes…
-			  var node = svg.selectAll("g.node")
-				  .data(nodes, function(d) { return d.id || (d.id = ++i); });
+			  var node = svg.selectAll("g.node").data(nodes, function(d) { return d.id || (d.id = ++i); });
 
 			  // Enter any new nodes at the parent's previous position.
-
-			  var nodeEnter = node.enter().append("g")
-				  .attr("class", "node")
+			  var nodeEnter = node.enter().append("g").attr("class", "node")
 				  .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; }); 
 		 
-			  nodeEnter.append("circle")
-				  .attr("r", function(d){
-					if((d.group=== "slide" && d.sequenceId.normalize() === sequenceId.normalize() )
-							&& (d.slideId.normalize() === currentSlide.id.normalize())){
-						return 10;
-						}
-					return 1e-6;
-					}
-						)
-				  .style("fill", function(d) { return d._children ? "orange" : "orange"; })
-				  .style("opacity", function(d, i) {
-                       return !d.depth ? 0 : 1;
-                   });
+			  nodeEnter.append("circle").attr("r", function(d){
+				  if((d.group=== "slide" && d.sequenceId.normalize() === sequenceId.normalize() ) 
+						  && (d.slideId.normalize() === currentSlide.id.normalize())){
+					  return 10;
+				  }
+				  return 1e-6;
+			  }).style("fill", function(d) { return d._children ? "orange" : "orange"; })
+			  .style("opacity", function(d, i) { return !d.depth ? 0 : 1; });
 
-			  nodeEnter.append("text")
-			  .attr("class","text")
+			  nodeEnter.append("text").attr("class","text")
 				  .attr("x", function(d) { return d.children || d._children ? 10 :10; })
 				  .attr("dy", "2.3em")
 				  .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
@@ -429,23 +399,21 @@
 						return 20;
 						}
 					return 10;
-					})
-					.style("opacity", function(d){ if((d.group=== "slide" && d.sequenceId.normalize() === sequenceId.normalize() )
+					}).style("opacity", function(d){ if((d.group=== "slide" 
+							&& d.sequenceId.normalize() === sequenceId.normalize() )
 							&& (d.slideId.normalize() === currentSlide.id.normalize())){
 						return 1;
 						}
 					return 0.5;
-					})
-				  .style("fill", function(d) { return d._children ? "orange" : "orange"; })
-				  .style("opacity", function(d, i) {
+					}).style("fill", function(d) { return d._children ? "orange" : "orange"; })
+					.style("opacity", function(d, i) {
         				return !d.depth ? 0 : 1;
-    			  });;
+    	      });;
 
 			  nodeUpdate.select("text")
 				  .style("fill-opacity", 1);
 
-			nodeEnter.append("text")
-			  .attr("class","text")
+			 nodeEnter.append("text").attr("class","text")
 				  .attr("x", function(d) { return d.children || d._children ? 10 :10; })
 				  .attr("dy", "1.5em")
 				  .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
@@ -453,11 +421,10 @@
 				  .style("fill-opacity", 1e-6)
 				  .style("opacity", function(d, i) {
         					return !d.depth ? 0 : 1;
-    				});;;
+    		 });;;
 
 			  // Transition exiting nodes to the parent's new position.
-			  var nodeExit = node.exit().transition()
-				  .duration(duration)
+			  var nodeExit = node.exit().transition().duration(duration)
 				  .attr("transform", function(d) { return "translate(" + source.y + "," + source.x + ")"; })
 				  .remove();
 
@@ -466,29 +433,21 @@
 
 			  nodeExit.select("text")
 				  .style("fill-opacity", 1e-6);
-
-				
-	
-				
+		
 			  // Update the links…
 			  var link = svg.selectAll("path.link")
 				  .data(links, function(d) { return d.target.id; })
 						   
 			  // Enter any new links at the parent's previous position.
-			  link.enter().insert("path", "g")
-				  .attr("class", "link")
+			  link.enter().insert("path", "g").attr("class", "link")
 				  .attr("d", function(d) {
 					var o = {x: source.x0, y: source.y0};					
 					return diagonal({source: o, target: o});			 	
 					
-				  })
-				  .style("fill-opacity", function(d) { return d._children ? 1e-6 : 1e-6; });//;
+			  }).style("fill-opacity", function(d) { return d._children ? 1e-6 : 1e-6; });//;
 
 			  // Transition links to their new position.
-			  link.transition()
-				   .duration(duration) 
- 				  .attr("d", diagonal);
- 
+			  link.transition().duration(duration).attr("d", diagonal);
 
 			  // Stash the old positions for transition.
 			  nodes.forEach(function(d) {
@@ -497,11 +456,11 @@
 			  });
 			}
 				        
-                        </script>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+             </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
