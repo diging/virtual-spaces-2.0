@@ -399,6 +399,7 @@
             	            var item = {};
             	            item["id"] = blockId;
             	            item["contentOrder"] = index;
+            	            item["slide"] = null;
             	            // Add the item to the jsonObj array
             	            jsonObj.push(item);
             	            // Set the data-position attribute of the child div element to the current index
@@ -415,7 +416,6 @@
             	                clearTimeout(timeout);
             	            }
             	            // Set a timeout to update the content order after 1000 milliseconds (1 second)
-            	            console.log("first chain");
             	            timeout = setTimeout(updateContentOrder(jsonObj, token), 1000);
             	        }
             	    }
@@ -428,14 +428,12 @@
 		            		url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/blocks/order/update'})]",
 		            		type: 'POST',
 		            		beforeSend: function(){
-		            			console.log("before send");
 			            		$(".loader").remove();
 			            		$('#contOrdUpdStatus').empty();
 			            		$('#contOrdUpdStatus').append($('<div class="loader" style="font-size: 30px;display: none; text-align: center;"><i class="icon-spinner" aria-hidden="true">Saving...</i></div>'));
 			            		$(".loader").show();
 		            		},
 		            		complete: function(){
-		            			console.log("after send");
 			            		$(".loader").hide();
 			            		timeout = null;
 		            		},
@@ -447,9 +445,7 @@
 		            		},
 		            		data: JSON.stringify(jsonObj),
 		            		success: function(data) {
-		            			console.log("1");
 			            		$(".save").remove();
-			            		console.log("1");
 			            		for(let i=0;i<data.length;i++) {
 				            		$('#'+data[i].id).attr('data-position',data[i].contentOrder);
 			            		} 
@@ -461,7 +457,6 @@
 			            		$('#contOrdUpdStatus').append(successDiv);
 		            		},
 		            		error: function(data) {
-		            			console.log("11");
 			            		$(".errInSave").remove();
 			            		var errorDiv = $('<div style="width: 100%;height: 50px;" class="errInSave alert alert-danger alert-dismissible fade show" role="alert">');
 			            		errorDiv.append('<p>We are sorry but something went wrong. Please try again later.</p>');

@@ -7,6 +7,7 @@ import edu.asu.diging.vspace.core.exception.VideoCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.model.IChoiceBlock;
 import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.IImageBlock;
+import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.ISpaceBlock;
 import edu.asu.diging.vspace.core.model.ITextBlock;
@@ -79,8 +80,17 @@ public interface IContentBlockManager {
      */
     void deleteSpaceBlockById(String blockId, String slideId) throws BlockDoesNotExistException;
     
-    void updateContentOrder(List<ContentBlock> contentBlockList) throws BlockDoesNotExistException;
+    void updateContentOrder(List<ContentBlock> contentBlockList, ISlide slide) throws BlockDoesNotExistException;
 
     void saveVideoBlock(IVideoBlock videoBlock);
+
+    /**
+     * Adjusting the content order of the blocks of slide once it is dragged and
+     * changed position.
+     * 
+     * @param contentBlockList - The list contains the blocks and the updated
+     *                         content order corresponding to each blocks.
+     */
+    
 
 }
