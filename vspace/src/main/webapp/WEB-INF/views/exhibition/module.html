@@ -2,29 +2,29 @@
 <head>
 <style type="text/css">
 .link {
-	stroke: #999;
-	stroke-opacity: 0.6;
-	stroke-width: 2px;
+    stroke: #999;
+    stroke-opacity: 0.6;
+    stroke-width: 2px;
 }
 
 .nodes circle {
-	stroke: #fff;
-	stroke-width: 1.5px;
+    stroke: #fff;
+    stroke-width: 1.5px;
 }
 
 .modal-content {
-	width: 1300px;
-	height: 1200px;
-	margin-left: -400px;
+    width: 1300px;
+    height: 1200px;
+    margin-left: -400px;
 }
 
 .modal-dialog {
-	width: 800px;
-	height: 800px;
+    width: 800px;
+    height: 800px;
 }
 
 .text {
-	font-size: 11px;
+    font-size: 11px;
 }
 
 .imgFullScreen:hover .tooltiptext {
@@ -79,143 +79,110 @@
 			   $("#Module_1").append('<div class = "exitfullscreen"><button class="btn circle-btn" style="padding: 3px;width: 35px;height: 35px;position: fixed;right: 0;bottom: 0;margin: 0 2rem 2rem 0;" onclick="exitFullScreen()"><span class="icon-collapse secondary"></span><span class="tooltiptextForExitFullscreen">Exit Full screen</span></button></div>')
 		}
          
-         function exitFullScreen()
- 		{
- 			$(".exitfullscreen").remove();
- 			$(".imgFullScreen").show();
- 			$("#Module_1").css('overflow-y','hidden')
- 			if (document.exitFullscreen) {
- 			    document.exitFullscreen();
- 			  } else if (document.webkitExitFullscreen) { /* Safari */
- 			    document.webkitExitFullscreen();
- 			  } else if (document.msExitFullscreen) { /* IE11 */
- 			    document.msExitFullscreen();
- 			  }
- 		}
+        function exitFullScreen() 
+        {
+        	$(".exitfullscreen").remove();
+        	$(".imgFullScreen").show();
+        	$("#Module_1").css('overflow-y', 'hidden')
+        	if (document.exitFullscreen) {
+        		document.exitFullscreen();
+        	} else if (document.webkitExitFullscreen) { /* Safari */
+        		document.webkitExitFullscreen();
+        	} else if (document.msExitFullscreen) { /* IE11 */
+        		document.msExitFullscreen();
+        	}
+        }
          
-	function showModuleMapModal(){
-		$("#moduleOverviewModal").show();
-	}
-         
-    function closeModuleOverview(){
-    	$("#moduleOverviewModal").hide();   
- 	}
-         
-	function closeModal(){
-    	$("#moduleOverviewModal").hide();
-	}
+        function showModuleMapModal(){
+        	$("#moduleOverviewModal").show();
+        }
+        	
+        function closeModuleOverview(){
+        	$("#moduleOverviewModal").hide();   
+        }
+        	
+        function closeModal(){
+        	$("#moduleOverviewModal").hide();
+        }
 </script>
 </head>
 <body>
-	<div layout:fragment="content">
-		<div th:if="${showAlert == true}"
-			class="alert alert-warning center col-md-12"
-			style="text-align: center;">
-			[[${message}]] <a th:href="@{'/exhibit/space/'+${spaceId}}">
-				<button class="btn circle-btn" style="margin-left: 10px;">
-					<span class="icon-double-chevron-left"></span> 
-                    <span class="tooltiptext">Go To Space</span>
-				</button>
-			</a>
+    <div layout:fragment="content">
+        <div th:if="${showAlert == true}"
+		   class="alert alert-warning center col-md-12"
+		   style="text-align: center;">[[${message}]] <a
+			   th:href="${isExhPreview == null OR isExhPreview == false}?@{'/exhibit/space/'+${spaceId}}:@{'/preview/'+${previewId}+'/space/'+${spaceId}}">
+			   <button class="btn circle-btn" style="margin-left: 10px;">
+				   <span class="icon-double-chevron-left"></span> <span
+					   class="tooltiptext">Go To Space</span>
+			   </button>
+		   </a>
+	   </div>
+	   <div th:if="${showAlert != true}" id="Module_1" class="Module_1_Class">
+	   <div th:if="${showAlert != true}" style="padding-top: 4%; padding-bottom: 1%; background-color: white; position: relative; z-index: 100; top: 5.5%; width: 100%; display: flex;">
+		   <h3 class="textDiv">[[${module.name}]]</h3>
+		   <p class="slideNumberClass">Slide [[${currentNumOfSlide}]]/[[${numOfSlides}]]</p>
+	   </div>
+		<div class="Group_7_Class" >
+		   <a th:if="${!#strings.isEmpty(prevSlide)}" th:href="${isExhPreview == null OR isExhPreview == false}?@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${currentSequenceId}+'/slide/'+${prevSlide}}:@{'/preview/'+${previewId}+'/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${currentSequenceId}+'/slide/'+${prevSlide}}">
+			  <div class="Slideshow_previous_Class" style="position: fixed; z-index:110; left: 13%; top: 40.3%;">
+				 <button class="btn circle-btn-slide-nav">
+						<span class="icon-chevron-left slide-nav"></span>
+						<span class="tooltiptext">Previous slide</span>
+				 </button>
+			  </div>
+		  </a>
+		   <a th:if="${!#strings.isEmpty(nextSlide)}" th:href= "${isExhPreview == null OR isExhPreview == false}?@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${currentSequenceId}+'/slide/'+${nextSlide}}:@{'/preview/'+${previewId}+'/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${currentSequenceId}+'/slide/'+${nextSlide}}">
+			  <div class="slideshow_next slideshow_next_Class" style="position: fixed; z-index:110; right: 11%; top: 40.3%;">
+				   <button class="btn circle-btn-slide-nav">
+						<span class="icon-chevron-right slide-nav"></span>
+						<span class="tooltiptext">Next slide</span>
+				   </button>  
+			  </div>
+		   </a>
+		   <div class="slideshow_next imgFullScreen" style="position: fixed; z-index:110; right: 11%;top: 50.3%;width:50px;">
+			   <button class="btn circle-btn" id="toggleFullscreenBtn" style="width: 33px; height: 33px;padding: 3px;"
+				   onclick="imageFullScreen()">
+					   <span class="icon-visible secondary"></span>
+				   <span class="tooltiptext">Full screen option</span>
+			   </button>
+			</div>
 		</div>
-		<div th:if="${showAlert != true}" id="Module_1" class="Module_1_Class">
-			<div th:if="${showAlert != true}"
-				style="padding-top: 4%; padding-bottom: 1%; background-color: white; position: relative; z-index: 100; top: 5.5%; width: 100%; display: flex;">
-				<h3 class="textDiv">[[${module.name}]]</h3>
-				<p class="slideNumberClass">Slide
-					[[${currentNumOfSlide}]]/[[${numOfSlides}]]</p>
-			</div>
-			<div class="Group_7_Class">
-				<a th:if="${!#strings.isEmpty(prevSlide)}"
-					th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${currentSequenceId}+'/slide/'+${prevSlide}}">
-					<div class="Slideshow_previous_Class"
-						style="position: fixed; z-index: 110; left: 13%; top: 40.3%;">
-						<button class="btn circle-btn-slide-nav">
-							<span class="icon-chevron-left slide-nav"></span> <span
-								class="tooltiptext">Previous slide</span>
-						</button>
-					</div>
-				</a> <a th:if="${!#strings.isEmpty(nextSlide)}"
-					th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${currentSequenceId}+'/slide/'+${nextSlide}}">
-					<div class="slideshow_next slideshow_next_Class"
-						style="position: fixed; z-index: 110; right: 11%; top: 40.3%;">
-						<button class="btn circle-btn-slide-nav">
-							<span class="icon-chevron-right slide-nav"></span> <span
-								class="tooltiptext">Next slide</span>
-						</button>
-					</div>
-				</a>
-				<div class="slideshow_next imgFullScreen"
-					style="position: fixed; z-index: 110; right: 11%; top: 50.3%; width: 50px;">
-					<button class="btn circle-btn" id="toggleFullscreenBtn"
-						style="width: 33px; height: 33px; padding: 3px;"
-						onclick="imageFullScreen()">
-						<span class="icon-visible secondary"></span> <span
-							class="tooltiptext">Full screen option</span>
-					</button>
-				</div>
-			</div>
-			<a th:href="@{'/exhibit/space/'+${spaceId}}">
-				<div class="exit_to_space_Class"
-					style="position: fixed; z-index: 120;">
-					<button class="btn circle-btn">
-						<span class="icon-double-chevron-left"></span> <span
-							class="tooltiptext">Go To Space</span>
-					</button>
-				</div>
-			</a> <a
-				th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${startSequenceId}+'?clearHistory=true'}">
-				<div class="exit_to_branchingPoint_Class"
-					style="position: fixed; z-index: 110;">
-					<button class="btn circle-btn">
-						<span class="icon-rewind-end"></span> <span class="tooltiptext">Go
-							To Start Sequence of Module</span>
-					</button>
-				</div>
-			</a> <a th:if="${showBackToPreviousChoice eq true}"
-				th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${previousSequenceId}+'/slide/'+${previousBranchingPoint.id}+'?back=true'}">
-				<div class="exit_to_previousChoice_Class"
-					style="position: fixed; z-index: 110;">
-					<button class="btn circle-btn">
-						<span class="icon-caret-left"></span> <span class="tooltiptext">Go
-							back to [[${previousBranchingPoint.name} ]]</span>
-					</button>
-				</div>
-			</a>
-			<div class="module_map"
-				style="position: fixed; z-index: 110; left: 4%; top: 50.3%; width: 50px;">
-				<button class="btn circle-btn" onClick="showModuleMapModal()">
-					<span class="icon-map"></span> <span class="tooltiptext">view
-						Module Map</span>
-				</button>
+		<a th:href="${isExhPreview == null OR isExhPreview == false}?@{'/exhibit/space/'+${spaceId}}:@{'/preview/'+${previewId}+'/space/'+${spaceId}}">
+		   <div class="exit_to_space_Class" style="position: fixed;  z-index:120;">
+				 <button class="btn circle-btn">
+					 <span class="icon-double-chevron-left"></span>
+					 <span class="tooltiptext">Go To Space</span>
+				 </button>
+		   </div>
+		</a>
+		<a th:href="${isExhPreview == null OR isExhPreview == false}?@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${startSequenceId}+'?clearHistory=true'}:@{'/preview/'+${previewId}+'/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${startSequenceId}+'?clearHistory=true'}">
+		   <div class="exit_to_branchingPoint_Class" style="position: fixed;  z-index:110;">
+				 <button class="btn circle-btn">
+					 <span class="icon-rewind-end"></span>
+					 <span class="tooltiptext">Go To Start Sequence of Module</span>
+				 </button>
+		   </div>
+		</a>
+		<a th:if="${showBackToPreviousChoice eq true}" th:href="${isExhPreview == null OR isExhPreview == false}?@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${previousSequenceId}+'/slide/'+${previousBranchingPoint.id}+'?back=true'}:@{'/preview/'+${previewId}+'/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${previousSequenceId}+'/slide/'+${previousBranchingPoint.id}+'?back=true'}">
+		   <div class="exit_to_previousChoice_Class" style="position: fixed; z-index:110;">
+				 <button class="btn circle-btn">
+					 <span class="icon-caret-left"></span>
+					 <span class="tooltiptext">Go back to [[${previousBranchingPoint.name} ]]</span>
+				 </button>
+		   </div>
+		</a>
 
-			</div>
-
-			<div style="position: relative; top: 6.5%;">
-				<h3 style="text-align: center;">[[${currentSlideCon.name}]]</h3>
-				<div id="blocks" class="Group_8_Class"
-					th:each="contents: ${currentSlideCon.contents}">
-					<img th:if="${contents['class'].simpleName ==  'ImageBlock'}"
-						id="${contents.id}" class="imgDiv"
-						th:src="@{'/api/image/'+${contents.image.id}}"
-						style="max-width: 57%">
-					<div th:if="${contents['class'].simpleName ==  'TextBlock'}"
-						id="${contents.id}" class="textDiv">[(${contents.htmlRenderedText()})]</div>
-					<div th:if="${contents['class'].simpleName == 'ChoiceBlock'}"
-						id="${contents.id}" class="textDiv" style="margin: 1%;">
-						<div th:if="${contents.showsAll eq true}"
-							th:each="choice: ${choices}" class="list-group">
-							<a
-								th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${choice.sequence.id}+'?branchingPoint='+${slideId}+'&previousSequenceId='+${currentSequenceId}}"
-								class="list-group-item list-group-item-action">[[${choice.sequence.name}]]</a>
-						</div>
-						<div class="list-group" th:if="${contents.showsAll eq false}"
-							th:each="choice: ${contents.choices}">
-							<a
-								th:href="@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${choice.sequence.id}+'?branchingPoint='+${slideId}+'&previousSequenceId='+${currentSequenceId}}"
-								class="list-group-item list-group-item-action">[[${choice.sequence.name}]]</a>
-						</div>
-					</div>
+		<div style="position: relative;top: 6.5%;">
+		   <h3 style="text-align:center;">[[${currentSlideCon.name}]]</h3>
+		   <div id="blocks" class="Group_8_Class" th:each="contents: ${currentSlideCon.contents}">
+			   <img th:if="${contents['class'].simpleName ==  'ImageBlock'}" id="${contents.id}" class="imgDiv" th:src="@{'/api/image/'+${contents.image.id}}" style="max-width:57%">
+			   <div th:if="${contents['class'].simpleName ==  'TextBlock'}" id="${contents.id}" class="textDiv">[(${contents.htmlRenderedText()})]</div>
+			   <div th:if="${contents['class'].simpleName == 'ChoiceBlock'}" id="${contents.id}" class="textDiv" style="margin: 1%;">
+				   <div th:if="${contents.showsAll eq true}" th:each="choice: ${choices}" class="list-group">
+					   <a th:href="${isExhPreview == null OR isExhPreview == false}?@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${choice.sequence.id}+'?branchingPoint='+${slideId}+'&previousSequenceId='+${currentSequenceId}}:@{'/preview/'+${previewId}+'/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${choice.sequence.id}+'?branchingPoint='+${slideId}+'&previousSequenceId='+${currentSequenceId}}"
+						   class="list-group-item list-group-item-action">[[${choice.sequence.name}]]</a>
+				   </div>
 				</div>
 			</div>
 		</div>
@@ -224,238 +191,220 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Module Map</h5>
-                        <button type="button" class="close" id="close"
-                            data-dismiss="modal" aria-label="Close"
-                            onClick="closeModal()">
+                        <button type="button" class="close" id="close" data-dismiss="modal" aria-label="Close" onClick="closeModal()">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div id="graph" class="modal-body"
-                        style="width: 2000px; height: 2000px">
-                        <script>
-			 const branchingPointsSet = new Set();
-			 const sequencesMap = new Map();
-			 function createFromSequence(sequence, treeData, isStartSequence){
-				let startNodeSequence = {};
-				let startNodeSequenceSlides = [];
-				startNodeSequence.children = [];
-				startNodeSequence.name = sequence.name;
-				startNodeSequence.id = sequence.id;
-				startNodeSequence.group = "sequence";
-				//we will use parent identifier as id instead of name
-				startNodeSequence.parent = json.id;
-				let slideIndex = 0;
-				for(slide of sequence.slideOverviews){
-					let slideNode = {}
-					slideNode.children=[];
-					if(slide.branchingPoint == true){
-						slideNode.branchSequences = [];
-						slideNode.branchingPoint = true;
-						slideNode.branchingPoints = [];
-						for(seq of slide.choiceSequenceNames){
-							if(seq === sequence.name){
-								let branchSeq = {};
-								branchSeq.name = seq;
- 								slideNode.children.push(branchSeq);
- 								continue;
-							}
-							let branchSeq = {};
-							branchSeq.name = seq;
- 							slideNode.branchSequences.push(branchSeq);
-  							slideNode.sequence = sequence.name;
-						}
- 						branchingPointsSet.add(slideNode);
-					}
-					slideNode.name = slide.name;
-					slideNode.group = "slide";
-					slideNode.sequenceId = sequence.id;
-					slideNode.slideId = slide.id;
-					slideNode.id = sequence.id + slide.id;
-  					startNodeSequenceSlides.push(slideNode);
- 
-					if(slideIndex == 0){
-					  let slideLink ={};
-					  slideNode.parent=startNodeSequence.name;
-					  startNodeSequence.children.push(slideNode);
-					  prev=slideNode;
-
-				  	} else {
-					  prev.children.push(slideNode);
-					  slideNode.parent=prev;
-					  prev=slideNode;
-					}
-				  source = slideNode.id;
-				  slideIndex=slideIndex+1;
-				}
-			 	if(isStartSequence == true){
-					treeData.children.push(startNodeSequence);
-				}
- 				sequencesMap.set(sequence.name, startNodeSequence)
- 				return treeData;
-			}
-			
-            let treeData = [];
-            treeData.children=[];
-            let startSequence = json['startSequence'];
-			let otherSequences = json['otherSequences'];
-			let startSequenceslides = [];
-			let isStartSequence = true;
-			treeData = createFromSequence(startSequence, treeData, isStartSequence);
-			isStartSequence = false;
-			for (sequence of otherSequences) {
-			    treeData = createFromSequence(sequence, treeData,isStartSequence);
- 			}
-			for(branch of branchingPointsSet){
-				for(branchSequence of branch.branchSequences){
-					if(branch.sequence === branchSequence.name) continue;
- 					branch.children.push(sequencesMap.get(branchSequence.name))
- 			    }
-			}
-			treeData.name = json.name;
-			
-			var margin = {top: 20, right: 120, bottom: 20, left: 120},
-			width = 1500 - margin.right - margin.left,
-			height = 500 - margin.top - margin.bottom;
-
-			var i = 0, duration = 750, root;
-
-			var tree = d3.layout.tree().size([height, width]);
-
-			var diagonal = d3.svg.diagonal().projection(function(d) { return [d.y, d.x]; });
-
-			var svg = d3.select("#graph").append("svg").attr("width", width + margin.right + margin.left)
-				.attr("height", height + margin.top + margin.bottom)
-				.append("g")
-				.attr("transform", "translate(" + 208 + "," + margin.top + ")");
- 
-			root = treeData;
-			
-			root.x0 = height / 2;
-			root.y0 = 0;
-
-			update(root);
-
-			d3.select(self.frameElement).style("height", "500px");
-			
-			function update(source) {
-			  // Compute the new tree layout.
-			  var nodes = tree.nodes(root).reverse(),links = tree.links(nodes);
-			   
-			  // Normalize for fixed-depth.
-			  nodes.forEach(function(d) { d.y = d.depth * 110; });
-			  nodes = nodes.filter(function(d){
-				  return  d.depth && d.depth != 1;
-			  });
-			  links = links.filter(function(d){ return   d.depth != 1 ; }); 		   
-			  nodes = nodes.filter(function(d){
-    			  if(d.group == "slide" && d.parent.branchingPoint == true ){
-    				  d.x= d.parent.x;
-    				  d.x0 = d.parent.x;
-    				  temp = d;
-    				  while(temp.children!=null && temp.children.length > 0){
-            			child = temp.children[0];
-            			child.x= temp.x;
-            			child.x0 = temp.x0;
-            			temp = child;
-            		  }
-    			 }
-    			 return d;
-    		 });
-					
-			  // Update the nodes…
-			  var node = svg.selectAll("g.node").data(nodes, function(d) { return d.id || (d.id = ++i); });
-
-			  // Enter any new nodes at the parent's previous position.
-			  var nodeEnter = node.enter().append("g").attr("class", "node")
-				  .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; }); 
-		 
-			  nodeEnter.append("circle").attr("r", function(d){
-				  if((d.group=== "slide" && d.sequenceId.normalize() === sequenceId.normalize() ) 
-						  && (d.slideId.normalize() === currentSlide.id.normalize())){
-					  return 10;
-				  }
-				  return 1e-6;
-			  }).style("fill", function(d) { return d._children ? "orange" : "orange"; })
-			  .style("opacity", function(d, i) { return !d.depth ? 0 : 1; });
-
-			  nodeEnter.append("text").attr("class","text")
-				  .attr("x", function(d) { return d.children || d._children ? 10 :10; })
-				  .attr("dy", "2.3em")
-				  .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
-				  .text(function(d) { return d.name; })
-				  .style("fill-opacity", 1e-6)
-				  .style("opacity", function(d, i) {
-                      return !d.depth ? 0 : 1;
-                  });;;
-                  
-			  // Transition nodes to their new position.
-			  var nodeUpdate = node.transition()
-				  .duration(duration)
-				  .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
-
-			  nodeUpdate.select("circle")
-				  .attr("r", function(d){ if((d.group=== "slide" && d.sequenceId.normalize() === sequenceId.normalize() )
-							&& (d.slideId.normalize() === currentSlide.id.normalize())){
-						return 20;
-						}
-					return 10;
-					}).style("opacity", function(d){ if((d.group=== "slide" 
-							&& d.sequenceId.normalize() === sequenceId.normalize() )
-							&& (d.slideId.normalize() === currentSlide.id.normalize())){
-						return 1;
-						}
-					return 0.5;
-					}).style("fill", function(d) { return d._children ? "orange" : "orange"; })
-					.style("opacity", function(d, i) {
-        				return !d.depth ? 0 : 1;
-    	      });;
-
-			  nodeUpdate.select("text")
-				  .style("fill-opacity", 1);
-
-			 nodeEnter.append("text").attr("class","text")
-				  .attr("x", function(d) { return d.children || d._children ? 10 :10; })
-				  .attr("dy", "1.5em")
-				  .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
-				  .text(function(d) { return d.name; })
-				  .style("fill-opacity", 1e-6)
-				  .style("opacity", function(d, i) {
-        					return !d.depth ? 0 : 1;
-    		 });;;
-
-			  // Transition exiting nodes to the parent's new position.
-			  var nodeExit = node.exit().transition().duration(duration)
-				  .attr("transform", function(d) { return "translate(" + source.y + "," + source.x + ")"; })
-				  .remove();
-
-			  nodeExit.select("circle")
-				  .attr("r", 1e-6);
-
-			  nodeExit.select("text")
-				  .style("fill-opacity", 1e-6);
-		
-			  // Update the links…
-			  var link = svg.selectAll("path.link")
-				  .data(links, function(d) { return d.target.id; })
-						   
-			  // Enter any new links at the parent's previous position.
-			  link.enter().insert("path", "g").attr("class", "link")
-				  .attr("d", function(d) {
-					var o = {x: source.x0, y: source.y0};					
-					return diagonal({source: o, target: o});			 	
-					
-			  }).style("fill-opacity", function(d) { return d._children ? 1e-6 : 1e-6; });//;
-
-			  // Transition links to their new position.
-			  link.transition().duration(duration).attr("d", diagonal);
-
-			  // Stash the old positions for transition.
-			  nodes.forEach(function(d) {
-				d.x0 = d.x;
-				d.y0 = d.y;
-			  });
-			}
-				        
+                    <div id="graph" class="modal-body" style="width: 2000px; height: 2000px">
+                    <script>
+                        const branchingPointsSet = new Set();
+                        const sequencesMap = new Map();
+                        function createFromSequence(sequence, treeData, isStartSequence){
+                            let startNodeSequence = {};
+                            let startNodeSequenceSlides = [];
+                            startNodeSequence.children = [];
+                            startNodeSequence.name = sequence.name;
+                            startNodeSequence.id = sequence.id;
+                            startNodeSequence.group = "sequence";
+                        	//we will use parent identifier as id instead of name
+                        	startNodeSequence.parent = json.id;
+                        	let slideIndex = 0;
+                        	for(slide of sequence.slideOverviews){
+                        		let slideNode = {}
+                        		slideNode.children=[];
+                        		if(slide.branchingPoint == true){
+                        		    slideNode.branchSequences = [];
+                        		    slideNode.branchingPoint = true;
+                        		    slideNode.branchingPoints = [];
+                        			for(seq of slide.choiceSequenceNames){
+                        			    if(seq === sequence.name){
+                        			        let branchSeq = {};
+                        			        branchSeq.name = seq;
+                        			        slideNode.children.push(branchSeq);
+                        			        continue;
+                        			    }
+                    				    let branchSeq = {};
+                    				    branchSeq.name = seq;
+                    				    slideNode.branchSequences.push(branchSeq);
+                    				    slideNode.sequence = sequence.name;
+                        		    }
+                        		    branchingPointsSet.add(slideNode);
+                		        }
+                        		slideNode.name = slide.name;
+                    		    slideNode.group = "slide";
+                    		    slideNode.sequenceId = sequence.id;
+                    		    slideNode.slideId = slide.id;
+                    		    slideNode.id = sequence.id + slide.id;
+                    		    startNodeSequenceSlides.push(slideNode);
+                
+                    		    if(slideIndex == 0){
+                    		        let slideLink ={};
+                    		        slideNode.parent=startNodeSequence.name;
+                    		        startNodeSequence.children.push(slideNode);
+                    		        prev=slideNode;
+                    		    } else {
+                    		    	prev.children.push(slideNode);
+                    		    	slideNode.parent=prev;
+                    		    	prev=slideNode;
+                    		    }
+                                source = slideNode.id;
+                                slideIndex=slideIndex+1;
+                            }
+                            if(isStartSequence == true){
+                                treeData.children.push(startNodeSequence);
+                            }
+                            sequencesMap.set(sequence.name, startNodeSequence)
+                            return treeData;
+                        }
+                        let treeData = [];
+                        treeData.children=[];
+                        let startSequence = json['startSequence'];
+                        let otherSequences = json['otherSequences'];
+                        let startSequenceslides = [];
+                        let isStartSequence = true;
+                        treeData = createFromSequence(startSequence, treeData, isStartSequence);
+                        isStartSequence = false;
+                        for (sequence of otherSequences) {
+                            treeData = createFromSequence(sequence, treeData,isStartSequence);
+                        }
+                        for(branch of branchingPointsSet){
+                            for(branchSequence of branch.branchSequences){
+                                if(branch.sequence === branchSequence.name) continue;
+                                branch.children.push(sequencesMap.get(branchSequence.name))
+                            }
+                        }
+                        treeData.name = json.name;
+                        var margin = {top: 20, right: 120, bottom: 20, left: 120},
+                        width = 1500 - margin.right - margin.left,
+                        height = 500 - margin.top - margin.bottom;
+                        
+                        var i = 0, duration = 750, root;
+                        var tree = d3.layout.tree().size([height, width]);
+                        var diagonal = d3.svg.diagonal().projection(function(d) { return [d.y, d.x]; });
+                        var svg = d3.select("#graph").append("svg").attr("width", width + margin.right + margin.left)
+                                    .attr("height", height + margin.top + margin.bottom)
+                                    .append("g")
+                                    .attr("transform", "translate(" + 208 + "," + margin.top + ")");
+                        root = treeData;
+                        root.x0 = height / 2;
+                        root.y0 = 0;
+                        
+                        update(root);
+                        d3.select(self.frameElement).style("height", "500px");
+                        function update(source) {
+                            // Compute the new tree layout.
+                            var nodes = tree.nodes(root).reverse(),links = tree.links(nodes);
+                            // Normalize for fixed-depth.
+                            nodes.forEach(function(d) { d.y = d.depth * 110; });
+                            nodes = nodes.filter(function(d){
+                            	return  d.depth && d.depth != 1;
+                            });
+                            links = links.filter(function(d){ return   d.depth != 1 ; });
+                            nodes = nodes.filter(function(d){
+                            if(d.group == "slide" && d.parent.branchingPoint == true ){
+                            	d.x= d.parent.x;
+                            	d.x0 = d.parent.x;
+                            	temp = d;
+                                while(temp.children!=null && temp.children.length > 0){
+                                	child = temp.children[0];
+                                	child.x= temp.x;
+                                	child.x0 = temp.x0;
+                                	temp = child;
+                                }
+                            }
+                            return d;
+                        });
+								
+                        // Update the nodes…
+                        var node = svg.selectAll("g.node").data(nodes, function(d) { return d.id || (d.id = ++i); });
+                        
+                        // Enter any new nodes at the parent's previous position.
+                        var nodeEnter = node.enter().append("g").attr("class", "node")
+                        	.attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; }); 
+						
+                        nodeEnter.append("circle").attr("r", function(d){
+                        	if((d.group=== "slide" && d.sequenceId.normalize() === sequenceId.normalize() ) 
+                        			&& (d.slideId.normalize() === currentSlide.id.normalize())){
+                        		return 10;
+                        	}
+                        	return 1e-6;
+                        }).style("fill", function(d) { return d._children ? "orange" : "orange"; })
+                        .style("opacity", function(d, i) { return !d.depth ? 0 : 1; });
+						
+                        nodeEnter.append("text").attr("class","text")
+                        	.attr("x", function(d) { return d.children || d._children ? 10 :10; })
+                        	.attr("dy", "2.3em")
+                        	.attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
+                        	.text(function(d) { return d.name; })
+                        	.style("fill-opacity", 1e-6)
+                        	.style("opacity", function(d, i) {
+                        		return !d.depth ? 0 : 1;
+                        });;;
+							
+                        // Transition nodes to their new position.
+                        var nodeUpdate = node.transition()
+                        	.duration(duration)
+                        	.attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
+						
+                        nodeUpdate.select("circle").attr("r", 
+                        		function(d){ if((d.group=== "slide" && d.sequenceId.normalize() === sequenceId.normalize() )
+                        				&& (d.slideId.normalize() === currentSlide.id.normalize())){
+                        			return 20;
+                        		}
+                        		return 10;
+                        }).style("opacity", function(d){ if((d.group=== "slide" 
+                        		&& d.sequenceId.normalize() === sequenceId.normalize() )
+                        		&& (d.slideId.normalize() === currentSlide.id.normalize())){
+                        			return 1;
+                        		}
+                        		return 0.5;
+                        }).style("fill", function(d) { return d._children ? "orange" : "orange"; })
+                        .style("opacity", function(d, i) {
+                            return !d.depth ? 0 : 1;
+                        });;
+						
+                        nodeUpdate.select("text").style("fill-opacity", 1);
+                        
+                        nodeEnter.append("text").attr("class","text")
+                        	.attr("x", function(d) { return d.children || d._children ? 10 :10; })
+                        	.attr("dy", "1.5em")
+                        	.attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
+                        	.text(function(d) { return d.name; })
+                        	.style("fill-opacity", 1e-6)
+                        	.style("opacity", function(d, i) {
+                        				return !d.depth ? 0 : 1;
+                        });;;
+						
+                        // Transition exiting nodes to the parent's new position.
+                        var nodeExit = node.exit().transition().duration(duration)
+                        	.attr("transform", function(d) { return "translate(" + source.y + "," + source.x + ")"; })
+                        	.remove();
+						
+                        nodeExit.select("circle")
+                        	.attr("r", 1e-6);
+                        
+                        nodeExit.select("text")
+                        	.style("fill-opacity", 1e-6);
+                        
+                        // Update the links…
+                        var link = svg.selectAll("path.link")
+                        	.data(links, function(d) { return d.target.id; })
+									
+                        // Enter any new links at the parent's previous position.
+                        link.enter().insert("path", "g").attr("class", "link")
+                        	.attr("d", function(d) {
+                        		var o = {x: source.x0, y: source.y0};					
+                        		return diagonal({source: o, target: o});	
+                        }).style("fill-opacity", function(d) { return d._children ? 1e-6 : 1e-6; });//;
+						
+                        // Transition links to their new position.
+                        link.transition().duration(duration).attr("d", diagonal);
+                        
+                        // Stash the old positions for transition.
+                        nodes.forEach(function(d) {
+                        	d.x0 = d.x;
+                        	d.y0 = d.y;});
+                        }  
              </script>
                     </div>
                 </div>
