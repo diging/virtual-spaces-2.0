@@ -125,7 +125,7 @@ public class SequenceOverviewManagerTest {
     }
     
     @Test
-    public void showModuleMap_success_checkOtherSequenceOverview() {
+    public void test_getModuleOverview_otherSequencesSuccess() {
         slides = new ArrayList<>();
         
         List<ISequence> sequences = new ArrayList<ISequence>();
