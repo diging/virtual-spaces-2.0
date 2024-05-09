@@ -105,14 +105,14 @@
 </script>
 <style>
 .pagination>li>a {
-    border: 1px solid var(- -primary);
+    border: 1px solid var(--primary);
     padding: 5px;
-    color: var(- -primary);
+    color: var(--primary);
     font-size: 15px;
 }
 
 .pagination>li.active>a {
-    background: var(- -primary);
+    background: var(--primary);
     color: #fff;
     font-size: 15px;
 }
@@ -129,8 +129,8 @@
         <h2>Images</h2>
         <div style="padding-bottom: 20px;">This virtual exhibition
             contains the following images.</div>
-        <div class="searchInput">
-            <input class="form-control" style="margin-left: 70%; width: 20%; margin-bottom: 5px;" type="text"
+        <div class="searchInput" style="margin-bottom: 10px !important">
+            <input class="form-control" style="margin-left: 70%; width: 20%; padding-bottom: 5px; margin-right: 3px;" type="text"
                 id="searchImageField" placeholder="Search..." th:value="${searchText}">
             <a id="searchImageLink"><button class="btn primary-btn" type="submit" id="searchImageButton">
                     <span class="icon-search"></span>
@@ -202,7 +202,7 @@
                     $('#searchImageButton').attr('disabled', 'true');
                 }
                 if (!$('#searchImageButton').attr('disabled') && $("#searchImageField").val().trim()) {
-                    $("#searchImageLink").attr('href', '[[@{/staff/images/search/full?searchText=}]]' + $("#searchImageField").val());
+                    $("#searchImageLink").attr('href', '[[@{/staff/images/search/full/1?searchText=}]]' + $("#searchImageField").val());
                 }
                 else {
                     $("#searchImageLink").attr('href', '');

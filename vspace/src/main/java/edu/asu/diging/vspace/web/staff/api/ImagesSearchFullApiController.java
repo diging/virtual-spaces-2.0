@@ -34,12 +34,6 @@ public class ImagesSearchFullApiController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @RequestMapping("/staff/images/search/full")
-    public String imageSearchDescription(@RequestParam(value = "searchText", required = false) String searchTerm) {
-        return String.format("redirect:/staff/images/search/full/1?searchText=%s",
-                (searchTerm == null ? "" : searchTerm));
-    }
-
     @RequestMapping("/staff/images/search/full/{page}")
     public String imageSearchDescription(@PathVariable String page,
             @RequestParam(value = "searchText", required = false) String searchTerm, Model model,

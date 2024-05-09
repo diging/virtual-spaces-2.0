@@ -275,8 +275,8 @@ public class ImageService implements IImageService {
      * 
      * @param searchTerm - This is the search string which is being searched.
      * 
-     * @return totalPages required to display images with filename, name or description
-     * matching the search text 
+     * @return totalPages - this is the total pages for the search results
+     *  
      */
     @Override
     public long getTotalPagesOnSearchText(String searchTerm) {

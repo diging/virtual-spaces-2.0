@@ -120,6 +120,7 @@ $( document ).ready(function() {
     height: 100px;
     width: 140px;
 }
+
 </style>
 </head>
 <body>
@@ -127,8 +128,8 @@ $( document ).ready(function() {
         <h2>Images</h2>
         <div style="padding-bottom: 20px;">This virtual exhibition
             contains the following images.</div>
-         <div class="searchInput">
-            <input class="form-control" style="margin-left: 70%;width: 20%; margin-bottom: 5px;" type="text" id="searchImageField" placeholder="Search..." th:value="${searchWord}">
+         <div class="searchInput" style="margin-bottom: 10px !important">
+            <input class="form-control" style="margin-left: 70%;width: 20%; padding-bottom: 5px; margin-right: 3px;" type="text" id="searchImageField" placeholder="Search..." th:value="${searchWord}">
             <a id="searchImageLink"><button class="btn primary-btn" type="submit" id="searchImageButton">
             <span class="icon-search"></span></button></a>
          </div>   
