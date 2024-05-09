@@ -384,7 +384,6 @@ public class ContentBlockManagerTest {
         contentBlocks.add(firstContentBlock);
         slide.setContents(contentBlocks);
         when(slideManager.getSlide(slideId)).thenReturn(slide);
-        when(slideRepo.findById("notARealId")).thenReturn(Optional.empty());
 
         List<IContentBlock> returnedContentBlock = managerToTest.getAllContentBlocks(slideId);
         assertEquals(returnedContentBlock.get(0).getId(), contentBlockIdString);
