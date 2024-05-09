@@ -312,6 +312,8 @@ public class ContentBlockManagerTest {
     public void test_createBiblioBlock_success() {
 
         Integer contentOrder = 1;
+        String title = "title1";
+        String description = "description1";
 
         Slide slide = new Slide();
         slide.setId("slide1");
@@ -330,7 +332,7 @@ public class ContentBlockManagerTest {
         
         when(slideManager.getSlide(slide.getId())).thenReturn(slide);
         when(biblioBlockRepo.save((BiblioBlock)biblioBlock)).thenReturn((BiblioBlock) biblioBlockWithId);
-        IBiblioBlock resBiblio = managerToTest.createBiblioBlock(slide.getId(), biblioBlock, contentOrder);
+        IBiblioBlock resBiblio = managerToTest.createBiblioBlock(slide.getId(), title, description, contentOrder);
         assertEquals(resBiblio.getId(), biblioBlockWithId.getId());
         assertEquals(resBiblio.getBiblioTitle(), biblioBlockWithId.getBiblioTitle());
         assertEquals(resBiblio.getDescription(), biblioBlockWithId.getDescription());
