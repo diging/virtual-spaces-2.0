@@ -18,20 +18,18 @@ import edu.asu.diging.vspace.core.model.impl.TextBlock;
 import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
 
 public interface IContentBlockManager {
-
-    ITextBlock createTextBlock(String slideId, String content, Integer contentOrder);
-
-    CreationReturnValue createImageBlock(String slideId, byte[] image, String filename, Integer contentOrder)
-            throws ImageCouldNotBeStoredException;
     
     IBiblioBlock createBiblioBlock(String slideId, String title, String description, Integer contentOrder);
 
-    CreationReturnValue createImageBlock(String slideId, IVSImage image, Integer contentOrder);
-
-    public CreationReturnValue createVideoBlock(String slideId, byte[] video, Long size, String fileName, String url,
-            Integer contentOrder, String title) throws VideoCouldNotBeStoredException;
-
     List<IContentBlock> getAllContentBlocks(String slideId);
+
+    ITextBlock createTextBlock(String slideId, String content, Integer contentOrder);
+
+    CreationReturnValue createImageBlock(String slideId, byte[] image, String filename, Integer contentOrder) throws ImageCouldNotBeStoredException;
+    
+    CreationReturnValue createImageBlock(String slideId, IVSImage image, Integer contentOrder);
+    
+    public CreationReturnValue createVideoBlock(String slideId, byte[] video, Long size, String fileName, String url, Integer contentOrder, String title) throws VideoCouldNotBeStoredException;
 
     void deleteTextBlockById(String blockid, String slideId) throws BlockDoesNotExistException;
     
@@ -61,11 +59,9 @@ public interface IContentBlockManager {
 
     void updateImageBlock(IImageBlock imageBlock, IVSImage image);
 
-    void updateVideoBlock(IVideoBlock videoBlock, byte[] video, Long fileSize, String url, String filename,
-            String title) throws VideoCouldNotBeStoredException;
+    void updateVideoBlock(IVideoBlock videoBlock, byte[] video, Long fileSize, String url, String filename, String title) throws VideoCouldNotBeStoredException;
 
-    IChoiceBlock createChoiceBlock(String slideId, List<String> selectedChoices, Integer contentOrder,
-            boolean showsAll);
+    IChoiceBlock createChoiceBlock(String slideId, List<String> selectedChoices, Integer contentOrder, boolean showsAll);
 
     Integer findMaxContentOrder(String slideId);
 
