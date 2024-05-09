@@ -5,7 +5,7 @@ public class ReferenceListDeletionForBiblioException extends Exception {
     /**
      * 
      */
-    private static final long serialVersionUID = 8621469001444367106L;
+    private static final long serialVersionUID = 1L;
 
     public ReferenceListDeletionForBiblioException() {
         super();
