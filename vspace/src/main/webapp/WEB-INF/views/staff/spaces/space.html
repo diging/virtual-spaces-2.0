@@ -1,11 +1,10 @@
 
 <html layout:decorate="~{layouts/main_staff}">
 <head>
-<link rel="stylesheet" type="text/css" id="applicationStylesheet"
-    th:href="@{/resources/extra/Home.css}" />
-
-<script src="//use.fontawesome.com/releases/v5.8.1/js/all.js"
-    data-auto-replace-svg="nest"></script>
+<link rel="stylesheet" type="text/css" id="applicationStylesheet" th:href="@{/resources/extra/Home.css}" />
+<script src="//use.fontawesome.com/releases/v5.8.1/js/all.js" data-auto-replace-svg="nest"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 <script th:src="@{'/resources/extra/space.js'}"></script>
 <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
 <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
@@ -939,6 +938,62 @@ $(function(){
             }
             if ($("div#incomingLinks a").length < 2) {
                 $("#noLinksToSpace").show()
+            }
+            $('#imageId').prop("disabled",true);
+        	$('#chooseFromLocal').click(function() {
+        		$("#selectedImage").empty();
+        		$('#imageId').prop('selectedIndex',0).trigger( "change" );
+        		$('#imageId').prop("disabled",true);
+        		$('#fileUpload').prop("disabled",false);
+        	  });
+        	$('#chooseFromExisting').click(function() {
+        		$('#fileUpload').val('');
+        		$('#fileUpload').prop("disabled",true);
+        		$('#imageId').prop("disabled",false);
+        	  });
+        	$("#fileUpload").click(function() {
+            	$("#selectedImage").empty();
+            	$('#imageId').prop('selectedIndex',0).trigger( "change" );
+            });
+            $("#imageId").select2({
+        		ajax: {
+        		    url: function (params) {
+        		  		var imageURL = [[@{|/staff/images/search|}]];
+        		  		return imageURL;
+        		    },
+        		    dataType: 'json',
+        		    processResults: function (data) {
+        		        return {
+        		          results: data,
+        		        };
+        		      },
+        		},
+        		templateResult: formatImage,
+        		templateSelection: formatSelection
+            });
+            
+            function formatImage (image) {
+            	if (!image.id) {
+            		return image.text;
+            	}
+            	var tbaseUrl = [[@{|/api/image/|}]];
+            	var $image = $(
+            			'<span><img src="' + tbaseUrl + image.id + '" class="img-thumbnail" /> ' + image.text + '</span>'
+            	);
+            	return $image;
+            };
+            
+            function formatSelection(image) {
+            	if (!image.id) {
+                    return image.text;
+                }
+            	var tbaseUrl = [[@{|/api/image/|}]];
+                var $image = $(
+                        '<span>' + image.text + '</span>'
+                );
+                $("#selectedImage").empty();
+                $("#selectedImage").append('<img width="200px" src="' + tbaseUrl + image.id + '" class="img-thumbnail" />');
+                return $image;
             }
         });
 
@@ -2154,7 +2209,22 @@ $(function(){
 	                        <label>Image</label>
 	                    </div>
 	                    <div class="col-sm-8">
-	                        <input type="file" class="form-control-sm" name="externalLinkImage" id="externalLinkImage" style="width: inherit">
+	                    	<input type="radio" id="chooseFromLocal" name="uploadRadioBtn" checked />
+	                    		<small>Upload Image: </small>
+	                        <input class="form-control" type="file" name="file" rows="5"
+								cols="500" id="fileUpload" />
+	                        <input type="radio" id="chooseFromExisting" name="uploadRadioBtn" />
+	                        <div>
+								<small>Choose from existing: </small>
+								<select id="imageId" name="imageId"
+									class="form-control-xs target"
+									style="height: 50px; width: 200px;">
+									<option selected value="">Choose from existing</option>
+								</select>
+							</div>
+							<div>
+								<span id="selectedImage" width="200px"></span>
+							</div>
 	                    </div>
 	                </div>
 	                <p class="mt-5 text-center">
