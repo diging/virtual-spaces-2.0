@@ -76,7 +76,6 @@ public class SnapshotManagerTest {
         MockitoAnnotations.initMocks(this);
     }
 
-    
     @Test
     public void test_downloadSpace_success() throws FileStorageException {
         Space space = new Space();
@@ -93,7 +92,6 @@ public class SnapshotManagerTest {
         moduleLink2.setId("MODULE_LINK_2");
         moduleLink2.setModule(module2);
 
-
         space.getModuleLinks().add(moduleLink1);       
         space.getModuleLinks().add(moduleLink2);  
 
@@ -107,10 +105,7 @@ public class SnapshotManagerTest {
 
         verify(serviceToTest, times(1)).downloadModule(module1, space, imagesFolderPath, spaceFolderPath);
         verify(serviceToTest, times(1)).downloadModule(module2, space, imagesFolderPath, spaceFolderPath);
-
-    }
-    
-    
+    }        
 
     @Test
     public void test_downloadModule_success() throws FileStorageException {
@@ -135,7 +130,6 @@ public class SnapshotManagerTest {
         serviceToTest.downloadModule(module1, space, imagesFolderPath, spaceFolderPath);
 
         verify(serviceToTest, times(1)).downloadSequences(sequence1, module1, space, spaceFolderPath,imagesFolderPath);
-
     }
 
     @Test
@@ -196,7 +190,6 @@ public class SnapshotManagerTest {
 
         //to test if html page is added for given slide
         verify(serviceToTest, times(1)).storeTemplateForSlide(slide1.getId(),  spaceFolderPath, space.getId(), module1.getId(),sequence1.getId() );
-
     }
     
     
@@ -213,5 +206,4 @@ public class SnapshotManagerTest {
         doThrow(new IOException()).when(storageEngine).copyToFolder(Mockito.anyString(), Mockito.anyString() );        
         assertThrows(IOException.class, ()-> serviceToTest.createSnapshot(resourcesPath, "folderName", null, exhibitionDownload));
     }
-
 }

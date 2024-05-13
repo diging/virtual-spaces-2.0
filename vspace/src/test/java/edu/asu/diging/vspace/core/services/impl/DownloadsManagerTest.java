@@ -72,7 +72,6 @@ public class DownloadsManagerTest {
         MockitoAnnotations.initMocks(this);
     }
 
-
     @Test
     public void test_downloadExhibitionFolder_success() throws Exception {
         ExhibitionDownload exhibitionDownload = new ExhibitionDownload();
@@ -87,27 +86,20 @@ public class DownloadsManagerTest {
         assertEquals(response, byteArray);
     }
 
-
-
-
     @Test
     public void test_downloadExhibitionFolder_exhibitionDownloadNotPresent() {
         when(exhibitionDownloadRepo.findById("ID")).thenReturn(Optional.ofNullable(null));
         assertThrows(ExhibitionDownloadNotFoundException.class, () ->  serviceToTest.downloadExhibitionFolder("ID") );
-    }
-    
+    }  
     
     @Test
     public void test_triggerDownloadExhibition_success() throws IOException, InterruptedException, ExecutionException, FileStorageException {
         String resourcesPath = "/Resources";
         String exhibitionFolderName = "folderName";
-
         serviceToTest.triggerDownloadExhibition(exhibitionFolderName);
 
         Mockito.verify(storageEngine).createFolder(exhibitionFolderName);
-
-        Mockito.verify(snapshotManager).createSnapshot(resourcesPath, exhibitionFolderName, null,  null);
-        
+        Mockito.verify(snapshotManager).createSnapshot(resourcesPath, exhibitionFolderName, null,  null);    
     }
   
     @Test
@@ -121,8 +113,5 @@ public class DownloadsManagerTest {
         when(exhibitionDownloadRepo.findById("ID1")).thenReturn(Optional.of(exhibitionDownload));
 
         assertTrue(serviceToTest.checkIfSnapshotCreated("ID1"));
-
-
-
     }
 }
