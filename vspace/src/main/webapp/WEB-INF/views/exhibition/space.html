@@ -377,7 +377,7 @@
 		
 		function checkDefaultImage() {
 			$.ajax({
-				url: "[(@{'/api/exhibition/default/link/imageDetails/'})]",
+				url: "[(@{'/api/exhibition/default/link/image/status/'})]",
 				type: 'GET',
 		        cache       : false,
 		        contentType : false,
@@ -420,8 +420,8 @@
                         linkDisplay = $('<img class="InfoSpace_'+index+'" src="'+spaceImageURL+'" />');
     		        }
     		        else if(defaultSpaceImageFlag === true) {
-    		        	var defaultSpaceURL = [[@{/api/image/default/link/space/}]];
-    		        	linkDisplay = $('<div class="InfoSpace_'+index+' Info_cz_Class"><img class="InfoSpace_'+index+'" src="'+defaultSpaceURL+'" width="30" height="30" border-radius = "50%"/><span class="tooltiptext">'+link.link.name+'</span></div>');
+    		        	var defaultSpaceLinkImageURL = [[@{/api/image/default/link/space/}]];
+    		        	linkDisplay = $('<div class="InfoSpace_'+index+' Info_cz_Class"><img class="InfoSpace_'+index+'" src="'+defaultSpaceLinkImageURL+'" width="30" height="30" border-radius = "50%"/><span class="tooltiptext">'+link.link.name+'</span></div>');
     		        }
     		        linkDisplay.css('position', 'absolute');
     		        linkDisplay.css('transform', 'rotate('+link.rotation+'deg)');
@@ -502,7 +502,7 @@
     		        	linkDisplay = $('<img class="InfoExt_'+index+'" src="'+extImageURL+'" />');
                 	}
                     else if(defaultExternalLinkImageFlag === true){
-                   		var defaultExternalLinkURL = [[@{/api/image/default/link/externalLink/}]];
+                   		var defaultExternalLinkURL = [[@{/api/image/default/link/external/}]];
                    		linkDisplay = $('<div class="InfoExt_'+index+' Info_cz_Class"><img class="InfoExt_'+index+'" src="'+defaultExternalLinkURL+'" width="30" height="30" border-radius = "50%""/><span class="tooltiptext">'+link.externalLink.name+'</span></div>');
                 	}
                     linkDisplay.css('position', 'absolute');

@@ -50,15 +50,15 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     
     @OneToOne(targetEntity = VSImage.class)
     @NotFound(action = NotFoundAction.IGNORE)
-    private IVSImage spacelinkDefaultImage;
+    private IVSImage spaceLinkDefaultImage;
     
     @OneToOne(targetEntity = VSImage.class)
     @NotFound(action = NotFoundAction.IGNORE)
-    private IVSImage modulelinkDefaultImage;
+    private IVSImage moduleLinkDefaultImage;
     
     @OneToOne(targetEntity = VSImage.class)
     @NotFound(action = NotFoundAction.IGNORE)
-    private IVSImage externallinkDefaultImage;
+    private IVSImage externalLinkDefaultImage;
     
     private boolean aboutPageConfigured;
     
@@ -136,28 +136,28 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     }
     
     @Override
-    public IVSImage getSpacelinkDefaultImage() {
-        return spacelinkDefaultImage;
+    public IVSImage getSpaceLinkDefaultImage() {
+        return spaceLinkDefaultImage;
     }
     @Override
-    public void setSpacelinkDefaultImage(IVSImage spacelinkDefaultImage) {
-        this.spacelinkDefaultImage = spacelinkDefaultImage;
+    public void setSpaceLinkDefaultImage(IVSImage spaceLinkDefaultImage) {
+        this.spaceLinkDefaultImage = spaceLinkDefaultImage;
     }
     @Override
-    public IVSImage getModulelinkDefaultImage() {
-        return modulelinkDefaultImage;
+    public IVSImage getModuleLinkDefaultImage() {
+        return moduleLinkDefaultImage;
     }
     @Override
-    public void setModulelinkDefaultImage(IVSImage modulelinkDefaultImage) {
-        this.modulelinkDefaultImage = modulelinkDefaultImage;
+    public void setModuleLinkDefaultImage(IVSImage moduleLinkDefaultImage) {
+        this.moduleLinkDefaultImage = moduleLinkDefaultImage;
     }
     @Override
-    public IVSImage getExternallinkDefaultImage() {
-        return externallinkDefaultImage;
+    public IVSImage getExternalLinkDefaultImage() {
+        return externalLinkDefaultImage;
     }
     @Override
-    public void setExternallinkDefaultImage(IVSImage externallinkDefaultImage) {
-        this.externallinkDefaultImage = externallinkDefaultImage;
+    public void setExternalLinkDefaultImage(IVSImage externalLinkDefaultImage) {
+        this.externalLinkDefaultImage = externalLinkDefaultImage;
     }
     @Override
     public boolean isAboutPageConfigured() {

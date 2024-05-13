@@ -100,7 +100,7 @@ externalLinkIconReader.onload = function(e) {
 
 function checkDefaultImage() {
 	$.ajax({
-	     url: "[(@{'/api/exhibition/default/link/imageDetails/'})]",
+	     url: "[(@{'/api/exhibition/default/link/image/status/'})]",
 	     type: 'GET',
 	     cache       : false,
 	     contentType : false,
@@ -242,7 +242,7 @@ function generateExternalLinks(link,spanId,divId,isModal, posX, posY, posXModal,
 			externalLink = $('<img id="'+spanId+link.externalLink.id+'" data-linkTarget="'+link.externalLink.externalLink+'" data-linkType="'+link.type+'"  data-howToOpen="'+ link.howToOpen+'" data-linkLabel="'+link.externalLink.name+'" class="externalLink-'+link.externalLink.id+' imageLink" data-link-id="'+link.externalLink.id+'" src="'+imageURL+'" />');
 		}
 		else if(defaultExternalLinkImageFlag === true){
-		    var externalLinkImageUrl = [[@{/api/image/default/link/externalLink/}]];
+		    var externalLinkImageUrl = [[@{/api/image/default/link/external/}]];
 		    externalLink = $('<div id="'+spanId+link.externalLink.id+'" data-linkTarget="'+link.externalLink.externalLink+'" data-linkType="'+link.type+'"  data-howToOpen="'+ link.howToOpen+'" data-linkLabel="'+link.externalLink.name+'" class="externalLink-'+link.externalLink.id+' imageLink Info_cz_Class" data-link-id="'+link.externalLink.id+'"><img src="'+externalLinkImageUrl+'" width="30" height="30" border-radius = "50%"/><p class="label-'+link.externalLink.id+'" data-link-id="'+link.externalLink.id+'"><span class="tooltiptext">'+link.externalLink.name+'</span></p></div>');	
 		}
 		setLinkPosition(externalLink,link,false,isModal,true, posX, posY, posXModal, posYModal);
