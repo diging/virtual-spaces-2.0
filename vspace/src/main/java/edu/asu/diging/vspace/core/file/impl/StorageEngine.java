@@ -202,7 +202,7 @@ public class StorageEngine implements IStorageEngine {
                        fileName.endsWith(".css");
             });
         } catch (Exception e) {
-            logger.debug("Could not check the directory for css or Image Files ", e);
+            logger.error("Could not check the directory for css or Image Files ", e);
             return false;
         }
     }
