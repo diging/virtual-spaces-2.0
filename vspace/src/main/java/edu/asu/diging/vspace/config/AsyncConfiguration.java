@@ -24,7 +24,6 @@ public class AsyncConfiguration {
     
     @Bean(name="asyncExecutor")
     public Executor getAsyncExecutor() {
-        System.out.println("size = "+corePoolSize);
         
         SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
         ThreadPoolTaskExecutor asyncExecutor = new ThreadPoolTaskExecutor();

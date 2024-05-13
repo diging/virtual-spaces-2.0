@@ -4,158 +4,136 @@
 <script th:src="@{/resources/bootpag/js/bootpag.min.js}">
 </script>
 <script th:inline="javascript">
-$(document).ready(function($) {
-	$("#downloads").addClass("active");	
-	$('.downloadPage-selection').bootpag({
-	total: [[${downloadsTotalPages}]],
-	page: [[${downloadsCurrentPageNumber}]],
-	maxVisible: 10,
-	leaps: true,
-	firstLastUse: true,
-	first: '|<',
-	last: '>|',
-	wrapClass: 'pagination',
-	activeClass: 'active',
-	disabledClass: 'disabled',
-	nextClass: 'next',
-	prevClass: 'prev',
-	lastClass: 'last',
-	firstClass: 'first'
-	}).on("page", function(event, num){
-		console.log(num);
-		window.location.assign("[(@{'/staff/downloads/list'})]"+'?'+"downloadsPagenum="+num);
-	});
-	 $.ajax({
-			type : "GET",
-			url : "[(@{'/staff/exhibit/task/snapshot/status?'+ ${_csrf.parameterName}+'='+${_csrf.token} })] ",
-			cache : false,
-			
-			contentType : false,
-			processData : false,
-			
-			success : function(data) {
-				console.log(data);
-				if(data.taskComplete ==  false) {
-					pollForExhibitionDownload(data.exhibitionDownload.id, data.exhibitionDownload.folderName);
-
-				}				
-			},
-			error : function(data) {
-				var loader = document.getElementById('downloadLoader');
-				loader.style.visibility="hidden";
-				
-				var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>Snapshot could not be downloaded</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-				$('.errorAdd').append(alert);
-				
-				var errorAlert = document.getElementById('downloadError');
-				errorAlert.style.visibility="visible";
-			}
-		});
-	
-	 
+    $(document).ready(function($) {
+    	$("#downloads").addClass("active");	
+    	$('.downloadPage-selection').bootpag({
+    	total: [[${downloadsTotalPages}]],
+    	page: [[${downloadsCurrentPageNumber}]],
+    	maxVisible: 10,
+    	leaps: true,
+    	firstLastUse: true,
+    	first: '|<',
+    	last: '>|',
+    	wrapClass: 'pagination',
+    	activeClass: 'active',
+    	disabledClass: 'disabled',
+    	nextClass: 'next',
+    	prevClass: 'prev',
+    	lastClass: 'last',
+    	firstClass: 'first'
+    }).on("page", function(event, num){
+    		window.location.assign("[(@{'/staff/downloads/list'})]"+'?'+"downloadsPagenum="+num);
+    });
+    $.ajax({
+    	type : "GET",
+    	url : "[(@{'/staff/exhibit/task/snapshot/status?'+ ${_csrf.parameterName}+'='+${_csrf.token} })] ",
+    	cache : false,
+    	
+    	contentType : false,
+    	processData : false,
+    	
+    	success : function(data) {
+            if(data.taskComplete ==  false) {
+            	pollForExhibitionDownload(data.exhibitionDownload.id, data.exhibitionDownload.folderName);
+            }				
+    	},
+    	error : function(data) {
+            var loader = document.getElementById('downloadLoader');
+            loader.style.visibility="hidden";
+            
+            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>Snapshot could not be downloaded</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+            $('.errorAdd').append(alert);
+            
+            var errorAlert = document.getElementById('downloadError');
+            errorAlert.style.visibility="visible";
+    	}
+    });
 })
-	function triggerExhibitionDownload()
-	{ 
-		 $.ajax({
-				type : "POST",
-				url : "[(@{'/staff/exhibit/download?'+ ${_csrf.parameterName}+'='+${_csrf.token} })] ",
-				cache : false,
-				
-				contentType : false,
-				processData : false,
-				
-				success : function(data) {
-					console.log(data);					
-	 				pollForExhibitionDownload(data.id, data.folderName);					
- 					
-				},
-				error : function(data) {					
-					var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>Snapshot could not be downloaded</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-					$('.errorAdd').append(alert);
-					
-					var errorAlert = document.getElementById('downloadError');
-					errorAlert.style.visibility="visible";
-				}
-			});
-		
-	}
+    function triggerExhibitionDownload(){ 
+        $.ajax({
+            type : "POST",
+            url : "[(@{'/staff/exhibit/download?'+ ${_csrf.parameterName}+'='+${_csrf.token} })] ",
+            cache : false,
+            
+            contentType : false,
+            processData : false,
+            
+            success : function(data) {
+            	pollForExhibitionDownload(data.id, data.folderName); 		
+            },
+            error : function(data) {					
+            	var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>Snapshot could not be downloaded</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+            	$('.errorAdd').append(alert);
+            	
+            	var errorAlert = document.getElementById('downloadError');
+            	errorAlert.style.visibility="visible";
+            }
+        });
+    }
 
-	function pollForExhibitionDownload(id, folderName) {
-		
-		var alert = $('<div class="alert alert-info alert-dismissible fade show" role="alert"><p>Snapshot creation is in progress. Please wait. </p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-		$('.successAlert').append(alert); 
-		 const poll = (id, folderName) => {
-
-				
-				maxAttempts = 10;
-				interval= 3000;
-				  console.log('Start poll...');
-				  let attempts = 0;
-
-				  const executePoll = async (resolve, reject) => {
-					    console.log('- poll');
-						console.log("id" + id);
-						console.log("folderName" + folderName);
-					  	const  url = "[(@{'/staff/exhibit/download/checkStatus/'})]"+id+"?folderName="+folderName+','+ [[${_csrf.parameterName}]]+'='+[[${_csrf.token}]];			  
-						const result = await fetch(url);
-						console.log("attemps" + attempts);
-					    attempts++;
-					    var text = await result.text();
-					    console.log("text", text);
-					    if ( text == "true") {
-					    	console.log("succes");
-						 	
-							var alert = $('<div class="alert alert-success alert-dismissible fade show" role="alert"><p>Snapshot is ready. Please click to download. <a href=[[@{/staff/exhibit/download/'+id+'?folderName='+folderName+'}]] > <span class="btn primary-btn btn-sm">Download</span></a> </p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-							$('.successAlert').empty();
-							$('.successAlert').append(alert); 
-						
-					      return resolve(result);
-					    } else if (maxAttempts && attempts === maxAttempts) {
-		  					var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>Snapshot could not be created. Please try again later</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-		  					$('.errorAdd').append(alert);
-		  					var errorAlert = document.getElementById('downloadError');
-							errorAlert.style.visibility="visible";
-		  					
-					      return reject(new Error('Exceeded max attempts'));
-					    } else {
-		  					setTimeout( executePoll, interval, resolve, reject  );
-		  				
-					    }
-					  };
-
-					  return new Promise(executePoll);
-			
-			};
-			
-			poll(id, folderName)
-			.then(value => value)
-			.then(data => console.log(data))
-			     	
-			.catch(err => console.error(err)) 
-		 
-	}
+    function pollForExhibitionDownload(id, folderName) {	
+    	var alert = $('<div class="alert alert-info alert-dismissible fade show" role="alert"><p>Snapshot creation is in progress. Please wait. </p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+    	$('.successAlert').append(alert);
+    	const poll = (id, folderName) => {
+            maxAttempts = 10;
+            interval= 3000;
+            console.log('Start poll...');
+            let attempts = 0;
+    
+            const executePoll = async (resolve, reject) => {
+                console.log('- poll');
+                console.log("id" + id);
+                const  url = "[(@{'/staff/exhibit/download/checkStatus/'})]"+id+"?folderName="+folderName+','+ [[${_csrf.parameterName}]]+'='+[[${_csrf.token}]];			  
+                const result = await fetch(url);
+                console.log("attemps" + attempts);
+                attempts++;
+                var text = await result.text();
+                console.log("text", text);
+                if ( text == "true") {
+                    var alert = $('<div class="alert alert-success alert-dismissible fade show" role="alert"><p>Snapshot is ready. Please click to download. <a href=[[@{/staff/exhibit/download/'+id+'?folderName='+folderName+'}]] > <span class="btn primary-btn btn-sm">Download</span></a> </p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    $('.successAlert').empty();
+                    $('.successAlert').append(alert); 
+                    return resolve(result);
+                } else if (maxAttempts && attempts === maxAttempts) {
+                    var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>Snapshot could not be created. Please try again later</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    $('.errorAdd').append(alert);
+                    var errorAlert = document.getElementById('downloadError');
+                    errorAlert.style.visibility="visible";
+                    
+                    return reject(new Error('Exceeded max attempts'));
+                } else {
+                    setTimeout( executePoll, interval, resolve, reject  );
+                }
+            };
+            return new Promise(executePoll);	
+         };
+         poll(id, folderName)
+         .then(value => value)
+         .then(data => console.log(data))
+         .catch(err => console.error(err))  
+    }
 
 </script>
 <style>
 .pagination>li>a {
-	border: 1px solid #A55941;
-	padding: 5px;
-	color: #A55941;
-	font-size: 15px;
+    border: 1px solid #A55941;
+    padding: 5px;
+    color: #A55941;
+    font-size: 15px;
 }
 
 .pagination>li.active>a {
-	background: #A55941;
-	color: #fff;
-	font-size: 15px;
+    background: #A55941;
+    color: #fff;
+    font-size: 15px;
 }
 
 a.nav-link.active.show {
-	border-color: transparent;
-	border-bottom: 4px solid var(--primary);
-	color: var(--primary) !important;
-	background: transparent;
-	font-weight: 600;
+    border-color: transparent;
+    border-bottom: 4px solid var(--primary);
+    color: var(--primary) !important;
+    background: transparent;
+    font-weight: 600;
 }
 
 .img-thumbnail {
@@ -175,25 +153,25 @@ a.nav-link.active.show {
 
 }
 #downloadInProgress {
-visibility: hidden;
+    visibility: hidden;
 }
 
 #downloadReady {
-visibility: hidden;
+    visibility: hidden;
 }
 #infoSection {
-display: none;
+    display: none;
 }
 
 
 @-webkit-keyframes spin {
-  0% { -webkit-transform: rotate(0deg); }
-  100% { -webkit-transform: rotate(360deg); }
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 </style>
@@ -211,23 +189,23 @@ display: none;
  	 
  	 <div class="downloadPage-selection"></div>
 	 <table class="table">
-		 <thead>
-         	<tr>
-            	<th scope="col" sort-prop="filename"><a href="#">Creation date</a></th>
-                <th scope="col" sort-prop="name"><a href="#">Created by</a></th>
-                <th scope="col" >View</th>
-         	</tr>
-	     </thead>
-		 <tbody class="tableBody" id="downloads">
-	     	<tr th:each="exhibitionDownload:  ${downloadsList}">
-	             <th scope="row">[[${exhibitionDownload.creationDate}]]</th>	            
-	             <td>[[${exhibitionDownload.createdBy}]]</td>
-	             <td><a th:href="@{'/staff/exhibit/download/'+${exhibitionDownload.id}(folderName=${exhibitionDownload.folderName})}" ><span class="btn primary-btn btn-sm">Download</span></a></td>
-	     	</tr>
-	     </tbody>
+            <thead>
+                <tr>
+                    <th scope="col" sort-prop="filename"><a href="#">Creation date</a></th>
+                    <th scope="col" sort-prop="name"><a href="#">Created by</a></th>
+                    <th scope="col" >View</th>
+                </tr>
+            </thead>
+            <tbody class="tableBody" id="downloads">
+                <tr th:each="exhibitionDownload:  ${downloadsList}">
+                    <th scope="row">[[${exhibitionDownload.creationDate}]]</th>	            
+                    <td>[[${exhibitionDownload.createdBy}]]</td>
+                    <td><a th:href="@{'/staff/exhibit/download/'+${exhibitionDownload.id}(folderName=${exhibitionDownload.folderName})}" ><span class="btn primary-btn btn-sm">Download</span></a></td>
+                </tr>
+            </tbody>
 	 
 	</table>
- 	 <div class="downloadPage-selection"></div>
+    <div class="downloadPage-selection"></div>
 
 </div>
 </body>
