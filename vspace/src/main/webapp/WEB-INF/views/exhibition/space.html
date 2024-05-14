@@ -205,6 +205,19 @@
     }
 }
 </style>
+
+<script th:inline="javascript">
+$(document).ready(function() {
+	const textBlock = document.getElementByClassName("textBlock");
+	const color = textBlock.style.borderColor;
+	console.log("color" + color);
+	textBlock.addEventListener('focus-visible', function(e) {
+		e.target.style.outline = "2px solid blue";
+	});
+
+}
+
+</script>
 </head>
 
 <body>
@@ -498,15 +511,37 @@
                     var posY = $("#space").position().top;
                     var heightText = (block.height*height)/100;
                     var widthText = (block.width*width)/100;
-                    var textBlock = $('<span data-link-id="'+block.id+'" class="spaceLink-'+block.id+' Info_cz_Class"><textarea class="textBlock" style="height:'+heightText+'px; width:'+widthText+'px; resize:none;" readonly>'+block.spaceTextBlock.text+'</textarea></span>');
-                    textBlock.css('position', 'absolute');
+                    var textBlock = $('<span data-link-id="'+block.id+'" class="spaceLink-'+block.id+' Info_cz_Class"><textarea class="textBlock" style="height:'+heightText+'px; width:'+widthText+'px; resize:none; color: '+block.textColor+'; border-color:'+block.borderColor+';" readonly>'+block.spaceTextBlock.text+'</textarea></span>');
+                    textBlock.css('position', 'absolute');   
+                    
                     var	linkPosX=(width*block.positionX)/[(${display.width})];
                     var	linkPosY=(height*block.positionY)/relativeHeight;
                     textBlock.css('left', linkPosX + posX);
                     textBlock.css('top', linkPosY + posY);
+                    
+               
                     $("#space").append(textBlock);
+                    
+                    
                 }
             })
+            
+            var textBlockElements = document.getElementsByClassName("textBlock");
+            Array.from(textBlockElements).forEach(function(textBlock, index){
+            	if(textBlock != null) {
+            	   	const color = textBlock.style.borderColor;
+                 	console.log("color" + color);
+                 	textBlock.addEventListener('focus', function(e) {
+               		e.target.style.outline = "2px solid "+ color;
+                 	});
+                 	textBlock.addEventListener('blur', function(e) {
+                 		e.target.style.outline = "none";
+                	});
+            	}
+         
+            })
+              
+                	
 		}
 		</script>
 		

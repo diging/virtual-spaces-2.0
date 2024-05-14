@@ -69,11 +69,11 @@ public class SpaceTextBlockManagerTest {
         
         Mockito.when(spaceManager.getSpace(spaceId1)).thenReturn(space);
         Mockito.when(spaceTextBlockFactory.createSpaceTextBlock("New Text Block", space)).thenReturn(spaceTextBlock);
-        Mockito.when(spaceTextBlockDisplayFactory.createSpaceTextBlockDisplay(spaceTextBlock, 10, 30, 40, 50)).thenReturn(spaceTextBlockDisplay);
+        Mockito.when(spaceTextBlockDisplayFactory.createSpaceTextBlockDisplay(spaceTextBlock, 10, 30, 40, 50, "#000000", "#000000")).thenReturn(spaceTextBlockDisplay);
         Mockito.when(spaceTextBlockRepo.save((SpaceTextBlock)spaceTextBlock)).thenReturn((SpaceTextBlock) spaceTextBlock);
         Mockito.when(spaceTextBlockDisplayRepo.save((SpaceTextBlockDisplay)spaceTextBlockDisplay)).thenReturn((SpaceTextBlockDisplay)spaceTextBlockDisplay);
 
-        ISpaceTextBlockDisplay savedSpaceTextBlockDisplay = managerToTest.createTextBlock(spaceId1, 10, 30, "New Text Block", 40, 50);
+        ISpaceTextBlockDisplay savedSpaceTextBlockDisplay = managerToTest.createTextBlock(spaceId1, 10, 30, "New Text Block", 40, 50, "#000000", "#000000");
         Assert.assertEquals(spaceTextBlockDisplay.getId(), savedSpaceTextBlockDisplay.getId());
         Assert.assertEquals(spaceTextBlockDisplay.getName(), savedSpaceTextBlockDisplay.getName());
         Assert.assertEquals(new Double(spaceTextBlockDisplay.getPositionX()), new Double(savedSpaceTextBlockDisplay.getPositionX()));
@@ -81,6 +81,9 @@ public class SpaceTextBlockManagerTest {
         Assert.assertEquals(new Float(spaceTextBlockDisplay.getWidth()), new Float(savedSpaceTextBlockDisplay.getWidth()));
         Assert.assertEquals(new Float(spaceTextBlockDisplay.getHeight()), new Float(savedSpaceTextBlockDisplay.getHeight()));
         Assert.assertEquals(spaceTextBlockDisplay.getSpaceTextBlock(), savedSpaceTextBlockDisplay.getSpaceTextBlock());
+        Assert.assertEquals(spaceTextBlockDisplay.getTextColor(), savedSpaceTextBlockDisplay.getTextColor());
+        Assert.assertEquals(spaceTextBlockDisplay.getBorderColor(), savedSpaceTextBlockDisplay.getBorderColor());
+
         Mockito.verify(spaceTextBlockDisplayRepo).save((SpaceTextBlockDisplay)spaceTextBlockDisplay);
     }
     
@@ -111,7 +114,7 @@ public class SpaceTextBlockManagerTest {
         Mockito.when(spaceTextBlockDisplayRepo.save(spaceTextBlockDisplay)).thenReturn(spaceTextBlockDisplay);
     
 
-        ISpaceTextBlockDisplay updatedSpaceTextBlockDisplay = managerToTest.updateTextBlock(spaceId1, 10, 30, "SPB001", "STBD001", "New Text Block", 40, 50);
+        ISpaceTextBlockDisplay updatedSpaceTextBlockDisplay = managerToTest.updateTextBlock(spaceId1, 10, 30, "SPB001", "STBD001", "New Text Block", 40, 50, null, "#000000");
         Assert.assertEquals(spaceTextBlockDisplay.getId(), updatedSpaceTextBlockDisplay.getId());
         Assert.assertEquals(spaceTextBlockDisplay.getName(), updatedSpaceTextBlockDisplay.getName());
         Assert.assertEquals(new Double(spaceTextBlockDisplay.getPositionX()), new Double(updatedSpaceTextBlockDisplay.getPositionX()));
@@ -119,6 +122,8 @@ public class SpaceTextBlockManagerTest {
         Assert.assertEquals(new Float(spaceTextBlockDisplay.getWidth()), new Float(updatedSpaceTextBlockDisplay.getWidth()));
         Assert.assertEquals(new Float(spaceTextBlockDisplay.getHeight()), new Float(updatedSpaceTextBlockDisplay.getHeight()));
         Assert.assertEquals(spaceTextBlockDisplay.getSpaceTextBlock(), updatedSpaceTextBlockDisplay.getSpaceTextBlock());
+        Assert.assertEquals(spaceTextBlockDisplay.getTextColor(), updatedSpaceTextBlockDisplay.getTextColor());
+        Assert.assertEquals(spaceTextBlockDisplay.getBorderColor(), updatedSpaceTextBlockDisplay.getBorderColor());
     }
     
     @Test
@@ -141,7 +146,7 @@ public class SpaceTextBlockManagerTest {
         Mockito.when(spaceTextBlockRepo.findById(spaceTextBlock.getId())).thenReturn(Optional.empty());
         Mockito.when(spaceTextBlockDisplayRepo.findById(spaceTextBlockDisplay.getId())).thenReturn(mockSpaceTextBlockDisplay);
         
-        managerToTest.updateTextBlock("", 10, 30, "SPB001", "STBD001", "test", 50, 40);
+        managerToTest.updateTextBlock("", 10, 30, "SPB001", "STBD001", "test", 50, 40, spaceId1, null);
         Mockito.verify(spaceTextBlockRepo, Mockito.never()).save(spaceTextBlock);
     }
     
@@ -164,7 +169,7 @@ public class SpaceTextBlockManagerTest {
         Mockito.when(spaceTextBlockRepo.findById(spaceTextBlock.getId())).thenReturn(mockSpaceTextBlock);
         Mockito.when(spaceTextBlockDisplayRepo.findById(spaceTextBlockDisplay.getId())).thenReturn(Optional.empty());
         
-        managerToTest.updateTextBlock("", 10, 30, "SPB001", "STBD001", "test", 50, 40);
+        managerToTest.updateTextBlock("", 10, 30, "SPB001", "STBD001", "test", 50, 40, null, spaceId1);
         Mockito.verify(spaceTextBlockDisplayRepo, Mockito.never()).save(spaceTextBlockDisplay);
     }
     
