@@ -216,7 +216,7 @@ function generateModuleLinks(link,spanId,divId,isModal, posX, posY, posXModal, p
         }
         else{
         	moduleLinkTooltip = link.link.name + (link.link.description!=null && link.link.description!=''? ' : '+link.link.description : "");
-            moduleLink = $('<span id="'+spanId+link.link.id+'" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.module.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'" class="moduleLink-'+link.link.id+' Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_staff_m"></span><p class="label-'+link.link.id+'" data-link-id="'+link.link.id+'"><span class="tooltiptext">'+link.link.name+'</span></p></span>'+ (moduleLinkTooltip!=null && moduleLinkTooltip!='' ? '<span class="tooltiptext">'+moduleLinkTooltip+'</span>' : '') +'</p></span>');
+            moduleLink = $('<span id="'+spanId+link.link.id+'" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.module.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'" class="moduleLink-'+link.link.id+' Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_staff_m"></span><p class="label-'+link.link.id+'" data-link-id="'+link.link.id+'">'+ (moduleLinkTooltip!=null && moduleLinkTooltip!='' ? '<span class="tooltiptext">'+moduleLinkTooltip+'</span>' : '') +'</p></span>');
         }
         setLinkPosition(moduleLink,link,false,isModal,false, posX, posY, posXModal, posYModal,true);
         $(divId).append(moduleLink);
@@ -850,9 +850,8 @@ function makeModuleLinksEditable(moduleLinkName, moduleLinkDesc, moduleLinkId, r
     $("#moduleLinkDisplayId").val(displayLinkId);
     $("#moduleLinkInfoLabelEdit").text(moduleLinkName);
     $("#moduleLinkLabelEdit").val(moduleLinkName);
-    $("#moduleLinkDescEdit").val(moduleLinkDesc);
+    $("#moduleLinkDesc").val(moduleLinkDesc);
     $("#moduleLinkId").val(moduleLinkId);
-    $("#moduleLinkImageIdEdit").val(moduleLinkImageId);
     $("#moduleLinkIdValueEdit").val(moduleLinkId);
     $("#moduleLinkRotationEdit").val(rotation);
     $("#moduleTypeEdit option:selected").prop('selected', false);
@@ -1636,7 +1635,6 @@ $(function(){
             var moduleLabel = $("#moduleLinkLabel").val();
             var type = $("#moduleType option:selected").text();
             var moduleDesc = $("#moduleLinkDesc").val();
-            
             if (moduleLabel == undefined || moduleLabel == "") {
                 $("#errorMsg").text("Please enter the label for module.")
                 $('#errorAlert').show();
@@ -2762,6 +2760,17 @@ $(function(){
 	                            id="spaceLinkLabelEdit" style="width: inherit; background: var(--base-grey)" />
 	                    </div>
 	                </div>
+                    
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label>Description</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <input class="form-control-sm spacelink-targetEdit"
+                                type="text" name="spaceLinkDesc"
+                                id="spaceLinkDescEdit" style="width: inherit; background: var(--base-grey)" />
+                        </div>
+                    </div>
 	
 	                <div class="row">
 	                    <div class="col-sm-4">
@@ -2861,6 +2870,16 @@ $(function(){
                                 style="width: inherit;  background: var(--base-grey)"><br>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label>Description</label>
+                        </div>
+                        <div class="col-sm-8">
+                            <input class="form-control-sm modulelink-target" style="width: inherit; background: var(--base-grey)" type="text"
+                                name="moduleLinkDesc" id="moduleLinkDesc">
+                        </div>
+                    </div>
+                    
                     <div class="row">
                         <div class="col-sm-4">
                             <label>Type:</label>

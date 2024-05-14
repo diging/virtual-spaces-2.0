@@ -41,7 +41,6 @@ public class EditSpaceLinkController extends EditSpaceLinksController {
 		@RequestParam("spaceLinkLabel") String spaceLinkLabel,@RequestParam("spaceLinkDesc") String spaceLinkDesc,
 		@RequestParam("spaceLinkIdValueEdit") String spaceLinkIdValueEdit,
 		@RequestParam("spaceLinkDisplayId") String spaceLinkDisplayId,
-		@RequestParam(value = "spaceLinkImageIdEdit", required = false) String spaceLinkImageIdEdit,
 		@RequestParam("type") String displayType, @RequestParam(value="spaceLinkImage", required = false) MultipartFile file,
 		@RequestParam(value = "imageId", required = false) String imageId) throws NumberFormatException,
 		SpaceDoesNotExistException, LinkDoesNotExistsException, IOException, ImageCouldNotBeStoredException, ImageDoesNotExistException {
