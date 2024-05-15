@@ -58,7 +58,7 @@ public class DefaultImageController {
     }
 
     @RequestMapping(value = API_DEFAULT_SPACE_IMAGE_STATUS, method = RequestMethod.GET)
-    public ResponseEntity<String> getDefaultImageDetails() {
+    public ResponseEntity<String> getDefaultImageStatus() {
         IExhibition exhibition = exhibitManager.getStartExhibition();
         IVSImage defaultSpaceImage = exhibition.getSpaceLinkDefaultImage();
         IVSImage defaultModuleImage = exhibition.getModuleLinkDefaultImage();
