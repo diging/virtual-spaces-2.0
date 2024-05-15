@@ -38,7 +38,7 @@ public class AddExternalLinkController {
     @RequestMapping(value = "/staff/space/{id}/externallink", method = RequestMethod.POST)
     public ResponseEntity<String> createExternalLink(@PathVariable("id") String id, @RequestParam("x") String x,
             @RequestParam("y") String y, @RequestParam("externalLinkLabel") String title,
-			@RequestParam("externalLinkDesc") String desc,
+            @RequestParam(name = "externalLinkDesc", required=false) String desc,
             @RequestParam("url") String externalLink, @RequestParam("tabOpen") String howToOpen,
             @RequestParam("type") String displayType, @RequestParam(value="externalLinkImage", required=false) MultipartFile file,
             @RequestParam(value="imageId", required=false) String imageId)

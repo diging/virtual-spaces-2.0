@@ -393,17 +393,16 @@ $(document).ready(function() {
     		        }
     		        
     		        var linkDisplay;
-    		        var spaceLinkTooltip;
     		        if(link.type=="ALERT"){
     		            linkDisplay = $('<div class="InfoSpace_'+index+' alert alert-primary" role="alert"><span class="tooltiptextalert">'+link.link.name+'</span></div>');
     		        }
     		        else if(link.type=="IMAGE" && link.image != null){
-                        var spaceImageURL = [[@{/api/image/}]]+link.image.id;
-                        linkDisplay = $('<img class="InfoSpace_'+index+'" src="'+spaceImageURL+'" />');
+    		            var spaceImageURL = [[@{/api/image/}]]+link.image.id;
+    		            linkDisplay = $('<img class="InfoSpace_'+index+'" src="'+spaceImageURL+'" />');
     		        }
     		        else{
-    		        	spaceLinkTooltip = (link.link.name!=null && link.link.name!=''? link.link.name : '') + (link.link.description!=null && link.link.description!='' ? ' : '+link.link.description : "");
-                        linkDisplay = $('<div class="InfoSpace_'+index+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-move Icon_awesome_info_c"></span>'+ (spaceLinkTooltip!=null && spaceLinkTooltip!=''? '<span class="tooltiptext">'+spaceLinkTooltip+'</span>' : '') + '<span class="tooltiptext">' +link.link.name+'</span></div>');
+    		            var spaceLinkTooltip = (link.link.name!=null && link.link.name!=''? link.link.name : '') + (link.link.description!=null && link.link.description!='' ? ' : '+link.link.description : "");
+    		            linkDisplay = $('<div class="InfoSpace_'+index+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-move Icon_awesome_info_c"></span>'+ (spaceLinkTooltip!=null && spaceLinkTooltip!=''? '<span class="tooltiptext">'+spaceLinkTooltip+'</span>' : ''));
     		        }
     		        linkDisplay.css('position', 'absolute');
     		        linkDisplay.css('transform', 'rotate('+link.rotation+'deg)');
@@ -443,7 +442,7 @@ $(document).ready(function() {
                         var moduleImageURL = [[@{/api/image/}]]+link.image.id;
                         linkDisplay = $('<img class="InfoModule_'+index+'" src="'+moduleImageURL+'" />');
     		        } else {
-    		        	linkDisplay= $('<div class="InfoModule_'+index+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_m"></span>'+ (moduleLinkTooltip!=null && moduleLinkTooltip!='' ? '<span class="tooltiptext">'+moduleLinkTooltip+'</span>' : '') + '<span class="tooltiptext">' +link.link.name+'</span></div>');
+    		            linkDisplay= $('<div class="InfoModule_'+index+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_m"></span>'+ (moduleLinkTooltip!=null && moduleLinkTooltip!='' ? '<span class="tooltiptext">'+moduleLinkTooltip+'</span>' : ''));
     		        }
     		        linkDisplay.css('position', 'absolute');
     		        linkDisplay.css('transform', 'rotate('+link.rotation+'deg)');
