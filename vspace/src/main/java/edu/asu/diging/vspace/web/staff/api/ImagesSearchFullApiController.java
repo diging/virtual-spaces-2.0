@@ -51,7 +51,6 @@ public class ImagesSearchFullApiController {
                 category = ImageCategory.valueOf(searchTerm);
             } catch (IllegalArgumentException e) {
                 logger.error("Wrong argument for image category", e);
-                category = null;
             }
         }
         model.addAttribute("totalPages", category == null ? imageService.getTotalPagesOnSearchText(searchTerm)
@@ -74,6 +73,6 @@ public class ImagesSearchFullApiController {
         model.addAttribute("imageToSpaces", imageToSpaces);
         model.addAttribute("images", imageResults);
         model.addAttribute("searchTerm", searchTerm);
-        return "staff/images/searchImages";
+        return "staff/images/imagelist";
     }
 }

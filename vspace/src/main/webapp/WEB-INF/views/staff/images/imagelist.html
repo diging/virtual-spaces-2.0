@@ -62,7 +62,7 @@ $( document ).ready(function() {
         lastClass: 'last',
         firstClass: 'first'
     }).on("page", function(event, num){
-        window.location.assign("./"+num+"?imageCat="+[[${imageCategory}]]+"&sort="+[[${sortProperty}]]+"&order="+[[${order}]]);
+        window.location.assign("./"+num+"?searchText=" + [[${searchTerm}]]+"&imageCat="+[[${imageCategory}]]+"&sort="+[[${sortProperty}]]+"&order="+[[${order}]]);
     });
 
   $("table.table thead th").each(function(){
@@ -129,7 +129,7 @@ $( document ).ready(function() {
         <div style="padding-bottom: 20px;">This virtual exhibition
             contains the following images.</div>
          <div class="searchInput" style="margin-bottom: 10px !important">
-            <input class="form-control" style="margin-left: 70%;width: 20%; padding-bottom: 5px; margin-right: 3px;" type="text" id="searchImageField" placeholder="Search..." th:value="${searchWord}">
+            <input class="form-control" style="margin-left: 70%;width: 20%; padding-bottom: 5px; margin-right: 3px;" type="text" id="searchImageField" placeholder="Search..." th:value="${searchText}">
             <a id="searchImageLink"><button class="btn primary-btn" type="submit" id="searchImageButton">
             <span class="icon-search"></span></button></a>
          </div>   
@@ -205,6 +205,9 @@ $( document ).ready(function() {
             </tbody>
         </table>
         <div id="page-selection"></div>
+        <span th:if="${searchText!=null && searchText!=''}" >
+            <a class="btn-sm" style="text-decoration: underline; text-underline-offset: 2px;" th:href="@{/staff/images/list}">Clear Search</a>
+         </span>
          <script>
             $(document).on('input', '#searchImageField', function(e){
                 if($("#searchImageField").val().trim()) {
