@@ -944,14 +944,14 @@ $(function(){
         		$("#selectedImage").empty();
         		$('#imageId').prop('selectedIndex',0).trigger( "change" );
         		$('#imageId').prop("disabled",true);
-        		$('#fileUpload').prop("disabled",false);
+        		$('#externalLinkImage').prop("disabled",false);
         	  });
         	$('#chooseFromExisting').click(function() {
-        		$('#fileUpload').val('');
-        		$('#fileUpload').prop("disabled",true);
+        		$('#externalLinkImage').val('');
+        		$('#externalLinkImage').prop("disabled",true);
         		$('#imageId').prop("disabled",false);
         	  });
-        	$("#fileUpload").click(function() {
+        	$("#externalLinkImage").click(function() {
             	$("#selectedImage").empty();
             	$('#imageId').prop('selectedIndex',0).trigger( "change" );
             });
@@ -1490,6 +1490,7 @@ $(function(){
         });
 
         $("#createExternalLinkBtn").click(function(e) {
+        	
             e.preventDefault();
             $("#space").scrollTop(0);
             var payload = {};
@@ -1524,8 +1525,14 @@ $(function(){
             $("#externalLinkX").val(storeX);
             $("#externalLinkY").val(storeY - 25);
 
+            var file = $('#externalLinkImage')[0].files[0];
             var form = $("#createExternalLinkForm");
             var formData = new FormData(form[0]);
+            var chooseFromExisting = true;
+        	if (typeof(file) != "undefined"){
+        		chooseFromExisting = false;
+        		formData.append('file', file);
+        	}
             var externalLinkInfo = createExternalLinkInfo();
 
             $.ajax({
@@ -2242,8 +2249,7 @@ $(function(){
 	                    <div class="col-sm-8">
 	                    	<input type="radio" id="chooseFromLocal" name="uploadRadioBtn" checked />
 	                    		<small>Upload Image: </small>
-	                        <input class="form-control" type="file" name="file" rows="5"
-								cols="500" id="fileUpload" />
+	                        <input type="file" class="form-control-sm" name="externalLinkImage" id="externalLinkImage" style="width: inherit">
 	                        <input type="radio" id="chooseFromExisting" name="uploadRadioBtn" />
 	                        <div>
 								<small>Choose from existing: </small>
