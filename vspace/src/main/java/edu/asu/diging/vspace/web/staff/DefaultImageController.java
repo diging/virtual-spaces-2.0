@@ -26,8 +26,8 @@ import edu.asu.diging.vspace.core.services.IImageService;
 public class DefaultImageController {
 
     public static final String API_DEFAULT_SPACE_IMAGE_PATH = "/api/image/default/link/space/";
-    public static final String API_DEFAULT_MODULEIMAGE_PATH = "/api/image/default/link/module/";
-    public static final String API_DEFAULT_EXTERNALIMAGE_PATH = "/api/image/default/link/external/";
+    public static final String API_DEFAULT_MODULE_IMAGE_PATH = "/api/image/default/link/module/";
+    public static final String API_DEFAULT_EXTERNAL_IMAGE_PATH = "/api/image/default/link/external/";
     public static final String API_DEFAULT_SPACE_IMAGE_STATUS = "/api/exhibition/default/link/image/status/";
 
     @Autowired
@@ -43,41 +43,38 @@ public class DefaultImageController {
         return getResponseWithDefaultHeaders(spaceImage);
     }
 
-    @RequestMapping(value = API_DEFAULT_MODULEIMAGE_PATH, method = RequestMethod.GET)
+    @RequestMapping(value = API_DEFAULT_MODULE_IMAGE_PATH, method = RequestMethod.GET)
     public ResponseEntity<byte[]> getDefaultModuleImage() {
         IExhibition exhibition = exhibitManager.getStartExhibition();
         IVSImage moduleImage = exhibition.getModuleLinkDefaultImage();
         return getResponseWithDefaultHeaders(moduleImage);
     }
 
-    @RequestMapping(value = API_DEFAULT_EXTERNALIMAGE_PATH, method = RequestMethod.GET)
+    @RequestMapping(value = API_DEFAULT_EXTERNAL_IMAGE_PATH, method = RequestMethod.GET)
     public ResponseEntity<byte[]> getDefaultExternalImage() {
         IExhibition exhibition = exhibitManager.getStartExhibition();
         IVSImage externalLinkImage = exhibition.getExternalLinkDefaultImage();
         return getResponseWithDefaultHeaders(externalLinkImage);
     }
 
+    /**
+     * Retrieves the status of default images for exhibition links
+     * @return A JSON response containing flags indicating the availability of default images.
+     */
     @RequestMapping(value = API_DEFAULT_SPACE_IMAGE_STATUS, method = RequestMethod.GET)
     public ResponseEntity<String> getDefaultImageStatus() {
-        IExhibition exhibition = exhibitManager.getStartExhibition();
-        IVSImage defaultSpaceImage = exhibition.getSpaceLinkDefaultImage();
-        IVSImage defaultModuleImage = exhibition.getModuleLinkDefaultImage();
-        IVSImage defaultExternalLinkImage = exhibition.getExternalLinkDefaultImage();
-
-        boolean defaultSpaceImageFlag = defaultSpaceImage != null? true : false;
-        boolean defaultModuleImageFlag = defaultModuleImage != null? true : false;
-        boolean defaultExternalLinkImageFlag = defaultExternalLinkImage != null? true : false;
+        IExhibition exhibition = exhibitManager.getStartExhibition();exhibition.getSpaceLinkDefaultImage();
 
         JsonObject jsonObj = new JsonObject();
-        jsonObj.addProperty("defaultSpaceImageFlag", defaultSpaceImageFlag);
-        jsonObj.addProperty("defaultModuleImageFlag", defaultModuleImageFlag);
-        jsonObj.addProperty("defaultExternalLinkImageFlag", defaultExternalLinkImageFlag);
+        jsonObj.addProperty("defaultSpaceImageFlag", exhibition.getSpaceLinkDefaultImage() != null? true : false);
+        jsonObj.addProperty("defaultModuleImageFlag", exhibition.getModuleLinkDefaultImage() != null? true : false);
+        jsonObj.addProperty("defaultExternalLinkImageFlag", exhibition.getExternalLinkDefaultImage() != null? true : false);
         return new ResponseEntity<>(jsonObj.toString(), HttpStatus.OK);
     }
 
     private ResponseEntity<byte[]> getResponseWithDefaultHeaders(IVSImage image) {
         if(image == null) {
-            return null;
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         byte[] imageContent = imageService.getImageContent(image);
         HttpHeaders headers = new HttpHeaders();

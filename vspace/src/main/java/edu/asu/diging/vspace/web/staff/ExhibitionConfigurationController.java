@@ -58,14 +58,14 @@ public class ExhibitionConfigurationController {
         // for now we assume there is just one exhibition
 
         IExhibition exhibition = exhibitManager.getStartExhibition();
-        if (exhibition == null) {
+        if (exhibition==null) {
             exhibition = (Exhibition) exhibitFactory.createExhibition();
         }
         if (exhibition.getLanguages() != null) {
-            model.addAttribute("savedExhibitionLanguages", exhibition.getLanguages().stream()
-                    .map(language -> language.getLabel()).collect(Collectors.toList()));
-            model.addAttribute("defaultLanguage", exhibition.getLanguages().stream()
-                    .filter(language -> language.isDefault()).findFirst().orElse(null));
+            model.addAttribute("savedExhibitionLanguages", exhibition.getLanguages()
+                    .stream().map(language -> language.getLabel()).collect(Collectors.toList()));
+            model.addAttribute("defaultLanguage", exhibition.getLanguages()
+                    .stream().filter(language -> language.isDefault()).findFirst().orElse(null));
         }
         model.addAttribute("exhibitionModes", Arrays.asList(ExhibitionModes.values()));
         model.addAttribute("spacesList", spaceRepo.findAll());
@@ -90,7 +90,7 @@ public class ExhibitionConfigurationController {
             @RequestParam(value = "customMessage", required = false, defaultValue = "") String customMessage,
 
             @RequestParam("externalLinkImage") MultipartFile externalLinkImage,
-            @RequestParam("spacelinkImage") MultipartFile spacelinkImage,
+            @RequestParam("spaceLinkImage") MultipartFile spaceLinkImage,
             @RequestParam("moduleLinkImage") MultipartFile moduleLinkImage,
             @RequestParam("exhibitLanguage") List<String> languages,
             @RequestParam("defaultExhibitLanguage") String defaultLanguage,
@@ -106,8 +106,8 @@ public class ExhibitionConfigurationController {
             exhibition = (Exhibition) exhibitManager.getExhibitionById(exhibitID);
         }
         
-        IVSImage spaceDefaultImage = spacelinkImage != null ? 
-                imageService.storeImage(spacelinkImage.getBytes(), spacelinkImage.getOriginalFilename()) : null; 
+        IVSImage spaceDefaultImage = spaceLinkImage != null ? 
+                imageService.storeImage(spaceLinkImage.getBytes(), spaceLinkImage.getOriginalFilename()) : null; 
         IVSImage moduleDefaultImage = moduleLinkImage != null ? 
                 imageService.storeImage(moduleLinkImage.getBytes(), moduleLinkImage.getOriginalFilename()) : null; 
         IVSImage externalDefaultImage = externalLinkImage != null ? 
