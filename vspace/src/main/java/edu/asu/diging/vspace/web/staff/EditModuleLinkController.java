@@ -30,23 +30,18 @@ public class EditModuleLinkController extends EditSpaceLinksController {
 
     @RequestMapping(value = "/staff/space/link/module/{id}", method = RequestMethod.POST)
     public ResponseEntity<String> editModuleLink(@PathVariable("id") String id, @RequestParam("x") String x,
-            @RequestParam("y") String y, @RequestParam("rotation") String rotation,
-            @RequestParam("moduleLinkLabel") String title, @RequestParam("linkedModule") String linkedModuleId,
-            @RequestParam("moduleLinkLabel") String moduleLinkLabel,
-            @RequestParam("moduleLinkDesc") String moduleLinkDesc,
-            @RequestParam("moduleLinkIdValueEdit") String moduleLinkIdValueEdit,
-            @RequestParam("moduleLinkImageIdEdit") String moduleLinkImageIdEdit,
-            @RequestParam("moduleLinkDisplayId") String moduleLinkDisplayId, @RequestParam("type") String displayType,
-            @RequestParam("moduleLinkImage") MultipartFile file, @RequestParam(value="imageId", required=false) String imageId) throws NumberFormatException,
-            SpaceDoesNotExistException, LinkDoesNotExistsException, IOException, ImageCouldNotBeStoredException, ImageDoesNotExistException {
+        @RequestParam("y") String y, @RequestParam("rotation") String rotation,
+        @RequestParam("moduleLinkLabel") String title, @RequestParam("linkedModule") String linkedModuleId,
+        @RequestParam("moduleLinkLabel") String moduleLinkLabel,
+        @RequestParam("moduleLinkDesc") String moduleLinkDesc,
+        @RequestParam("moduleLinkIdValueEdit") String moduleLinkIdValueEdit,
+        @RequestParam("moduleLinkDisplayId") String moduleLinkDisplayId, @RequestParam("type") String displayType,
+        @RequestParam("moduleLinkImage") MultipartFile file, @RequestParam(value="imageId", required=false) String imageId) throws NumberFormatException,
+        SpaceDoesNotExistException, LinkDoesNotExistsException, IOException, ImageCouldNotBeStoredException, ImageDoesNotExistException {
 
         ResponseEntity<String> validation = checkIfSpaceExists(spaceManager, id, x, y);
         if (validation != null) {
             return validation;
-        }else if(imageId==null || imageId.equals("")){
-            System.out.println("Diya " + moduleLinkImageIdEdit);
-            String[] token = moduleLinkImageIdEdit.split("/");
-            imageId = token[token.length - 1];
         }
         byte[] linkImage = null;
         String filename = null;
