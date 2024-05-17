@@ -71,6 +71,7 @@ public class ExhibitionConfigurationController {
         model.addAttribute("spacesList", spaceRepo.findAll());
         model.addAttribute("languageList", exhibitionLanguageConfig.getExhibitionLanguageList());
         model.addAttribute("exhibition", exhibition);
+        model.addAttribute("defaultSpaceLinkImage",exhibition.getSpaceLinkDefaultImage());
         return "staff/exhibit/config";
     }
 
@@ -88,10 +89,6 @@ public class ExhibitionConfigurationController {
             @RequestParam("spaceParam") String spaceID, @RequestParam("title") String title,
             @RequestParam("exhibitMode") ExhibitionModes exhibitMode,
             @RequestParam(value = "customMessage", required = false, defaultValue = "") String customMessage,
-
-            @RequestParam("externalLinkImage") MultipartFile externalLinkImage,
-            @RequestParam("spaceLinkImage") MultipartFile spaceLinkImage,
-            @RequestParam("moduleLinkImage") MultipartFile moduleLinkImage,
             @RequestParam("exhibitLanguage") List<String> languages,
             @RequestParam("defaultExhibitLanguage") String defaultLanguage,
 
@@ -105,20 +102,9 @@ public class ExhibitionConfigurationController {
         } else {
             exhibition = (Exhibition) exhibitManager.getExhibitionById(exhibitID);
         }
-        
-        IVSImage spaceDefaultImage = spaceLinkImage != null ? 
-                imageService.storeImage(spaceLinkImage.getBytes(), spaceLinkImage.getOriginalFilename()) : null; 
-        IVSImage moduleDefaultImage = moduleLinkImage != null ? 
-                imageService.storeImage(moduleLinkImage.getBytes(), moduleLinkImage.getOriginalFilename()) : null; 
-        IVSImage externalDefaultImage = externalLinkImage != null ? 
-                imageService.storeImage(externalLinkImage.getBytes(), externalLinkImage.getOriginalFilename()) : null; 
-        
         exhibition.setStartSpace(startSpace);
         exhibition.setTitle(title);
         exhibition.setMode(exhibitMode);
-        exhibition.setSpaceLinkDefaultImage(spaceDefaultImage);
-        exhibition.setModuleLinkDefaultImage(moduleDefaultImage);
-        exhibition.setExternalLinkDefaultImage(externalDefaultImage);
 
         exhibitManager.updateExhibitionLanguages(exhibition, languages, defaultLanguage);
 
@@ -128,6 +114,104 @@ public class ExhibitionConfigurationController {
         }
 
         exhibition = (Exhibition) exhibitManager.storeExhibition(exhibition);
+        attributes.addAttribute("alertType", "success");
+        attributes.addAttribute("message", "Successfully Saved!");
+        attributes.addAttribute("showAlert", "true");
+
+        return new RedirectView(request.getContextPath() + "/staff/exhibit/config");
+    }
+    
+    /**
+     * exhibitionParam is used when default space of existing exhibition is updated.
+     * 
+     * @param exhibitionParam
+     * @param spaceLinkImage
+     * @param attributes
+     * @return
+     */
+    @RequestMapping(value = "/staff/exhibit/config/spaceLinkImage", method = RequestMethod.POST)
+    public RedirectView createOrUpdateSpaceLinkImage(HttpServletRequest request,
+            @RequestParam(required = false, name = "exhibitionParam") String exhibitID,
+            @RequestParam("spaceLinkImage") MultipartFile spaceLinkImage,
+            RedirectAttributes attributes) throws IOException {
+        Exhibition exhibition;
+        if (exhibitID == null || exhibitID.isEmpty()) {
+            exhibition = (Exhibition) exhibitFactory.createExhibition();
+        } else {
+            exhibition = (Exhibition) exhibitManager.getExhibitionById(exhibitID);
+        }
+        
+        IVSImage spaceDefaultImage = spaceLinkImage != null ? 
+                imageService.storeImage(spaceLinkImage.getBytes(), spaceLinkImage.getOriginalFilename()) : null; 
+        
+        exhibition.setSpaceLinkDefaultImage(spaceDefaultImage);
+        exhibition = (Exhibition) exhibitManager.storeExhibition(exhibition);
+        attributes.addAttribute("exhibitId",exhibition.getId());
+        attributes.addAttribute("alertType", "success");
+        attributes.addAttribute("message", "Successfully Saved!");
+        attributes.addAttribute("showAlert", "true");
+
+        return new RedirectView(request.getContextPath() + "/staff/exhibit/config");
+    }
+    
+    /**
+     * exhibitionParam is used when default space of existing exhibition is updated.
+     * 
+     * @param exhibitionParam
+     * @param moduleLinkImage
+     * @param attributes
+     * @return
+     */
+    @RequestMapping(value = "/staff/exhibit/config/moduleLinkImage", method = RequestMethod.POST)
+    public RedirectView createOrUpdateModuleLinkImage(HttpServletRequest request,
+            @RequestParam(required = false, name = "exhibitionParam") String exhibitID,
+            @RequestParam("moduleLinkImage") MultipartFile moduleLinkImage,
+            RedirectAttributes attributes) throws IOException {
+        Exhibition exhibition;
+        if (exhibitID == null || exhibitID.isEmpty()) {
+            exhibition = (Exhibition) exhibitFactory.createExhibition();
+        } else {
+            exhibition = (Exhibition) exhibitManager.getExhibitionById(exhibitID);
+        }
+        
+        IVSImage moduleDefaultImage = moduleLinkImage != null ? 
+                imageService.storeImage(moduleLinkImage.getBytes(), moduleLinkImage.getOriginalFilename()) : null; 
+        
+        exhibition.setSpaceLinkDefaultImage(moduleDefaultImage);
+        exhibition = (Exhibition) exhibitManager.storeExhibition(exhibition);
+        attributes.addAttribute("exhibitId",exhibition.getId());
+        attributes.addAttribute("alertType", "success");
+        attributes.addAttribute("message", "Successfully Saved!");
+        attributes.addAttribute("showAlert", "true");
+
+        return new RedirectView(request.getContextPath() + "/staff/exhibit/config");
+    }
+    
+    /**
+     * exhibitionParam is used when default space of existing exhibition is updated.
+     * 
+     * @param exhibitionParam
+     * @param externalLinkImage
+     * @param attributes
+     * @return
+     */
+    @RequestMapping(value = "/staff/exhibit/config/externalLinkImage", method = RequestMethod.POST)
+    public RedirectView createOrUpdateExternalLinkImage(HttpServletRequest request,
+            @RequestParam(required = false, name = "exhibitionParam") String exhibitID,
+            @RequestParam("externalLinkImage") MultipartFile externalLinkImage,
+            RedirectAttributes attributes) throws IOException {
+        Exhibition exhibition;
+        if (exhibitID == null || exhibitID.isEmpty()) {
+            exhibition = (Exhibition) exhibitFactory.createExhibition();
+        } else {
+            exhibition = (Exhibition) exhibitManager.getExhibitionById(exhibitID);
+        }
+        
+        IVSImage externalLinkDefaultImage = externalLinkImage != null ? 
+                imageService.storeImage(externalLinkImage.getBytes(), externalLinkImage.getOriginalFilename()) : null;         
+        exhibition.setExternalLinkDefaultImage(externalLinkDefaultImage);
+        exhibition = (Exhibition) exhibitManager.storeExhibition(exhibition);
+        attributes.addAttribute("exhibitId",exhibition.getId());
         attributes.addAttribute("alertType", "success");
         attributes.addAttribute("message", "Successfully Saved!");
         attributes.addAttribute("showAlert", "true");
