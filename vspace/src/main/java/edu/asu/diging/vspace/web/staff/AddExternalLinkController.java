@@ -40,7 +40,7 @@ public class AddExternalLinkController {
             @RequestParam("y") String y, @RequestParam("externalLinkLabel") String title,
             @RequestParam("url") String externalLink, @RequestParam("tabOpen") String howToOpen,
             @RequestParam("type") String displayType, @RequestParam(value="externalLinkImage", required=false) MultipartFile file,
-            @RequestParam(value="imageId", required=false) String imageId)
+            @RequestParam(value="externalLink-imageId", required=false) String imageId)
             throws NumberFormatException, SpaceDoesNotExistException, IOException, ImageCouldNotBeStoredException, ImageDoesNotExistException {
 
         ISpace space = spaceManager.getSpace(id);

@@ -38,7 +38,7 @@ public class AddSpaceLinkController {
             @RequestParam("y") String y, @RequestParam("rotation") String rotation,
             @RequestParam("spaceLinkLabel") String title, @RequestParam("linkedSpace") String linkedSpaceId,
             @RequestParam("spaceLinkLabel") String spaceLinkLabel, @RequestParam("spaceLinkDesc") String spaceLinkDesc, @RequestParam("type") String displayType,
-            @RequestParam(value="spaceLinkImage", required=false) MultipartFile file, @RequestParam(value="imageId", required=false) String imageId)
+            @RequestParam(value="spaceLinkImage", required=false) MultipartFile file, @RequestParam(value="space-imageId", required=false) String imageId)
             throws NumberFormatException, SpaceDoesNotExistException, IOException, ImageDoesNotExistException {
 
         ISpace source = spaceManager.getSpace(id);
