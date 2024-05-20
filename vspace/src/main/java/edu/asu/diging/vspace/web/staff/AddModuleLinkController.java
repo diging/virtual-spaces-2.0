@@ -37,9 +37,9 @@ public class AddModuleLinkController {
 		@RequestParam("y") String y, @RequestParam("rotation") String rotation,
 		@RequestParam("moduleLinkLabel") String title, @RequestParam("linkedModule") String linkedModuleId,
 		@RequestParam("moduleLinkLabel") String moduleLinkLabel,
-		@RequestParam("moduleLinkDesc") String moduleLinkDesc, @RequestParam("moduleType") String displayType,
+		@RequestParam(value = "moduleLinkDesc", required = false) String moduleLinkDesc, @RequestParam("moduleType") String displayType,
 		@RequestParam(value = "moduleLinkImage", required = false) MultipartFile file,
-		@RequestParam(value = "imageId", required = false) String imageId)
+		@RequestParam(value = "module-imageId", required = false) String imageId)
 	    throws NumberFormatException, SpaceDoesNotExistException, IOException, ImageCouldNotBeStoredException, ImageDoesNotExistException {
 
         ISpace source = spaceManager.getSpace(id);

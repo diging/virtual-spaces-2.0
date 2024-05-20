@@ -74,41 +74,25 @@ var linkIconReader = new FileReader();
 var linkIcon;
 linkIconReader.onload = function(e) {
     linkIcon = e.target.result;
-    var linkId = $("#spaceLinkIdValueEdit").val();
-    if(linkId!=null && linkId!="") {
-        showSpaceLinkEdit(editSpaceLinkInfo());
-    } else {
-        showSpaceLink(createSpaceLinkInfo());
-    }
+    showSpaceLink(createSpaceLinkInfo());
 }
 
 var moduleLinkIconReader = new FileReader();
 var moduleLinkIcon;
 moduleLinkIconReader.onload = function(e) {
-    moduleLinkIcon = e.target.result;
-    var moduleLinkId = $("#moduleLinkIdValueEdit").val();
-    if(moduleLinkId!=null && moduleLinkId!="") {
-        showModuleLinkEdit(editModuleLinkInfo());
-    } else {
-        showModuleLink(createModuleLinkInfo());
-    }
+	moduleLinkIcon = e.target.result;
+    showModuleLink(createModuleLinkInfo());
 }
 
 var externalLinkIconReader = new FileReader();
 var externalLinkIcon;
 externalLinkIconReader.onload = function(e) {
     externalLinkIcon = e.target.result;
-    var externalLinkId = $("#externalLinkIdValueEdit").val();
-
-    if(externalLinkId!=null && externalLinkId!="") {
-        showExternalLinkEdit(editExternalLinkInfo());
-    } else {
-        showExternalLinks(createExternalLinkInfo());
-    }
+    showExternalLinks(createExternalLinkInfo());
 }
 
 function setLinkPosition(modalLink, link, isSpaceLink, isModal, isExternalLink, posX, posY, posXModal, posYModal, isTextBlock, isModuleLink){
-    modalLink.css('position', 'absolute');
+	modalLink.css('position', 'absolute');
     if(isModal){
         modalLink.css('left',link.positionX + posXModal);
         modalLink.css('top', link.positionY + posYModal);
@@ -123,38 +107,38 @@ function setLinkPosition(modalLink, link, isSpaceLink, isModal, isExternalLink, 
     var positionX = isModal ? posXModal : posX;
     var positionY = isModal ? posYModal : posY;
     if(isSpaceLink && (link.link.targetSpace==null || link.link.targetSpace.spaceStatus=="UNPUBLISHED")){
-    var inactiveLinkId;
-    var inactiveLinkClasses;
-    var inactiveLinkTitle;
-    if(link.link.targetSpace==null) {
-        inactiveLinkId = "deletedSpace-";
-        inactiveLinkClasses = "deletedSpaceClass deletedClass-";   
-        inactiveLinkTitle = "The target space for this link has been deleted. This link won't be shown on the public site."
-    } else {
-        inactiveLinkId = "unpublished-";
-        inactiveLinkClasses = "unpublishedSpaceClass unpublishedClass-";
-        inactiveLinkTitle = "The target space for this link is unpublished. This link won't be shown on the public site."
-    }
-    var inactiveSpaceElement  = $('<span data-link-id="'+inactiveLinkId +link.link.id+'" class="icon-warning secondary '+inactiveLinkClasses+link.link.id+'"></span>')
-    inactiveSpaceElement.css('position', 'absolute');
-    inactiveSpaceElement.css('left', link.positionX + positionX + displaceUnpublishedOnX);
-    inactiveSpaceElement.css('top', link.positionY + positionY - displaceUnpublishedOnY);
-    inactiveSpaceElement.css('transform', 'rotate('+link.rotation+'deg)');
-    inactiveSpaceElement.css('font-size', "24px");
-    inactiveSpaceElement.attr('title', inactiveLinkTitle);
-    if(isModal){
-        $("#space").append(inactiveSpaceElement);
-    } else{
-        $("#main-space").append(inactiveSpaceElement);
-    }
+	var inactiveLinkId;
+	var inactiveLinkClasses;
+	var inactiveLinkTitle;
+	if(link.link.targetSpace==null) {
+	    inactiveLinkId = "deletedSpace-";
+	    inactiveLinkClasses = "deletedSpaceClass deletedClass-";   
+	    inactiveLinkTitle = "The target space for this link has been deleted. This link won't be shown on the public site."
+    	} else {
+	    inactiveLinkId = "unpublished-";
+	    inactiveLinkClasses = "unpublishedSpaceClass unpublishedClass-";
+	    inactiveLinkTitle = "The target space for this link is unpublished. This link won't be shown on the public site."
+    	}
+	var inactiveSpaceElement  = $('<span data-link-id="'+inactiveLinkId +link.link.id+'" class="icon-warning secondary '+inactiveLinkClasses+link.link.id+'"></span>')
+    	inactiveSpaceElement.css('position', 'absolute');
+	inactiveSpaceElement.css('left', link.positionX + positionX + displaceUnpublishedOnX);
+	inactiveSpaceElement.css('top', link.positionY + positionY - displaceUnpublishedOnY);
+	inactiveSpaceElement.css('transform', 'rotate('+link.rotation+'deg)');
+	inactiveSpaceElement.css('font-size', "24px");
+	inactiveSpaceElement.attr('title', inactiveLinkTitle);
+	if(isModal){
+	    $("#space").append(inactiveSpaceElement);
+	} else{
+	    $("#main-space").append(inactiveSpaceElement);
+	}
     }
     if(isModuleLink && link.link.module.moduleStatus!=null && link.link.module.moduleStatus=="UNPUBLISHED"){
-        var unpublishedModuleElement = $('<span data-link-id="unpublished-'+link.link.id+'" class="icon-warning secondary unpublishedSpaceClass unpublishedClass-'+link.link.id+'"></span>')
+    	var unpublishedModuleElement = $('<span data-link-id="unpublished-'+link.link.id+'" class="icon-warning secondary unpublishedSpaceClass unpublishedClass-'+link.link.id+'"></span>')
         unpublishedModuleElement.css('position', 'absolute');
-        unpublishedModuleElement.css('left', link.positionX + positionX + displaceUnpublishedOnX);
-        unpublishedModuleElement.css('top', link.positionY + positionY - displaceUnpublishedOnY);
-        unpublishedModuleElement.css('transform', 'rotate('+link.rotation+'deg)');
-        unpublishedModuleElement.css('font-size', "24px");
+    	unpublishedModuleElement.css('left', link.positionX + positionX + displaceUnpublishedOnX);
+    	unpublishedModuleElement.css('top', link.positionY + positionY - displaceUnpublishedOnY);
+    	unpublishedModuleElement.css('transform', 'rotate('+link.rotation+'deg)');
+    	unpublishedModuleElement.css('font-size', "24px");
         if(isModal){
             $("#space").append(unpublishedModuleElement);
         }else{
@@ -167,11 +151,11 @@ function setLinkPosition(modalLink, link, isSpaceLink, isModal, isExternalLink, 
     }
 }
 function setLabelPosition(link,id, positionX, positionY){
-    $(".label-"+id).css({
-        'left': link.positionX + positionX - displaceLableOnX,
-        'top': link.positionY + positionY + displaceLableOnY,
-        'color': 'red'
-    }); 
+	$(".label-"+id).css({
+	    'left': link.positionX + positionX - displaceLableOnX,
+	    'top': link.positionY + positionY + displaceLableOnY,
+	    'color': 'red'
+	}); 
 }
 
 function generateSpaceLinks(link,spanId,divId,isModal, posX, posY, posXModal, posYModal){
@@ -185,8 +169,7 @@ function generateSpaceLinks(link,spanId,divId,isModal, posX, posY, posXModal, po
             spaceLink = $('<img id="'+spanId+link.link.id+'" class="spaceLink-'+link.link.id+' imageLink" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.targetSpace?.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'" src="'+spaceImageURL+'" />');
         }
         else{
-            var spaceLinkTooltip = link.link.name + (link.link.description!=null && link.link.description!='' ? ' : '+link.link.description : "");
-            spaceLink = $('<span id="'+spanId+link.link.id+'" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.targetSpace?.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'" class="spaceLink-'+link.link.id+' Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-move Icon_awesome_info_staff_c"></span><p class="label-'+link.link.id+'" data-link-id="'+link.link.id+'">'+ (spaceLinkTooltip!=null && spaceLinkTooltip!=''?'<span class="tooltiptext">'+ spaceLinkTooltip +'</span>' : '') +'</p></span>');
+            spaceLink = $('<span id="'+spanId+link.link.id+'" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.targetSpace?.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'" class="spaceLink-'+link.link.id+' Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-move Icon_awesome_info_staff_c"></span><p class="label-'+link.link.id+'" data-link-id="'+link.link.id+'"><span class="tooltiptext">'+link.link.name+'</span></p></span>');
         }
         setLinkPosition(spaceLink,link,true,isModal,false, posX, posY, posXModal, posYModal, false);
         $(divId).append(spaceLink);
@@ -195,7 +178,7 @@ function generateSpaceLinks(link,spanId,divId,isModal, posX, posY, posXModal, po
             $('#'+spanId+link.link.id).css('cursor', 'pointer');
             $('#'+spanId+link.link.id).click(function(e) {
                 var linkData = $('#'+spanId+link.link.id).data();
-                makeSpaceLinksEditable(linkData["linklabel"],link.link.description, link.link.id, linkData["linkrotation"] ,linkData["linktarget"],link.positionX,link.positionY,link.id,linkData["linktype"], $('#'+spanId+link.link.id).attr('src'));
+                makeSpaceLinksEditable(linkData["linklabel"], link.link.id, linkData["linkrotation"] ,linkData["linktarget"],link.positionX,link.positionY,link.id,linkData["linktype"]);
             });
         }
     }
@@ -209,11 +192,10 @@ function generateModuleLinks(link,spanId,divId,isModal, posX, posY, posXModal, p
         }
         else if(link.type=="IMAGE" && link.image != null){
             var moduleImageURL = [[@{/api/image/}]]+link.image.id;
-            moduleLink = $('<img id="'+spanId+link.link.id+'" data-link-id="'+link.link.id+'" class="moduleLink-'+link.link.id+' imageLink" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.module.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'" src="' + moduleImageURL+'" />');
+            moduleLink = $('<img id="'+spanId+link.link.id+'" class="moduleLink-'+link.link.id+' imageLink" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.module.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'" src="' + moduleImageURL+'" />');
         }
         else{
-            var moduleLinkTooltip = link.link.name + (link.link.description!=null && link.link.description!=''? ' : '+link.link.description : "");
-            moduleLink = $('<span id="'+spanId+link.link.id+'" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.module.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'" class="moduleLink-'+link.link.id+' Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_staff_m"></span><p class="label-'+link.link.id+'" data-link-id="'+link.link.id+'">'+ (moduleLinkTooltip!=null && moduleLinkTooltip!='' ? '<span class="tooltiptext">'+moduleLinkTooltip+'</span>' : '') +'</p></span>');
+            moduleLink = $('<span id="'+spanId+link.link.id+'" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.module.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'" class="moduleLink-'+link.link.id+' Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_staff_m"></span><p class="label-'+link.link.id+'" data-link-id="'+link.link.id+'"><span class="tooltiptext">'+link.link.name+'</span></p></span>');
         }
         setLinkPosition(moduleLink,link,false,isModal,false, posX, posY, posXModal, posYModal,true);
         $(divId).append(moduleLink);
@@ -221,31 +203,31 @@ function generateModuleLinks(link,spanId,divId,isModal, posX, posY, posXModal, p
             $('#'+spanId+link.link.id).css('cursor', 'pointer');
             $('#'+spanId+link.link.id).click(function(e) {
                 var linkData = $('#'+spanId+link.link.id).data();
-                makeModuleLinksEditable(linkData["linklabel"], link.link.description, link.link.id,linkData["linkrotation"],linkData["linktarget"],link.positionX,link.positionY,link.id, linkData["linktype"], $('#'+spanId+link.link.id).attr('src'));
+                makeModuleLinksEditable(linkData["linklabel"], link.link.id,linkData["linkrotation"],linkData["linktarget"],link.positionX,link.positionY,link.id, linkData["linktype"]);
             });
         }
     }
 }
 
 function generateExternalLinks(link,spanId,divId,isModal, posX, posY, posXModal, posYModal){
-    if(link != null){
-        var externalLink;
-        if(link.type=="IMAGE" && link.image != null){
-            var imageURL = [[@{/api/image/}]]+link.image.id;
-            externalLink = $('<img id="'+spanId+link.externalLink.id+'" data-linkTarget="'+link.externalLink.externalLink+'" data-linkType="'+link.type+'"  data-howToOpen="'+ link.howToOpen+'" data-linkLabel="'+link.externalLink.name+'" class="externalLink-'+link.externalLink.id+' imageLink" data-link-id="'+link.externalLink.id+'" src="'+imageURL+'" />');
-        }else{
-            externalLink = $('<span id="'+spanId+link.externalLink.id+'" data-link-id="'+link.externalLink.id+'" data-linkTarget="'+link.externalLink.externalLink+'" data-linkType="'+link.type+'"  data-howToOpen="'+ link.howToOpen+'" data-linkLabel="'+link.externalLink.name+'" class="externalLink-'+link.externalLink.id+' Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-ext-link Icon_awesome_info_staff_e"></span><p class="label-'+link.externalLink.id+'" data-link-id="'+link.externalLink.id+'"><span class="tooltiptext">'+link.externalLink.name+'</span></p></span>');
-        }
-        setLinkPosition(externalLink,link,false,isModal,true, posX, posY, posXModal, posYModal);
-        $(divId).append(externalLink);
-        if(spanId === "externallinkId-"){
-            $('#'+spanId+link.externalLink.id).css('cursor', 'pointer');
-            $('#'+spanId+link.externalLink.id).click(function(e) {
-                var linkData = $('#'+spanId+link.externalLink.id).data();
-                makeExternalLinksEditable(linkData["linklabel"],link.externalLink.description,link.externalLink.id,linkData["linktarget"],link.positionX,link.positionY,link.id,linkData["linktype"],linkData["howtoopen"], $('#'+spanId+link.externalLink.id).attr('src'));
-            });
-        }
-    }
+	if(link != null){
+		var externalLink;
+		if(link.type=="IMAGE" && link.image != null){
+			var imageURL = [[@{/api/image/}]]+link.image.id;
+			externalLink = $('<img id="'+spanId+link.externalLink.id+'" data-linkTarget="'+link.externalLink.externalLink+'" data-linkType="'+link.type+'"  data-howToOpen="'+ link.howToOpen+'" data-linkLabel="'+link.externalLink.name+'" class="externalLink-'+link.externalLink.id+' imageLink" data-link-id="'+link.externalLink.id+'" src="'+imageURL+'" />');
+		}else{
+			externalLink = $('<span id="'+spanId+link.externalLink.id+'" data-link-id="'+link.externalLink.id+'" data-linkTarget="'+link.externalLink.externalLink+'" data-linkType="'+link.type+'"  data-howToOpen="'+ link.howToOpen+'" data-linkLabel="'+link.externalLink.name+'" class="externalLink-'+link.externalLink.id+' Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-ext-link Icon_awesome_info_staff_e"></span><p class="label-'+link.externalLink.id+'" data-link-id="'+link.externalLink.id+'"><span class="tooltiptext">'+link.externalLink.name+'</span></p></span>');
+		}
+		setLinkPosition(externalLink,link,false,isModal,true, posX, posY, posXModal, posYModal);
+		$(divId).append(externalLink);
+		if(spanId === "externallinkId-"){
+			$('#'+spanId+link.externalLink.id).css('cursor', 'pointer');
+			$('#'+spanId+link.externalLink.id).click(function(e) {
+				var linkData = $('#'+spanId+link.externalLink.id).data();
+				makeExternalLinksEditable(linkData["linklabel"],link.externalLink.id,linkData["linktarget"],link.positionX,link.positionY,link.id,linkData["linktype"],linkData["howtoopen"]);
+			});
+		}
+	}
 }
 
 function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, posYModal, imageHeight, imageWidth){
@@ -264,24 +246,24 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
         }
         
         if(block.spaceTextBlock.id === selectedTextBlockId) {
-            var textModalBlock = $("#textModalBlockId-"+selectedTextBlockId).find("textarea")[0];
-            
-            tHeight = textModalBlock.clientHeight;
-            tWidth = textModalBlock.clientWidth;
+        	var textModalBlock = $("#textModalBlockId-"+selectedTextBlockId).find("textarea")[0];
+        	
+        	tHeight = textModalBlock.clientHeight;
+        	tWidth = textModalBlock.clientWidth;
             
             var height = modalBgImageHeight;
             var width = modalBgImageWidth;
             textModalBlock.style["resize"] = "both";
             textModalBlock.onmouseup = function (e) {
-                if (tHeight !== textModalBlock.clientHeight || tWidth !== textModalBlock.clientWidth ) {
-                    tHeight = textModalBlock.clientHeight;
-                    tWidth = textModalBlock.clientWidth;
-                    let percentileHeight = (tHeight*100)/height;
-                    let percentileWidth = (tWidth*100)/width;
-                    $("#textBoxWidthIDEdit").val(percentileWidth);
-                    $("#textBoxHeightIDEdit").val(percentileHeight);
-                    $("#textContentIDForEdit").val(textModalBlock.value);
-                }
+	            if (tHeight !== textModalBlock.clientHeight || tWidth !== textModalBlock.clientWidth ) {
+	                tHeight = textModalBlock.clientHeight;
+	                tWidth = textModalBlock.clientWidth;
+	                let percentileHeight = (tHeight*100)/height;
+	                let percentileWidth = (tWidth*100)/width;
+	                $("#textBoxWidthIDEdit").val(percentileWidth);
+	                $("#textBoxHeightIDEdit").val(percentileHeight);
+	                $("#textContentIDForEdit").val(textModalBlock.value);
+	            }
             };
         }
     }
@@ -309,7 +291,7 @@ function drawLinks(){
         beforeSend: function () {
             $("#loader").show();
             },
-        complete: function () {
+       	complete: function () {
             $("#loader").hide();
             },
         success: function(data) {
@@ -426,25 +408,21 @@ function showTextBlockEdit(textBlock){
 }
 
 function showSpaceLink(spaceLink, show, x, y) {
-    $("#space_label_desc").remove();
+    $("#space_label").remove();
     $("#link").remove();
     $("#undefined").remove();
     var posX = $("#bgImage").position().left;
     var posY = $("#bgImage").position().top;
-    var space_label_desc = $("<p id='space_label' class='tooltiptext'></p>");
-    var linkTooltip = spaceLink["spaceLinkLabel"] + (spaceLink["spaceLinkDesc"]!=null && spaceLink["spaceLinkDesc"]!='' ? ' : ' + spaceLink["spaceLinkDesc"] : "");
-    space_label_desc.text();
+    var space_label = $("<p id='space_label' class='tooltiptext'></p>");
+    space_label.text(spaceLink["spaceLinkLabel"]);
 
     var link;
     if (spaceLink["type"] == "ALERT") {
         link = $('<div id="link" class="alert alert-primary alertLink spaceLink-"' + spaceLink["id"] + '" role="alert" data-link-id="' + spaceLink["id"] + '"><p>'+spaceLink["spaceLinkLabel"]+'</p></div>');
     } else if(spaceLink["type"] == "IMAGE" && linkIcon) {
-        if(selectedSpaceLinkId!=null) {
-            $('#spacelinkModalId-'+selectedSpaceLinkId).css('visbility', 'hidden');
-        }
         link = $('<div id="link" class="spaceLink-' + spaceLink["id"] + '" data-link-id="' + spaceLink["id"] + '"><img src="' + linkIcon + '"></div>');
     } else {
-        $(space_label_desc).css({
+        $(space_label).css({
             'font-size': "12px",
             'transform': 'rotate(0deg)',
             'color': 'grey'
@@ -465,7 +443,7 @@ function showSpaceLink(spaceLink, show, x, y) {
         } 
         link.css('top', spaceLink["y"] + posY);
     } else {
-        link.css('top', spaceLink["y"]);
+    	link.css('top', spaceLink["y"]);
     }
 
     link.css('position', 'absolute');
@@ -481,17 +459,17 @@ function showSpaceLink(spaceLink, show, x, y) {
             makeSpaceLinksEditable(spaceLink["spaceLinkLabel"], spaceLink["id"], spaceLink["rotation"], spaceLink["linkedSpace"], spaceLink["x"], spaceLink["y"], spaceLink["displayId"], spaceLink["type"]);
         });
 
-        space_label_desc.attr("data-link-id", spaceLink["id"]);
-        space_label_desc.attr("class", "tooltiptext label-"+spaceLink["id"]);
-        space_label_desc.css('cursor', 'pointer');
-        space_label_desc.click(function(e) {
+        space_label.attr("data-link-id", spaceLink["id"]);
+        space_label.attr("class", "tooltiptext label-"+spaceLink["id"]);
+        space_label.css('cursor', 'pointer');
+        space_label.click(function(e) {
             makeSpaceLinksEditable(spaceLink["spaceLinkLabel"], spaceLink["id"], spaceLink["rotation"], spaceLink["linkedSpace"], spaceLink["x"], spaceLink["y"], spaceLink["displayId"], spaceLink["type"]);
         });
     }
 
     $("#space").append(link);
     $("#space").append(unpublishedSpaceElement);
-    $("#link").append(space_label_desc);
+    $("#link").append(space_label);
 }
 
 function showModuleLink(moduleLink, show, x, y) {
@@ -500,20 +478,16 @@ function showModuleLink(moduleLink, show, x, y) {
     $("#undefined").remove();
     var posX = $("#bgImage").position().left;
     var posY = $("#bgImage").position().top;
-    var module_label_desc = $("<p id='module_label_desc' class='tooltiptext'></p>");
-    var linkTootip = moduleLink["moduleLinkLabel"] + (moduleLink["moduleLinkDesc"]!=null && moduleLink["moduleLinkDesc"]!='' ? ' : ' + moduleLink["moduleLinkDesc"] : "");
-    module_label_desc.text(linkTootip);
+    var module_label = $("<p id='module_label' class='tooltiptext'></p>");
+    module_label.text(moduleLink["moduleLinkLabel"]);
 
     var link;
     if (moduleLink["type"] == "ALERT") {
         link = $('<div id="link" class="alert alert-primary alertLink moduleLink-"' + moduleLink["id"] + '" role="alert" data-link-id="' + moduleLink["id"] + '"><p>'+moduleLink["moduleLinkLabel"]+'</p></div>');
     } else if(moduleLink["type"] == "IMAGE" && moduleLinkIcon) {
-        if(selectedModuleLinkId!=null) {
-            $('#moduleModallinkId-'+selectedModuleLinkId).css('visbility', 'hidden');
-        }
         link = $('<div id="link" class="spaceLink-' + moduleLink["id"] + '" data-link-id="' + moduleLink["id"] + '"><img src="' + moduleLinkIcon + '"></div>');
     } else{ 
-        $(module_label_desc).css({
+        $(module_label).css({
             'position': 'absolute',
             'font-size': "10px",
             'transform': 'rotate(0deg)',
@@ -525,7 +499,7 @@ function showModuleLink(moduleLink, show, x, y) {
         link.find("div").css('fill', 'red');
         link.css('top', moduleLink["y"] + posY);
     } else {
-        link.css('top', moduleLink["y"]);
+    	link.css('top', moduleLink["y"]);
     }
     link.css('position', 'absolute');
     link.css('left', moduleLink["x"] + posX);
@@ -534,22 +508,21 @@ function showModuleLink(moduleLink, show, x, y) {
     link.css('font-size', "12px");
 
     if (moduleLink["id"]) {
-        link.attr("class", moduleLink["id"]);
         link.attr("data-link-id", moduleLink["id"]);
         link.css('cursor', 'pointer');
         link.click(function(e) {
             makeModuleLinksEditable(moduleLink["moduleLinkLabel"], moduleLink["id"], moduleLink["rotation"], moduleLink["linkedModule"], moduleLink["x"], moduleLink["y"], moduleLink["displayId"], moduleLink["type"]);
         });
-        module_label_desc.attr("data-link-id", moduleLink["id"]);
-        module_label_desc.css('cursor', 'pointer');
-        module_label_desc.attr("class", "tooltiptext label-"+moduleLink["id"]);
-        module_label_desc.click(function(e) {
+        module_label.attr("data-link-id", moduleLink["id"]);
+        module_label.css('cursor', 'pointer');
+        module_label.attr("class", "tooltiptext label-"+moduleLink["id"]);
+        module_label.click(function(e) {
             makeModuleLinksEditable(moduleLink["moduleLinkLabel"], moduleLink["id"], moduleLink["rotation"], moduleLink["linkedModule"], moduleLink["x"], moduleLink["y"], moduleLink["displayId"], moduleLink["type"]);
         });
     }
 
     $("#space").append(link);
-    $("#link").append(module_label_desc);
+    $("#link").append(module_label);
 }
 
 function showModuleLinkEdit(moduleLink, show, posX, posY) {
@@ -557,7 +530,7 @@ function showModuleLinkEdit(moduleLink, show, posX, posY) {
     moduleLink["y"]=storeY;
     var selectedLinkClass = '#moduleModallinkId-'+selectedModuleLinkId;
     var selectedLabelClass = '.label-'+selectedModuleLinkId;
-    updateLinkProperties(selectedLinkClass,selectedLabelClass,moduleLink["rotation"],posX,posY,moduleLink["moduleLinkLabel"],moduleLink["moduleLinkDesc"]);
+    updateLinkProperties(selectedLinkClass,selectedLabelClass,moduleLink["rotation"],posX,posY,moduleLink["moduleLinkLabel"]);
 }
 
 
@@ -585,7 +558,7 @@ function showSpaceLinkEdit(spaceLink, show, posX, posY) {
     $(selectedUnpublishedIconClass).css({ 'position': 'absolute'});
     $(selectedUnpublishedIconClass).css({ 'left': posX + displaceUnpublishedOnXModal});
     $(selectedUnpublishedIconClass).css({ 'top': posY - displaceUnpublishedOnYModal});
-    updateLinkProperties(selectedLinkClass,selectedLabelClass,spaceLink["rotation"],posX,posY,spaceLink["spaceLinkLabel"],spaceLink["spaceLinkDesc"]);
+    updateLinkProperties(selectedLinkClass,selectedLabelClass,spaceLink["rotation"],posX,posY,spaceLink["spaceLinkLabel"]);
 }
 
 function showExternalLinkEdit(externalLink, show, posX, posY) {
@@ -593,10 +566,10 @@ function showExternalLinkEdit(externalLink, show, posX, posY) {
     externalLink["y"]=storeY;
     var selectedLinkClass = '#externalModallinkId-'+selectedExternalLinkId;
     var selectedLabelClass = '.label-'+selectedExternalLinkId;
-    updateLinkProperties(selectedLinkClass,selectedLabelClass,externalLink["rotation"],posX,posY,externalLink["externalLinkLabel"],externalLink["externalLinkDesc"]);
+    updateLinkProperties(selectedLinkClass,selectedLabelClass,externalLink["rotation"],posX,posY,externalLink["externalLinkLabel"]);
 }
 
-function updateLinkProperties(selectedLinkClass,selectedLabelClass,rotation,x,y,linkLabel, linkDesc, show){
+function updateLinkProperties(selectedLinkClass,selectedLabelClass,rotation,x,y,linkLabel, show){
     var posX, posY;
     if(show) {
         posX = $("#main-bgImage").position().left;
@@ -611,21 +584,8 @@ function updateLinkProperties(selectedLinkClass,selectedLabelClass,rotation,x,y,
     $(selectedLinkClass).css({ 'left': x + posX});
     $(selectedLinkClass).css({ 'top': y + posY});
     $(selectedLabelClass+' span').remove();
-    linkTooltip = linkLabel+ (linkDesc!=null && linkDesc!="" ? " : " + linkDesc : "");
-    $(selectedLabelClass).append('<span class = "tooltiptext" style="fill: grey;">' + linkTooltip + '</span>');
-    if(linkIcon!=null && linkIcon!="") {
-        $(selectedLinkClass).attr('src', linkIcon);
-    }
-
-    if(moduleLinkIcon!=null && moduleLinkIcon!="") {
-        $(selectedLinkClass).attr('src', moduleLinkIcon);
-    }
-
-    if(externalLinkIcon!=null && externalLinkIcon!="") {
-        $(selectedLinkClass).attr('src', externalLinkIcon);
-    }
-
-    feather.replace();
+    $(selectedLabelClass).append('<span class = "tooltiptext" style="fill: grey;">' + linkLabel + '</span>');
+    feather.replace();    
 }
 
 function hideLinkInfoTabs(){
@@ -641,23 +601,19 @@ function hideLinkInfoTabs(){
 }
 
 function showExternalLinks(externalLink, show, x, y) {
-    $("#ext_label_desc").remove();
+    $("#ext_label").remove();
     $("#link").remove();
     $("#undefined").remove();
     var posX = $("#bgImage").position().left;
     var posY = $("#bgImage").position().top;
-    var ext_label_desc = $("<p id='ext_label_desc' class='tooltiptext'></p>");
-    var linkTooltip = externalLink["externalLinkLabel"] + (externalLink["externalLinkDesc"]!=null && externalLink["externalLinkDesc"]!='' ? " : " + externalLink["externalLinkDesc"] : "");
-    ext_label_desc.text(linkTooltip);
+    var ext_label = $("<p id='ext_label' class='tooltiptext'></p>");
+    ext_label.text(externalLink["externalLinkLabel"]);
 
     var link;
     if(externalLink["type"] == "IMAGE" && externalLinkIcon) {
-        if(selectedExternalLinkId!=null) {
-            $('#externalModallinkId-'+selectedExternalLinkId).css('visbility', 'hidden');
-        }
         link = $('<div id="link" data-link-id="' + externalLink["id"] + '"><img src="' + externalLinkIcon + '"></div>');
     } else {
-        $(ext_label_desc).css({
+        $(ext_label).css({
             'position': 'absolute',
             'font-size': "12px",
             'transform': 'rotate(0deg)',
@@ -669,7 +625,7 @@ function showExternalLinks(externalLink, show, x, y) {
     if(show) {
         link.css('top', externalLink["y"] + posY);
     } else {
-        link.css('top', externalLink["y"]);
+    	link.css('top', externalLink["y"]);
     }
 
     link.css('position', 'absolute');
@@ -678,24 +634,23 @@ function showExternalLinks(externalLink, show, x, y) {
     link.css('font-size', "12px");
 
     if (externalLink["id"]) {
-        link.attr("data-link-id", externalLink["id"]);
-        link.attr("class", externalLink["id"]);
-        link.css('cursor', 'pointer');
-        link.attr('href', externalLink["url"]);
-        link.click(function(e) {
-            makeExternalLinksEditable(externalLink["externalLinkLabel"],externalLink["externalLinkDesc"], externalLink["id"], externalLink["externalLinkURL"], externalLink["x"], externalLink["y"], externalLink["displayId"], externalLink["type"],externalLink["howToOpen"],externalLink["tabOpen"]);
-        });
-        
-        ext_label_desc.attr("data-link-id", externalLink["id"]);
-        ext_label_desc.css('cursor', 'pointer');
-        ext_label_desc.attr("class", "label-"+externalLink["id"]);
-        ext_label_desc.click(function(e) {
-            makeExternalLinksEditable(externalLink["externalLinkLabel"], externalLink["externalLinkDesc"], externalLink["id"], externalLink["externalLinkURL"], externalLink["x"], externalLink["y"], externalLink["displayId"], externalLink["type"],externalLink["howToOpen"],externalLink["tabOpen"]);
-        });
+		link.attr("data-link-id", externalLink["id"]);
+		link.css('cursor', 'pointer');
+		link.attr('href', externalLink["url"]);
+		link.click(function(e) {
+			makeExternalLinksEditable(externalLink["externalLinkLabel"], externalLink["id"], externalLink["externalLinkURL"], externalLink["x"], externalLink["y"], externalLink["displayId"], externalLink["type"],externalLink["howToOpen"],externalLink["tabOpen"]);
+		});
+		
+		ext_label.attr("data-link-id", externalLink["id"]);
+		ext_label.css('cursor', 'pointer');
+		ext_label.attr("class", "label-"+externalLink["id"]);
+		ext_label.click(function(e) {
+			makeExternalLinksEditable(externalLink["externalLinkLabel"], externalLink["id"], externalLink["externalLinkURL"], externalLink["x"], externalLink["y"], externalLink["displayId"], externalLink["type"],externalLink["howToOpen"],externalLink["tabOpen"]);
+		});
     }
 
     $("#space").append(link);
-    $("#link").append(ext_label_desc);
+    $("#link").append(ext_label);
     $("#external-link").remove();
 
 }
@@ -707,22 +662,20 @@ function createSpaceLinkInfo() {
     info["y"] = storeY;
     info["rotation"] = $("#spaceLinkRotation").val();
     info["linkedSpace"] = $("#linkedSpace").val();
-    info["spaceLinkDesc"] = $("#spaceLinkDesc").val();
     info["spaceLinkLabel"] = $("#spaceLinkLabel").val();
     info["type"] = $("#type").val();
     return info;
 }
 
 function createExternalLinkInfo() {
-    var info = {};
-    info["x"] = storeX;
-    info["y"] = storeY;
-    info["tabOpen"] = $("#extTabOpen").val();
-    info["type"] = $("#extType").val();
-    info["externalLinkDesc"] = $("#externalLinkDesc").val();
-    info["externalLinkLabel"] = $("#externalLinkLabel").val();
-    info["externalLinkURL"] = $("#externalLink").val();
-    return info;
+	var info = {};
+	info["x"] = storeX;
+	info["y"] = storeY;
+	info["tabOpen"] = $("#extTabOpen").val();
+	info["type"] = $("#extType").val();
+	info["externalLinkLabel"] = $("#externalLinkLabel").val();
+	info["externalLinkURL"] = $("#externalLink").val();
+	return info;
 }
 
 function createModuleLinkInfo() {
@@ -732,7 +685,6 @@ function createModuleLinkInfo() {
     info["rotation"] = $("#moduleLinkRotation").val();
     info["linkedModule"] = $("#linkedModule").val();
     info["moduleLinkLabel"] = $("#moduleLinkLabel").val();
-    info["moduleLinkDesc"] = $("#moduleLinkDesc").val();
     info["type"] = $("#moduleType").val();
     return info;
 }
@@ -767,7 +719,6 @@ function editModuleLinkInfo() {
     info["y"] = storeY;
     info["rotation"] = $("#moduleLinkRotationEdit").val();
     info["linkedModule"] = $("#moduleLinkIdEdit").val();
-    info["moduleLinkDesc"] = $("#moduleLinkDescEdit").val();
     info["moduleLinkLabel"] = $("#moduleLinkLabelEdit").val();
     info["type"] = $("#moduleTypeEdit").val();
     return info;
@@ -785,18 +736,17 @@ function editSpaceLinkInfo() {
 }
 
 function editExternalLinkInfo() {
-    var info = {};
-    info["x"] = storeX;
-    info["y"] = storeY;
-    info["tabOpen"] = $("#extTabOpenEdit").val();
-    info["type"] = $("#extTypeEdit").val();
-    info["externalLinkLabel"] = $("#externalLinkLabelEdit").val();
-    info["externalLinkDesc"] = $("#externalLinkDescEdit").val();
-    info["externalLinkURL"] = $("#externalLinkURLEdit").val();
-    return info;
+	var info = {};
+	info["x"] = storeX;
+	info["y"] = storeY;
+	info["tabOpen"] = $("#extTabOpenEdit").val();
+	info["type"] = $("#extTypeEdit").val();
+	info["externalLinkLabel"] = $("#externalLinkLabelEdit").val();
+	info["externalLinkURL"] = $("#externalLinkURLEdit").val();
+	return info;
 }
 
-function makeSpaceLinksEditable(spaceLinkName, spaceLinkDesc, spaceLinkId, rotation, selectedSpaceId, posXEdit, posYEdit, displayLinkId, linkType, spaceLinkImageId) {
+function makeSpaceLinksEditable(spaceLinkName, spaceLinkId, rotation, selectedSpaceId, posXEdit, posYEdit, displayLinkId, linkType) {
     $("#spaceLinkInfoLabel").text(spaceLinkName);
     $("#spaceLinkId").val(spaceLinkId);
     selectedSpaceLinkId=spaceLinkId;
@@ -805,20 +755,16 @@ function makeSpaceLinksEditable(spaceLinkName, spaceLinkDesc, spaceLinkId, rotat
     $("#spaceLinkInfoLabel").text(spaceLinkName);
     $("#spaceLinkDisplayId").val(displayLinkId);
     $("#spaceLinkInfoLabelEdit").text(spaceLinkName);
-    $("#spaceLinkDescEdit").val(spaceLinkDesc);
     $("#spaceLinkLabelEdit").val(spaceLinkName);
-    $("#spaceLinkImageIdEdit").val(spaceLinkImageId);
     $("#spaceLinkId").val(spaceLinkId);
     $("#spaceLinkIdValueEdit").val(spaceLinkId);
     $("#spaceLinkRotationEdit").val(rotation);
     $("#typeSpaceEdit option:selected").prop('selected', false);
     $('#typeSpaceEdit option[value="'+linkType+'"]').prop("selected", true);
-    $('#imageOptionsSpaceEdit *').prop('disabled', false);
     $("#spaceLinkIdEdit option:selected").prop('selected', false);
     $('#spaceLinkIdEdit option[value="'+selectedSpaceId+'"]').prop("selected", true);
     if(linkType != "IMAGE"){
-        resetHighlighting(); 
-        $('#imageOptionsSpaceEdit *').prop('disabled', true);
+    	resetHighlighting(); 
     }
     $('[data-link-id="' + spaceLinkId + '"]').css("color", "var(--secondary)");
     $('img[data-link-id="' + spaceLinkId + '"]').css("border", "solid 1px #c1bb88");
@@ -843,7 +789,7 @@ function displayForms(formToShow){
     modalBgImageWidth = parseInt($("#bgImage").css("width"));
 }
 
-function makeModuleLinksEditable(moduleLinkName, moduleLinkDesc, moduleLinkId, rotation, selectedModuleId, posXEdit, posYEdit, displayLinkId, linkType, moduleLinkImageId) {
+function makeModuleLinksEditable(moduleLinkName, moduleLinkId, rotation, selectedModuleId, posXEdit, posYEdit, displayLinkId, linkType) {
     selectedModuleLinkId=moduleLinkId;
     storeX=posXEdit;
     storeY=posYEdit;
@@ -851,19 +797,14 @@ function makeModuleLinksEditable(moduleLinkName, moduleLinkDesc, moduleLinkId, r
     $("#moduleLinkDisplayId").val(displayLinkId);
     $("#moduleLinkInfoLabelEdit").text(moduleLinkName);
     $("#moduleLinkLabelEdit").val(moduleLinkName);
-    $("#moduleLinkDesc").val(moduleLinkDesc);
     $("#moduleLinkId").val(moduleLinkId);
     $("#moduleLinkIdValueEdit").val(moduleLinkId);
     $("#moduleLinkRotationEdit").val(rotation);
     $("#moduleTypeEdit option:selected").prop('selected', false);
     $('#moduleTypeEdit option[value="'+linkType+'"]').prop("selected", true);
-    $('#imageOptionsModuleEdit *').prop('disabled', false);
     $("#moduleLinkIdEdit option:selected").prop('selected', false);
     $('#moduleLinkIdEdit option[value="'+selectedModuleId+'"]').prop("selected", true);
-    resetHighlighting();
-    if(linkType!='IMAGE') {
-        $('#imageOptionsModuleEdit *').prop('disabled', true);
-    }
+    resetHighlighting();     
     $('[data-link-id="' + moduleLinkId + '"]').css("color", "#c1bb88");
     $('div[data-link-id="' + moduleLinkId + '"]').removeClass("alert-primary");
     $('div[data-link-id="' + moduleLinkId + '"]').addClass("alert-warning");
@@ -881,7 +822,7 @@ function makeModuleLinksEditable(moduleLinkName, moduleLinkDesc, moduleLinkId, r
     displayForms("#editModuleLinkInfo");
 }
 
-function makeExternalLinksEditable(linkName, linkDesc, linkId, externalLinkURL, posXEdit, posYEdit, displayLinkId, linkType,tabOpenType, externalLinkImageId) {
+function makeExternalLinksEditable(linkName, linkId, externalLinkURL, posXEdit, posYEdit, displayLinkId, linkType,tabOpenType) {
     selectedExternalLinkId=linkId;
     storeX=posXEdit;
     storeY=posYEdit;
@@ -893,13 +834,9 @@ function makeExternalLinksEditable(linkName, linkDesc, linkId, externalLinkURL, 
     $("#externalLinkIdValueEdit").val(linkId);
     $("#externalLinkURLEdit").val(externalLinkURL);
     $('#extTypeEdit option[value="'+linkType+'"]').prop("selected", true);
-    $('#imageOptionsExternalEdit *').prop('disabled', false);
+    $('#extTabOpenEdit option[value="'+tabOpenType+'"]').prop("selected",true);
     
     resetHighlighting();
-    
-    if(linkType!='IMAGE') {
-        $('#imageOptionsExternalEdit *').prop('disabled', true);
-    }
 
     $('[data-link-id="' + linkId + '"]').css("color", "#c1bb88");
     $('div[data-link-id="' + linkId + '"]').removeClass("alert-primary");
@@ -1006,323 +943,141 @@ $(function(){
             if ($("div#incomingLinks a").length < 2) {
                 $("#noLinksToSpace").show()
             }
-        });
-        
-        $("#selectedImage-spcLink").empty();
-        $('#imageId-spcLink').prop("disabled",true);
-        $('#chooseFromLocal-spcLink').click(function() {
-            $("#selectedImage-spcLink").empty();
-            $('#imageId-spcLink').prop('selectedIndex',0).trigger( "change" );
-            $('#imageId-spcLink').prop("disabled",true);
-            $('#spaceLinkImage').prop("disabled",false);
-            linkIcon = null;
-            showSpaceLink(createSpaceLinkInfo());
-          });
-
-        $('#chooseFromExisting-spcLink').click(function() {
-            $('#spaceLinkImage').val('');
-            $('#spaceLinkImage').prop("disabled",true);
-            $('#imageId-spcLink').prop("disabled",false);
-            linkIcon = null;
-            showSpaceLink(createSpaceLinkInfo());
-          });
-
-        $("#imageId-spcLink").select2({
-            ajax: {
-                url: function (params) {
-                    var imageURL = [[@{|/staff/images/search|}]];
-                    return imageURL ;
-                },
-                dataType: 'json',
-                processResults: function (data) {
-                    return {
-                      results: data,
-                    };
-                  },
-            },
-            templateResult: formatImage,
-            templateSelection: formatSelection
-        });
-
-        $('#imageId-spcLinkEdit').prop("disabled",true);
-        $('#chooseFromLocal-spcLinkEdit').click(function() {
-            $("#selectedImage-spcLinkEdit").empty();
-            $('#imageId-spcLinkEdit').prop('selectedIndex',0).trigger( "change" );
-            $('#imageId-spcLinkEdit').prop("disabled",true);
-            $('#spaceLinkImageEdit').prop("disabled",false);
-            linkIcon = $('#spaceLinkImageIdEdit').val();
-            showSpaceLinkEdit(editSpaceLinkInfo());
-          });
-
-        $('#chooseFromExisting-spcLinkEdit').click(function() {
-            $('#spaceLinkImageEdit').val('');
-            $('#spaceLinkImageEdit').prop("disabled",true);
-            $('#imageId-spcLinkEdit').prop("disabled",false);
-            linkIcon = $('#spaceLinkImageIdEdit').val();
-            showSpaceLinkEdit(editSpaceLinkInfo());
-          });
-
-        $("#imageId-spcLinkEdit").select2({
-            ajax: {
-                url: function (params) {
-                    var imageURL = [[@{|/staff/images/search|}]];
-                    return imageURL;
-                },
-                dataType: 'json',
-                processResults: function (data) {
-                    return {
-                      results: data,
-                    };
-                  },
-            },
-            templateResult: formatImage,
-            templateSelection: formatSelectionEdit
-        });
-        
-        function formatImage (image) {
-            if (!image.id) {
-                return image.text;
+            $('#externalLink-imageId').prop("disabled",true);
+            $('#module-imageId').prop("disabled",true);
+            $('#space-imageId').prop("disabled",true);
+            
+        	$('#externalLink-chooseFromLocal').click(function() {
+        		$("#selectedImage").empty();
+        		$('#externalLink-imageId').prop('selectedIndex',0).trigger( "change" );
+        		$('#externalLink-imageId').prop("disabled",true);
+        		$('#externalLinkImage').prop("disabled",false);
+        		
+        	  });
+        	
+        	$('#module-chooseFromLocal').click(function() {
+        		$("#selectedImage").empty();
+        		$('#module-imageId').prop('selectedIndex',0).trigger( "change" );
+        		$('#module-imageId').prop("disabled",true);
+        		$('#moduleLinkImage').prop("disabled",false);
+        	});
+    		
+        	$('#space-chooseFromLocal').click(function() {
+        		$("#selectedImage").empty();
+        		$('#space-imageId').prop('selectedIndex',0).trigger( "change" );
+        		$('#space-imageId').prop("disabled",true);
+        		$('#spaceLinkImage').prop("disabled",false);
+        	});
+    		
+        	$('#externalLink-chooseFromExisting').click(function() {
+        		$('#externalLinkImage').val('');
+        		$('#externalLinkImage').prop("disabled",true);
+        		$('#externalLink-imageId').prop("disabled",false);
+        	});
+        	
+        	$('#module-chooseFromExisting').click(function() {
+        		$('#moduleLinkImage').val('');
+        		$('#moduleLinkImage').prop("disabled",true);
+        		$('#module-imageId').prop("disabled",false);
+        	});
+        	
+        	$('#space-chooseFromExisting').click(function() {
+        		$('#spaceLinkImage').val('');
+        		$('#spaceLinkImage').prop("disabled",true);
+        		$('#space-imageId').prop("disabled",false);
+        	  });
+        	
+        	$("#spaceLinkImage").click(function() {
+            	$("#selectedImage").empty();
+            	$('#space-imageId').prop('selectedIndex',0).trigger( "change" );
+            });
+        	
+        	$("#moduleLinkImage").click(function() {
+            	$("#selectedImage").empty();
+            	$('#module-imageId').prop('selectedIndex',0).trigger( "change" );
+            });
+        	
+        	$("#externalLinkImage").click(function() {
+            	$("#selectedImage").empty();
+            	$('#externalLink-imageId').prop('selectedIndex',0).trigger( "change" );
+            });
+        	
+        	
+            $("#externalLink-imageId").select2({
+        		ajax: {
+        		    url: function (params) {
+        		  		var imageURL = [[@{|/staff/images/search|}]];
+        		  		return imageURL;
+        		    },
+        		    dataType: 'json',
+        		    processResults: function (data) {
+        		        return {
+        		          results: data,
+        		        };
+        		      },
+        		},
+        		templateResult: formatImage,
+        		templateSelection: formatSelection
+            });
+            
+            $("#module-imageId").select2({
+        		ajax: {
+        		    url: function (params) {
+        		  		var imageURL = [[@{|/staff/images/search|}]];
+        		  		return imageURL;
+        		    },
+        		    dataType: 'json',
+        		    processResults: function (data) {
+        		        return {
+        		          results: data,
+        		        };
+        		      },
+        		},
+        		templateResult: formatImage,
+        		templateSelection: formatSelection
+            });
+            
+            $("#space-imageId").select2({
+        		ajax: {
+        		    url: function (params) {
+        		  		var imageURL = [[@{|/staff/images/search|}]];
+        		  		return imageURL;
+        		    },
+        		    dataType: 'json',
+        		    processResults: function (data) {
+        		        return {
+        		          results: data,
+        		        };
+        		      },
+        		},
+        		templateResult: formatImage,
+        		templateSelection: formatSelection
+            });
+            
+            function formatImage (image) {
+            	if (!image.id) {
+            		return image.text;
+            	}
+            	var tbaseUrl = [[@{|/api/image/|}]];
+            	var $image = $(
+            			'<span><img src="' + tbaseUrl + image.id + '" class="img-thumbnail" /> ' + image.text + '</span>'
+            	);
+            	return $image;
+            };
+            
+            function formatSelection(image) {
+            	if (!image.id) {
+                    return image.text;
+                }
+            	var tbaseUrl = [[@{|/api/image/|}]];
+                var $image = $(
+                        '<span>' + image.text + '</span>'
+                );
+                $("#selectedImage").empty();
+                $("#selectedImage").append('<img width="200px" src="' + tbaseUrl + image.id + '" class="img-thumbnail" />');
+                return $image;
             }
-            var tbaseUrl = [[@{|/api/image/|}]];
-            var $image = $(
-                '<span><img src="' + tbaseUrl + image.id + '" class="img-thumbnail" /> ' + image.text + '</span>'
-            );
-            return $image;
-        };
-        
-        function formatSelection(image) {
-            if (!image.id) {
-                return image.text;
-            }
-            var tbaseUrl = [[@{|/api/image/|}]];
-            var $image = $(
-                '<span>' + image.text + '</span>'
-            );
-            $("#selectedImage-spcLink").empty();
-            $("#selectedImage-spcLink").append('<img width="200px" src="' + tbaseUrl + image.id + '" class="img-thumbnail" />');
-            linkIcon = tbaseUrl + image.id;
-            showSpaceLink(createSpaceLinkInfo());
-            return $image;
-        }
-
-        function formatSelectionEdit(image) {
-            if (!image.id) {
-                return image.text;
-            }
-            var tbaseUrl = [[@{|/api/image/|}]];
-            var $image = $(
-                '<span>' + image.text + '</span>'
-            );
-            $("#selectedImage-spcLinkEdit").empty();
-            $("#selectedImage-spcLinkEdit").append('<img width="200px" src="' + tbaseUrl + image.id + '" class="img-thumbnail" />');
-            linkIcon = tbaseUrl + image.id;
-            showSpaceLinkEdit(editSpaceLinkInfo());
-            return $image;
-        }
-
-      //Module link selection of existing images
-        $('#imageId-modLink').prop("disabled",true);
-        $('#chooseFromLocal-modLink').click(function() {
-            $("#selectedImage-modLink").empty();
-            $('#imageId-modLink').prop('selectedIndex',0).trigger( "change" );
-            $('#imageId-modLink').prop("disabled",true);
-            $('#moduleLinkImage').prop("disabled",false);
-            moduleLinkIcon = null;
-            showModuleLink(createModuleLinkInfo());
-          });
-
-        $('#chooseFromExisting-modLink').click(function() {
-            $('#moduleLinkImage').val('');
-            $('#moduleLinkImage').prop("disabled",true);
-            $('#imageId-modLink').prop("disabled",false);
-            moduleLinkIcon = null;
-            showModuleLink(createModuleLinkInfo());
-          });
-
-        $("#imageId-modLink").select2({
-            ajax: {
-                url: function (params) {
-                    var imageURL = [[@{|/staff/images/search|}]];
-                    return imageURL;
-                },
-                dataType: 'json',
-                processResults: function (data) {
-                    return {
-                      results: data,
-                    };
-                  },
-            },
-            templateResult: formatImage,
-            templateSelection: formatSelectionModule
         });
-
-        $('#imageId-modLinkEdit').prop("disabled",true);
-        $('#chooseFromLocal-modLinkEdit').click(function() {
-            $("#selectedImage-modLinkEdit").empty();
-            $('#imageId-modLinkEdit').prop('selectedIndex',0).trigger( "change" );
-            $('#imageId-modLinkEdit').prop("disabled",true);
-            $('#moduleLinkImageEdit').prop("disabled",false);
-            moduleLinkIcon = $('#moduleLinkImageIdEdit').val();
-            showModuleLinkEdit(editModuleLinkInfo());
-          });
-
-        $('#chooseFromExisting-modLinkEdit').click(function() {
-            $('#moduleLinkImageEdit').val('');
-            $('#moduleLinkImageEdit').prop("disabled",true);
-            $('#imageId-modLinkEdit').prop("disabled",false);
-            moduleLinkIcon = $('#moduleLinkImageIdEdit').val();
-            showModuleLinkEdit(editModuleLinkInfo());
-          });
-
-        $("#imageId-modLinkEdit").select2({
-            ajax: {
-                url: function (params) {
-                    var imageURL = [[@{|/staff/images/search|}]];
-                    return imageURL;
-                },
-                dataType: 'json',
-                processResults: function (data) {
-                    return {
-                      results: data,
-                    };
-                  },
-            },
-            templateResult: formatImage,
-            templateSelection: formatSelectionEditModule
-        });
-
-        function formatSelectionModule(image) {
-            if (!image.id) {
-                return image.text;
-            }
-            var tbaseUrl = [[@{|/api/image/|}]];
-            var $image = $(
-                '<span>' + image.text + '</span>'
-            );
-            $("#selectedImage-modLink").empty();
-            $("#selectedImage-modLink").append('<img width="200px" src="' + tbaseUrl + image.id + '" class="img-thumbnail" />');
-            moduleLinkIcon = tbaseUrl + image.id;
-            showModuleLink(createModuleLinkInfo());
-            return $image;
-        }
-
-        function formatSelectionEditModule(image) {
-            if (!image.id) {
-                return image.text;
-            }
-            var tbaseUrl = [[@{|/api/image/|}]];
-            var $image = $(
-                '<span>' + image.text + '</span>'
-            );
-            $("#selectedImage-modLinkEdit").empty();
-            $("#selectedImage-modLinkEdit").append('<img width="200px" src="' + tbaseUrl + image.id + '" class="img-thumbnail" />');
-            moduleLinkIcon = tbaseUrl + image.id;
-            showModuleLinkEdit(editModuleLinkInfo());
-            return $image;
-        }
-
-      //External link selection of existing images
-        $('#imageId-extLink').prop("disabled",true);
-        $('#chooseFromLocal-extLink').click(function() {
-            $("#selectedImage-extLink").empty();
-            $('#imageId-extLink').prop('selectedIndex',0).trigger( "change" );
-            $('#imageId-extLink').prop("disabled",true);
-            $('#externalLinkImage').prop("disabled",false);
-            externalLinkIcon = null;
-            showExternalLinks(createExternalLinkInfo());
-          });
-
-        $('#chooseFromExisting-extLink').click(function() {
-            $('#externalLinkImage').val('');
-            $('#externalLinkImage').prop("disabled",true);
-            $('#imageId-extLink').prop("disabled",false);
-            externalLinkIcon = null;
-            showExternalLinks(createExternalLinkInfo());
-          });
-
-        $("#imageId-extLink").select2({
-            ajax: {
-                url: function (params) {
-                    var imageURL = [[@{|/staff/images/search|}]];
-                    return imageURL;
-                },
-                dataType: 'json',
-                processResults: function (data) {
-                    return {
-                      results: data,
-                    };
-                  },
-            },
-            templateResult: formatImage,
-            templateSelection: formatSelectionExternal
-        });
-
-        $('#imageId-extLinkEdit').prop("disabled",true);
-        $('#chooseFromLocal-extLinkEdit').click(function() {
-            $("#selectedImage-extLinkEdit").empty();
-            $('#imageId-extLinkEdit').prop('selectedIndex',0).trigger( "change" );
-            $('#imageId-extLinkEdit').prop("disabled",true);
-            $('#externalLinkImageEdit').prop("disabled",false);
-            externalLinkIcon = $('#externalLinkImageIdEdit').val();
-            showExternalLinkEdit(editExternalLinkInfo());
-          });
-
-        $('#chooseFromExisting-extLinkEdit').click(function() {
-            $('#externalLinkImageEdit').val('');
-            $('#externalLinkImageEdit').prop("disabled",true);
-            $('#imageId-extLinkEdit').prop("disabled",false);
-            externalLinkIcon = $('#externalLinkImageIdEdit').val();
-            showExternalLinkEdit(editExternalLinkInfo());
-          });
-
-        $("#imageId-extLinkEdit").select2({
-            ajax: {
-                url: function (params) {
-                    var imageURL = [[@{|/staff/images/search|}]];
-                    return imageURL;
-                },
-                dataType: 'json',
-                processResults: function (data) {
-                    return {
-                      results: data,
-                    };
-                  },
-            },
-            templateResult: formatImage,
-            templateSelection: formatSelectionEditExternal
-        });
-
-        function formatSelectionExternal(image) {
-            if (!image.id) {
-                return image.text;
-            }
-            var tbaseUrl = [[@{|/api/image/|}]];
-            var $image = $(
-                '<span>' + image.text + '</span>'
-            );
-            $("#selectedImage-extLink").empty();
-            $("#selectedImage-extLink").append('<img width="200px" src="' + tbaseUrl + image.id + '" class="img-thumbnail" />');
-            externalLinkIcon = tbaseUrl + image.id;
-            showExternalLinks(createExternalLinkInfo());
-            return $image;
-        }
-
-        function formatSelectionEditExternal(image) {
-            if (!image.id) {
-                return image.text;
-            }
-            var tbaseUrl = [[@{|/api/image/|}]];
-            var $image = $(
-                '<span>' + image.text + '</span>'
-            );
-            $("#selectedImage-extLinkEdit").empty();
-            $("#selectedImage-extLinkEdit").append('<img width="200px" src="' + tbaseUrl + image.id + '" class="img-thumbnail" />');
-            externalLinkIcon = tbaseUrl + image.id;
-            showExternalLinkEdit(editExternalLinkInfo());
-            return $image;
-        }
-
-
 
         // -------- buttons that open modals (e.g. to create space links) ------
 
@@ -1354,7 +1109,6 @@ $(function(){
                 e.preventDefault();
                 $("#external-arrow").remove();
                 $("#space_label").remove();
-                $("#space_label_desc").remove();
                 $("#link").remove();
                 var icon;
                 var posX = $(this).position().left;
@@ -1365,12 +1119,6 @@ $(function(){
             });
             hideLinkInfoTabs();
             displayForms("#createSpaceLinkAlert");
-            var spaceLinkType = $("#type").val();
-            if (spaceLinkType=='IMAGE') {
-                $('#imageOptionsSpace *').prop('disabled', false);
-            } else {
-                $('#imageOptionsSpace *').prop('disabled', true);
-            }
         });
 
         $("#addModuleLinkButton").click(function(e) {
@@ -1380,7 +1128,6 @@ $(function(){
                 e.preventDefault();
                 $("#external-arrow").remove();
                 $("#module_label").remove();
-                $("#module_label_desc").remove();
                 $("#link").remove();
                 var icon;
                 var posX = $(this).position().left;
@@ -1391,12 +1138,6 @@ $(function(){
             });
             hideLinkInfoTabs();
             displayForms("#createModuleLinkAlert");
-            var moduleLinkType = $("#moduleType").val();
-            if (moduleLinkType=='IMAGE') {
-                $('#imageOptionsModule *').prop('disabled', false);
-            } else {
-                $('#imageOptionsModule *').prop('disabled', true);
-            }
         }); 
 
         $("#addExternalLinkButton").click(function(e) {
@@ -1408,7 +1149,6 @@ $(function(){
                 $("#link").remove();
                 $("#external-arrow").remove();
                 $("#ext_label").remove();
-                $("#ext_label_desc").remove();
                 var icon;
                 var posX = $(this).position().left
                 var posY = $(this).position().top;
@@ -1418,12 +1158,6 @@ $(function(){
             });
             hideLinkInfoTabs();
             displayForms("#createExternalLinkAlert");
-            var extLinkType = $("#extType").val();
-            if (extLinkType=='IMAGE') {
-                $('#imageOptionsExternal *').prop('disabled', false);
-            } else {
-                $('#imageOptionsExternal *').prop('disabled', true);
-            }
         });
 
         $('#changeBgImgButton').click(function(file) {
@@ -1464,7 +1198,7 @@ $(function(){
                 beforeSend: function () {
                     $(".saveLoader").show();
                     },
-                complete: function () {
+               	complete: function () {
                     $(".saveLoader").hide();
                     },
                 success: function(data) {
@@ -1533,7 +1267,6 @@ $(function(){
             $("#space").scrollTop(0);
             var label = $("#spaceLinkLabel").val();
             var spaceName = $("#linkedSpace option:selected").text();
-            var desc = $("#spaceLinkDesc").val();
             var type = $("#type option:selected").text();
 
             if (label == undefined || label == "") {
@@ -1561,20 +1294,13 @@ $(function(){
 
             $("#spaceLinkX").val(storeX);
             $("#spaceLinkY").val(storeY - 25);
-            
+			
             var form = $("#createSpaceLinkForm");
             var label = $("#spaceLinkLabel").val();
             var spaceName = $("#linkedSpace option:selected").text();
             var spaceId = $("#linkedSpace option:selected").val(); 
             var formData = new FormData(form[0]);
             var spaceLinkInfo = createSpaceLinkInfo();
-            var imageSource = $('#selectedImage-spcLink').find('img').attr('src');
-            var imageId = "";
-            if(typeof(imageSource) != "undefined"){
-                imageId = imageSource.split("/").pop().split(".")[0];
-            }
-            formData.set('imageId',imageId);
-            formData.delete('uploadRadioBtn')
             $.ajax({
                 type: "POST",
                 url: "[(@{'/staff/space/'+${space?.id}+'/spacelink?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
@@ -1586,7 +1312,7 @@ $(function(){
                 beforeSend: function () {
                     $(".saveLoader").show();
                     },
-                complete: function () {
+               	complete: function () {
                     $(".saveLoader").hide();
                     },
                 success: function(data) {
@@ -1599,7 +1325,6 @@ $(function(){
                     spaceLinkInfo["linkedSpaceStatus"]=linkData["linkedSpaceStatus"];
                     showSpaceLink(spaceLinkInfo, true);
                     $("#space_label").attr("id","");
-                    $("#space_label_desc").attr("id","");
                     $("#link").attr("id","");
                     $("#createSpaceLinkAlert").hide();  
                     $("#errorMsg").text("");
@@ -1607,7 +1332,6 @@ $(function(){
                     $("#noLinksOnSpace").hide();
                     $("."+linkData["id"]).remove();
                     form[0].reset();
-                    $('#spaceLinkImage').val('');
                     var newSpaceLinkURL = [[@{|/staff/space/|}]]+spaceId;
                     $("#outgoingLinks").append("<a href="+newSpaceLinkURL+" style='padding: .25rem .25rem;' class='list-group-item' id="+linkData["id"]+">"+label+"  &nbsp;-> &nbsp;"+spaceName+"</a>");
                     if (spaceName == "${space?.name}") {
@@ -1635,7 +1359,7 @@ $(function(){
             var linkedModules = $("#linkedModule").val();
             var moduleLabel = $("#moduleLinkLabel").val();
             var type = $("#moduleType option:selected").text();
-            var moduleDesc = $("#moduleLinkDesc").val();
+            
             if (moduleLabel == undefined || moduleLabel == "") {
                 $("#errorMsg").text("Please enter the label for module.")
                 $('#errorAlert').show();
@@ -1661,13 +1385,6 @@ $(function(){
             var formData = new FormData(form[0]);
 
             var moduleLinkInfo = createModuleLinkInfo();
-            var imageSource = $('#selectedImage-modLink').find('img').attr('src');
-            var imageId = "";
-            if(typeof(imageSource) != "undefined"){
-                imageId = imageSource.split("/").pop().split(".")[0];
-            }
-            formData.set('imageId',imageId);
-            formData.delete('uploadRadioBtn');
 
             $.ajax({
                 type: "POST",
@@ -1681,7 +1398,7 @@ $(function(){
                 beforeSend: function () {
                     $(".saveLoader").show();
                     },
-                complete: function () {
+               	complete: function () {
                     $(".saveLoader").hide();
                     },
                 success: function(data) {
@@ -1693,30 +1410,22 @@ $(function(){
                     moduleLinkInfo["y"]=linkData["y"];
                     showModuleLink(moduleLinkInfo, true);
                     $("#module_label").attr("id","");
-                    $("#module_label_desc").attr("id","");
                     $("#link").attr("id","");
                     $("#createModuleLinkAlert").hide();
                     $("#errorMsg").text("");
+                    $("#selectedImage").empty();
+                    $("#module-imageId").value("");
                     $('#errorAlert').hide();
                     $("."+linkData["id"]).remove();
                     form[0].reset();
-                    $('#moduleLinkImage').val('');
                     $("#space").css("display", "none");
                     moduleLinkIcon=null;
-                    $('#chooseFromLocal-modLink').click();
                     drawLinks();
                 }
             });
         });
         $("#editModuleLinkBtn").click(function(e) {
             e.preventDefault();
-            var moduleLabel = $("#moduleLinkLabelEdit").val();
-
-            if (moduleLabel == undefined || moduleLabel == "") {
-                $("#errorMsg").text("Please enter the label for module.")
-                $('#errorAlert').show();
-                return;
-            }
             var linkId = $("#moduleLinkIdEdit").val();
             if(storeX == undefined || storeY == undefined){
                 $("#errorMsg").text("Please click on the image to specify where the new link should be located.");
@@ -1741,7 +1450,7 @@ $(function(){
                 beforeSend: function () {
                     $(".saveLoader").show();
                     },
-                complete: function () {
+               	complete: function () {
                     $(".saveLoader").hide();
                     },
                 success: function(data){
@@ -1781,7 +1490,6 @@ $(function(){
             var form = $("#editSpaceLinkForm");
             var formData = new FormData(form[0]);
             var spaceLinkInfo = editSpaceLinkInfo();
-            formData.delete('uploadRadioBtn');
             $.ajax({
                 type: "POST",
                 url: "[(@{'/staff/space/link/space/'+${space?.id}+'?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
@@ -1793,7 +1501,7 @@ $(function(){
                 beforeSend: function () {
                     $(".saveLoader").show();
                     },
-                complete: function () {
+               	complete: function () {
                     $(".saveLoader").hide();
                     },
                 success: function(data) {
@@ -1812,8 +1520,6 @@ $(function(){
                     hideLinkInfoTabs();
                     $("#space").css("display", "none");
                     selectedSpaceLinkId=undefined;
-                    $('#chooseFromLocal-modLinkEdit').click();
-                    moduleLinkIcon=null;
                     drawLinks();
                 }
             });
@@ -1822,19 +1528,7 @@ $(function(){
         $("#editExternalLinkBtn").click(function(e) {
             e.preventDefault();
             $("#space").scrollTop(0);
-            var externalLinkLabel = $("#externalLinkLabelEdit").val();
-            if (externalLinkLabel == undefined || externalLinkLabel == "") {
-                $("#errorMsg").text("Please enter a label for this external link.");
-                $('#errorAlert').show();
-                return;
-            }
             var linkId = $("#externalLinkIdEdit").val();
-            var label = $("#spaceLinkLabelEdit").val();
-            if (label == undefined || label == "") {
-                $("#errorMsg").text("Please fill the Label field before submitting.")
-                $('#errorAlert').show();
-                return;
-            }
             if (storeX == undefined || storeY == undefined) {
                 $("#errorMsg").text("Please click on the image to specify where the new link should be located.")
                 $('#errorAlert').show();
@@ -1845,7 +1539,6 @@ $(function(){
             $("#externalLinkYEdit").val(storeY - 25);
             var form = $("#editExternalLinkForm");
             var formData = new FormData(form[0]);
-            formData.delete('uploadRadioBtn');
             var externalLinkInfo = editExternalLinkInfo();
             $.ajax({
                 type: "POST",
@@ -1858,7 +1551,7 @@ $(function(){
                 beforeSend: function () {
                     $(".saveLoader").show();
                     },
-                complete: function () {
+               	complete: function () {
                     $(".saveLoader").hide();
                     },
                 success: function(data) {
@@ -1874,16 +1567,14 @@ $(function(){
                     showExternalLinkEdit(editExternalLinkInfo, true);
                     hideLinkInfoTabs();
                     $("#space").css("display", "none");
-                    $('#externalLinkImageEdit').val('');
                     selectedExternalLinkId=undefined;
-                    $('#chooseFromLocal-extLinkEdit').click();
-                    externalLinkIcon=null;
                     drawLinks();
                 }
             });
         });
 
         $("#createExternalLinkBtn").click(function(e) {
+        	
             e.preventDefault();
             $("#space").scrollTop(0);
             var payload = {};
@@ -1896,7 +1587,6 @@ $(function(){
 
             var externalLink = $("#externalLink").val();
             var externalLinkLabel = $("#externalLinkLabel").val();
-            var externalLinkDesc = $("#externalLinkDesc").val();
             var type = $("#extType option:selected").text();
 
             if (externalLink == undefined || externalLink == "") {
@@ -1919,16 +1609,15 @@ $(function(){
             $("#externalLinkX").val(storeX);
             $("#externalLinkY").val(storeY - 25);
 
+            var file = $('#externalLinkImage')[0].files[0];
             var form = $("#createExternalLinkForm");
             var formData = new FormData(form[0]);
+/*             var chooseFromExisting = true;
+        	if (typeof(file) != "undefined"){
+        		chooseFromExisting = false;
+        		formData.append('file', file);
+        	} */
             var externalLinkInfo = createExternalLinkInfo();
-            var imageSource = $('#selectedImage-extLink').find('img').attr('src');
-            var imageId = "";
-            if(typeof(imageSource) != "undefined"){
-                imageId = imageSource.split("/").pop().split(".")[0];
-            }
-            formData.set('imageId',imageId);
-            formData.delete('uploadRadioBtn');
 
             $.ajax({
                 type: "POST",
@@ -1941,10 +1630,11 @@ $(function(){
                 beforeSend: function () {
                     $(".saveLoader").show();
                     },
-                complete: function () {
+               	complete: function () {
                     $(".saveLoader").hide();
                     },
                 success: function(data) {
+                	console.log("Success");
                     var linkData = JSON.parse(data);
                     $("#bgImage").off("click");
                     externalLinkInfo["id"] = linkData["id"];
@@ -1953,18 +1643,17 @@ $(function(){
                     externalLinkInfo["y"]=linkData["y"];
                     showExternalLinks(externalLinkInfo, true);
                     $("#ext_label").attr("id","");
-                    $("#ext_label_desc").attr("id","");
                     $("#link").attr("id","");
                     $("#createExternalLinkAlert").hide();
                     $("#errorMsg").text("");
+                    $("externalLink-imageId").value = "";
+                    $("#selectedImage").empty();
                     $('#errorAlert').hide();
                     $("."+linkData["id"]).remove();
                     form[0].reset();
                     $("#external-arrow").attr("id","");
                     $("#space").css("display", "none");
-                    $('#externalLinkImage').val('');
                     externalLinkIcon=null;
-                    $('#chooseFromLocal-extLink').click();
                     drawLinks();
                 }
             });
@@ -1979,13 +1668,12 @@ $(function(){
                 beforeSend: function () {
                     $(".saveLoader").show();
                     },
-                complete: function () {
+               	complete: function () {
                     $(".saveLoader").hide();
                     },
                 success:function(data) {
                     $('[data-link-id="' + linkId + '"]').remove();
                     $('[data-link-id="unpublished-' + linkId + '"]').remove();
-                    $('#spaceLinkIdValueEdit').val("");
                     hideLinkInfoTabs();
                     $('a#'+linkId).remove();
                     if ($("div#outgoingLinks a").length < 2) {
@@ -1996,10 +1684,6 @@ $(function(){
                     }
                     $("#spaceLinkInfo").hide();
                     $("#space").css("display", "none");
-                    $('#chooseFromLocal-spcLinkEdit').click();
-                    linkIcon=null;
-                    storeX = null;
-                    storeY = null;
                     drawLinks();
                 }
             });
@@ -2014,17 +1698,13 @@ $(function(){
                 beforeSend: function () {
                     $(".saveLoader").show();
                     },
-                complete: function () {
+               	complete: function () {
                     $(".saveLoader").hide();
                     },
                 success:function(data) {
                     $('[data-link-id="' + linkId + '"]').remove();
                     hideLinkInfoTabs();
                     $("#space").css("display", "none");
-                    $('#chooseFromLocal-extLinkEdit').click();
-                    externalLinkIcon=null;
-                    storeX = null;
-                    storeY = null;
                     drawLinks();
                 }
             });
@@ -2038,7 +1718,7 @@ $(function(){
                 beforeSend: function () {
                     $(".saveLoader").show();
                     },
-                complete: function () {
+               	complete: function () {
                     $(".saveLoader").hide();
                     },
                 success:function(data) {
@@ -2058,7 +1738,7 @@ $(function(){
                 beforeSend: function () {
                     $(".saveLoader").show();
                     },
-                complete: function () {
+               	complete: function () {
                     $(".saveLoader").hide();
                     },
                 success:function(data) {
@@ -2203,7 +1883,7 @@ $(function(){
         });
 
         $("#cancelBgImgBtn").click(function() {
-            $("#space").scrollTop(0);
+        	$("#space").scrollTop(0);
             drawLinks();
             $("#file").val('');
             $("#changeBgImgAlert").hide();
@@ -2282,50 +1962,50 @@ $(function(){
 
 <body>
     <div layout:fragment="content" class="main-content">
-        <div class="flex-spacing">
-            <div>
-                <h2>
-                    <span style="color: var(--dark-grey)">Space:</span> [[${space?.name}]]
-                    <i class="fa fa-info-circle black" data-toggle="tooltip" data-html="true" data-placement="top" 
-                        th:title="|Created on <span class='date'>${space.creationDate}</span> by ${space.createdBy}|"></i>
-                    <a th:href="@{'/staff/space/'+${space?.id}+'/edit'}"><span class="icon-edit"></span></a>
-                    <a th:href="@{'/exhibit/space/'+${space?.id}}" data-toggle="tooltip" title="Link to the public space"><span class="icon-link"></span></a>
-                    </h2>
-                <p>[[${space.description}]]</p>
-                <div class="inline-spacing">
-                    <div class="dropdown">
-                      <button class="btn form-control btn-sm dropdown-toggle" type="button" id="incominglinks" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Incoming space links
-                      </button>
-                      <div class="dropdown-menu" aria-labelledby="incominglinks">
-                        <span th:if="${#lists.isEmpty(linksToThisSpace)}"><small>There are no links to this space.</small></span>
-                        <div th:each="spaceLinks : ${linksToThisSpace}">            
-                            <a th:href="@{'/staff/space/'+${spaceLinks.sourceSpace?.id}}" style="padding: .25rem; color: var(--secondary);"
-                                th:id="${spaceLinks?.id}"><small>[[${spaceLinks.sourceSpace?.name}]]</small> <span class="icon-warning secondary unpublishedSpaceClass"
+ 		<div class="flex-spacing">
+ 			<div>
+	    		<h2>
+		            <span style="color: var(--dark-grey)">Space:</span> [[${space?.name}]]
+		            <i class="fa fa-info-circle black" data-toggle="tooltip" data-html="true" data-placement="top" 
+						th:title="|Created on <span class='date'>${space.creationDate}</span> by ${space.createdBy}|"></i>
+		            <a th:href="@{'/staff/space/'+${space?.id}+'/edit'}"><span class="icon-edit"></span></a>
+		            <a th:href="@{'/exhibit/space/'+${space?.id}}" data-toggle="tooltip" title="Link to the public space"><span class="icon-link"></span></a>
+		            </h2>
+		        <p>[[${space.description}]]</p>
+		        <div class="inline-spacing">
+		        	<div class="dropdown">
+					  <button class="btn form-control btn-sm dropdown-toggle" type="button" id="incominglinks" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					    Incoming space links
+					  </button>
+					  <div class="dropdown-menu" aria-labelledby="incominglinks">
+					    <span th:if="${#lists.isEmpty(linksToThisSpace)}"><small>There are no links to this space.</small></span>
+			            <div th:each="spaceLinks : ${linksToThisSpace}">          	
+			                <a th:href="@{'/staff/space/'+${spaceLinks.sourceSpace?.id}}" style="padding: .25rem; color: var(--secondary);"
+			                    th:id="${spaceLinks?.id}"><small>[[${spaceLinks.sourceSpace?.name}]]</small> <span class="icon-warning secondary unpublishedSpaceClass"
                             th:if="${#strings.equals(spaceLinks.sourceSpace?.spaceStatus,'UNPUBLISHED')}" style="font-size: 100%; font-weight: 400;"></span></a>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div class="dropdown right-aligned">
-                      <button class="btn form-control btn-sm dropdown-toggle" type="button" id="outgoinglinks" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Outgoing space links
-                      </button>
-                      <div class="dropdown-menu" aria-labelledby="outgoinglinks">
-                        <span th:if="${#lists.isEmpty(linksOnThisSpace)}"><small>There are no links from this space.</small></span>
-                        <div th:each="spaceLinks : ${linksOnThisSpace}">                
-                            <a th:href="@{'/staff/space/'+${spaceLinks.targetSpace?.id}}" style="padding: .25rem; color: var(--secondary);"
-                                th:if="${spaceLinks.targetSpace != null}"
-                                th:id="${spaceLinks?.id}"><small>[[${spaceLinks.targetSpace?.name}]]</small> <span class="icon-warning secondary unpublishedSpaceClass"
+			            </div>
+					  </div>
+					</div>
+					
+					<div class="dropdown right-aligned">
+					  <button class="btn form-control btn-sm dropdown-toggle" type="button" id="outgoinglinks" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					    Outgoing space links
+					  </button>
+					  <div class="dropdown-menu" aria-labelledby="outgoinglinks">
+					    <span th:if="${#lists.isEmpty(linksOnThisSpace)}"><small>There are no links from this space.</small></span>
+			            <div th:each="spaceLinks : ${linksOnThisSpace}">              	
+		                    <a th:href="@{'/staff/space/'+${spaceLinks.targetSpace?.id}}" style="padding: .25rem; color: var(--secondary);"
+		                        th:if="${spaceLinks.targetSpace != null}"
+		                        th:id="${spaceLinks?.id}"><small>[[${spaceLinks.targetSpace?.name}]]</small> <span class="icon-warning secondary unpublishedSpaceClass"
                             th:if="${#strings.equals(spaceLinks.targetSpace?.spaceStatus,'UNPUBLISHED')}" style="font-size: 100%; font-weight: 400;"></span></a>
-                        </div>
-                      </div>
-                    </div>
-                </div>
-                
-                
-            </div>
-            <div>
+						</div>
+					  </div>
+					</div>
+		        </div>
+		        
+		        
+	    	</div>
+	    	<div>
                 <label style="margin-right: 10px;">Space Status</label> 
                 <form method="POST" th:action="@{'/staff/space/'+${space?.id}+'/status'}">
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" /> 
@@ -2339,7 +2019,7 @@ $(function(){
                 </form>
                 <label style="margin-right: 10px;">Hide all space links to this space</label>
                 <form method="POST" th:action="@{'/staff/space/links/edit/'+${space.id}+'/incoming'}">
-                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+           		    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                     <select class="form-control" name="hideSpaceLinksParam" style="width: 200px; display: inline;">
                       <option th:id="No" th:value=false th:selected="${!space.hideIncomingLinks}">No</option>
                       <option th:id="Yes" th:value=true th:selected="${space.hideIncomingLinks}">Yes</option>
@@ -2360,24 +2040,24 @@ $(function(){
                     </p>
                 </form>
             </div>
-             
-        </div>
-        
-         <div style="margin: 20px 0">
+ 			 
+ 		</div>
+		
+		 <div style="margin: 20px 0">
             <button type="button" id="addSpaceLinkButton"class="btn primary-btn" data-toggle="tooltip" title="Add Link to Space" data-placement="top">
-                <i class="fa fa-plus"></i>&emsp;<i class="fa fa-layer-group"></i></button>
+            	<i class="fa fa-plus"></i>&emsp;<i class="fa fa-layer-group"></i></button>
             &nbsp;
             <button type="button" id="addModuleLinkButton" class="btn primary-btn" data-toggle="tooltip" title="Add Link to Module" data-placement="top">
-                <i class="fa fa-plus"></i>&emsp;<i class="fa fa-th-large"></i></button>
+            	<i class="fa fa-plus"></i>&emsp;<i class="fa fa-th-large"></i></button>
             &nbsp;
             <button type="button" id="addExternalLinkButton" class="btn primary-btn"  data-toggle="tooltip" title="Add Link to External" data-placement="top">
-                <i class="fa fa-plus"></i>&emsp;<i class="fa fa-external-link-alt"></i></button>
+            	<i class="fa fa-plus"></i>&emsp;<i class="fa fa-external-link-alt"></i></button>
             &nbsp;
             <button type="button" id="addTextBlock" class="btn primary-btn" data-toggle="tooltip" title="Add Text Block" data-placement="top">
             <i class="fa fa-plus"></i>&emsp;<i class="fas fa-file-alt"></i></button>
             &nbsp;
             <button type="button" id="changeBgImgButton"  class="btn primary-btn" data-toggle="tooltip" title="Change Background Image" data-placement="top">
-                <i class="fas fa-pen"></i>&emsp;<i class="fas fa-image"></i></button>
+            	<i class="fas fa-pen"></i>&emsp;<i class="fas fa-image"></i></button>
             &nbsp;
         </div>
         <div id="space" th:style="|max-width: ${display.width+400}px;|" th:if="${space.image != null}" class="link-modal flex-spacing">
@@ -2392,198 +2072,82 @@ $(function(){
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-        <div id="createSpaceLinkAlert" class="custom_form_style" style="z-index: 1;">
+		<div id="createSpaceLinkAlert" class="custom_form_style" style="z-index: 1;">
             <div class="divider"></div>
-            <form id="createSpaceLinkForm" style="z-index: 1;">
-                <div role="alert" style="margin-top: 30px;">
+			<form id="createSpaceLinkForm" style="z-index: 1;">
+	            <div role="alert" style="margin-top: 30px;">
                     <div class = "saveLoader" style="font-size: 30px; display: none; text-align: center;">
                         <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
                     </div>
-                    <div class="row">
-                        <div class="col">
-                            <h5 class="alert-heading">Create new Space Link</h5>
-                            <p>Please click on the image where
-                                you want to place the new space link. Then
-                                click "Create Space Link".</p>
-                        </div>
-                    </div>
-    
-                    <input type="hidden" name="x" id="spaceLinkX" />
-                    <input type="hidden" name="y" id="spaceLinkY" />
-    
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <label>Rotation</label>
-                        </div>
-                        <div class="col-sm-8">
-                            <input class="form-control-sm" style="background: var(--base-grey); width: inherit;" type="number" id="spaceLinkRotation" name="rotation" value="0">
-                        </div>
-                    </div>
-    
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <label>Label</label>
-                        </div>
-                        <div class="col-sm-8">
-                            <input class="form-control-sm target" style="background: var(--base-grey); width: inherit;" type="text" name="spaceLinkLabel" id="spaceLinkLabel">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <label>Description</label>
-                        </div>
-                        <div class="col-sm-8">
-                            <textarea class="form-control-sm target" style="background: var(--base-grey); width: inherit;" type="text" name="spaceLinkDesc" id="spaceLinkDesc"></textarea>
-                        </div>
-                    </div>
-    
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <label>Type</label>
-                        </div>
-                        <div class="col-sm-8">
-                            <select id="type" name="type"  class="form-control-sm target" style="background: var(--base-grey); width: inherit;">
-                                <option th:selected>Choose...</option>
-                                <option th:value="IMAGE">Image</option>
-                                <option th:value="ARROW">Link</option>
-                                <option th:value="ALERT">Alert</option>
-                            </select>
-                        </div>
-                    </div>
-    
-                    <div class="row">
-                        <div class="col-sm-4" style="padding-right: 0;">
-                            <label>Linked Space</label>
-                        </div>
-                        <div class="col-sm-8">
-                            <select id="linkedSpace" name="linkedSpace" class="form-control-sm target" style="background: var(--base-grey); width: inherit;">
-                                <option th:selected>Choose...</option>
-                                <option th:each="space : ${spaces}" th:value="${space?.id}">[[${space?.name}]]
-                                    <span th:if="${#strings.equals(space.spaceStatus,'UNPUBLISHED')}">(Unpublished)</span></option>
-                            </select>
-                        </div>
-                    </div>
-    
-                    <div class="row">
-                        <div class="col-sm-4" style="padding-right: 0;">
-                            <label>Image</label>
-                        </div>
-                        <div class="col-sm-8">
-                            <input type="file" class="form-control-sm-xs" name="spaceLinkImage" id="spaceLinkImage" style="width: inherit">
-                            <!-- 	                        <input type="radio" id="chooseFromLocal" name="uploadRadioBtn" checked />
+	                <div class="row">
+	                    <div class="col">
+	                        <h5 class="alert-heading">Create new Space Link</h5>
+	                        <p>Please click on the image where
+	                            you want to place the new space link. Then
+	                            click "Create Space Link".</p>
+	                    </div>
+	                </div>
+	
+	                <input type="hidden" name="x" id="spaceLinkX" />
+	                <input type="hidden" name="y" id="spaceLinkY" />
+	
+	                <div class="row">
+	                    <div class="col-sm-4">
+	                        <label>Rotation</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <input class="form-control-sm" style="background: var(--base-grey); width: inherit;" type="number" id="spaceLinkRotation" name="rotation" value="0">
+	                    </div>
+	                </div>
+	
+	                <div class="row">
+	                    <div class="col-sm-4">
+	                        <label>Label</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <input class="form-control-sm target" style="background: var(--base-grey); width: inherit;" type="text" name="spaceLinkLabel" id="spaceLinkLabel">
+	                    </div>
+	                </div>
+	
+	                <div class="row">
+	                    <div class="col-sm-4">
+	                        <label>Type</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <select id="type" name="type"  class="form-control-sm target" style="background: var(--base-grey); width: inherit;">
+	                            <option th:selected>Choose...</option>
+	                            <option th:value="IMAGE">Image</option>
+	                            <option th:value="ARROW">Link</option>
+	                            <option th:value="ALERT">Alert</option>
+	                        </select>
+	                    </div>
+	                </div>
+	
+	                <div class="row">
+	                    <div class="col-sm-4" style="padding-right: 0;">
+	                        <label>Linked Space</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <select id="linkedSpace" name="linkedSpace" class="form-control-sm target" style="background: var(--base-grey); width: inherit;">
+	                            <option th:selected>Choose...</option>
+	                            <option th:each="space : ${spaces}" th:value="${space?.id}">[[${space?.name}]]
+	                                <span th:if="${#strings.equals(space.spaceStatus,'UNPUBLISHED')}">(Unpublished)</span></option>
+	                        </select>
+	                    </div>
+	                </div>
+	
+	                <div class="row">
+	                    <div class="col-sm-4" style="padding-right: 0;">
+	                        <label>Image</label>
+	                    </div>
+	                    <div class="col-sm-8">
+							<input type="radio" id="space-chooseFromLocal" name="uploadRadioBtn" checked />
 	                    		<small>Upload Image: </small>
-	                        <input type="file" class="form-control-sm" name="moduleLinkImage" id="moduleLinkImage" style="width: inherit">
-	                        <input type="radio" id="chooseFromExisting" name="uploadRadioBtn" />
+	                        <input type="file" class="form-control-sm-xs" name="spaceLinkImage" id="spaceLinkImage" style="width: inherit">
+	                        <input type="radio" id="space-chooseFromExisting" name="uploadRadioBtn" />
 	                        <div>
 								<small>Choose from existing: </small>
-								<select id="imageId" name="imageId"
-									class="form-control-xs target"
-									style="height: 50px; width: 200px;">
-									<option selected value="">Choose from existing</option>
-								</select>
-							</div>
-							<div>
-								<span id="selectedImage" width="200px"></span>
-							</div> -->
-                        </div>
-                    </div>
-                    <p class="mt-5 text-center">
-                        <button type="reset" class="btn btn-light cancelSpaceLinkBtn btn-sm">Cancel</button>
-                        <button id="createSpaceLinkBtn" type="reset" class="btn primary-btn btn-sm">Create Space Link</button>
-                    </p>
-                </div>
-            </form>
-        </div>
-        
-        <div id="createModuleLinkAlert" class="custom_form_style" style="z-index: 1;">
-            <div class="divider"></div>
-            <form id="createModuleLinkForm" style="z-index: 1;">
-                <div role="alert" style="margin-top: 30px;">
-                    <div class = "saveLoader" style="font-size: 30px; display: none; text-align: center;">
-                        <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <h5 class="alert-heading">Create new Module Link</h5>
-                            <p>Please click on the image where
-                                you want to place the new module link. Then
-                                click "Create Module Link".</p>
-                        </div>
-                    </div>
-    
-                    <input type="hidden" name="x" id="moduleLinkX" /> 
-                    <input type="hidden" name="y" id="moduleLinkY" />
-    
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <label>Rotation</label>
-                        </div>
-                        <div class="col-sm-8">
-                            <input class="form-control-sm modulelink-target" style="width: inherit; background: var(--base-grey)" type="number"
-                                id="moduleLinkRotation" name="rotation"
-                                value="0">
-                        </div>
-                    </div>
-    
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <label>Label</label>
-                        </div>
-                        <div class="col-sm-8">
-                            <input class="form-control-sm modulelink-target" style="width: inherit; background: var(--base-grey)" type="text"
-                                name="moduleLinkLabel" id="moduleLinkLabel">
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <label>Description</label>
-                        </div>
-                        <div class="col-sm-8">
-                            <textarea class="form-control-sm target" style="background: var(--base-grey); width: inherit;" type="text" name="moduleLinkDesc" id="moduleLinkDesc"></textarea>
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <label>Type</label>
-                        </div>
-                        <div class="col-sm-8">
-                            <select id="moduleType" name="moduleType" class="form-control-sm modulelink-target" style="width: inherit; background: var(--base-grey)">
-                                <option th:selected>Choose...</option>
-                                <option th:value="IMAGE">Image</option>
-                                <option th:value="ARROW">Link</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <label>Linked Modules</label>
-                        </div>
-                        <div class="col-sm-8">
-                            <select id="linkedModule" name="linkedModule" class="form-control-sm modulelink-target" style="width: inherit; background: var(--base-grey)">
-                                <option th:selected>Choose...</option>
-                                <option th:value="${module?.id}"
-                                    th:each="module : ${moduleList}">[[${module?.name}]]</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-    
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <label>Image</label>
-                        </div>
-                        <div class="col-sm-8">
-                             <input type="radio" id="chooseFromLocal" name="uploadRadioBtn" checked />
-                             <small>Upload Image: </small>
-	                        <input type="file" class="form-control-sm" name="moduleLinkImage" id="moduleLinkImage" style="width: inherit">
-	                        <input type="radio" id="chooseFromExisting" name="uploadRadioBtn" />
-	                        <div>
-								<small>Choose from existing: </small>
-								<select id="imageId" name="imageId"
-									class="form-control-xs target"
+								<select id="space-imageId" name="space-imageId" class="form-control-xs target"
 									style="height: 50px; width: 200px;">
 									<option selected value="">Choose from existing</option>
 								</select>
@@ -2591,92 +2155,192 @@ $(function(){
 							<div>
 								<span id="selectedImage" width="200px"></span>
 							</div>
-                        </div>
-                    </div>
-                    <p class="mt-5 text-center">
-                        <button type="reset" class="btn btn-light cancelModuleLinkBtn btn-sm">Cancel</button>
-                        <button id="createModuleLinkBtn" type="reset" class="btn primary-btn btn-sm">Create Module Link</button>
-                    </p>
-                </div>
-            </form>
-        </div>
+	                    </div>
+	                </div>
+	                <p class="mt-5 text-center">
+	                    <button type="reset" class="btn btn-light cancelSpaceLinkBtn btn-sm">Cancel</button>
+	                    <button id="createSpaceLinkBtn" type="reset" class="btn primary-btn btn-sm">Create Space Link</button>
+	                </p>
+	            </div>
+	        </form>
+		</div>
         
-        <div id="createExternalLinkAlert" class="custom_form_style" style="z-index: 1;">
-            <div class="divider"></div>
-            <form id="createExternalLinkForm" style="z-index: 1;">
-                <div role="alert" style="margin-top: 30px;">
+		<div id="createModuleLinkAlert" class="custom_form_style" style="z-index: 1;">
+	        <div class="divider"></div>
+	        <form id="createModuleLinkForm" style="z-index: 1;">
+	            <div role="alert" style="margin-top: 30px;">
                     <div class = "saveLoader" style="font-size: 30px; display: none; text-align: center;">
                         <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
                     </div>
-                    <div class="row">   
-                        <div class="col">
-                            <h5 class="alert-heading">Create new External Link</h5>
-                            <p>Please click on the image where you
-                               want to place the new external link. Then click
-                               "Create External Link".</p>
-                        </div>
-                    </div>
-    
-                    <input type="hidden" name="x" id="externalLinkX" /> 
-                    <input type="hidden" name="y" id="externalLinkY" /> 
-                    
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <label>Label</label>
-                        </div>
-                        <div class="col-sm-8">
-                            <input class="form-control-sm extlink-target" type="text" style="width: inherit; background: var(--base-grey)"
-                                 name="externalLinkLabel" id="externalLinkLabel">   
-                        </div>
-                    </div>
-                     
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <label>External Link</label>
-                        </div>
-                        <div class="col-sm-8">
-                            <input class="form-control-sm extlink-target" type="text" style="width: inherit; background: var(--base-grey)"
-                                size="15" name="url" id="externalLink"> 
-                        </div>
-                    </div>               
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <label>How To Open:</label>
-                        </div>
-                        <div class="col-sm-8">
-                            <select id="extTabOpen" name="tabOpen" class="form-control-sm extlink-target" style="width: inherit; background: var(--base-grey)">
-                                <option th:selected>Choose...</option>
-                                <option th:value="NEWWINDOW">New Window</option>
-                                <option th:value="SAMEWINDOW">Same Window</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <label>Type</label>
-                        </div>
-                        <div class="col-sm-8">
-                            <select id="extType" name="type" class="form-control-sm extlink-target" style="width: inherit; background: var(--base-grey)">
-                                <option th:selected>Choose...</option>
-                                <option th:value="IMAGE">Image</option>
-                                <option th:value="ARROW">Link</option>
-                            </select>
-                        </div>
-                    </div>
-    
-                    
+	                <div class="row">
+	                    <div class="col">
+	                        <h5 class="alert-heading">Create new Module Link</h5>
+	                        <p>Please click on the image where
+	                            you want to place the new module link. Then
+	                            click "Create Module Link".</p>
+	                    </div>
+	                </div>
+	
+	                <input type="hidden" name="x" id="moduleLinkX" /> 
+	                <input type="hidden" name="y" id="moduleLinkY" />
+	
+	                <div class="row">
+	                    <div class="col-sm-4">
+	                        <label>Rotation</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <input class="form-control-sm modulelink-target" style="width: inherit; background: var(--base-grey)" type="number"
+	                            id="moduleLinkRotation" name="rotation"
+	                            value="0">
+	                    </div>
+	                </div>
+	
+	                <div class="row">
+	                    <div class="col-sm-4">
+	                        <label>Label</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <input class="form-control-sm modulelink-target" style="width: inherit; background: var(--base-grey)" type="text"
+	                            name="moduleLinkLabel" id="moduleLinkLabel">
+	                    </div>
+	                </div>
+					
+					<div class="row">
+	                    <div class="col-sm-4">
+	                        <label>Type</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <select id="moduleType" name="moduleType" class="form-control-sm modulelink-target" style="width: inherit; background: var(--base-grey)">
+	                            <option th:selected>Choose...</option>
+	                            <option th:value="IMAGE">Image</option>
+	                            <option th:value="ARROW">Link</option>
+	                        </select>
+	                    </div>
+	                </div>
+	                
+	                <div class="row">
+	                    <div class="col-sm-4">
+	                        <label>Linked Modules</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <select id="linkedModule" name="linkedModule" class="form-control-sm modulelink-target" style="width: inherit; background: var(--base-grey)">
+	                            <option th:selected>Choose...</option>
+	                            <option th:value="${module?.id}"
+	                                th:each="module : ${moduleList}">[[${module?.name}]]</option>
+	                        </select>
+	                    </div>
+	                </div>
+	                
+	
 	                <div class="row">
 	                    <div class="col-sm-4">
 	                        <label>Image</label>
 	                    </div>
 	                    <div class="col-sm-8">
-	                    	<input type="radio" id="chooseFromLocal" name="uploadRadioBtn" checked />
+	                        
+	                        
+ 	                        <input type="radio" id="module-chooseFromLocal" name="uploadRadioBtn" checked />
 	                    		<small>Upload Image: </small>
-	                    	<input type="file" class="form-control-sm" name="externalLinkImage" id="externalLinkImage" style="width: inherit">
-	                        <input type="radio" id="chooseFromExisting" name="uploadRadioBtn" />
+	                        <input type="file" class="form-control-sm" name="moduleLinkImage" id="moduleLinkImage" style="width: inherit">
+	                        <input type="radio" id="module-chooseFromExisting" name="uploadRadioBtn" />
 	                        <div>
 								<small>Choose from existing: </small>
-								<select id="imageId" name="imageId"
+								<select id="module-imageId" name="module-imageId"
+									class="form-control-xs target"
+									style="height: 50px; width: 200px;">
+									<option selected value="">Choose from existing</option>
+								</select>
+							</div>
+							<div>
+								<span id="selectedImage" width="200px"></span>
+							</div>
+							
+							 
+	                    </div>
+	                </div>
+	                <p class="mt-5 text-center">
+	                    <button type="reset" class="btn btn-light cancelModuleLinkBtn btn-sm">Cancel</button>
+	                    <button id="createModuleLinkBtn" type="reset" class="btn primary-btn btn-sm">Create Module Link</button>
+	                </p>
+	            </div>
+	        </form>
+		</div>
+		
+		<div id="createExternalLinkAlert" class="custom_form_style" style="z-index: 1;">
+	        <div class="divider"></div>
+	        <form id="createExternalLinkForm" style="z-index: 1;">
+	            <div role="alert" style="margin-top: 30px;">
+                    <div class = "saveLoader" style="font-size: 30px; display: none; text-align: center;">
+                        <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
+                    </div>
+	            	<div class="row">	
+	            		<div class="col">
+	            			<h5 class="alert-heading">Create new External Link</h5>
+			                <p>Please click on the image where you
+			                   want to place the new external link. Then click
+			                   "Create External Link".</p>
+	            		</div>
+	                </div>
+	
+	                <input type="hidden" name="x" id="externalLinkX" /> 
+	                <input type="hidden" name="y" id="externalLinkY" /> 
+	                
+	                <div class="row">
+	                	<div class="col-sm-4">
+	                		<label>Label</label>
+	                	</div>
+	                	<div class="col-sm-8">
+	                		<input class="form-control-sm extlink-target" type="text" style="width: inherit; background: var(--base-grey)"
+	                			 name="externalLinkLabel" id="externalLinkLabel">	
+	                	</div>
+	                </div>
+	                 
+	                <div class="row">
+	                	<div class="col-sm-4">
+	                		<label>External Link</label>
+	                	</div>
+	                	<div class="col-sm-8">
+	                		<input class="form-control-sm extlink-target" type="text" style="width: inherit; background: var(--base-grey)"
+	                    		size="15" name="url" id="externalLink">	
+	                	</div>
+	                </div>               
+					<div class="row">
+	                    <div class="col-sm-4">
+	                        <label>How To Open:</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <select id="extTabOpen" name="tabOpen" class="form-control-sm extlink-target" style="width: inherit; background: var(--base-grey)">
+	                            <option th:selected>Choose...</option>
+	                            <option th:value="NEWWINDOW">New Window</option>
+	                            <option th:value="SAMEWINDOW">Same Window</option>
+	                        </select>
+	                    </div>
+	                </div>
+	                <div class="row">
+	                    <div class="col-sm-4">
+	                        <label>Type</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <select id="extType" name="type" class="form-control-sm extlink-target" style="width: inherit; background: var(--base-grey)">
+	                            <option th:selected>Choose...</option>
+	                            <option th:value="IMAGE">Image</option>
+	                            <option th:value="ARROW">Link</option>
+	                        </select>
+	                    </div>
+	                </div>
+	
+	                <div class="row">
+	                    <div class="col-sm-4">
+	                        <label>Image</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                    	<input type="radio" id="externalLink-chooseFromLocal" name="uploadRadioBtn" checked />
+	                    		<small>Upload Image: </small>
+	                        <input type="file" class="form-control-sm" name="externalLinkImage" id="externalLinkImage" style="width: inherit">
+	                        <input type="radio" id="externalLink-chooseFromExisting" name="uploadRadioBtn" />
+	                        <div>
+								<small>Choose from existing: </small>
+								<select id="externalLink-imageId" name="externalLink-imageId"
 									class="form-control-xs target"
 									style="height: 50px; width: 200px;">
 									<option selected value="">Choose from existing</option>
@@ -2687,13 +2351,13 @@ $(function(){
 							</div>
 	                    </div>
 	                </div>
-                    <p class="mt-5 text-center">
-                        <button type="reset" class="btn btn-light cancelExternalLinkBtn btn-sm">Cancel</button>
-                        <button id="createExternalLinkBtn" type="submit" class="btn primary-btn btn-sm">Create External Link</button>
-                    </p>
-                </div>
-            </form>
-        </div>
+	                <p class="mt-5 text-center">
+	                    <button type="reset" class="btn btn-light cancelExternalLinkBtn btn-sm">Cancel</button>
+	                    <button id="createExternalLinkBtn" type="submit" class="btn primary-btn btn-sm">Create External Link</button>
+	                </p>
+	            </div>
+	        </form>
+		</div>
         
         <div id="addTextFormInfo" class="custom_form_style" style="z-index: 1;">
             <div class="divider"></div>
@@ -2736,12 +2400,12 @@ $(function(){
                                 name="height" style="width: inherit;"><br>
                         </div>
                     </div>
-                    <div class="row" style="height: 32%;">
+            		<div class="row" style="height: 32%;">
                         <div class="col-sm-4">
                             <label>Text Color:</label>
                         </div>
                         <div class="col-sm-8" >
-                            <input type="color" class="form-control input-lg" name="textColor" id="textColorID"/>
+                        	<input type="color" class="form-control input-lg" name="textColor" id="textColorID"/>
                                 <br>
                         </div>
                     </div>
@@ -2750,7 +2414,7 @@ $(function(){
                             <label>Border Color:</label>
                         </div>
                         <div class="col-sm-8" >
-                            <input type="color" class="form-control input-lg" name="borderColor" id="borderColorID"/>
+                        	<input type="color" class="form-control input-lg" name="borderColor" id="borderColorID"/>
                                 <br>
                         </div>
                     </div>
@@ -2759,7 +2423,7 @@ $(function(){
                             <label>Text:</label>
                         </div>
                         <div class="col-sm-8">
-                         <textarea class="form-control-xs textContent"
+                   		 <textarea class="form-control-xs textContent"
                                  name="textContent"
                                 id="textContentID" style="width: 140%; height: 400%;"></textarea><br>
                         </div>
@@ -2774,112 +2438,101 @@ $(function(){
                 </div>
             </form>
         </div>
-        
-        <div id="editSpaceLinkInfo" class="custom_form_style" style="z-index: 1;">
-            <div class="divider"></div>
-            <form id="editSpaceLinkForm" style="z-index: 1;">
+		
+		<div id="editSpaceLinkInfo" class="custom_form_style" style="z-index: 1;">
+	        <div class="divider"></div>
+	        <form id="editSpaceLinkForm" style="z-index: 1;">
                 <p class="float-right">
                     <a href="#" id="closeEditSpaceLinkInfo" class="icon-circle-close"></a>
                 </p>
-                <div role="alert" style="margin-top: 30px;">
+	            <div role="alert" style="margin-top: 30px;">
                     <div class = "saveLoader" style="font-size: 30px; display: none; text-align: center;">
                         <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
                     </div>
-                    <div class="row">
-                        <div class="col">
-                            <h6 class="alert-heading"><span style="color: var(--dark-grey)"> Space Link:</span> <span id="spaceLinkInfoLabelEdit"></span></h6>
-                            <p>Please click on the image where
-                                you want to place the selected space link.
-                                Then click "Edit Space Link".</p>
-                        </div>
-                    </div>
-                    
-                    <input type="hidden" name="spaceLinkIdValueEdit" id="spaceLinkIdValueEdit" />
-    
-                    <input type="hidden" name="x" id="spaceLinkXEdit" /> 
-                    <input type="hidden" name="y" id="spaceLinkYEdit" /> 
-                    <input type="hidden" name="spaceLinkDisplayId" id="spaceLinkDisplayId" />
-    
-    
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <label>Rotation</label>
-                        </div>
-                        <div class="col-sm-8">
-                            <input class="form-control-sm spacelink-targetEdit"
-                                type="number" id="spaceLinkRotationEdit"
-                                name="rotation" style="width: inherit; background: var(--base-grey)" />
-                        </div>
-                    </div>
-    
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <label>Label</label>
-                        </div>
-                        <div class="col-sm-8">
-                            <input class="form-control-sm spacelink-targetEdit"
-                                type="text" name="spaceLinkLabel"
-                                id="spaceLinkLabelEdit" style="width: inherit; background: var(--base-grey)" />
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <label>Description</label>
-                        </div>
-                        <div class="col-sm-8">
-                            <input class="form-control-sm spacelink-targetEdit"
-                                type="text" name="spaceLinkDesc"
-                                id="spaceLinkDescEdit" style="width: inherit; background: var(--base-grey)" />
-                        </div>
-                    </div>
-    
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <label>Type</label>
-                        </div>
-                        <div class="col-sm-8">
-                            <select id="typeSpaceEdit" name="type" class="form-control-sm spacelink-targetEdit"
-                                style="width: inherit; background: var(--base-grey)">
-                                <option th:value="IMAGE">Image</option>
-                                <option th:value="ARROW">Link</option>
-                                <option th:value="ALERT">Alert</option>
-                            </select>
-                        </div>
-                    </div>
-    
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <label>Linked Space</label>
-                        </div>
-                        <div class="col-sm-8">
-                            <select id="spaceLinkIdEdit" name="linkedSpace" class="form-control-sm spacelink-targetEdit"
-                                style="width: inherit; background: var(--base-grey)">
-                                <option th:each=" space : ${spaces}" th:value="${space?.id}">[[${space?.name}]]
-                                    <span th:if="${#strings.equals(space.spaceStatus,'UNPUBLISHED')}">(Unpublished)</span>
-                                </option>
-    
-                            </select>
-                        </div>
-                    </div>
-    
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <label>Image</label>
-                        </div>
-                        <div class="col-sm-8">
-                            <input type="file" class="form-control-sm" name="spaceLinkImage" id="spaceLinkImageEdit" style="width: inherit"/>
-                        </div>
-                    </div>
-                    
-                    <p class="mt-5 text-center">
-                        <button id="deleteSpaceLinkButton" type="reset" class="btn delete-btn btn-sm"><i class="fa fa-trash"></i>Delete</button>
-                        <button id="editSpaceLinkBtn" type="reset" class="btn primary-btn btn-sm">Save Changes</button>
-                    </p>
-                    
-                </div>
-            </form>
-        </div>
+					<div class="row">
+						<div class="col">
+							<h6 class="alert-heading"><span style="color: var(--dark-grey)"> Space Link:</span> <span id="spaceLinkInfoLabelEdit"></span></h6>
+							<p>Please click on the image where
+	                            you want to place the selected space link.
+	                            Then click "Edit Space Link".</p>
+						</div>
+					</div>
+	                
+	                <input type="hidden" name="spaceLinkIdValueEdit" id="spaceLinkIdValueEdit" />
+	
+	                <input type="hidden" name="x" id="spaceLinkXEdit" /> 
+	                <input type="hidden" name="y" id="spaceLinkYEdit" /> 
+	                <input type="hidden" name="spaceLinkDisplayId" id="spaceLinkDisplayId" />
+	
+	
+	                <div class="row">
+	                    <div class="col-sm-4">
+	                        <label>Rotation</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <input class="form-control-sm spacelink-targetEdit"
+	                            type="number" id="spaceLinkRotationEdit"
+	                            name="rotation" style="width: inherit; background: var(--base-grey)" />
+	                    </div>
+	                </div>
+	
+	                <div class="row">
+	                    <div class="col-sm-4">
+	                        <label>Label</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <input class="form-control-sm spacelink-targetEdit"
+	                            type="text" name="spaceLinkLabel"
+	                            id="spaceLinkLabelEdit" style="width: inherit; background: var(--base-grey)" />
+	                    </div>
+	                </div>
+	
+	                <div class="row">
+	                    <div class="col-sm-4">
+	                        <label>Type</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <select id="typeSpaceEdit" name="type" class="form-control-sm spacelink-targetEdit"
+	                            style="width: inherit; background: var(--base-grey)">
+	                            <option th:value="IMAGE">Image</option>
+	                            <option th:value="ARROW">Link</option>
+	                            <option th:value="ALERT">Alert</option>
+	                        </select>
+	                    </div>
+	                </div>
+	
+	                <div class="row">
+	                    <div class="col-sm-4">
+	                        <label>Linked Space</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <select id="spaceLinkIdEdit" name="linkedSpace" class="form-control-sm spacelink-targetEdit"
+	                            style="width: inherit; background: var(--base-grey)">
+	                            <option th:each=" space : ${spaces}" th:value="${space?.id}">[[${space?.name}]]
+	                            	<span th:if="${#strings.equals(space.spaceStatus,'UNPUBLISHED')}">(Unpublished)</span>
+	                           	</option>
+	
+	                        </select>
+	                    </div>
+	                </div>
+	
+	                <div class="row">
+	                    <div class="col-sm-4">
+	                        <label>Image</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <input type="file" class="form-control-sm" name="spaceLinkImage" id="spaceLinkImageEdit" style="width: inherit"/>
+	                    </div>
+	                </div>
+	                
+	                <p class="mt-5 text-center">
+	                    <button id="deleteSpaceLinkButton" type="reset" class="btn delete-btn btn-sm"><i class="fa fa-trash"></i>Delete</button>
+	                    <button id="editSpaceLinkBtn" type="reset" class="btn primary-btn btn-sm">Save Changes</button>
+	                </p>
+	                
+	            </div>
+	        </form>
+		</div>
         <div id="editModuleLinkInfo" class="custom_form_style" style="z-index: 1;">
             <div class="divider"></div>
             <form id="editModuleLinkForm" style="z-index: 1;">
@@ -2932,16 +2585,6 @@ $(function(){
                                 style="width: inherit;  background: var(--base-grey)"><br>
                         </div>
                     </div>
-                    
-                    <div class="row">
-                        <div class="col-sm-4 " style="padding-right: 1px">
-                            <label>Description</label>
-                        </div>
-                        <div class="col-sm-8">
-                            <textarea class="form-control-sm target" style="background: var(--base-grey); width: inherit;" type="text" name="moduleLinkDesc" id="moduleLinkDesc"></textarea>
-                        </div>
-                    </div>
-                    
                     <div class="row">
                         <div class="col-sm-4">
                             <label>Type:</label>
@@ -3043,17 +2686,17 @@ $(function(){
                                 style="width: inherit; background: var(--base-grey)">
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <label>How To Open:</label>
-                        </div>
-                        <div class="col-sm-8">
-                            <select id="extTabOpenEdit" name="tabOpen" class="form-control-sm extlink-target" style="width: inherit; background: var(--base-grey)">
-                                <option th:value="NEWWINDOW">New Window</option>
-                                <option th:value="SAMEWINDOW">Same Window</option>
-                            </select>
-                        </div>
-                    </div>
+					<div class="row">
+	                    <div class="col-sm-4">
+	                        <label>How To Open:</label>
+	                    </div>
+	                    <div class="col-sm-8">
+	                        <select id="extTabOpenEdit" name="tabOpen" class="form-control-sm extlink-target" style="width: inherit; background: var(--base-grey)">
+	                            <option th:value="NEWWINDOW">New Window</option>
+	                            <option th:value="SAMEWINDOW">Same Window</option>
+	                        </select>
+	                    </div>
+	                </div>
                     <div class="row">
                         <div class="col-sm-4">
                             <label>Type:</label>
@@ -3137,12 +2780,12 @@ $(function(){
                                 name="height" style="width: inherit;"><br>
                         </div>
                     </div>
-                    <div class="row" style="height: 32%;">
+              		<div class="row" style="height: 32%;">
                         <div class="col-sm-4">
                             <label>Text Color:</label>
                         </div>
                         <div class="col-sm-8" >
-                            <input type="color" class="form-control input-lg" name="textColor" id="textColorIDEdit"/>
+                        	<input type="color" class="form-control input-lg" name="textColor" id="textColorIDEdit"/>
                                 <br>
                         </div>
                     </div>
@@ -3151,7 +2794,7 @@ $(function(){
                             <label>Border Color:</label>
                         </div>
                         <div class="col-sm-8" >
-                            <input type="color" class="form-control input-lg" name="borderColor" id="borderColorIDEdit"/>
+                        	<input type="color" class="form-control input-lg" name="borderColor" id="borderColorIDEdit"/>
                                 <br>
                         </div>
                     </div>

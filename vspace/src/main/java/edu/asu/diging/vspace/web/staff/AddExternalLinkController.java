@@ -38,13 +38,13 @@ public class AddExternalLinkController {
     @RequestMapping(value = "/staff/space/{id}/externallink", method = RequestMethod.POST)
     public ResponseEntity<String> createExternalLink(@PathVariable("id") String id, @RequestParam("x") String x,
             @RequestParam("y") String y, @RequestParam("externalLinkLabel") String title,
-            @RequestParam(name = "externalLinkDesc", required=false) String desc,
             @RequestParam("url") String externalLink, @RequestParam("tabOpen") String howToOpen,
             @RequestParam("type") String displayType, @RequestParam(value="externalLinkImage", required=false) MultipartFile file,
-            @RequestParam(value="imageId", required=false) String imageId)
+            @RequestParam(value="externalLink-imageId", required=false) String imageId)
             throws NumberFormatException, SpaceDoesNotExistException, IOException, ImageCouldNotBeStoredException, ImageDoesNotExistException {
 
         ISpace space = spaceManager.getSpace(id);
+        String desc = "";
         if (space == null) {
             return new ResponseEntity<>("{'error': 'Space could not be found.'}", HttpStatus.NOT_FOUND);
         }

@@ -37,10 +37,11 @@ public class AddSpaceLinkController {
     public ResponseEntity<String> createSpaceLink(@PathVariable("id") String id, @RequestParam("x") String x,
             @RequestParam("y") String y, @RequestParam("rotation") String rotation,
             @RequestParam("spaceLinkLabel") String title, @RequestParam("linkedSpace") String linkedSpaceId,
-            @RequestParam("spaceLinkLabel") String spaceLinkLabel, @RequestParam("spaceLinkDesc") String spaceLinkDesc, @RequestParam("type") String displayType,
-            @RequestParam(value="spaceLinkImage", required=false) MultipartFile file, @RequestParam(value="imageId", required=false) String imageId)
+            @RequestParam("spaceLinkLabel") String spaceLinkLabel, @RequestParam(value = "spaceLinkDesc", required=false) String spaceLinkDesc, @RequestParam("type") String displayType,
+            @RequestParam(value="spaceLinkImage", required=false) MultipartFile file, @RequestParam(value="space-imageId", required=false) String imageId)
             throws NumberFormatException, SpaceDoesNotExistException, IOException, ImageDoesNotExistException {
 
+        
         ISpace source = spaceManager.getSpace(id);
         if (source == null) {
             return new ResponseEntity<>("{'error': 'Space could not be found.'}", HttpStatus.NOT_FOUND);
