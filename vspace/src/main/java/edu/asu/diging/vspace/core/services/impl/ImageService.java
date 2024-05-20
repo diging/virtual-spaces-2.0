@@ -259,8 +259,9 @@ public class ImageService implements IImageService {
      * @return list of images in the requested pageNo and requested order.
      */
     @Override
-    public List<VSImage> getPaginatedImagesByCategoryAndSearchTerm(int pageNo, ImageCategory category, String searchTerm) {    	
-    	Sort sortingParameters = getSortingParameters(searchTerm, searchTerm);
+    public List<VSImage> getPaginatedImagesByCategoryAndSearchTerm(int pageNo, ImageCategory category, String searchTerm,
+            String sortedBy, String order) {    	
+    	Sort sortingParameters = getSortingParameters(sortedBy, order);
         pageNo = validatePageNumber(pageNo, category);
         Pageable sortByRequestedField = PageRequest.of(pageNo - 1, pageSize, sortingParameters);
         String likeSearchTerm = "%" + searchTerm + "%";

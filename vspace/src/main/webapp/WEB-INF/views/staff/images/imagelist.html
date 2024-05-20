@@ -62,7 +62,7 @@ $( document ).ready(function() {
         lastClass: 'last',
         firstClass: 'first'
     }).on("page", function(event, num){
-        window.location.assign("./"+num+"?searchText=" + [[${searchTerm}]]+"&imageCat="+[[${imageCategory}]]+"&sort="+[[${sortProperty}]]+"&order="+[[${order}]]);
+        window.location.assign("./"+num+"?searchText=" + [[${searchText}]]+"&imageCat="+[[${imageCategory}]]+"&sort="+[[${sortProperty}]]+"&order="+[[${order}]]);
     });
 
   $("table.table thead th").each(function(){
@@ -76,13 +76,13 @@ $( document ).ready(function() {
    $("table.table thead th").click(function() {
     var headerSortPropName = $(this).attr("sort-prop");
     if(headerSortPropName != 'tag') {
-        if(headerSortPropName=='[(${sortProperty})]'){
+        if(headerSortPropName =='[(${sortProperty})]'){
             window.location.href = window.location.pathname+
-            '?imageCat=[(${imageCategory})]&sort='+ headerSortPropName+'&order='+
+            '?searchText=[(${searchText})]&imageCat=[(${imageCategory})]&sort='+ headerSortPropName+'&order='+
             ('[(${order})]' == 'desc'?'asc':'desc');
         }else{
             window.location.href = window.location.pathname+
-            '?imageCat=[(${imageCategory})]&sort='+ headerSortPropName+'&order=asc';
+            '?searchText=[(${searchText})]&imageCat=[(${imageCategory})]&sort='+ headerSortPropName+'&order=asc';
         }
     }
     });
