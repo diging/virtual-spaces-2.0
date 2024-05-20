@@ -72,6 +72,8 @@ public class ExhibitionConfigurationController {
         model.addAttribute("languageList", exhibitionLanguageConfig.getExhibitionLanguageList());
         model.addAttribute("exhibition", exhibition);
         model.addAttribute("defaultSpaceLinkImage",exhibition.getSpaceLinkDefaultImage());
+        model.addAttribute("defaultModuleLinkImage",exhibition.getModuleLinkDefaultImage());
+        model.addAttribute("defaultExternalLinkImage",exhibition.getExternalLinkDefaultImage());
         return "staff/exhibit/config";
     }
 
@@ -177,13 +179,13 @@ public class ExhibitionConfigurationController {
         IVSImage moduleDefaultImage = moduleLinkImage != null ? 
                 imageService.storeImage(moduleLinkImage.getBytes(), moduleLinkImage.getOriginalFilename()) : null; 
         
-        exhibition.setSpaceLinkDefaultImage(moduleDefaultImage);
+        exhibition.setModuleLinkDefaultImage(moduleDefaultImage);
         exhibition = (Exhibition) exhibitManager.storeExhibition(exhibition);
         attributes.addAttribute("exhibitId",exhibition.getId());
         attributes.addAttribute("alertType", "success");
         attributes.addAttribute("message", "Successfully Saved!");
         attributes.addAttribute("showAlert", "true");
-
+        
         return new RedirectView(request.getContextPath() + "/staff/exhibit/config");
     }
     
