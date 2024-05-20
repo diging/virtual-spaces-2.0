@@ -5,84 +5,81 @@
 		var offlineMessage = $('#offlineMessage');			
 		var spaceParamExihibit = $('#spaceParamExihibit');
 		var defaultImages = $('#defaultImages');
-		if ('[(${exhibition})]' != null
-				&& '[(${exhibition.mode})]' == 'OFFLINE') {
-			offlineMessage.show();
+		
+		if ('[(${exhibition})]' != null && '[(${exhibition.mode})]' == 'OFFLINE') {
+		    offlineMessage.show();
 		} else {
-			offlineMessage.hide();
+		    offlineMessage.hide();
 		}
 		$("#changeBgImgAlert").show();
-			
-		$("#cancelSpaceImgBtn").click(function() {			
-			document.getElementById('spaceLinkImage').value= null;
-			$('#cancelSpaceImgBtn').attr('disabled',true);
+
+		$("#cancelSpaceImgBtn").click(function() {
+		    document.getElementById('spaceLinkImage').value = null;
+		    $('#cancelSpaceImgBtn').attr('disabled', true);
 		});
-		
+
 		$("#cancelModuleImgBtn").click(function() {
-			document.getElementById('moduleLinkImage').value= null;
-			$('#cancelModuleImgBtn').attr('disabled',true);
+		    document.getElementById('moduleLinkImage').value = null;
+		    $('#cancelModuleImgBtn').attr('disabled', true);
 		});
-		
+
 		$("#cancelExternalImgBtn").click(function() {
-			document.getElementById('externalLinkImage').value= null;
-			$('#cancelExternalImgBtn').attr('disabled',true);
+		    document.getElementById('externalLinkImage').value = null;
+		    $('#cancelExternalImgBtn').attr('disabled', true);
 		});
-		
+
 		//when input's value changes
-		$("#spaceLinkImage").change(function () {
-			if($(this).val()) {
-				$("#cancelSpaceImgBtn").prop("disabled", false);
-			}
-			else {
-				$("#cancelSpaceImgBtn").prop("disabled", true);
-			}
+		$("#spaceLinkImage").change(function() {
+		    if ($(this).val()) {
+		        $("#cancelSpaceImgBtn").prop("disabled", false);
+		    } else {
+		    	$("#cancelSpaceImgBtn").prop("disabled", true);
+		    }
 		});
-            
-		$("#moduleLinkImage").change(function () {
-			if($(this).val()) {
-				$("#cancelModuleImgBtn").prop("disabled", false);
-			}
-			else {
-				$("#cancelModuleImgBtn").prop("disabled", true);
-			}
+
+		$("#moduleLinkImage").change(function() {
+		    if ($(this).val()) {
+		    	$("#cancelModuleImgBtn").prop("disabled", false);
+		    } else {
+		    	$("#cancelModuleImgBtn").prop("disabled", true);
+		    }
 		});
-		
-		$("#externalLinkImage").change(function () {
-			if($(this).val()) {
-				$("#cancelExternalImgBtn").prop("disabled", false);
-			}
-			else {
-				$("#cancelExternalImgBtn").prop("disabled", true);
-			}
+
+		$("#externalLinkImage").change(function() {
+		    if ($(this).val()) {
+		    	$("#cancelExternalImgBtn").prop("disabled", false);
+		    } else {
+		    	$("#cancelExternalImgBtn").prop("disabled", true);
+		    }
 		});
 	});
 
 	function modeChange(modeChosen) {
-		var offlineMessage = $('#offlineMessage');
-		if (modeChosen == 'OFFLINE') {
-			offlineMessage.show();
-		} else {
-			offlineMessage.hide();
-		}
+	    var offlineMessage = $('#offlineMessage');
+	    
+	    if (modeChosen == 'OFFLINE') {			
+	        offlineMessage.show();
+	    } else {
+	    	offlineMessage.hide();
+	    }
 	}
-	
+
 	function defaultLinkImages() {
-		var defaultImages = $('#defaultImages');
-		defaultImages.show();
+	    var defaultImages = $('#defaultImages');
+	    defaultImages.show();
 	}
-	
+
 	function defaultLinkModuleImages() {
-		$("#uploadModuleLinkImage").css('display','block');
+	    $("#uploadModuleLinkImage").css('display', 'block');
 	}
 
 	function defaultLinkExternalImages() {
-		$("#uploadExternalLinkImage").css('display','block');
+	    $("#uploadExternalLinkImage").css('display', 'block');
 	}
-	
+
 	function openUploadSpaceLinkDefaultImgBlock() {
-		$("#uploadSpaceLinkImage").css('display','block');
+	    $("#uploadSpaceLinkImage").css('display', 'block');
 	}
-	
 </script>
 <style>
 .tooltiptext {
