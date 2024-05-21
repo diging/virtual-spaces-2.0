@@ -80,22 +80,26 @@ $( document ).ready(function() {
             window.location.href = window.location.pathname+
             '?searchText=[(${searchText})]&imageCat=[(${imageCategory})]&sort='+ headerSortPropName+'&order='+
             ('[(${order})]' == 'desc'?'asc':'desc');
-        }else{
+        } else{
             window.location.href = window.location.pathname+
             '?searchText=[(${searchText})]&imageCat=[(${imageCategory})]&sort='+ headerSortPropName+'&order=asc';
         }
     }
-    });
+   });
    
    $("#filterTag").on("change", function(e) {
        e.preventDefault();
        var selectedId=e.target.value;
        var formData = new FormData();
+       let baseResultsUrl = "[(@{'/staff/images/search/full/'})]";
+       if('[(${searchText})]' == null || '[(${searchText})]' ==""){
+    	   baseResultsUrl = "[(@{'/staff/images/list/'})]"
+       }
        if(selectedId === "all"){
-           var url = "[(@{'/staff/images/list/'})]"+'?imageCat=&sort='+[[${sortProperty}]]+'&order='+[[${order}]];
+           var url = baseResultsUrl+[(${currentPageNumber})]+"?searchText=[(${searchText})]"+"&imageCat=&sort="+[[${sortProperty}]]+"&order="+[[${order}]];
            window.location = url;
-       }else{
-           var url = "[(@{'/staff/images/list/'})]"+'?imageCat='+selectedId+'&sort='+[[${sortProperty}]]+'&order='+[[${order}]];
+       } else{
+           var url = baseResultsUrl+[(${currentPageNumber})]+'?searchText=[(${searchText})]'+'&imageCat='+selectedId+'&sort='+[[${sortProperty}]]+'&order='+[[${order}]];
            window.location = url;
        }
        
@@ -217,7 +221,8 @@ $( document ).ready(function() {
                     $('#searchImageButton').attr('disabled','true');
                 }
                 if (!$('#searchImageButton').attr('disabled') && $("#searchImageField").val().trim()){
-                    $("#searchImageLink").attr('href','[[@{/staff/images/search/full/1?searchText=}]]'+$("#searchImageField").val());
+                    $("#searchImageLink").attr('href','[[@{/staff/images/search/full/1?searchText=}]]'+$("#searchImageField").val()+"&imageCat="+
+                    		$("#filterTag :selected").val()+"&sort=[(${sortProperty})]&order=[(${order})]");
                 } 
                 else{
                     $("#searchImageLink").attr('href','');

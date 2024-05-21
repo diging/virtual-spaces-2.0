@@ -51,10 +51,11 @@ public class ImagesSearchFullApiController {
         } catch (NumberFormatException numberFormatException) {
             pageNo = 1;
         }
+
         ImageCategory category = null;
-        if (searchTerm != null && !searchTerm.isEmpty()) {
+        if (imageCategory!=null && imageCategory!="") {
             try {
-                category = ImageCategory.valueOf(searchTerm);
+                category = ImageCategory.valueOf(imageCategory);
             } catch (IllegalArgumentException e) {
                 logger.error("Wrong argument for image category", e);
             }
@@ -65,6 +66,8 @@ public class ImagesSearchFullApiController {
         model.addAttribute("currentPageNumber", pageNo);
         model.addAttribute("totalImageCount", imageService.getTotalImageCount(category));
         model.addAttribute("imageCategories", ImageCategory.values());
+        model.addAttribute("imageCategory", imageCategory);
+        
         model.addAttribute("sortProperty",
                 (sortedBy==null || sortedBy.equals("")) ? SortByField.CREATION_DATE.getValue():sortedBy);
         model.addAttribute("order",
