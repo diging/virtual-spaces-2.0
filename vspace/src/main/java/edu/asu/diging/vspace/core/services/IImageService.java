@@ -42,4 +42,6 @@ public interface IImageService {
             String searchTerm, String sortedBy, String order);
 
     long getTotalPagesOnSearchText(String searchTerm);
+
+    long getTotalPagesOnSearchTextAndCategory(String searchTerm, ImageCategory category);
 }

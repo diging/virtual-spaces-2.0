@@ -34,4 +34,7 @@ public interface ImageRepository extends PagingAndSortingRepository<VSImage, Str
     long countByCategories(ImageCategory category);
 
     long countByFilenameLikeOrNameLikeOrDescriptionLike(String filename, String name, String description);
+    
+    long countByCategoriesAndFilenameLikeOrCategoriesAndNameLikeOrCategoriesAndDescriptionLike(ImageCategory category, 
+            String filename, ImageCategory category2, String name,ImageCategory category3, String description);
 }

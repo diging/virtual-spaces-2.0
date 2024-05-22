@@ -293,4 +293,12 @@ public class ImageService implements IImageService {
     	long count = imageRepo.countByFilenameLikeOrNameLikeOrDescriptionLike(likeSearchTerm, likeSearchTerm, likeSearchTerm);
     	return (count % pageSize == 0) ? count / pageSize : (count / pageSize) + 1;
     }
+    
+    @Override
+    public long getTotalPagesOnSearchTextAndCategory(String searchTerm, ImageCategory category) {
+        String likeSearchTerm = "%" + searchTerm + "%";
+        long count = imageRepo.countByCategoriesAndFilenameLikeOrCategoriesAndNameLikeOrCategoriesAndDescriptionLike(category, 
+                likeSearchTerm, category, likeSearchTerm, category, likeSearchTerm);
+        return (count % pageSize == 0) ? count / pageSize : (count / pageSize) + 1;
+    }
 }

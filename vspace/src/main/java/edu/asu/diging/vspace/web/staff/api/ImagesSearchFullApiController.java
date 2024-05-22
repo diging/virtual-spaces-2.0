@@ -61,7 +61,7 @@ public class ImagesSearchFullApiController {
             }
         }
         model.addAttribute("totalPages", category == null ? imageService.getTotalPagesOnSearchText(searchTerm)
-                : imageService.getTotalPages(category));
+                : imageService.getTotalPagesOnSearchTextAndCategory(searchTerm, category));
         model.addAttribute("searchText", searchTerm);
         model.addAttribute("currentPageNumber", pageNo);
         model.addAttribute("totalImageCount", imageService.getTotalImageCount(category));
