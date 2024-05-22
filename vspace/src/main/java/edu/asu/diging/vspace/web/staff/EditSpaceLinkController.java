@@ -38,7 +38,7 @@ public class EditSpaceLinkController extends EditSpaceLinksController {
 	public ResponseEntity<String> editSpaceLink(@PathVariable("id") String id, @RequestParam("x") String x,
 		@RequestParam("y") String y, @RequestParam("rotation") String rotation,
 		@RequestParam("spaceLinkLabel") String title, @RequestParam("linkedSpace") String linkedSpaceId,
-		@RequestParam("spaceLinkLabel") String spaceLinkLabel,@RequestParam("spaceLinkDesc") String spaceLinkDesc,
+		@RequestParam("spaceLinkLabel") String spaceLinkLabel,@RequestParam(value = "spaceLinkDesc", required = false) String spaceLinkDesc,
 		@RequestParam("spaceLinkIdValueEdit") String spaceLinkIdValueEdit,
 		@RequestParam("spaceLinkDisplayId") String spaceLinkDisplayId,
 		@RequestParam("type") String displayType, @RequestParam(value="spaceLinkImage", required = false) MultipartFile file,

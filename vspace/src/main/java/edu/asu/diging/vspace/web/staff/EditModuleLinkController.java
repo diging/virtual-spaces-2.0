@@ -33,7 +33,7 @@ public class EditModuleLinkController extends EditSpaceLinksController {
         @RequestParam("y") String y, @RequestParam("rotation") String rotation,
         @RequestParam("moduleLinkLabel") String title, @RequestParam("linkedModule") String linkedModuleId,
         @RequestParam("moduleLinkLabel") String moduleLinkLabel,
-        @RequestParam("moduleLinkDesc") String moduleLinkDesc,
+        @RequestParam(value = "moduleLinkDesc", required = false) String moduleLinkDesc,
         @RequestParam("moduleLinkIdValueEdit") String moduleLinkIdValueEdit,
         @RequestParam("moduleLinkDisplayId") String moduleLinkDisplayId, @RequestParam("type") String displayType,
         @RequestParam("moduleLinkImage") MultipartFile file, @RequestParam(value="imageId", required=false) String imageId) throws NumberFormatException,

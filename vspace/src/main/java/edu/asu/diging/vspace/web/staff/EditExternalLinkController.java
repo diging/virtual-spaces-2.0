@@ -33,7 +33,7 @@ public class EditExternalLinkController extends EditSpaceLinksController {
     @RequestMapping(value = "/staff/space/link/external/{id}", method = RequestMethod.POST)
 	public ResponseEntity<String> createExternalLink(@PathVariable("id") String id, @RequestParam("x") String x,
 			@RequestParam("y") String y, @RequestParam("externalLinkLabel") String title,
-			@RequestParam("externalLinkDesc") String desc, @RequestParam("url") String externalLink,
+			@RequestParam(value = "externalLinkDesc", required = false) String desc, @RequestParam("url") String externalLink,
 			@RequestParam("externalLinkIdValueEdit") String externalLinkIdValueEdit,
 			@RequestParam("externalLinkDisplayId") String externalLinkDisplayId,
 			@RequestParam(value="externalLinkImageIdEdit", required=false) String externalLinkImageIdEdit,
