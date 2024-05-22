@@ -24,11 +24,12 @@ import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
 import edu.asu.diging.vspace.core.model.impl.Slide;
+import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.services.impl.model.ModuleOverview;
 import edu.asu.diging.vspace.core.services.impl.model.SequenceOverview;
 import edu.asu.diging.vspace.core.services.impl.model.SlideOverview;
 
-public class SequenceOverviewManagerTest {
+public class ModuleOverviewManagerTest {
 
     @Mock
     private ModuleRepository moduleRepository;
@@ -46,129 +47,114 @@ public class SequenceOverviewManagerTest {
     private ModuleOverviewManager serviceToTest;
 
     private List<ISlide> slides;
-
-    IModule module = new Module();
+    
+    private List<ISequence> sequences;
+    private Module module;
+    private Sequence sequence;
 
     @Before
     public void init() {
         MockitoAnnotations.initMocks(this);
+        
+        Space space = new Space();
+        space.setId("SPACE_01");
+
         module = new Module();
+        module.setId("MODULE_01");
+        
+        Module module2 = new Module();
+        module2.setId("MODULE_02");
+        
+        slides = new ArrayList<ISlide>();
+        ISlide slide = new Slide();
+        slide.setId("SLIDE_01");
+        slide.setModule(module);
+        slides.add(slide);
+
+        sequences = new ArrayList<ISequence>();
+        sequence = new Sequence();
+        sequence.setId("SEQUENCE_01");
+        sequence.setName("Sequence 1");
+        sequence.setSlides(slides);      
+        
+        sequences.add(sequence);
+        module.setStartSequence(sequence);
     }
 
     @Test
-    public void showModuleMap_success() {
-        slides = new ArrayList<ISlide>();
-        ISlide slide = new Slide();
-        slide.setId("slide1");
-        slide.setModule(module);
-
-        slides.add(slide);
-
-        String moduleId = "moduleId";
-
-        List<ISequence> sequences = new ArrayList<ISequence>();
-        Sequence sequence1 = new Sequence();
-        sequence1.setId("1");
-        sequence1.setName("Sequence 1");
-        sequence1.setSlides(slides);
-        sequences.add(sequence1);
-        module.setStartSequence(sequence1);
+    public void test_getModuleOverview_success() {
+        
+        String moduleId = "MODULE_01";
+        module.setStartSequence(sequence);
 
         Mockito.when(moduleManager.getModule(moduleId)).thenReturn(module);
         Mockito.when(moduleManager.getModuleSequences(moduleId)).thenReturn(sequences);
-        ModuleOverview moduleOverview = serviceToTest.getModuleOverview("moduleId");
-        assertEquals(sequence1.getId(), moduleOverview.getStartSequence().getId());
+        ModuleOverview moduleOverview = serviceToTest.getModuleOverview(moduleId);
+        assertEquals(sequence.getId(), moduleOverview.getStartSequence().getId());
     }
 
     @Test
-    public void showModuleMap_success_checkBranchingPoint() {
-        slides = new ArrayList<ISlide>();
-
-        List<ISequence> sequences = new ArrayList<ISequence>();
-        Sequence sequence1 = new Sequence();
-        sequence1.setId("1");
-        sequence1.setName("Sequence 1");
-        sequence1.setSlides(slides);
-        sequences.add(sequence1);
-
-        Sequence sequence2 = new Sequence();
-        sequence2.setId("2");
-        sequence2.setName("Sequence 2");
-        sequence2.setSlides(slides);
-        sequences.add(sequence2);
-
-        module.setStartSequence(sequence1);
+    public void test_getModuleOverview_checkBranchingPointSuccess() {
 
         List<IChoice> choices = new ArrayList<IChoice>();
         IChoice choice = new Choice();
         choice.setId("choiceId");
         choice.setName("choiceName");
-        choice.setSequence(sequence1);
+        choice.setSequence(sequence);
         choices.add(choice);
         
         BranchingPoint branchingPoint = new BranchingPoint();
         branchingPoint.setChoices(choices);
 
         ISlide slide = branchingPoint;
-        slide.setId("slide1");
+        slide.setId("BRANCHING_POINT_01");
         slide.setModule(module);
 
         slides.add(slide);
 
-        String moduleId = "moduleId";
-        module.setStartSequence(sequence1);
+        String moduleId = "MODULE_01";
 
         Mockito.when(moduleManager.getModule(moduleId)).thenReturn(module);
         Mockito.when(moduleManager.getModuleSequences(moduleId)).thenReturn(sequences);
-        ModuleOverview moduleOverview = serviceToTest.getModuleOverview("moduleId");
-        assertEquals(sequence1.getId(), moduleOverview.getStartSequence().getId());  
+        
+        ModuleOverview moduleOverview = serviceToTest.getModuleOverview(moduleId);
+        assertEquals(sequence.getId(), moduleOverview.getStartSequence().getId());
+        assertEquals(true, moduleOverview.getOtherSequences().isEmpty());
     }
     
     @Test
     public void test_getModuleOverview_otherSequencesSuccess() {
-        slides = new ArrayList<>();
-        
-        List<ISequence> sequences = new ArrayList<ISequence>();
-        Sequence sequence1 = new Sequence();
-        sequence1.setId("1");
-        sequence1.setName("Sequence 1");
-        sequence1.setSlides(slides);
-        sequences.add(sequence1);
-
-        Sequence sequence2 = new Sequence();
-        sequence2.setId("2");
-        sequence2.setName("Sequence 2");
-        sequence2.setSlides(slides);
-        sequences.add(sequence2);
         
         List<IChoice> choices = new ArrayList<IChoice>();
         IChoice choice = new Choice();
         choice.setId("choiceId");
         choice.setName("choiceName");
-        choice.setSequence(sequence1);
+        choice.setSequence(sequence);
         choices.add(choice);
         
         BranchingPoint branchingPoint = new BranchingPoint();
         branchingPoint.setChoices(choices);
-
-        ISlide slide1 = new Slide();
-        slide1.setId("slide1");
-        slide1.setModule(module);
-        slides.add(slide1);
-        
-        sequence1.setSlides(slides);      
+       
+        sequence.setSlides(slides);      
         
         ISlide slide2 = branchingPoint;
-        slide2.setId("slide2");
+        slide2.setId("SLIDE_02");
         slide2.setModule(module);
-
         slides.add(slide2);
-        String moduleId = "moduleId";
-        module.setStartSequence(sequence1);
+        
+        String moduleId = "MODULE_01";
+        
+        Sequence sequence2 = new Sequence();
+        sequence2.setId("SEQUENCE_02");
+        sequence2.setName("Sequence 2");
+        sequence2.setSlides(slides);
+        sequences.add(sequence2);
         
         Mockito.when(moduleManager.getModule(moduleId)).thenReturn(module);
         Mockito.when(moduleManager.getModuleSequences(moduleId)).thenReturn(sequences);
+        
         ModuleOverview moduleOverview = serviceToTest.getModuleOverview(moduleId);
+        
         List<SequenceOverview> sequenceOverviews = moduleOverview.getOtherSequences();
         SequenceOverview sequenceOverview = sequenceOverviews.get(0);
         
