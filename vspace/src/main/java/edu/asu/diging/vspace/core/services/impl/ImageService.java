@@ -259,7 +259,7 @@ public class ImageService implements IImageService {
      * @return list of images in the requested pageNo and requested order.
      */
     @Override
-    public List<VSImage> getPaginatedImagesByCategoryAndSearchTerm(int pageNo, ImageCategory category, String searchTerm,
+    public List<VSImage> getImagesByCategoryAndSearchTerm(int pageNo, ImageCategory category, String searchTerm,
             String sortedBy, String order) {    	
     	Sort sortingParameters = getSortingParameters(sortedBy, order);
         pageNo = validatePageNumber(pageNo, category);
@@ -267,9 +267,8 @@ public class ImageService implements IImageService {
         String likeSearchTerm = "%" + searchTerm + "%";
         Page<VSImage> results;
         if(category!=null) {
-            results = imageRepo.findByCategoriesAndFilenameLikeOrCategoriesAndNameLikeOrCategoriesAndDescriptionLike(
-                    sortByRequestedField, category, likeSearchTerm, category, 
-                    likeSearchTerm, category, likeSearchTerm);
+            results = imageRepo.findByCategoryAndFilenameLikeOrNameLikeOrDescriptionLike(
+                    sortByRequestedField, category, likeSearchTerm, likeSearchTerm, likeSearchTerm);
         }
         else {
             results = imageRepo.findByFilenameLikeOrNameLikeOrDescriptionLike(sortByRequestedField,
@@ -297,8 +296,8 @@ public class ImageService implements IImageService {
     @Override
     public long getTotalPagesOnSearchTextAndCategory(String searchTerm, ImageCategory category) {
         String likeSearchTerm = "%" + searchTerm + "%";
-        long count = imageRepo.countByCategoriesAndFilenameLikeOrCategoriesAndNameLikeOrCategoriesAndDescriptionLike(category, 
-                likeSearchTerm, category, likeSearchTerm, category, likeSearchTerm);
+        long count = imageRepo.countByCategoryAndFilenameLikeOrNameLikeOrDescriptionLike(category, 
+                likeSearchTerm, likeSearchTerm, likeSearchTerm);
         return (count % pageSize == 0) ? count / pageSize : (count / pageSize) + 1;
     }
 }

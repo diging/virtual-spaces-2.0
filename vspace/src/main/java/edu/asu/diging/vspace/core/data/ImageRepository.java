@@ -5,6 +5,7 @@ import java.util.List;
 import org.javers.spring.annotation.JaversSpringDataAuditable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
@@ -22,8 +23,9 @@ public interface ImageRepository extends PagingAndSortingRepository<VSImage, Str
 
     Page<VSImage> findByFilenameLikeOrNameLikeOrDescriptionLike(Pageable pageable, String filename, String name, String description);
 
-    Page<VSImage> findByCategoriesAndFilenameLikeOrCategoriesAndNameLikeOrCategoriesAndDescriptionLike(Pageable pageable, 
-            ImageCategory category, String filename, ImageCategory category2, String name,ImageCategory category3, String description);
+    @Query("SELECT i FROM  VSImage i join i.categories c WHERE c=?1 AND (i.filename like ?2 or i.description like ?3 or i.name like ?4)")
+    Page<VSImage> findByCategoryAndFilenameLikeOrNameLikeOrDescriptionLike(Pageable pageable, 
+            ImageCategory category, String filename, String name, String description);
     
     List<VSImage> findByFilenameLike(String filename);
 
@@ -35,6 +37,7 @@ public interface ImageRepository extends PagingAndSortingRepository<VSImage, Str
 
     long countByFilenameLikeOrNameLikeOrDescriptionLike(String filename, String name, String description);
     
-    long countByCategoriesAndFilenameLikeOrCategoriesAndNameLikeOrCategoriesAndDescriptionLike(ImageCategory category, 
-            String filename, ImageCategory category2, String name,ImageCategory category3, String description);
+    @Query("SELECT count(*) FROM  VSImage i join i.categories c WHERE c=?1 AND (i.filename like ?2 or i.description like ?3 or i.name like ?4)")
+    long countByCategoryAndFilenameLikeOrNameLikeOrDescriptionLike(ImageCategory category, 
+            String filename, String name, String description);
 }

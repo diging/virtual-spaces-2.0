@@ -38,7 +38,7 @@ public interface IImageService {
 
     List<IVSImage> findByFilenameOrNameContains(String searchTerm);
 
-    List<VSImage> getPaginatedImagesByCategoryAndSearchTerm(int pageNo, ImageCategory category, 
+    List<VSImage> getImagesByCategoryAndSearchTerm(int pageNo, ImageCategory category, 
             String searchTerm, String sortedBy, String order);
 
     long getTotalPagesOnSearchText(String searchTerm);
