@@ -26,7 +26,6 @@ public class ReferenceManager implements IReferenceManager {
 
     @Override
     public IReference createReference(IBiblioBlock biblio, String title, String author,String year,String journal, String url, String volume,String issue, String pages,String editor, String type, String note) {
-        
         IReference reference = new Reference();
         reference.setAuthor(author);
         reference.setTitle(title);
@@ -39,7 +38,6 @@ public class ReferenceManager implements IReferenceManager {
         reference.setEditors(editor);
         reference.setType(type);
         reference.setNote(note);
-        
         reference.getBiblios().add((BiblioBlock) biblio);
         return referenceRepo.save((Reference) reference);
     }
@@ -64,20 +62,14 @@ public class ReferenceManager implements IReferenceManager {
             logger.warn("Reference Id cannot be null.");
             return;
         }
-
-        try {
-            referenceRepo.delete((Reference) getReference(referenceId));
-        } catch (IllegalArgumentException exception) {
-            logger.error("Unable to delete reference" + referenceId + ". ", exception);
-        }
+        referenceRepo.delete((Reference)getReference(referenceId));
     }
 
     @Override
     public void deleteReferences(List<IReference> references, String biblioId) {
         for(IReference ref : references) {
             deleteReferenceById(ref.getId(), biblioId);
-        }
-        
+        }  
     }
 
     @Override

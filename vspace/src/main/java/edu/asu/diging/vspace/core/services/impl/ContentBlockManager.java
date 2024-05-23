@@ -163,8 +163,7 @@ public class ContentBlockManager implements IContentBlockManager {
         return null;
     }
 
-    private void storeImageFile(byte[] image, IVSImage slideContentImage, String filename)
-            throws ImageCouldNotBeStoredException {
+    private void storeImageFile(byte[] image, IVSImage slideContentImage, String filename) throws ImageCouldNotBeStoredException {
         if (slideContentImage != null) {
             String relativePath = null;
             try {
@@ -177,8 +176,7 @@ public class ContentBlockManager implements IContentBlockManager {
         }
     }
 
-    private void storeVideoFile(byte[] video, IVSVideo slideContentVideo, String filename)
-            throws VideoCouldNotBeStoredException {
+    private void storeVideoFile(byte[] video, IVSVideo slideContentVideo, String filename) throws VideoCouldNotBeStoredException {
         if (slideContentVideo != null) {
             String relativePath = null;
             try {
@@ -198,8 +196,7 @@ public class ContentBlockManager implements IContentBlockManager {
      * createImageBlock(java.lang.String, java.util.Arrays, java.lang.String)
      */
     @Override
-    public CreationReturnValue createImageBlock(String slideId, byte[] image, String filename, Integer contentOrder)
-            throws ImageCouldNotBeStoredException {
+    public CreationReturnValue createImageBlock(String slideId, byte[] image, String filename, Integer contentOrder) throws ImageCouldNotBeStoredException {
         ISlide slide = slideManager.getSlide(slideId);
         IVSImage slideContentImage = saveImage(image, filename);
         CreationReturnValue returnValue = new CreationReturnValue();
@@ -222,7 +219,6 @@ public class ContentBlockManager implements IContentBlockManager {
      */
     @Override
     public CreationReturnValue createImageBlock(String slideId, IVSImage image, Integer contentOrder) {
-
         CreationReturnValue returnValue = new CreationReturnValue();
         returnValue.setErrorMsgs(new ArrayList<>());
         ISlide slide = slideManager.getSlide(slideId);
@@ -292,8 +288,8 @@ public class ContentBlockManager implements IContentBlockManager {
         try {
             textBlockRepo.deleteById(blockId);
             updateContentOrder(slideId, contentOrder);
-        } catch (EmptyResultDataAccessException e) {
-            throw new BlockDoesNotExistException(e);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(e);
         }
 
     }
@@ -323,8 +319,8 @@ public class ContentBlockManager implements IContentBlockManager {
         try {
             imageBlockRepo.deleteById(blockId);
             updateContentOrder(slideId, contentOrder);
-        } catch (EmptyResultDataAccessException e) {
-            throw new BlockDoesNotExistException(e);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(e);
         }
 
     }
@@ -354,8 +350,8 @@ public class ContentBlockManager implements IContentBlockManager {
         try {
             videoBlockRepo.deleteById(blockId);
             updateContentOrder(slideId, contentOrder);
-        } catch (EmptyResultDataAccessException e) {
-            throw new BlockDoesNotExistException(e);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(e);
         }
     }
 
@@ -384,8 +380,8 @@ public class ContentBlockManager implements IContentBlockManager {
         try {
             choiceBlockRepo.deleteById(blockId);
             updateContentOrder(slideId, contentOrder);
-        } catch (EmptyResultDataAccessException e) {
-            throw new BlockDoesNotExistException(e);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(e);
         }
 
     }
@@ -395,8 +391,7 @@ public class ContentBlockManager implements IContentBlockManager {
     }
 
     @Override
-    public void updateImageBlock(IImageBlock imageBlock, byte[] image, String filename)
-            throws ImageCouldNotBeStoredException {
+    public void updateImageBlock(IImageBlock imageBlock, byte[] image, String filename) throws ImageCouldNotBeStoredException {
         IVSImage slideContentImage = saveImage(image, filename);
         storeImageFile(image, slideContentImage, filename);
         imageBlock.setImage(slideContentImage);
@@ -476,8 +471,6 @@ public class ContentBlockManager implements IContentBlockManager {
 
     @Override
     public IBiblioBlock createBiblioBlock(String slideId, String title, String description, Integer contentOrder) {
-        
-        
         ISlide slide = slideManager.getSlide(slideId);
         IBiblioBlock bilioBlock = new BiblioBlock();
         bilioBlock.setDescription(title);
@@ -495,8 +488,8 @@ public class ContentBlockManager implements IContentBlockManager {
         
         try {
             biblioBlockRepo.deleteById(id);         
-        } catch (EmptyResultDataAccessException e) {
-            throw new BlockDoesNotExistException(e);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(e);
         } 
     }
 
@@ -531,7 +524,6 @@ public class ContentBlockManager implements IContentBlockManager {
      */
     @Override
     public void updateContentOrder(List<ContentBlock> contentBlockList) throws BlockDoesNotExistException {
-
         if (contentBlockList == null) {
             return;
         }
@@ -561,7 +553,6 @@ public class ContentBlockManager implements IContentBlockManager {
      *                     contentOrder will be updated
      */
     private void updateContentOrder(String slideId, Integer contentOrder) {
-
         List<ContentBlock> contentBlockList = contentBlockRepository.findBySlide_IdAndContentOrderGreaterThan(slideId,
                 contentOrder);
         if (contentBlockList != null) {

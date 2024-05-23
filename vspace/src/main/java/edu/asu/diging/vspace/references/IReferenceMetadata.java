@@ -1,4 +1,4 @@
-package edu.asu.diging.vspace.referenceExpose;
+package edu.asu.diging.vspace.references;
 
 import edu.asu.diging.vspace.core.model.IReference;
 

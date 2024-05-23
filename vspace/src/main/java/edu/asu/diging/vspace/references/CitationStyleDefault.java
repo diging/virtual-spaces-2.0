@@ -1,4 +1,4 @@
-package edu.asu.diging.vspace.referenceExpose;
+package edu.asu.diging.vspace.references;
 
 public class CitationStyleDefault implements ICitationStyle{
     
