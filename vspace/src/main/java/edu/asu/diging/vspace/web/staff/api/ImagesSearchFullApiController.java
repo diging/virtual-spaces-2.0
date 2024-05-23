@@ -74,7 +74,7 @@ public class ImagesSearchFullApiController {
                 (order==null || order.equals("")) ? Sort.Direction.DESC.toString().toLowerCase():order);
         
 
-        List<VSImage> imageResults = imageService.getImagesByCategoryAndSearchTerm(pageNo, category,
+        List<VSImage> imageResults = imageService.getPaginatedImagesBySearchTerm(pageNo, category,
                 searchTerm, sortedBy!=null?sortedBy:searchTerm, order!=null ? order : searchTerm);
 
         Map<String, List<ISpace>> imageToSpaces = new HashMap<>();

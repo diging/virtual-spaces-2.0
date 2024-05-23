@@ -259,7 +259,7 @@ public class ImageService implements IImageService {
      * @return list of images in the requested pageNo and requested order.
      */
     @Override
-    public List<VSImage> getImagesByCategoryAndSearchTerm(int pageNo, ImageCategory category, String searchTerm,
+    public List<VSImage> getPaginatedImagesBySearchTerm(int pageNo, ImageCategory category, String searchTerm,
             String sortedBy, String order) {    	
     	Sort sortingParameters = getSortingParameters(sortedBy, order);
         pageNo = validatePageNumber(pageNo, category);
