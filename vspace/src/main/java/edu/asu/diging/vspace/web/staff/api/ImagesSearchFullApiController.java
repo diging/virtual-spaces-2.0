@@ -75,7 +75,13 @@ public class ImagesSearchFullApiController {
         
         List<VSImage> imageResults = imageService.getPaginatedImagesBySearchTerm(pageNo, category,
                 searchTerm, sortedBy!=null?sortedBy:searchTerm, order!=null ? order : searchTerm);
-
+        
+        model.addAttribute("images", imageResults);
+        model.addAttribute("imageToSpaces", fetchImageToSpaces(imageResults));
+        return "staff/images/imagelist";
+    }
+    
+    private Map<String, List<ISpace>> fetchImageToSpaces(List<VSImage> imageResults) {
         Map<String, List<ISpace>> imageToSpaces = new HashMap<>();
         for (IVSImage image : imageResults) {
             List<ISpace> spaces = spaceManager.getSpacesWithImageId(image.getId());
@@ -83,9 +89,6 @@ public class ImagesSearchFullApiController {
                 imageToSpaces.put(image.getId(), spaces);
             }
         }
-        
-        model.addAttribute("images", imageResults);
-        model.addAttribute("imageToSpaces", imageToSpaces);
-        return "staff/images/imagelist";
+        return imageToSpaces;
     }
 }
