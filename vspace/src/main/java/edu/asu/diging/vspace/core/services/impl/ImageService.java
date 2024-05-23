@@ -294,7 +294,7 @@ public class ImageService implements IImageService {
     }
     
     @Override
-    public long getTotalPagesOnSearchTextAndCategory(String searchTerm, ImageCategory category) {
+    public long getTotalPagesOnSearchText(String searchTerm, ImageCategory category) {
         String likeSearchTerm = "%" + searchTerm + "%";
         long count = imageRepo.countByCategoryAndFilenameLikeOrNameLikeOrDescriptionLike(category, 
                 likeSearchTerm, likeSearchTerm, likeSearchTerm);

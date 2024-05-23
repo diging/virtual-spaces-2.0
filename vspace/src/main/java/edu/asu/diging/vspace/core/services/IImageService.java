@@ -43,5 +43,5 @@ public interface IImageService {
 
     long getTotalPagesOnSearchText(String searchTerm);
 
-    long getTotalPagesOnSearchTextAndCategory(String searchTerm, ImageCategory category);
+    long getTotalPagesOnSearchText(String searchTerm, ImageCategory category);
 }

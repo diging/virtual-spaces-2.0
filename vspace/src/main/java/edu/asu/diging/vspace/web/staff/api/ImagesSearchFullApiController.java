@@ -42,8 +42,7 @@ public class ImagesSearchFullApiController {
             @RequestParam(value = "imageCat", required = false) String imageCategory,
             @RequestParam(value = "sort", required = false) String sortedBy,
             @RequestParam(value = "order", required = false) String order,
-            Model model,
-            RedirectAttributes attributes) {
+            Model model, RedirectAttributes attributes) {
         int pageNo;
         page = StringUtils.isEmpty(page) ? "1" : page;
         try {
@@ -61,19 +60,19 @@ public class ImagesSearchFullApiController {
             }
         }
         model.addAttribute("totalPages", category == null ? imageService.getTotalPagesOnSearchText(searchTerm)
-                : imageService.getTotalPagesOnSearchTextAndCategory(searchTerm, category));
+                : imageService.getTotalPagesOnSearchText(searchTerm, category));
         model.addAttribute("searchText", searchTerm);
         model.addAttribute("currentPageNumber", pageNo);
         model.addAttribute("totalImageCount", imageService.getTotalImageCount(category));
         model.addAttribute("imageCategories", ImageCategory.values());
         model.addAttribute("imageCategory", imageCategory);
+        model.addAttribute("searchTerm", searchTerm);
         
         model.addAttribute("sortProperty",
                 (sortedBy==null || sortedBy.equals("")) ? SortByField.CREATION_DATE.getValue():sortedBy);
         model.addAttribute("order",
                 (order==null || order.equals("")) ? Sort.Direction.DESC.toString().toLowerCase():order);
         
-
         List<VSImage> imageResults = imageService.getPaginatedImagesBySearchTerm(pageNo, category,
                 searchTerm, sortedBy!=null?sortedBy:searchTerm, order!=null ? order : searchTerm);
 
@@ -84,10 +83,9 @@ public class ImagesSearchFullApiController {
                 imageToSpaces.put(image.getId(), spaces);
             }
         }
-
-        model.addAttribute("imageToSpaces", imageToSpaces);
+        
         model.addAttribute("images", imageResults);
-        model.addAttribute("searchTerm", searchTerm);
+        model.addAttribute("imageToSpaces", imageToSpaces);
         return "staff/images/imagelist";
     }
 }
