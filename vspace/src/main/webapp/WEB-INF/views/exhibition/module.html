@@ -57,6 +57,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
 <script th:inline="javascript">
         var json =[[${overview}]];
+        var moduleId = [[${module.id}]];
+        var spaceId = [[${spaceId}]];
         var currentSlide = [[${currentSlideCon}]];
         var sequenceId = [[${currentSequenceId}]];
          $( document ).ready(function() {
@@ -334,6 +336,16 @@
                         var nodeEnter = node.enter().append("g").attr("class", "node")
                         	.attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; }); 
 						
+                        nodeEnter.on("click", openSlide);
+
+                        function openSlide (d){
+                            if(d.group === "slide"){
+                                window.open("[[@{|/exhibit/|}]]"+spaceId+'/module/'+moduleId+'/sequence/'+d.sequenceId+'/slide/'+d.slideId, "_self");
+                            } else if(d.group === "sequence" && d.parent.branchingPoint == true ){
+                                window.open("[[@{|/exhibit/|}]]"+spaceId+'/module/'+moduleId+'/sequence/'+d.id+"?branchingPoint="+d.parent.slideId+"&previousSequenceId="+d.parent.sequenceId, "_self");
+                            }
+                        }
+
                         nodeEnter.append("circle").attr("r", function(d){
                         	if((d.group=== "slide" && d.sequenceId.normalize() === sequenceId.normalize() ) 
                         			&& (d.slideId.normalize() === currentSlide.id.normalize())){
@@ -397,17 +409,28 @@
                         
                         nodeExit.select("text")
                         	.style("fill-opacity", 1e-6);
-                        
+
+                        // Remove the last two links from the data array
+                        if (links.length > 1) {
+                            links.pop();
+                            links.pop();
+                        }
+
                         // Update the links…
                         var link = svg.selectAll("path.link")
-                        	.data(links, function(d) { return d.target.id; })
-									
+                            .data(links, function(d) { return d.target.id; })
+                        
+                        
                         // Enter any new links at the parent's previous position.
                         link.enter().insert("path", "g").attr("class", "link")
-                        	.attr("d", function(d) {
-                        		var o = {x: source.x0, y: source.y0};					
-                        		return diagonal({source: o, target: o});	
-                        }).style("fill-opacity", function(d) { return d._children ? 1e-6 : 1e-6; });//;
+                            .attr("d", function(d) {
+                                let i=0;
+                                var o = {x: source.x0, y: source.y0};					
+                                return diagonal({source: o, target: o});	
+                            }).style("fill-opacity", function(d) { return d._children ? 1e-6 : 1e-6; });
+
+                        // Remove the last two path.link elements from the DOM
+                        d3.selectAll("path.link:nth-last-child(-n+2)").remove();
 						
                         // Transition links to their new position.
                         link.transition().duration(duration).attr("d", diagonal);
@@ -416,7 +439,7 @@
                         nodes.forEach(function(d) {
                         	d.x0 = d.x;
                         	d.y0 = d.y;});
-                        }  
+                        }                           
              </script>
                     </div>
                 </div>
