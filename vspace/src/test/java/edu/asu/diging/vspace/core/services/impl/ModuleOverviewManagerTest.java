@@ -1,6 +1,8 @@
 package edu.asu.diging.vspace.core.services.impl;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,13 +26,11 @@ import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
 import edu.asu.diging.vspace.core.model.impl.Slide;
-import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.services.impl.model.ModuleOverview;
 import edu.asu.diging.vspace.core.services.impl.model.SequenceOverview;
 import edu.asu.diging.vspace.core.services.impl.model.SlideOverview;
 
 public class ModuleOverviewManagerTest {
-
     @Mock
     private ModuleRepository moduleRepository;
 
@@ -46,19 +46,14 @@ public class ModuleOverviewManagerTest {
     @InjectMocks
     private ModuleOverviewManager serviceToTest;
 
-    private List<ISlide> slides;
-    
+    private List<ISlide> slides;   
     private List<ISequence> sequences;
-    private Module module;
-    private Sequence sequence;
+    private IModule module;
+    private ISequence sequence;
 
     @Before
     public void init() {
         MockitoAnnotations.initMocks(this);
-        
-        Space space = new Space();
-        space.setId("SPACE_01");
-
         module = new Module();
         module.setId("MODULE_01");
         
@@ -68,6 +63,7 @@ public class ModuleOverviewManagerTest {
         slides = new ArrayList<ISlide>();
         ISlide slide = new Slide();
         slide.setId("SLIDE_01");
+        slide.setName("Slide 1");
         slide.setModule(module);
         slides.add(slide);
 
@@ -78,7 +74,29 @@ public class ModuleOverviewManagerTest {
         sequence.setSlides(slides);      
         
         sequences.add(sequence);
-        module.setStartSequence(sequence);
+        module.setStartSequence(sequence);        
+    }
+        
+    @Test
+    public void test_createSequenceOverviewNode_success() {
+        String moduleId = "MODULE_01";      
+        Mockito.when(moduleManager.getModule(moduleId)).thenReturn(module);
+        Mockito.when(moduleManager.getModuleSequences(moduleId)).thenReturn(sequences);
+        
+        SequenceOverview sequenceOverview = serviceToTest.createSequenceOverviewNode(sequences.get(0));
+        assertEquals(sequenceOverview.getId(), sequence.getId());
+        assertEquals(sequenceOverview.getName(), sequence.getName());
+        assertEquals(sequenceOverview.getSlideOverviews().size(), 1);
+    }
+    
+    @Test
+    public void test_createSequenceOverviewNode_failure() {        
+        String moduleId = "MODULE_01";        
+        Mockito.when(moduleManager.getModule(moduleId)).thenReturn(null);
+        Mockito.when(moduleManager.getModuleSequences(moduleId)).thenReturn(sequences);
+        
+        SequenceOverview sequenceOverview = serviceToTest.createSequenceOverviewNode(sequences.get(0));
+        assertNotEquals(sequenceOverview.getId(), null);
     }
 
     @Test
@@ -86,21 +104,22 @@ public class ModuleOverviewManagerTest {
         
         String moduleId = "MODULE_01";
         module.setStartSequence(sequence);
-
         Mockito.when(moduleManager.getModule(moduleId)).thenReturn(module);
         Mockito.when(moduleManager.getModuleSequences(moduleId)).thenReturn(sequences);
+        
         ModuleOverview moduleOverview = serviceToTest.getModuleOverview(moduleId);
         assertEquals(sequence.getId(), moduleOverview.getStartSequence().getId());
+        assertTrue(moduleOverview.getOtherSequences().isEmpty());
     }
 
     @Test
     public void test_getModuleOverview_checkBranchingPointSuccess() {
-
-        List<IChoice> choices = new ArrayList<IChoice>();
         IChoice choice = new Choice();
-        choice.setId("choiceId");
-        choice.setName("choiceName");
+        choice.setId("CHOICE_01");
+        choice.setName("choice 1");
         choice.setSequence(sequence);
+        
+        List<IChoice> choices = new ArrayList<IChoice>();
         choices.add(choice);
         
         BranchingPoint branchingPoint = new BranchingPoint();
@@ -111,27 +130,34 @@ public class ModuleOverviewManagerTest {
         slide.setModule(module);
 
         slides.add(slide);
+        sequence.setSlides(slides);
 
         String moduleId = "MODULE_01";
-
         Mockito.when(moduleManager.getModule(moduleId)).thenReturn(module);
         Mockito.when(moduleManager.getModuleSequences(moduleId)).thenReturn(sequences);
         
         ModuleOverview moduleOverview = serviceToTest.getModuleOverview(moduleId);
+        
+        List<SlideOverview> slideOverviews = moduleOverview.getStartSequence().getSlideOverviews();
         assertEquals(sequence.getId(), moduleOverview.getStartSequence().getId());
-        assertEquals(true, moduleOverview.getOtherSequences().isEmpty());
+        assertEquals(sequence.getName(), moduleOverview.getStartSequence().getName());
+        assertTrue(moduleOverview.getOtherSequences().isEmpty());
+        assertEquals(sequence.getSlides().size(), 2);
+        assertEquals(slideOverviews.get(1).getId(), slide.getId());
+        assertEquals(slideOverviews.get(1).getName(), slide.getName());
+        assertTrue(slideOverviews.get(1).isBranchingPoint());    
     }
     
     @Test
     public void test_getModuleOverview_otherSequencesSuccess() {
+        IChoice choice = new Choice();
+        choice.setId("CHOICE_01");
+        choice.setName("choice 1");
+        choice.setSequence(sequence);
         
         List<IChoice> choices = new ArrayList<IChoice>();
-        IChoice choice = new Choice();
-        choice.setId("choiceId");
-        choice.setName("choiceName");
-        choice.setSequence(sequence);
-        choices.add(choice);
-        
+        choices.add(choice);        
+               
         BranchingPoint branchingPoint = new BranchingPoint();
         branchingPoint.setChoices(choices);
        
@@ -157,14 +183,26 @@ public class ModuleOverviewManagerTest {
         
         List<SequenceOverview> sequenceOverviews = moduleOverview.getOtherSequences();
         SequenceOverview sequenceOverview = sequenceOverviews.get(0);
-        
-        assertEquals(sequence2.getId(), sequenceOverview.getId());
-        
-        List<SlideOverview> slideOverviews = sequenceOverview.getSlideOverviews();            
+        List<SlideOverview> slideOverviews = sequenceOverview.getSlideOverviews();
+        assertEquals(sequenceOverview.getSlideOverviews().size(), 2);
+        assertEquals(sequence2.getId(), sequenceOverview.getId());       
+                 
         int i = 0;
         for(SlideOverview slideOverview : slideOverviews) {
             assertEquals(slideOverview.getId(), slides.get(i).getId());
+            assertEquals(slideOverview.getName(), slides.get(i).getName());
             i++;
         }
+    }
+    
+    @Test
+    public void test_getModuleOverview_failure() {
+        String moduleId = "MODULE_01";
+        Mockito.when(moduleManager.getModule(moduleId)).thenReturn(module);
+        
+        ModuleOverview moduleOverview = serviceToTest.getModuleOverview(moduleId);
+        
+        assertNotEquals(moduleOverview.getStartSequence(),null);
+        assertNotEquals(moduleOverview.getOtherSequences(),1);
     }
 }
