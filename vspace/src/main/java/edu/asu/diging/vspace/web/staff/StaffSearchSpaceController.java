@@ -40,36 +40,7 @@ public class StaffSearchSpaceController {
         staffSearch.setSpaces(spaceList);
         return new ResponseEntity<StaffSearchSpaceResults>(staffSearch, HttpStatus.OK);
     }
-    
-    @RequestMapping("/staff/spaces/search")
-    public ResponseEntity<String> search(@RequestParam(value = "term", required = false) String search){
-        List<ISpace> spaces = null;
-        if (search != null && !search.trim().isEmpty()) {
-            spaces = spaceManager.findByName(search);
-        } else {
-            spaces = spaceManager.getAllSpaces();
-        }
-        
-        ObjectMapper mapper = new ObjectMapper();
-        ArrayNode idArray = mapper.createArrayNode();
-        for (ISpace space : spaces) {
-            ObjectNode spaceNode = mapper.createObjectNode();
-            spaceNode.put("id", space.getId());
-            spaceNode.put("name", space.getName());
-            idArray.add(spaceNode);
-        }
-        return new ResponseEntity<String>(idArray.toString(), HttpStatus.OK);
-    }
 
-    /**
-     * This method is used to search the search string specified in the input
-     * parameter(searchTerm) and return the spaces corresponding to
-     * the page number specified in the input parameter(spacePagenum) whose name or
-     * description contains the search string.
-     * 
-     * @param spacePagenum current page number sent as request parameter in the URL.
-     * @param searchTerm   This is the search string which is being searched.
-     */
     private List<ISpace> paginationForSpace(String spacePagenum, String searchTerm) {
         Page<ISpace> spacePage = staffSearchManager.searchInSpaces(searchTerm, Integer.parseInt(spacePagenum));
         return spacePage.getContent();

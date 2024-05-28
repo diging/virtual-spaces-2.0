@@ -80,10 +80,6 @@ public interface IContentBlockManager {
      */
     void deleteSpaceBlockById(String blockId, String slideId) throws BlockDoesNotExistException;
     
-    void updateContentOrder(List<ContentBlock> contentBlockList, ISlide slide) throws BlockDoesNotExistException;
-
-    void saveVideoBlock(IVideoBlock videoBlock);
-
     /**
      * Adjusting the content order of the blocks of slide once it is dragged and
      * changed position.
@@ -91,6 +87,9 @@ public interface IContentBlockManager {
      * @param contentBlockList - The list contains the blocks and the updated
      *                         content order corresponding to each blocks.
      */
+    void updateContentOrder(List<ContentBlock> contentBlockList, ISlide slide) throws BlockDoesNotExistException;
+
+    void saveVideoBlock(IVideoBlock videoBlock);
     
 
 }

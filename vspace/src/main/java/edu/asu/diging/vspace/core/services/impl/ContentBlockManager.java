@@ -267,9 +267,7 @@ public class ContentBlockManager implements IContentBlockManager {
     private IVSVideo storeVideo(byte[] video, Long size, String fileName, String url, String title)
             throws VideoCouldNotBeStoredException {
         IVSVideo slideContentVideo = null;
-        
         if (video != null) {
-            
             slideContentVideo = saveVideo(video, size, fileName, title);
             storeVideoFile(video, slideContentVideo, fileName);
             slideContentVideo.setUrl(null);
