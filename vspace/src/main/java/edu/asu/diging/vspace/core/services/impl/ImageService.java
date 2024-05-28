@@ -262,8 +262,17 @@ public class ImageService implements IImageService {
     public void removeCategory(IVSImage image, ImageCategory category) {
         image.getCategories().remove(category);
         imageRepo.save((VSImage) image);
-    }
-
+    }   
+    
+    /**
+     * Method to store an image in the file location
+     * 
+     *@param image - The image data as a byte array
+     *@param filename - The name of the file to be stored
+     *
+     *@return {@link IVSImage} instance 
+     *@throws FileStorageException If there is an error storing the file
+     */
     @Override
     public IVSImage storeImage(byte[] image, String filename) {
 
@@ -298,6 +307,12 @@ public class ImageService implements IImageService {
         return storedImage;
     }
 
+    /**
+     *Method to return content of the image
+     *
+     *@param image - {@link IVSImage} instance of the image to be retrieved
+     *@return byte[] - the image content as byte array
+     */
     @Override
     public byte[] getImageContent(IVSImage image) {
         try {

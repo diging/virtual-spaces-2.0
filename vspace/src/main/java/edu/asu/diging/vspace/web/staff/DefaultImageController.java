@@ -63,7 +63,8 @@ public class DefaultImageController {
      */
     @RequestMapping(value = API_DEFAULT_SPACE_IMAGE_STATUS, method = RequestMethod.GET)
     public ResponseEntity<String> getDefaultImageStatus() {
-        IExhibition exhibition = exhibitManager.getStartExhibition();exhibition.getSpaceLinkDefaultImage();
+        IExhibition exhibition = exhibitManager.getStartExhibition();
+        exhibition.getSpaceLinkDefaultImage();
 
         JsonObject jsonObj = new JsonObject();
         jsonObj.addProperty("defaultSpaceImageFlag", exhibition.getSpaceLinkDefaultImage() != null? true : false);
