@@ -1,5 +1,6 @@
 package edu.asu.diging.vspace.web.staff;
 
+import java.lang.reflect.InaccessibleObjectException;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -14,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.asu.diging.vspace.core.exception.BlockDoesNotExistException;
@@ -35,16 +38,15 @@ public class UpdateContentOrderController {
     private ISlideManager slideManager;
 
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/blocks/order/update", method = RequestMethod.POST)
-    public ResponseEntity<List<ContentBlock>> adjustContentOrder(@RequestBody String contentBlockString, @PathVariable("id") String slideId) {
+    public ResponseEntity<List<ContentBlock>> adjustContentOrder(@RequestBody String contentBlockString, @PathVariable("id") String slideId) throws BlockDoesNotExistException, JsonMappingException, JsonProcessingException {
 
         ObjectMapper objectMapper = new ObjectMapper();
         ISlide slide = slideManager.getSlide(slideId);
         List<ContentBlock> contentBlockList;
         try {
-            System.out.println(contentBlockString);
             contentBlockList = objectMapper.readValue(contentBlockString, new TypeReference<List<ContentBlock>>(){});
             contentBlockManager.updateContentOrder(contentBlockList,slide);
-        } catch (Exception e) {
+        } catch (InaccessibleObjectException e) {
             logger.warn("Error while parsing content blocks.", e);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
