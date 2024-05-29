@@ -2,7 +2,9 @@ package edu.asu.diging.vspace.web.staff;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -116,9 +118,7 @@ public class ExhibitionConfigurationController {
         }
 
         exhibition = (Exhibition) exhibitManager.storeExhibition(exhibition);
-        attributes.addAttribute("alertType", "success");
-        attributes.addAttribute("message", "Successfully Saved!");
-        attributes.addAttribute("showAlert", "true");
+        attributes.addAllAttributes(addSuccessAttributes(exhibition));
 
         return new RedirectView(request.getContextPath() + "/staff/exhibit/config");
     }
@@ -148,10 +148,7 @@ public class ExhibitionConfigurationController {
         
         exhibition.setSpaceLinkDefaultImage(spaceDefaultImage);
         exhibition = (Exhibition) exhibitManager.storeExhibition(exhibition);
-        attributes.addAttribute("exhibitId",exhibition.getId());
-        attributes.addAttribute("alertType", "success");
-        attributes.addAttribute("message", "Successfully Saved!");
-        attributes.addAttribute("showAlert", "true");
+        attributes.addAllAttributes(addSuccessAttributes(exhibition));
 
         return new RedirectView(request.getContextPath() + "/staff/exhibit/config");
     }
@@ -181,10 +178,7 @@ public class ExhibitionConfigurationController {
         
         exhibition.setModuleLinkDefaultImage(moduleDefaultImage);
         exhibition = (Exhibition) exhibitManager.storeExhibition(exhibition);
-        attributes.addAttribute("exhibitId",exhibition.getId());
-        attributes.addAttribute("alertType", "success");
-        attributes.addAttribute("message", "Successfully Saved!");
-        attributes.addAttribute("showAlert", "true");
+        attributes.addAllAttributes(addSuccessAttributes(exhibition));
         
         return new RedirectView(request.getContextPath() + "/staff/exhibit/config");
     }
@@ -213,11 +207,24 @@ public class ExhibitionConfigurationController {
                 imageService.storeImage(externalLinkImage.getBytes(), externalLinkImage.getOriginalFilename()) : null;         
         exhibition.setExternalLinkDefaultImage(externalLinkDefaultImage);
         exhibition = (Exhibition) exhibitManager.storeExhibition(exhibition);
-        attributes.addAttribute("exhibitId",exhibition.getId());
-        attributes.addAttribute("alertType", "success");
-        attributes.addAttribute("message", "Successfully Saved!");
-        attributes.addAttribute("showAlert", "true");
+        attributes.addAllAttributes(addSuccessAttributes(exhibition));
 
         return new RedirectView(request.getContextPath() + "/staff/exhibit/config");
+    }
+    
+    /**
+     * Method to return values as a map indicating a successful operation
+     * 
+     * @param exhibition
+     * @param attributes
+     * @return 
+     */
+    private Map<String, String> addSuccessAttributes(Exhibition exhibition) {
+        Map<String, String>attributes = new HashMap<>();
+        attributes.put("exhibitId",exhibition.getId());
+        attributes.put("alertType", "success");
+        attributes.put("message", "Successfully Saved!");
+        attributes.put("showAlert", "true");
+        return attributes;
     }
 }
