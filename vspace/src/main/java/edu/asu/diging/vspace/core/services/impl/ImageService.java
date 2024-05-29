@@ -259,7 +259,7 @@ public class ImageService implements IImageService {
      * @return list of images in the requested pageNo and requested order.
      */
     @Override
-    public List<VSImage> getPaginatedImagesBySearchTerm(int pageNo, ImageCategory category, String searchTerm,
+    public Page<VSImage> getPaginatedImagesBySearchTerm(int pageNo, ImageCategory category, String searchTerm,
             String sortedBy, String order) {    	
     	Sort sortingParameters = getSortingParameters(sortedBy, order);
         pageNo = validatePageNumber(pageNo, category);
@@ -274,30 +274,6 @@ public class ImageService implements IImageService {
             results = imageRepo.findByFilenameLikeOrNameLikeOrDescriptionLike(sortByRequestedField,
                     likeSearchTerm, likeSearchTerm, likeSearchTerm);
         }
-        return results.getContent();
-    }
-      
-    /**
-     * Method to return the total pages sufficient to display all images
-     * with respect to the search text
-     * 
-     * @param searchTerm - This is the search string which is being searched.
-     * 
-     * @return totalPages - this is the total pages for the search results
-     *  
-     */
-    @Override
-    public long getTotalPagesOnSearchText(String searchTerm) {
-    	String likeSearchTerm = "%" + searchTerm + "%";
-    	long count = imageRepo.countByFilenameLikeOrNameLikeOrDescriptionLike(likeSearchTerm, likeSearchTerm, likeSearchTerm);
-    	return (count % pageSize == 0) ? count / pageSize : (count / pageSize) + 1;
-    }
-    
-    @Override
-    public long getTotalPagesOnSearchText(String searchTerm, ImageCategory category) {
-        String likeSearchTerm = "%" + searchTerm + "%";
-        long count = imageRepo.countByCategoryAndFilenameLikeOrNameLikeOrDescriptionLike(category, 
-                likeSearchTerm, likeSearchTerm, likeSearchTerm);
-        return (count % pageSize == 0) ? count / pageSize : (count / pageSize) + 1;
+        return results;
     }
 }

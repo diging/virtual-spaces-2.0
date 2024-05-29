@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -59,8 +60,6 @@ public class ImagesSearchFullApiController {
                 logger.error("Wrong argument for image category", e);
             }
         }
-        model.addAttribute("totalPages", category == null ? imageService.getTotalPagesOnSearchText(searchTerm)
-                : imageService.getTotalPagesOnSearchText(searchTerm, category));
         model.addAttribute("searchText", searchTerm);
         model.addAttribute("currentPageNumber", pageNo);
         model.addAttribute("totalImageCount", imageService.getTotalImageCount(category));
@@ -73,11 +72,12 @@ public class ImagesSearchFullApiController {
         model.addAttribute("order",
                 (order==null || order.equals("")) ? Sort.Direction.DESC.toString().toLowerCase():order);
         
-        List<VSImage> imageResults = imageService.getPaginatedImagesBySearchTerm(pageNo, category,
+        Page<VSImage> imageResults = imageService.getPaginatedImagesBySearchTerm(pageNo, category,
                 searchTerm, sortedBy!=null?sortedBy:searchTerm, order!=null ? order : searchTerm);
+        model.addAttribute("totalPages", imageResults.getTotalPages());
         
         model.addAttribute("images", imageResults);
-        model.addAttribute("imageToSpaces", fetchImageToSpaces(imageResults));
+        model.addAttribute("imageToSpaces", fetchImageToSpaces(imageResults.getContent()));
         return "staff/images/imagelist";
     }
     

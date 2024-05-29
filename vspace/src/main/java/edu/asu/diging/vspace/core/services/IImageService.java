@@ -3,6 +3,8 @@ package edu.asu.diging.vspace.core.services;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
 import edu.asu.diging.vspace.core.exception.ImageDoesNotExistException;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.ImageCategory;
@@ -38,10 +40,6 @@ public interface IImageService {
 
     List<IVSImage> findByFilenameOrNameContains(String searchTerm);
 
-    List<VSImage> getPaginatedImagesBySearchTerm(int pageNo, ImageCategory category, 
+    Page<VSImage> getPaginatedImagesBySearchTerm(int pageNo, ImageCategory category, 
             String searchTerm, String sortedBy, String order);
-
-    long getTotalPagesOnSearchText(String searchTerm);
-
-    long getTotalPagesOnSearchText(String searchTerm, ImageCategory category);
 }

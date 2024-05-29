@@ -34,10 +34,4 @@ public interface ImageRepository extends PagingAndSortingRepository<VSImage, Str
     List<IVSImage> findByCategories(ImageCategory category);
     
     long countByCategories(ImageCategory category);
-
-    long countByFilenameLikeOrNameLikeOrDescriptionLike(String filename, String name, String description);
-    
-    @Query("SELECT count(*) FROM  VSImage i join i.categories c WHERE c=?1 AND (i.filename like ?2 or i.description like ?3 or i.name like ?4)")
-    long countByCategoryAndFilenameLikeOrNameLikeOrDescriptionLike(ImageCategory category, 
-            String filename, String name, String description);
 }
