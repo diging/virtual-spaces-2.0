@@ -353,7 +353,8 @@
                         	}
                         	return 1e-6;
                         }).style("fill", function(d) { return d._children ? "orange" : "orange"; })
-                        .style("opacity", function(d, i) { return !d.depth ? 0 : 1; });
+                        .style("opacity", function(d, i) { return !d.depth ? 0 : 1; })
+                        .style("cursor","pointer");
 						
                         nodeEnter.append("text").attr("class","text")
                         	.attr("x", function(d) { return d.children || d._children ? 10 :10; })
