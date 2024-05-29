@@ -124,12 +124,13 @@ public class ExhibitionConfigurationController {
     }
     
     /**
-     * exhibitionParam is used when default space of existing exhibition is updated.
+     * To create or update the default space link image.
      * 
-     * @param exhibitionParam
-     * @param spaceLinkImage
-     * @param attributes
-     * @return
+     * @param exhibitID - the ID of the exhibition to update
+     * @param spaceLinkImage - the MultipartFile representing the space link image to be uploaded
+     * @param attributes - the RedirectAttributes object to add flash attributes
+     * @return a RedirectView to the exhibition configuration page
+     * @throws IOException if an input or output error occurs
      */
     @RequestMapping(value = "/staff/exhibit/config/spaceLinkImage", method = RequestMethod.POST)
     public RedirectView createOrUpdateSpaceLinkImage(HttpServletRequest request,
@@ -154,12 +155,12 @@ public class ExhibitionConfigurationController {
     }
     
     /**
-     * exhibitionParam is used when default space of existing exhibition is updated.
+     * To create or update the default module link image
      * 
-     * @param exhibitionParam
-     * @param moduleLinkImage
-     * @param attributes
-     * @return
+     * @param exhibitID - the ID of the exhibition to update
+     * @param moduleLinkImage - the MultipartFile representing the module link image
+     * @param attributes - the RedirectAttributes object
+     * @return a RedirectView to the exhibition configuration page
      */
     @RequestMapping(value = "/staff/exhibit/config/moduleLinkImage", method = RequestMethod.POST)
     public RedirectView createOrUpdateModuleLinkImage(HttpServletRequest request,
@@ -184,12 +185,12 @@ public class ExhibitionConfigurationController {
     }
     
     /**
-     * exhibitionParam is used when default space of existing exhibition is updated.
+     * To create or update the default external link image 
      * 
-     * @param exhibitionParam
-     * @param externalLinkImage
-     * @param attributes
-     * @return
+     * @param exhibitID - the ID of the exhibition to update
+     * @param externalLinkImage - the MultipartFile representing the external link image
+     * @param attributes - the RedirectAttributes object 
+     * @return a RedirectView to the exhibition configuration page
      */
     @RequestMapping(value = "/staff/exhibit/config/externalLinkImage", method = RequestMethod.POST)
     public RedirectView createOrUpdateExternalLinkImage(HttpServletRequest request,
@@ -213,7 +214,7 @@ public class ExhibitionConfigurationController {
     }
     
     /**
-     * Method to return values as a map indicating a successful operation
+     * Method to return values indicating a successful operation
      * 
      * @param exhibition
      * @param attributes

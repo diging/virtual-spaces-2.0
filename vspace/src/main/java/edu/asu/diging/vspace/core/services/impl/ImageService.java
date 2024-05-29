@@ -269,7 +269,6 @@ public class ImageService implements IImageService {
      * 
      *@param image - The image data as a byte array
      *@param filename - The name of the file to be stored
-     *
      *@return {@link IVSImage} instance 
      *@throws FileStorageException If there is an error storing the file
      */
