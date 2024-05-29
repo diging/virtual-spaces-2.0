@@ -2,6 +2,7 @@ package edu.asu.diging.vspace.core.services.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import edu.asu.diging.vspace.core.model.impl.Choice;
 import edu.asu.diging.vspace.core.model.impl.Module;
 import edu.asu.diging.vspace.core.data.SequenceRepository;
 import edu.asu.diging.vspace.core.data.display.ModuleLinkDisplayRepository;
+import edu.asu.diging.vspace.core.exception.ModuleNotFoundException;
 import edu.asu.diging.vspace.core.model.IChoice;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISequence;
@@ -56,10 +58,7 @@ public class ModuleOverviewManagerTest {
         MockitoAnnotations.initMocks(this);
         module = new Module();
         module.setId("MODULE_01");
-        
-        Module module2 = new Module();
-        module2.setId("MODULE_02");
-        
+
         slides = new ArrayList<ISlide>();
         ISlide slide = new Slide();
         slide.setId("SLIDE_01");
@@ -71,8 +70,7 @@ public class ModuleOverviewManagerTest {
         sequence = new Sequence();
         sequence.setId("SEQUENCE_01");
         sequence.setName("Sequence 1");
-        sequence.setSlides(slides);      
-        
+        sequence.setSlides(slides);        
         sequences.add(sequence);
         module.setStartSequence(sequence);        
     }
@@ -88,19 +86,9 @@ public class ModuleOverviewManagerTest {
         assertEquals(sequenceOverview.getName(), sequence.getName());
         assertEquals(sequenceOverview.getSlideOverviews().size(), 1);
     }
-    
-    @Test
-    public void test_createSequenceOverviewNode_failure() {        
-        String moduleId = "MODULE_01";        
-        Mockito.when(moduleManager.getModule(moduleId)).thenReturn(null);
-        Mockito.when(moduleManager.getModuleSequences(moduleId)).thenReturn(sequences);
-        
-        SequenceOverview sequenceOverview = serviceToTest.createSequenceOverviewNode(sequences.get(0));
-        assertNotEquals(sequenceOverview.getId(), null);
-    }
 
     @Test
-    public void test_getModuleOverview_success() {
+    public void test_getModuleOverview_success() throws ModuleNotFoundException {
         
         String moduleId = "MODULE_01";
         module.setStartSequence(sequence);
@@ -113,7 +101,7 @@ public class ModuleOverviewManagerTest {
     }
 
     @Test
-    public void test_getModuleOverview_checkBranchingPointSuccess() {
+    public void test_getModuleOverview_checkBranchingPointSuccess() throws ModuleNotFoundException {
         IChoice choice = new Choice();
         choice.setId("CHOICE_01");
         choice.setName("choice 1");
@@ -149,7 +137,7 @@ public class ModuleOverviewManagerTest {
     }
     
     @Test
-    public void test_getModuleOverview_otherSequencesSuccess() {
+    public void test_getModuleOverview_otherSequencesSuccess() throws ModuleNotFoundException {
         IChoice choice = new Choice();
         choice.setId("CHOICE_01");
         choice.setName("choice 1");
@@ -181,9 +169,10 @@ public class ModuleOverviewManagerTest {
         
         ModuleOverview moduleOverview = serviceToTest.getModuleOverview(moduleId);
         
-        List<SequenceOverview> sequenceOverviews = moduleOverview.getOtherSequences();
-        SequenceOverview sequenceOverview = sequenceOverviews.get(0);
+        List<SequenceOverview> otherSequenceOverviews = moduleOverview.getOtherSequences();
+        SequenceOverview sequenceOverview = otherSequenceOverviews.get(0);
         List<SlideOverview> slideOverviews = sequenceOverview.getSlideOverviews();
+        assertEquals(otherSequenceOverviews.size(), 1);
         assertEquals(sequenceOverview.getSlideOverviews().size(), 2);
         assertEquals(sequence2.getId(), sequenceOverview.getId());       
                  
@@ -196,13 +185,22 @@ public class ModuleOverviewManagerTest {
     }
     
     @Test
-    public void test_getModuleOverview_failure() {
+    public void test_getModuleOverview_moduleNotExists(){
         String moduleId = "MODULE_01";
+        Mockito.when(moduleManager.getModule("MODULE_01")).thenReturn(null);
+        assertThrows(ModuleNotFoundException.class, () -> serviceToTest.getModuleOverview(moduleId));
+    }
+    
+    @Test
+    public void test_getModuleOverview_failure() throws ModuleNotFoundException{
+        String moduleId = "MODULE_02";
+        module = new Module();
+        module.setId(moduleId);
         Mockito.when(moduleManager.getModule(moduleId)).thenReturn(module);
+        Mockito.when(moduleManager.getModuleSequences(moduleId)).thenReturn(new ArrayList());
         
         ModuleOverview moduleOverview = serviceToTest.getModuleOverview(moduleId);
-        
-        assertNotEquals(moduleOverview.getStartSequence(),null);
-        assertNotEquals(moduleOverview.getOtherSequences(),1);
+        assertEquals(moduleOverview.getStartSequence(),null);
+        assertTrue(moduleOverview.getOtherSequences().isEmpty());
     }
 }

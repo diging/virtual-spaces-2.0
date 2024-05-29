@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import edu.asu.diging.vspace.core.exception.ModuleNotFoundException;
 import edu.asu.diging.vspace.core.model.IChoice;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISequence;
@@ -23,8 +24,11 @@ public class ModuleOverviewManager implements IModuleOverviewManager {
     @Autowired
     private IModuleManager moduleManager;
     
-    public ModuleOverview getModuleOverview(String moduleId) {
+    public ModuleOverview getModuleOverview(String moduleId) throws ModuleNotFoundException{
         IModule module = moduleManager.getModule(moduleId);
+        if(module==null) {
+            throw new ModuleNotFoundException("Module not found");
+        }
         ISequence startSequence = module.getStartSequence();
         
         List<ISequence> sequences = moduleManager.getModuleSequences(moduleId);
@@ -51,6 +55,9 @@ public class ModuleOverviewManager implements IModuleOverviewManager {
      * @return ModuleOverview which contains the module and the list of sequences and its slides
      */   
     public SequenceOverview createSequenceOverviewNode(ISequence sequence) {
+        if(sequence==null) {
+            return null;
+        }
         
         SequenceOverview sequenceOverview = new SequenceOverview();
         sequenceOverview.setName(sequence.getName());

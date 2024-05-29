@@ -1,6 +1,7 @@
 package edu.asu.diging.vspace.core.services;
 
 
+import edu.asu.diging.vspace.core.exception.ModuleNotFoundException;
 import edu.asu.diging.vspace.core.services.impl.model.ModuleOverview;
 
 public interface IModuleOverviewManager {
@@ -11,7 +12,8 @@ public interface IModuleOverviewManager {
      * ModuleOverview
      * @param id
      * @return ModuleOverview which contains the module and the list of sequences and its slides
+     * @throws ModuleNotFoundException 
      */
-    public ModuleOverview getModuleOverview(String moduleId);
+    public ModuleOverview getModuleOverview(String moduleId) throws ModuleNotFoundException;
 
 }
