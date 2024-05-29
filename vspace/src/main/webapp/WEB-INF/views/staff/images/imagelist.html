@@ -221,8 +221,10 @@ $( document ).ready(function() {
                     $('#searchImageButton').attr('disabled','true');
                 }
                 if (!$('#searchImageButton').attr('disabled') && $("#searchImageField").val().trim()){
-                    $("#searchImageLink").attr('href','[[@{/staff/images/search/full/1?searchText=}]]'+$("#searchImageField").val()+"&imageCat="+
-                    		$("#filterTag :selected").val()+"&sort=[(${sortProperty})]&order=[(${order})]");
+                    let imageCat = $("#filterTag :selected").val() !== 'all' ? 
+                        $("#filterTag :selected").val() : '';
+                    $("#searchImageLink").attr('href','[[@{/staff/images/search/full/1?searchText=}]]'+$("#searchImageField").val()+
+                        "&imageCat="+imageCat+"&sort=[(${sortProperty})]&order=[(${order})]");
                 } 
                 else{
                     $("#searchImageLink").attr('href','');

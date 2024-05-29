@@ -75,8 +75,7 @@ public class ImagesSearchFullApiController {
         Page<VSImage> imageResults = imageService.getPaginatedImagesBySearchTerm(pageNo, category,
                 searchTerm, sortedBy!=null?sortedBy:searchTerm, order!=null ? order : searchTerm);
         model.addAttribute("totalPages", imageResults.getTotalPages());
-        
-        model.addAttribute("images", imageResults);
+        model.addAttribute("images", imageResults.getContent());
         model.addAttribute("imageToSpaces", fetchImageToSpaces(imageResults.getContent()));
         return "staff/images/imagelist";
     }
