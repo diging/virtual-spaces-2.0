@@ -87,12 +87,12 @@ public class DownloadsController {
 
     
     @RequestMapping(value = "/staff/exhibit/download/checkStatus/{id}", method = RequestMethod.GET) 
-    public ResponseEntity<Boolean> exhibitionDownloadStatus(@PathVariable("id") String id, @RequestParam("folderName") String exhibitionDownloadFolderName , HttpServletRequest request) {
-        try {
-            return new ResponseEntity<Boolean>(downloadsManager.checkIfSnapshotCreated(id), HttpStatus.OK);
-        } catch (Exception e) {
-            logger.error("Could not check the exhibition Download status ",e);
-            return new ResponseEntity<Boolean>(false, HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<Boolean> exhibitionDownloadStatus(@PathVariable("id") String id, @RequestParam("folderName") String exhibitionDownloadFolderName , HttpServletRequest request) throws ExhibitionDownloadNotFoundException {
+        if (downloadsManager.checkIfSnapshotCreated(id)) {
+            return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+        }
+        else {
+            throw new ExhibitionDownloadNotFoundException(id);
         }
     }
 

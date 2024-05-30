@@ -146,6 +146,7 @@ public class StorageEngine implements IStorageEngine {
         return relativePath;
     }
 
+    
     @Override
     public byte[] generateZipFolder(String folderPath) throws IOException {
         Path zipFile = Paths.get(path + File.separator + folderPath);
@@ -173,8 +174,12 @@ public class StorageEngine implements IStorageEngine {
     }
     
     /**
-     * Gets the list of directories 
+     Gets the list of directories 
      * and copies only the folder with .css or .img files in it
+     * 
+     * @param relativePath
+     * @param folderToCopy
+     * @throws IOException
      */
     @Override
     public void copyToFolder(String relativePath, String folderToCopy) throws IOException {
@@ -182,10 +187,7 @@ public class StorageEngine implements IStorageEngine {
         for(String file : list) {
             String folderWithCssOrImg = folderToCopy.replaceFirst("/","")+file;
             String newRelativePath = relativePath+File.separator+file;
-            boolean copyFolder = containsImageOrCSSFiles(folderWithCssOrImg);
-            if(copyFolder) {
-                FileUtils.copyDirectory(new File(folderWithCssOrImg), new File(path + File.separator+ newRelativePath));
-            }
+            FileUtils.copyDirectory(new File(folderWithCssOrImg), new File(path + File.separator+ newRelativePath));
         } 
     }
     

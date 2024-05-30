@@ -3,6 +3,7 @@ package edu.asu.diging.vspace.core.services.impl;
 import java.io.IOException;
 import java.nio.file.FileSystemNotFoundException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
@@ -21,6 +22,7 @@ import edu.asu.diging.vspace.core.data.ExhibitionDownloadRepository;
 import edu.asu.diging.vspace.core.data.SnapshotTaskRepository;
 import edu.asu.diging.vspace.core.exception.ExhibitionDownloadNotFoundException;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
+import edu.asu.diging.vspace.core.exception.SnapshotCouldNotBeCreatedException;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionDownload;
 import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
@@ -63,16 +65,17 @@ public class DownloadsManager  implements  IDownloadsManager {
      * @throws IOException
      * @throws InterruptedException 
      * @throws ExecutionException 
+     * @throws SnapshotCouldNotBeCreatedException 
      */
     @Override
     @Transactional
-    public ExhibitionDownload triggerDownloadExhibition(String exhibitionFolderName) throws IOException, InterruptedException, ExecutionException {                 
+    public ExhibitionDownload triggerDownloadExhibition(String exhibitionFolderName) throws IOException, InterruptedException, ExecutionException, SnapshotCouldNotBeCreatedException {                 
         String resourcesPath = getClass().getResource("/../../resources/").getPath();
         ExhibitionDownload exhibitionDownload = exhibitionDownloadRepository.findByFolderName(exhibitionFolderName);        
         if(exhibitionDownload == null ) {
             exhibitionDownload = new ExhibitionDownload();
         }
-        createFolderAndUpdateExhibitionDownload(exhibitionDownload, exhibitionFolderName);
+        createSnapshotFolder(exhibitionDownload, exhibitionFolderName);
 
         SnapshotTask snapshotTask =  createSnapshotTask(exhibitionDownload);
 
@@ -82,7 +85,7 @@ public class DownloadsManager  implements  IDownloadsManager {
         try {
             snapshotManager.createSnapshot(resourcesPath, exhibitionFolderName, sequenceHistory, exhibitionDownload);
         } catch (IOException | InterruptedException | FileStorageException e) {
-            logger.error("Could not create a snapshot",e);
+            throw new SnapshotCouldNotBeCreatedException(e.getMessage(), e.getCause());
         }
         return exhibitionDownload;
     }
@@ -106,7 +109,7 @@ public class DownloadsManager  implements  IDownloadsManager {
      * @param exhibitionFolderName
      * @return
      */
-    private String createFolderAndUpdateExhibitionDownload(ExhibitionDownload exhibitionDownload, String exhibitionFolderName) {
+    private String createSnapshotFolder(ExhibitionDownload exhibitionDownload, String exhibitionFolderName) {
         storageEngineDownloads.createFolder(exhibitionFolderName);
         exhibitionDownload.setFolderName(exhibitionFolderName);
         exhibitionDownloadRepository.save(exhibitionDownload); 
@@ -125,12 +128,10 @@ public class DownloadsManager  implements  IDownloadsManager {
     public byte[] downloadExhibitionFolder(String id) throws ExhibitionDownloadNotFoundException, IOException {
         Optional<ExhibitionDownload> exhibitionDownlaod = exhibitionDownloadRepository.findById(id);
 
-        if(exhibitionDownlaod.isPresent()) {
-            
+        if(exhibitionDownlaod.isPresent()) {           
             try {
                 return storageEngineDownloads.generateZipFolder(exhibitionDownlaod.get().getFolderName());                
             }catch(FileSystemNotFoundException e) {
-                logger.error("Zip folder not yet created", e);
                 throw new ExhibitionDownloadNotFoundException(id);
             }
               
@@ -154,8 +155,8 @@ public class DownloadsManager  implements  IDownloadsManager {
 
     @Override
     public String getExhibitionFolderName() {
-        String folderName = "Exhibition"+ LocalDateTime.now().toString();
-        return folderName.replace( ":" , "." )+"Z";
+        String folderName = "Exhibition"+ LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HHmmss"));
+        return folderName;
     }
 
     @Override
@@ -168,5 +169,9 @@ public class DownloadsManager  implements  IDownloadsManager {
 
         Page<ExhibitionDownload> page =   exhibitionDownloadRepository.findAllByOrderByCreationDateDesc(requestedPageForFiles);
         return page.map(exhibitionDownload-> { return (ExhibitionDownload) exhibitionDownload; } );
+    }
+    
+    public SnapshotTask getLatestSnapshotTask(){
+        return snapshotTaskRepository.findFirstByOrderByCreationDateDesc();
     }
 }

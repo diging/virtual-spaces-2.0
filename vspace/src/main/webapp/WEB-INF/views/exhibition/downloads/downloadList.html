@@ -77,18 +77,13 @@
     	const poll = (id, folderName) => {
             maxAttempts = 10;
             interval= 3000;
-            console.log('Start poll...');
             let attempts = 0;
     
             const executePoll = async (resolve, reject) => {
-                console.log('- poll');
-                console.log("id" + id);
                 const  url = "[(@{'/staff/exhibit/download/checkStatus/'})]"+id+"?folderName="+folderName+','+ [[${_csrf.parameterName}]]+'='+[[${_csrf.token}]];			  
                 const result = await fetch(url);
-                console.log("attemps" + attempts);
                 attempts++;
                 var text = await result.text();
-                console.log("text", text);
                 if ( text == "true") {
                     var alert = $('<div class="alert alert-success alert-dismissible fade show" role="alert"><p>Snapshot is ready. Please click to download. <a href=[[@{/staff/exhibit/download/'+id+'?folderName='+folderName+'}]] > <span class="btn primary-btn btn-sm">Download</span></a> </p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
                     $('.successAlert').empty();
@@ -109,7 +104,6 @@
          };
          poll(id, folderName)
          .then(value => value)
-         .then(data => console.log(data))
          .catch(err => console.error(err))  
     }
 

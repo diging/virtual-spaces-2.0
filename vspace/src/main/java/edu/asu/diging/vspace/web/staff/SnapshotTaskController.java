@@ -14,21 +14,21 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import edu.asu.diging.vspace.core.data.SnapshotTaskRepository;
 import edu.asu.diging.vspace.core.model.impl.SnapshotTask;
+import edu.asu.diging.vspace.core.services.impl.DownloadsManager;
 
 @Controller
 public class SnapshotTaskController {
 
     @Autowired
-    SnapshotTaskRepository snapshotTaskRepository;
+    DownloadsManager downloadsManager;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
 
     @RequestMapping(value = "/staff/exhibit/task/snapshot/status", method = RequestMethod.GET) 
     public ResponseEntity<SnapshotTask> getLatestSnapshotStatus(HttpServletRequest request, HttpServletResponse response,  Model model) {                     
-        SnapshotTask snapshotTask = snapshotTaskRepository.findFirstByOrderByCreationDateDesc();   
+        SnapshotTask snapshotTask = downloadsManager.getLatestSnapshotTask();   
         if(snapshotTask == null) {
             logger.error("Could not find snapshot task");
             return new ResponseEntity<SnapshotTask>(snapshotTask, HttpStatus.INTERNAL_SERVER_ERROR);
