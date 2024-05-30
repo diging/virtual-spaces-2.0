@@ -1,11 +1,10 @@
 
 <html layout:decorate="~{layouts/main_staff}">
 <head>
-<link rel="stylesheet" type="text/css" id="applicationStylesheet"
-    th:href="@{/resources/extra/Home.css}" />
-
-<script src="//use.fontawesome.com/releases/v5.8.1/js/all.js"
-    data-auto-replace-svg="nest"></script>
+<link rel="stylesheet" type="text/css" id="applicationStylesheet" th:href="@{/resources/extra/Home.css}" />
+<script src="//use.fontawesome.com/releases/v5.8.1/js/all.js" data-auto-replace-svg="nest"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 <script th:src="@{'/resources/extra/space.js'}"></script>
 <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
 <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
@@ -268,6 +267,10 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
             };
         }
     }
+}
+
+function uploadImage(){
+	
 }
 
 function drawLinks(){
@@ -940,6 +943,140 @@ $(function(){
             if ($("div#incomingLinks a").length < 2) {
                 $("#noLinksToSpace").show()
             }
+            $('#externalLink-imageId').prop("disabled",true);
+            $('#module-imageId').prop("disabled",true);
+            $('#space-imageId').prop("disabled",true);
+            
+        	$('#externalLink-chooseFromLocal').click(function() {
+        		$("#selectedImage").empty();
+        		$('#externalLink-imageId').prop('selectedIndex',0).trigger( "change" );
+        		$('#externalLink-imageId').prop("disabled",true);
+        		$('#externalLinkImage').prop("disabled",false);
+        		
+        	  });
+        	
+        	$('#module-chooseFromLocal').click(function() {
+        		$("#selectedImage").empty();
+        		$('#module-imageId').prop('selectedIndex',0).trigger( "change" );
+        		$('#module-imageId').prop("disabled",true);
+        		$('#moduleLinkImage').prop("disabled",false);
+        	});
+    		
+        	$('#space-chooseFromLocal').click(function() {
+        		$("#selectedImage").empty();
+        		$('#space-imageId').prop('selectedIndex',0).trigger( "change" );
+        		$('#space-imageId').prop("disabled",true);
+        		$('#spaceLinkImage').prop("disabled",false);
+        	});
+    		
+        	$('#externalLink-chooseFromExisting').click(function() {
+        		$('#externalLinkImage').val('');
+        		$('#externalLinkImage').prop("disabled",true);
+        		$('#externalLink-imageId').prop("disabled",false);
+        	});
+        	
+        	$('#module-chooseFromExisting').click(function() {
+        		$('#moduleLinkImage').val('');
+        		$('#moduleLinkImage').prop("disabled",true);
+        		$('#module-imageId').prop("disabled",false);
+        	});
+        	
+        	$('#space-chooseFromExisting').click(function() {
+        		$('#spaceLinkImage').val('');
+        		$('#spaceLinkImage').prop("disabled",true);
+        		$('#space-imageId').prop("disabled",false);
+        	  });
+        	
+        	$("#spaceLinkImage").click(function() {
+            	$("#selectedImage").empty();
+            	$('#space-imageId').prop('selectedIndex',0).trigger( "change" );
+            });
+        	
+        	$("#moduleLinkImage").click(function() {
+            	$("#selectedImage").empty();
+            	$('#module-imageId').prop('selectedIndex',0).trigger( "change" );
+            });
+        	
+        	$("#externalLinkImage").click(function() {
+            	$("#selectedImage").empty();
+            	$('#externalLink-imageId').prop('selectedIndex',0).trigger( "change" );
+            });
+        	
+        	
+            $("#externalLink-imageId").select2({
+        		ajax: {
+        		    url: function (params) {
+        		  		var imageURL = [[@{|/staff/images/search|}]];
+        		  		return imageURL;
+        		    },
+        		    dataType: 'json',
+        		    processResults: function (data) {
+        		        return {
+        		          results: data,
+        		        };
+        		      },
+        		},
+        		templateResult: formatImage,
+        		templateSelection: formatSelection
+            });
+            
+            $("#module-imageId").select2({
+        		ajax: {
+        		    url: function (params) {
+        		  		var imageURL = [[@{|/staff/images/search|}]];
+        		  		return imageURL;
+        		    },
+        		    dataType: 'json',
+        		    processResults: function (data) {
+        		        return {
+        		          results: data,
+        		        };
+        		      },
+        		},
+        		templateResult: formatImage,
+        		templateSelection: formatSelection
+            });
+            
+            $("#space-imageId").select2({
+        		ajax: {
+        		    url: function (params) {
+        		  		var imageURL = [[@{|/staff/images/search|}]];
+        		  		return imageURL;
+        		    },
+        		    dataType: 'json',
+        		    processResults: function (data) {
+        		        return {
+        		          results: data,
+        		        };
+        		      },
+        		},
+        		templateResult: formatImage,
+        		templateSelection: formatSelection
+            });
+            
+            function formatImage (image) {
+            	if (!image.id) {
+            		return image.text;
+            	}
+            	var tbaseUrl = [[@{|/api/image/|}]];
+            	var $image = $(
+            			'<span><img src="' + tbaseUrl + image.id + '" class="img-thumbnail" /> ' + image.text + '</span>'
+            	);
+            	return $image;
+            };
+            
+            function formatSelection(image) {
+            	if (!image.id) {
+                    return image.text;
+                }
+            	var tbaseUrl = [[@{|/api/image/|}]];
+                var $image = $(
+                        '<span>' + image.text + '</span>'
+                );
+                $("#selectedImage").empty();
+                $("#selectedImage").append('<img width="200px" src="' + tbaseUrl + image.id + '" class="img-thumbnail" />');
+                return $image;
+            }
         });
 
         // -------- buttons that open modals (e.g. to create space links) ------
@@ -1265,6 +1402,7 @@ $(function(){
                     $(".saveLoader").hide();
                     },
                 success: function(data) {
+                	 console.log("Execute")
                     var linkData = JSON.parse(data);
                     $("#bgImage").off("click");
                     moduleLinkInfo["id"] = linkData["id"];
@@ -1276,10 +1414,13 @@ $(function(){
                     $("#link").attr("id","");
                     $("#createModuleLinkAlert").hide();
                     $("#errorMsg").text("");
+                    $("#module-imageId").value = "";
+                    $("#selectedImage").empty();
                     $('#errorAlert').hide();
                     $("."+linkData["id"]).remove();
                     form[0].reset();
                     $("#space").css("display", "none");
+                    console.log("Execute")
                     moduleLinkIcon=null;
                     drawLinks();
                 }
@@ -1315,6 +1456,7 @@ $(function(){
                     $(".saveLoader").hide();
                     },
                 success: function(data){
+                	console.log("Start");
                     var linkData = JSON.parse(data);
                     $("#bgImage").off("click");
                     moduleLinkInfo["id"] = linkData["id"];
@@ -1328,6 +1470,7 @@ $(function(){
                     showModuleLinkEdit(moduleLinkInfo, true);
                     hideLinkInfoTabs();
                     $("#space").css("display", "none");
+                    console.log("Start");
                     selectedModuleLinkId=undefined;
                     drawLinks();
                 }
@@ -1435,6 +1578,7 @@ $(function(){
         });
 
         $("#createExternalLinkBtn").click(function(e) {
+        	
             e.preventDefault();
             $("#space").scrollTop(0);
             var payload = {};
@@ -1469,8 +1613,14 @@ $(function(){
             $("#externalLinkX").val(storeX);
             $("#externalLinkY").val(storeY - 25);
 
+            var file = $('#externalLinkImage')[0].files[0];
             var form = $("#createExternalLinkForm");
             var formData = new FormData(form[0]);
+/*             var chooseFromExisting = true;
+        	if (typeof(file) != "undefined"){
+        		chooseFromExisting = false;
+        		formData.append('file', file);
+        	} */
             var externalLinkInfo = createExternalLinkInfo();
 
             $.ajax({
@@ -1499,6 +1649,8 @@ $(function(){
                     $("#link").attr("id","");
                     $("#createExternalLinkAlert").hide();
                     $("#errorMsg").text("");
+                    $("externalLink-imageId").value = "";
+                    $("#selectedImage").empty();
                     $('#errorAlert').hide();
                     $("."+linkData["id"]).remove();
                     form[0].reset();
@@ -1992,7 +2144,20 @@ $(function(){
 	                        <label>Image</label>
 	                    </div>
 	                    <div class="col-sm-8">
+							<input type="radio" id="space-chooseFromLocal" name="uploadRadioBtn" checked />
+	                    		<small>Upload Image: </small>
 	                        <input type="file" class="form-control-sm-xs" name="spaceLinkImage" id="spaceLinkImage" style="width: inherit">
+	                        <input type="radio" id="space-chooseFromExisting" name="uploadRadioBtn" />
+	                        <div>
+								<small>Choose from existing: </small>
+								<select id="space-imageId" name="space-imageId" class="form-control-xs target"
+									style="height: 50px; width: 200px;">
+									<option selected value="">Choose from existing</option>
+								</select>
+							</div>
+							<div>
+								<span id="selectedImage" width="200px"></span>
+							</div>
 	                    </div>
 	                </div>
 	                <p class="mt-5 text-center">
@@ -2075,7 +2240,25 @@ $(function(){
 	                        <label>Image</label>
 	                    </div>
 	                    <div class="col-sm-8">
+	                        
+	                        
+ 	                        <input type="radio" id="module-chooseFromLocal" name="uploadRadioBtn" checked />
+	                    		<small>Upload Image: </small>
 	                        <input type="file" class="form-control-sm" name="moduleLinkImage" id="moduleLinkImage" style="width: inherit">
+	                        <input type="radio" id="module-chooseFromExisting" name="uploadRadioBtn" />
+	                        <div>
+								<small>Choose from existing: </small>
+								<select id="module-imageId" name="module-imageId"
+									class="form-control-xs target"
+									style="height: 50px; width: 200px;">
+									<option selected value="">Choose from existing</option>
+								</select>
+							</div>
+							<div>
+								<span id="selectedImage" width="200px"></span>
+							</div>
+							
+							 
 	                    </div>
 	                </div>
 	                <p class="mt-5 text-center">
@@ -2154,7 +2337,21 @@ $(function(){
 	                        <label>Image</label>
 	                    </div>
 	                    <div class="col-sm-8">
+	                    	<input type="radio" id="externalLink-chooseFromLocal" name="uploadRadioBtn" checked />
+	                    		<small>Upload Image: </small>
 	                        <input type="file" class="form-control-sm" name="externalLinkImage" id="externalLinkImage" style="width: inherit">
+	                        <input type="radio" id="externalLink-chooseFromExisting" name="uploadRadioBtn" />
+	                        <div>
+								<small>Choose from existing: </small>
+								<select id="externalLink-imageId" name="externalLink-imageId"
+									class="form-control-xs target"
+									style="height: 50px; width: 200px;">
+									<option selected value="">Choose from existing</option>
+								</select>
+							</div>
+							<div>
+								<span id="selectedImage" width="200px"></span>
+							</div>
 	                    </div>
 	                </div>
 	                <p class="mt-5 text-center">
@@ -2405,8 +2602,7 @@ $(function(){
                     </div>
                     <div class="row">
                         <div class="col-sm-4" style="padding-right: 0;">
-                            <label>Linked
-                                    Modules:</label>
+                            <label>Linked Modules:</label>
                         </div>
                         <div class="col-sm-8">
                             <select id="moduleLinkIdEdit"
