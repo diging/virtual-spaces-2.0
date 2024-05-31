@@ -9,7 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.Transient;
 
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
@@ -20,8 +19,6 @@ import org.hibernate.annotations.Parameter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import edu.asu.diging.vspace.core.model.IReference;
-import edu.asu.diging.vspace.references.CitationStyleDefault;
-import edu.asu.diging.vspace.references.ReferenceContext;
 
 @Entity
 public class Reference extends VSpaceElement implements IReference {
@@ -185,12 +182,6 @@ public class Reference extends VSpaceElement implements IReference {
         HtmlRenderer renderer = HtmlRenderer.builder().build();
         return renderer.render(document);
     }
-
-
-//    public String urlEncodedRefMetaData() {
-//        ReferenceContext biblioContext = new ReferenceContext(new CitationStyleDefault(), this); //currently default citation 
-//        return biblioContext.executeBiblioMetadata(this);
-//    }
 
     @Override
     public void setId(String id) {
