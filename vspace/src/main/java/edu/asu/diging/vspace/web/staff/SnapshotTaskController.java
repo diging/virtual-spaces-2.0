@@ -15,13 +15,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.diging.vspace.core.model.impl.SnapshotTask;
-import edu.asu.diging.vspace.core.services.impl.DownloadsManager;
+import edu.asu.diging.vspace.core.services.IDownloadsManager;
 
 @Controller
 public class SnapshotTaskController {
 
     @Autowired
-    DownloadsManager downloadsManager;
+    IDownloadsManager downloadsManager;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 

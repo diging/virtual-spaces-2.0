@@ -21,6 +21,7 @@ import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionDownload;
 import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
+import edu.asu.diging.vspace.core.model.impl.SnapshotTask;
 import edu.asu.diging.vspace.core.model.impl.Space;
 
 public interface IDownloadsManager {
@@ -35,4 +36,6 @@ public interface IDownloadsManager {
 
 
     Page<ExhibitionDownload> getAllExhibitionDownloads(int filesPagenum);
+
+    SnapshotTask getLatestSnapshotTask();
 }

@@ -130,7 +130,7 @@ public class DownloadsManager  implements  IDownloadsManager {
 
         if(exhibitionDownlaod.isPresent()) {           
             try {
-                return storageEngineDownloads.generateZipFolder(exhibitionDownlaod.get().getFolderName());                
+                return storageEngineDownloads.generateZip(exhibitionDownlaod.get().getFolderName());                
             }catch(FileSystemNotFoundException e) {
                 throw new ExhibitionDownloadNotFoundException(id);
             }
@@ -171,6 +171,7 @@ public class DownloadsManager  implements  IDownloadsManager {
         return page.map(exhibitionDownload-> { return (ExhibitionDownload) exhibitionDownload; } );
     }
     
+    @Override
     public SnapshotTask getLatestSnapshotTask(){
         return snapshotTaskRepository.findFirstByOrderByCreationDateDesc();
     }

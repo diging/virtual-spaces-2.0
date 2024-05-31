@@ -137,23 +137,35 @@ public class StorageEngine implements IStorageEngine {
         return currentFile.renameTo(renamedFile);
     }
 
+    /**
+     * To create a folder with given name, if it doesn't exist
+     * 
+     * @param folderName - folder name to be created
+     * @return folderName 
+     */
     @Override
-    public String createFolder(String relativePath) {
-        File folder = new File(path + File.separator + relativePath);
+    public String createFolder(String folderName) {
+        File folder = new File(path + File.separator + folderName);
         if (!folder.exists()) {
             folder.mkdir();
         }
-        return relativePath;
+        return folderName;
     }
 
     
+    /**
+     * To create a zip of a given folder
+     * 
+     * @param folderName - name of the folder to be zipped
+     * @return byte[] - zipped data as a byte array
+     * @throws IOException if an I/O error occurs while reading files or writing the zip data
+     */
     @Override
-    public byte[] generateZipFolder(String folderPath) throws IOException {
-        Path zipFile = Paths.get(path + File.separator + folderPath);
-        ByteArrayOutputStream byteArrayOutputStreamResult = null;
-
-        try (ByteArrayOutputStream  byteArrayOutputStream = new ByteArrayOutputStream();
-                BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(byteArrayOutputStream);
+    public byte[] generateZip(String folderName) throws IOException {
+        Path zipFile = Paths.get(path + File.separator + folderName);
+        ByteArrayOutputStream  byteArrayOutputStream = new ByteArrayOutputStream();
+        
+        try (BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(byteArrayOutputStream);
                 ZipOutputStream responseZipStream = new ZipOutputStream(bufferedOutputStream);
                 Stream<Path> paths = Files.walk(zipFile)) {
             paths
@@ -167,45 +179,21 @@ public class StorageEngine implements IStorageEngine {
                     } catch (IOException e) {
                         logger.error("Could not generate Zip folder", e);
                     }
-                });
-            byteArrayOutputStreamResult = byteArrayOutputStream;
+                });            
         }
-        return byteArrayOutputStreamResult.toByteArray();
+        return byteArrayOutputStream.toByteArray();
+        
     }
     
     /**
-     Gets the list of directories 
-     * and copies only the folder with .css or .img files in it
-     * 
+     * Gets the list of directories 
+     *  
      * @param relativePath
      * @param folderToCopy
      * @throws IOException
      */
     @Override
     public void copyToFolder(String relativePath, String folderToCopy) throws IOException {
-        String [] list = new File(folderToCopy).list();
-        for(String file : list) {
-            String folderWithCssOrImg = folderToCopy.replaceFirst("/","")+file;
-            String newRelativePath = relativePath+File.separator+file;
-            FileUtils.copyDirectory(new File(folderWithCssOrImg), new File(path + File.separator+ newRelativePath));
-        } 
-    }
-    
-    // Method to check if a folder contains image or CSS files
-    private boolean containsImageOrCSSFiles(String folderPath) {
-        try (Stream<Path> paths = Files.walk(Paths.get(folderPath))) {
-            
-            return paths.anyMatch(path -> {
-                String fileName = path.getFileName().toString().toLowerCase();
-                
-                return fileName.endsWith(".jpg") ||
-                       fileName.endsWith(".jpeg") ||
-                       fileName.endsWith(".png") ||
-                       fileName.endsWith(".css");
-            });
-        } catch (Exception e) {
-            logger.error("Could not check the directory for css or Image Files ", e);
-            return false;
-        }
+        FileUtils.copyDirectory(new File(folderToCopy), new File(path + File.separator+ relativePath));
     }
 }

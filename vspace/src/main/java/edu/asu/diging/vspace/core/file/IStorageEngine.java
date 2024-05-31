@@ -13,7 +13,7 @@ public interface IStorageEngine {
 
     String createFolder(String relativePath);
 
-    byte[] generateZipFolder(String exhibitionFolderPath) throws IOException;
+    byte[] generateZip(String exhibitionFolderName) throws IOException;
 
     void copyToFolder(String relativePath, String folderToCopy) throws IOException;
     
