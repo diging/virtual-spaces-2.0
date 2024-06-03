@@ -3,20 +3,15 @@ package edu.asu.diging.vspace.core.services;
 import java.io.IOException;
 
 import org.thymeleaf.context.Context;
-import org.thymeleaf.context.WebContext;
 
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.SequenceNotFoundException;
 import edu.asu.diging.vspace.core.exception.SlideNotFoundException;
 import edu.asu.diging.vspace.core.exception.SlidesInSequenceNotFoundException;
-import edu.asu.diging.vspace.core.model.IModule;
-import edu.asu.diging.vspace.core.model.ISequence;
-import edu.asu.diging.vspace.core.model.ISpace;
-import edu.asu.diging.vspace.core.model.impl.ExhibitionDownload;
+import edu.asu.diging.vspace.core.model.impl.ExhibitionSnapshot;
 import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
-import edu.asu.diging.vspace.core.model.impl.Space;
 
-public interface ISnapshotManager {
+public interface IRenderingManager {
     
     /**
      * Creates a snapshot and copies the spaces to exhibitionFolderPath
@@ -24,12 +19,12 @@ public interface ISnapshotManager {
      * @param resourcesPath
      * @param exhibitionFolderName
      * @param sequenceHistory
-     * @param exhibitionDownload
+     * @param exhibitionSnapshot
      * @throws IOException
      * @throws InterruptedException
      * @throws FileStorageException
      */
-    void createSnapshot(String resourcesPath, String exhibitionFolderName, SequenceHistory sequenceHistory, ExhibitionDownload exhibitionDownload) 
+    void createSnapshot(String resourcesPath, String exhibitionFolderName, SequenceHistory sequenceHistory, ExhibitionSnapshot exhibitionSnapshot) 
             throws IOException, InterruptedException, FileStorageException ;
 
     /**

@@ -18,21 +18,21 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import edu.asu.diging.vspace.core.data.ExhibitionDownloadRepository;
+import edu.asu.diging.vspace.core.data.ExhibitionSnapshotRepository;
 import edu.asu.diging.vspace.core.data.SnapshotTaskRepository;
-import edu.asu.diging.vspace.core.exception.ExhibitionDownloadNotFoundException;
+import edu.asu.diging.vspace.core.exception.ExhibitionSnapshotNotFoundException;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.SnapshotCouldNotBeCreatedException;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
-import edu.asu.diging.vspace.core.model.impl.ExhibitionDownload;
+import edu.asu.diging.vspace.core.model.impl.ExhibitionSnapshot;
 import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
 import edu.asu.diging.vspace.core.model.impl.SnapshotTask;
-import edu.asu.diging.vspace.core.services.IDownloadsManager;
-import edu.asu.diging.vspace.core.services.ISnapshotManager;
+import edu.asu.diging.vspace.core.services.IRenderingManager;
+import edu.asu.diging.vspace.core.services.ISnapshotsManager;
 
 
 @Service
-public class DownloadsManager  implements  IDownloadsManager {
+public class SnapshotsManager  implements  ISnapshotsManager {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -44,13 +44,12 @@ public class DownloadsManager  implements  IDownloadsManager {
     private IStorageEngine storageEngineDownloads;
 
     @Autowired
-    private ISnapshotManager snapshotManager;
+    private IRenderingManager snapshotManager;
 
-    @Autowired
     private SequenceHistory sequenceHistory;
 
     @Autowired
-    private ExhibitionDownloadRepository exhibitionDownloadRepository;
+    private ExhibitionSnapshotRepository exhibitionSnapshotRepository;
 
     @Autowired
     private SnapshotTaskRepository snapshotTaskRepository;
@@ -69,25 +68,26 @@ public class DownloadsManager  implements  IDownloadsManager {
      */
     @Override
     @Transactional
-    public ExhibitionDownload triggerDownloadExhibition(String exhibitionFolderName) throws IOException, InterruptedException, ExecutionException, SnapshotCouldNotBeCreatedException {                 
+    public ExhibitionSnapshot triggerExhibitionSnapshotCreation() throws IOException, InterruptedException, ExecutionException, SnapshotCouldNotBeCreatedException {                 
         String resourcesPath = getClass().getResource("/../../resources/").getPath();
-        ExhibitionDownload exhibitionDownload = exhibitionDownloadRepository.findByFolderName(exhibitionFolderName);        
-        if(exhibitionDownload == null ) {
-            exhibitionDownload = new ExhibitionDownload();
+        String exhibitionFolderName = getExhibitionFolderName();
+        ExhibitionSnapshot exhibitionSnapshot = exhibitionSnapshotRepository.findByFolderName(exhibitionFolderName);        
+        if(exhibitionSnapshot == null ) {
+            exhibitionSnapshot = new ExhibitionSnapshot();
         }
-        createSnapshotFolder(exhibitionDownload, exhibitionFolderName);
+        createSnapshotFolder(exhibitionSnapshot, exhibitionFolderName);
 
-        SnapshotTask snapshotTask =  createSnapshotTask(exhibitionDownload);
+        SnapshotTask snapshotTask =  createSnapshotTask(exhibitionSnapshot);
 
-        exhibitionDownload.setSnapshotTask(snapshotTask); 
-        exhibitionDownloadRepository.save(exhibitionDownload);
+        exhibitionSnapshot.setSnapshotTask(snapshotTask); 
+        exhibitionSnapshotRepository.save(exhibitionSnapshot);
 
         try {
-            snapshotManager.createSnapshot(resourcesPath, exhibitionFolderName, sequenceHistory, exhibitionDownload);
+            snapshotManager.createSnapshot(resourcesPath, exhibitionFolderName, sequenceHistory, exhibitionSnapshot);
         } catch (IOException | InterruptedException | FileStorageException e) {
             throw new SnapshotCouldNotBeCreatedException(e.getMessage(), e.getCause());
         }
-        return exhibitionDownload;
+        return exhibitionSnapshot;
     }
 
     /**
@@ -95,9 +95,9 @@ public class DownloadsManager  implements  IDownloadsManager {
      * @param exhibitionDownload
      * @return
      */
-    private SnapshotTask createSnapshotTask(ExhibitionDownload exhibitionDownload) {
+    private SnapshotTask createSnapshotTask(ExhibitionSnapshot exhibitionSnapshot) {
         SnapshotTask snapshotTask = new SnapshotTask();  
-        snapshotTask.setExhibitionDownload(exhibitionDownload);        
+        snapshotTask.setExhibitionSnapshot(exhibitionSnapshot);        
         snapshotTaskRepository.save(snapshotTask);
         return snapshotTask;
     }
@@ -109,10 +109,10 @@ public class DownloadsManager  implements  IDownloadsManager {
      * @param exhibitionFolderName
      * @return
      */
-    private String createSnapshotFolder(ExhibitionDownload exhibitionDownload, String exhibitionFolderName) {
+    private String createSnapshotFolder(ExhibitionSnapshot exhibitionSnapshot, String exhibitionFolderName) {
         storageEngineDownloads.createFolder(exhibitionFolderName);
-        exhibitionDownload.setFolderName(exhibitionFolderName);
-        exhibitionDownloadRepository.save(exhibitionDownload); 
+        exhibitionSnapshot.setFolderName(exhibitionFolderName);
+        exhibitionSnapshotRepository.save(exhibitionSnapshot); 
         return exhibitionFolderName;
     }
 
@@ -125,18 +125,18 @@ public class DownloadsManager  implements  IDownloadsManager {
      * @throws IOException
      */
     @Override
-    public byte[] downloadExhibitionFolder(String id) throws ExhibitionDownloadNotFoundException, IOException {
-        Optional<ExhibitionDownload> exhibitionDownlaod = exhibitionDownloadRepository.findById(id);
+    public byte[] downloadExhibitionFolder(String id) throws ExhibitionSnapshotNotFoundException, IOException {
+        Optional<ExhibitionSnapshot> exhibitionDownlaod = exhibitionSnapshotRepository.findById(id);
 
         if(exhibitionDownlaod.isPresent()) {           
             try {
                 return storageEngineDownloads.generateZip(exhibitionDownlaod.get().getFolderName());                
             }catch(FileSystemNotFoundException e) {
-                throw new ExhibitionDownloadNotFoundException(id);
+                throw new ExhibitionSnapshotNotFoundException(id);
             }
               
         } else {
-            throw new ExhibitionDownloadNotFoundException(id);
+            throw new ExhibitionSnapshotNotFoundException(id);
         }
     }
 
@@ -146,7 +146,7 @@ public class DownloadsManager  implements  IDownloadsManager {
     @Override
     @Transactional
     public Boolean checkIfSnapshotCreated(String id) {
-        Optional<ExhibitionDownload> exhibitionDownload = exhibitionDownloadRepository.findById(id);
+        Optional<ExhibitionSnapshot> exhibitionDownload = exhibitionSnapshotRepository.findById(id);
         if(exhibitionDownload.isPresent()) {
             return exhibitionDownload.get().getSnapshotTask().isTaskComplete();            
         }
@@ -160,15 +160,15 @@ public class DownloadsManager  implements  IDownloadsManager {
     }
 
     @Override
-    public Page<ExhibitionDownload> getAllExhibitionDownloads(int filesPagenum) {
+    public Page<ExhibitionSnapshot> getAllExhibitionSnapshots(int filesPagenum) {
 
         if (filesPagenum < 1) {
             filesPagenum = 1;
         }
         Pageable requestedPageForFiles = PageRequest.of(filesPagenum - 1, pageSize);
 
-        Page<ExhibitionDownload> page =   exhibitionDownloadRepository.findAllByOrderByCreationDateDesc(requestedPageForFiles);
-        return page.map(exhibitionDownload-> { return (ExhibitionDownload) exhibitionDownload; } );
+        Page<ExhibitionSnapshot> page =   exhibitionSnapshotRepository.findAllByOrderByCreationDateDesc(requestedPageForFiles);
+        return page.map(exhibitionSnapshot-> { return (ExhibitionSnapshot) exhibitionSnapshot; } );
     }
     
     @Override

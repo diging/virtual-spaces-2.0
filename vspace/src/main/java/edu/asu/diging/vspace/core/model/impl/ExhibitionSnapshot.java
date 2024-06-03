@@ -11,25 +11,24 @@ import org.hibernate.annotations.Parameter;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import edu.asu.diging.vspace.core.model.IExhibitionDownload;
-import edu.asu.diging.vspace.core.model.ISnapshotTask;
+import edu.asu.diging.vspace.core.model.IExhibitionSnapshot;
 
 @Entity
-public class ExhibitionDownload extends VSpaceElement implements IExhibitionDownload{
+public class ExhibitionSnapshot extends VSpaceElement implements IExhibitionSnapshot{
 
     @Id
-    @GeneratedValue(generator = "exhibit_download_id_generator")
-    @GenericGenerator(name = "exhibit_download_id_generator", parameters = @Parameter(name = "prefix", value = "EXHDWNLD"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
+    @GeneratedValue(generator = "exhibit_snapshot_id_generator")
+    @GenericGenerator(name = "exhibit_snapshot_id_generator", parameters = @Parameter(name = "prefix", value = "EXHSNAP"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
 
     private String folderName;
    
-    @OneToOne(cascade = CascadeType.ALL, mappedBy="exhibitionDownload")
+    @OneToOne(cascade = CascadeType.ALL, mappedBy="exhibitionSnapshot")
     @JsonIgnore
     private SnapshotTask snapshotTask;
     
     
-    public ExhibitionDownload() {
+    public ExhibitionSnapshot() {
         super();
     }    
     

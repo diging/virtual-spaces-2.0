@@ -1,6 +1,6 @@
 package edu.asu.diging.vspace.core.model;
 
-import edu.asu.diging.vspace.core.model.impl.ExhibitionDownload;
+import edu.asu.diging.vspace.core.model.impl.ExhibitionSnapshot;
 
 public interface ISnapshotTask  extends IVSpaceElement {
 
@@ -9,8 +9,8 @@ public interface ISnapshotTask  extends IVSpaceElement {
     
     public void setTaskComplete(boolean isTaskComplete);
     
-    ExhibitionDownload getExhibitionDownload();
+    ExhibitionSnapshot getExhibitionSnapshot();
     
-    void setExhibitionDownload(ExhibitionDownload exhibitionDownload) ;
+    void setExhibitionSnapshot(ExhibitionSnapshot exhibitionSnapshot) ;
     
 }

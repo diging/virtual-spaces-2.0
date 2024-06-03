@@ -10,7 +10,6 @@ import javax.persistence.OneToOne;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
-import edu.asu.diging.vspace.core.model.IExhibitionDownload;
 import edu.asu.diging.vspace.core.model.ISnapshotTask;
 
 @Entity
@@ -23,8 +22,8 @@ public class SnapshotTask extends VSpaceElement implements ISnapshotTask {
     private boolean isTaskComplete = false;
     
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "exhibitionDownloadId", referencedColumnName = "id")
-    private ExhibitionDownload exhibitionDownload;
+    @JoinColumn(name = "exhibitionSnapshotId", referencedColumnName = "id")
+    private ExhibitionSnapshot exhibitionSnapshot;
 
     public String getId() {
         return id;
@@ -44,13 +43,13 @@ public class SnapshotTask extends VSpaceElement implements ISnapshotTask {
     }
     
     @Override
-    public ExhibitionDownload getExhibitionDownload() {
-        return exhibitionDownload;
+    public ExhibitionSnapshot getExhibitionSnapshot() {
+        return exhibitionSnapshot;
     }
 
     @Override
-    public void setExhibitionDownload(ExhibitionDownload exhibitionDownload) {
-        this.exhibitionDownload = exhibitionDownload;
+    public void setExhibitionSnapshot(ExhibitionSnapshot exhibitionSnapshot) {
+        this.exhibitionSnapshot = exhibitionSnapshot;
     }
     
     

@@ -34,7 +34,7 @@ public class StorageManager implements IStorageManager{
      * @param imagesFolderPath
      */
     @Override
-    public void copyImageUploadsToDownloads(IVSImage image, String imagesFolderPath) {
+    public void copyImage(IVSImage image, String imagesFolderPath) {
         if(image!=null) {
             try {
                 byte[] byteArray = storageEngineUploads.getMediaContent(image.getId(), image.getFilename());

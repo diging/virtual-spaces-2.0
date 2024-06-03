@@ -52,7 +52,7 @@
     function triggerExhibitionDownload(){ 
         $.ajax({
             type : "POST",
-            url : "[(@{'/staff/exhibit/download?'+ ${_csrf.parameterName}+'='+${_csrf.token} })] ",
+            url : "[(@{'/staff/exhibit/snapshot?'+ ${_csrf.parameterName}+'='+${_csrf.token} })] ",
             cache : false,
             
             contentType : false,

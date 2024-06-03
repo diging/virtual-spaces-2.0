@@ -5,11 +5,11 @@ import edu.asu.diging.vspace.core.model.IVSImage;
 public interface IStorageManager {
 
     /**
-     * Copies given image from uploads to exhibition download folder
+     * Copies given image from uploads to exhibition snapshot folder
      * 
      * @param image
      * @param imagesFolderPath
      */
-    void copyImageUploadsToDownloads(IVSImage image, String imagesFolderPath);
+    void copyImage(IVSImage image, String imagesFolderPath);
 
 }
