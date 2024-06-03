@@ -268,10 +268,6 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
     }
 }
 
-function uploadImage(){
-	
-}
-
 function drawLinks(){
     $(".Info_cz_Class").remove();
     $(".imageLink").remove();
@@ -1401,7 +1397,6 @@ $(function(){
                     $(".saveLoader").hide();
                     },
                 success: function(data) {
-                	 console.log("Execute")
                     var linkData = JSON.parse(data);
                     $("#bgImage").off("click");
                     moduleLinkInfo["id"] = linkData["id"];
@@ -1413,13 +1408,12 @@ $(function(){
                     $("#link").attr("id","");
                     $("#createModuleLinkAlert").hide();
                     $("#errorMsg").text("");
-                    $("#module-imageId").value = "";
                     $("#selectedImage").empty();
+                    $("#module-imageId").value("");
                     $('#errorAlert').hide();
                     $("."+linkData["id"]).remove();
                     form[0].reset();
                     $("#space").css("display", "none");
-                    console.log("Execute")
                     moduleLinkIcon=null;
                     drawLinks();
                 }
@@ -1455,7 +1449,6 @@ $(function(){
                     $(".saveLoader").hide();
                     },
                 success: function(data){
-                	console.log("Start");
                     var linkData = JSON.parse(data);
                     $("#bgImage").off("click");
                     moduleLinkInfo["id"] = linkData["id"];
@@ -1469,7 +1462,6 @@ $(function(){
                     showModuleLinkEdit(moduleLinkInfo, true);
                     hideLinkInfoTabs();
                     $("#space").css("display", "none");
-                    console.log("Start");
                     selectedModuleLinkId=undefined;
                     drawLinks();
                 }
@@ -1637,6 +1629,7 @@ $(function(){
                     $(".saveLoader").hide();
                     },
                 success: function(data) {
+                	console.log("Success");
                     var linkData = JSON.parse(data);
                     $("#bgImage").off("click");
                     externalLinkInfo["id"] = linkData["id"];
