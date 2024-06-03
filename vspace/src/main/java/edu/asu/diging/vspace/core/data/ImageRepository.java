@@ -18,9 +18,7 @@ import edu.asu.diging.vspace.core.model.impl.VSImage;
 public interface ImageRepository extends PagingAndSortingRepository<VSImage, String> {
 
     List<VSImage> findByFilenameLikeOrNameLike(String filename, String name);
-
-    List<VSImage> findByFilenameLikeOrNameLikeOrDescriptionLike(String filename, String name, String description);
-
+    
     Page<VSImage> findByFilenameLikeOrNameLikeOrDescriptionLike(Pageable pageable, String filename, String name, String description);
 
     @Query("SELECT i FROM  VSImage i join i.categories c WHERE c=?1 AND (i.filename like ?2 or i.description like ?3 or i.name like ?4)")

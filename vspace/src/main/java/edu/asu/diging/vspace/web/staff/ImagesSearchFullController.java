@@ -1,4 +1,4 @@
-package edu.asu.diging.vspace.web.staff.api;
+package edu.asu.diging.vspace.web.staff;
 
 import java.util.HashMap;
 import java.util.List;
@@ -27,7 +27,7 @@ import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Controller
-public class ImagesSearchFullApiController {
+public class ImagesSearchFullController {
 
     @Autowired
     private IImageService imageService;
@@ -73,7 +73,7 @@ public class ImagesSearchFullApiController {
                 (order==null || order.equals("")) ? Sort.Direction.DESC.toString().toLowerCase():order);
         
         Page<VSImage> imageResults = imageService.getPaginatedImagesBySearchTerm(pageNo, category,
-                searchTerm, sortedBy!=null?sortedBy:searchTerm, order!=null ? order : searchTerm);
+                searchTerm, sortedBy != null ? sortedBy : searchTerm, order != null ? order : searchTerm);
         model.addAttribute("totalPages", imageResults.getTotalPages());
         model.addAttribute("images", imageResults.getContent());
         model.addAttribute("imageToSpaces", fetchImageToSpaces(imageResults.getContent()));

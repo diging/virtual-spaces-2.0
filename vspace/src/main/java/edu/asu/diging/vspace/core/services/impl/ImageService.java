@@ -263,15 +263,15 @@ public class ImageService implements IImageService {
             String sortedBy, String order) {    	
     	Sort sortingParameters = getSortingParameters(sortedBy, order);
         pageNo = validatePageNumber(pageNo, category);
-        Pageable sortByRequestedField = PageRequest.of(pageNo - 1, pageSize, sortingParameters);
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sortingParameters);
         String likeSearchTerm = "%" + searchTerm + "%";
         Page<VSImage> results;
         if(category!=null) {
             results = imageRepo.findByCategoryAndFilenameLikeOrNameLikeOrDescriptionLike(
-                    sortByRequestedField, category, likeSearchTerm, likeSearchTerm, likeSearchTerm);
+                    pageable, category, likeSearchTerm, likeSearchTerm, likeSearchTerm);
         }
         else {
-            results = imageRepo.findByFilenameLikeOrNameLikeOrDescriptionLike(sortByRequestedField,
+            results = imageRepo.findByFilenameLikeOrNameLikeOrDescriptionLike(pageable,
                     likeSearchTerm, likeSearchTerm, likeSearchTerm);
         }
         return results;
