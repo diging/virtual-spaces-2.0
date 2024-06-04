@@ -27,5 +27,4 @@ public class StorageEngineConfig {
     public IStorageEngine storageEngineUploads(){
         return new StorageEngine(uploadsPath); 
     }
-
 }

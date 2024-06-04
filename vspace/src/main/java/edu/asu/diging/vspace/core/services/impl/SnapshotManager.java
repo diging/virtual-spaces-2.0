@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,16 +29,19 @@ import edu.asu.diging.vspace.core.model.impl.ExhibitionSnapshot;
 import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
 import edu.asu.diging.vspace.core.model.impl.SnapshotTask;
 import edu.asu.diging.vspace.core.services.IRenderingManager;
-import edu.asu.diging.vspace.core.services.ISnapshotsManager;
-
+import edu.asu.diging.vspace.core.services.ISnapshotManager;
 
 @Service
-public class SnapshotsManager  implements  ISnapshotsManager {
+@PropertySource("classpath:app.properties")
+public class SnapshotManager  implements  ISnapshotManager {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Value("${page_size}")
     private int pageSize;
+    
+    @Value("${resources_folder_path}")
+    private String resourcesPath;
 
     @Autowired
     @Qualifier("storageEngineDownloads")
@@ -55,21 +59,19 @@ public class SnapshotsManager  implements  ISnapshotsManager {
     private SnapshotTaskRepository snapshotTaskRepository;
 
     /**
-     * Triggers the snapshot creation process asynchronously. 
-     * 
-     * @param resourcesPath
-     * @param exhibitionFolderName
-     * @param context
-     * @return
-     * @throws IOException
-     * @throws InterruptedException 
-     * @throws ExecutionException 
-     * @throws SnapshotCouldNotBeCreatedException 
+     * Triggers the creation of an exhibition snapshot.
+     *
+     * This method initializes and saves an {@link ExhibitionSnapshot} and a {@link SnapshotTask},
+     *
+     * @return the created {@link ExhibitionSnapshot}
+     * @throws IOException                          if an I/O error occurs during the snapshot creation process
+     * @throws InterruptedException                 if the snapshot creation process is interrupted
+     * @throws ExecutionException                   if an error occurs during the execution of the snapshot task
+     * @throws SnapshotCouldNotBeCreatedException   if the snapshot could not be created due to any other errors
      */
     @Override
     @Transactional
     public ExhibitionSnapshot triggerExhibitionSnapshotCreation() throws IOException, InterruptedException, ExecutionException, SnapshotCouldNotBeCreatedException {                 
-        String resourcesPath = getClass().getResource("/../../resources/").getPath();
         String exhibitionFolderName = getExhibitionFolderName();
         ExhibitionSnapshot exhibitionSnapshot = exhibitionSnapshotRepository.findByFolderName(exhibitionFolderName);        
         if(exhibitionSnapshot == null ) {
@@ -92,8 +94,9 @@ public class SnapshotsManager  implements  ISnapshotsManager {
 
     /**
      * Creates and saves snapshotTask object.
-     * @param exhibitionDownload
-     * @return
+     * 
+     * @param exhibitionSnapshot {@link ExhibitionSnapshot} object for which the task is to be created
+     * @return the created       {@link SnapshotTask}
      */
     private SnapshotTask createSnapshotTask(ExhibitionSnapshot exhibitionSnapshot) {
         SnapshotTask snapshotTask = new SnapshotTask();  
@@ -104,10 +107,11 @@ public class SnapshotsManager  implements  ISnapshotsManager {
 
     /**
      * 
-     * Creates folder for ExhibitionDownload and updates entity. 
-     * @param exhibitionDownload
-     * @param exhibitionFolderName
-     * @return
+     * Creates folder for ExhibitionSnapshot and updates entity. 
+     * 
+     * @param exhibitionSnapshot   {@link ExhibitionSnapshot} for which the folder is created
+     * @param exhibitionFolderName the folder name of the snapshot
+     * @return the name of the exhibition folder
      */
     private String createSnapshotFolder(ExhibitionSnapshot exhibitionSnapshot, String exhibitionFolderName) {
         storageEngineDownloads.createFolder(exhibitionFolderName);

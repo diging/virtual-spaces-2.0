@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import edu.asu.diging.vspace.core.exception.ExhibitionSnapshotNotFoundException;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionSnapshot;
-import edu.asu.diging.vspace.core.services.ISnapshotsManager;
+import edu.asu.diging.vspace.core.services.ISnapshotManager;
 
 @Controller
 public class DownloadsController {
@@ -29,7 +29,7 @@ public class DownloadsController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
        
     @Autowired
-    private ISnapshotsManager snapshotsManager;
+    private ISnapshotManager snapshotManager;
     
     @RequestMapping("/staff/downloads/list")
     public String listDownloads(Model model, @RequestParam(value = "downloadsPagenum", required = false, defaultValue = "1") String downloadsPagenum) {
@@ -39,7 +39,7 @@ public class DownloadsController {
         } catch(NumberFormatException e) {
             logger.error("Invalid page number", e);
         }        
-        Page<ExhibitionSnapshot> downloadsPage = snapshotsManager.getAllExhibitionSnapshots(pageNum);
+        Page<ExhibitionSnapshot> downloadsPage = snapshotManager.getAllExhibitionSnapshots(pageNum);
         model.addAttribute("downloadsList" , downloadsPage.getContent());
         model.addAttribute("downloadsCurrentPageNumber", Integer.parseInt(downloadsPagenum));
         model.addAttribute("downloadsTotalPages", downloadsPage.getTotalPages());
@@ -53,7 +53,7 @@ public class DownloadsController {
         ExhibitionSnapshot exhibitionSnapshot = null;
         try {      
             exhibitionSnapshot =
-                    snapshotsManager.triggerExhibitionSnapshotCreation();
+                    snapshotManager.triggerExhibitionSnapshotCreation();
 
             return  ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_TYPE, "application/json")
@@ -66,15 +66,15 @@ public class DownloadsController {
     }
 
     @RequestMapping(value = "/staff/exhibit/download/{id}", method = RequestMethod.GET) 
-    public ResponseEntity<Resource> downloadExhibitionFolder(@PathVariable("id") String id, @RequestParam("folderName") String exhibitionDownloadFolderName , HttpServletRequest request)
+    public ResponseEntity<Resource> downloadExhibitionFolder(@PathVariable("id") String id, @RequestParam("folderName") String exhibitionSnapshotFolderName , HttpServletRequest request)
             throws ExhibitionSnapshotNotFoundException , IOException {
         Resource resource = null;      
 
         try {
-            byte[] byteArrayResource = snapshotsManager.downloadExhibitionFolder(id);
+            byte[] byteArrayResource = snapshotManager.downloadExhibitionFolder(id);
             resource = new ByteArrayResource(byteArrayResource);
             return  ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+exhibitionDownloadFolderName+".zip")
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+exhibitionSnapshotFolderName+".zip")
                     .contentLength(resource.contentLength())
                     .header(HttpHeaders.CONTENT_TYPE, "application/zip")
                     .body(resource);
@@ -87,7 +87,7 @@ public class DownloadsController {
     
     @RequestMapping(value = "/staff/exhibit/download/checkStatus/{id}", method = RequestMethod.GET) 
     public ResponseEntity<Boolean> exhibitionDownloadStatus(@PathVariable("id") String id, @RequestParam("folderName") String exhibitionDownloadFolderName , HttpServletRequest request) throws ExhibitionSnapshotNotFoundException {
-        if (snapshotsManager.checkIfSnapshotCreated(id)) {
+        if (snapshotManager.checkIfSnapshotCreated(id)) {
             return new ResponseEntity<Boolean>(true, HttpStatus.OK);
         }
         else {

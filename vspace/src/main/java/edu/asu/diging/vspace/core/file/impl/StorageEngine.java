@@ -186,14 +186,14 @@ public class StorageEngine implements IStorageEngine {
     }
     
     /**
-     * Gets the list of directories 
-     *  
-     * @param relativePath
-     * @param folderToCopy
-     * @throws IOException
+     * Copies the contents of a specified folder to a destination folder in the relative path.
+     *
+     * @param relativePath - the relative path within which the folder contents will be copied
+     * @param folderToCopy - the path of the folder whose contents are to be copied
+     * @throws IOException - if an I/O error occurs during the copy process
      */
     @Override
     public void copyToFolder(String relativePath, String folderToCopy) throws IOException {
         FileUtils.copyDirectory(new File(folderToCopy), new File(path + File.separator+ relativePath));
     }
-}
+}   

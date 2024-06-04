@@ -7,7 +7,7 @@ public class SnapshotCouldNotBeCreatedException extends Exception{
 private static final long serialVersionUID = 1L;
     
     public SnapshotCouldNotBeCreatedException(String id) {
-        super("Snapshot could not be created for snapshot task" + id + " not found");
+        super("Snapshot could not be created for snapshot task id " + id + " not found");
     }
     
     public SnapshotCouldNotBeCreatedException(String message, Throwable cause) {

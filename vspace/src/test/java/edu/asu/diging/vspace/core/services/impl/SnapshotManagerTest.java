@@ -34,11 +34,11 @@ import edu.asu.diging.vspace.core.file.impl.StorageEngine;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionSnapshot;
 import edu.asu.diging.vspace.core.model.impl.SnapshotTask;
 
-public class DownloadsManagerTest {
+public class SnapshotManagerTest {
 
     @Spy 
     @InjectMocks
-    private SnapshotsManager serviceToTest;
+    private SnapshotManager serviceToTest;
 
     @Mock
     StorageEngine storageEngine;
