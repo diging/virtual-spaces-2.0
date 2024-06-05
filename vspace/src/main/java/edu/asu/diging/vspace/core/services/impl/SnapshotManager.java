@@ -48,7 +48,7 @@ public class SnapshotManager  implements  ISnapshotManager {
     private IStorageEngine storageEngineDownloads;
 
     @Autowired
-    private IRenderingManager snapshotManager;
+    private IRenderingManager renderingManager;
 
     private SequenceHistory sequenceHistory;
 
@@ -85,7 +85,7 @@ public class SnapshotManager  implements  ISnapshotManager {
         exhibitionSnapshotRepository.save(exhibitionSnapshot);
 
         try {
-            snapshotManager.createSnapshot(resourcesPath, exhibitionFolderName, sequenceHistory, exhibitionSnapshot);
+            renderingManager.createSnapshot(resourcesPath, exhibitionFolderName, sequenceHistory, exhibitionSnapshot);
         } catch (IOException | InterruptedException | FileStorageException e) {
             throw new SnapshotCouldNotBeCreatedException(e.getMessage(), e.getCause());
         }
@@ -109,8 +109,8 @@ public class SnapshotManager  implements  ISnapshotManager {
      * 
      * Creates folder for ExhibitionSnapshot and updates entity. 
      * 
-     * @param exhibitionSnapshot   {@link ExhibitionSnapshot} for which the folder is created
-     * @param exhibitionFolderName the folder name of the snapshot
+     * @param exhibitionSnapshot     {@link ExhibitionSnapshot} for which the folder is created
+     * @param exhibitionFolderName   the folder name of the snapshot
      * @return the name of the exhibition folder
      */
     private String createSnapshotFolder(ExhibitionSnapshot exhibitionSnapshot, String exhibitionFolderName) {
@@ -178,5 +178,17 @@ public class SnapshotManager  implements  ISnapshotManager {
     @Override
     public SnapshotTask getLatestSnapshotTask(){
         return snapshotTaskRepository.findFirstByOrderByCreationDateDesc();
+    }
+    
+    @Override
+    public SnapshotTask getSnapshotTask(String id) throws ExhibitionSnapshotNotFoundException{
+        Optional<SnapshotTask> snapshotTask = snapshotTaskRepository.findById(id);
+        if(snapshotTask.isPresent()) {
+            logger.debug("hereee");
+            return snapshotTask.get();
+        }
+        else {
+            throw new ExhibitionSnapshotNotFoundException(id);
+        }
     }
 }

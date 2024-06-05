@@ -52,8 +52,7 @@ public class DownloadsController {
     public ResponseEntity<ExhibitionSnapshot> createExhibitionSnapshot(HttpServletRequest request, HttpServletResponse response,  Model model) {
         ExhibitionSnapshot exhibitionSnapshot = null;
         try {      
-            exhibitionSnapshot =
-                    snapshotManager.triggerExhibitionSnapshotCreation();
+            exhibitionSnapshot = snapshotManager.triggerExhibitionSnapshotCreation();
 
             return  ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_TYPE, "application/json")

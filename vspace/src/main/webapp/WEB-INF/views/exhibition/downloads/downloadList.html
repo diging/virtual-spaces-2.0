@@ -24,32 +24,36 @@
     }).on("page", function(event, num){
     		window.location.assign("[(@{'/staff/downloads/list'})]"+'?'+"downloadsPagenum="+num);
     });
-    $.ajax({
-    	type : "GET",
-    	url : "[(@{'/staff/exhibit/task/snapshot/status?'+ ${_csrf.parameterName}+'='+${_csrf.token} })] ",
-    	cache : false,
-    	
-    	contentType : false,
-    	processData : false,
-    	
-    	success : function(data) {
-            if(data.taskComplete ==  false) {
-            	pollForExhibitionDownload(data.exhibitionDownload.id, data.exhibitionDownload.folderName);
-            }				
-    	},
-    	error : function(data) {
-            var loader = document.getElementById('downloadLoader');
-            loader.style.visibility="hidden";
-            
-            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>Snapshot could not be downloaded</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-            $('.errorAdd').append(alert);
-            
-            var errorAlert = document.getElementById('downloadError');
-            errorAlert.style.visibility="visible";
-    	}
-    });
+    checkSnapshotCreationStatus('');
 })
-    function triggerExhibitionDownload(){ 
+
+    function checkSnapshotCreationStatus(id){
+    	$.ajax({
+            type : "GET",
+            url : "[(@{'/staff/exhibit/task/snapshot/status?'+ ${_csrf.parameterName}+'='+${_csrf.token} })]"+"&snapshotTaskId="+id,
+            cache : false,
+            
+            contentType : false,
+            processData : false,
+            
+            success : function(data) {
+                if(data.taskComplete ==  false) {
+                    pollForExhibitionDownload(data.exhibitionSnapshot.id, data.exhibitionSnapshot.folderName);
+                }
+            },
+            error : function(data) {
+                var loader = document.getElementById('downloadLoader');
+                loader.style.visibility="hidden";
+                
+                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>Snapshot could not be downloaded</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                $('.errorAdd').append(alert);
+                
+                var errorAlert = document.getElementById('downloadError');
+                errorAlert.style.visibility="visible";
+            }
+        });
+    }
+    function triggerExhibitionSnapshotCreation(){ 
         $.ajax({
             type : "POST",
             url : "[(@{'/staff/exhibit/snapshot?'+ ${_csrf.parameterName}+'='+${_csrf.token} })] ",
@@ -72,7 +76,7 @@
     }
 
     function pollForExhibitionDownload(id, folderName) {	
-    	var alert = $('<div class="alert alert-info alert-dismissible fade show" role="alert"><p>Snapshot creation is in progress. Please wait. </p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+    	var alert = $('<div class="alert alert-info alert-dismissible fade show" role="alert"><p>Snapshot '+folderName+' creation is in progress. Please wait. </p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
     	$('.successAlert').append(alert);
     	const poll = (id, folderName) => {
             maxAttempts = 10;
@@ -85,12 +89,12 @@
                 attempts++;
                 var text = await result.text();
                 if ( text == "true") {
-                    var alert = $('<div class="alert alert-success alert-dismissible fade show" role="alert"><p>Snapshot is ready. Please click to download. <a href=[[@{/staff/exhibit/download/'+id+'?folderName='+folderName+'}]] > <span class="btn primary-btn btn-sm">Download</span></a> </p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    var alert = $('<div class="alert alert-success alert-dismissible fade show" role="alert"><p>Snapshot '+folderName+' is ready. Please click to download. <a href=[[@{/staff/exhibit/download/'+id+'?folderName='+folderName+'}]] > <span class="btn primary-btn btn-sm">Download</span></a> </p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
                     $('.successAlert').empty();
                     $('.successAlert').append(alert); 
                     return resolve(result);
                 } else if (maxAttempts && attempts === maxAttempts) {
-                    var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>Snapshot could not be created. Please try again later</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>Snapshot '+folderName+' could not be created. Please try again later</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
                     $('.errorAdd').append(alert);
                     var errorAlert = document.getElementById('downloadError');
                     errorAlert.style.visibility="visible";
@@ -177,7 +181,7 @@ a.nav-link.active.show {
 	<span class = "errorAdd" id="downloadError"></span>
 	<span class = "successAlert" id="downloadSuccess"></span>
 	
- 	<button class="download btn primary-btn" onClick="triggerExhibitionDownload()">Create Snapshot</button>	
+ 	<button class="download btn primary-btn" onClick="triggerExhibitionSnapshotCreation()">Create Snapshot</button>	
  	
  	 <h2>Downloads</h2>
  	 
@@ -194,7 +198,11 @@ a.nav-link.active.show {
                 <tr th:each="exhibitionDownload:  ${downloadsList}">
                     <th scope="row">[[${exhibitionDownload.creationDate}]]</th>	            
                     <td>[[${exhibitionDownload.createdBy}]]</td>
-                    <td><a th:href="@{'/staff/exhibit/download/'+${exhibitionDownload.id}(folderName=${exhibitionDownload.folderName})}" ><span class="btn primary-btn btn-sm">Download</span></a></td>
+                    <td>
+                        <span th:if="${!exhibitionDownload.getSnapshotTask().isTaskComplete()}"> 
+                            <a id="snapshotStatus" th:onclick="javascript:checkSnapshotCreationStatus('[(${exhibitionDownload?.getSnapshotTask()?.id})]')"><span class="btn primary-btn btn-sm">Check Status</span></a>
+                        </span>
+                        <span th:if="${exhibitionDownload.getSnapshotTask().isTaskComplete()}"><a th:href="@{'/staff/exhibit/download/'+${exhibitionDownload.id}(folderName=${exhibitionDownload.folderName})}" ><span class="btn primary-btn btn-sm">Download</span></a></span>
                 </tr>
             </tbody>
 	 

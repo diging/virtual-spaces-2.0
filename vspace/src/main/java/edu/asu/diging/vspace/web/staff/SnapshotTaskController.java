@@ -13,7 +13,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import edu.asu.diging.vspace.core.exception.ExhibitionSnapshotNotFoundException;
 import edu.asu.diging.vspace.core.model.impl.SnapshotTask;
 import edu.asu.diging.vspace.core.services.ISnapshotManager;
 
@@ -27,8 +29,9 @@ public class SnapshotTaskController {
 
 
     @RequestMapping(value = "/staff/exhibit/task/snapshot/status", method = RequestMethod.GET) 
-    public ResponseEntity<SnapshotTask> getLatestSnapshotStatus(HttpServletRequest request, HttpServletResponse response,  Model model) {                     
-        SnapshotTask snapshotTask = snapshotManager.getLatestSnapshotTask();   
+    public ResponseEntity<SnapshotTask> getLatestSnapshotStatus(HttpServletRequest request, 
+            @RequestParam(required = false, name = "snapshotTaskId") String id, HttpServletResponse response,  Model model) throws ExhibitionSnapshotNotFoundException{                     
+        SnapshotTask snapshotTask = (id == null && id=="") ? snapshotManager.getLatestSnapshotTask() : snapshotManager.getSnapshotTask(id);   
         if(snapshotTask == null) {
             logger.error("Could not find snapshot task");
             return new ResponseEntity<SnapshotTask>(snapshotTask, HttpStatus.INTERNAL_SERVER_ERROR);

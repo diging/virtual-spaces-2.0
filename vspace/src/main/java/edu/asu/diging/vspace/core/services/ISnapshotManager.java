@@ -36,4 +36,6 @@ public interface ISnapshotManager {
     Page<ExhibitionSnapshot> getAllExhibitionSnapshots(int filesPagenum);
 
     SnapshotTask getLatestSnapshotTask();
+
+    SnapshotTask getSnapshotTask(String id) throws ExhibitionSnapshotNotFoundException;
 }
