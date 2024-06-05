@@ -133,7 +133,7 @@ public class ExternalLinkManager extends LinkManager<IExternalLink, ExternalLink
          * automatically persist howToOpen in database.
          */
         IExternalLinkDisplay externalLinkDisplay = createLink(title, id, positionX, positionY, rotation, linkedId,
-                linkLabel, displayType, linkImage, imageFilename);
+                linkLabel, displayType, linkImage, imageFilename, howToOpen);
         externalLinkDisplay.setHowToOpen(howToOpen);
         return externalLinkDisplay;
 
@@ -153,7 +153,7 @@ public class ExternalLinkManager extends LinkManager<IExternalLink, ExternalLink
          * automatically persist howToOpen in database.
          */
         IExternalLinkDisplay externalLinkDisplay = updateLink(title, id, positionX, positionY, rotation, linkedId,
-                linkLabel, linkId, linkDisplayId, displayType, linkImage, imageFilename);
+                linkLabel, linkId, linkDisplayId, displayType, linkImage, imageFilename, howToOpen);
         externalLinkDisplay.setHowToOpen(howToOpen);
         return externalLinkDisplay;
     }
