@@ -136,8 +136,8 @@ public class ExhibitionConfigurationController {
      * @return - a RedirectView to the exhibition configuration page
      * @throws IOException if an input or output error occurs
      */
-    @RequestMapping(value = "/staff/exhibit/config/linkImage", method = RequestMethod.POST)
-    public RedirectView createOrUpdateSpaceLinkImage(HttpServletRequest request,
+    @RequestMapping(value = "/staff/exhibit/config/link/defaultImage", method = RequestMethod.POST)
+    public RedirectView createOrUpdateLinkImage(HttpServletRequest request,
             @RequestParam(required = false, name = "exhibitionParam") String exhibitID,
             @RequestParam(name = "spaceLinkImage", required = false) MultipartFile spaceLinkImage,
             @RequestParam(name = "moduleLinkImage", required = false) MultipartFile moduleLinkImage,

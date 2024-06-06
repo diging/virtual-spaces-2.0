@@ -166,7 +166,7 @@
                 <br>      
                 </div>                   
                 <div id="uploadSpaceLinkImage" th:style="${defaultSpaceLinkImage != null ? 'display: none;' : '' }" >                       
-                    <form id="uploadSpaceLinkImage" th:action="@{|/staff/exhibit/config/linkImage?${_csrf.parameterName}=${_csrf.token}|}" method="POST" enctype="multipart/form-data">
+                    <form id="uploadSpaceLinkImage" th:action="@{|/staff/exhibit/config/link/defaultImage?${_csrf.parameterName}=${_csrf.token}|}" method="POST" enctype="multipart/form-data">
                         <input type="hidden"  th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                         <input type="hidden" th:value="${exhibition?.id}" name="exhibitionParam" id="exhibitionParam"/>
                         <div id="spaceLinkImageBlock" class="alert alert-secondary"
@@ -192,7 +192,7 @@
                 <br>      
                 </div>                   
                 <div id="uploadModuleLinkImage" th:style="${defaultModuleLinkImage != null ? 'display: none;' : '' }" >                       
-                    <form id="uploadModuleLinkImage" th:action="@{|/staff/exhibit/config/linkImage?${_csrf.parameterName}=${_csrf.token}|}" method="POST" enctype="multipart/form-data">
+                    <form id="uploadModuleLinkImage" th:action="@{|/staff/exhibit/config/link/defaultImage?${_csrf.parameterName}=${_csrf.token}|}" method="POST" enctype="multipart/form-data">
                         <input type="hidden"  th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                         <input type="hidden" th:value="${exhibition?.id}" name="exhibitionParam" id="exhibitionParam"/>
                         <div id="moduleLinkImageBlock" class="alert alert-secondary"
@@ -219,7 +219,7 @@
                 <br>      
             </div>                   
             <div id="uploadExternalLinkImage" th:style="${defaultExternalLinkImage != null ? 'display: none;' : '' }" >                       
-                <form id="uploadModuleLinkImage" th:action="@{|/staff/exhibit/config/linkImage?${_csrf.parameterName}=${_csrf.token}|}" method="POST" enctype="multipart/form-data">
+                <form id="uploadModuleLinkImage" th:action="@{|/staff/exhibit/config/link/defaultImage?${_csrf.parameterName}=${_csrf.token}|}" method="POST" enctype="multipart/form-data">
                     <input type="hidden"  th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                     <input type="hidden" th:value="${exhibition?.id}" name="exhibitionParam" id="exhibitionParam"/>
                     <div id="externalLinkImageBlock" class="alert alert-secondary"
