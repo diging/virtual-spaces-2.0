@@ -186,19 +186,4 @@ public class RenderingManagerTest {
         //to test if html page is added for given slide
         verify(serviceToTest, times(1)).renderSlide(slide1.getId(),  spaceFolderPath, space.getId(), module1.getId(),sequence1.getId() );
     }
-    
-    
-    @Test
-    public void test_downloadExhibition_createSnapShotfailure() throws IOException {
-        String resourcesPath = "/Resources";
-        ExhibitionSnapshot exhibitionSnapshot = new ExhibitionSnapshot();
-        exhibitionSnapshot.setId("ID1");
-        SnapshotTask snapshotTask = new SnapshotTask();  
-        snapshotTask.setExhibitionSnapshot(exhibitionSnapshot);    
-        exhibitionSnapshot.setSnapshotTask(snapshotTask);
-
-        when(spaceRepository.findAllBySpaceStatus(SpaceStatus.PUBLISHED)).thenReturn(new ArrayList());
-        doThrow(new IOException()).when(storageEngine).copyToFolder(Mockito.anyString(), Mockito.anyString() );        
-        assertThrows(IOException.class, ()-> serviceToTest.createSnapshot(resourcesPath, "folderName", null, exhibitionSnapshot));
-    }
 }

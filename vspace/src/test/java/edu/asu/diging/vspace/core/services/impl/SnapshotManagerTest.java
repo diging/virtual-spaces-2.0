@@ -33,6 +33,7 @@ import edu.asu.diging.vspace.core.exception.SnapshotCouldNotBeCreatedException;
 import edu.asu.diging.vspace.core.file.impl.StorageEngine;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionSnapshot;
 import edu.asu.diging.vspace.core.model.impl.SnapshotTask;
+import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 
 public class SnapshotManagerTest {
 
@@ -84,7 +85,7 @@ public class SnapshotManagerTest {
         serviceToTest.triggerExhibitionSnapshotCreation();
 
         Mockito.verify(storageEngine).createFolder(exhibitionFolderName);
-        Mockito.verify(renderingManager).createSnapshot(resourcesPath, exhibitionFolderName, null,  null);    
+        Mockito.verify(serviceToTest).createSnapshot(resourcesPath, exhibitionFolderName, null,  null);    
     }
   
     @Test
@@ -98,5 +99,19 @@ public class SnapshotManagerTest {
         when(exhibitionSnapshotRepo.findById("ID1")).thenReturn(Optional.of(exhibitionDownload));
 
         assertTrue(serviceToTest.checkIfSnapshotCreated("ID1"));
+    }
+    
+    @Test
+    public void test_downloadExhibition_createSnapShotfailure() throws IOException {
+        String resourcesPath = "/Resources";
+        ExhibitionSnapshot exhibitionSnapshot = new ExhibitionSnapshot();
+        exhibitionSnapshot.setId("ID1");
+        SnapshotTask snapshotTask = new SnapshotTask();  
+        snapshotTask.setExhibitionSnapshot(exhibitionSnapshot);    
+        exhibitionSnapshot.setSnapshotTask(snapshotTask);
+
+        when(spaceRepository.findAllBySpaceStatus(SpaceStatus.PUBLISHED)).thenReturn(new ArrayList());
+        doThrow(new IOException()).when(storageEngine).copyToFolder(Mockito.anyString(), Mockito.anyString() );        
+        assertThrows(IOException.class, ()-> serviceToTest.createSnapshot(resourcesPath, "folderName", null, exhibitionSnapshot));
     }
 }

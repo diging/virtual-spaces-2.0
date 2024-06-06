@@ -12,6 +12,7 @@ import org.thymeleaf.context.Context;
 import org.thymeleaf.context.WebContext;
 
 import edu.asu.diging.vspace.core.exception.ExhibitionSnapshotNotFoundException;
+import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.SequenceNotFoundException;
 import edu.asu.diging.vspace.core.exception.SlideNotFoundException;
 import edu.asu.diging.vspace.core.exception.SlidesInSequenceNotFoundException;
@@ -27,7 +28,7 @@ import edu.asu.diging.vspace.core.model.impl.Space;
 public interface ISnapshotManager {
     ExhibitionSnapshot triggerExhibitionSnapshotCreation() throws IOException, InterruptedException, ExecutionException, SnapshotCouldNotBeCreatedException;
  
-    byte[] downloadExhibitionFolder(String id) throws ExhibitionSnapshotNotFoundException, IOException;
+    byte[] downloadExhibitionFolder(String id) throws ExhibitionSnapshotNotFoundException, IOException, FileStorageException;
 
     Boolean checkIfSnapshotCreated(String id);
 
@@ -38,4 +39,8 @@ public interface ISnapshotManager {
     SnapshotTask getLatestSnapshotTask();
 
     SnapshotTask getSnapshotTask(String id) throws ExhibitionSnapshotNotFoundException;
+        
+    void createSnapshot(String resourcesPath, String exhibitionFolderName, SequenceHistory sequenceHistory, ExhibitionSnapshot exhibitionSnapshot) 
+            throws IOException, InterruptedException, FileStorageException ;
+
 }

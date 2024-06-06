@@ -10,23 +10,10 @@ import edu.asu.diging.vspace.core.exception.SlideNotFoundException;
 import edu.asu.diging.vspace.core.exception.SlidesInSequenceNotFoundException;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionSnapshot;
 import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
+import edu.asu.diging.vspace.core.model.impl.Space;
 
 public interface IRenderingManager {
     
-    /**
-     * Creates a snapshot and copies the spaces to exhibitionFolderPath
-     * 
-     * @param resourcesPath - the path to the resources directory
-     * @param exhibitionFolderName - the name of the folder where the exhibition data is stored
-     * @param sequenceHistory - the history of sequences to be included in the snapshot
-     * @param exhibitionSnapshot - the snapshot object that will store the exhibition state
-     * @throws IOException - if an I/O error occurs during the snapshot creation
-     * @throws InterruptedException - if the snapshot creation process is interrupted
-     * @throws FileStorageException - if an error occurs while storing the snapshot
-     */
-    void createSnapshot(String resourcesPath, String exhibitionFolderName, SequenceHistory sequenceHistory, ExhibitionSnapshot exhibitionSnapshot) 
-            throws IOException, InterruptedException, FileStorageException ;
-
     /**
      * Populates the context with variables for slide template.
      * 
@@ -50,5 +37,15 @@ public interface IRenderingManager {
      * @param sequenceHistory - Sequence history object of the space
      */
     void populateContextForSpace(Context context, String id, SequenceHistory sequenceHistory);
+    
+    /**
+     * 
+     * Download given space and related modules into exhibitionFolderPath
+     * @param space
+     * @param exhibitionFolderPath
+     * @param context
+     * @throws FileStorageException 
+     */
+    void downloadSpace(Space space, String exhibitionFolderName,  SequenceHistory sequenceHistory) throws FileStorageException;
 
 }

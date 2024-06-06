@@ -53,10 +53,7 @@ import edu.asu.diging.vspace.core.services.ISpaceManager;
 public class RenderingManager implements IRenderingManager {
     
     private final Logger logger = LoggerFactory.getLogger(getClass());
-    
-    @Autowired
-    private SpaceRepository spaceRepository;
-    
+       
     @Autowired
     private IModuleManager moduleManager;
 
@@ -98,29 +95,12 @@ public class RenderingManager implements IRenderingManager {
     private IStorageManager storageManager;
     
     private final String IMAGES_FOLDER_NAME = "images";
-
-    private final String RESOURCES_FOLDER_NAME = "resources";
        
     private final String SPACE_TEMPLATE_DOWNLOAD_API = "exhibition/downloads/spaceDownloadTemplate";
     
     private final String SLIDE_TEMPLATE_DOWNLOAD_API = "exhibition/downloads/slideDownloadTemplate";
     
-    private final String DOWNLOAD_FILE_EXTENSION = ".html";
-    
-    @Async
-    @Override
-    @Transactional
-    public void createSnapshot(String resourcesPath, String exhibitionFolderName,SequenceHistory sequenceHistory, ExhibitionSnapshot exhibitionSnapshot)  throws IOException, InterruptedException, FileStorageException {
-        storageEngineDownloads.copyToFolder(exhibitionFolderName + File.separator + RESOURCES_FOLDER_NAME, resourcesPath);
-        List<Space> spaces= spaceRepository.findAllBySpaceStatus(SpaceStatus.PUBLISHED);
-
-        for(Space space : spaces) {
-            downloadSpace(space, exhibitionFolderName, sequenceHistory);                
-        }
-        SnapshotTask snapshotTask = exhibitionSnapshot.getSnapshotTask();
-        snapshotTask.setTaskComplete(true);
-        snapshotTaskRepository.save(snapshotTask);   
-    }
+    private final String DOWNLOAD_FILE_EXTENSION = ".html"; 
     
     /**
      * 
