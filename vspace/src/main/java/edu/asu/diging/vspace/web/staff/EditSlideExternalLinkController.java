@@ -9,16 +9,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
-import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
 import edu.asu.diging.vspace.core.exception.SlideDoesNotExistException;
-import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
-import edu.asu.diging.vspace.core.model.display.DisplayType;
-import edu.asu.diging.vspace.core.model.display.ExternalLinkDisplayMode;
-import edu.asu.diging.vspace.core.model.display.IExternalLinkDisplay;
-import edu.asu.diging.vspace.core.model.display.ISlideExternalLinkDisplay;
+import edu.asu.diging.vspace.core.model.IExternalLinkSlide;
 import edu.asu.diging.vspace.core.services.ISlideExternalLinkManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 
@@ -32,36 +26,20 @@ public class EditSlideExternalLinkController extends EditSlideLinksController{
     private ISlideExternalLinkManager externalLinkManager;
     
     
-    
-    @RequestMapping(value = "/staff/module/{moduleId}/slide/link/external/{id}", method = RequestMethod.POST)
-    public ResponseEntity<String> editExternalLink(@PathVariable("id") String id, @RequestParam("x") String x,
-            @RequestParam("y") String y, @RequestParam("externalLinkLabel") String title,
-            @RequestParam("url") String externalLink,
-            @RequestParam("externalLinkIdValueEdit") String externalLinkIdValueEdit,
-            @RequestParam("externalLinkDisplayId") String externalLinkDisplayId,
-            @RequestParam("tabOpen") String howToOpen, @RequestParam("type") String displayType,
-            @RequestParam("externalLinkImage") MultipartFile file) throws SlideDoesNotExistException, IOException,
-            LinkDoesNotExistsException, NumberFormatException, ImageCouldNotBeStoredException {
+    @RequestMapping(value = "/staff/module/{moduleId}/slide/{slideId}/link/external/{id}", method = RequestMethod.POST)
+    public ResponseEntity<String> editExternalLink(@PathVariable("id") String id, @PathVariable("slideId") String slideId,
+    		@RequestParam("externalLinkLabel") String title,
+            @RequestParam("url") String externalLink
+            ) throws SlideDoesNotExistException, IOException, LinkDoesNotExistsException, NumberFormatException {
 
-        ResponseEntity<String> validation = checkIfSlideExists(slideManager, id, x, y);
+        ResponseEntity<String> validation = checkIfSlideExists(slideManager, slideId);
         if (validation != null) {
             return validation;
         }
-        byte[] linkImage = null;
-        String filename = null;
-        if (file != null) {
-            linkImage = file.getBytes();
-            filename = file.getOriginalFilename();
-        }
-        DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
-        ExternalLinkDisplayMode externalLinkOpenMode = howToOpen.isEmpty() ? null
-                : ExternalLinkDisplayMode.valueOf(howToOpen);
-        ISlideExternalLinkDisplay display = (ISlideExternalLinkDisplay) externalLinkManager.updateLink(title, id, new Float(x),
-                new Float(y), 0, externalLink, title, externalLinkIdValueEdit, externalLinkDisplayId, type, linkImage,
-                filename, externalLinkOpenMode);
-        return success(display.getExternalLink().getId(), display.getId(), display.getPositionX(),
-                display.getPositionY(), display.getRotation(), display.getExternalLink().getExternalLink(), title,
-                displayType, null, null);
+
+        IExternalLinkSlide link = externalLinkManager.updateExternalLink(title, externalLink, id);
+        return success(link.getId(), link.getExternalLink(), title, null, 0, 0, 0,
+        		null, null, null);
 
     }
 

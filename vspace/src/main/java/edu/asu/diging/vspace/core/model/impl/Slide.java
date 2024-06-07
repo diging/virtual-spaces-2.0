@@ -1,5 +1,7 @@
 package edu.asu.diging.vspace.core.model.impl;
 
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -22,7 +24,6 @@ import org.hibernate.annotations.Parameter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import edu.asu.diging.vspace.core.model.IContentBlock;
-import edu.asu.diging.vspace.core.model.IExternalLink;
 import edu.asu.diging.vspace.core.model.IExternalLinkSlide;
 import edu.asu.diging.vspace.core.model.IImageBlock;
 import edu.asu.diging.vspace.core.model.IModule;
@@ -33,7 +34,7 @@ import edu.asu.diging.vspace.core.model.IVSImage;
 
 @Entity
 public class Slide extends VSpaceElement implements ISlide {
-
+	
     @Id
     @GeneratedValue(generator = "slide_id_generator")
     @GenericGenerator(name = "slide_id_generator", parameters = @Parameter(name = "prefix", value = "SLI"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
@@ -52,14 +53,12 @@ public class Slide extends VSpaceElement implements ISlide {
     private List<ISequence> sequence;
     
     @JsonIgnore
-    @OneToMany(mappedBy = "slide", targetEntity = ExternalLinkSlide.class)
+    @OneToMany(mappedBy = "slide", targetEntity = ExternalLinkSlide.class, cascade = CascadeType.ALL)
     private List<IExternalLinkSlide> externalLinks;
     
     @OneToOne(targetEntity = VSImage.class)
     @NotFound(action = NotFoundAction.IGNORE)
     private IVSImage image;
-
-    
 
     /*
      * (non-Javadoc)
@@ -109,6 +108,9 @@ public class Slide extends VSpaceElement implements ISlide {
      */
     @Override
     public List<IExternalLinkSlide> getExternalLinks() {
+    	if (externalLinks == null) {
+    		externalLinks = new ArrayList<IExternalLinkSlide>();
+    	}
         return externalLinks;
     }
 

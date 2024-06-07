@@ -8,38 +8,18 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import edu.asu.diging.vspace.core.data.ExternalLinkDisplayRepository;
-import edu.asu.diging.vspace.core.data.ExternalLinkRepository;
-import edu.asu.diging.vspace.core.data.SlideExternalLinkRepository;
-import edu.asu.diging.vspace.core.data.ImageRepository;
 import edu.asu.diging.vspace.core.data.SlideExternalLinkDisplayRepository;
-import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
-import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
-import edu.asu.diging.vspace.core.exception.SlideDoesNotExistException;
-import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
-import edu.asu.diging.vspace.core.factory.IExternalLinkDisplayFactory;
-import edu.asu.diging.vspace.core.factory.IExternalLinkFactory;
-import edu.asu.diging.vspace.core.factory.IImageFactory;
+import edu.asu.diging.vspace.core.data.SlideExternalLinkRepository;
 import edu.asu.diging.vspace.core.factory.ISlideExternalLinkDisplayFactory;
 import edu.asu.diging.vspace.core.factory.ISlideExternalLinkFactory;
-import edu.asu.diging.vspace.core.file.IStorageEngine;
-import edu.asu.diging.vspace.core.model.IExternalLink;
 import edu.asu.diging.vspace.core.model.IExternalLinkSlide;
 import edu.asu.diging.vspace.core.model.ISlide;
-import edu.asu.diging.vspace.core.model.ISpace;
-import edu.asu.diging.vspace.core.model.display.DisplayType;
-import edu.asu.diging.vspace.core.model.display.ExternalLinkDisplayMode;
-import edu.asu.diging.vspace.core.model.display.IExternalLinkDisplay;
 import edu.asu.diging.vspace.core.model.display.ISlideExternalLinkDisplay;
-import edu.asu.diging.vspace.core.model.display.impl.ExternalLinkDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.SlideExternalLinkDisplay;
-import edu.asu.diging.vspace.core.model.impl.ExternalLink;
 import edu.asu.diging.vspace.core.model.impl.ExternalLinkSlide;
 import edu.asu.diging.vspace.core.model.impl.ExternalLinkValue;
-import edu.asu.diging.vspace.core.services.IExternalLinkManager;
 import edu.asu.diging.vspace.core.services.ISlideExternalLinkManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
-import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Transactional
 @Service
@@ -60,20 +40,16 @@ implements ISlideExternalLinkManager{
 
     @Autowired
     private ISlideExternalLinkDisplayFactory externalLinkDisplayFactory;
-
-    @Autowired
-    private IImageFactory imageFactory;
-
-    @Autowired
-    private ImageRepository imageRepo;
-
-    @Autowired
-    private IStorageEngine storage;
     
-    @Override
-    public List<ISlideExternalLinkDisplay> getLinkDisplays(String slideId) {
-        return externalLinkDisplayRepo.findSlideExternalLinkDisplaysForSlide(slideId);
+    public List<IExternalLinkSlide> getLinks(String slideId) {
+        return externalLinkRepo.findExternalLinkSlides(slideId);
     }
+    
+	@Override
+	public List<ISlideExternalLinkDisplay> getLinkDisplays(String slideId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
     @Override
     protected IExternalLinkSlide createLinkObject(String title, String id) {
@@ -131,44 +107,27 @@ implements ISlideExternalLinkManager{
         externalLinkRepo.delete((ExternalLinkSlide) link);
     }
 
+    @Override
+    public IExternalLinkSlide createExternalLink(String title, String url, String slideId) {
+    	ISlide slide = slideManager.getSlide(slideId);
+    	IExternalLinkSlide externalLink = new ExternalLinkSlide();
+    	externalLink.setExternalLink(url);
+    	externalLink.setName(title);
+    	externalLink.setSlide(slide);
+    	externalLinkRepo.save((ExternalLinkSlide) externalLink);
+    	return externalLink;
+    }
     
     @Override
-    public ISlideExternalLinkDisplay createLink(String title, String id, float positionX, float positionY, int rotation,
-            String linkedId, String linkLabel, DisplayType displayType, byte[] linkImage, String imageFilename,
-            ExternalLinkDisplayMode howToOpen)
-            throws SlideDoesNotExistException, ImageCouldNotBeStoredException, SlideDoesNotExistException {
-
-        /*
-         * When createLink is called then inside updateLinkAndDisplay(link, displayLink)
-         * is called to save Link and Display link in the database and return an object
-         * of ExternalLinkDisplay. When setHowToOpen method is being called on the same
-         * ExternalLinkDisplay object to set howToOpen field then Hibernate
-         * automatically persist howToOpen in database.
-         */
-        ISlideExternalLinkDisplay externalLinkDisplay = createLink(title, id, positionX, positionY, rotation, linkedId,
-                linkLabel, displayType, linkImage, imageFilename);
-        externalLinkDisplay.setHowToOpen(howToOpen);
-        return externalLinkDisplay;
-
+    public IExternalLinkSlide updateExternalLink(String title, String url, String id) {
+    	IExternalLinkSlide externalLink = getLink(id);
+    	if (externalLink != null) {
+			externalLink.setExternalLink(url);
+	    	externalLink.setName(title);
+	    	externalLinkRepo.save((ExternalLinkSlide) externalLink);
+    	} else {
+    		externalLink = new ExternalLinkSlide();
+    	}
+    	return externalLink;
     }
-
-    @Override
-    public ISlideExternalLinkDisplay updateLink(String title, String id, float positionX, float positionY, int rotation,
-            String linkedId, String linkLabel, String linkId, String linkDisplayId, DisplayType displayType,
-            byte[] linkImage, String imageFilename, ExternalLinkDisplayMode howToOpen)
-            throws SlideDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException {
-
-        /*
-         * When updateLink is called then inside updateLinkAndDisplay(link, displayLink)
-         * is called to save Link and Display link in the database and return an object
-         * of ExternalLinkDisplay. When setHowToOpen method is being called on the same
-         * ExternalLinkDisplay object to set howToOpen field then Hibernate
-         * automatically persist howToOpen in database.
-         */
-        ISlideExternalLinkDisplay externalLinkDisplay = updateLink(title, id, positionX, positionY, rotation, linkedId,
-                linkLabel, linkId, linkDisplayId, displayType, linkImage, imageFilename);
-        externalLinkDisplay.setHowToOpen(howToOpen);
-        return externalLinkDisplay;
-    }
-
 }

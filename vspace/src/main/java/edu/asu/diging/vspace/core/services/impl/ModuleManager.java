@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,8 +21,8 @@ import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.impl.Module;
-import edu.asu.diging.vspace.core.model.impl.ModuleLink;
 import edu.asu.diging.vspace.core.services.IModuleManager;
+import edu.asu.diging.vspace.core.services.ISlideManager;
 
 @Transactional
 @Service
@@ -43,7 +42,7 @@ public class ModuleManager implements IModuleManager {
     private SequenceRepository sequenceRepo;
     
     @Autowired
-    private SlideManager slideManager;
+    private ISlideManager slideManager;
     
     @Autowired
     private ModuleLinkDisplayRepository moduleLinkDisplayRepo;

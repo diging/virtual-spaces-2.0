@@ -3,14 +3,15 @@
 <head>
 <link rel="stylesheet" type="text/css" id="applicationStylesheet"
     th:href="@{/resources/extra/Home.css}" />
+<link th:href="@{/resources/boostrap-colorpicker/dist/css/bootstrap-colorpicker.css}" rel="stylesheet">
 
 <script src="//use.fontawesome.com/releases/v5.8.1/js/all.js"
     data-auto-replace-svg="nest"></script>
 <script th:src="@{'/resources/extra/space.js'}"></script>
-<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
-<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
-<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
-<script th:src="@{/assets/bootstrap-colorpicker/js/bootstrap-colorpicker.js}"></script>
+<script th:src="@{/resources/jquery/jquery-ui.min.js}"></script>
+<script th:src="@{/resources/bootstrap-4.1.2/assets/js/popper.min.js}"></script>
+<script th:src="@{/resources/bootstrap-4.1.2/js/bootstrap.min.js}"></script>
+<script th:src="@{/resources/boostrap-colorpicker/dist/js/bootstrap-colorpicker.js}"></script>
 <style type="text/css">
 
 .right-aligned {
@@ -26,1765 +27,1767 @@
 </style>
 <script th:inline="javascript">
 //# sourceURL=script.js
-$(function () {
-    $('[data-toggle="tooltip"]').tooltip()
-});
-
-$(function () {
-    $('#textColor').colorpicker();
-});
-
-$(window).on("load", function() {
-    $( window ).resize(function() {
-        drawLinks();
-    });
-    drawLinks();
-    
-    var textBlockElements = document.getElementsByClassName("textBlock");
-    Array.from(textBlockElements).forEach(function(textBlock, index){
-    	if(textBlock != null) {
-    	   	const color = textBlock.style.borderColor;
-         	textBlock.addEventListener('focus', function(e) {
-       		e.target.style.outline = "2px solid "+ color;
-         	});
-         	textBlock.addEventListener('blur', function(e) {
-         		e.target.style.outline = "none";
-        	});
-    	}
- 
-    })
-});
-//store where a user clicked on an image
-var storeX;
-var storeY;
-var selectedModuleLinkId;
-var selectedSpaceLinkId;
-var selectedExternalLinkId;
-var selectedTextBlockId;
-const displaceUnpublishedOnX = 25;
-const displaceUnpublishedOnY = 13;
-const displaceUnpublishedOnXModal = 50;
-const displaceUnpublishedOnYModal = 13;
-const displaceLableOnX = 10;
-const displaceLableOnY = 35;
-var modalBgImageHeight;
-var modalBgImageWidth;
-
-//link icons for space links
-var linkIconReader = new FileReader();
-var linkIcon;
-linkIconReader.onload = function(e) {
-    linkIcon = e.target.result;
-    showSpaceLink(createSpaceLinkInfo());
-}
-
-var moduleLinkIconReader = new FileReader();
-var moduleLinkIcon;
-moduleLinkIconReader.onload = function(e) {
-	moduleLinkIcon = e.target.result;
-    showModuleLink(createModuleLinkInfo());
-}
-
-var externalLinkIconReader = new FileReader();
-var externalLinkIcon;
-externalLinkIconReader.onload = function(e) {
-    externalLinkIcon = e.target.result;
-    showExternalLinks(createExternalLinkInfo());
-}
-
-function setLinkPosition(modalLink, link, isSpaceLink, isModal, isExternalLink, posX, posY, posXModal, posYModal, isTextBlock, isModuleLink){
-	modalLink.css('position', 'absolute');
-    if(isModal){
-        modalLink.css('left',link.positionX + posXModal);
-        modalLink.css('top', link.positionY + posYModal);
-    }else{
-        modalLink.css('left', link.positionX + posX);
-        modalLink.css('top', link.positionY + posY);
-    }
-    modalLink.css('transform', 'rotate('+link.rotation+'deg)');
-    modalLink.find("span").css('fill', 'grey');
-    modalLink.css('color', 'rgba(128,128,128,1)');
-    modalLink.css('font-size', "16px");
-    var positionX = isModal ? posXModal : posX;
-    var positionY = isModal ? posYModal : posY;
-    if(isSpaceLink && (link.link.targetSpace==null || link.link.targetSpace.spaceStatus=="UNPUBLISHED")){
-	var inactiveLinkId;
-	var inactiveLinkClasses;
-	var inactiveLinkTitle;
-	if(link.link.targetSpace==null) {
-	    inactiveLinkId = "deletedSpace-";
-	    inactiveLinkClasses = "deletedSpaceClass deletedClass-";   
-	    inactiveLinkTitle = "The target space for this link has been deleted. This link won't be shown on the public site."
-    	} else {
-	    inactiveLinkId = "unpublished-";
-	    inactiveLinkClasses = "unpublishedSpaceClass unpublishedClass-";
-	    inactiveLinkTitle = "The target space for this link is unpublished. This link won't be shown on the public site."
-    	}
-	var inactiveSpaceElement  = $('<span data-link-id="'+inactiveLinkId +link.link.id+'" class="icon-warning secondary '+inactiveLinkClasses+link.link.id+'"></span>')
-    	inactiveSpaceElement.css('position', 'absolute');
-	inactiveSpaceElement.css('left', link.positionX + positionX + displaceUnpublishedOnX);
-	inactiveSpaceElement.css('top', link.positionY + positionY - displaceUnpublishedOnY);
-	inactiveSpaceElement.css('transform', 'rotate('+link.rotation+'deg)');
-	inactiveSpaceElement.css('font-size', "24px");
-	inactiveSpaceElement.attr('title', inactiveLinkTitle);
-	if(isModal){
-	    $("#space").append(inactiveSpaceElement);
-	} else{
-	    $("#main-space").append(inactiveSpaceElement);
+	$(function () {
+	    $('[data-toggle="tooltip"]').tooltip()
+	});
+	
+	/* $(function () {
+	    $('[name="textColor"]').colorpicker();
+	}); */
+	
+	$(window).on("load", function() {
+	    $( window ).resize(function() {
+	        drawLinks();
+	    });
+	    drawLinks();
+	    
+	    var textBlockElements = document.getElementsByClassName("textBlock");
+	    Array.from(textBlockElements).forEach(function(textBlock, index){
+	    	if(textBlock != null) {
+	    	   	const color = textBlock.style.borderColor;
+	         	textBlock.addEventListener('focus', function(e) {
+	       		e.target.style.outline = "2px solid "+ color;
+	         	});
+	         	textBlock.addEventListener('blur', function(e) {
+	         		e.target.style.outline = "none";
+	        	});
+	    	}
+	 
+	    })
+	});
+	//store where a user clicked on an image
+	var storeX;
+	var storeY;
+	var selectedModuleLinkId;
+	var selectedSpaceLinkId;
+	var selectedExternalLinkId;
+	var selectedTextBlockId;
+	const displaceUnpublishedOnX = 25;
+	const displaceUnpublishedOnY = 13;
+	const displaceUnpublishedOnXModal = 50;
+	const displaceUnpublishedOnYModal = 13;
+	const displaceLableOnX = 10;
+	const displaceLableOnY = 35;
+	var modalBgImageHeight;
+	var modalBgImageWidth;
+	
+	//link icons for space links
+	var linkIconReader = new FileReader();
+	var linkIcon;
+	linkIconReader.onload = function(e) {
+	    linkIcon = e.target.result;
+	    showSpaceLink(createSpaceLinkInfo());
 	}
-    }
-    if(isModuleLink && link.link.module.moduleStatus!=null && link.link.module.moduleStatus=="UNPUBLISHED"){
-    	var unpublishedModuleElement = $('<span data-link-id="unpublished-'+link.link.id+'" class="icon-warning secondary unpublishedSpaceClass unpublishedClass-'+link.link.id+'"></span>')
-        unpublishedModuleElement.css('position', 'absolute');
-    	unpublishedModuleElement.css('left', link.positionX + positionX + displaceUnpublishedOnX);
-    	unpublishedModuleElement.css('top', link.positionY + positionY - displaceUnpublishedOnY);
-    	unpublishedModuleElement.css('transform', 'rotate('+link.rotation+'deg)');
-    	unpublishedModuleElement.css('font-size', "24px");
-        if(isModal){
-            $("#space").append(unpublishedModuleElement);
-        }else{
-            $("#main-space").append(unpublishedModuleElement);
-        }
-    }
-    if(!isTextBlock){
-        var linkId = isExternalLink ? link.externalLink.id : link.link.id;
-        setLabelPosition(link,linkId,positionX,positionY);
-    }
-}
-function setLabelPosition(link,id, positionX, positionY){
-	$(".label-"+id).css({
-	    'left': link.positionX + positionX - displaceLableOnX,
-	    'top': link.positionY + positionY + displaceLableOnY,
-	    'color': 'red'
-	}); 
-}
-
-function generateSpaceLinks(link,spanId,divId,isModal, posX, posY, posXModal, posYModal){
-    if(link != null){
-        var spaceLink;
-        if(link.type == "ALERT"){
-            spaceLink = $('<span id="'+spanId+link.link.id+'" class="alert alertLink alert-primary spaceLink-'+link.link.id+'" role="alert" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.targetSpace?.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'"><p class="label-'+link.link.id+'">'+link.link.name+'</p></span>');
-        }
-        else if(link.type == "IMAGE" && link.image != null){
-            var spaceImageURL = [[@{/api/image/}]]+link.image.id;
-            spaceLink = $('<img id="'+spanId+link.link.id+'" class="spaceLink-'+link.link.id+' imageLink" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.targetSpace?.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'" src="'+spaceImageURL+'" />');
-        }
-        else{
-            spaceLink = $('<span id="'+spanId+link.link.id+'" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.targetSpace?.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'" class="spaceLink-'+link.link.id+' Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-move Icon_awesome_info_staff_c"></span><p class="label-'+link.link.id+'" data-link-id="'+link.link.id+'"><span class="tooltiptext">'+link.link.name+'</span></p></span>');
-        }
-        setLinkPosition(spaceLink,link,true,isModal,false, posX, posY, posXModal, posYModal, false);
-        $(divId).append(spaceLink);
-        
-        if(spanId === "spacelinkId-"){
-            $('#'+spanId+link.link.id).css('cursor', 'pointer');
-            $('#'+spanId+link.link.id).click(function(e) {
-                var linkData = $('#'+spanId+link.link.id).data();
-                makeSpaceLinksEditable(linkData["linklabel"], link.link.id, linkData["linkrotation"] ,linkData["linktarget"],link.positionX,link.positionY,link.id,linkData["linktype"]);
-            });
-        }
-    }
-}
-
-function generateModuleLinks(link,spanId,divId,isModal, posX, posY, posXModal, posYModal){
-    if(link != null){
-        var moduleLink;
-        if(link.type=="ALERT"){
-            moduleLink = $('<div class="alert alert-primary alertLink moduleLink-'+link.link.id+'" id="'+spanId+link.link.id+'" role="alert" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.module.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'"><p class="label-'+link.link.id+'">'+link.link.name+'</p></div>');
-        }
-        else if(link.type=="IMAGE" && link.image != null){
-            var moduleImageURL = [[@{/api/image/}]]+link.image.id;
-            moduleLink = $('<img id="'+spanId+link.link.id+'" class="moduleLink-'+link.link.id+' imageLink" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.module.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'" src="' + moduleImageURL+'" />');
-        }
-        else{
-            moduleLink = $('<span id="'+spanId+link.link.id+'" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.module.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'" class="moduleLink-'+link.link.id+' Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_staff_m"></span><p class="label-'+link.link.id+'" data-link-id="'+link.link.id+'"><span class="tooltiptext">'+link.link.name+'</span></p></span>');
-        }
-        setLinkPosition(moduleLink,link,false,isModal,false, posX, posY, posXModal, posYModal,true);
-        $(divId).append(moduleLink);
-        if(spanId === "modulelinkId-"){
-            $('#'+spanId+link.link.id).css('cursor', 'pointer');
-            $('#'+spanId+link.link.id).click(function(e) {
-                var linkData = $('#'+spanId+link.link.id).data();
-                makeModuleLinksEditable(linkData["linklabel"], link.link.id,linkData["linkrotation"],linkData["linktarget"],link.positionX,link.positionY,link.id, linkData["linktype"]);
-            });
-        }
-    }
-}
-
-function generateExternalLinks(link,spanId,divId,isModal, posX, posY, posXModal, posYModal){
-	if(link != null){
-		var externalLink;
-		if(link.type=="IMAGE" && link.image != null){
-			var imageURL = [[@{/api/image/}]]+link.image.id;
-			externalLink = $('<img id="'+spanId+link.externalLink.id+'" data-linkTarget="'+link.externalLink.externalLink+'" data-linkType="'+link.type+'"  data-howToOpen="'+ link.howToOpen+'" data-linkLabel="'+link.externalLink.name+'" class="externalLink-'+link.externalLink.id+' imageLink" data-link-id="'+link.externalLink.id+'" src="'+imageURL+'" />');
-		}else{
-			externalLink = $('<span id="'+spanId+link.externalLink.id+'" data-link-id="'+link.externalLink.id+'" data-linkTarget="'+link.externalLink.externalLink+'" data-linkType="'+link.type+'"  data-howToOpen="'+ link.howToOpen+'" data-linkLabel="'+link.externalLink.name+'" class="externalLink-'+link.externalLink.id+' Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-ext-link Icon_awesome_info_staff_e"></span><p class="label-'+link.externalLink.id+'" data-link-id="'+link.externalLink.id+'"><span class="tooltiptext">'+link.externalLink.name+'</span></p></span>');
+	
+	var moduleLinkIconReader = new FileReader();
+	var moduleLinkIcon;
+	moduleLinkIconReader.onload = function(e) {
+		moduleLinkIcon = e.target.result;
+	    showModuleLink(createModuleLinkInfo());
+	}
+	
+	var externalLinkIconReader = new FileReader();
+	var externalLinkIcon;
+	externalLinkIconReader.onload = function(e) {
+	    externalLinkIcon = e.target.result;
+	    showExternalLinks(createExternalLinkInfo());
+	}
+	
+	function setLinkPosition(modalLink, link, isSpaceLink, isModal, isExternalLink, posX, posY, posXModal, posYModal, isTextBlock, isModuleLink){
+		modalLink.css('position', 'absolute');
+	    if(isModal){
+	        modalLink.css('left',link.positionX + posXModal);
+	        modalLink.css('top', link.positionY + posYModal);
+	    }else{
+	        modalLink.css('left', link.positionX + posX);
+	        modalLink.css('top', link.positionY + posY);
+	    }
+	    modalLink.css('transform', 'rotate('+link.rotation+'deg)');
+	    modalLink.find("span").css('fill', 'grey');
+	    modalLink.css('color', 'rgba(128,128,128,1)');
+	    modalLink.css('font-size', "16px");
+	    var positionX = isModal ? posXModal : posX;
+	    var positionY = isModal ? posYModal : posY;
+	    if(isSpaceLink && (link.link.targetSpace==null || link.link.targetSpace.spaceStatus=="UNPUBLISHED")){
+		var inactiveLinkId;
+		var inactiveLinkClasses;
+		var inactiveLinkTitle;
+		if(link.link.targetSpace==null) {
+		    inactiveLinkId = "deletedSpace-";
+		    inactiveLinkClasses = "deletedSpaceClass deletedClass-";   
+		    inactiveLinkTitle = "The target space for this link has been deleted. This link won't be shown on the public site."
+	    	} else {
+		    inactiveLinkId = "unpublished-";
+		    inactiveLinkClasses = "unpublishedSpaceClass unpublishedClass-";
+		    inactiveLinkTitle = "The target space for this link is unpublished. This link won't be shown on the public site."
+	    	}
+		var inactiveSpaceElement  = $('<span data-link-id="'+inactiveLinkId +link.link.id+'" class="icon-warning secondary '+inactiveLinkClasses+link.link.id+'"></span>')
+	    	inactiveSpaceElement.css('position', 'absolute');
+		inactiveSpaceElement.css('left', link.positionX + positionX + displaceUnpublishedOnX);
+		inactiveSpaceElement.css('top', link.positionY + positionY - displaceUnpublishedOnY);
+		inactiveSpaceElement.css('transform', 'rotate('+link.rotation+'deg)');
+		inactiveSpaceElement.css('font-size', "24px");
+		inactiveSpaceElement.attr('title', inactiveLinkTitle);
+		if(isModal){
+		    $("#space").append(inactiveSpaceElement);
+		} else{
+		    $("#main-space").append(inactiveSpaceElement);
 		}
-		setLinkPosition(externalLink,link,false,isModal,true, posX, posY, posXModal, posYModal);
-		$(divId).append(externalLink);
-		if(spanId === "externallinkId-"){
-			$('#'+spanId+link.externalLink.id).css('cursor', 'pointer');
-			$('#'+spanId+link.externalLink.id).click(function(e) {
-				var linkData = $('#'+spanId+link.externalLink.id).data();
-				makeExternalLinksEditable(linkData["linklabel"],link.externalLink.id,linkData["linktarget"],link.positionX,link.positionY,link.id,linkData["linktype"],linkData["howtoopen"]);
+	    }
+	    if(isModuleLink && link.link.module.moduleStatus!=null && link.link.module.moduleStatus=="UNPUBLISHED"){
+	    	var unpublishedModuleElement = $('<span data-link-id="unpublished-'+link.link.id+'" class="icon-warning secondary unpublishedSpaceClass unpublishedClass-'+link.link.id+'"></span>')
+	        unpublishedModuleElement.css('position', 'absolute');
+	    	unpublishedModuleElement.css('left', link.positionX + positionX + displaceUnpublishedOnX);
+	    	unpublishedModuleElement.css('top', link.positionY + positionY - displaceUnpublishedOnY);
+	    	unpublishedModuleElement.css('transform', 'rotate('+link.rotation+'deg)');
+	    	unpublishedModuleElement.css('font-size', "24px");
+	        if(isModal){
+	            $("#space").append(unpublishedModuleElement);
+	        }else{
+	            $("#main-space").append(unpublishedModuleElement);
+	        }
+	    }
+	    if(!isTextBlock){
+	        var linkId = isExternalLink ? link.externalLink.id : link.link.id;
+	        setLabelPosition(link,linkId,positionX,positionY);
+	    }
+	}
+	function setLabelPosition(link,id, positionX, positionY){
+		$(".label-"+id).css({
+		    'left': link.positionX + positionX - displaceLableOnX,
+		    'top': link.positionY + positionY + displaceLableOnY,
+		    'color': 'red'
+		}); 
+	}
+	
+	function generateSpaceLinks(link,spanId,divId,isModal, posX, posY, posXModal, posYModal){
+	    if(link != null){
+	        var spaceLink;
+	        if(link.type == "ALERT"){
+	            spaceLink = $('<span id="'+spanId+link.link.id+'" class="alert alertLink alert-primary spaceLink-'+link.link.id+'" role="alert" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.targetSpace?.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'"><p class="label-'+link.link.id+'">'+link.link.name+'</p></span>');
+	        }
+	        else if(link.type == "IMAGE" && link.image != null){
+	            var spaceImageURL = [[@{/api/image/}]]+link.image.id;
+	            spaceLink = $('<img id="'+spanId+link.link.id+'" class="spaceLink-'+link.link.id+' imageLink" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.targetSpace?.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'" src="'+spaceImageURL+'" />');
+	        }
+	        else{
+	            spaceLink = $('<span id="'+spanId+link.link.id+'" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.targetSpace?.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'" class="spaceLink-'+link.link.id+' Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-move Icon_awesome_info_staff_c"></span><p class="label-'+link.link.id+'" data-link-id="'+link.link.id+'"><span class="tooltiptext">'+link.link.name+'</span></p></span>');
+	        }
+	        setLinkPosition(spaceLink,link,true,isModal,false, posX, posY, posXModal, posYModal, false);
+	        $(divId).append(spaceLink);
+	        
+	        if(spanId === "spacelinkId-"){
+	            $('#'+spanId+link.link.id).css('cursor', 'pointer');
+	            $('#'+spanId+link.link.id).click(function(e) {
+	                var linkData = $('#'+spanId+link.link.id).data();
+	                makeSpaceLinksEditable(linkData["linklabel"], link.link.id, linkData["linkrotation"] ,linkData["linktarget"],link.positionX,link.positionY,link.id,linkData["linktype"]);
+	            });
+	        }
+	    }
+	}
+	
+	function generateModuleLinks(link,spanId,divId,isModal, posX, posY, posXModal, posYModal){
+	    if(link != null){
+	    	console.log('LINK: ', link);
+	        var moduleLink;
+	        if(link.type=="ALERT"){
+	            moduleLink = $('<div class="alert alert-primary alertLink moduleLink-'+link.link.id+'" id="'+spanId+link.link.id+'" role="alert" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.module.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'"><p class="label-'+link.link.id+'">'+link.link.name+'</p></div>');
+	        }
+	        else if(link.type=="IMAGE" && link.image != null){
+	            var moduleImageURL = [[@{/api/image/}]]+link.image.id;
+	            moduleLink = $('<img id="'+spanId+link.link.id+'" class="moduleLink-'+link.link.id+' imageLink" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.module.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'" src="' + moduleImageURL+'" />');
+	        }
+	        else{
+	            moduleLink = $('<span id="'+spanId+link.link.id+'" data-link-id="'+link.link.id+'" data-linkTarget="'+link.link.module.id+'" data-linkRotation="'+link.rotation+'" data-linkType="'+link.type+'" data-linkLabel="'+link.link.name+'" class="moduleLink-'+link.link.id+' Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_staff_m"></span><p class="label-'+link.link.id+'" data-link-id="'+link.link.id+'"><span class="tooltiptext">'+link.link.name+'</span></p></span>');
+	        }
+	        setLinkPosition(moduleLink,link,false,isModal,false, posX, posY, posXModal, posYModal,true);
+	        $(divId).append(moduleLink);
+			console.log('DIV ID: ', $(divId));
+	        if(spanId === "modulelinkId-"){
+	            $('#'+spanId+link.link.id).css('cursor', 'pointer');
+	            $('#'+spanId+link.link.id).click(function(e) {
+	                var linkData = $('#'+spanId+link.link.id).data();
+	                makeModuleLinksEditable(linkData["linklabel"], link.link.id,linkData["linkrotation"],linkData["linktarget"],link.positionX,link.positionY,link.id, linkData["linktype"]);
+	            });
+	        }
+	    }
+	}
+	
+	function generateExternalLinks(link,spanId,divId,isModal, posX, posY, posXModal, posYModal){
+		if(link != null){
+			var externalLink;
+			if(link.type=="IMAGE" && link.image != null){
+				var imageURL = [[@{/api/image/}]]+link.image.id;
+				externalLink = $('<img id="'+spanId+link.externalLink.id+'" data-linkTarget="'+link.externalLink.externalLink+'" data-linkType="'+link.type+'"  data-howToOpen="'+ link.howToOpen+'" data-linkLabel="'+link.externalLink.name+'" class="externalLink-'+link.externalLink.id+' imageLink" data-link-id="'+link.externalLink.id+'" src="'+imageURL+'" />');
+			}else{
+				externalLink = $('<span id="'+spanId+link.externalLink.id+'" data-link-id="'+link.externalLink.id+'" data-linkTarget="'+link.externalLink.externalLink+'" data-linkType="'+link.type+'"  data-howToOpen="'+ link.howToOpen+'" data-linkLabel="'+link.externalLink.name+'" class="externalLink-'+link.externalLink.id+' Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-ext-link Icon_awesome_info_staff_e"></span><p class="label-'+link.externalLink.id+'" data-link-id="'+link.externalLink.id+'"><span class="tooltiptext">'+link.externalLink.name+'</span></p></span>');
+			}
+			setLinkPosition(externalLink,link,false,isModal,true, posX, posY, posXModal, posYModal);
+			$(divId).append(externalLink);
+			if(spanId === "externallinkId-"){
+				$('#'+spanId+link.externalLink.id).css('cursor', 'pointer');
+				$('#'+spanId+link.externalLink.id).click(function(e) {
+					var linkData = $('#'+spanId+link.externalLink.id).data();
+					makeExternalLinksEditable(linkData["linklabel"],link.externalLink.id,linkData["linktarget"],link.positionX,link.positionY,link.id,linkData["linktype"],linkData["howtoopen"]);
+				});
+			}
+		}
+	}
+	
+	function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, posYModal, imageHeight, imageWidth){
+	    if(block != null){
+	        var height = (block.height*imageHeight)/100;
+	        var width = (block.width*imageWidth)/100;
+	        var textBlock = $('<span id="'+spanId+block.spaceTextBlock.id+'" data-link-id="'+block.spaceTextBlock.id+'" data-blockId="'+block.id+'" data-text="'+block.spaceTextBlock.text+'" data-width="'+block.width+'"  data-height="'+block.height+'" class="textBlockClass spaceLink-'+block.spaceTextBlock.id+'"><textarea class="textBlock" style="height:'+height+'px; width:'+width+'px; resize:none; background: rgba(0, 0, 0, 0.4); color:'+block.textColor+'; border-color: '+block.borderColor+';" readonly type="textarea">'+block.spaceTextBlock.text+'</textarea></span>');
+	        setLinkPosition(textBlock,block,false,isModal,false, posX, posY, posXModal, posYModal, true);
+	        $(divId).append(textBlock);
+	        if(spanId === "textBlockId-"){
+	            $('#'+spanId+block.spaceTextBlock.id).css('cursor', 'pointer');
+	            $('#'+spanId+block.spaceTextBlock.id).click(function(e) {  
+	                var blockData = $('#'+spanId+block.spaceTextBlock.id).data();
+	                makeTextBlockEditable(blockData["blockid"],blockData["linkId"],blockData["text"],block.positionX,block.positionY,blockData["width"],blockData["height"], block.textColor, block.borderColor);
+	            });
+	        }
+	        
+	        if(block.spaceTextBlock.id === selectedTextBlockId) {
+	        	var textModalBlock = $("#textModalBlockId-"+selectedTextBlockId).find("textarea")[0];
+	        	
+	        	tHeight = textModalBlock.clientHeight;
+	        	tWidth = textModalBlock.clientWidth;
+	            
+	            var height = modalBgImageHeight;
+	            var width = modalBgImageWidth;
+	            textModalBlock.style["resize"] = "both";
+	            textModalBlock.onmouseup = function (e) {
+		            if (tHeight !== textModalBlock.clientHeight || tWidth !== textModalBlock.clientWidth ) {
+		                tHeight = textModalBlock.clientHeight;
+		                tWidth = textModalBlock.clientWidth;
+		                let percentileHeight = (tHeight*100)/height;
+		                let percentileWidth = (tWidth*100)/width;
+		                $("#textBoxWidthIDEdit").val(percentileWidth);
+		                $("#textBoxHeightIDEdit").val(percentileHeight);
+		                $("#textContentIDForEdit").val(textModalBlock.value);
+		            }
+	            };
+	        }
+	    }
+	}
+	
+	function drawLinks(){
+	    $(".Info_cz_Class").remove();
+	    $(".imageLink").remove();
+	    $(".alertLink").remove();
+	    $(".ellipse_class").remove();
+	    $(".unpublishedSpaceClass").remove();
+	    $(".textBlockClass").remove();
+	    $(".deletedSpaceClass").remove();
+	    
+	    $.ajax({
+	        type: "GET",
+	        url: "[(@{'/staff/space/'+${space?.id}+'/links'})]",
+	        cache       : false,
+	        contentType : false,
+	        processData : false,
+	        beforeSend: function () {
+	            $("#loader").show();
+	            },
+	       	complete: function () {
+	            $("#loader").hide();
+	            },
+	        success: function(data) {
+	            var spaceLinks = data['spaceLinks'];
+	            var externalLinks = data['externalLinks'];
+	            var moduleLinks = data['moduleLinks'];
+	            var textBlocks = data['textBlocks'];
+	            
+	            var posXModal = $("#bgImage").position().left;
+	            var posYModal = $("#bgImage").position().top;
+	            var posX = $("#main-bgImage").position().left;
+	            var posY = $("#main-bgImage").position().top;
+	            
+	            spaceLinks.forEach(function(link,index){
+	                var spanId= "spacelinkModalId-";
+	                var divId = "#space"
+	                generateSpaceLinks(link,spanId,divId,true, posX, posY, posXModal, posYModal);
+	            })
+	            spaceLinks.forEach(function(link,index){
+	                var spanId= "spacelinkId-";
+	                var divId = "#main-space";
+	                generateSpaceLinks(link,spanId,divId,false, posX, posY, posXModal, posYModal);
+	            })
+	            
+	            moduleLinks.forEach(function(link,index){
+	                var spanId= "moduleModallinkId-";
+	                var divId = "#space";
+	                generateModuleLinks(link,spanId,divId,true, posX, posY, posXModal, posYModal);
+	            })
+	            moduleLinks.forEach(function(link,index){
+	                var spanId= "modulelinkId-";
+	                var divId = "#main-space";
+	                generateModuleLinks(link,spanId,divId,false, posX, posY, posXModal, posYModal);
+	            })
+	            
+	            externalLinks.forEach(function(link,index){
+	                var spanId= "externalModallinkId-";
+	                var divId = "#space";
+	                generateExternalLinks(link,spanId,divId,true, posX, posY, posXModal, posYModal);
+	            })
+	            
+	            externalLinks.forEach(function(link,index){
+	                var spanId= "externallinkId-";
+	                var divId = "#main-space";
+	                generateExternalLinks(link,spanId,divId,false, posX, posY, posXModal, posYModal);
+	            })
+	            
+	            textBlocks.forEach(function(block,index){
+	                var spanId= "textModalBlockId-";
+	                var divId = "#space";
+	                var imageHeight = modalBgImageHeight;
+	                var imageWidth = modalBgImageWidth;
+	                generateTextBlock(block,spanId,divId,true, posX, posY, posXModal, posYModal, imageHeight, imageWidth);
+	            })
+	            
+	            textBlocks.forEach(function(block,index){
+	                var spanId= "textBlockId-";
+	                var divId = "#main-space";
+	                var imageHeight = parseInt($("#main-bgImage").css("height"));
+	                var imageWidth = parseInt($("#main-bgImage").css("width"));
+	                generateTextBlock(block,spanId,divId,false, posX, posY, posXModal, posYModal, imageHeight, imageWidth);
+	            })
+	        }
+	    });
+	}
+	
+	//--------- show links functions --------------
+	function showTextBlock(textBlock, show){
+	    $("#textB").remove();
+	    $("#text").remove();
+	    var posX = $("#bgImage").position().left;
+	    var posY = $("#bgImage").position().top;
+	    var imageHeight = modalBgImageHeight;
+	    var imageWidth = modalBgImageWidth;
+	    var textArea = $("<textarea class='textBlock' type='textarea'></textarea>");
+	    textArea.css('width', (textBlock["width"]*imageWidth)/100);
+	    textArea.css('height', (textBlock["height"]*imageHeight)/100);
+	    textArea.css('resize', 'both');
+	    textArea.text(textBlock["text"]);
+	    var spaceTextBlock;
+	    spaceTextBlock = $('<span class="textBlockClass spaceLink-' + textBlock["id"] + '" data-link-id="' + textBlock["id"] + '"></span>');
+	    spaceTextBlock.css('position', 'absolute');
+	    spaceTextBlock.css('left', textBlock["x"] + posX);
+	    spaceTextBlock.css('top', textBlock["y"] + posY);
+	    spaceTextBlock.css('font-size', "12px");
+	
+	    if (textBlock["id"]) {
+	        spaceTextBlock.attr("data-link-id", textBlock["id"]);
+	        spaceTextBlock.css('cursor', 'pointer');
+	        spaceTextBlock.click(function(e) {
+	            makeTextBlockEditable(textBlock["displayId"], textBlock["id"], textBlock["text"], textBlock["x"], textBlock["y"], textBlock["width"], textBlock["height"]);
+	        });
+	    }
+	    spaceTextBlock.append(textArea);
+	    $("#space").append(spaceTextBlock);
+	}
+	
+	function showTextBlockEdit(textBlock){
+	    textBlock["x"]=storeX;
+	    textBlock["y"]=storeY;
+	    var selectedClass = '#textModalBlockId-'+selectedTextBlockId;
+	    var selectedTextArea = "#textModalBlockId-"+selectedTextBlockId+" .textBlock";
+	    var posX = $("#bgImage").position().left;
+	    var posY = $("#bgImage").position().top;
+	    var imageHeight = modalBgImageHeight;
+	    var imageWidth = modalBgImageWidth;
+	    $(selectedClass).css('left', textBlock["x"]+posX);
+	    $(selectedClass).css('top', textBlock["y"]);
+	    $(selectedTextArea).css('width', (textBlock["width"]*imageWidth)/100);
+	    $(selectedTextArea).css('height', (textBlock["height"]*imageHeight)/100);   
+	    $(selectedTextArea).text(textBlock["text"]);
+	    $(selectedClass).css('color', textBlock["textColor"]);
+	    $(selectedClass).css('border-color', textBlock["borderColor"]);
+	}
+	
+	function showSpaceLink(spaceLink, show, x, y) {
+	    $("#space_label").remove();
+	    $("#link").remove();
+	    $("#undefined").remove();
+	    var posX = $("#bgImage").position().left;
+	    var posY = $("#bgImage").position().top;
+	    var space_label = $("<p id='space_label' class='tooltiptext'></p>");
+	    space_label.text(spaceLink["spaceLinkLabel"]);
+	
+	    var link;
+	    if (spaceLink["type"] == "ALERT") {
+	        link = $('<div id="link" class="alert alert-primary alertLink spaceLink-"' + spaceLink["id"] + '" role="alert" data-link-id="' + spaceLink["id"] + '"><p>'+spaceLink["spaceLinkLabel"]+'</p></div>');
+	    } else if(spaceLink["type"] == "IMAGE" && linkIcon) {
+	        link = $('<div id="link" class="spaceLink-' + spaceLink["id"] + '" data-link-id="' + spaceLink["id"] + '"><img src="' + linkIcon + '"></div>');
+	    } else {
+	        $(space_label).css({
+	            'font-size': "12px",
+	            'transform': 'rotate(0deg)',
+	            'color': 'grey'
+	        });
+	        link = $('<span id="' + spaceLink["id"] +'" data-link-id="' + spaceLink["id"] + '" class="spaceLink-' + spaceLink["id"] + '"><div id="link" class="Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-move Icon_awesome_info_staff_c "></span></div></span>');
+	    }
+	    if(show) {
+	        var unpublishedSpaceElement;
+	        if(spaceLink["linkedSpaceStatus"]=="UNPUBLISHED"){
+	            unpublishedSpaceElement=$('<span data-link-id = "unpublished-' + spaceLink["id"] + '" class="icon-warning secondary fa-lg unpublishedSpaceClass unpublishedClass-' + spaceLink["id"] + '" style="color: var(--secondary);"></span>')
+	            unpublishedSpaceElement.css('position', 'absolute');
+	            unpublishedSpaceElement.css('left', x + posX + displaceUnpublishedOnX);
+	            unpublishedSpaceElement.css('top', y + posY - displaceUnpublishedOnY);
+	            unpublishedSpaceElement.css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
+	            unpublishedSpaceElement.css('font-size', "24px");
+	        }else{
+	            $('[data-link-id="unpublished-' + spaceLink["id"] + '"]').remove();
+	        } 
+	        link.css('top', spaceLink["y"] + posY);
+	    } else {
+	    	link.css('top', spaceLink["y"]);
+	    }
+	
+	    link.css('position', 'absolute');
+	    link.css('left', spaceLink["x"] + posX);
+	    link.css('color', 'rgba(128,128,128,1)');
+	    link.css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
+	    link.css('font-size', "12px");
+	    if (spaceLink["id"]) {
+	        link.attr("class", spaceLink["id"]);
+	        link.css('cursor', 'pointer');
+	        link.css('color', 'rgba(128,128,128,1)');
+	        link.click(function(e) {
+	            makeSpaceLinksEditable(spaceLink["spaceLinkLabel"], spaceLink["id"], spaceLink["rotation"], spaceLink["linkedSpace"], spaceLink["x"], spaceLink["y"], spaceLink["displayId"], spaceLink["type"]);
+	        });
+	
+	        space_label.attr("data-link-id", spaceLink["id"]);
+	        space_label.attr("class", "tooltiptext label-"+spaceLink["id"]);
+	        space_label.css('cursor', 'pointer');
+	        space_label.click(function(e) {
+	            makeSpaceLinksEditable(spaceLink["spaceLinkLabel"], spaceLink["id"], spaceLink["rotation"], spaceLink["linkedSpace"], spaceLink["x"], spaceLink["y"], spaceLink["displayId"], spaceLink["type"]);
+	        });
+	    }
+	
+	    $("#space").append(link);
+	    $("#space").append(unpublishedSpaceElement);
+	    $("#link").append(space_label);
+	}
+	
+	function showModuleLink(moduleLink, show, x, y) {
+	    $("#module_label").remove();
+	    $("#link").remove();
+	    $("#undefined").remove();
+	    var posX = $("#bgImage").position().left;
+	    var posY = $("#bgImage").position().top;
+	    var module_label = $("<p id='module_label' class='tooltiptext'></p>");
+	    module_label.text(moduleLink["moduleLinkLabel"]);
+	
+	    var link;
+	    if (moduleLink["type"] == "ALERT") {
+	        link = $('<div id="link" class="alert alert-primary alertLink moduleLink-"' + moduleLink["id"] + '" role="alert" data-link-id="' + moduleLink["id"] + '"><p>'+moduleLink["moduleLinkLabel"]+'</p></div>');
+	    } else if(moduleLink["type"] == "IMAGE" && moduleLinkIcon) {
+	        link = $('<div id="link" class="spaceLink-' + moduleLink["id"] + '" data-link-id="' + moduleLink["id"] + '"><img src="' + moduleLinkIcon + '"></div>');
+	    } else{ 
+	        $(module_label).css({
+	            'position': 'absolute',
+	            'font-size': "10px",
+	            'transform': 'rotate(0deg)',
+	            'color': 'red'
+	        });
+	        link = $('<span id="' + moduleLink["id"] +'" data-link-id="' + moduleLink["id"] + '" class="moduleLink-' + moduleLink["id"] + '"><div id="link" class="Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_staff_m"></span></div></span>');
+	    } 
+	    if(show) {
+	        link.find("div").css('fill', 'red');
+	        link.css('top', moduleLink["y"] + posY);
+	    } else {
+	    	link.css('top', moduleLink["y"]);
+	    }
+	    link.css('position', 'absolute');
+	    link.css('left', moduleLink["x"] + posX);
+	    link.css('color', 'red');
+	    link.css('transform', 'rotate(' +$('#moduleLinkRotation').val()+ 'deg)');
+	    link.css('font-size', "12px");
+	
+	    if (moduleLink["id"]) {
+	        link.attr("data-link-id", moduleLink["id"]);
+	        link.css('cursor', 'pointer');
+	        link.click(function(e) {
+	            makeModuleLinksEditable(moduleLink["moduleLinkLabel"], moduleLink["id"], moduleLink["rotation"], moduleLink["linkedModule"], moduleLink["x"], moduleLink["y"], moduleLink["displayId"], moduleLink["type"]);
+	        });
+	        module_label.attr("data-link-id", moduleLink["id"]);
+	        module_label.css('cursor', 'pointer');
+	        module_label.attr("class", "tooltiptext label-"+moduleLink["id"]);
+	        module_label.click(function(e) {
+	            makeModuleLinksEditable(moduleLink["moduleLinkLabel"], moduleLink["id"], moduleLink["rotation"], moduleLink["linkedModule"], moduleLink["x"], moduleLink["y"], moduleLink["displayId"], moduleLink["type"]);
+	        });
+	    }
+	
+	    $("#space").append(link);
+	    $("#link").append(module_label);
+	}
+	
+	function showModuleLinkEdit(moduleLink, show, posX, posY) {
+	    moduleLink["x"]=storeX;
+	    moduleLink["y"]=storeY;
+	    var selectedLinkClass = '#moduleModallinkId-'+selectedModuleLinkId;
+	    var selectedLabelClass = '.label-'+selectedModuleLinkId;
+	    updateLinkProperties(selectedLinkClass,selectedLabelClass,moduleLink["rotation"],posX,posY,moduleLink["moduleLinkLabel"]);
+	}
+	
+	
+	function showSpaceLinkEdit(spaceLink, show, posX, posY) {
+	    spaceLink["x"]=storeX;
+	    spaceLink["y"]=storeY;
+	    var selectedLinkClass = '#spacelinkModalId-'+selectedSpaceLinkId;
+	    var selectedLabelClass = '.label-'+selectedSpaceLinkId;
+	    var selectedUnpublishedIconClass = '.unpublishedClass-'+selectedSpaceLinkId;
+	    if(show) {
+	        var unpublishedSpaceElement;
+	        if(spaceLink["linkedSpaceStatus"]=="UNPUBLISHED"){
+	            unpublishedSpaceElement=$('<span data-link-id = "unpublished-' + spaceLink["id"] + '" class="icon-warning secondary unpublishedSpaceClass unpublishedClass-' + spaceLink["id"] + '></span>')
+	            unpublishedSpaceElement.css('position', 'absolute');
+	            unpublishedSpaceElement.css('left', posX + displaceUnpublishedOnX);
+	            unpublishedSpaceElement.css('top', posY - displaceUnpublishedOnY);
+	            unpublishedSpaceElement.css('transform', 'rotate(' +spaceLink["rotation"]+ 'deg)');
+	            unpublishedSpaceElement.css('font-size', "24px");
+	            $("#space").append(unpublishedSpaceElement);
+	        }else{
+	            $('[data-link-id="unpublished-' + spaceLink["id"] + '"]').remove();
+	        }    
+	    }
+	    $(selectedUnpublishedIconClass).css({ 'transform': 'rotate(' + parseInt(spaceLink["rotation"]) + 'deg)'});
+	    $(selectedUnpublishedIconClass).css({ 'position': 'absolute'});
+	    $(selectedUnpublishedIconClass).css({ 'left': posX + displaceUnpublishedOnXModal});
+	    $(selectedUnpublishedIconClass).css({ 'top': posY - displaceUnpublishedOnYModal});
+	    updateLinkProperties(selectedLinkClass,selectedLabelClass,spaceLink["rotation"],posX,posY,spaceLink["spaceLinkLabel"]);
+	}
+	
+	function showExternalLinkEdit(externalLink, show, posX, posY) {
+	    externalLink["x"]=storeX;
+	    externalLink["y"]=storeY;
+	    var selectedLinkClass = '#externalModallinkId-'+selectedExternalLinkId;
+	    var selectedLabelClass = '.label-'+selectedExternalLinkId;
+	    updateLinkProperties(selectedLinkClass,selectedLabelClass,externalLink["rotation"],posX,posY,externalLink["externalLinkLabel"]);
+	}
+	
+	function updateLinkProperties(selectedLinkClass,selectedLabelClass,rotation,x,y,linkLabel, show){
+	    var posX, posY;
+	    if(show) {
+	        posX = $("#main-bgImage").position().left;
+	        posY = $("#main-bgImage").position().top;
+	    }
+	    else{
+	        posX = $("#bgImage").position().left;
+	        posY = 0
+	    }
+	    $(selectedLinkClass).css({ 'transform': 'rotate(' + rotation + 'deg)'});
+	    $(selectedLinkClass).css({ 'position': 'absolute'});
+	    $(selectedLinkClass).css({ 'left': x + posX});
+	    $(selectedLinkClass).css({ 'top': y + posY});
+	    $(selectedLabelClass+' span').remove();
+	    $(selectedLabelClass).append('<span class = "tooltiptext" style="fill: grey;">' + linkLabel + '</span>');
+	    feather.replace();    
+	}
+	
+	function hideLinkInfoTabs(){
+	    $("#editExternalLinkInfo").hide();
+	    $("#editSpaceLinkInfo").hide();
+	    $("#editModuleLinkInfo").hide();
+	    $("#editTextBlockInfo").hide();
+	    $("#createExternalLinkAlert").hide();
+	    $("#createSpaceLinkAlert").hide();
+	    $("#createModuleLinkAlert").hide();
+	    $("#errorMsg").text("");
+	    $('#errorAlert').hide();
+	}
+	
+	function showExternalLinks(externalLink, show, x, y) {
+	    $("#ext_label").remove();
+	    $("#link").remove();
+	    $("#undefined").remove();
+	    var posX = $("#bgImage").position().left;
+	    var posY = $("#bgImage").position().top;
+	    var ext_label = $("<p id='ext_label' class='tooltiptext'></p>");
+	    ext_label.text(externalLink["externalLinkLabel"]);
+	
+	    var link;
+	    if(externalLink["type"] == "IMAGE" && externalLinkIcon) {
+	        link = $('<div id="link" data-link-id="' + externalLink["id"] + '"><img src="' + externalLinkIcon + '"></div>');
+	    } else {
+	        $(ext_label).css({
+	            'position': 'absolute',
+	            'font-size': "12px",
+	            'transform': 'rotate(0deg)',
+	            'color': 'blue'
+	        });
+	        link = $('<span id="' + externalLink["id"] +'" data-link-id="' + externalLink["id"] + '"  class="externalLink-' + externalLink["id"] + '"><div id="link" class="Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-ext-link Icon_awesome_info_staff_e"></span></div></span>');
+	    }
+	    
+	    if(show) {
+	        link.css('top', externalLink["y"] + posY);
+	    } else {
+	    	link.css('top', externalLink["y"]);
+	    }
+	
+	    link.css('position', 'absolute');
+	    link.css('left', externalLink["x"] + posX);
+	    link.css('color', 'blue');
+	    link.css('font-size', "12px");
+	
+	    if (externalLink["id"]) {
+			link.attr("data-link-id", externalLink["id"]);
+			link.css('cursor', 'pointer');
+			link.attr('href', externalLink["url"]);
+			link.click(function(e) {
+				makeExternalLinksEditable(externalLink["externalLinkLabel"], externalLink["id"], externalLink["externalLinkURL"], externalLink["x"], externalLink["y"], externalLink["displayId"], externalLink["type"],externalLink["howToOpen"],externalLink["tabOpen"]);
 			});
-		}
-	}
-}
-
-function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, posYModal, imageHeight, imageWidth){
-    if(block != null){
-        var height = (block.height*imageHeight)/100;
-        var width = (block.width*imageWidth)/100;
-        var textBlock = $('<span id="'+spanId+block.spaceTextBlock.id+'" data-link-id="'+block.spaceTextBlock.id+'" data-blockId="'+block.id+'" data-text="'+block.spaceTextBlock.text+'" data-width="'+block.width+'"  data-height="'+block.height+'" class="textBlockClass spaceLink-'+block.spaceTextBlock.id+'"><textarea class="textBlock" style="height:'+height+'px; width:'+width+'px; resize:none; background: rgba(0, 0, 0, 0.4); color:'+block.textColor+'; border-color: '+block.borderColor+';" readonly type="textarea">'+block.spaceTextBlock.text+'</textarea></span>');
-        setLinkPosition(textBlock,block,false,isModal,false, posX, posY, posXModal, posYModal, true);
-        $(divId).append(textBlock);
-        if(spanId === "textBlockId-"){
-            $('#'+spanId+block.spaceTextBlock.id).css('cursor', 'pointer');
-            $('#'+spanId+block.spaceTextBlock.id).click(function(e) {  
-                var blockData = $('#'+spanId+block.spaceTextBlock.id).data();
-                makeTextBlockEditable(blockData["blockid"],blockData["linkId"],blockData["text"],block.positionX,block.positionY,blockData["width"],blockData["height"], block.textColor, block.borderColor);
-            });
-        }
-        
-        if(block.spaceTextBlock.id === selectedTextBlockId) {
-        	var textModalBlock = $("#textModalBlockId-"+selectedTextBlockId).find("textarea")[0];
-        	
-        	tHeight = textModalBlock.clientHeight;
-        	tWidth = textModalBlock.clientWidth;
-            
-            var height = modalBgImageHeight;
-            var width = modalBgImageWidth;
-            textModalBlock.style["resize"] = "both";
-            textModalBlock.onmouseup = function (e) {
-	            if (tHeight !== textModalBlock.clientHeight || tWidth !== textModalBlock.clientWidth ) {
-	                tHeight = textModalBlock.clientHeight;
-	                tWidth = textModalBlock.clientWidth;
-	                let percentileHeight = (tHeight*100)/height;
-	                let percentileWidth = (tWidth*100)/width;
-	                $("#textBoxWidthIDEdit").val(percentileWidth);
-	                $("#textBoxHeightIDEdit").val(percentileHeight);
-	                $("#textContentIDForEdit").val(textModalBlock.value);
-	            }
-            };
-        }
-    }
-}
-
-function drawLinks(){
-    $(".Info_cz_Class").remove();
-    $(".imageLink").remove();
-    $(".alertLink").remove();
-    $(".ellipse_class").remove();
-    $(".unpublishedSpaceClass").remove();
-    $(".textBlockClass").remove();
-    $(".deletedSpaceClass").remove();
-    
-    $.ajax({
-        type: "GET",
-        url: "[(@{'/staff/space/'+${space?.id}+'/links'})]",
-        cache       : false,
-        contentType : false,
-        processData : false,
-        beforeSend: function () {
-            $("#loader").show();
-            },
-       	complete: function () {
-            $("#loader").hide();
-            },
-        success: function(data) {
-            var spaceLinks = data['spaceLinks'];
-            var externalLinks = data['externalLinks'];
-            var moduleLinks = data['moduleLinks'];
-            var textBlocks = data['textBlocks'];
-            
-            var posXModal = $("#bgImage").position().left;
-            var posYModal = $("#bgImage").position().top;
-            var posX = $("#main-bgImage").position().left;
-            var posY = $("#main-bgImage").position().top;
-            
-            spaceLinks.forEach(function(link,index){
-                var spanId= "spacelinkModalId-";
-                var divId = "#space"
-                generateSpaceLinks(link,spanId,divId,true, posX, posY, posXModal, posYModal);
-            })
-            spaceLinks.forEach(function(link,index){
-                var spanId= "spacelinkId-";
-                var divId = "#main-space";
-                generateSpaceLinks(link,spanId,divId,false, posX, posY, posXModal, posYModal);
-            })
-            
-            moduleLinks.forEach(function(link,index){
-                var spanId= "moduleModallinkId-";
-                var divId = "#space";
-                generateModuleLinks(link,spanId,divId,true, posX, posY, posXModal, posYModal);
-            })
-            moduleLinks.forEach(function(link,index){
-                var spanId= "modulelinkId-";
-                var divId = "#main-space";
-                generateModuleLinks(link,spanId,divId,false, posX, posY, posXModal, posYModal);
-            })
-            
-            externalLinks.forEach(function(link,index){
-                var spanId= "externalModallinkId-";
-                var divId = "#space";
-                generateExternalLinks(link,spanId,divId,true, posX, posY, posXModal, posYModal);
-            })
-            
-            externalLinks.forEach(function(link,index){
-                var spanId= "externallinkId-";
-                var divId = "#main-space";
-                generateExternalLinks(link,spanId,divId,false, posX, posY, posXModal, posYModal);
-            })
-            
-            textBlocks.forEach(function(block,index){
-                var spanId= "textModalBlockId-";
-                var divId = "#space";
-                var imageHeight = modalBgImageHeight;
-                var imageWidth = modalBgImageWidth;
-                generateTextBlock(block,spanId,divId,true, posX, posY, posXModal, posYModal, imageHeight, imageWidth);
-            })
-            
-            textBlocks.forEach(function(block,index){
-                var spanId= "textBlockId-";
-                var divId = "#main-space";
-                var imageHeight = parseInt($("#main-bgImage").css("height"));
-                var imageWidth = parseInt($("#main-bgImage").css("width"));
-                generateTextBlock(block,spanId,divId,false, posX, posY, posXModal, posYModal, imageHeight, imageWidth);
-            })
-        }
-    });
-}
-
-//--------- show links functions --------------
-function showTextBlock(textBlock, show){
-    $("#textB").remove();
-    $("#text").remove();
-    var posX = $("#bgImage").position().left;
-    var posY = $("#bgImage").position().top;
-    var imageHeight = modalBgImageHeight;
-    var imageWidth = modalBgImageWidth;
-    var textArea = $("<textarea class='textBlock' type='textarea'></textarea>");
-    textArea.css('width', (textBlock["width"]*imageWidth)/100);
-    textArea.css('height', (textBlock["height"]*imageHeight)/100);
-    textArea.css('resize', 'both');
-    textArea.text(textBlock["text"]);
-    var spaceTextBlock;
-    spaceTextBlock = $('<span class="textBlockClass spaceLink-' + textBlock["id"] + '" data-link-id="' + textBlock["id"] + '"></span>');
-    spaceTextBlock.css('position', 'absolute');
-    spaceTextBlock.css('left', textBlock["x"] + posX);
-    spaceTextBlock.css('top', textBlock["y"] + posY);
-    spaceTextBlock.css('font-size', "12px");
-
-    if (textBlock["id"]) {
-        spaceTextBlock.attr("data-link-id", textBlock["id"]);
-        spaceTextBlock.css('cursor', 'pointer');
-        spaceTextBlock.click(function(e) {
-            makeTextBlockEditable(textBlock["displayId"], textBlock["id"], textBlock["text"], textBlock["x"], textBlock["y"], textBlock["width"], textBlock["height"]);
-        });
-    }
-    spaceTextBlock.append(textArea);
-    $("#space").append(spaceTextBlock);
-}
-
-function showTextBlockEdit(textBlock){
-    textBlock["x"]=storeX;
-    textBlock["y"]=storeY;
-    var selectedClass = '#textModalBlockId-'+selectedTextBlockId;
-    var selectedTextArea = "#textModalBlockId-"+selectedTextBlockId+" .textBlock";
-    var posX = $("#bgImage").position().left;
-    var posY = $("#bgImage").position().top;
-    var imageHeight = modalBgImageHeight;
-    var imageWidth = modalBgImageWidth;
-    $(selectedClass).css('left', textBlock["x"]+posX);
-    $(selectedClass).css('top', textBlock["y"]);
-    $(selectedTextArea).css('width', (textBlock["width"]*imageWidth)/100);
-    $(selectedTextArea).css('height', (textBlock["height"]*imageHeight)/100);   
-    $(selectedTextArea).text(textBlock["text"]);
-    $(selectedClass).css('color', textBlock["textColor"]);
-    $(selectedClass).css('border-color', textBlock["borderColor"]);
-}
-
-function showSpaceLink(spaceLink, show, x, y) {
-    $("#space_label").remove();
-    $("#link").remove();
-    $("#undefined").remove();
-    var posX = $("#bgImage").position().left;
-    var posY = $("#bgImage").position().top;
-    var space_label = $("<p id='space_label' class='tooltiptext'></p>");
-    space_label.text(spaceLink["spaceLinkLabel"]);
-
-    var link;
-    if (spaceLink["type"] == "ALERT") {
-        link = $('<div id="link" class="alert alert-primary alertLink spaceLink-"' + spaceLink["id"] + '" role="alert" data-link-id="' + spaceLink["id"] + '"><p>'+spaceLink["spaceLinkLabel"]+'</p></div>');
-    } else if(spaceLink["type"] == "IMAGE" && linkIcon) {
-        link = $('<div id="link" class="spaceLink-' + spaceLink["id"] + '" data-link-id="' + spaceLink["id"] + '"><img src="' + linkIcon + '"></div>');
-    } else {
-        $(space_label).css({
-            'font-size': "12px",
-            'transform': 'rotate(0deg)',
-            'color': 'grey'
-        });
-        link = $('<span id="' + spaceLink["id"] +'" data-link-id="' + spaceLink["id"] + '" class="spaceLink-' + spaceLink["id"] + '"><div id="link" class="Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-move Icon_awesome_info_staff_c "></span></div></span>');
-    }
-    if(show) {
-        var unpublishedSpaceElement;
-        if(spaceLink["linkedSpaceStatus"]=="UNPUBLISHED"){
-            unpublishedSpaceElement=$('<span data-link-id = "unpublished-' + spaceLink["id"] + '" class="icon-warning secondary fa-lg unpublishedSpaceClass unpublishedClass-' + spaceLink["id"] + '" style="color: var(--secondary);"></span>')
-            unpublishedSpaceElement.css('position', 'absolute');
-            unpublishedSpaceElement.css('left', x + posX + displaceUnpublishedOnX);
-            unpublishedSpaceElement.css('top', y + posY - displaceUnpublishedOnY);
-            unpublishedSpaceElement.css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
-            unpublishedSpaceElement.css('font-size', "24px");
-        }else{
-            $('[data-link-id="unpublished-' + spaceLink["id"] + '"]').remove();
-        } 
-        link.css('top', spaceLink["y"] + posY);
-    } else {
-    	link.css('top', spaceLink["y"]);
-    }
-
-    link.css('position', 'absolute');
-    link.css('left', spaceLink["x"] + posX);
-    link.css('color', 'rgba(128,128,128,1)');
-    link.css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
-    link.css('font-size', "12px");
-    if (spaceLink["id"]) {
-        link.attr("class", spaceLink["id"]);
-        link.css('cursor', 'pointer');
-        link.css('color', 'rgba(128,128,128,1)');
-        link.click(function(e) {
-            makeSpaceLinksEditable(spaceLink["spaceLinkLabel"], spaceLink["id"], spaceLink["rotation"], spaceLink["linkedSpace"], spaceLink["x"], spaceLink["y"], spaceLink["displayId"], spaceLink["type"]);
-        });
-
-        space_label.attr("data-link-id", spaceLink["id"]);
-        space_label.attr("class", "tooltiptext label-"+spaceLink["id"]);
-        space_label.css('cursor', 'pointer');
-        space_label.click(function(e) {
-            makeSpaceLinksEditable(spaceLink["spaceLinkLabel"], spaceLink["id"], spaceLink["rotation"], spaceLink["linkedSpace"], spaceLink["x"], spaceLink["y"], spaceLink["displayId"], spaceLink["type"]);
-        });
-    }
-
-    $("#space").append(link);
-    $("#space").append(unpublishedSpaceElement);
-    $("#link").append(space_label);
-}
-
-function showModuleLink(moduleLink, show, x, y) {
-    $("#module_label").remove();
-    $("#link").remove();
-    $("#undefined").remove();
-    var posX = $("#bgImage").position().left;
-    var posY = $("#bgImage").position().top;
-    var module_label = $("<p id='module_label' class='tooltiptext'></p>");
-    module_label.text(moduleLink["moduleLinkLabel"]);
-
-    var link;
-    if (moduleLink["type"] == "ALERT") {
-        link = $('<div id="link" class="alert alert-primary alertLink moduleLink-"' + moduleLink["id"] + '" role="alert" data-link-id="' + moduleLink["id"] + '"><p>'+moduleLink["moduleLinkLabel"]+'</p></div>');
-    } else if(moduleLink["type"] == "IMAGE" && moduleLinkIcon) {
-        link = $('<div id="link" class="spaceLink-' + moduleLink["id"] + '" data-link-id="' + moduleLink["id"] + '"><img src="' + moduleLinkIcon + '"></div>');
-    } else{ 
-        $(module_label).css({
-            'position': 'absolute',
-            'font-size': "10px",
-            'transform': 'rotate(0deg)',
-            'color': 'red'
-        });
-        link = $('<span id="' + moduleLink["id"] +'" data-link-id="' + moduleLink["id"] + '" class="moduleLink-' + moduleLink["id"] + '"><div id="link" class="Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_staff_m"></span></div></span>');
-    } 
-    if(show) {
-        link.find("div").css('fill', 'red');
-        link.css('top', moduleLink["y"] + posY);
-    } else {
-    	link.css('top', moduleLink["y"]);
-    }
-    link.css('position', 'absolute');
-    link.css('left', moduleLink["x"] + posX);
-    link.css('color', 'red');
-    link.css('transform', 'rotate(' +$('#moduleLinkRotation').val()+ 'deg)');
-    link.css('font-size', "12px");
-
-    if (moduleLink["id"]) {
-        link.attr("data-link-id", moduleLink["id"]);
-        link.css('cursor', 'pointer');
-        link.click(function(e) {
-            makeModuleLinksEditable(moduleLink["moduleLinkLabel"], moduleLink["id"], moduleLink["rotation"], moduleLink["linkedModule"], moduleLink["x"], moduleLink["y"], moduleLink["displayId"], moduleLink["type"]);
-        });
-        module_label.attr("data-link-id", moduleLink["id"]);
-        module_label.css('cursor', 'pointer');
-        module_label.attr("class", "tooltiptext label-"+moduleLink["id"]);
-        module_label.click(function(e) {
-            makeModuleLinksEditable(moduleLink["moduleLinkLabel"], moduleLink["id"], moduleLink["rotation"], moduleLink["linkedModule"], moduleLink["x"], moduleLink["y"], moduleLink["displayId"], moduleLink["type"]);
-        });
-    }
-
-    $("#space").append(link);
-    $("#link").append(module_label);
-}
-
-function showModuleLinkEdit(moduleLink, show, posX, posY) {
-    moduleLink["x"]=storeX;
-    moduleLink["y"]=storeY;
-    var selectedLinkClass = '#moduleModallinkId-'+selectedModuleLinkId;
-    var selectedLabelClass = '.label-'+selectedModuleLinkId;
-    updateLinkProperties(selectedLinkClass,selectedLabelClass,moduleLink["rotation"],posX,posY,moduleLink["moduleLinkLabel"]);
-}
-
-
-function showSpaceLinkEdit(spaceLink, show, posX, posY) {
-    spaceLink["x"]=storeX;
-    spaceLink["y"]=storeY;
-    var selectedLinkClass = '#spacelinkModalId-'+selectedSpaceLinkId;
-    var selectedLabelClass = '.label-'+selectedSpaceLinkId;
-    var selectedUnpublishedIconClass = '.unpublishedClass-'+selectedSpaceLinkId;
-    if(show) {
-        var unpublishedSpaceElement;
-        if(spaceLink["linkedSpaceStatus"]=="UNPUBLISHED"){
-            unpublishedSpaceElement=$('<span data-link-id = "unpublished-' + spaceLink["id"] + '" class="icon-warning secondary unpublishedSpaceClass unpublishedClass-' + spaceLink["id"] + '></span>')
-            unpublishedSpaceElement.css('position', 'absolute');
-            unpublishedSpaceElement.css('left', posX + displaceUnpublishedOnX);
-            unpublishedSpaceElement.css('top', posY - displaceUnpublishedOnY);
-            unpublishedSpaceElement.css('transform', 'rotate(' +spaceLink["rotation"]+ 'deg)');
-            unpublishedSpaceElement.css('font-size', "24px");
-            $("#space").append(unpublishedSpaceElement);
-        }else{
-            $('[data-link-id="unpublished-' + spaceLink["id"] + '"]').remove();
-        }    
-    }
-    $(selectedUnpublishedIconClass).css({ 'transform': 'rotate(' + parseInt(spaceLink["rotation"]) + 'deg)'});
-    $(selectedUnpublishedIconClass).css({ 'position': 'absolute'});
-    $(selectedUnpublishedIconClass).css({ 'left': posX + displaceUnpublishedOnXModal});
-    $(selectedUnpublishedIconClass).css({ 'top': posY - displaceUnpublishedOnYModal});
-    updateLinkProperties(selectedLinkClass,selectedLabelClass,spaceLink["rotation"],posX,posY,spaceLink["spaceLinkLabel"]);
-}
-
-function showExternalLinkEdit(externalLink, show, posX, posY) {
-    externalLink["x"]=storeX;
-    externalLink["y"]=storeY;
-    var selectedLinkClass = '#externalModallinkId-'+selectedExternalLinkId;
-    var selectedLabelClass = '.label-'+selectedExternalLinkId;
-    updateLinkProperties(selectedLinkClass,selectedLabelClass,externalLink["rotation"],posX,posY,externalLink["externalLinkLabel"]);
-}
-
-function updateLinkProperties(selectedLinkClass,selectedLabelClass,rotation,x,y,linkLabel, show){
-    var posX, posY;
-    if(show) {
-        posX = $("#main-bgImage").position().left;
-        posY = $("#main-bgImage").position().top;
-    }
-    else{
-        posX = $("#bgImage").position().left;
-        posY = 0
-    }
-    $(selectedLinkClass).css({ 'transform': 'rotate(' + rotation + 'deg)'});
-    $(selectedLinkClass).css({ 'position': 'absolute'});
-    $(selectedLinkClass).css({ 'left': x + posX});
-    $(selectedLinkClass).css({ 'top': y + posY});
-    $(selectedLabelClass+' span').remove();
-    $(selectedLabelClass).append('<span class = "tooltiptext" style="fill: grey;">' + linkLabel + '</span>');
-    feather.replace();    
-}
-
-function hideLinkInfoTabs(){
-    $("#editExternalLinkInfo").hide();
-    $("#editSpaceLinkInfo").hide();
-    $("#editModuleLinkInfo").hide();
-    $("#editTextBlockInfo").hide();
-    $("#createExternalLinkAlert").hide();
-    $("#createSpaceLinkAlert").hide();
-    $("#createModuleLinkAlert").hide();
-    $("#errorMsg").text("");
-    $('#errorAlert').hide();
-}
-
-function showExternalLinks(externalLink, show, x, y) {
-    $("#ext_label").remove();
-    $("#link").remove();
-    $("#undefined").remove();
-    var posX = $("#bgImage").position().left;
-    var posY = $("#bgImage").position().top;
-    var ext_label = $("<p id='ext_label' class='tooltiptext'></p>");
-    ext_label.text(externalLink["externalLinkLabel"]);
-
-    var link;
-    if(externalLink["type"] == "IMAGE" && externalLinkIcon) {
-        link = $('<div id="link" data-link-id="' + externalLink["id"] + '"><img src="' + externalLinkIcon + '"></div>');
-    } else {
-        $(ext_label).css({
-            'position': 'absolute',
-            'font-size': "12px",
-            'transform': 'rotate(0deg)',
-            'color': 'blue'
-        });
-        link = $('<span id="' + externalLink["id"] +'" data-link-id="' + externalLink["id"] + '"  class="externalLink-' + externalLink["id"] + '"><div id="link" class="Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-ext-link Icon_awesome_info_staff_e"></span></div></span>');
-    }
-    
-    if(show) {
-        link.css('top', externalLink["y"] + posY);
-    } else {
-    	link.css('top', externalLink["y"]);
-    }
-
-    link.css('position', 'absolute');
-    link.css('left', externalLink["x"] + posX);
-    link.css('color', 'blue');
-    link.css('font-size', "12px");
-
-    if (externalLink["id"]) {
-		link.attr("data-link-id", externalLink["id"]);
-		link.css('cursor', 'pointer');
-		link.attr('href', externalLink["url"]);
-		link.click(function(e) {
-			makeExternalLinksEditable(externalLink["externalLinkLabel"], externalLink["id"], externalLink["externalLinkURL"], externalLink["x"], externalLink["y"], externalLink["displayId"], externalLink["type"],externalLink["howToOpen"],externalLink["tabOpen"]);
-		});
-		
-		ext_label.attr("data-link-id", externalLink["id"]);
-		ext_label.css('cursor', 'pointer');
-		ext_label.attr("class", "label-"+externalLink["id"]);
-		ext_label.click(function(e) {
-			makeExternalLinksEditable(externalLink["externalLinkLabel"], externalLink["id"], externalLink["externalLinkURL"], externalLink["x"], externalLink["y"], externalLink["displayId"], externalLink["type"],externalLink["howToOpen"],externalLink["tabOpen"]);
-		});
-    }
-
-    $("#space").append(link);
-    $("#link").append(ext_label);
-    $("#external-link").remove();
-
-}
-
-//--------- Utility functions -------------
-function createSpaceLinkInfo() {
-    var info = {};
-    info["x"] = storeX;
-    info["y"] = storeY;
-    info["rotation"] = $("#spaceLinkRotation").val();
-    info["linkedSpace"] = $("#linkedSpace").val();
-    info["spaceLinkLabel"] = $("#spaceLinkLabel").val();
-    info["type"] = $("#type").val();
-    return info;
-}
-
-function createExternalLinkInfo() {
-	var info = {};
-	info["x"] = storeX;
-	info["y"] = storeY;
-	info["tabOpen"] = $("#extTabOpen").val();
-	info["type"] = $("#extType").val();
-	info["externalLinkLabel"] = $("#externalLinkLabel").val();
-	info["externalLinkURL"] = $("#externalLink").val();
-	return info;
-}
-
-function createModuleLinkInfo() {
-    var info = {};
-    info["x"] = storeX;
-    info["y"] = storeY;
-    info["rotation"] = $("#moduleLinkRotation").val();
-    info["linkedModule"] = $("#linkedModule").val();
-    info["moduleLinkLabel"] = $("#moduleLinkLabel").val();
-    info["type"] = $("#moduleType").val();
-    return info;
-}
-
-function createTextBlockInfo() {
-    var info = {};
-    info["x"] = storeX;
-    info["y"] = storeY;
-    info["text"] = $("#textContentID").val();
-    info["height"] = $("#textBoxHeightID").val();
-    info["width"] = $("#textBoxWidthID").val();
-    info["textColor"] = $("#textColorID").val();
-    info["borderColor"] = $("#borderColorID").val();
-    return info;
-}
-
-function editTextBlockInfo() {
-    var info = {};
-    info["x"] = storeX;
-    info["y"] = storeY;
-    info["text"] = $("#textContentIDForEdit").val();
-    info["height"] = $("#textBoxHeightIDEdit").val();
-    info["width"] = $("#textBoxWidthIDEdit").val();
-    info["textColor"] = $("#textColorIDEdit").val();
-    info["borderColor"] = $("#borderColorIDEdit").val();
-    return info;
-}
-
-function editModuleLinkInfo() {
-    var info = {};
-    info["x"] = storeX;
-    info["y"] = storeY;
-    info["rotation"] = $("#moduleLinkRotationEdit").val();
-    info["linkedModule"] = $("#moduleLinkIdEdit").val();
-    info["moduleLinkLabel"] = $("#moduleLinkLabelEdit").val();
-    info["type"] = $("#moduleTypeEdit").val();
-    return info;
-}
-
-function editSpaceLinkInfo() {
-    var info = {};
-    info["x"] = storeX;
-    info["y"] = storeY;
-    info["rotation"] = $("#spaceLinkRotationEdit").val();
-    info["linkedSpace"] = $("#spaceLinkIdEdit").val();
-    info["spaceLinkLabel"] = $("#spaceLinkLabelEdit").val();
-    info["type"] = $("#typeSpaceEdit").val();
-    return info;
-}
-
-function editExternalLinkInfo() {
-	var info = {};
-	info["x"] = storeX;
-	info["y"] = storeY;
-	info["tabOpen"] = $("#extTabOpenEdit").val();
-	info["type"] = $("#extTypeEdit").val();
-	info["externalLinkLabel"] = $("#externalLinkLabelEdit").val();
-	info["externalLinkURL"] = $("#externalLinkURLEdit").val();
-	return info;
-}
-
-function makeSpaceLinksEditable(spaceLinkName, spaceLinkId, rotation, selectedSpaceId, posXEdit, posYEdit, displayLinkId, linkType) {
-    $("#spaceLinkInfoLabel").text(spaceLinkName);
-    $("#spaceLinkId").val(spaceLinkId);
-    selectedSpaceLinkId=spaceLinkId;
-    storeX=posXEdit;
-    storeY=posYEdit;
-    $("#spaceLinkInfoLabel").text(spaceLinkName);
-    $("#spaceLinkDisplayId").val(displayLinkId);
-    $("#spaceLinkInfoLabelEdit").text(spaceLinkName);
-    $("#spaceLinkLabelEdit").val(spaceLinkName);
-    $("#spaceLinkId").val(spaceLinkId);
-    $("#spaceLinkIdValueEdit").val(spaceLinkId);
-    $("#spaceLinkRotationEdit").val(rotation);
-    $("#typeSpaceEdit option:selected").prop('selected', false);
-    $('#typeSpaceEdit option[value="'+linkType+'"]').prop("selected", true);
-    $("#spaceLinkIdEdit option:selected").prop('selected', false);
-    $('#spaceLinkIdEdit option[value="'+selectedSpaceId+'"]').prop("selected", true);
-    if(linkType != "IMAGE"){
-    	resetHighlighting(); 
-    }
-    $('[data-link-id="' + spaceLinkId + '"]').css("color", "var(--secondary)");
-    $('img[data-link-id="' + spaceLinkId + '"]').css("border", "solid 1px #c1bb88");
-    $('[data-link-id="unpublished-' + spaceLinkId + '"]').css("color", "var(--secondary)");
-
-    $("#bgImage").on("click", function(e){
-        e.preventDefault();
-        var posX = $(this).position().left;
-        var posY = $(this).position().top;
-        storeX = e.pageX  - $(this).offset().left;
-        storeY = e.pageY  - $(this).offset().top + 25;
-        showSpaceLinkEdit(editSpaceLinkInfo(),false, storeX,storeY);
-    });
-    hideLinkInfoTabs();
-    displayForms("#editSpaceLinkInfo");
-}
-function displayForms(formToShow){
-    drawLinks();
-    $("#space").css("display", "-webkit-box");
-    $(formToShow).css("display", "flex");
-    modalBgImageHeight = parseInt($("#bgImage").css("height"));
-    modalBgImageWidth = parseInt($("#bgImage").css("width"));
-}
-
-function makeModuleLinksEditable(moduleLinkName, moduleLinkId, rotation, selectedModuleId, posXEdit, posYEdit, displayLinkId, linkType) {
-    selectedModuleLinkId=moduleLinkId;
-    storeX=posXEdit;
-    storeY=posYEdit;
-    $("#moduleLinkInfoLabel").text(moduleLinkName);
-    $("#moduleLinkDisplayId").val(displayLinkId);
-    $("#moduleLinkInfoLabelEdit").text(moduleLinkName);
-    $("#moduleLinkLabelEdit").val(moduleLinkName);
-    $("#moduleLinkId").val(moduleLinkId);
-    $("#moduleLinkIdValueEdit").val(moduleLinkId);
-    $("#moduleLinkRotationEdit").val(rotation);
-    $("#moduleTypeEdit option:selected").prop('selected', false);
-    $('#moduleTypeEdit option[value="'+linkType+'"]').prop("selected", true);
-    $("#moduleLinkIdEdit option:selected").prop('selected', false);
-    $('#moduleLinkIdEdit option[value="'+selectedModuleId+'"]').prop("selected", true);
-    resetHighlighting();     
-    $('[data-link-id="' + moduleLinkId + '"]').css("color", "#c1bb88");
-    $('div[data-link-id="' + moduleLinkId + '"]').removeClass("alert-primary");
-    $('div[data-link-id="' + moduleLinkId + '"]').addClass("alert-warning");
-    $('img[data-link-id="' + moduleLinkId + '"]').css("border", "solid 1px #c1bb88");
-
-    $("#bgImage").on("click", function(e){
-        e.preventDefault();
-        var posX = $(this).position().left;
-        var posY = $(this).position().top;  
-        storeX = e.pageX - $(this).offset().left;
-        storeY = e.pageY - $(this).offset().top + 25;
-        showModuleLinkEdit(editModuleLinkInfo(), false, storeX,storeY);
-    });
-    hideLinkInfoTabs();
-    displayForms("#editModuleLinkInfo");
-}
-
-function makeExternalLinksEditable(linkName, linkId, externalLinkURL, posXEdit, posYEdit, displayLinkId, linkType,tabOpenType) {
-    selectedExternalLinkId=linkId;
-    storeX=posXEdit;
-    storeY=posYEdit;
-    $("#externalLinkInfoLabel").text(linkName);
-    $("#externalLinkId").val(linkId);
-    $("#externalLinkDisplayId").val(displayLinkId);
-    $("#externalLinkInfoLabelEdit").text(linkName);
-    $("#externalLinkLabelEdit").val(linkName);
-    $("#externalLinkIdValueEdit").val(linkId);
-    $("#externalLinkURLEdit").val(externalLinkURL);
-    $('#extTypeEdit option[value="'+linkType+'"]').prop("selected", true);
-    $('#extTabOpenEdit option[value="'+tabOpenType+'"]').prop("selected",true);
-    
-    resetHighlighting();
-
-    $('[data-link-id="' + linkId + '"]').css("color", "#c1bb88");
-    $('div[data-link-id="' + linkId + '"]').removeClass("alert-primary");
-    $('div[data-link-id="' + linkId + '"]').addClass("alert-warning");
-    $('img[data-link-id="' + linkId + '"]').css("border", "solid 1px #c1bb88");
-
-    $("#bgImage").on("click", function(e){
-        e.preventDefault();
-        var posX = $(this).position().left;
-        var posY = $(this).position().top;    
-        storeX = e.pageX - $(this).offset().left;
-        storeY = e.pageY - $(this).offset().top + 25;
-        showExternalLinkEdit(editExternalLinkInfo(), false, storeX,storeY);
-    });
-    hideLinkInfoTabs();
-    displayForms("#editExternalLinkInfo");
-}
-
-function makeTextBlockEditable(blockDisplayId,blockId,text,posX,posY,width,height, textColor, borderColor){
-    selectedTextBlockId=blockId;
-    storeX=posX;
-    storeY=posY;
-    $("#textBlockId").val(blockId);
-    $("#textBlockXEdit").val(posX);
-    $("#textBlockYEdit").val(posY);
-    $("#textBlockDisplayId").val(blockDisplayId);
-    $("#textBoxWidthIDEdit").val(width);
-    $("#textBoxHeightIDEdit").val(height);
-    $("#textContentIDForEdit").val(text);
-    $("#textColorIDEdit").val(textColor);
-    $("#borderColorIDEdit").val(borderColor);
-    resetHighlighting();
-    $("#bgImage").on("click", function(e){
-        e.preventDefault();
-        var posX = $(this).position().left;
-        var posY = $(this).position().top;    
-        storeX = e.pageX - $(this).offset().left;
-        storeY = e.pageY - $(this).offset().top + 25;
-        showTextBlockEdit(editTextBlockInfo());
-    });
-    hideLinkInfoTabs();
-    displayForms("#editTextBlockInfo");
-}
-
-function resetHighlighting() {
-    // reset icon links
-    $('[data-link-id]').css("color", "red");
-
-    // reset alert links
-    $('div[data-link-id]').removeClass("alert-warning");
-    $('div[data-link-id]').addClass("alert-primary");
-
-    // reset image links
-    $('img[data-link-id]').css("border-width", "0");
-}
-
-function getTextArea(x,y) {
-    var posX = $("#bgImage").position().left;
-    var posY = $("#bgImage").position().top;
-    var text = $('<span id="text"><textarea id="textB" name="textBlock" type="textarea" class="textBlock" style="resize:both; background: rgba(0, 0, 0, 0.4);"></textarea></span>');
-    text.css('position', 'absolute');
-    text.css('left', x + posX);
-    text.css('top', y);
-    $("#space").append(text);
-    
-    var textB = $('#textB')[0],
-    tHeight = textB.clientHeight,
-    tWidth = textB.clientWidth;
-    
-    var height = modalBgImageHeight;
-    var width = modalBgImageWidth;
-    
-    $("#textBoxWidthID").val(tWidth);
-    $("#textBoxHeightID").val(tHeight);
-    textB.onmouseup = function (e) {
-        if (tHeight !== textB.clientHeight || tWidth !== textB.clientWidth ) {
-            tHeight = textB.clientHeight;
-            tWidth = textB.clientWidth;
-            let percentileHeight = (tHeight*100)/height;
-            let percentileWidth = (tWidth*100)/width;
-            $("#textBoxWidthID").val(percentileWidth);
-            $("#textBoxHeightID").val(percentileHeight);
-            $("#textContentID").val(textB.value);
-        }
-    };
-    var percentileHeight = (tHeight*100)/height;
-    var percentileWidth = (tWidth*100)/width;
-    $("#textBoxWidthID").val(percentileWidth);
-    $("#textBoxHeightID").val(percentileHeight);
-    $("#textContentID").val(textB.value);
-}
-
-$(function(){
-    $("#deleteSpace").click(function(){
-        var spaceId = "${space?.id}";
-        checkSpaceLinkPresent('[(${space?.id})]', '[(@{'/staff/'})]', '[('?'+${_csrf.parameterName}+'='+${_csrf.token})]',$('#headerSpaceValue'));
-    });
-
-        $( document ).ready(function() {
-            onPageReady($("#deleteSpace"), $('#confirm-space-delete'));
-            if ($("div#outgoingLinks a").length < 2) {
-                $("#noLinksOnSpace").show()
-            }
-            if ($("div#incomingLinks a").length < 2) {
-                $("#noLinksToSpace").show()
-            }
-        });
-
-        // -------- buttons that open modals (e.g. to create space links) ------
-
-        $("#addTextBlock").click(function(e){
-            hideLinkInfoTabs();
-            $("#changeBgImgAlert").hide();
-            $("#bgImage").off("click");
-            $("#bgImage").on("click", function(e){
-                e.preventDefault();
-                $("#external-arrow").remove();
-                $("#space_label").remove();
-                $("#link").remove();
-                $("#text").remove();
-                var posX = $(this).position().left;
-                var posY = $(this).position().top;    
-                storeX = e.pageX - $(this).offset().left;
-                storeY = e.pageY - $(this).offset().top + 25;
-                getTextArea(storeX,storeY);
-            });
-            hideLinkInfoTabs();
-            displayForms("#addTextFormInfo");
-        });
-
-        $("#addSpaceLinkButton").click(function(e) {
-            $("#createExternalLinkAlert").hide();
-            $("#changeBgImgAlert").hide();
-            $("#bgImage").off("click");
-            $("#bgImage").on("click", function(e){
-                e.preventDefault();
-                $("#external-arrow").remove();
-                $("#space_label").remove();
-                $("#link").remove();
-                var icon;
-                var posX = $(this).position().left;
-                var posY = $(this).position().top;    
-                storeX = e.pageX - $(this).offset().left;
-                storeY = e.pageY - $(this).offset().top + 25;
-                showSpaceLink(createSpaceLinkInfo(), false, storeX, storeY);
-            });
-            hideLinkInfoTabs();
-            displayForms("#createSpaceLinkAlert");
-        });
-
-        $("#addModuleLinkButton").click(function(e) {
-            $("#createModuleLinkAlert").hide();
-            $("#bgImage").off("click");
-            $("#bgImage").on("click", function(e){
-                e.preventDefault();
-                $("#external-arrow").remove();
-                $("#module_label").remove();
-                $("#link").remove();
-                var icon;
-                var posX = $(this).position().left;
-                var posY = $(this).position().top;    
-                storeX = e.pageX - $(this).offset().left;
-                storeY = e.pageY - $(this).offset().top + 25;
-                showModuleLink(createModuleLinkInfo(), false, storeX, storeY);
-            });
-            hideLinkInfoTabs();
-            displayForms("#createModuleLinkAlert");
-        }); 
-
-        $("#addExternalLinkButton").click(function(e) {
-            $("#createSpaceLinkAlert").hide();
-            $("#changeBgImgAlert").hide();
-            $("#bgImage").off("click");
-            $("#bgImage").on("click", function(e){
-                e.preventDefault();
-                $("#link").remove();
-                $("#external-arrow").remove();
-                $("#ext_label").remove();
-                var icon;
-                var posX = $(this).position().left
-                var posY = $(this).position().top;
-                storeX = e.pageX - $(this).offset().left;
-                storeY = e.pageY - $(this).offset().top + 25;
-                showExternalLinks(createExternalLinkInfo(), false, storeX, storeY);
-            });
-            hideLinkInfoTabs();
-            displayForms("#createExternalLinkAlert");
-        });
-
-        $('#changeBgImgButton').click(function(file) {
-            $("#createSpaceLinkAlert").hide();
-            $("#createExternalLinkAlert").hide();
-            drawLinks();
-            $("#changeBgImgAlert").show();          
-        });
-
-
-        // ----------- submit buttons (e.g. to create space links) ------------------
-
-        $("#addTextBlockBtn").click(function(e) {
-            e.preventDefault();
-            $("#space").scrollTop(0);
-            if (storeX == undefined || storeY == undefined) {
-                $("#errorMsg").text("Please click on the image to specify where the new block should be located.")
-                $('#errorAlert').show();
-                return;
-            }
-
-            $("#addTextX").val(storeX);
-            $("#addTextY").val(storeY - 25);
-
-            var form = $("#addTextForm");
-            var formData = new FormData(form[0]);
-
-            var textBlockInfo = createTextBlockInfo();
-
-            $.ajax({
-                type: "POST",
-                url: "[(@{'/staff/space/'+${space.id}+'/textblock?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
-                cache       : false,
-                contentType : false,
-                processData : false,
-                enctype: 'multipart/form-data',
-                data: formData, 
-                beforeSend: function () {
-                    $(".saveLoader").show();
-                    },
-               	complete: function () {
-                    $(".saveLoader").hide();
-                    },
-                success: function(data) {
-                    var linkData = JSON.parse(data);
-                    $("#bgImage").off("click");
-                    textBlockInfo["id"] = linkData["id"];
-                    textBlockInfo["displayId"]=linkData["displayId"];
-                    textBlockInfo["x"]=linkData["x"];
-                    textBlockInfo["y"]=linkData["y"];
-                    showTextBlock(textBlockInfo, true);
-                    $("#errorMsg").text("");
-                    $('#errorAlert').hide();
-                    $("#addTextFormInfo").hide();
-                    $("#space").css("display", "none");
-                    form[0].reset();
-                    drawLinks();
-                }
-            });
-        });
-        
-        $("#editTextBlockBtn").click(function(e) {
-            e.preventDefault();
-            $("#space").scrollTop(0);
-            var blockId = $("#textBlockId").val();
-            if (storeX == undefined || storeY == undefined) {
-                $("#errorMsg").text("Please click on the image to specify where the new link should be located.")
-                $('#errorAlert').show();
-                return;
-            }
-            var linkedTextBlock = $("#textBlockId").val();
-            $("#textBlockXEdit").val(storeX);
-            $("#textBlockYEdit").val(storeY - 25);
-            var form = $("#editTextBlockForm");
-            var formData = new FormData(form[0]);
-            var textBlockInfo = editTextBlockInfo();
-            $.ajax({
-                type: "POST",
-                url: "[(@{'/staff/space/link/textblock/'+${space.id}+'?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
-                cache: false,
-                contentType : false,
-                processData : false,
-                enctype: 'multipart/form-data',
-                data: formData,
-                success: function(data) {
-                    var linkData = JSON.parse(data);
-                    $("#bgImage").off("click");
-                    textBlockInfo["id"] = linkData["id"];
-                    textBlockInfo["text"]=linkData["textContent"];
-                    textBlockInfo["x"]=linkData["x"];
-                    textBlockInfo["y"]=linkData["y"];
-                    textBlockInfo["height"]=linkData["height"];
-                    textBlockInfo["width"]=linkData["width"];
-                    textBlockInfo["textColor"] = linkData["textColor"];
-                    showTextBlockEdit(textBlockInfo);
-                    hideLinkInfoTabs();
-                    $("#space").css("display", "none");
-                    selectedTextBlockId=undefined;
-                    drawLinks();
-                }
-            });
-        });
-
-        $("#createSpaceLinkBtn").click(function(e) {
-            e.preventDefault();
-            $('#errorAlert').hide();
-            $("#space").scrollTop(0);
-            var label = $("#spaceLinkLabel").val();
-            var spaceName = $("#linkedSpace option:selected").text();
-            var type = $("#type option:selected").text();
-
-            if (label == undefined || label == "") {
-                $("#errorMsg").text("Please fill the Label field before submitting.")
-                $('#errorAlert').show();
-                return;
-            }
-            if (spaceName == undefined || spaceName == "Choose...") {
-                $("#errorMsg").text("Please select a space in Linked Space dropdown.")
-                $('#errorAlert').show();
-                return;
-            }
-            
-            if (type == undefined || type == "Choose...") {
-                $("#errorMsg").text("Please select a link type in Type dropdown.")
-                $('#errorAlert').show();
-                return;
-            }
-
-            if (storeX == undefined || storeY == undefined) {
-                $("#errorMsg").text("Please click on the image to specify where the new link should be located.")
-                $('#errorAlert').show();
-                return;
-            }
-
-            $("#spaceLinkX").val(storeX);
-            $("#spaceLinkY").val(storeY - 25);
 			
-            var form = $("#createSpaceLinkForm");
-            var label = $("#spaceLinkLabel").val();
-            var spaceName = $("#linkedSpace option:selected").text();
-            var spaceId = $("#linkedSpace option:selected").val(); 
-            var formData = new FormData(form[0]);
-            var spaceLinkInfo = createSpaceLinkInfo();
-            $.ajax({
-                type: "POST",
-                url: "[(@{'/staff/space/'+${space?.id}+'/spacelink?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
-                cache       : false,
-                contentType : false,
-                processData : false,
-                enctype: 'multipart/form-data',
-                data: formData,
-                beforeSend: function () {
-                    $(".saveLoader").show();
-                    },
-               	complete: function () {
-                    $(".saveLoader").hide();
-                    },
-                success: function(data) {
-                    var linkData = JSON.parse(data);
-                    $("#bgImage").off("click");
-                    spaceLinkInfo["id"] = linkData["id"];
-                    spaceLinkInfo["displayId"]=linkData["displayId"];
-                    spaceLinkInfo["x"]=linkData["x"];
-                    spaceLinkInfo["y"]=linkData["y"];
-                    spaceLinkInfo["linkedSpaceStatus"]=linkData["linkedSpaceStatus"];
-                    showSpaceLink(spaceLinkInfo, true);
-                    $("#space_label").attr("id","");
-                    $("#link").attr("id","");
-                    $("#createSpaceLinkAlert").hide();  
-                    $("#errorMsg").text("");
-                    $('#errorAlert').hide();
-                    $("#noLinksOnSpace").hide();
-                    $("."+linkData["id"]).remove();
-                    form[0].reset();
-                    var newSpaceLinkURL = [[@{|/staff/space/|}]]+spaceId;
-                    $("#outgoingLinks").append("<a href="+newSpaceLinkURL+" style='padding: .25rem .25rem;' class='list-group-item' id="+linkData["id"]+">"+label+"  &nbsp;-> &nbsp;"+spaceName+"</a>");
-                    if (spaceName == "${space?.name}") {
-                        $("#noLinksToSpace").hide();
-                        $("div#incomingLinks").append("<a href="+newSpaceLinkURL+" style='padding: .25rem .25rem;' class='list-group-item' id="+linkData["id"]+">"+spaceName+"</a>");
-                    }
-                    $("#space").css("display", "none");
-                    linkIcon=null;
-                    drawLinks();
-                }
-            });
-        });
-
-        $("#createModuleLinkBtn").click(function(e) {
-            e.preventDefault();
-            $("#space").scrollTop(0);
-            $('#errorAlert').hide();
-            
-            if (storeX == undefined || storeY == undefined) {
-                $("#errorMsg").text("Please click on the image to specify where the new link should be located.")
-                $('#errorAlert').show();
-                return;
-            }
-
-            var linkedModules = $("#linkedModule").val();
-            var moduleLabel = $("#moduleLinkLabel").val();
-            var type = $("#moduleType option:selected").text();
-            
-            if (moduleLabel == undefined || moduleLabel == "") {
-                $("#errorMsg").text("Please enter the label for module.")
-                $('#errorAlert').show();
-                return;
-            }
-
-            if (linkedModules == undefined || linkedModules == "Choose...") {
-                $("#errorMsg").text("Please select linked modules.")
-                $('#errorAlert').show();
-                return;
-            }
-            
-            if (type == undefined || type == "Choose...") {
-                $("#errorMsg").text("Please select a link type in Type dropdown.")
-                $('#errorAlert').show();
-                return;
-            }
-
-            $("#moduleLinkX").val(storeX);
-            $("#moduleLinkY").val(storeY - 25);
-
-            var form = $("#createModuleLinkForm");
-            var formData = new FormData(form[0]);
-
-            var moduleLinkInfo = createModuleLinkInfo();
-
-            $.ajax({
-                type: "POST",
-
-                url: "[(@{'/staff/space/'+${space?.id}+'/modulelink?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
-                cache       : false,
-                contentType : false,
-                processData : false,
-                enctype: 'multipart/form-data',
-                data: formData,
-                beforeSend: function () {
-                    $(".saveLoader").show();
-                    },
-               	complete: function () {
-                    $(".saveLoader").hide();
-                    },
-                success: function(data) {
-                    var linkData = JSON.parse(data);
-                    $("#bgImage").off("click");
-                    moduleLinkInfo["id"] = linkData["id"];
-                    moduleLinkInfo["displayId"]=linkData["displayId"];
-                    moduleLinkInfo["x"]=linkData["x"];
-                    moduleLinkInfo["y"]=linkData["y"];
-                    showModuleLink(moduleLinkInfo, true);
-                    $("#module_label").attr("id","");
-                    $("#link").attr("id","");
-                    $("#createModuleLinkAlert").hide();
-                    $("#errorMsg").text("");
-                    $('#errorAlert').hide();
-                    $("."+linkData["id"]).remove();
-                    form[0].reset();
-                    $("#space").css("display", "none");
-                    moduleLinkIcon=null;
-                    drawLinks();
-                }
-            });
-        });
-        $("#editModuleLinkBtn").click(function(e) {
-            e.preventDefault();
-            var linkId = $("#moduleLinkIdEdit").val();
-            if(storeX == undefined || storeY == undefined){
-                $("#errorMsg").text("Please click on the image to specify where the new link should be located.");
-                $('#errorAlert').show();
-                return;    
-            }
-            $("#space").scrollTop(0);
-            var linkedModules = $("#moduleLinkIdEdit").val();
-            $("#moduleLinkXEdit").val(storeX);
-            $("#moduleLinkYEdit").val(storeY - 25);
-            var form = $("#editModuleLinkForm");
-            var formData = new FormData(form[0]);
-            var moduleLinkInfo = editModuleLinkInfo();
-            $.ajax({
-                type: "POST",
-                url: "[(@{'/staff/space/link/module/'+${space?.id}+'?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
-                cache: false,
-                contentType: false,
-                processData: false,
-                enctype: 'multipart/form-data',
-                data: formData,
-                beforeSend: function () {
-                    $(".saveLoader").show();
-                    },
-               	complete: function () {
-                    $(".saveLoader").hide();
-                    },
-                success: function(data){
-                    var linkData = JSON.parse(data);
-                    $("#bgImage").off("click");
-                    moduleLinkInfo["id"] = linkData["id"];
-                    moduleLinkInfo["displayId"]=linkData["displayId"];
-                    moduleLinkInfo["x"]=linkData["x"];
-                    moduleLinkInfo["y"]=linkData["y"];
-                    $('#linkRotation-'+selectedModuleLinkId).val(linkData["rotation"]);
-                    $('#linkLabel-'+selectedModuleLinkId).val(linkData["label"]);
-                    $('#linkType-'+selectedModuleLinkId).val(linkData["dislpayType"]);
-                    $('#moduleLinkTarget-'+selectedModuleLinkId).val(linkData["linkedId"]);
-                    showModuleLinkEdit(moduleLinkInfo, true);
-                    hideLinkInfoTabs();
-                    $("#space").css("display", "none");
-                    selectedModuleLinkId=undefined;
-                    drawLinks();
-                }
-            });
-        });
-
-        $("#editSpaceLinkBtn").click(function(e) {
-            e.preventDefault();
-            var linkId = $("#spaceLinkIdEdit").val();
-            if (storeX == undefined || storeY == undefined) {
-                $("#errorMsg").text("Please click on the image to specify where the new link should be located.")
-                $('#errorAlert').show();
-                return;    
-            }
-            $("#space").scrollTop(0);
-            var linkedSpace = $("#spaceLinkIdEdit").val();
-            $("#spaceLinkXEdit").val(storeX);
-            $("#spaceLinkYEdit").val(storeY - 25);
-            
-
-            var form = $("#editSpaceLinkForm");
-            var formData = new FormData(form[0]);
-            var spaceLinkInfo = editSpaceLinkInfo();
-            $.ajax({
-                type: "POST",
-                url: "[(@{'/staff/space/link/space/'+${space?.id}+'?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
-                cache: false,
-                contentType : false,
-                processData : false,
-                enctype: 'multipart/form-data',
-                data: formData,
-                beforeSend: function () {
-                    $(".saveLoader").show();
-                    },
-               	complete: function () {
-                    $(".saveLoader").hide();
-                    },
-                success: function(data) {
-                    var linkData = JSON.parse(data);
-                    $("#main-bgImage").off("click");
-                    spaceLinkInfo["id"] = linkData["id"];
-                    spaceLinkInfo["displayId"]=linkData["displayId"];
-                    spaceLinkInfo["x"]=linkData["x"];
-                    spaceLinkInfo["y"]=linkData["y"];
-                    spaceLinkInfo["linkedSpaceStatus"]=linkData["linkedSpaceStatus"];
-                    showSpaceLinkEdit(spaceLinkInfo, true);
-                    $('#linkRotation-'+selectedSpaceLinkId).val(linkData["rotation"]);
-                    $('#linkLabel-'+selectedSpaceLinkId).val(linkData["label"]);
-                    $('#linkType-'+selectedSpaceLinkId).val(linkData["dislpayType"]);
-                    $('#linkTarget-'+selectedSpaceLinkId).val(linkData["linkedId"]);
-                    hideLinkInfoTabs();
-                    $("#space").css("display", "none");
-                    selectedSpaceLinkId=undefined;
-                    drawLinks();
-                }
-            });
-        });
-
-        $("#editExternalLinkBtn").click(function(e) {
-            e.preventDefault();
-            $("#space").scrollTop(0);
-            var linkId = $("#externalLinkIdEdit").val();
-            if (storeX == undefined || storeY == undefined) {
-                $("#errorMsg").text("Please click on the image to specify where the new link should be located.")
-                $('#errorAlert').show();
-                return;
-            }
-            var linkedSpace = $("#externalLinkIdEdit").val();
-            $("#externalLinkXEdit").val(storeX);
-            $("#externalLinkYEdit").val(storeY - 25);
-            var form = $("#editExternalLinkForm");
-            var formData = new FormData(form[0]);
-            var externalLinkInfo = editExternalLinkInfo();
-            $.ajax({
-                type: "POST",
-                url: "[(@{'/staff/space/link/external/'+${space?.id}+'?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
-                cache: false,
-                contentType : false,
-                processData : false,
-                enctype: 'multipart/form-data',
-                data: formData,
-                beforeSend: function () {
-                    $(".saveLoader").show();
-                    },
-               	complete: function () {
-                    $(".saveLoader").hide();
-                    },
-                success: function(data) {
-                    var linkData = JSON.parse(data);
-                    $("#bgImage").off("click");
-                    externalLinkInfo["id"] = linkData["id"];
-                    externalLinkInfo["displayId"]=linkData["displayId"];
-                    externalLinkInfo["x"]=linkData["x"];
-                    externalLinkInfo["y"]=linkData["y"];
-                    $('#linkLabel-'+selectedExternalLinkId).val(linkData["label"]);
-                    $('#linkType-'+selectedExternalLinkId).val(linkData["dislpayType"]);
-                    $('#externalLinkTarget-'+selectedExternalLinkId).val(linkData["url"]);
-                    showExternalLinkEdit(editExternalLinkInfo, true);
-                    hideLinkInfoTabs();
-                    $("#space").css("display", "none");
-                    selectedExternalLinkId=undefined;
-                    drawLinks();
-                }
-            });
-        });
-
-        $("#createExternalLinkBtn").click(function(e) {
-            e.preventDefault();
-            $("#space").scrollTop(0);
-            var payload = {};
-
-            if (storeX == undefined || storeY == undefined) {
-                $("#errorMsg").text("Please click on the image to specify where the new link should be located.")
-                $('#errorAlert').show();
-                return;
-            }
-
-            var externalLink = $("#externalLink").val();
-            var externalLinkLabel = $("#externalLinkLabel").val();
-            var type = $("#extType option:selected").text();
-
-            if (externalLink == undefined || externalLink == "") {
-                $("#errorMsg").text("Please provide the link to the external link.")
-                $('#errorAlert').show();
-                return;
-            }
-
-            if (externalLinkLabel == undefined || externalLinkLabel == "") {
-                $("#errorMsg").text("Please enter a label for this external link.")
-                $('#errorAlert').show();
-                return;
-            }
-            
-            if (type == undefined || type == "Choose...") {
-                $("#errorMsg").text("Please select a link type in Type dropdown.")
-                $('#errorAlert').show();
-                return;
-            }
-            $("#externalLinkX").val(storeX);
-            $("#externalLinkY").val(storeY - 25);
-
-            var form = $("#createExternalLinkForm");
-            var formData = new FormData(form[0]);
-            var externalLinkInfo = createExternalLinkInfo();
-
-            $.ajax({
-                type: "POST",
-                url: "[(@{'/staff/space/'+${space?.id}+'/externallink?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
-                cache       : false,
-                contentType : false,
-                processData : false,
-                enctype: 'multipart/form-data',
-                data: formData,
-                beforeSend: function () {
-                    $(".saveLoader").show();
-                    },
-               	complete: function () {
-                    $(".saveLoader").hide();
-                    },
-                success: function(data) {
-                    var linkData = JSON.parse(data);
-                    $("#bgImage").off("click");
-                    externalLinkInfo["id"] = linkData["id"];
-                    externalLinkInfo["displayId"]=linkData["displayId"];
-                    externalLinkInfo["x"]=linkData["x"];
-                    externalLinkInfo["y"]=linkData["y"];
-                    showExternalLinks(externalLinkInfo, true);
-                    $("#ext_label").attr("id","");
-                    $("#link").attr("id","");
-                    $("#createExternalLinkAlert").hide();
-                    $("#errorMsg").text("");
-                    $('#errorAlert').hide();
-                    $("."+linkData["id"]).remove();
-                    form[0].reset();
-                    $("#external-arrow").attr("id","");
-                    $("#space").css("display", "none");
-                    externalLinkIcon=null;
-                    drawLinks();
-                }
-            });
-        });
-
-        // ------------- other buttons ------------
-        $("#deleteSpaceLinkButton").click(function() {
-            var linkId = $("#spaceLinkIdValueEdit").val();
-            $.ajax({
-                url: "[(@{'/staff/space/'+${space?.id}+'/spacelink/'})]"+ linkId + '?[(${_csrf.parameterName})]=[(${_csrf.token})]',
-                method: "DELETE",
-                beforeSend: function () {
-                    $(".saveLoader").show();
-                    },
-               	complete: function () {
-                    $(".saveLoader").hide();
-                    },
-                success:function(data) {
-                    $('[data-link-id="' + linkId + '"]').remove();
-                    $('[data-link-id="unpublished-' + linkId + '"]').remove();
-                    hideLinkInfoTabs();
-                    $('a#'+linkId).remove();
-                    if ($("div#outgoingLinks a").length < 2) {
-                        $("#noLinksOnSpace").show();
-                    }
-                    if ($("div#incomingLinks a").length < 2) {
-                        $("#noLinksToSpace").show();
-                    }
-                    $("#spaceLinkInfo").hide();
-                    $("#space").css("display", "none");
-                    drawLinks();
-                }
-            });
-        });
-
-
-        $("#deleteModuleLinkButton").click(function() {
-            var linkId = $("#moduleLinkIdValueEdit").val();
-            $.ajax({
-                url: "[(@{'/staff/space/'+${space?.id}+'/modulelink/'})]"+ linkId + '?[(${_csrf.parameterName})]=[(${_csrf.token})]',
-                method: "DELETE",
-                beforeSend: function () {
-                    $(".saveLoader").show();
-                    },
-               	complete: function () {
-                    $(".saveLoader").hide();
-                    },
-                success:function(data) {
-                    $('[data-link-id="' + linkId + '"]').remove();
-                    hideLinkInfoTabs();
-                    $("#space").css("display", "none");
-                    drawLinks();
-                }
-            });
-        });
-
-        $("#deleteExternalLinkButton").click(function() {
-            var linkId = $("#externalLinkIdValueEdit").val();
-            $.ajax({
-                url: "[(@{'/staff/space/'+${space?.id}+'/externallink/'})]"+ linkId + '?[(${_csrf.parameterName})]=[(${_csrf.token})]',
-                method: "DELETE",
-                beforeSend: function () {
-                    $(".saveLoader").show();
-                    },
-               	complete: function () {
-                    $(".saveLoader").hide();
-                    },
-                success:function(data) {
-                    $('[data-link-id="' + linkId + '"]').remove();
-                    hideLinkInfoTabs();
-                    $("#space").css("display", "none");
-                    drawLinks();
-                }
-            });
-        });
-        
-        $("#deleteTextBlockButton").click(function() {
-            var blockId = $("#textBlockId").val();
-            $.ajax({
-                url: "[(@{'/staff/space/'+${space.id}+'/textblock/'})]"+ blockId + '?[(${_csrf.parameterName})]=[(${_csrf.token})]',
-                method: "DELETE",
-                beforeSend: function () {
-                    $(".saveLoader").show();
-                    },
-               	complete: function () {
-                    $(".saveLoader").hide();
-                    },
-                success:function(data) {
-                    $('[data-link-id="' + blockId + '"]').remove();
-                    hideLinkInfoTabs();
-                    $("#space").css("display", "none");
-                    drawLinks();
-                }
-            });
-        });
-
-        $("#closeAlert").click(function() {
-            $('#errorAlert').hide();
-        });
-
-        // ------------- adjust links on background image (e.g. when inputs are changed) ------------
-        // external links
-        $(".extlink-target").change(function() {
-            var externalLink = {};
-            externalLink["x"] = storeX;
-            externalLink["y"] = storeY;
-            externalLink["externalLinkLabel"] = $("#externalLinkLabel").val();
-            externalLink["url"] = $("#externalLink").val();
-            externalLink["type"] = $("#extType").val();
-            showExternalLinks(externalLink);
-        });     
-
-        // space links
-        $('#spaceLinkRotation').change(function() {
-            $('#link').css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
-        });
-
-        $(".target").change(function() {
-            showSpaceLink(createSpaceLinkInfo());
-        }); 
-
-        $(".modulelink-target").change(function() {
-            showModuleLink(createModuleLinkInfo());
-        }); 
-
-        // link icons for space links
-
-        $('#moduleLinkRotation').change(function() {
-            $('#link').css('transform', 'rotate(' +$('#moduleLinkRotation').val()+ 'deg)');
-        });
-
-        $('#moduleLinkRotationEdit').change(function() {
-            $('#link').css('transform', 'rotate(' +$('#moduleLinkRotationEdit').val()+ 'deg)');
-        });
-
-        $(".modulelink-targetEdit").change(function() {
-            showModuleLinkEdit(editModuleLinkInfo());
-        }); 
-
-        $(".spacelink-targetEdit").change(function() {
-            showSpaceLinkEdit(editSpaceLinkInfo());
-        });
-
-        $(".externallink-targetEdit").change(function() {
-            showExternalLinkEdit(editExternalLinkInfo());
-        });
-
-
-        $("#spaceLinkImage").change(function() {
-            if (this.files && this.files[0]) {
-                linkIconReader.readAsDataURL(this.files[0]);
-            }
-        });
-        
-        $("#moduleLinkImage").change(function() {
-            if (this.files && this.files[0]) {
-                moduleLinkIconReader.readAsDataURL(this.files[0]);
-            }
-        });
-
-        $("#externalLinkImage").change(function() {
-            if (this.files && this.files[0]) {
-                externalLinkIconReader.readAsDataURL(this.files[0]);
-            }
-        });
-
-        // ------------ Cancel buttons -----------------
-
-        $(".cancelSpaceLinkBtn").click(function() {
-            storeX = null;
-            storeY = null;
-            linkIcon = null;
-            $("#space").scrollTop(0);
-            $("#link").remove();
-            $("#undefined").remove();
-            $("#space_label").remove();
-            $("#space").hide();
-            $("#createSpaceLinkAlert").hide(); 
-            $('#errorAlert').hide();
-            $("#bgImage").off("click");
-            drawLinks();
-        });
-
-        $(".cancelModuleLinkBtn").click(function() {
-            storeX = null;
-            storeY = null;
-            $("#space").scrollTop(0);
-            moduleLinkIcon=null;
-            $("#link").remove();
-            $("#undefined").remove();
-            $("#module_label").remove();
-            $("#space").hide();
-            $("#createModuleLinkAlert").hide();  
-            $('#errorAlert').hide();
-            $("#bgImage").off("click");
-            drawLinks();
-        }); 
-
-        $(".cancelExternalLinkBtn").click(function() {
-            storeX = null;
-            storeY = null;
-            $("#space").scrollTop(0);
-            externalLinkIcon=null;
-            $("#external-link").remove();
-            $("#undefined").remove();
-            $("div#link").remove();
-            $("#external-arrow").remove();
-            $("#ext_label").remove();
-            $("#space").hide();
-            $("#createExternalLinkAlert").hide();
-            $("#bgImage").off("click");
-            $('#errorAlert').hide();
-            drawLinks();
-        });
-        
-        $(".cancelAddTextBlockBtn").click(function() {
-            storeX = null;
-            storeY = null;
-            $("#space").scrollTop(0);
-            $("#textContentID").val(""); 
-            $("span#text").remove();
-            $("#space").hide();
-            $("#addTextFormInfo").hide();
-            $('#errorAlert').hide();
-            $("#bgImage").off("click");
-            drawLinks();
-        });
-
-        $("#cancelBgImgBtn").click(function() {
-        	$("#space").scrollTop(0);
-            drawLinks();
-            $("#file").val('');
-            $("#changeBgImgAlert").hide();
-        });
-
-        $("#closeEditModuleLinkInfo").click(function(e) {
-            e.preventDefault();
-            selectedModuleLinkId=undefined;
-            $("#moduleLinkInfoLabel").text("");
-            $("#moduleLinkId").val("");
-            resetHighlighting();
-            $("#space").hide();
-            $("#editModuleLinkInfo").hide();
-            drawLinks();
-        }); 
-
-        $("#closeEditSpaceLinkInfo").click(function(e) {
-            e.preventDefault();
-            selectedSpaceLinkId=undefined;
-            $("#spaceLinkInfoLabel").text("");
-            $("#spaceLinkId").val("");
-            resetHighlighting();
-            $("#space").hide();
-            $("#editSpaceLinkInfo").hide();
-            drawLinks();
-        }); 
-
-        $("#closeEditExternalLinkInfo").click(function(e) {
-            e.preventDefault();
-            selectedExternalLinkId=undefined;
-            $("#externalLinkInfoLabel").text("");
-            $("#externalLinkId").val("");
-            resetHighlighting();
-            $("#space").hide();
-            $("#editExternalLinkInfo").hide();
-            drawLinks();
-        });
-        
-        $("#closeEditTextBlockInfo").click(function(e) {
-            e.preventDefault();
-            selectedTextBlockId=undefined;
-            $("#textBoxHeightIDEdit").val("");
-            $("#textBoxWidthIDEdit").val("");
-            $("#textContentIDForEdit").val("");
-            resetHighlighting();
-            $("#space").hide();
-            $("#editTextBlockInfo").hide();
-            drawLinks();
-        });
-});
+			ext_label.attr("data-link-id", externalLink["id"]);
+			ext_label.css('cursor', 'pointer');
+			ext_label.attr("class", "label-"+externalLink["id"]);
+			ext_label.click(function(e) {
+				makeExternalLinksEditable(externalLink["externalLinkLabel"], externalLink["id"], externalLink["externalLinkURL"], externalLink["x"], externalLink["y"], externalLink["displayId"], externalLink["type"],externalLink["howToOpen"],externalLink["tabOpen"]);
+			});
+	    }
+	
+	    $("#space").append(link);
+	    $("#link").append(ext_label);
+	    $("#external-link").remove();
+	
+	}
+	
+	//--------- Utility functions -------------
+	function createSpaceLinkInfo() {
+	    var info = {};
+	    info["x"] = storeX;
+	    info["y"] = storeY;
+	    info["rotation"] = $("#spaceLinkRotation").val();
+	    info["linkedSpace"] = $("#linkedSpace").val();
+	    info["spaceLinkLabel"] = $("#spaceLinkLabel").val();
+	    info["type"] = $("#type").val();
+	    return info;
+	}
+	
+	function createExternalLinkInfo() {
+		var info = {};
+		info["x"] = storeX;
+		info["y"] = storeY;
+		info["tabOpen"] = $("#extTabOpen").val();
+		info["type"] = $("#extType").val();
+		info["externalLinkLabel"] = $("#externalLinkLabel").val();
+		info["externalLinkURL"] = $("#externalLink").val();
+		return info;
+	}
+	
+	function createModuleLinkInfo() {
+	    var info = {};
+	    info["x"] = storeX;
+	    info["y"] = storeY;
+	    info["rotation"] = $("#moduleLinkRotation").val();
+	    info["linkedModule"] = $("#linkedModule").val();
+	    info["moduleLinkLabel"] = $("#moduleLinkLabel").val();
+	    info["type"] = $("#moduleType").val();
+	    return info;
+	}
+	
+	function createTextBlockInfo() {
+	    var info = {};
+	    info["x"] = storeX;
+	    info["y"] = storeY;
+	    info["text"] = $("#textContentID").val();
+	    info["height"] = $("#textBoxHeightID").val();
+	    info["width"] = $("#textBoxWidthID").val();
+	    info["textColor"] = $("#textColorID").val();
+	    info["borderColor"] = $("#borderColorID").val();
+	    return info;
+	}
+	
+	function editTextBlockInfo() {
+	    var info = {};
+	    info["x"] = storeX;
+	    info["y"] = storeY;
+	    info["text"] = $("#textContentIDForEdit").val();
+	    info["height"] = $("#textBoxHeightIDEdit").val();
+	    info["width"] = $("#textBoxWidthIDEdit").val();
+	    info["textColor"] = $("#textColorIDEdit").val();
+	    info["borderColor"] = $("#borderColorIDEdit").val();
+	    return info;
+	}
+	
+	function editModuleLinkInfo() {
+	    var info = {};
+	    info["x"] = storeX;
+	    info["y"] = storeY;
+	    info["rotation"] = $("#moduleLinkRotationEdit").val();
+	    info["linkedModule"] = $("#moduleLinkIdEdit").val();
+	    info["moduleLinkLabel"] = $("#moduleLinkLabelEdit").val();
+	    info["type"] = $("#moduleTypeEdit").val();
+	    return info;
+	}
+	
+	function editSpaceLinkInfo() {
+	    var info = {};
+	    info["x"] = storeX;
+	    info["y"] = storeY;
+	    info["rotation"] = $("#spaceLinkRotationEdit").val();
+	    info["linkedSpace"] = $("#spaceLinkIdEdit").val();
+	    info["spaceLinkLabel"] = $("#spaceLinkLabelEdit").val();
+	    info["type"] = $("#typeSpaceEdit").val();
+	    return info;
+	}
+	
+	function editExternalLinkInfo() {
+		var info = {};
+		info["x"] = storeX;
+		info["y"] = storeY;
+		info["tabOpen"] = $("#extTabOpenEdit").val();
+		info["type"] = $("#extTypeEdit").val();
+		info["externalLinkLabel"] = $("#externalLinkLabelEdit").val();
+		info["externalLinkURL"] = $("#externalLinkURLEdit").val();
+		return info;
+	}
+	
+	function makeSpaceLinksEditable(spaceLinkName, spaceLinkId, rotation, selectedSpaceId, posXEdit, posYEdit, displayLinkId, linkType) {
+	    $("#spaceLinkInfoLabel").text(spaceLinkName);
+	    $("#spaceLinkId").val(spaceLinkId);
+	    selectedSpaceLinkId=spaceLinkId;
+	    storeX=posXEdit;
+	    storeY=posYEdit;
+	    $("#spaceLinkInfoLabel").text(spaceLinkName);
+	    $("#spaceLinkDisplayId").val(displayLinkId);
+	    $("#spaceLinkInfoLabelEdit").text(spaceLinkName);
+	    $("#spaceLinkLabelEdit").val(spaceLinkName);
+	    $("#spaceLinkId").val(spaceLinkId);
+	    $("#spaceLinkIdValueEdit").val(spaceLinkId);
+	    $("#spaceLinkRotationEdit").val(rotation);
+	    $("#typeSpaceEdit option:selected").prop('selected', false);
+	    $('#typeSpaceEdit option[value="'+linkType+'"]').prop("selected", true);
+	    $("#spaceLinkIdEdit option:selected").prop('selected', false);
+	    $('#spaceLinkIdEdit option[value="'+selectedSpaceId+'"]').prop("selected", true);
+	    if(linkType != "IMAGE"){
+	    	resetHighlighting(); 
+	    }
+	    $('[data-link-id="' + spaceLinkId + '"]').css("color", "var(--secondary)");
+	    $('img[data-link-id="' + spaceLinkId + '"]').css("border", "solid 1px #c1bb88");
+	    $('[data-link-id="unpublished-' + spaceLinkId + '"]').css("color", "var(--secondary)");
+	
+	    $("#bgImage").on("click", function(e){
+	        e.preventDefault();
+	        var posX = $(this).position().left;
+	        var posY = $(this).position().top;
+	        storeX = e.pageX  - $(this).offset().left;
+	        storeY = e.pageY  - $(this).offset().top + 25;
+	        showSpaceLinkEdit(editSpaceLinkInfo(),false, storeX,storeY);
+	    });
+	    hideLinkInfoTabs();
+	    displayForms("#editSpaceLinkInfo");
+	}
+	function displayForms(formToShow){
+	    drawLinks();
+	    $("#space").css("display", "-webkit-box");
+	    $(formToShow).css("display", "flex");
+	    modalBgImageHeight = parseInt($("#bgImage").css("height"));
+	    modalBgImageWidth = parseInt($("#bgImage").css("width"));
+	}
+	
+	function makeModuleLinksEditable(moduleLinkName, moduleLinkId, rotation, selectedModuleId, posXEdit, posYEdit, displayLinkId, linkType) {
+	    selectedModuleLinkId=moduleLinkId;
+	    storeX=posXEdit;
+	    storeY=posYEdit;
+	    $("#moduleLinkInfoLabel").text(moduleLinkName);
+	    $("#moduleLinkDisplayId").val(displayLinkId);
+	    $("#moduleLinkInfoLabelEdit").text(moduleLinkName);
+	    $("#moduleLinkLabelEdit").val(moduleLinkName);
+	    $("#moduleLinkId").val(moduleLinkId);
+	    $("#moduleLinkIdValueEdit").val(moduleLinkId);
+	    $("#moduleLinkRotationEdit").val(rotation);
+	    $("#moduleTypeEdit option:selected").prop('selected', false);
+	    $('#moduleTypeEdit option[value="'+linkType+'"]').prop("selected", true);
+	    $("#moduleLinkIdEdit option:selected").prop('selected', false);
+	    $('#moduleLinkIdEdit option[value="'+selectedModuleId+'"]').prop("selected", true);
+	    resetHighlighting();     
+	    $('[data-link-id="' + moduleLinkId + '"]').css("color", "#c1bb88");
+	    $('div[data-link-id="' + moduleLinkId + '"]').removeClass("alert-primary");
+	    $('div[data-link-id="' + moduleLinkId + '"]').addClass("alert-warning");
+	    $('img[data-link-id="' + moduleLinkId + '"]').css("border", "solid 1px #c1bb88");
+	
+	    $("#bgImage").on("click", function(e){
+	        e.preventDefault();
+	        var posX = $(this).position().left;
+	        var posY = $(this).position().top;  
+	        storeX = e.pageX - $(this).offset().left;
+	        storeY = e.pageY - $(this).offset().top + 25;
+	        showModuleLinkEdit(editModuleLinkInfo(), false, storeX,storeY);
+	    });
+	    hideLinkInfoTabs();
+	    displayForms("#editModuleLinkInfo");
+	}
+	
+	function makeExternalLinksEditable(linkName, linkId, externalLinkURL, posXEdit, posYEdit, displayLinkId, linkType,tabOpenType) {
+	    selectedExternalLinkId=linkId;
+	    storeX=posXEdit;
+	    storeY=posYEdit;
+	    $("#externalLinkInfoLabel").text(linkName);
+	    $("#externalLinkId").val(linkId);
+	    $("#externalLinkDisplayId").val(displayLinkId);
+	    $("#externalLinkInfoLabelEdit").text(linkName);
+	    $("#externalLinkLabelEdit").val(linkName);
+	    $("#externalLinkIdValueEdit").val(linkId);
+	    $("#externalLinkURLEdit").val(externalLinkURL);
+	    $('#extTypeEdit option[value="'+linkType+'"]').prop("selected", true);
+	    $('#extTabOpenEdit option[value="'+tabOpenType+'"]').prop("selected",true);
+	    
+	    resetHighlighting();
+	
+	    $('[data-link-id="' + linkId + '"]').css("color", "#c1bb88");
+	    $('div[data-link-id="' + linkId + '"]').removeClass("alert-primary");
+	    $('div[data-link-id="' + linkId + '"]').addClass("alert-warning");
+	    $('img[data-link-id="' + linkId + '"]').css("border", "solid 1px #c1bb88");
+	
+	    $("#bgImage").on("click", function(e){
+	        e.preventDefault();
+	        var posX = $(this).position().left;
+	        var posY = $(this).position().top;    
+	        storeX = e.pageX - $(this).offset().left;
+	        storeY = e.pageY - $(this).offset().top + 25;
+	        showExternalLinkEdit(editExternalLinkInfo(), false, storeX,storeY);
+	    });
+	    hideLinkInfoTabs();
+	    displayForms("#editExternalLinkInfo");
+	}
+	
+	function makeTextBlockEditable(blockDisplayId,blockId,text,posX,posY,width,height, textColor, borderColor){
+	    selectedTextBlockId=blockId;
+	    storeX=posX;
+	    storeY=posY;
+	    $("#textBlockId").val(blockId);
+	    $("#textBlockXEdit").val(posX);
+	    $("#textBlockYEdit").val(posY);
+	    $("#textBlockDisplayId").val(blockDisplayId);
+	    $("#textBoxWidthIDEdit").val(width);
+	    $("#textBoxHeightIDEdit").val(height);
+	    $("#textContentIDForEdit").val(text);
+	    $("#textColorIDEdit").val(textColor);
+	    $("#borderColorIDEdit").val(borderColor);
+	    resetHighlighting();
+	    $("#bgImage").on("click", function(e){
+	        e.preventDefault();
+	        var posX = $(this).position().left;
+	        var posY = $(this).position().top;    
+	        storeX = e.pageX - $(this).offset().left;
+	        storeY = e.pageY - $(this).offset().top + 25;
+	        showTextBlockEdit(editTextBlockInfo());
+	    });
+	    hideLinkInfoTabs();
+	    displayForms("#editTextBlockInfo");
+	}
+	
+	function resetHighlighting() {
+	    // reset icon links
+	    $('[data-link-id]').css("color", "red");
+	
+	    // reset alert links
+	    $('div[data-link-id]').removeClass("alert-warning");
+	    $('div[data-link-id]').addClass("alert-primary");
+	
+	    // reset image links
+	    $('img[data-link-id]').css("border-width", "0");
+	}
+	
+	function getTextArea(x,y) {
+	    var posX = $("#bgImage").position().left;
+	    var posY = $("#bgImage").position().top;
+	    var text = $('<span id="text"><textarea id="textB" name="textBlock" type="textarea" class="textBlock" style="resize:both; background: rgba(0, 0, 0, 0.4);"></textarea></span>');
+	    text.css('position', 'absolute');
+	    text.css('left', x + posX);
+	    text.css('top', y);
+	    $("#space").append(text);
+	    
+	    var textB = $('#textB')[0],
+	    tHeight = textB.clientHeight,
+	    tWidth = textB.clientWidth;
+	    
+	    var height = modalBgImageHeight;
+	    var width = modalBgImageWidth;
+	    
+	    $("#textBoxWidthID").val(tWidth);
+	    $("#textBoxHeightID").val(tHeight);
+	    textB.onmouseup = function (e) {
+	        if (tHeight !== textB.clientHeight || tWidth !== textB.clientWidth ) {
+	            tHeight = textB.clientHeight;
+	            tWidth = textB.clientWidth;
+	            let percentileHeight = (tHeight*100)/height;
+	            let percentileWidth = (tWidth*100)/width;
+	            $("#textBoxWidthID").val(percentileWidth);
+	            $("#textBoxHeightID").val(percentileHeight);
+	            $("#textContentID").val(textB.value);
+	        }
+	    };
+	    var percentileHeight = (tHeight*100)/height;
+	    var percentileWidth = (tWidth*100)/width;
+	    $("#textBoxWidthID").val(percentileWidth);
+	    $("#textBoxHeightID").val(percentileHeight);
+	    $("#textContentID").val(textB.value);
+	}
+	
+	$(function(){
+	    $("#deleteSpace").click(function(){
+	        var spaceId = "${space?.id}";
+	        checkSpaceLinkPresent('[(${space?.id})]', '[(@{'/staff/'})]', '[('?'+${_csrf.parameterName}+'='+${_csrf.token})]',$('#headerSpaceValue'));
+	    });
+	
+	        $( document ).ready(function() {
+	            onPageReady($("#deleteSpace"), $('#confirm-space-delete'));
+	            if ($("div#outgoingLinks a").length < 2) {
+	                $("#noLinksOnSpace").show()
+	            }
+	            if ($("div#incomingLinks a").length < 2) {
+	                $("#noLinksToSpace").show()
+	            }
+	        });
+	
+	        // -------- buttons that open modals (e.g. to create space links) ------
+	
+	        $("#addTextBlock").click(function(e){
+	            hideLinkInfoTabs();
+	            $("#changeBgImgAlert").hide();
+	            $("#bgImage").off("click");
+	            $("#bgImage").on("click", function(e){
+	                e.preventDefault();
+	                $("#external-arrow").remove();
+	                $("#space_label").remove();
+	                $("#link").remove();
+	                $("#text").remove();
+	                var posX = $(this).position().left;
+	                var posY = $(this).position().top;    
+	                storeX = e.pageX - $(this).offset().left;
+	                storeY = e.pageY - $(this).offset().top + 25;
+	                getTextArea(storeX,storeY);
+	            });
+	            hideLinkInfoTabs();
+	            displayForms("#addTextFormInfo");
+	        });
+	
+	        $("#addSpaceLinkButton").click(function(e) {
+	            $("#createExternalLinkAlert").hide();
+	            $("#changeBgImgAlert").hide();
+	            $("#bgImage").off("click");
+	            $("#bgImage").on("click", function(e){
+	                e.preventDefault();
+	                $("#external-arrow").remove();
+	                $("#space_label").remove();
+	                $("#link").remove();
+	                var icon;
+	                var posX = $(this).position().left;
+	                var posY = $(this).position().top;    
+	                storeX = e.pageX - $(this).offset().left;
+	                storeY = e.pageY - $(this).offset().top + 25;
+	                showSpaceLink(createSpaceLinkInfo(), false, storeX, storeY);
+	            });
+	            hideLinkInfoTabs();
+	            displayForms("#createSpaceLinkAlert");
+	        });
+	
+	        $("#addModuleLinkButton").click(function(e) {
+	            $("#createModuleLinkAlert").hide();
+	            $("#bgImage").off("click");
+	            $("#bgImage").on("click", function(e){
+	                e.preventDefault();
+	                $("#external-arrow").remove();
+	                $("#module_label").remove();
+	                $("#link").remove();
+	                var icon;
+	                var posX = $(this).position().left;
+	                var posY = $(this).position().top;    
+	                storeX = e.pageX - $(this).offset().left;
+	                storeY = e.pageY - $(this).offset().top + 25;
+	                showModuleLink(createModuleLinkInfo(), false, storeX, storeY);
+	            });
+	            hideLinkInfoTabs();
+	            displayForms("#createModuleLinkAlert");
+	        }); 
+	
+	        $("#addExternalLinkButton").click(function(e) {
+	            $("#createSpaceLinkAlert").hide();
+	            $("#changeBgImgAlert").hide();
+	            $("#bgImage").off("click");
+	            $("#bgImage").on("click", function(e){
+	                e.preventDefault();
+	                $("#link").remove();
+	                $("#external-arrow").remove();
+	                $("#ext_label").remove();
+	                var icon;
+	                var posX = $(this).position().left
+	                var posY = $(this).position().top;
+	                storeX = e.pageX - $(this).offset().left;
+	                storeY = e.pageY - $(this).offset().top + 25;
+	                showExternalLinks(createExternalLinkInfo(), false, storeX, storeY);
+	            });
+	            hideLinkInfoTabs();
+	            displayForms("#createExternalLinkAlert");
+	        });
+	
+	        $('#changeBgImgButton').click(function(file) {
+	            $("#createSpaceLinkAlert").hide();
+	            $("#createExternalLinkAlert").hide();
+	            drawLinks();
+	            $("#changeBgImgAlert").show();          
+	        });
+	
+	
+	        // ----------- submit buttons (e.g. to create space links) ------------------
+	
+	        $("#addTextBlockBtn").click(function(e) {
+	            e.preventDefault();
+	            $("#space").scrollTop(0);
+	            if (storeX == undefined || storeY == undefined) {
+	                $("#errorMsg").text("Please click on the image to specify where the new block should be located.")
+	                $('#errorAlert').show();
+	                return;
+	            }
+	
+	            $("#addTextX").val(storeX);
+	            $("#addTextY").val(storeY - 25);
+	
+	            var form = $("#addTextForm");
+	            var formData = new FormData(form[0]);
+	
+	            var textBlockInfo = createTextBlockInfo();
+	
+	            $.ajax({
+	                type: "POST",
+	                url: "[(@{'/staff/space/'+${space.id}+'/textblock?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+	                cache       : false,
+	                contentType : false,
+	                processData : false,
+	                enctype: 'multipart/form-data',
+	                data: formData, 
+	                beforeSend: function () {
+	                    $(".saveLoader").show();
+	                    },
+	               	complete: function () {
+	                    $(".saveLoader").hide();
+	                    },
+	                success: function(data) {
+	                    var linkData = JSON.parse(data);
+	                    $("#bgImage").off("click");
+	                    textBlockInfo["id"] = linkData["id"];
+	                    textBlockInfo["displayId"]=linkData["displayId"];
+	                    textBlockInfo["x"]=linkData["x"];
+	                    textBlockInfo["y"]=linkData["y"];
+	                    showTextBlock(textBlockInfo, true);
+	                    $("#errorMsg").text("");
+	                    $('#errorAlert').hide();
+	                    $("#addTextFormInfo").hide();
+	                    $("#space").css("display", "none");
+	                    form[0].reset();
+	                    drawLinks();
+	                }
+	            });
+	        });
+	        
+	        $("#editTextBlockBtn").click(function(e) {
+	            e.preventDefault();
+	            $("#space").scrollTop(0);
+	            var blockId = $("#textBlockId").val();
+	            if (storeX == undefined || storeY == undefined) {
+	                $("#errorMsg").text("Please click on the image to specify where the new link should be located.")
+	                $('#errorAlert').show();
+	                return;
+	            }
+	            var linkedTextBlock = $("#textBlockId").val();
+	            $("#textBlockXEdit").val(storeX);
+	            $("#textBlockYEdit").val(storeY - 25);
+	            var form = $("#editTextBlockForm");
+	            var formData = new FormData(form[0]);
+	            var textBlockInfo = editTextBlockInfo();
+	            $.ajax({
+	                type: "POST",
+	                url: "[(@{'/staff/space/link/textblock/'+${space.id}+'?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+	                cache: false,
+	                contentType : false,
+	                processData : false,
+	                enctype: 'multipart/form-data',
+	                data: formData,
+	                success: function(data) {
+	                    var linkData = JSON.parse(data);
+	                    $("#bgImage").off("click");
+	                    textBlockInfo["id"] = linkData["id"];
+	                    textBlockInfo["text"]=linkData["textContent"];
+	                    textBlockInfo["x"]=linkData["x"];
+	                    textBlockInfo["y"]=linkData["y"];
+	                    textBlockInfo["height"]=linkData["height"];
+	                    textBlockInfo["width"]=linkData["width"];
+	                    textBlockInfo["textColor"] = linkData["textColor"];
+	                    showTextBlockEdit(textBlockInfo);
+	                    hideLinkInfoTabs();
+	                    $("#space").css("display", "none");
+	                    selectedTextBlockId=undefined;
+	                    drawLinks();
+	                }
+	            });
+	        });
+	
+	        $("#createSpaceLinkBtn").click(function(e) {
+	            e.preventDefault();
+	            $('#errorAlert').hide();
+	            $("#space").scrollTop(0);
+	            var label = $("#spaceLinkLabel").val();
+	            var spaceName = $("#linkedSpace option:selected").text();
+	            var type = $("#type option:selected").text();
+	
+	            if (label == undefined || label == "") {
+	                $("#errorMsg").text("Please fill the Label field before submitting.")
+	                $('#errorAlert').show();
+	                return;
+	            }
+	            if (spaceName == undefined || spaceName == "Choose...") {
+	                $("#errorMsg").text("Please select a space in Linked Space dropdown.")
+	                $('#errorAlert').show();
+	                return;
+	            }
+	            
+	            if (type == undefined || type == "Choose...") {
+	                $("#errorMsg").text("Please select a link type in Type dropdown.")
+	                $('#errorAlert').show();
+	                return;
+	            }
+	
+	            if (storeX == undefined || storeY == undefined) {
+	                $("#errorMsg").text("Please click on the image to specify where the new link should be located.")
+	                $('#errorAlert').show();
+	                return;
+	            }
+	
+	            $("#spaceLinkX").val(storeX);
+	            $("#spaceLinkY").val(storeY - 25);
+				
+	            var form = $("#createSpaceLinkForm");
+	            var label = $("#spaceLinkLabel").val();
+	            var spaceName = $("#linkedSpace option:selected").text();
+	            var spaceId = $("#linkedSpace option:selected").val(); 
+	            var formData = new FormData(form[0]);
+	            var spaceLinkInfo = createSpaceLinkInfo();
+	            $.ajax({
+	                type: "POST",
+	                url: "[(@{'/staff/space/'+${space?.id}+'/spacelink?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+	                cache       : false,
+	                contentType : false,
+	                processData : false,
+	                enctype: 'multipart/form-data',
+	                data: formData,
+	                beforeSend: function () {
+	                    $(".saveLoader").show();
+	                    },
+	               	complete: function () {
+	                    $(".saveLoader").hide();
+	                    },
+	                success: function(data) {
+	                    var linkData = JSON.parse(data);
+	                    $("#bgImage").off("click");
+	                    spaceLinkInfo["id"] = linkData["id"];
+	                    spaceLinkInfo["displayId"]=linkData["displayId"];
+	                    spaceLinkInfo["x"]=linkData["x"];
+	                    spaceLinkInfo["y"]=linkData["y"];
+	                    spaceLinkInfo["linkedSpaceStatus"]=linkData["linkedSpaceStatus"];
+	                    showSpaceLink(spaceLinkInfo, true);
+	                    $("#space_label").attr("id","");
+	                    $("#link").attr("id","");
+	                    $("#createSpaceLinkAlert").hide();  
+	                    $("#errorMsg").text("");
+	                    $('#errorAlert').hide();
+	                    $("#noLinksOnSpace").hide();
+	                    $("."+linkData["id"]).remove();
+	                    form[0].reset();
+	                    var newSpaceLinkURL = [[@{|/staff/space/|}]]+spaceId;
+	                    $("#outgoingLinks").append("<a href="+newSpaceLinkURL+" style='padding: .25rem .25rem;' class='list-group-item' id="+linkData["id"]+">"+label+"  &nbsp;-> &nbsp;"+spaceName+"</a>");
+	                    if (spaceName == "${space?.name}") {
+	                        $("#noLinksToSpace").hide();
+	                        $("div#incomingLinks").append("<a href="+newSpaceLinkURL+" style='padding: .25rem .25rem;' class='list-group-item' id="+linkData["id"]+">"+spaceName+"</a>");
+	                    }
+	                    $("#space").css("display", "none");
+	                    linkIcon=null;
+	                    drawLinks();
+	                }
+	            });
+	        });
+	
+	        $("#createModuleLinkBtn").click(function(e) {
+	            e.preventDefault();
+	            $("#space").scrollTop(0);
+	            $('#errorAlert').hide();
+	            
+	            if (storeX == undefined || storeY == undefined) {
+	                $("#errorMsg").text("Please click on the image to specify where the new link should be located.")
+	                $('#errorAlert').show();
+	                return;
+	            }
+	
+	            var linkedModules = $("#linkedModule").val();
+	            var moduleLabel = $("#moduleLinkLabel").val();
+	            var type = $("#moduleType option:selected").text();
+	            
+	            if (moduleLabel == undefined || moduleLabel == "") {
+	                $("#errorMsg").text("Please enter the label for module.")
+	                $('#errorAlert').show();
+	                return;
+	            }
+	
+	            if (linkedModules == undefined || linkedModules == "Choose...") {
+	                $("#errorMsg").text("Please select linked modules.")
+	                $('#errorAlert').show();
+	                return;
+	            }
+	            
+	            if (type == undefined || type == "Choose...") {
+	                $("#errorMsg").text("Please select a link type in Type dropdown.")
+	                $('#errorAlert').show();
+	                return;
+	            }
+	
+	            $("#moduleLinkX").val(storeX);
+	            $("#moduleLinkY").val(storeY - 25);
+	
+	            var form = $("#createModuleLinkForm");
+	            var formData = new FormData(form[0]);
+	
+	            var moduleLinkInfo = createModuleLinkInfo();
+	
+	            $.ajax({
+	                type: "POST",
+	
+	                url: "[(@{'/staff/space/'+${space?.id}+'/modulelink?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+	                cache       : false,
+	                contentType : false,
+	                processData : false,
+	                enctype: 'multipart/form-data',
+	                data: formData,
+	                beforeSend: function () {
+	                    $(".saveLoader").show();
+	                    },
+	               	complete: function () {
+	                    $(".saveLoader").hide();
+	                    },
+	                success: function(data) {
+	                    var linkData = JSON.parse(data);
+	                    $("#bgImage").off("click");
+	                    moduleLinkInfo["id"] = linkData["id"];
+	                    moduleLinkInfo["displayId"]=linkData["displayId"];
+	                    moduleLinkInfo["x"]=linkData["x"];
+	                    moduleLinkInfo["y"]=linkData["y"];
+	                    showModuleLink(moduleLinkInfo, true);
+	                    $("#module_label").attr("id","");
+	                    $("#link").attr("id","");
+	                    $("#createModuleLinkAlert").hide();
+	                    $("#errorMsg").text("");
+	                    $('#errorAlert').hide();
+	                    $("."+linkData["id"]).remove();
+	                    form[0].reset();
+	                    $("#space").css("display", "none");
+	                    moduleLinkIcon=null;
+	                    drawLinks();
+	                }
+	            });
+	        });
+	        $("#editModuleLinkBtn").click(function(e) {
+	            e.preventDefault();
+	            var linkId = $("#moduleLinkIdEdit").val();
+	            if(storeX == undefined || storeY == undefined){
+	                $("#errorMsg").text("Please click on the image to specify where the new link should be located.");
+	                $('#errorAlert').show();
+	                return;    
+	            }
+	            $("#space").scrollTop(0);
+	            var linkedModules = $("#moduleLinkIdEdit").val();
+	            $("#moduleLinkXEdit").val(storeX);
+	            $("#moduleLinkYEdit").val(storeY - 25);
+	            var form = $("#editModuleLinkForm");
+	            var formData = new FormData(form[0]);
+	            var moduleLinkInfo = editModuleLinkInfo();
+	            $.ajax({
+	                type: "POST",
+	                url: "[(@{'/staff/space/link/module/'+${space?.id}+'?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+	                cache: false,
+	                contentType: false,
+	                processData: false,
+	                enctype: 'multipart/form-data',
+	                data: formData,
+	                beforeSend: function () {
+	                    $(".saveLoader").show();
+	                    },
+	               	complete: function () {
+	                    $(".saveLoader").hide();
+	                    },
+	                success: function(data){
+	                    var linkData = JSON.parse(data);
+	                    $("#bgImage").off("click");
+	                    moduleLinkInfo["id"] = linkData["id"];
+	                    moduleLinkInfo["displayId"]=linkData["displayId"];
+	                    moduleLinkInfo["x"]=linkData["x"];
+	                    moduleLinkInfo["y"]=linkData["y"];
+	                    $('#linkRotation-'+selectedModuleLinkId).val(linkData["rotation"]);
+	                    $('#linkLabel-'+selectedModuleLinkId).val(linkData["label"]);
+	                    $('#linkType-'+selectedModuleLinkId).val(linkData["dislpayType"]);
+	                    $('#moduleLinkTarget-'+selectedModuleLinkId).val(linkData["linkedId"]);
+	                    showModuleLinkEdit(moduleLinkInfo, true);
+	                    hideLinkInfoTabs();
+	                    $("#space").css("display", "none");
+	                    selectedModuleLinkId=undefined;
+	                    drawLinks();
+	                }
+	            });
+	        });
+	
+	        $("#editSpaceLinkBtn").click(function(e) {
+	            e.preventDefault();
+	            var linkId = $("#spaceLinkIdEdit").val();
+	            if (storeX == undefined || storeY == undefined) {
+	                $("#errorMsg").text("Please click on the image to specify where the new link should be located.")
+	                $('#errorAlert').show();
+	                return;    
+	            }
+	            $("#space").scrollTop(0);
+	            var linkedSpace = $("#spaceLinkIdEdit").val();
+	            $("#spaceLinkXEdit").val(storeX);
+	            $("#spaceLinkYEdit").val(storeY - 25);
+	            
+	
+	            var form = $("#editSpaceLinkForm");
+	            var formData = new FormData(form[0]);
+	            var spaceLinkInfo = editSpaceLinkInfo();
+	            $.ajax({
+	                type: "POST",
+	                url: "[(@{'/staff/space/link/space/'+${space?.id}+'?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+	                cache: false,
+	                contentType : false,
+	                processData : false,
+	                enctype: 'multipart/form-data',
+	                data: formData,
+	                beforeSend: function () {
+	                    $(".saveLoader").show();
+	                    },
+	               	complete: function () {
+	                    $(".saveLoader").hide();
+	                    },
+	                success: function(data) {
+	                    var linkData = JSON.parse(data);
+	                    $("#main-bgImage").off("click");
+	                    spaceLinkInfo["id"] = linkData["id"];
+	                    spaceLinkInfo["displayId"]=linkData["displayId"];
+	                    spaceLinkInfo["x"]=linkData["x"];
+	                    spaceLinkInfo["y"]=linkData["y"];
+	                    spaceLinkInfo["linkedSpaceStatus"]=linkData["linkedSpaceStatus"];
+	                    showSpaceLinkEdit(spaceLinkInfo, true);
+	                    $('#linkRotation-'+selectedSpaceLinkId).val(linkData["rotation"]);
+	                    $('#linkLabel-'+selectedSpaceLinkId).val(linkData["label"]);
+	                    $('#linkType-'+selectedSpaceLinkId).val(linkData["dislpayType"]);
+	                    $('#linkTarget-'+selectedSpaceLinkId).val(linkData["linkedId"]);
+	                    hideLinkInfoTabs();
+	                    $("#space").css("display", "none");
+	                    selectedSpaceLinkId=undefined;
+	                    drawLinks();
+	                }
+	            });
+	        });
+	
+	        $("#editExternalLinkBtn").click(function(e) {
+	            e.preventDefault();
+	            $("#space").scrollTop(0);
+	            var linkId = $("#externalLinkIdEdit").val();
+	            if (storeX == undefined || storeY == undefined) {
+	                $("#errorMsg").text("Please click on the image to specify where the new link should be located.")
+	                $('#errorAlert').show();
+	                return;
+	            }
+	            var linkedSpace = $("#externalLinkIdEdit").val();
+	            $("#externalLinkXEdit").val(storeX);
+	            $("#externalLinkYEdit").val(storeY - 25);
+	            var form = $("#editExternalLinkForm");
+	            var formData = new FormData(form[0]);
+	            var externalLinkInfo = editExternalLinkInfo();
+	            $.ajax({
+	                type: "POST",
+	                url: "[(@{'/staff/space/link/external/'+${space?.id}+'?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+	                cache: false,
+	                contentType : false,
+	                processData : false,
+	                enctype: 'multipart/form-data',
+	                data: formData,
+	                beforeSend: function () {
+	                    $(".saveLoader").show();
+	                    },
+	               	complete: function () {
+	                    $(".saveLoader").hide();
+	                    },
+	                success: function(data) {
+	                    var linkData = JSON.parse(data);
+	                    $("#bgImage").off("click");
+	                    externalLinkInfo["id"] = linkData["id"];
+	                    externalLinkInfo["displayId"]=linkData["displayId"];
+	                    externalLinkInfo["x"]=linkData["x"];
+	                    externalLinkInfo["y"]=linkData["y"];
+	                    $('#linkLabel-'+selectedExternalLinkId).val(linkData["label"]);
+	                    $('#linkType-'+selectedExternalLinkId).val(linkData["dislpayType"]);
+	                    $('#externalLinkTarget-'+selectedExternalLinkId).val(linkData["url"]);
+	                    showExternalLinkEdit(editExternalLinkInfo, true);
+	                    hideLinkInfoTabs();
+	                    $("#space").css("display", "none");
+	                    selectedExternalLinkId=undefined;
+	                    drawLinks();
+	                }
+	            });
+	        });
+	
+	        $("#createExternalLinkBtn").click(function(e) {
+	            e.preventDefault();
+	            $("#space").scrollTop(0);
+	            var payload = {};
+	
+	            if (storeX == undefined || storeY == undefined) {
+	                $("#errorMsg").text("Please click on the image to specify where the new link should be located.")
+	                $('#errorAlert').show();
+	                return;
+	            }
+	
+	            var externalLink = $("#externalLink").val();
+	            var externalLinkLabel = $("#externalLinkLabel").val();
+	            var type = $("#extType option:selected").text();
+	
+	            if (externalLink == undefined || externalLink == "") {
+	                $("#errorMsg").text("Please provide the link to the external link.")
+	                $('#errorAlert').show();
+	                return;
+	            }
+	
+	            if (externalLinkLabel == undefined || externalLinkLabel == "") {
+	                $("#errorMsg").text("Please enter a label for this external link.")
+	                $('#errorAlert').show();
+	                return;
+	            }
+	            
+	            if (type == undefined || type == "Choose...") {
+	                $("#errorMsg").text("Please select a link type in Type dropdown.")
+	                $('#errorAlert').show();
+	                return;
+	            }
+	            $("#externalLinkX").val(storeX);
+	            $("#externalLinkY").val(storeY - 25);
+	
+	            var form = $("#createExternalLinkForm");
+	            var formData = new FormData(form[0]);
+	            var externalLinkInfo = createExternalLinkInfo();
+	
+	            $.ajax({
+	                type: "POST",
+	                url: "[(@{'/staff/space/'+${space?.id}+'/externallink?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+	                cache       : false,
+	                contentType : false,
+	                processData : false,
+	                enctype: 'multipart/form-data',
+	                data: formData,
+	                beforeSend: function () {
+	                    $(".saveLoader").show();
+	                    },
+	               	complete: function () {
+	                    $(".saveLoader").hide();
+	                    },
+	                success: function(data) {
+	                    var linkData = JSON.parse(data);
+	                    $("#bgImage").off("click");
+	                    externalLinkInfo["id"] = linkData["id"];
+	                    externalLinkInfo["displayId"]=linkData["displayId"];
+	                    externalLinkInfo["x"]=linkData["x"];
+	                    externalLinkInfo["y"]=linkData["y"];
+	                    showExternalLinks(externalLinkInfo, true);
+	                    $("#ext_label").attr("id","");
+	                    $("#link").attr("id","");
+	                    $("#createExternalLinkAlert").hide();
+	                    $("#errorMsg").text("");
+	                    $('#errorAlert').hide();
+	                    $("."+linkData["id"]).remove();
+	                    form[0].reset();
+	                    $("#external-arrow").attr("id","");
+	                    $("#space").css("display", "none");
+	                    externalLinkIcon=null;
+	                    drawLinks();
+	                }
+	            });
+	        });
+	
+	        // ------------- other buttons ------------
+	        $("#deleteSpaceLinkButton").click(function() {
+	            var linkId = $("#spaceLinkIdValueEdit").val();
+	            $.ajax({
+	                url: "[(@{'/staff/space/'+${space?.id}+'/spacelink/'})]"+ linkId + '?[(${_csrf.parameterName})]=[(${_csrf.token})]',
+	                method: "DELETE",
+	                beforeSend: function () {
+	                    $(".saveLoader").show();
+	                    },
+	               	complete: function () {
+	                    $(".saveLoader").hide();
+	                    },
+	                success:function(data) {
+	                    $('[data-link-id="' + linkId + '"]').remove();
+	                    $('[data-link-id="unpublished-' + linkId + '"]').remove();
+	                    hideLinkInfoTabs();
+	                    $('a#'+linkId).remove();
+	                    if ($("div#outgoingLinks a").length < 2) {
+	                        $("#noLinksOnSpace").show();
+	                    }
+	                    if ($("div#incomingLinks a").length < 2) {
+	                        $("#noLinksToSpace").show();
+	                    }
+	                    $("#spaceLinkInfo").hide();
+	                    $("#space").css("display", "none");
+	                    drawLinks();
+	                }
+	            });
+	        });
+	
+	
+	        $("#deleteModuleLinkButton").click(function() {
+	            var linkId = $("#moduleLinkIdValueEdit").val();
+	            $.ajax({
+	                url: "[(@{'/staff/space/'+${space?.id}+'/modulelink/'})]"+ linkId + '?[(${_csrf.parameterName})]=[(${_csrf.token})]',
+	                method: "DELETE",
+	                beforeSend: function () {
+	                    $(".saveLoader").show();
+	                    },
+	               	complete: function () {
+	                    $(".saveLoader").hide();
+	                    },
+	                success:function(data) {
+	                    $('[data-link-id="' + linkId + '"]').remove();
+	                    hideLinkInfoTabs();
+	                    $("#space").css("display", "none");
+	                    drawLinks();
+	                }
+	            });
+	        });
+	
+	        $("#deleteExternalLinkButton").click(function() {
+	            var linkId = $("#externalLinkIdValueEdit").val();
+	            $.ajax({
+	                url: "[(@{'/staff/space/'+${space?.id}+'/externallink/'})]"+ linkId + '?[(${_csrf.parameterName})]=[(${_csrf.token})]',
+	                method: "DELETE",
+	                beforeSend: function () {
+	                    $(".saveLoader").show();
+	                    },
+	               	complete: function () {
+	                    $(".saveLoader").hide();
+	                    },
+	                success:function(data) {
+	                    $('[data-link-id="' + linkId + '"]').remove();
+	                    hideLinkInfoTabs();
+	                    $("#space").css("display", "none");
+	                    drawLinks();
+	                }
+	            });
+	        });
+	        
+	        $("#deleteTextBlockButton").click(function() {
+	            var blockId = $("#textBlockId").val();
+	            $.ajax({
+	                url: "[(@{'/staff/space/'+${space.id}+'/textblock/'})]"+ blockId + '?[(${_csrf.parameterName})]=[(${_csrf.token})]',
+	                method: "DELETE",
+	                beforeSend: function () {
+	                    $(".saveLoader").show();
+	                    },
+	               	complete: function () {
+	                    $(".saveLoader").hide();
+	                    },
+	                success:function(data) {
+	                    $('[data-link-id="' + blockId + '"]').remove();
+	                    hideLinkInfoTabs();
+	                    $("#space").css("display", "none");
+	                    drawLinks();
+	                }
+	            });
+	        });
+	
+	        $("#closeAlert").click(function() {
+	            $('#errorAlert').hide();
+	        });
+	
+	        // ------------- adjust links on background image (e.g. when inputs are changed) ------------
+	        // external links
+	        $(".extlink-target").change(function() {
+	            var externalLink = {};
+	            externalLink["x"] = storeX;
+	            externalLink["y"] = storeY;
+	            externalLink["externalLinkLabel"] = $("#externalLinkLabel").val();
+	            externalLink["url"] = $("#externalLink").val();
+	            externalLink["type"] = $("#extType").val();
+	            showExternalLinks(externalLink);
+	        });     
+	
+	        // space links
+	        $('#spaceLinkRotation').change(function() {
+	            $('#link').css('transform', 'rotate(' +$('#spaceLinkRotation').val()+ 'deg)');
+	        });
+	
+	        $(".target").change(function() {
+	            showSpaceLink(createSpaceLinkInfo());
+	        }); 
+	
+	        $(".modulelink-target").change(function() {
+	            showModuleLink(createModuleLinkInfo());
+	        }); 
+	
+	        // link icons for space links
+	
+	        $('#moduleLinkRotation').change(function() {
+	            $('#link').css('transform', 'rotate(' +$('#moduleLinkRotation').val()+ 'deg)');
+	        });
+	
+	        $('#moduleLinkRotationEdit').change(function() {
+	            $('#link').css('transform', 'rotate(' +$('#moduleLinkRotationEdit').val()+ 'deg)');
+	        });
+	
+	        $(".modulelink-targetEdit").change(function() {
+	            showModuleLinkEdit(editModuleLinkInfo());
+	        }); 
+	
+	        $(".spacelink-targetEdit").change(function() {
+	            showSpaceLinkEdit(editSpaceLinkInfo());
+	        });
+	
+	        $(".externallink-targetEdit").change(function() {
+	            showExternalLinkEdit(editExternalLinkInfo());
+	        });
+	
+	
+	        $("#spaceLinkImage").change(function() {
+	            if (this.files && this.files[0]) {
+	                linkIconReader.readAsDataURL(this.files[0]);
+	            }
+	        });
+	        
+	        $("#moduleLinkImage").change(function() {
+	            if (this.files && this.files[0]) {
+	                moduleLinkIconReader.readAsDataURL(this.files[0]);
+	            }
+	        });
+	
+	        $("#externalLinkImage").change(function() {
+	            if (this.files && this.files[0]) {
+	                externalLinkIconReader.readAsDataURL(this.files[0]);
+	            }
+	        });
+	
+	        // ------------ Cancel buttons -----------------
+	
+	        $(".cancelSpaceLinkBtn").click(function() {
+	            storeX = null;
+	            storeY = null;
+	            linkIcon = null;
+	            $("#space").scrollTop(0);
+	            $("#link").remove();
+	            $("#undefined").remove();
+	            $("#space_label").remove();
+	            $("#space").hide();
+	            $("#createSpaceLinkAlert").hide(); 
+	            $('#errorAlert').hide();
+	            $("#bgImage").off("click");
+	            drawLinks();
+	        });
+	
+	        $(".cancelModuleLinkBtn").click(function() {
+	            storeX = null;
+	            storeY = null;
+	            $("#space").scrollTop(0);
+	            moduleLinkIcon=null;
+	            $("#link").remove();
+	            $("#undefined").remove();
+	            $("#module_label").remove();
+	            $("#space").hide();
+	            $("#createModuleLinkAlert").hide();  
+	            $('#errorAlert').hide();
+	            $("#bgImage").off("click");
+	            drawLinks();
+	        }); 
+	
+	        $(".cancelExternalLinkBtn").click(function() {
+	            storeX = null;
+	            storeY = null;
+	            $("#space").scrollTop(0);
+	            externalLinkIcon=null;
+	            $("#external-link").remove();
+	            $("#undefined").remove();
+	            $("div#link").remove();
+	            $("#external-arrow").remove();
+	            $("#ext_label").remove();
+	            $("#space").hide();
+	            $("#createExternalLinkAlert").hide();
+	            $("#bgImage").off("click");
+	            $('#errorAlert').hide();
+	            drawLinks();
+	        });
+	        
+	        $(".cancelAddTextBlockBtn").click(function() {
+	            storeX = null;
+	            storeY = null;
+	            $("#space").scrollTop(0);
+	            $("#textContentID").val(""); 
+	            $("span#text").remove();
+	            $("#space").hide();
+	            $("#addTextFormInfo").hide();
+	            $('#errorAlert').hide();
+	            $("#bgImage").off("click");
+	            drawLinks();
+	        });
+	
+	        $("#cancelBgImgBtn").click(function() {
+	        	$("#space").scrollTop(0);
+	            drawLinks();
+	            $("#file").val('');
+	            $("#changeBgImgAlert").hide();
+	        });
+	
+	        $("#closeEditModuleLinkInfo").click(function(e) {
+	            e.preventDefault();
+	            selectedModuleLinkId=undefined;
+	            $("#moduleLinkInfoLabel").text("");
+	            $("#moduleLinkId").val("");
+	            resetHighlighting();
+	            $("#space").hide();
+	            $("#editModuleLinkInfo").hide();
+	            drawLinks();
+	        }); 
+	
+	        $("#closeEditSpaceLinkInfo").click(function(e) {
+	            e.preventDefault();
+	            selectedSpaceLinkId=undefined;
+	            $("#spaceLinkInfoLabel").text("");
+	            $("#spaceLinkId").val("");
+	            resetHighlighting();
+	            $("#space").hide();
+	            $("#editSpaceLinkInfo").hide();
+	            drawLinks();
+	        }); 
+	
+	        $("#closeEditExternalLinkInfo").click(function(e) {
+	            e.preventDefault();
+	            selectedExternalLinkId=undefined;
+	            $("#externalLinkInfoLabel").text("");
+	            $("#externalLinkId").val("");
+	            resetHighlighting();
+	            $("#space").hide();
+	            $("#editExternalLinkInfo").hide();
+	            drawLinks();
+	        });
+	        
+	        $("#closeEditTextBlockInfo").click(function(e) {
+	            e.preventDefault();
+	            selectedTextBlockId=undefined;
+	            $("#textBoxHeightIDEdit").val("");
+	            $("#textBoxWidthIDEdit").val("");
+	            $("#textContentIDForEdit").val("");
+	            resetHighlighting();
+	            $("#space").hide();
+	            $("#editTextBlockInfo").hide();
+	            drawLinks();
+	        });
+	});
 </script>
 <style>
 .Info_cz_Class .tooltiptext {

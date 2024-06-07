@@ -9,15 +9,14 @@ import javax.persistence.ManyToOne;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
-import edu.asu.diging.vspace.core.model.IExternalLink;
 import edu.asu.diging.vspace.core.model.IExternalLinkSlide;
 import edu.asu.diging.vspace.core.model.ISlide;
 @Entity
 public class ExternalLinkSlide extends VSpaceElement implements IExternalLinkSlide {
     
     @Id 
-    @GeneratedValue(generator = "extlink_id_generator")
-    @GenericGenerator(name = "extlink_id_generator", 
+    @GeneratedValue(generator = "extlinkslide_id_generator")
+    @GenericGenerator(name = "extlinkslide_id_generator", 
         parameters = @Parameter(name = "prefix", value = "EXLS"), 
         strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
@@ -27,7 +26,7 @@ public class ExternalLinkSlide extends VSpaceElement implements IExternalLinkSli
     private ISlide slide;
   
     private String externalLink;
-    
+        
     @Override
     public String getId() {
         return id;

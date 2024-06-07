@@ -11,5 +11,4 @@ public interface IExternalLinkSlide extends ILinkSlide<ExternalLinkValue>{
     String getExternalLink();
 
     void setExternalLink(String externalLink);
-
 }

@@ -1,6 +1,6 @@
 <html layout:decorate="~{layouts/main}">
-   <head>
-      <style type="text/css">
+<head>
+<style type="text/css">
       
 .imgFullScreen:hover .tooltiptext {
     visibility: visible;
@@ -24,27 +24,43 @@
     top: -15px;
     background: rgba(0, 0, 0, 0.6);
 }
-      
-      </style>
+
+.Group_8_Class {
+    display: block;
+}
+
+.External_Links_Class {
+	position: absolute;
+	text-align: left;
+	margin-left: 15px;
+}
+
+.slide_container {
+	display: grid;
+	align-items:center;
+}
+  
+</style>
       <script th:inline="javascript">
-         $( document ).ready(function() {
-            $("#blocks a").css('color','rgb(150, 45, 62)').css('font-weight','bold');
-            $(".nav-bar").css('position','fixed').css('width','100%').css('z-index','125');
-         });
-         
-         function imageFullScreen(){
-			   var elem = document.getElementById("Module_1");
-			   $(".imgFullScreen").hide();
-			   $("#Module_1").css('overflow-y','scroll');
-			   $("#Module_1").css('background-color','white');
-			   if (elem.requestFullscreen) {
-				    elem.requestFullscreen();
-				    } else if (elem.webkitRequestFullscreen) { 
-				    elem.webkitRequestFullscreen();
-				  } else if (elem.msRequestFullscreen) { 
-				    elem.msRequestFullscreen();
-				  }
-			   $("#Module_1").append('<div class = "exitfullscreen"><button class="btn circle-btn" style="padding: 3px;width: 35px;height: 35px;position: fixed;right: 0;bottom: 0;margin: 0 2rem 2rem 0;" onclick="exitFullScreen()"><span class="icon-collapse secondary"></span><span class="tooltiptextForExitFullscreen">Exit Full screen</span></button></div>')
+        $( window ).on('load', function() {
+           $("#blocks a").css('color','rgb(150, 45, 62)').css('font-weight','bold');
+           $(".nav-bar").css('position','fixed').css('width','100%').css('z-index','125');
+           drawLinks();
+        });
+        
+        function imageFullScreen(){
+			var elem = document.getElementById("Module_1");
+			$(".imgFullScreen").hide();
+			$("#Module_1").css('overflow-y','scroll');
+			$("#Module_1").css('background-color','white');
+			if (elem.requestFullscreen) {
+				elem.requestFullscreen();
+			} else if (elem.webkitRequestFullscreen) { 
+				elem.webkitRequestFullscreen();
+			} else if (elem.msRequestFullscreen) {
+				elem.msRequestFullscreen();
+			}
+			$("#Module_1").append('<div class = "exitfullscreen"><button class="btn circle-btn" style="padding: 3px;width: 35px;height: 35px;position: fixed;right: 0;bottom: 0;margin: 0 2rem 2rem 0;" onclick="exitFullScreen()"><span class="icon-collapse secondary"></span><span class="tooltiptextForExitFullscreen">Exit Full screen</span></button></div>');
 		}
 
 		function exitFullScreen()
@@ -89,7 +105,7 @@
                </div>
            </a>
             <a th:if="${!#strings.isEmpty(nextSlide)}" th:href= "${isExhPreview == null OR isExhPreview == false}?@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${currentSequenceId}+'/slide/'+${nextSlide}}:@{'/preview/'+${previewId}+'/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${currentSequenceId}+'/slide/'+${nextSlide}}">
-               <div class="slideshow_next slideshow_next_Class" style="position: fixed; z-index:110; right: 11%; top: 40.3%;">
+               <div class="slideshow_next slideshow_next_Class" style="position: fixed; z-index:110; right: 11%; top: 40.3%;"> 
                     <button class="btn circle-btn-slide-nav">
                          <span class="icon-chevron-right slide-nav"></span>
                          <span class="tooltiptext">Next slide</span>
@@ -131,30 +147,37 @@
          
          <div style="position: relative;top: 6.5%;">
             <h3 style="text-align:center;">[[${currentSlideCon.name}]]</h3>
-            <div id="blocks" class="Group_8_Class" th:each="contents: ${currentSlideCon.contents}">
-                <img th:if="${contents['class'].simpleName ==  'ImageBlock'}" id="${contents.id}" class="imgDiv" th:src="@{'/api/image/'+${contents.image.id}}" style="max-width:57%">
-                <div th:if="${contents['class'].simpleName ==  'TextBlock'}" id="${contents.id}" class="textDiv">[(${contents.htmlRenderedText()})]</div>
-                <div th:if="${contents['class'].simpleName == 'ChoiceBlock'}" id="${contents.id}" class="textDiv" style="margin: 1%;">
-                    <div th:if="${contents.showsAll eq true}" th:each="choice: ${choices}" class="list-group">
-                        <a th:href="${isExhPreview == null OR isExhPreview == false}?@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${choice.sequence.id}+'?branchingPoint='+${slideId}+'&previousSequenceId='+${currentSequenceId}}:@{'/preview/'+${previewId}+'/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${choice.sequence.id}+'?branchingPoint='+${slideId}+'&previousSequenceId='+${currentSequenceId}}"
-                            class="list-group-item list-group-item-action">[[${choice.sequence.name}]]</a>
-                    </div>
-                    <div class="list-group" th:if="${contents.showsAll eq false}" th:each="choice: ${contents.choices}">
-                        <a th:href="${isExhPreview == null OR isExhPreview == false}?@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${choice.sequence.id}+'?branchingPoint='+${slideId}+'&previousSequenceId='+${currentSequenceId}}:@{'/preview/'+${previewId}+'/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${choice.sequence.id}+'?branchingPoint='+${slideId}+'&previousSequenceId='+${currentSequenceId}}"
-                            class="list-group-item list-group-item-action">[[${choice.sequence.name}]]</a>
-                    </div>
-                </div>
-                <div style="align-items: center" class="list-group" th:id="${contents.id}" th:if="${#strings.equals(contents['class'].simpleName,'VideoBlock')}">
-                  <br/>[[${contents.video.title}]]
-                    <iframe th:id="${contents.id}" width="800" height="530" th:src="${contents.video.url}" th:if="${contents.video.url}" frameborder="0"
-                        allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen ></iframe>
-                     <video width="800" height="530" th:if="${contents.video.url == null}" controls>
-						  <source th:src="@{'/api/video/'+${contents.video.id}}" />
-						</video>
-						 <br>
-               </div>
+            <div class="slide_container"> 
+	            <div id="blocks" class="Group_8_Class" th:each="contents: ${currentSlideCon.contents}">
+	                <img th:if="${contents['class'].simpleName == 'ImageBlock'}" th:id="${contents.id}" class="imgDiv" th:src="@{'/api/image/'+${contents.image.id}}" style="max-width:57%;"/>
+	                <div th:if="${contents['class'].simpleName == 'TextBlock'}" th:id="${contents.id}" class="textDiv">[(${contents.htmlRenderedText()})]</div>
+	                <div th:if="${contents['class'].simpleName == 'ChoiceBlock'}" th:id="${contents.id}" class="textDiv" style="margin: 1%;">
+	                    <div th:if="${contents.showsAll eq true}" th:each="choice: ${choices}" class="list-group">
+	                        <a th:href="${isExhPreview == null OR isExhPreview == false}?@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${choice.sequence.id}+'?branchingPoint='+${slideId}+'&previousSequenceId='+${currentSequenceId}}:@{'/preview/'+${previewId}+'/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${choice.sequence.id}+'?branchingPoint='+${slideId}+'&previousSequenceId='+${currentSequenceId}}"
+	                            class="list-group-item list-group-item-action">[[${choice.sequence.name}]]</a>
+	                    </div>
+	                    <div class="list-group" th:if="${contents.showsAll eq false}" th:each="choice: ${contents.choices}">
+	                        <a th:href="${isExhPreview == null OR isExhPreview == false}?@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${choice.sequence.id}+'?branchingPoint='+${slideId}+'&previousSequenceId='+${currentSequenceId}}:@{'/preview/'+${previewId}+'/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${choice.sequence.id}+'?branchingPoint='+${slideId}+'&previousSequenceId='+${currentSequenceId}}"
+	                            class="list-group-item list-group-item-action">[[${choice.sequence.name}]]</a>
+	                    </div>
+	                </div>
+	                <div style="align-items: center" class="list-group" th:id="${contents.id}" th:if="${#strings.equals(contents['class'].simpleName,'VideoBlock')}">
+	                  <br/>[[${contents.video.title}]]
+	                    <iframe th:id="${contents.id}" width="800" height="530" th:src="${contents.video.url}" th:if="${contents.video.url}" frameborder="0"
+	                        allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+	                        allowfullscreen ></iframe>
+	                     <video width="800" height="530" th:if="${contents.video.url == null}" controls>
+							  <source th:src="@{'/api/video/'+${contents.video.id}}" />
+							</video>
+							 <br>
+	               </div>
+	            </div>
             </div>
+            <div class="External_Links_Class"> External Resources:
+	     		<div th:if="${slideExternalLinkList}" th:each="link: ${slideExternalLinkList}"> -
+	      			<a style="text-decoration: underline; color:blue;" th:href="@{${link.externalLink.externalLink}}">[[${link.externalLink.name}]]</a>
+	     		</div>
+     		</div>
         </div>
       </div>
       </div>

@@ -22,14 +22,13 @@ import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.impl.BranchingPoint;
-import edu.asu.diging.vspace.core.model.impl.ExhibitionAboutPage;
 import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
-import edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISequenceManager;
+import edu.asu.diging.vspace.core.services.ISlideExternalLinkManager;
+import edu.asu.diging.vspace.core.services.ISlideManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
-import edu.asu.diging.vspace.core.services.impl.SlideManager;
 
 @Controller
 public class ExhibitionSlideController {
@@ -38,7 +37,7 @@ public class ExhibitionSlideController {
     private IModuleManager moduleManager;
 
     @Autowired
-    private SlideManager slideManager;
+    private ISlideManager slideManager;
 
     @Autowired
     private ISequenceManager sequenceManager;
@@ -49,9 +48,11 @@ public class ExhibitionSlideController {
     @Autowired
     private SequenceHistory sequenceHistory;
     
-    
     @Autowired
     private IExhibitionManager exhibitManager;
+    
+    @Autowired
+    private ISlideExternalLinkManager slideExternalLinkManager;
 
     @RequestMapping(value = {
         "/exhibit/{spaceId}/module/{moduleId}/sequence/{sequenceId}/slide/{slideId}",
@@ -135,6 +136,9 @@ public class ExhibitionSlideController {
         model.addAttribute("currentNumOfSlide", slideIndex + 1);
         model.addAttribute("spaceId", spaceId);
         model.addAttribute("spaceName", spaceManager.getSpace(spaceId).getName());
+        System.out.println("SLIDE ID: " + slideId);
+        model.addAttribute("slideExternalLinkList", slideExternalLinkManager.getLinkDisplays(slideId));
+        System.out.println("SLIDE LIST: " + slideExternalLinkManager.getLinkDisplays(slideId));
         return "exhibition/module";
     }
 

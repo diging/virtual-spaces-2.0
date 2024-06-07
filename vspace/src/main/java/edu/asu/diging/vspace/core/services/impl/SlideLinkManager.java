@@ -9,13 +9,10 @@ import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
 import edu.asu.diging.vspace.core.exception.SlideDoesNotExistException;
-import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
-import edu.asu.diging.vspace.core.model.ILink;
 import edu.asu.diging.vspace.core.model.ILinkSlide;
 import edu.asu.diging.vspace.core.model.ISlide;
-import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.IVSpaceElement;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
@@ -41,22 +38,25 @@ implements ISlideLinkManager<L, T, U> {
     private IStorageEngine storage;
     
     @Override
-    public U createLink(String title, String id, float positionX, float positionY, int rotation, String linkedId,
+    public U createLink(String title, String id, String linkedId,
             String linkLabel, DisplayType displayType, byte[] linkImage, String imageFilename)
             throws SlideDoesNotExistException, ImageCouldNotBeStoredException, SlideDoesNotExistException {
 
         L link = createLinkObject(title, id);
+        System.out.println("LINK ID 3: " + id);
+        System.out.println("LINK ID 4: " + link.getId());
         T target = getTarget(linkedId);
         link.setName(linkLabel);
         link.setTarget(target);
+        System.out.println("LINK TARGET: " + link.getTarget());
         U displayLink = createDisplayLink(link);
-        setDisplayProperties(displayLink, id, positionX, positionY, rotation, displayType, linkImage, imageFilename);
+        setDisplayProperties(displayLink, id, displayType, linkImage, imageFilename);
         return updateLinkAndDisplay(link, displayLink);
 
     }
     
     @Override
-    public U updateLink(String title, String id, float positionX, float positionY, int rotation, String linkedId,
+    public U updateLink(String title, String id, String linkedId,
             String linkLabel, String linkId, String linkDisplayId, DisplayType displayType, byte[] linkImage,
             String imageFilename)
             throws SlideDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException {
@@ -68,7 +68,7 @@ implements ISlideLinkManager<L, T, U> {
         link.setName(title);
         link.setTarget(target);
         U displayLink = getDisplayLink(linkDisplayId);
-        setDisplayProperties(displayLink, id, positionX, positionY, rotation, displayType, linkImage, imageFilename);
+        setDisplayProperties(displayLink, id, displayType, linkImage, imageFilename);
         return updateLinkAndDisplay(link, displayLink);
     }
     
@@ -105,12 +105,8 @@ implements ISlideLinkManager<L, T, U> {
         }
     }
     
-    protected void setDisplayProperties(ILinkDisplay linkDisplay, String id, float positionX, float positionY,
-            int rotation, DisplayType displayType, byte[] linkImage, String imageFilename)
+    protected void setDisplayProperties(ILinkDisplay linkDisplay, String id, DisplayType displayType, byte[] linkImage, String imageFilename)
             throws ImageCouldNotBeStoredException {
-        linkDisplay.setPositionX(positionX);
-        linkDisplay.setPositionY(positionY);
-        linkDisplay.setRotation(rotation);
         linkDisplay.setType(displayType != null ? displayType : DisplayType.ARROW);
         if (linkImage != null && linkImage.length > 0) {
             Tika tika = new Tika();

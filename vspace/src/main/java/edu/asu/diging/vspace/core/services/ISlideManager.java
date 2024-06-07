@@ -23,7 +23,7 @@ public interface ISlideManager {
 
     ISlide createSlide(IModule module, SlideForm slideForm, SlideType type);
 
-    void updateSlide(Slide slide);
+    ISlide updateSlide(ISlide slide);
 
     IBranchingPoint createBranchingPoint(IModule module, SlideForm slideForm, SlideType type);
 
