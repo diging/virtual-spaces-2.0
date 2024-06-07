@@ -546,14 +546,13 @@ public class ContentBlockManager implements IContentBlockManager {
      *                         content order corresponding to each blocks.
      */
     @Override
-    public void updateContentOrder(List<ContentBlock> contentBlockList, ISlide slide) throws BlockDoesNotExistException {
+    public void updateContentOrder(List<ContentBlock> contentBlockList) throws BlockDoesNotExistException {
 
         if (contentBlockList == null) {
             return;
         }
         List<ContentBlock> contentBlocks = new ArrayList<>();
         for (ContentBlock eachBlock : contentBlockList) {
-            eachBlock.setSlide(slide);
             String blockId = eachBlock.getId();
             int contentOrder = eachBlock.getContentOrder();
             Optional<ContentBlock> contentBlock = contentBlockRepository.findById(blockId);

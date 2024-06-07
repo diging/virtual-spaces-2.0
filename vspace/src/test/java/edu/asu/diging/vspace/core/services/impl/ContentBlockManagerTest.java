@@ -329,7 +329,6 @@ public class ContentBlockManagerTest {
     @Test
     public void test_updateContentOrder_success() throws BlockDoesNotExistException {
         ContentBlock firstContentBlock = new ContentBlock();
-        ISlide slide = firstContentBlock.getSlide();
         firstContentBlock.setId("contentBlockId1");
         firstContentBlock.setContentOrder(Integer.valueOf(3));
 
@@ -344,7 +343,7 @@ public class ContentBlockManagerTest {
         when(contentBlockRepository.findById("contentBlockId1")).thenReturn(Optional.of(contentBlock));
         when(contentBlockRepository.findById("contentBlockId2")).thenReturn(Optional.of(contentBlock1));
 
-        managerToTest.updateContentOrder(contentBlocks,slide);
+        managerToTest.updateContentOrder(contentBlocks);
         assertEquals(Integer.valueOf(3), contentBlock.getContentOrder());
         assertEquals(Integer.valueOf(4), contentBlock1.getContentOrder());
 
@@ -358,7 +357,6 @@ public class ContentBlockManagerTest {
     @Test(expected = BlockDoesNotExistException.class)
     public void test_updateContentOrder_forNonExistentId() throws BlockDoesNotExistException {
         ContentBlock contentBlock1 = new ContentBlock();
-        ISlide slide = contentBlock1.getSlide();
         contentBlock1.setId("notARealId");
         contentBlock1.setContentOrder(Integer.valueOf(1));
 
@@ -366,7 +364,7 @@ public class ContentBlockManagerTest {
         contentBlocks.add(contentBlock1);
 
         when(contentBlockRepository.findById("notARealId")).thenReturn(Optional.empty());
-        managerToTest.updateContentOrder(contentBlocks,slide);
+        managerToTest.updateContentOrder(contentBlocks);
     }
 
     @Test

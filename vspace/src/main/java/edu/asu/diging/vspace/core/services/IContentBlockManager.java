@@ -87,7 +87,7 @@ public interface IContentBlockManager {
      * @param contentBlockList - The list contains the blocks and the updated
      *                         content order corresponding to each blocks.
      */
-    void updateContentOrder(List<ContentBlock> contentBlockList, ISlide slide) throws BlockDoesNotExistException;
+    void updateContentOrder(List<ContentBlock> contentBlockList) throws BlockDoesNotExistException;
 
     void saveVideoBlock(IVideoBlock videoBlock);
     
