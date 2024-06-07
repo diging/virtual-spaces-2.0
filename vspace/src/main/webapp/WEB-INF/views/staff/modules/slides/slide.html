@@ -878,7 +878,7 @@
                  var token =  $('input[name="_csrf"]').attr('value');
                  
                  $.ajax({
-                     url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/biblio/'})]" + biblioBlockId + ['/reference/add'],
+                     url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/biblio/'})]" + biblioBlockId + ['/references'],
                      type: 'POST',
                      cache       : false,
                      contentType : 'application/json; charset=utf-8',

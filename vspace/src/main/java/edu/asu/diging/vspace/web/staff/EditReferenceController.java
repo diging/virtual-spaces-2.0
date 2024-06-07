@@ -46,6 +46,11 @@ public class EditReferenceController {
         String id = rootNode.get("id").asText();
         
         IReference reference = referenceManager.getReference(id);
+        
+        if (reference == null) {
+            return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+        }
+        
         reference.setTitle(title);
         reference.setAuthor(author);
         reference.setYear(year);

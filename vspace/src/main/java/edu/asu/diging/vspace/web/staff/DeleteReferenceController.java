@@ -46,18 +46,18 @@ public class DeleteReferenceController {
         IBiblioBlock biblio = contentBlockManager.getBiblioBlock(biblioId);
 
         if(slide==null) {
-            logger.warn("Slide Id does not exist, bad request.");
-            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+            logger.warn("Slide Id does not exist, 404 not found.");
+            return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
         }
         
         if(module==null) {
-            logger.warn("Module Id does not exist, bad request.");
-            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+            logger.warn("Module Id does not exist, 404 not found.");
+            return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
         }
         
         if(biblio==null) {
-            logger.warn("Biblio Block Id does not exist, bad request.");
-            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+            logger.warn("Biblio Block Id does not exist, 404 not found.");
+            return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
         }
         
         referenceManager.deleteReferenceById(refId, biblioId);

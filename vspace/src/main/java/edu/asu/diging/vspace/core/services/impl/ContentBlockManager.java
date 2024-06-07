@@ -288,8 +288,8 @@ public class ContentBlockManager implements IContentBlockManager {
         try {
             textBlockRepo.deleteById(blockId);
             updateContentOrder(slideId, contentOrder);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException(e);
+        } catch (EmptyResultDataAccessException e) {
+            throw new BlockDoesNotExistException(e);
         }
 
     }
@@ -319,8 +319,8 @@ public class ContentBlockManager implements IContentBlockManager {
         try {
             imageBlockRepo.deleteById(blockId);
             updateContentOrder(slideId, contentOrder);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException(e);
+        } catch (EmptyResultDataAccessException e) {
+            throw new BlockDoesNotExistException(e);
         }
 
     }
@@ -350,8 +350,8 @@ public class ContentBlockManager implements IContentBlockManager {
         try {
             videoBlockRepo.deleteById(blockId);
             updateContentOrder(slideId, contentOrder);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException(e);
+        } catch (EmptyResultDataAccessException e) {
+            throw new BlockDoesNotExistException(e);
         }
     }
 
@@ -380,8 +380,8 @@ public class ContentBlockManager implements IContentBlockManager {
         try {
             choiceBlockRepo.deleteById(blockId);
             updateContentOrder(slideId, contentOrder);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException(e);
+        } catch (EmptyResultDataAccessException e) {
+            throw new BlockDoesNotExistException(e);
         }
 
     }
@@ -488,8 +488,8 @@ public class ContentBlockManager implements IContentBlockManager {
         
         try {
             biblioBlockRepo.deleteById(id);         
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException(e);
+        } catch (EmptyResultDataAccessException e) {
+            throw new BlockDoesNotExistException(e);
         } 
     }
 
