@@ -19,8 +19,8 @@ public class SlideExternalLinkDisplay extends LinkDisplay implements ISlideExter
     @Id
     @GeneratedValue(generator = "externallink_display_id_generator")
     @GenericGenerator(name = "externallink_display_id_generator", 
-      parameters = @Parameter(name = "prefix", value = "EXLDS"),
-      strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
+      	parameters = @Parameter(name = "prefix", value = "EXLDS"),
+      	strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
 
     @OneToOne(targetEntity = ExternalLinkSlide.class)

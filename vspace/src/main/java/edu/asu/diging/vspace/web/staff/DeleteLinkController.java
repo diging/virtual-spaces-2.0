@@ -48,7 +48,6 @@ public class DeleteLinkController {
     
     @RequestMapping(value = "/staff/module/{id}/slide/{slideId}/externallink/{linkId}", method = RequestMethod.DELETE)
     public ResponseEntity<String> deleteSlideExternalLink(@PathVariable("id") String moduleId, @PathVariable("slideId") String slideId, @PathVariable("linkId") String linkId) {
-    	System.out.println("IDs: " + moduleId + " " + slideId + " " + linkId);
         slideExternalLinkManager.deleteLink(linkId);
         return new ResponseEntity<String>(HttpStatus.OK);
     }

@@ -59,14 +59,14 @@ public class SlideController {
         model.addAttribute("slideSequences", slideManager.getSlideSequences(id, moduleId));
         List<IContentBlock> slideContents = contentBlockManager.getAllContentBlocks(id);
         if (slideContents.size()>0) {
-    		IImageBlock imageblock = contentBlockManager.getImageBlock(slideContents.get(0).getId());
+        	IImageBlock imageblock = contentBlockManager.getImageBlock(slideContents.get(0).getId());
             slideManager.storeSlideDisplay(slide, imageblock.getImage());
             model.addAttribute("display", slideDisplayManager.getBySlide(slide,imageblock.getImage()));
         }
         model.addAttribute("slideContents", slideContents);
         model.addAttribute("contentCount",slideContents.size()>0 ? slideContents.get(slideContents.size()-1).getContentOrder() : 0);
         if(slideManager.getSlide(id) instanceof BranchingPoint) {
-        model.addAttribute("choices", ((IBranchingPoint)slide).getChoices());
+        	model.addAttribute("choices", ((IBranchingPoint)slide).getChoices());
         }
         return "staff/modules/slides/slide";
     }

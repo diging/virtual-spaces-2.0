@@ -24,7 +24,7 @@ import edu.asu.diging.vspace.core.services.ISlideManager;
 @Transactional
 @Service
 public class SlideExternalLinkManager extends SlideLinkManager<IExternalLinkSlide, ExternalLinkValue, ISlideExternalLinkDisplay>
-implements ISlideExternalLinkManager{
+	implements ISlideExternalLinkManager{
     
     @Autowired
     private ISlideManager slideManager;
@@ -45,11 +45,10 @@ implements ISlideExternalLinkManager{
         return externalLinkRepo.findExternalLinkSlides(slideId);
     }
     
-	@Override
+    @Override
 	public List<ISlideExternalLinkDisplay> getLinkDisplays(String slideId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    	return null;
+    }
 
     @Override
     protected IExternalLinkSlide createLinkObject(String title, String id) {
@@ -123,8 +122,8 @@ implements ISlideExternalLinkManager{
     	IExternalLinkSlide externalLink = getLink(id);
     	if (externalLink != null) {
 			externalLink.setExternalLink(url);
-	    	externalLink.setName(title);
-	    	externalLinkRepo.save((ExternalLinkSlide) externalLink);
+			externalLink.setName(title);
+			externalLinkRepo.save((ExternalLinkSlide) externalLink);
     	} else {
     		externalLink = new ExternalLinkSlide();
     	}

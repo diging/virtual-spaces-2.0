@@ -30,7 +30,7 @@ public class EditSlideExternalLinkController extends EditSlideLinksController{
     public ResponseEntity<String> editExternalLink(@PathVariable("id") String id, @PathVariable("slideId") String slideId,
     		@RequestParam("externalLinkLabel") String title,
             @RequestParam("url") String externalLink
-            ) throws SlideDoesNotExistException, IOException, LinkDoesNotExistsException, NumberFormatException {
+    	) throws SlideDoesNotExistException, IOException, LinkDoesNotExistsException, NumberFormatException {
 
         ResponseEntity<String> validation = checkIfSlideExists(slideManager, slideId);
         if (validation != null) {

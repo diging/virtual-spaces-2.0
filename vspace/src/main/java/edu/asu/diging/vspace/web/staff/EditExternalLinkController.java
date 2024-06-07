@@ -19,7 +19,6 @@ import edu.asu.diging.vspace.core.model.display.ExternalLinkDisplayMode;
 import edu.asu.diging.vspace.core.model.display.IExternalLinkDisplay;
 import edu.asu.diging.vspace.core.services.IExternalLinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
-import edu.asu.diging.vspace.core.services.impl.ExternalLinkManager;
 
 @Controller
 public class EditExternalLinkController extends EditSpaceLinksController {
@@ -29,7 +28,7 @@ public class EditExternalLinkController extends EditSpaceLinksController {
 
     @Autowired
     private IExternalLinkManager externalLinkManager;
-
+    
     @RequestMapping(value = "/staff/space/link/external/{id}", method = RequestMethod.POST)
     public ResponseEntity<String> createExternalLink(@PathVariable("id") String id, @RequestParam("x") String x,
             @RequestParam("y") String y, @RequestParam("externalLinkLabel") String title,

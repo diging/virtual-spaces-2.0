@@ -23,7 +23,7 @@ import edu.asu.diging.vspace.core.services.ISlideManager;
 
 @Transactional
 public abstract class SlideLinkManager<L extends ILinkSlide<T>, T extends IVSpaceElement, U extends ILinkDisplay>
-implements ISlideLinkManager<L, T, U> {
+	implements ISlideLinkManager<L, T, U> {
     
     @Autowired
     private ISlideManager slideManager;
@@ -43,12 +43,9 @@ implements ISlideLinkManager<L, T, U> {
             throws SlideDoesNotExistException, ImageCouldNotBeStoredException, SlideDoesNotExistException {
 
         L link = createLinkObject(title, id);
-        System.out.println("LINK ID 3: " + id);
-        System.out.println("LINK ID 4: " + link.getId());
         T target = getTarget(linkedId);
         link.setName(linkLabel);
         link.setTarget(target);
-        System.out.println("LINK TARGET: " + link.getTarget());
         U displayLink = createDisplayLink(link);
         setDisplayProperties(displayLink, id, displayType, linkImage, imageFilename);
         return updateLinkAndDisplay(link, displayLink);

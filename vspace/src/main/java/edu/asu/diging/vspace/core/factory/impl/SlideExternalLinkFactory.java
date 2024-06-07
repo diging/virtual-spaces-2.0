@@ -19,11 +19,8 @@ public class SlideExternalLinkFactory implements ISlideExternalLinkFactory{
     @Override
     public IExternalLinkSlide createExternalLink(String title, ISlide slide) {
         IExternalLinkSlide link = new ExternalLinkSlide();
-        System.out.println("LINK FACTORY: " + link);
-        System.out.println("LINK ID: " + link.getId());
         link.setName(title);
         link.setSlide(slide);
-        System.out.println("LINK ID 2: " + link.getId());
         return link;
     }
 
