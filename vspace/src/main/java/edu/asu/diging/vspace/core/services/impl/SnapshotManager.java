@@ -82,8 +82,8 @@ public class SnapshotManager  implements  ISnapshotManager {
      */
     @Override
     @Transactional
-    public ExhibitionSnapshot triggerExhibitionSnapshotCreation() throws IOException, InterruptedException, ExecutionException, SnapshotCouldNotBeCreatedException {                 
-        String exhibitionFolderName = getExhibitionFolderName();
+    public ExhibitionSnapshot triggerExhibitionSnapshotCreation(String exhibitionFolderName) throws IOException, InterruptedException, ExecutionException, SnapshotCouldNotBeCreatedException {                 
+//        String exhibitionFolderName = getExhibitionFolderName();
         ExhibitionSnapshot exhibitionSnapshot = exhibitionSnapshotRepository.findByFolderName(exhibitionFolderName);        
         if(exhibitionSnapshot == null ) {
             exhibitionSnapshot = new ExhibitionSnapshot();
@@ -168,11 +168,11 @@ public class SnapshotManager  implements  ISnapshotManager {
      */
     @Override
     public byte[] downloadExhibitionFolder(String id) throws ExhibitionSnapshotNotFoundException, IOException {
-        Optional<ExhibitionSnapshot> exhibitionDownlaod = exhibitionSnapshotRepository.findById(id);
+        Optional<ExhibitionSnapshot> exhibitionDownload = exhibitionSnapshotRepository.findById(id);
 
-        if(exhibitionDownlaod.isPresent()) {           
+        if(exhibitionDownload.isPresent()) {           
             try {
-                return storageEngineDownloads.generateZip(exhibitionDownlaod.get().getFolderName());                
+                return storageEngineDownloads.downloadZip(exhibitionDownload.get().getFolderName());                
             }catch(FileSystemNotFoundException e) {
                 throw new ExhibitionSnapshotNotFoundException(id);
             }

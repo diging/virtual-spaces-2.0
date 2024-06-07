@@ -82,7 +82,7 @@ public class SnapshotManagerTest {
     public void test_triggerDownloadExhibition_success() throws IOException, InterruptedException, ExecutionException, FileStorageException, SnapshotCouldNotBeCreatedException {
         String resourcesPath = "/Resources";
         String exhibitionFolderName = "folderName";
-        serviceToTest.triggerExhibitionSnapshotCreation();
+        serviceToTest.triggerExhibitionSnapshotCreation(exhibitionFolderName);
 
         Mockito.verify(storageEngine).createFolder(exhibitionFolderName);
         Mockito.verify(serviceToTest).createSnapshot(resourcesPath, exhibitionFolderName, null,  null);    

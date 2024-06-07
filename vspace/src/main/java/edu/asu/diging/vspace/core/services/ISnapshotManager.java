@@ -26,7 +26,7 @@ import edu.asu.diging.vspace.core.model.impl.SnapshotTask;
 import edu.asu.diging.vspace.core.model.impl.Space;
 
 public interface ISnapshotManager {
-    ExhibitionSnapshot triggerExhibitionSnapshotCreation() throws IOException, InterruptedException, ExecutionException, SnapshotCouldNotBeCreatedException;
+    ExhibitionSnapshot triggerExhibitionSnapshotCreation(String exhibitionFolderName) throws IOException, InterruptedException, ExecutionException, SnapshotCouldNotBeCreatedException;
  
     byte[] downloadExhibitionFolder(String id) throws ExhibitionSnapshotNotFoundException, IOException, FileStorageException;
 

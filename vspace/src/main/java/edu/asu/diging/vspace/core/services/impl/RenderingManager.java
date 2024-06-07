@@ -237,6 +237,10 @@ public class RenderingManager implements IRenderingManager {
         }       
     }
 
+    
+    /**
+     *@see IRenderingManager#populateContextForSlide(Context, String, String, String, String)
+     */
     @Override
     public void populateContextForSlide(Context context, String spaceId, String moduleId, String sequenceId, String slideId) throws SlidesInSequenceNotFoundException, SequenceNotFoundException, SlideNotFoundException {
         IModule module = moduleManager.getModule(moduleId);

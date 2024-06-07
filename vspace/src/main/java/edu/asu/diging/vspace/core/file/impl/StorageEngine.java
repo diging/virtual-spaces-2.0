@@ -3,6 +3,7 @@ package edu.asu.diging.vspace.core.file.impl;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -24,6 +25,7 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
+import edu.asu.diging.vspace.core.exception.ExhibitionSnapshotNotFoundException;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IVSImage;
@@ -164,8 +166,9 @@ public class StorageEngine implements IStorageEngine {
     public byte[] generateZip(String folderName) throws IOException {
         Path zipFile = Paths.get(path + File.separator + folderName);
         ByteArrayOutputStream  byteArrayOutputStream = new ByteArrayOutputStream();
-        
-        try (BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(byteArrayOutputStream);
+        Path zipFilePath = Paths.get(File.separator + folderName+".zip");
+        FileOutputStream fileOutputStream = new FileOutputStream(getFile("",folderName+".zip"));
+        try (BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
                 ZipOutputStream responseZipStream = new ZipOutputStream(bufferedOutputStream);
                 Stream<Path> paths = Files.walk(zipFile)) {
             paths
@@ -176,13 +179,14 @@ public class StorageEngine implements IStorageEngine {
                         responseZipStream.putNextEntry(zipEntry);
                         Files.copy(path, responseZipStream);
                         responseZipStream.closeEntry();
+                        //delete the folder 
+                        Files.delete(zipFile);
                     } catch (IOException e) {
                         logger.error("Could not generate Zip folder", e);
                     }
                 });            
         }
-        return byteArrayOutputStream.toByteArray();
-        
+        return byteArrayOutputStream.toByteArray();        
     }
     
     /**
@@ -195,5 +199,40 @@ public class StorageEngine implements IStorageEngine {
     @Override
     public void copyToFolder(String relativePath, String folderToCopy) throws IOException {
         FileUtils.copyDirectory(new File(folderToCopy), new File(path + File.separator+ relativePath));
+    }
+    
+    /**
+     * Deletes the specified folder
+     *
+     *@param folderPath  path to the folder to be deleted
+     */
+    @Override
+    public void deleteFolder(String folderPath) throws IOException {
+        FileUtils.deleteDirectory(getFile("",folderPath));
+    }
+    
+    /**
+     * To create a zip of a given folder
+     * 
+     * @param zipFilename - name of the folder to be zipped
+     * @return byte[] - zipped data as a byte array
+     * @throws ExhibitionSnapshotNotFoundException 
+     * @throws IOException 
+     */
+    @Override
+    public byte[] downloadZip(String zipFilename) throws ExhibitionSnapshotNotFoundException, IOException, FileNotFoundException {
+        File file = new File(path + File.separator + zipFilename + ".zip");
+        if(!file.exists()){
+            throw new ExhibitionSnapshotNotFoundException(zipFilename);
+        }
+        try {
+            FileInputStream in = new FileInputStream(file);
+            byte[] buffer = in.readAllBytes();
+            return buffer;
+        } catch (IOException e) {
+            logger.error("Could not download the snapshot "+e.getMessage());
+        }
+        return null;
+                   
     }
 }   

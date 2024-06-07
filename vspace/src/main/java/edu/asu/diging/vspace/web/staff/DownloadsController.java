@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import edu.asu.diging.vspace.core.exception.ExhibitionSnapshotNotFoundException;
+import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionSnapshot;
 import edu.asu.diging.vspace.core.services.ISnapshotManager;
 
@@ -52,7 +53,7 @@ public class DownloadsController {
     public ResponseEntity<ExhibitionSnapshot> createExhibitionSnapshot(HttpServletRequest request, HttpServletResponse response,  Model model) {
         ExhibitionSnapshot exhibitionSnapshot = null;
         try {      
-            exhibitionSnapshot = snapshotManager.triggerExhibitionSnapshotCreation();
+            exhibitionSnapshot = snapshotManager.triggerExhibitionSnapshotCreation(snapshotManager.getExhibitionFolderName());
 
             return  ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_TYPE, "application/json")
@@ -66,7 +67,7 @@ public class DownloadsController {
 
     @RequestMapping(value = "/staff/exhibit/download/{id}", method = RequestMethod.GET) 
     public ResponseEntity<Resource> downloadExhibitionFolder(@PathVariable("id") String id, @RequestParam("folderName") String exhibitionSnapshotFolderName , HttpServletRequest request)
-            throws ExhibitionSnapshotNotFoundException , IOException {
+            throws ExhibitionSnapshotNotFoundException , IOException, FileStorageException {
         Resource resource = null;      
 
         try {
