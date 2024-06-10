@@ -42,13 +42,12 @@ public class SlideController {
 
     @Autowired
     private IContentBlockManager contentBlockManager;
-    
+
     @Autowired
     private ISlideExternalLinkManager externalLinkManager;
-    
+
     @Autowired
     private ISlideDisplayManager slideDisplayManager;
-   
 
     @RequestMapping("/staff/module/{moduleId}/slide/{id}")
     public String listSlides(@PathVariable("id") String id, @PathVariable("moduleId") String moduleId, Model model) {
@@ -58,30 +57,32 @@ public class SlideController {
         model.addAttribute("externalLinks", externalLinkManager.getLinks(id));
         model.addAttribute("slideSequences", slideManager.getSlideSequences(id, moduleId));
         List<IContentBlock> slideContents = contentBlockManager.getAllContentBlocks(id);
-        if (slideContents.size()>0) {
-        	IImageBlock imageblock = contentBlockManager.getImageBlock(slideContents.get(0).getId());
+        if (slideContents.size() > 0) {
+            IImageBlock imageblock = contentBlockManager.getImageBlock(slideContents.get(0).getId());
             slideManager.storeSlideDisplay(slide, imageblock.getImage());
-            model.addAttribute("display", slideDisplayManager.getBySlide(slide,imageblock.getImage()));
+            model.addAttribute("display", slideDisplayManager.getBySlide(slide, imageblock.getImage()));
         }
         model.addAttribute("slideContents", slideContents);
-        model.addAttribute("contentCount",slideContents.size()>0 ? slideContents.get(slideContents.size()-1).getContentOrder() : 0);
-        if(slideManager.getSlide(id) instanceof BranchingPoint) {
-        	model.addAttribute("choices", ((IBranchingPoint)slide).getChoices());
+        model.addAttribute("contentCount",
+                slideContents.size() > 0 ? slideContents.get(slideContents.size() - 1).getContentOrder() : 0);
+        if (slideManager.getSlide(id) instanceof BranchingPoint) {
+            model.addAttribute("choices", ((IBranchingPoint) slide).getChoices());
         }
         return "staff/modules/slides/slide";
     }
 
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/contents", method = RequestMethod.GET)
-    public ResponseEntity<List<IContentBlock>> getAllContentBlocks(Model model, @PathVariable("moduleId") String moduleId, @PathVariable("id") String slideId, @ModelAttribute SequenceForm sequenceForm,
-            Principal principal) {
+    public ResponseEntity<List<IContentBlock>> getAllContentBlocks(Model model,
+            @PathVariable("moduleId") String moduleId, @PathVariable("id") String slideId,
+            @ModelAttribute SequenceForm sequenceForm, Principal principal) {
 
         List<IContentBlock> slideContents = contentBlockManager.getAllContentBlocks(slideId);
         return new ResponseEntity<List<IContentBlock>>(slideContents, HttpStatus.OK);
     }
-    
+
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/links", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String,Object>> showSlideLinks(@PathVariable String id, Model model) {
-        Map<String,Object> responseData = new HashMap<String,Object>();
+    public ResponseEntity<Map<String, Object>> showSlideLinks(@PathVariable String id, Model model) {
+        Map<String, Object> responseData = new HashMap<String, Object>();
         responseData.put("externalLinks", externalLinkManager.getLinks(id));
         return new ResponseEntity<>(responseData, HttpStatus.OK);
     }

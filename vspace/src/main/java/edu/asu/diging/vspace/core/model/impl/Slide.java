@@ -1,6 +1,5 @@
 package edu.asu.diging.vspace.core.model.impl;
 
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -34,7 +33,7 @@ import edu.asu.diging.vspace.core.model.IVSImage;
 
 @Entity
 public class Slide extends VSpaceElement implements ISlide {
-	
+
     @Id
     @GeneratedValue(generator = "slide_id_generator")
     @GenericGenerator(name = "slide_id_generator", parameters = @Parameter(name = "prefix", value = "SLI"), strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
@@ -42,7 +41,7 @@ public class Slide extends VSpaceElement implements ISlide {
 
     @ManyToOne(targetEntity = Module.class)
     private IModule module;
-    
+
     // -------- @JsonIgnore used as this entity will be returned in a controller
     @JsonIgnore
     @OneToMany(targetEntity = ContentBlock.class, mappedBy = "slide", cascade = CascadeType.ALL)
@@ -51,11 +50,11 @@ public class Slide extends VSpaceElement implements ISlide {
     @JsonIgnore
     @ManyToMany(mappedBy = "slides", targetEntity = Sequence.class)
     private List<ISequence> sequence;
-    
+
     @JsonIgnore
     @OneToMany(mappedBy = "slide", targetEntity = ExternalLinkSlide.class, cascade = CascadeType.ALL)
     private List<IExternalLinkSlide> externalLinks;
-    
+
     @OneToOne(targetEntity = VSImage.class)
     @NotFound(action = NotFoundAction.IGNORE)
     private IVSImage image;
@@ -100,7 +99,7 @@ public class Slide extends VSpaceElement implements ISlide {
     public void setModule(IModule module) {
         this.module = module;
     }
-    
+
     /*
      * (non-Javadoc)
      * 
@@ -108,24 +107,23 @@ public class Slide extends VSpaceElement implements ISlide {
      */
     @Override
     public List<IExternalLinkSlide> getExternalLinks() {
-    	if (externalLinks == null) {
-    		externalLinks = new ArrayList<IExternalLinkSlide>();
-    	}
+        if (externalLinks == null) {
+            externalLinks = new ArrayList<IExternalLinkSlide>();
+        }
         return externalLinks;
     }
 
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * edu.asu.diging.vspace.core.model.impl.ISlide#setExternalLinks(java.util.
+     * @see edu.asu.diging.vspace.core.model.impl.ISlide#setExternalLinks(java.util.
      * List)
      */
     @Override
     public void setExternalLinks(List<IExternalLinkSlide> externalLinks) {
         this.externalLinks = externalLinks;
     }
-    
+
     public IVSImage getImage() {
         return image;
     }
@@ -133,7 +131,7 @@ public class Slide extends VSpaceElement implements ISlide {
     public void setImage(IVSImage image) {
         this.image = image;
     }
-    
+
     /*
      * (non-Javadoc)
      * 
@@ -179,7 +177,7 @@ public class Slide extends VSpaceElement implements ISlide {
     public void setSequence(List<ISequence> sequence) {
         this.sequence = sequence;
     }
-    
+
     /**
      * This Method will retrieve the first ImageBlock of a slide if the ImageBlock
      * is present

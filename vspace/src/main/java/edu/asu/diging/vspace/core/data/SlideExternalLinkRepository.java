@@ -12,9 +12,9 @@ import edu.asu.diging.vspace.core.model.impl.ExternalLinkSlide;
 
 @Repository
 @JaversSpringDataAuditable
-public interface SlideExternalLinkRepository extends PagingAndSortingRepository<ExternalLinkSlide, String>{
+public interface SlideExternalLinkRepository extends PagingAndSortingRepository<ExternalLinkSlide, String> {
 
-	@Query("SELECT d FROM ExternalLinkSlide d WHERE d.slide.id = ?1")
+    @Query("SELECT d FROM ExternalLinkSlide d WHERE d.slide.id = ?1")
     public List<IExternalLinkSlide> findExternalLinkSlides(String slideId);
 
     public void deleteByExternalLink(IExternalLinkSlide link);

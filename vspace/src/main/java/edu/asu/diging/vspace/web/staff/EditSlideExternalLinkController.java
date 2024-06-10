@@ -17,20 +17,19 @@ import edu.asu.diging.vspace.core.services.ISlideExternalLinkManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 
 @Controller
-public class EditSlideExternalLinkController extends EditSlideLinksController{
-    
+public class EditSlideExternalLinkController extends EditSlideLinksController {
+
     @Autowired
     private ISlideManager slideManager;
 
     @Autowired
     private ISlideExternalLinkManager externalLinkManager;
-    
-    
+
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{slideId}/link/external/{id}", method = RequestMethod.POST)
-    public ResponseEntity<String> editExternalLink(@PathVariable("id") String id, @PathVariable("slideId") String slideId,
-    		@RequestParam("externalLinkLabel") String title,
-            @RequestParam("url") String externalLink
-    	) throws SlideDoesNotExistException, IOException, LinkDoesNotExistsException, NumberFormatException {
+    public ResponseEntity<String> editExternalLink(@PathVariable("id") String id,
+            @PathVariable("slideId") String slideId, @RequestParam("externalLinkLabel") String title,
+            @RequestParam("url") String externalLink)
+            throws SlideDoesNotExistException, IOException, LinkDoesNotExistsException, NumberFormatException {
 
         ResponseEntity<String> validation = checkIfSlideExists(slideManager, slideId);
         if (validation != null) {
@@ -38,10 +37,8 @@ public class EditSlideExternalLinkController extends EditSlideLinksController{
         }
 
         IExternalLinkSlide link = externalLinkManager.updateExternalLink(title, externalLink, id);
-        return success(link.getId(), link.getExternalLink(), title, null, 0, 0, 0,
-        		null, null, null);
+        return success(link.getId(), link.getExternalLink(), title, null, 0, 0, 0, null, null, null);
 
     }
-
 
 }

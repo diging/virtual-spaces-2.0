@@ -23,12 +23,13 @@ import edu.asu.diging.vspace.core.services.ISlideManager;
 
 @Transactional
 @Service
-public class SlideExternalLinkManager extends SlideLinkManager<IExternalLinkSlide, ExternalLinkValue, ISlideExternalLinkDisplay>
-	implements ISlideExternalLinkManager{
-    
+public class SlideExternalLinkManager
+        extends SlideLinkManager<IExternalLinkSlide, ExternalLinkValue, ISlideExternalLinkDisplay>
+        implements ISlideExternalLinkManager {
+
     @Autowired
     private ISlideManager slideManager;
-    
+
     @Autowired
     private SlideExternalLinkRepository externalLinkRepo;
 
@@ -40,14 +41,14 @@ public class SlideExternalLinkManager extends SlideLinkManager<IExternalLinkSlid
 
     @Autowired
     private ISlideExternalLinkDisplayFactory externalLinkDisplayFactory;
-    
+
     public List<IExternalLinkSlide> getLinks(String slideId) {
         return externalLinkRepo.findExternalLinkSlides(slideId);
     }
-    
+
     @Override
-	public List<ISlideExternalLinkDisplay> getLinkDisplays(String slideId) {
-    	return null;
+    public List<ISlideExternalLinkDisplay> getLinkDisplays(String slideId) {
+        return null;
     }
 
     @Override
@@ -56,21 +57,23 @@ public class SlideExternalLinkManager extends SlideLinkManager<IExternalLinkSlid
         IExternalLinkSlide link = externalLinkFactory.createExternalLink(title, source);
         return externalLinkRepo.save((ExternalLinkSlide) link);
     }
-    
+
     @Override
     protected ExternalLinkValue getTarget(String externalLink) {
         return new ExternalLinkValue(externalLink);
     }
 
     @Override
-    protected ISlideExternalLinkDisplay updateLinkAndDisplay(IExternalLinkSlide link, ISlideExternalLinkDisplay displayLink) {
+    protected ISlideExternalLinkDisplay updateLinkAndDisplay(IExternalLinkSlide link,
+            ISlideExternalLinkDisplay displayLink) {
         externalLinkRepo.save((ExternalLinkSlide) link);
         return externalLinkDisplayRepo.save((SlideExternalLinkDisplay) displayLink);
     }
 
     @Override
     protected ISlideExternalLinkDisplay getDisplayLink(String externalLinkDisplayId) {
-        Optional<SlideExternalLinkDisplay> externalLinkDisplay = externalLinkDisplayRepo.findById(externalLinkDisplayId);
+        Optional<SlideExternalLinkDisplay> externalLinkDisplay = externalLinkDisplayRepo
+                .findById(externalLinkDisplayId);
         if (externalLinkDisplay.isPresent()) {
             return externalLinkDisplay.get();
         }
@@ -108,25 +111,25 @@ public class SlideExternalLinkManager extends SlideLinkManager<IExternalLinkSlid
 
     @Override
     public IExternalLinkSlide createExternalLink(String title, String url, String slideId) {
-    	ISlide slide = slideManager.getSlide(slideId);
-    	IExternalLinkSlide externalLink = new ExternalLinkSlide();
-    	externalLink.setExternalLink(url);
-    	externalLink.setName(title);
-    	externalLink.setSlide(slide);
-    	externalLinkRepo.save((ExternalLinkSlide) externalLink);
-    	return externalLink;
+        ISlide slide = slideManager.getSlide(slideId);
+        IExternalLinkSlide externalLink = new ExternalLinkSlide();
+        externalLink.setExternalLink(url);
+        externalLink.setName(title);
+        externalLink.setSlide(slide);
+        externalLinkRepo.save((ExternalLinkSlide) externalLink);
+        return externalLink;
     }
-    
+
     @Override
     public IExternalLinkSlide updateExternalLink(String title, String url, String id) {
-    	IExternalLinkSlide externalLink = getLink(id);
-    	if (externalLink != null) {
-			externalLink.setExternalLink(url);
-			externalLink.setName(title);
-			externalLinkRepo.save((ExternalLinkSlide) externalLink);
-    	} else {
-    		externalLink = new ExternalLinkSlide();
-    	}
-    	return externalLink;
+        IExternalLinkSlide externalLink = getLink(id);
+        if (externalLink != null) {
+            externalLink.setExternalLink(url);
+            externalLink.setName(title);
+            externalLinkRepo.save((ExternalLinkSlide) externalLink);
+        } else {
+            externalLink = new ExternalLinkSlide();
+        }
+        return externalLink;
     }
 }
