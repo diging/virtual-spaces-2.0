@@ -1,6 +1,7 @@
 package edu.asu.diging.vspace.web.staff;
 
 import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import edu.asu.diging.vspace.core.exception.ExhibitionSnapshotNotFoundException;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
+import edu.asu.diging.vspace.core.exception.SnapshotCouldNotBeCreatedException;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionSnapshot;
 import edu.asu.diging.vspace.core.services.ISnapshotManager;
 
@@ -59,7 +61,7 @@ public class DownloadsController {
                     .header(HttpHeaders.CONTENT_TYPE, "application/json")
                     .body(exhibitionSnapshot);
         } 
-        catch (Exception e) {
+        catch (IOException | SnapshotCouldNotBeCreatedException | InterruptedException e) {
             logger.error("Could not download exhibition", e);
             return new ResponseEntity<ExhibitionSnapshot>(exhibitionSnapshot, HttpStatus.INTERNAL_SERVER_ERROR);
         }

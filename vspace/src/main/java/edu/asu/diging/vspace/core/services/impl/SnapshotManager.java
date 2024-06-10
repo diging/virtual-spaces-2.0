@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,13 +76,11 @@ public class SnapshotManager  implements  ISnapshotManager {
      * @return the created {@link ExhibitionSnapshot}
      * @throws IOException                          if an I/O error occurs during the snapshot creation process
      * @throws InterruptedException                 if the snapshot creation process is interrupted
-     * @throws ExecutionException                   if an error occurs during the execution of the snapshot task
      * @throws SnapshotCouldNotBeCreatedException   if the snapshot could not be created due to any other errors
      */
     @Override
     @Transactional
-    public ExhibitionSnapshot triggerExhibitionSnapshotCreation(String exhibitionFolderName) throws IOException, InterruptedException, ExecutionException, SnapshotCouldNotBeCreatedException {                 
-//        String exhibitionFolderName = getExhibitionFolderName();
+    public ExhibitionSnapshot triggerExhibitionSnapshotCreation(String exhibitionFolderName) throws IOException, InterruptedException, SnapshotCouldNotBeCreatedException {                 
         ExhibitionSnapshot exhibitionSnapshot = exhibitionSnapshotRepository.findByFolderName(exhibitionFolderName);        
         if(exhibitionSnapshot == null ) {
             exhibitionSnapshot = new ExhibitionSnapshot();
@@ -99,7 +96,7 @@ public class SnapshotManager  implements  ISnapshotManager {
             createSnapshot(resourcesPath, exhibitionFolderName, sequenceHistory, exhibitionSnapshot);
             storageEngineDownloads.generateZip(exhibitionFolderName);
         } catch (IOException | InterruptedException | FileStorageException e) {
-            throw new SnapshotCouldNotBeCreatedException(e.getMessage(), e.getCause());
+            throw new SnapshotCouldNotBeCreatedException(e.getMessage(), e);
         }
         return exhibitionSnapshot;
     }
