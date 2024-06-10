@@ -74,18 +74,6 @@ public class ModuleOverviewManagerTest {
         sequences.add(sequence);
         module.setStartSequence(sequence);        
     }
-        
-    @Test
-    public void test_createSequenceOverviewNode_success() {
-        String moduleId = "MODULE_01";      
-        Mockito.when(moduleManager.getModule(moduleId)).thenReturn(module);
-        Mockito.when(moduleManager.getModuleSequences(moduleId)).thenReturn(sequences);
-        
-        SequenceOverview sequenceOverview = serviceToTest.createSequenceOverviewNode(sequences.get(0));
-        assertEquals(sequenceOverview.getId(), sequence.getId());
-        assertEquals(sequenceOverview.getName(), sequence.getName());
-        assertEquals(sequenceOverview.getSlideOverviews().size(), 1);
-    }
 
     @Test
     public void test_getModuleOverview_success() throws ModuleNotFoundException {

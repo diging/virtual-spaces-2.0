@@ -54,7 +54,7 @@ public class ModuleOverviewManager implements IModuleOverviewManager {
      * ModuleOverview
      * @return ModuleOverview which contains the module and the list of sequences and its slides
      */   
-    public SequenceOverview createSequenceOverviewNode(ISequence sequence) {
+    private SequenceOverview createSequenceOverviewNode(ISequence sequence) {
         if(sequence==null) {
             return null;
         }
@@ -67,7 +67,7 @@ public class ModuleOverviewManager implements IModuleOverviewManager {
         return sequenceOverview;  
     }
     
-    public List<SlideOverview> createSlideOverviewNode(List<ISlide> slides){
+    private List<SlideOverview> createSlideOverviewNode(List<ISlide> slides){
         List<SlideOverview> slideOverviews = new ArrayList<SlideOverview>();
         for(ISlide slide : slides) {
             SlideOverview slideOverview = new SlideOverview(); 
