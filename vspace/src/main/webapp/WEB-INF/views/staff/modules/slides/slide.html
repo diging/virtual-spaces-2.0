@@ -1,20 +1,21 @@
 <html layout:decorate="~{layouts/main_staff}">
     <head>
-        <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css" />
+        <link rel="stylesheet"
+            href="https://unpkg.com/easymde/dist/easymde.min.css">
         <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
         <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
-        <script th:src="@{/resources/jquery/jquery-ui.min_custom_sortable.js}"></script>
-        <script src="//use.fontawesome.com/releases/v5.8.1/js/all.js" data-auto-replace-svg="nest"></script>
+		<script th:src="@{/resources/jquery/jquery-ui.min_custom_sortable.js}"></script>
+		<script src="//use.fontawesome.com/releases/v5.8.1/js/all.js"
+    	data-auto-replace-svg="nest"></script>
         <style type="text/css">
             .hova {
-                background-color: #f2f2f2;
+            background-color: #f2f2f2;
             }
-
-            .EasyMDEContainer .CodeMirror-wrap {
-                overflow-y: scroll;
-                height: 400px;
-            }
+            .EasyMDEContainer .CodeMirror-wrap{
+            overflow-y: scroll;
+            height: 400px;
+             }
             .fixed {
                 position: fixed;
                 top: 0;
@@ -54,104 +55,104 @@
             var defaultValue;
             var addVideoClk=0;
             var editVideoClk=0;
-
+            
             $(function () {
-            	$('[data-toggle="tooltip"]').tooltip()
+            	  $('[data-toggle="tooltip"]').tooltip()
             });
+            
             $(window).scroll(function(){
-	            var sticky = $('.sticky'),
-	            scroll = $(window).scrollTop();
-	            if (scroll >= 100) sticky.addClass('fixed');
-	            else sticky.removeClass('fixed');
+            	  var sticky = $('.sticky'),
+            	      scroll = $(window).scrollTop();
+            	  if (scroll >= 100) sticky.addClass('fixed');
+            	  else sticky.removeClass('fixed');
             });
-
+            
             function createImageBlock(reader, width) {
-	            var imageblock = $('<div id="current" class="valueDiv tab row"><img src="#" style="imgDiv tab row"/><input type="hidden" id="deleteImageId" /><a class="btn deleteImage col-md-1" href="javascript:;" style="position:absolute; right:25px;"><span class="icon-trash error"></span></a></div>');
-	            imageblock.find('img').attr('src', reader.result);
-	            if(width > 800)
-	            imageblock.find('img').attr('width', '800px');
-	            return imageblock;
+                var imageblock = $('<div id="current" class="valueDiv tab row"><img src="#" style="imgDiv tab row"/><input type="hidden" id="deleteImageId" /><a class="btn deleteImage col-md-1" href="javascript:;" style="position:absolute; right:25px;"><span class="icon-trash error"></span></a></div>');
+                imageblock.find('img').attr('src', reader.result);
+                if(width > 800)
+                	imageblock.find('img').attr('width', '800px');
+                return imageblock;
             }
-
+            
             function createImageBlockWithExistingImage(src, width) {
-	            var imageblock = $('<div id="current" class="valueDiv tab row"><img src="#" style="imgDiv tab row"/><input type="hidden" id="deleteImageId" /><a class="btn deleteImage col-md-1" href="javascript:;" style="position:absolute; right:25px;"><span class="icon-trash error"></span></a></div>');
-	            imageblock.find('img').attr('src', src);
-	            if(width > 800)
-	            	imageblock.find('img').attr('width', '800px');
-	            return imageblock;
+                var imageblock = $('<div id="current" class="valueDiv tab row"><img src="#" style="imgDiv tab row"/><input type="hidden" id="deleteImageId" /><a class="btn deleteImage col-md-1" href="javascript:;" style="position:absolute; right:25px;"><span class="icon-trash error"></span></a></div>');
+                imageblock.find('img').attr('src', src);
+                if(width > 800)
+                	imageblock.find('img').attr('width', '800px');
+                return imageblock;
             }
-
+            
             function createVideoBlock(reader, videoSrc, title,isUrlProvided) {
-	            var videoBlock = $("<div></div>");
-	            videoBlock.attr('id',"currentVideo");
-	            videoBlock.attr('class',"tab vidDiv row");
-	            videoBlock.css('border','1px solid rgba(0, 0, 0, 0.125)');
-	            var innerDiv1 = $("<div></div>");
-	            var heading = $("<h3></h3>");
-	            heading.append($("<strong></strong>"));
-	            innerDiv1.append(heading);
-	            if (isUrlProvided) {
-	            	var iframe = $("<iframe></iframe>");
-		            iframe.attr('width',"800");
-		            iframe.attr('height',"530");
-		            iframe.attr('src',videoSrc);
-		            iframe.attr('frameborder',"0");
-		            iframe.attr('allow',"accelerometer; clipboard-write; encrypted-media;gyroscope; picture-in-picture");
-		            iframe.attr('allowFullScreen', '');
-		            innerDiv1.append(iframe);
-	            }
-	            else{
-		            var video = $("<video></video>");
-		            video.attr('width',"800");
-		            video.attr('height',"530");
-		            video.attr('controls', true);
-		            var source = $("<source></source>");
-		            source.attr('src', videoSrc);
-		            source.attr('type',"video/mp4");
-		            video.append(source);
-		            innerDiv1.append(video);
-	            }
-	            videoBlock.append(innerDiv1);
-	            var anchor1 = $("<a></a>");
-	            anchor1.attr('href',"javascript:;");
-	            anchor1.attr('class',"btn deleteVideo col-md-1");
-	            anchor1.attr('data-video-id',"");
-	            anchor1.css('position','absolute');
-	            anchor1.css('right','25px');
-	            var span1 = $("<span></span>");
-	            span1.attr('class',"icon-trash error");
-	            anchor1.append(span1);
-	            videoBlock.append(anchor1);
-	            var anchor2 = $("<a></a>");
-	            anchor2.attr('href',"javascript:;");
-	            anchor2.attr('class',"btn editVideo col-md-1");
-	            anchor2.attr('data-editvideo-id',"");
-	            anchor2.css('position','absolute');
-	            anchor2.css('top','60px');
-	            anchor2.css('right','25px');
-	            var span2 = $("<span></span>");
-	            span2.attr('class',"icon-edit");
-	            anchor2.append(span2);
-	            videoBlock.append(anchor2);
-	            videoBlock.find('h3 strong').html(title);
-	            return videoBlock;
+                var videoBlock = $("<div></div>");
+                videoBlock.attr('id',"currentVideo");
+                videoBlock.attr('class',"tab vidDiv row");
+                videoBlock.css('border','1px solid rgba(0, 0, 0, 0.125)');
+                var innerDiv1 = $("<div></div>");
+                var heading = $("<h3></h3>");
+                heading.append($("<strong></strong>"));
+                innerDiv1.append(heading);
+                if (isUrlProvided) {
+                	var iframe = $("<iframe></iframe>");
+                	iframe.attr('width',"800");
+                	iframe.attr('height',"530");
+                	iframe.attr('src',videoSrc);
+                	iframe.attr('frameborder',"0");
+                	iframe.attr('allow',"accelerometer; clipboard-write; encrypted-media;gyroscope; picture-in-picture");
+                	iframe.attr('allowFullScreen', '');
+                	innerDiv1.append(iframe);
+                }else{
+                	var video = $("<video></video>");
+                	video.attr('width',"800");
+                	video.attr('height',"530");
+                	video.attr('controls', true);
+                	var source = $("<source></source>");
+                	source.attr('src', videoSrc);
+                	source.attr('type',"video/mp4");
+                	video.append(source);
+                	innerDiv1.append(video);
+                }
+                videoBlock.append(innerDiv1);
+                var anchor1 = $("<a></a>");
+                anchor1.attr('href',"javascript:;");
+                anchor1.attr('class',"btn deleteVideo col-md-1");
+                anchor1.attr('data-video-id',"");
+                anchor1.css('position','absolute');
+                anchor1.css('right','25px');
+                var span1 = $("<span></span>");
+                span1.attr('class',"icon-trash error");
+                anchor1.append(span1);
+                videoBlock.append(anchor1);
+                var anchor2 = $("<a></a>");
+                anchor2.attr('href',"javascript:;");
+                anchor2.attr('class',"btn editVideo col-md-1");
+                anchor2.attr('data-editvideo-id',"");
+                anchor2.css('position','absolute');
+                anchor2.css('top','60px');
+                anchor2.css('right','25px');
+                var span2 = $("<span></span>");
+                span2.attr('class',"icon-edit");
+                anchor2.append(span2);
+                videoBlock.append(anchor2);
+                videoBlock.find('h3 strong').html(title);
+                return videoBlock;
             }
-
+            
             function onMouseEnter(e){
-	            var target = $( e.target );
-	
-	            $(".hova").removeClass("hova");
-	            $(e.target).addClass("hova");
-	            // This is needed to prevent only the p tag from being highlighted
-	            if(target.is('p')){
-	            	$(e.target).parent().addClass("hova");
-	            }
-	            //prevent normal hover actions
-	            e.preventDefault();
+                var target = $( e.target );
+               
+                $(".hova").removeClass("hova");
+                $(e.target).addClass("hova");
+                // This is needed to prevent only the p tag from being highlighted
+                if(target.is('p')){
+                    $(e.target).parent().addClass("hova");
+                }
+                //prevent normal hover actions
+                e.preventDefault();
             }
             function onMouseLeave(e) {
             	$(this).removeClass("hova");
-            }
+                }
 
             function getSelectedSpace(blockId){
 	            $.ajax({
@@ -169,8 +170,7 @@
 		            }
 	            });
             }
-
-
+            
             function onDoubleClick(e){
 	            // get to the nearest divs class attribute
 	            $(".EasyMDEContainer").remove();
@@ -183,12 +183,12 @@
 		
 		            $("#editTextAlert").show();
 		            markDown = new EasyMDE({element: $('#editTextBlock')[0]});
-		            markDown.value(description.trim());
-		            //remove card border
-		            $(".open").css('display', 'none');
-		            $(".open").css('overflow-y', 'scroll');
-		            $(".open").css('height', '400px');
-	            } else if(divName.includes("SpaceDivStaff")){
+                    markDown.value(description.trim());
+                    //remove card border
+                    $(".open").css('display', 'none');
+                    $(".open").css('overflow-y', 'scroll');
+                    $(".open").css('height', '400px');
+                    } else if(divName.includes("SpaceDivStaff")){
 		            let spaceId = e.target.closest('div').id;
 		            $(e.target).closest('.SpaceDivStaff').addClass("open");
 		            defaultValue = $("div.open p:eq(0)").text();
@@ -211,7 +211,7 @@
 		            }
 	        	}
             }
-
+                
             function uploadImage() {
                 var imgBlockID = $("#uploadImage").data('value') // gets image ID
                 var file = $('#file')[0].files[0];
@@ -287,9 +287,9 @@
                         // ------------- creating image content blocks ------------
                         url: url,
                         type: 'POST',
-                        cache: false,
-                        contentType: false,
-                        processData: false,
+                        cache       : false,
+                        contentType : false,
+                        processData : false,
                         data: formData,
                         success: function(data) {
                                 $(".open").removeClass("open");
