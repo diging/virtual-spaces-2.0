@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import javax.imageio.ImageIO;
 
 import org.apache.tika.Tika;
@@ -123,8 +122,7 @@ public class ImageService implements IImageService {
     public List<IVSImage> getImages(int pageNo, ImageCategory category) {
         return getImages(pageNo, category, SortByField.CREATION_DATE.getValue(), Sort.Direction.DESC.toString());
     }
-    
-    
+     
     @Override
     public List<IVSImage> getImages(int pageNo) {
         return getImages(pageNo, null, SortByField.CREATION_DATE.getValue(), Sort.Direction.DESC.toString());
@@ -320,5 +318,33 @@ public class ImageService implements IImageService {
             logger.error("Could not retrieve the image",e);  
         }
         return null;
+    }
+    
+    /**
+     * Retrieves a list of IVSImages for pagination based on the provided parameters.
+     * 
+     * @param pageNo.    if pageNo<1, 1st page is returned, if pageNo>total
+     *                   pages,last page is returned
+     * @param searchTerm - This is the search string which is being searched.
+     * @param category - The category of the images to filter by.
+     * @return list of images in the requested pageNo and requested order.
+     */
+    @Override
+    public Page<VSImage> getPaginatedImagesBySearchTerm(int pageNo, ImageCategory category, String searchTerm,
+            String sortedBy, String order) {    	
+    	Sort sortingParameters = getSortingParameters(sortedBy, order);
+        pageNo = validatePageNumber(pageNo, category);
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sortingParameters);
+        String likeSearchTerm = "%" + searchTerm + "%";
+        Page<VSImage> results;
+        if(category!=null) {
+            results = imageRepo.findByCategoryAndFilenameLikeOrNameLikeOrDescriptionLike(
+                    pageable, category, likeSearchTerm, likeSearchTerm, likeSearchTerm);
+        }
+        else {
+            results = imageRepo.findByFilenameLikeOrNameLikeOrDescriptionLike(pageable,
+                    likeSearchTerm, likeSearchTerm, likeSearchTerm);
+        }
+        return results;
     }
 }
