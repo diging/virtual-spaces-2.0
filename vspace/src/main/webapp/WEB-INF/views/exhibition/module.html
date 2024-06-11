@@ -94,10 +94,6 @@
         	$("#moduleOverviewModal").show();
         }
         	
-        function closeModuleOverview(){
-        	$("#moduleOverviewModal").hide();   
-        }
-        	
         function closeModal(){
         	$("#moduleOverviewModal").hide();
         }
@@ -197,14 +193,15 @@
 		</div>
         <div id="moduleOverviewModal" class="modal" role="dialog">
             <div class="modal-dialog" role="document">
-                <div class="modal-content">
+                <div class="modal-content" >
                     <div class="modal-header">
                         <h5 class="modal-title">Module Map</h5>
                         <button type="button" class="close" id="close" data-dismiss="modal" aria-label="Close" onClick="closeModal()">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div id="graph" class="modal-body" style="width: 2000px; height: 2000px">
+                    <div id="graph" class="modal-body" style="width:100%; height: 100%; overflow: scroll;">
+                    
                     <script th:inline="javascript">
                         const branchingPointsSet = new Set();
                         const sequencesMap = new Map();
@@ -221,33 +218,36 @@
                         let otherSequences = json['otherSequences'];
                         let startSequenceslides = [];
                         let isStartSequence = true;
+                        
+                        populateTreeData(treeData, startSequence, otherSequences); 
+                        function populateTreeData(treeData, startSequence, otherSequences){
+                        	// Set the name of the root node
+                            treeData.name = json.name;
 
-                        // Create the tree structure starting with the start sequence
-                        treeData = createFromSequence(startSequence, treeData, isStartSequence);
+                            // Create the tree structure starting with the start sequence
+                            treeData = createFromSequence(startSequence, treeData, isStartSequence);
 
-                        // Update the flag to indicate we're no longer processing the start sequence
-                        isStartSequence = false;
+                            // Update the flag to indicate we're no longer processing the start sequence
+                            isStartSequence = false;
 
-                        // Add other sequences to the tree structure
-                        for (let sequence of otherSequences) {
-                            treeData = createFromSequence(sequence, treeData, isStartSequence);
-                        }
-
-                        // Add branching points to the tree structure
-                        for (let branch of branchingPointsSet) {
-                            for (let branchSequence of branch.branchSequences) {
-                                // Avoid adding a branch to itself
-                                if (branch.sequence === branchSequence.name) continue;
-                                // Add the branch sequence to the children of the branch
-                                branch.children.push(sequencesMap.get(branchSequence.name));
+                            // Add other sequences to the tree structure
+                            for (let sequence of otherSequences) {
+                                treeData = createFromSequence(sequence, treeData, isStartSequence);
                             }
-                        }
 
-                        // Set the name of the root node
-                        treeData.name = json.name;
-
+                            // Add branching points to the tree structure
+                            for (let branch of branchingPointsSet) {
+                                for (let branchSequence of branch.branchSequences) {
+                                    // Avoid adding a branch to itself
+                                    if (branch.sequence === branchSequence.name) continue;
+                                    // Add the branch sequence to the children of the branch
+                                    branch.children.push(sequencesMap.get(branchSequence.name));
+                                }
+                            }
+                        }                        
+                        
                         // Set up dimensions for the tree layout
-                        var margin = {top: 20, right: 120, bottom: 20, left: 120},
+                        var margin = {top: 20, right: 110, bottom: 20, left: 130},
                             width = 1500 - margin.right - margin.left,
                             height = 500 - margin.top - margin.bottom;
 
@@ -255,13 +255,14 @@
                         var i = 0, duration = 750, root;
                         var tree = d3.layout.tree().size([height, width]);
                         var diagonal = d3.svg.diagonal().projection(function(d) { return [d.y, d.x]; });
+                        
 
                         // Create the SVG container for the tree
                         var svg = d3.select("#graph").append("svg")
                                     .attr("width", width + margin.right + margin.left)
                                     .attr("height", height + margin.top + margin.bottom)
                                     .append("g")
-                                    .attr("transform", "translate(" + 208 + "," + margin.top + ")");
+                                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
                         // Set the root node and initialize its position
                         root = treeData;
@@ -356,18 +357,7 @@
                             }
                             return d;
                         });
-               
-                        // Set up dimensions and create the SVG container for the tree
-                        //let svg = setupSvgContainer(1500, 500);
-
-                        // Set the root node and initialize its position
-                        //let root = initializeRoot(treeData, 500);
-                        //var tree = d3.layout.tree().size([height, width]);
-                        //var diagonal = d3.svg.diagonal().projection(function(d) { return [d.y, d.x]; });
-
-                        //update(root);
-                        //d3.select(self.frameElement).style("height", "500px");
-                        								
+               								
                         // Update the nodes
                         var node = svg.selectAll("g.node").data(nodes, function(d) { return d.id || (d.id = ++i); });
                         
@@ -379,9 +369,9 @@
 
                         function openSlide (d){
                             if(d.group === "slide"){
-                                window.open("/exhibit/"+spaceId+'/module/'+moduleId+'/sequence/'+d.sequenceId+'/slide/'+d.slideId, "_self");
+                                window.open([[@{/exhibit/}]]+spaceId+'/module/'+moduleId+'/sequence/'+d.sequenceId+'/slide/'+d.slideId, "_self");
                             } else if(d.group === "sequence" && d.parent.branchingPoint == true ){
-                                window.open("/exhibit/"+spaceId+'/module/'+moduleId+'/sequence/'+d.id+"?branchingPoint="+d.parent.slideId+"&previousSequenceId="+d.parent.sequenceId, "_self");
+                                window.open([[@{/exhibit/}]]+spaceId+'/module/'+moduleId+'/sequence/'+d.id+"?branchingPoint="+d.parent.slideId+"&previousSequenceId="+d.parent.sequenceId, "_self");
                             }
                         }
 
