@@ -4,7 +4,6 @@ import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.factory.IExternalLinkDisplayFactory;
 import edu.asu.diging.vspace.core.model.IExternalLink;
-import edu.asu.diging.vspace.core.model.IExternalLinkSlide;
 import edu.asu.diging.vspace.core.model.display.IExternalLinkDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.ExternalLinkDisplay;
 

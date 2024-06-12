@@ -8,14 +8,11 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import edu.asu.diging.vspace.core.data.SlideExternalLinkDisplayRepository;
 import edu.asu.diging.vspace.core.data.SlideExternalLinkRepository;
-import edu.asu.diging.vspace.core.factory.ISlideExternalLinkDisplayFactory;
-import edu.asu.diging.vspace.core.factory.ISlideExternalLinkFactory;
+import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
 import edu.asu.diging.vspace.core.model.IExternalLinkSlide;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.display.ISlideExternalLinkDisplay;
-import edu.asu.diging.vspace.core.model.display.impl.SlideExternalLinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.ExternalLinkSlide;
 import edu.asu.diging.vspace.core.model.impl.ExternalLinkValue;
 import edu.asu.diging.vspace.core.services.ISlideExternalLinkManager;
@@ -33,51 +30,13 @@ public class SlideExternalLinkManager
     @Autowired
     private SlideExternalLinkRepository externalLinkRepo;
 
-    @Autowired
-    private SlideExternalLinkDisplayRepository externalLinkDisplayRepo;
-
-    @Autowired
-    private ISlideExternalLinkFactory externalLinkFactory;
-
-    @Autowired
-    private ISlideExternalLinkDisplayFactory externalLinkDisplayFactory;
-
     public List<IExternalLinkSlide> getLinks(String slideId) {
-        return externalLinkRepo.findExternalLinkSlides(slideId);
-    }
-
-    @Override
-    public List<ISlideExternalLinkDisplay> getLinkDisplays(String slideId) {
-        return null;
-    }
-
-    @Override
-    protected IExternalLinkSlide createLinkObject(String title, String id) {
-        ISlide source = slideManager.getSlide(id);
-        IExternalLinkSlide link = externalLinkFactory.createExternalLink(title, source);
-        return externalLinkRepo.save((ExternalLinkSlide) link);
+        return externalLinkRepo.findbySlide(slideId);
     }
 
     @Override
     protected ExternalLinkValue getTarget(String externalLink) {
         return new ExternalLinkValue(externalLink);
-    }
-
-    @Override
-    protected ISlideExternalLinkDisplay updateLinkAndDisplay(IExternalLinkSlide link,
-            ISlideExternalLinkDisplay displayLink) {
-        externalLinkRepo.save((ExternalLinkSlide) link);
-        return externalLinkDisplayRepo.save((SlideExternalLinkDisplay) displayLink);
-    }
-
-    @Override
-    protected ISlideExternalLinkDisplay getDisplayLink(String externalLinkDisplayId) {
-        Optional<SlideExternalLinkDisplay> externalLinkDisplay = externalLinkDisplayRepo
-                .findById(externalLinkDisplayId);
-        if (externalLinkDisplay.isPresent()) {
-            return externalLinkDisplay.get();
-        }
-        return null;
     }
 
     @Override
@@ -87,16 +46,6 @@ public class SlideExternalLinkManager
             return externalLink.get();
         }
         return null;
-    }
-
-    @Override
-    protected ISlideExternalLinkDisplay createDisplayLink(IExternalLinkSlide link) {
-        return externalLinkDisplayFactory.createExternalLinkDisplay(link);
-    }
-
-    @Override
-    protected void deleteLinkDisplayRepo(IExternalLinkSlide link) {
-        externalLinkDisplayRepo.deleteByExternalLink(link);
     }
 
     @Override
@@ -131,5 +80,36 @@ public class SlideExternalLinkManager
             externalLink = new ExternalLinkSlide();
         }
         return externalLink;
+    }
+
+    @Override
+    protected void deleteLinkDisplayRepo(IExternalLinkSlide link) {        
+    }
+
+    @Override
+    protected ISlideExternalLinkDisplay updateLinkAndDisplay(IExternalLinkSlide link,
+            ISlideExternalLinkDisplay displayLink) {
+        return null;
+    }
+
+    @Override
+    protected ISlideExternalLinkDisplay getDisplayLink(String linkDisplayId) throws LinkDoesNotExistsException {
+        return null;
+    }
+
+    @Override
+    protected ISlideExternalLinkDisplay createDisplayLink(IExternalLinkSlide link) {
+        return null;
+    }
+
+    @Override
+    public List<ISlideExternalLinkDisplay> getLinkDisplays(String slideId) {
+        return null;
+    }
+
+
+    @Override
+    protected IExternalLinkSlide createLinkObject(String title, String id) {
+        return null;
     }
 }

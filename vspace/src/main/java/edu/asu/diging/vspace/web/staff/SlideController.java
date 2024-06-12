@@ -25,7 +25,6 @@ import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.impl.BranchingPoint;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
-import edu.asu.diging.vspace.core.services.ISlideDisplayManager;
 import edu.asu.diging.vspace.core.services.ISlideExternalLinkManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 import edu.asu.diging.vspace.web.staff.forms.SequenceForm;
@@ -46,9 +45,6 @@ public class SlideController {
     @Autowired
     private ISlideExternalLinkManager externalLinkManager;
 
-    @Autowired
-    private ISlideDisplayManager slideDisplayManager;
-
     @RequestMapping("/staff/module/{moduleId}/slide/{id}")
     public String listSlides(@PathVariable("id") String id, @PathVariable("moduleId") String moduleId, Model model) {
         ISlide slide = slideManager.getSlide(id);
@@ -60,7 +56,6 @@ public class SlideController {
         if (slideContents.size() > 0) {
             IImageBlock imageblock = contentBlockManager.getImageBlock(slideContents.get(0).getId());
             slideManager.storeSlideDisplay(slide, imageblock.getImage());
-            model.addAttribute("display", slideDisplayManager.getBySlide(slide, imageblock.getImage()));
         }
         model.addAttribute("slideContents", slideContents);
         model.addAttribute("contentCount",
