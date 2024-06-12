@@ -200,8 +200,8 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div id="graph" class="modal-body" style="width:100%; height: 100%; overflow: scroll;">
-                    
+                    <div id="graph" class="modal-body" style="width: 100%; overflow: auto;">
+                    <div id="svg-container" style="width:2000px; height:2000px; overflow-y: auto;">
                     <script th:inline="javascript">
                         const branchingPointsSet = new Set();
                         const sequencesMap = new Map();
@@ -210,7 +210,7 @@
                         var spaceId = [[${spaceId}]];
                         var currentSlide = [[${currentSlideCon}]];
                         var sequenceId = [[${currentSequenceId}]];
-                        
+
                         // Initialize tree data and set up the basic structure
                         let treeData = [];
                         treeData.children = [];
@@ -219,36 +219,11 @@
                         let startSequenceslides = [];
                         let isStartSequence = true;
                         
-                        populateTreeData(treeData, startSequence, otherSequences); 
-                        function populateTreeData(treeData, startSequence, otherSequences){
-                        	// Set the name of the root node
-                            treeData.name = json.name;
-
-                            // Create the tree structure starting with the start sequence
-                            treeData = createFromSequence(startSequence, treeData, isStartSequence);
-
-                            // Update the flag to indicate we're no longer processing the start sequence
-                            isStartSequence = false;
-
-                            // Add other sequences to the tree structure
-                            for (let sequence of otherSequences) {
-                                treeData = createFromSequence(sequence, treeData, isStartSequence);
-                            }
-
-                            // Add branching points to the tree structure
-                            for (let branch of branchingPointsSet) {
-                                for (let branchSequence of branch.branchSequences) {
-                                    // Avoid adding a branch to itself
-                                    if (branch.sequence === branchSequence.name) continue;
-                                    // Add the branch sequence to the children of the branch
-                                    branch.children.push(sequencesMap.get(branchSequence.name));
-                                }
-                            }
-                        }                        
-                        
+                        //populate the data into the tree
+                        populateTreeData(treeData, startSequence, otherSequences);
                         // Set up dimensions for the tree layout
-                        var margin = {top: 20, right: 110, bottom: 20, left: 130},
-                            width = 1500 - margin.right - margin.left,
+                        var margin = {top: 20, right: 120, bottom: 20, left: 120},
+                            width = 2000 - margin.right - margin.left,
                             height = 500 - margin.top - margin.bottom;
 
                         // Initialize variables for tree layout
@@ -258,7 +233,7 @@
                         
 
                         // Create the SVG container for the tree
-                        var svg = d3.select("#graph").append("svg")
+                        var svg = d3.select("#svg-container").append("svg")
                                     .attr("width", width + margin.right + margin.left)
                                     .attr("height", height + margin.top + margin.bottom)
                                     .append("g")
@@ -275,6 +250,33 @@
                         // Set the height of the frame
                         d3.select(self.frameElement).style("height", "500px");
 
+                        function populateTreeData(treeData, startSequence, otherSequences){
+                            // Set the name of the root node
+                            treeData.name = json.name;
+
+                            // Create the tree structure starting with the start sequence
+                            treeData = createFromSequence(startSequence, treeData, isStartSequence);
+                            console.log("treeData after first seq",treeData);
+                            // Update the flag to indicate we're no longer processing the start sequence
+                            isStartSequence = false;
+
+                            // Add other sequences to the tree structure
+                            for (let sequence of otherSequences) {
+                                treeData = createFromSequence(sequence, treeData, isStartSequence);
+                            }
+
+                            // Add branching points to the tree structure
+                            for (let branch of branchingPointsSet) {
+                                for (let branchSequence of branch.branchSequences) {
+                                    // Avoid adding a branch to itself
+                                    if (branch.sequence === branchSequence.name) continue;
+                                    
+                                    // Add the branch sequence to the children of the branch
+                                    branch.children.push(sequencesMap.get(branchSequence.name));
+                                }
+                            }
+                        }
+
                         function createFromSequence(sequence, treeData, isStartSequence){                            
                             let startNodeSequence = {};
                             let startNodeSequenceSlides = [];
@@ -285,50 +287,54 @@
                             //we will use parent identifier as id instead of name
                             startNodeSequence.parent = json.id;
                             let slideIndex = 0;
+
                             for(slide of sequence.slideOverviews){
-                            	let slideNode = {}
-                            	slideNode.children=[];
+                                let slideNode = {};                                                               	
+                                slideNode.children=[];
+                                
                             	if(slide.branchingPoint == true){
-                            	    slideNode.branchSequences = [];
-                            	    slideNode.branchingPoint = true;
-                            	    slideNode.branchingPoints = [];
+                            	    prev.branchSequences = [];
+                            	    prev.branchingPoint = true;
+                            	    prev.branchingPoints = [];
                             	    for(seq of slide.choiceSequenceNames){
                             	    	let branchSeq = {};
                             	    	branchSeq.name = seq;
-                            	    	if(seq === sequence.name){
+                                        if(seq === sequence.name){
                             	    	    branchSeq.name = seq;
-                            	    	    slideNode.children.push(branchSeq);
+                            	    	    //slideNode.children.push(branchSeq);
                             	    	    continue;
                             	    	}
-                            	    	slideNode.branchSequences.push(branchSeq);
+                            	    	prev.branchSequences.push(branchSeq);
                             	    	slideNode.sequence = sequence.name;
                             	    }
-                            	    branchingPointsSet.add(slideNode);
-                            	}
-                            	slideNode.name = slide.name;
-                            	slideNode.group = "slide";
-                            	slideNode.sequenceId = sequence.id;
-                            	slideNode.slideId = slide.id;
-                            	slideNode.id = sequence.id + slide.id;
-                            	startNodeSequenceSlides.push(slideNode);
-
+                                    branchingPointsSet.add(prev);
+                            	}                                   
+                                slideNode.name = slide.name;
+                                slideNode.group = "slide";
+                                slideNode.sequenceId = sequence.id;
+                                slideNode.slideId = slide.id;
+                                slideNode.id = sequence.id + slide.id;
+                                startNodeSequenceSlides.push(slideNode);  
                             	if(slideIndex == 0){
-                            	    let slideLink ={};
                             	    slideNode.parent=startNodeSequence.name;
                             	    startNodeSequence.children.push(slideNode);
-                            	    prev=slideNode;
                             	} else {
-                            	    prev.children.push(slideNode);
-                            	    slideNode.parent=prev;
-                            	    prev=slideNode;
+                                    if(slide.branchingPoint == true){
+                            	        prev.children.concat(slideNode.branchSequences);
+                            	        prev.branchingPoint = true;               
+                                    } else {
+                                    	prev.children.push(slideNode);
+                            	        slideNode.parent=prev;
+                                    }                           	    
                             	}
+                            	prev = slideNode;
                             	source = slideNode.id;
                             	slideIndex=slideIndex+1;
                             }
                             if(isStartSequence == true){
                                 treeData.children.push(startNodeSequence);
                             }
-                            sequencesMap.set(sequence.name, startNodeSequence)
+                            sequencesMap.set(sequence.name, startNodeSequence);
                             return treeData;
                         }                      
                      
@@ -336,7 +342,7 @@
                         	
                             // Compute the new tree layout.
                             var nodes = tree.nodes(root).reverse(),links = tree.links(nodes);
-                            
+
                             // Normalize for fixed-depth.
                             nodes.forEach(function(d) { d.y = d.depth * 110; });
                             nodes = nodes.filter(function(d){
@@ -357,7 +363,6 @@
                             }
                             return d;
                         });
-               								
                         // Update the nodes
                         var node = svg.selectAll("g.node").data(nodes, function(d) { return d.id || (d.id = ++i); });
                         
@@ -366,7 +371,8 @@
                         	.attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; }); 
 						
                         nodeEnter.on("click", openSlide);
-
+                        
+                        //function to open slide or sequence on clicking the node
                         function openSlide (d){
                             if(d.group === "slide"){
                                 window.open([[@{/exhibit/}]]+spaceId+'/module/'+moduleId+'/sequence/'+d.sequenceId+'/slide/'+d.slideId, "_self");
@@ -401,7 +407,7 @@
                         	.attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
 						
                         nodeUpdate.select("circle").attr("r", 
-                        		function(d){ if((d.group=== "slide" && d.sequenceId.normalize() === sequenceId.normalize() )
+                        		function(d){ if((d.group=== "slide" && d.sequenceId.normalize() === sequenceId.normalize() && d.branchingPoint != true)
                         				&& (d.slideId.normalize() === currentSlide.id.normalize())){
                         			return 20;
                         		}
@@ -471,6 +477,7 @@
                         	d.y0 = d.y;});
                         }                           
              </script>
+             </div>
                         </div>
                     </div>
                 </div>
