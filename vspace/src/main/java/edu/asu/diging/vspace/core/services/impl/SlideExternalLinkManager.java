@@ -30,8 +30,9 @@ public class SlideExternalLinkManager
     @Autowired
     private SlideExternalLinkRepository externalLinkRepo;
 
+    @Transactional
     public List<IExternalLinkSlide> getLinks(String slideId) {
-        return externalLinkRepo.findbySlide(slideId);
+        return externalLinkRepo.findBySlide(slideId);
     }
 
     @Override

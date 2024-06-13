@@ -13,7 +13,7 @@ import edu.asu.diging.vspace.core.model.impl.ExternalLinkSlide;
 @JaversSpringDataAuditable
 public interface SlideExternalLinkRepository extends PagingAndSortingRepository<ExternalLinkSlide, String> {
 
-    public List<IExternalLinkSlide> findbySlide(String slideId);
+    public List<IExternalLinkSlide> findBySlide(String slideId);
 
     public void deleteByExternalLink(IExternalLinkSlide link);
 }
