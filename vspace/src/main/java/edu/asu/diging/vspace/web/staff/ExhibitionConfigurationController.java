@@ -103,6 +103,7 @@ public class ExhibitionConfigurationController {
         ISpace startSpace = spaceManager.getSpace(spaceID);
         
         Exhibition exhibition;
+        
         if (exhibitID == null || exhibitID.isEmpty()) {
             exhibition = (Exhibition) exhibitFactory.createExhibition();
         } else {
@@ -138,34 +139,28 @@ public class ExhibitionConfigurationController {
      */
     @RequestMapping(value = "/staff/exhibit/config/link/defaultImage", method = RequestMethod.POST)
     public RedirectView createOrUpdateLinkImage(HttpServletRequest request,
-            @RequestParam(required = false, name = "exhibitionParam") String exhibitID,
-            @RequestParam(name = "spaceLinkImage", required = false) MultipartFile spaceLinkImage,
-            @RequestParam(name = "moduleLinkImage", required = false) MultipartFile moduleLinkImage,
-            @RequestParam(name = "externalLinkImage", required = false) MultipartFile externalLinkImage,
+            @RequestParam(name = "image", required = false) MultipartFile image,
+            @RequestParam(name="linkType", required=true) String linkType,
             RedirectAttributes attributes) throws IOException {
         Exhibition exhibition;
-        if (exhibitID == null || exhibitID.isEmpty()) {
-            exhibition = (Exhibition) exhibitFactory.createExhibition();
-        } else {
-            exhibition = (Exhibition) exhibitManager.getExhibitionById(exhibitID);
-        }
+        exhibition = (Exhibition) (Exhibition) exhibitManager.getStartExhibition();;
         
-        if(spaceLinkImage != null) {
-            IVSImage spaceDefaultImage = imageService.storeImage(spaceLinkImage.getBytes(), spaceLinkImage.getOriginalFilename()); 
+        if(linkType.equals("space")) {
+            IVSImage spaceDefaultImage = imageService.storeImage(image.getBytes(), image.getOriginalFilename()); 
             exhibition.setSpaceLinkDefaultImage(spaceDefaultImage);
         }
-        else if(moduleLinkImage!=null) {
-            IVSImage moduleDefaultImage = imageService.storeImage(moduleLinkImage.getBytes(), moduleLinkImage.getOriginalFilename());            
+        else if(linkType.equals("module")) {
+            IVSImage moduleDefaultImage = imageService.storeImage(image.getBytes(), image.getOriginalFilename());            
             exhibition.setModuleLinkDefaultImage(moduleDefaultImage);
         }
-        else if(externalLinkImage!=null) {
-            IVSImage externalLinkDefaultImage = imageService.storeImage(externalLinkImage.getBytes(), externalLinkImage.getOriginalFilename());         
+        else if(linkType.equals("external")) {
+            IVSImage externalLinkDefaultImage = imageService.storeImage(image.getBytes(), image.getOriginalFilename());         
             exhibition.setExternalLinkDefaultImage(externalLinkDefaultImage);
         }
         else {
             attributes.addAttribute("alertType", "danger");
             attributes.addAttribute("showAlert", "true");
-            attributes.addAttribute("message", "Please select an image");
+            attributes.addAttribute("message", "Couldn't save the default image");
             return new RedirectView(request.getContextPath() + "/staff/exhibit/config");
         }
         

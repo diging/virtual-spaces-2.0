@@ -168,18 +168,18 @@
                 <div id="uploadSpaceLinkImage" th:style="${defaultSpaceLinkImage != null ? 'display: none;' : '' }" >                       
                     <form id="uploadSpaceLinkImage" th:action="@{|/staff/exhibit/config/link/defaultImage?${_csrf.parameterName}=${_csrf.token}|}" method="POST" enctype="multipart/form-data">
                         <input type="hidden"  th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-                        <input type="hidden" th:value="${exhibition?.id}" name="exhibitionParam" id="exhibitionParam"/>
-                        <div id="spaceLinkImageBlock" class="alert alert-secondary"
+                        <div id="spaceLinkImageBlock" class="alert alert-secondary" 
                             style="background: white; display: block;" >                                
-                                <input type="file" rows="5" cols="500" name="spaceLinkImage"
-                                    id="spaceLinkImage" class="form-control-file" />
-                                <p class="form-control mb-0 text-right">
-                                    <button id="cancelSpaceImgBtn" type="button"
-                                        class="btn light btn-sm btn-sm">Cancel</button>
-                                    <button id="uploadSpaceLinkImgBtn" type="submit" class="btn primary-btn btn-sm btn-sm">Save</button>
-                                </p>
-                            </div>
-                        </form>
+                            <input type="file" rows="5" cols="500" name="image"
+                                id="image" class="form-control-file" />
+                            <input type="hidden" name="linkType" value="space" />
+                            <p class="form-control mb-0 text-right">
+                                <button id="cancelSpaceImgBtn" type="button"
+                                    class="btn light btn-sm btn-sm">Cancel</button>
+                                <button id="uploadSpaceLinkImgBtn" type="submit" class="btn primary-btn btn-sm btn-sm">Save</button>
+                            </p>
+                        </div>
+                    </form>
                     </div>
             </div>
             
@@ -194,11 +194,11 @@
                 <div id="uploadModuleLinkImage" th:style="${defaultModuleLinkImage != null ? 'display: none;' : '' }" >                       
                     <form id="uploadModuleLinkImage" th:action="@{|/staff/exhibit/config/link/defaultImage?${_csrf.parameterName}=${_csrf.token}|}" method="POST" enctype="multipart/form-data">
                         <input type="hidden"  th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-                        <input type="hidden" th:value="${exhibition?.id}" name="exhibitionParam" id="exhibitionParam"/>
                         <div id="moduleLinkImageBlock" class="alert alert-secondary"
                             style="background: white; display: block;" >                                
-                            <input type="file" rows="5" cols="500" name="moduleLinkImage"
-                                id="moduleLinkImage" class="form-control-file" />
+                            <input type="file" rows="5" cols="500" name="image"
+                                id="image" class="form-control-file" />
+                            <input type="hidden" name="linkType" value="module" />
                             <p class="form-control mb-0 text-right">
                                 <button id="cancelModuleImgBtn" type="button"
                                     class="btn light btn-sm btn-sm">Cancel</button>
@@ -220,12 +220,12 @@
             </div>                   
             <div id="uploadExternalLinkImage" th:style="${defaultExternalLinkImage != null ? 'display: none;' : '' }" >                       
                 <form id="uploadModuleLinkImage" th:action="@{|/staff/exhibit/config/link/defaultImage?${_csrf.parameterName}=${_csrf.token}|}" method="POST" enctype="multipart/form-data">
-                    <input type="hidden"  th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-                    <input type="hidden" th:value="${exhibition?.id}" name="exhibitionParam" id="exhibitionParam"/>
+                    <input type="hidden"  th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>                    
                     <div id="externalLinkImageBlock" class="alert alert-secondary"
                         style="background: white; display: block;" >                                
-                            <input type="file" rows="5" cols="500" name="externalLinkImage"
-                                id="externalLinkImage" class="form-control-file" />
+                            <input type="file" rows="5" cols="500" name="image"
+                                id="image" class="form-control-file" />
+                            <input type="hidden" name="linkType" value="external" />
                             <p class="form-control mb-0 text-right">
                                 <button id="cancelExternalImgBtn" type="button"
                                     class="btn light btn-sm btn-sm">Cancel</button>
