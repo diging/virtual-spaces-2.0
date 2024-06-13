@@ -142,8 +142,7 @@ public class ExhibitionConfigurationController {
             @RequestParam(name = "image", required = false) MultipartFile image,
             @RequestParam(name="linkType", required=true) String linkType,
             RedirectAttributes attributes) throws IOException {
-        Exhibition exhibition = (Exhibition) exhibitManager.getStartExhibition();;
-        
+        Exhibition exhibition = (Exhibition) exhibitManager.getStartExhibition();       
         if(linkType.equals("space")) {
             IVSImage spaceDefaultImage = imageService.storeImage(image.getBytes(), image.getOriginalFilename()); 
             exhibition.setSpaceLinkDefaultImage(spaceDefaultImage);
