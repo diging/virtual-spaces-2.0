@@ -30,7 +30,6 @@ public class Reference extends VSpaceElement implements IReference {
         strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
     
-    @JsonIgnore
     @ManyToMany
     @JoinTable(name = "Biblio_Reference", joinColumns = @JoinColumn(name = "REFERENCE_ID"), inverseJoinColumns = @JoinColumn(name = "BIBLIO_ID"))
     

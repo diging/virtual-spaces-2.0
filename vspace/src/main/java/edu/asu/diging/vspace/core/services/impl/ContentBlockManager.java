@@ -488,7 +488,7 @@ public class ContentBlockManager implements IContentBlockManager {
         
         try {
             biblioBlockRepo.deleteById(id);         
-        } catch (EmptyResultDataAccessException e) {
+        } catch (IllegalArgumentException e) {
             throw new BlockDoesNotExistException(e);
         } 
     }
