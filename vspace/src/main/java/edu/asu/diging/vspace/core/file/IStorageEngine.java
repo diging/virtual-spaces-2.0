@@ -41,14 +41,13 @@ public interface IStorageEngine {
     void deleteFolder(String folderPath) throws IOException;
 
     /**
-     * To create a zip of a given folder
+     * To return the zip file
      * 
-     * @param folderName - name of the folder to be zipped
+     * @param zipFilename - name of the folder to be zipped
      * @return byte[] - zipped data as a byte array
-     * @throws IOException if an I/O error occurs while reading files or writing the zip data
      * @throws ExhibitionSnapshotNotFoundException 
-     * @throws FileNotFoundException 
+     * @throws IOException 
      */
-    byte[] downloadZip(String zipFilename) throws ExhibitionSnapshotNotFoundException, FileNotFoundException, IOException;
+    byte[] getZip(String zipFilename) throws ExhibitionSnapshotNotFoundException, IOException, FileNotFoundException;
 }
 

@@ -166,8 +166,8 @@ public class StorageEngine implements IStorageEngine {
     public byte[] generateZip(String folderName) throws IOException {
         Path zipFile = Paths.get(path + File.separator + folderName);
         ByteArrayOutputStream  byteArrayOutputStream = new ByteArrayOutputStream();
-        Path zipFilePath = Paths.get(File.separator + folderName+".zip");
         FileOutputStream fileOutputStream = new FileOutputStream(getFile("",folderName+".zip"));
+        
         try (BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
                 ZipOutputStream responseZipStream = new ZipOutputStream(bufferedOutputStream);
                 Stream<Path> paths = Files.walk(zipFile)) {
@@ -212,7 +212,7 @@ public class StorageEngine implements IStorageEngine {
     }
     
     /**
-     * To create a zip of a given folder
+     * To return the zip file
      * 
      * @param zipFilename - name of the folder to be zipped
      * @return byte[] - zipped data as a byte array
@@ -220,7 +220,7 @@ public class StorageEngine implements IStorageEngine {
      * @throws IOException 
      */
     @Override
-    public byte[] downloadZip(String zipFilename) throws ExhibitionSnapshotNotFoundException, IOException, FileNotFoundException {
+    public byte[] getZip(String zipFilename) throws ExhibitionSnapshotNotFoundException, IOException, FileNotFoundException {
         File file = new File(path + File.separator + zipFilename + ".zip");
         if(!file.exists()){
             throw new ExhibitionSnapshotNotFoundException(zipFilename);
@@ -230,9 +230,7 @@ public class StorageEngine implements IStorageEngine {
             byte[] buffer = in.readAllBytes();
             return buffer;
         } catch (IOException e) {
-            logger.error("Could not download the snapshot "+e.getMessage());
-        }
-        return null;
-                   
+            throw new ExhibitionSnapshotNotFoundException(e.getMessage());
+        }                   
     }
 }   

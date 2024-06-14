@@ -24,7 +24,7 @@ public class AsyncConfiguration {
     
     @Bean(name="asyncExecutor")
     public Executor getAsyncExecutor() {
-        
+        // Set the strategy so that threads can inherit the authenticated user
         SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
         ThreadPoolTaskExecutor asyncExecutor = new ThreadPoolTaskExecutor();
         
