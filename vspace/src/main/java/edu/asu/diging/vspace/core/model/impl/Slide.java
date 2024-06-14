@@ -124,14 +124,6 @@ public class Slide extends VSpaceElement implements ISlide {
         this.externalLinks = externalLinks;
     }
 
-    public IVSImage getImage() {
-        return image;
-    }
-
-    public void setImage(IVSImage image) {
-        this.image = image;
-    }
-
     /*
      * (non-Javadoc)
      * 

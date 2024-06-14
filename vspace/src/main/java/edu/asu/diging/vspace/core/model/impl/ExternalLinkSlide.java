@@ -26,6 +26,8 @@ public class ExternalLinkSlide extends VSpaceElement implements IExternalLinkSli
     private ISlide slide;
   
     private String externalLink;
+    
+    private String label;
         
     @Override
     public String getId() {
@@ -56,15 +58,14 @@ public class ExternalLinkSlide extends VSpaceElement implements IExternalLinkSli
     public void setExternalLink(String externalLink) {
         this.externalLink = externalLink;
     }
-
-    @Override
-    public ExternalLinkValue getTarget() {
-        return new ExternalLinkValue(this.externalLink);
-    }
-
-    @Override
-    public void setTarget(ExternalLinkValue target) {
-        this.externalLink = target.getValue();
-    }
     
+    @Override
+    public String getLabel() {
+        return label;
+    }
+
+    @Override
+    public void setLabel(String label) {
+        this.label = label;
+    }
 }

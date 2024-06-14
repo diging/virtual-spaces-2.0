@@ -11,5 +11,5 @@ public interface IExternalLink extends ILink<ExternalLinkValue> {
     String getExternalLink();
 
     void setExternalLink(String externalLink);
-  
+
 }

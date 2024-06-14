@@ -1,3 +1,4 @@
+
 <html layout:decorate="~{layouts/main}">
 <head>
 <style>
@@ -208,18 +209,13 @@
 
 <script th:inline="javascript">
 $(document).ready(function() {
-	const textBlockElements = document.getElementsByClassName("textBlock");
-	Array.from(textBlockElements).forEach(function(textBlock, index){
-    	if(textBlock != null) {
-    		const color = textBlock.style.borderColor;
-    		console.log("color 1: ", color);
-    	}
-		textBlock.addEventListener('focus-visible', function(e) {
-			e.target.style.outline = "2px solid blue";
-		});
-
+	const textBlock = document.getElementByClassName("textBlock");
+	const color = textBlock.style.borderColor;
+	textBlock.addEventListener('focus-visible', function(e) {
+		e.target.style.outline = "2px solid blue";
 	});
-});
+
+}
 
 </script>
 </head>
@@ -251,7 +247,7 @@ $(document).ready(function() {
 					$("#Module_1").css("min-height", "0");
 					$("#Module_1").css("margin-bottom", "0px");
 				}
-       		}
+        		}
 			else {
 				$("#toggleImgClass").attr('class', "icon-expand secondary");
 				if(maxImgWidthOrig > maxImgWidth) {
@@ -364,15 +360,15 @@ $(document).ready(function() {
 			if(isResizeImgBtnClicked == null || isResizeImgBtnClicked == "") {
 				setCookie('isResizeImgBtnClicked', -1, null);
 			} 
-	    	let spaceHeight = $("#bgImage").css("height");
-	    	$("#Module_1").css("height",spaceHeight);
+		    	let spaceHeight = $("#bgImage").css("height");
+		    	$("#Module_1").css("height",spaceHeight);
 			$( window ).resize(function() {
-				$("#space a").remove();
-				$(".Info_cz_Class").remove();
+					$("#space a").remove();
+					$(".Info_cz_Class").remove();
+			    	drawLinks();
+		    	});
 		    	drawLinks();
-	    	});
-	    	drawLinks();
-	    	toggleImgSize(false);
+		    	toggleImgSize(false);
 		});
 		
 		function drawLinks() {
@@ -467,8 +463,7 @@ $(document).ready(function() {
             })
             externalLinks.forEach(function(link,index){
                 if(link!=null){
-                    var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left;
-                    console.log('posX: ', parseInt($("#space").css('margin-left')), $("#space").position());
+                    var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 
                     var posY = $("#space").position().top;
                     var externalLink = $('<a></a>');
                     externalLink.attr('href', link.externalLink.externalLink);
@@ -491,7 +486,6 @@ $(document).ready(function() {
                     linkDisplay.css('transform', 'rotate('+link.rotation+'deg)');
                     linkDisplay.css('fill', 'grey'); 
                     linkDisplay.css('color', 'rgba(128,128,128,1)');
-                    console.log('LINK DISPLAY: ', linkDisplay);
                     var linkPosX=(width*link.positionX)/[(${display?.width})];
                     var linkPosY=(height*link.positionY)/relativeHeight;
                     linkDisplay.css('left',linkPosX + posX);
@@ -533,7 +527,6 @@ $(document).ready(function() {
             Array.from(textBlockElements).forEach(function(textBlock, index){
             	if(textBlock != null) {
             	   	const color = textBlock.style.borderColor;
-                 	console.log("color 2:", color);
                  	textBlock.addEventListener('focus', function(e) {
                		e.target.style.outline = "2px solid "+ color;
                  	});

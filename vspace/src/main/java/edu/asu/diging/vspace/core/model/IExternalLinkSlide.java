@@ -1,8 +1,10 @@
 package edu.asu.diging.vspace.core.model;
 
-import edu.asu.diging.vspace.core.model.impl.ExternalLinkValue;
-
-public interface IExternalLinkSlide extends ILinkSlide<ExternalLinkValue>{
+public interface IExternalLinkSlide{
+    
+    String getId();
+    
+    void setId(String id);
     
     ISlide getSlide();
 
@@ -11,4 +13,8 @@ public interface IExternalLinkSlide extends ILinkSlide<ExternalLinkValue>{
     String getExternalLink();
 
     void setExternalLink(String externalLink);
+    
+    String getLabel();
+    
+    void setLabel(String label);
 }

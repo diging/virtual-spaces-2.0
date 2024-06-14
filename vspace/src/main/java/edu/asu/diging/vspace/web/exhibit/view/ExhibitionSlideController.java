@@ -136,7 +136,7 @@ public class ExhibitionSlideController {
         model.addAttribute("currentNumOfSlide", slideIndex + 1);
         model.addAttribute("spaceId", spaceId);
         model.addAttribute("spaceName", spaceManager.getSpace(spaceId).getName());
-        model.addAttribute("slideExternalLinkList", slideExternalLinkManager.getLinkDisplays(slideId));
+        model.addAttribute("slideExternalLinkList", slideExternalLinkManager.getLinks(slideId));
         return "exhibition/module";
     }
 

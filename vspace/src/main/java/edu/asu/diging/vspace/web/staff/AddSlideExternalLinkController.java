@@ -45,7 +45,7 @@ public class AddSlideExternalLinkController {
     	slideManager.updateSlide(slide);
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode linkNode = mapper.createObjectNode();
-        linkNode.put("label", externalLinkSlide.getName());
+        linkNode.put("label", externalLinkSlide.getLabel());
         linkNode.put("id", externalLinkSlide.getId());
         linkNode.put("url", externalLinkSlide.getExternalLink());
  
