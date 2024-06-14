@@ -129,18 +129,16 @@ public class ExhibitionConfigurationController {
     /**
      * To create or update the default link images.
      * 
-     * @param exhibitID - the ID of the exhibition to update
-     * @param spaceLinkImage - the MultipartFile representing the space link image to be uploaded
-     * @param moduleLinkImage - the MultipartFile representing the module link image to be uploaded
-     * @param externalLinkImage - - the MultipartFile representing the external link image to be uploaded
-     * @param attributes - - the RedirectAttributes object to add flash attributes
+     * @param image - the MultipartFile representing the link image to be uploaded
+     * @param linkType - the type of the link for which the default image must be set
+     * @param attributes - the RedirectAttributes object to add flash attributes
      * @return - a RedirectView to the exhibition configuration page
      * @throws IOException if an input or output error occurs
      */
     @RequestMapping(value = "/staff/exhibit/config/link/defaultImage", method = RequestMethod.POST)
     public RedirectView createOrUpdateLinkImage(HttpServletRequest request,
             @RequestParam(name = "image", required = false) MultipartFile image,
-            @RequestParam(name="linkType", required=true) String linkType,
+            @RequestParam(name="linkType") String linkType,
             RedirectAttributes attributes) throws IOException {
         Exhibition exhibition = (Exhibition) exhibitManager.getStartExhibition();       
         if(linkType.equals("space")) {
