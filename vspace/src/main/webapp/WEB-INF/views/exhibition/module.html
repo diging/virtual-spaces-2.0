@@ -270,7 +270,7 @@
                                     // Avoid adding a branch to itself
                                     if (branch.sequence === branchSequence.name) continue;
                                     
-                                    // Add the branch sequence to the children of the branch
+                                    // Add the branch sequence to the children of the branch node
                                     branch.children.push(sequencesMap.get(branchSequence.name));
                                 }
                             }
@@ -278,15 +278,7 @@
 
                         function createFromSequence(sequence, treeData, isStartSequence){                            
                             let startNodeSequence = {};
-                            let startNodeSequenceSlides = [];
-                            startNodeSequence.children = [];
-                            startNodeSequence.name = sequence.name;
-                            startNodeSequence.id = sequence.id;
-                            startNodeSequence.group = "sequence";
-                            //we will use parent identifier as id instead of name
-                            startNodeSequence.parent = json.id;
                             let slideIndex = 0;
-
                             for(slide of sequence.slideOverviews){
                                 let slideNode = {};                                                               	
                                 slideNode.children=[];
@@ -294,7 +286,6 @@
                             	if(slide.branchingPoint == true){
                             	    slideNode.branchSequences = [];
                             	    slideNode.branchingPoint = true;
-                            	    slideNode.branchingPoints = [];
                             	    for(seq of slide.choiceSequenceNames){
                             	    	let branchSeq = {};
                             	    	branchSeq.name = seq;
@@ -313,37 +304,42 @@
                                 slideNode.sequenceId = sequence.id;
                                 slideNode.slideId = slide.id;
                                 slideNode.id = sequence.id + slide.id;
-                                startNodeSequenceSlides.push(slideNode);  
                             	if(slideIndex == 0){
-                            	    slideNode.parent=startNodeSequence.name;
-                                    startNodeSequence.children.push(slideNode);
-                            	} else {                                 
+                                    slideNode.parent=json.id;
+                                    startNodeSequence = slideNode;
+                            	} else {                     
                                     prev.children.push(slideNode);
                                     slideNode.parent=prev;                                                                 	    
                             	}
+                                startNodeSequence.parent = json.id;
+                                startNodeSequence.group ="startSequence";
                             	prev = slideNode;
                             	source = slideNode.id;
                             	slideIndex=slideIndex+1;
                             }
+                            
                             if(isStartSequence == true){
                                 treeData.children.push(startNodeSequence);
                             }
+                                                      
                             sequencesMap.set(sequence.name, startNodeSequence);
-                            
                             return treeData;
-                        }                      
-                     
+                        }
+
                         function update(source) {
                         	
                             // Compute the new tree layout.
                             var nodes = tree.nodes(root).reverse(),links = tree.links(nodes);
-
+                            
                             // Normalize for fixed-depth.
                             nodes.forEach(function(d) { d.y = d.depth * 110; });
+
+                            // filtering to remove the root node and link (Module name)
                             nodes = nodes.filter(function(d){
-                            	return  d.depth && d.depth != 1;
+                            	return  d.depth && d.depth != 0;
                             });
-                            links = links.filter(function(d){ return   d.depth != 1 ; });
+
+                            links = links.filter(function(d){ return  d.source.depth != 0 ; });
                             nodes.forEach(function(d){
                             if(d.group == "slide" && d.parent.branchingPoint == true ){
                             	d.x= d.parent.x;
@@ -365,26 +361,26 @@
                         var nodeEnter = node.enter().append("g").attr("class", "node")
                         	.attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; }); 
 						
+                        // On click event for nodes
                         nodeEnter.on("click", openSlide);
                         
                         //function to open slide or sequence on clicking the node
                         function openSlide (d){
-                            if(d.group === "slide"){
-                                window.open([[@{/exhibit/}]]+spaceId+'/module/'+moduleId+'/sequence/'+d.sequenceId+'/slide/'+d.slideId, "_self");
-                            } else if(d.group === "sequence" && d.parent.branchingPoint == true ){
-                                window.open([[@{/exhibit/}]]+spaceId+'/module/'+moduleId+'/sequence/'+d.id+"?branchingPoint="+d.parent.slideId+"&previousSequenceId="+d.parent.sequenceId, "_self");
-                            }
+                            window.open([[@{/exhibit/}]]+spaceId+'/module/'+moduleId+'/sequence/'+d.sequenceId+'/slide/'+d.slideId, "_self");
                         }
 
+                        // Add the circle for the nodes
                         nodeEnter.append("circle").attr("r", function(d){
-                        	if((d.group=== "slide" && d.sequenceId.normalize() === sequenceId.normalize() ) 
+                        	if((d.sequenceId.normalize() === sequenceId.normalize()) 
                         			&& (d.slideId.normalize() === currentSlide.id.normalize())){
                         		return 10;
                         	}
                         	return 1e-6;
-                        }).style("fill", function(d) { return d._children ? "orange" : "orange"; })
+                        }).style("fill", "orange" )
                         .style("opacity", function(d, i) { return !d.depth ? 0 : 1; })
                         .style("cursor","pointer");
+                        
+                        // Add the text for the nodes
                         nodeEnter.append("text").attr("class","text")
                         	.attr("x", function(d) { return d.children || d._children ? 10 :10; })
                         	.attr("dy", "2.3em")
@@ -392,14 +388,15 @@
                         	.text(function(d) { return d.name; })
                         	.style("fill-opacity", 1e-6)
                         	.style("opacity", function(d, i) {
-                        		return !d.depth ? 0 : 1;
-                        });;;
+                        		return !d.depth ? 0 : 1; 
+                        	});;;
 							
                         // Transition nodes to their new position.
                         var nodeUpdate = node.transition()
                         	.duration(duration)
                         	.attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
 						
+                        // update the node style
                         nodeUpdate.select("circle").attr("r", 
                         		function(d){ if((d.group=== "slide" && d.sequenceId.normalize() === sequenceId.normalize() && d.branchingPoint != true)
                         				&& (d.slideId.normalize() === currentSlide.id.normalize())){
@@ -412,13 +409,15 @@
                         			return 1;
                         		}
                         		return 0.5;
-                        }).style("fill", function(d) { return d._children ? "orange" : "orange"; })
+                        })
+                        .style("fill", "orange")
                         .style("opacity", function(d, i) {
                             return !d.depth ? 0 : 1;
                         });;
-						
+                        
                         nodeUpdate.select("text").style("fill-opacity", 1);
                         
+                        // Appends a text element to each entering node
                         nodeEnter.append("text").attr("class","text")
                         	.attr("x", function(d) { return d.children || d._children ? 10 :10; })
                         	.attr("dy", "1.5em")
@@ -426,27 +425,17 @@
                         	.text(function(d) { return d.name; })
                         	.style("fill-opacity", 1e-6)
                         	.style("opacity", function(d, i) {
-                        				return !d.depth ? 0 : 1;
-                        });;;
+                        		return !d.depth ? 0 : 1;
+                            });;;
 						
                         // Transition exiting nodes to the parent's new position.
                         var nodeExit = node.exit().transition().duration(duration)
                         	.attr("transform", function(d) { return "translate(" + source.y + "," + source.x + ")"; })
                         	.remove();
 						
-                        nodeExit.select("circle")
-                        	.attr("r", 1e-6);
-                        
-                        nodeExit.select("text")
-                        	.style("fill-opacity", 1e-6);
+                        nodeExit.select("text").style("fill-opacity", 1e-6);
 
-                        // Remove the last two links from the data array
-                        if (links.length > 1) {
-                            links.pop();
-                            links.pop();
-                        }
-
-                        // Update the links…
+                        // Update the links
                         var link = svg.selectAll("path.link")
                             .data(links, function(d) { return d.target.id; })
                         
@@ -454,14 +443,10 @@
                         // Enter any new links at the parent's previous position.
                         link.enter().insert("path", "g").attr("class", "link")
                             .attr("d", function(d) {
-                                let i=0;
                                 var o = {x: source.x0, y: source.y0};					
                                 return diagonal({source: o, target: o});	
                             }).style("fill-opacity", function(d) { return d._children ? 1e-6 : 1e-6; });
-
-                        // Remove the last two path.link elements from the DOM
-                        d3.selectAll("path.link:nth-last-child(-n+2)").remove();
-						
+                       
                         // Transition links to their new position.
                         link.transition().duration(duration).attr("d", diagonal);
                         
