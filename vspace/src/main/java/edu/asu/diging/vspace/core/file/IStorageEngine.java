@@ -38,7 +38,7 @@ public interface IStorageEngine {
      *
      *@param folderPath path to the folder to be deleted
      */
-    void deleteFolder(String folderPath) throws IOException;
+    void deleteFolder(String folderPath, String folderName) throws IOException;
 
     /**
      * To return the zip file

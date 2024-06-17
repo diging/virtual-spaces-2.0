@@ -24,18 +24,13 @@
     }).on("page", function(event, num){
     		window.location.assign("[(@{'/staff/downloads/list'})]"+'?'+"downloadsPagenum="+num);
     });
-    checkSnapshotCreationStatus('');
 })
 
     function checkSnapshotCreationStatus(id){
     	$.ajax({
             type : "GET",
-            url : "[(@{'/staff/exhibit/task/snapshot/status?'+ ${_csrf.parameterName}+'='+${_csrf.token} })]"+"&snapshotTaskId="+id,
+            url : "[(@{'/staff/exhibit/task/snapshot/status?'})]"+"snapshotTaskId="+id,
             cache : false,
-            
-            contentType : false,
-            processData : false,
-            
             success : function(data) {
                 if(data.taskComplete ==  false) {
                     pollForExhibitionDownload(data.exhibitionSnapshot.id, data.exhibitionSnapshot.folderName);
@@ -45,7 +40,7 @@
                 var loader = document.getElementById('downloadLoader');
                 loader.style.visibility="hidden";
                 
-                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>Snapshot could not be downloaded</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>Snapshot could not be created</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
                 $('.errorAdd').append(alert);
                 
                 var errorAlert = document.getElementById('downloadError');
@@ -66,7 +61,7 @@
             	pollForExhibitionDownload(data.id, data.folderName); 		
             },
             error : function(data) {					
-            	var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>Snapshot could not be downloaded</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+            	var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>Snapshot could not be created</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
             	$('.errorAdd').append(alert);
             	
             	var errorAlert = document.getElementById('downloadError');
@@ -84,7 +79,7 @@
             let attempts = 0;
     
             const executePoll = async (resolve, reject) => {
-                const  url = "[(@{'/staff/exhibit/download/checkStatus/'})]"+id+"?folderName="+folderName+','+ [[${_csrf.parameterName}]]+'='+[[${_csrf.token}]];			  
+                const  url = "[(@{'/staff/exhibit/download/checkStatus/'})]"+id+"?folderName="+folderName;			  
                 const result = await fetch(url);
                 attempts++;
                 var text = await result.text();
@@ -94,8 +89,9 @@
                     $('.successAlert').append(alert); 
                     return resolve(result);
                 } else if (maxAttempts && attempts === maxAttempts) {
-                    var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>Snapshot '+folderName+' could not be created. Please try again later</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>Snapshot '+folderName+' creation is still in progress. Please check again later</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
                     $('.errorAdd').append(alert);
+                    
                     var errorAlert = document.getElementById('downloadError');
                     errorAlert.style.visibility="visible";
                     

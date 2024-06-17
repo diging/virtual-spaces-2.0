@@ -26,6 +26,7 @@ import edu.asu.diging.vspace.core.data.SnapshotTaskRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.exception.ExhibitionSnapshotNotFoundException;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
+import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.exception.SnapshotCouldNotBeCreatedException;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionSnapshot;
@@ -64,8 +65,8 @@ public class SnapshotManager  implements  ISnapshotManager {
     private SnapshotTaskRepository snapshotTaskRepository;
     
     @Autowired
-    private SpaceRepository spaceRepository;    
-
+    private SpaceRepository spaceRepository;
+    
     private final String RESOURCES_FOLDER_NAME = "resources";
 
     /**
@@ -80,7 +81,8 @@ public class SnapshotManager  implements  ISnapshotManager {
      */
     @Override
     @Transactional
-    public ExhibitionSnapshot triggerExhibitionSnapshotCreation(String exhibitionFolderName) throws IOException, InterruptedException, SnapshotCouldNotBeCreatedException {                 
+    public ExhibitionSnapshot triggerExhibitionSnapshotCreation() throws IOException, InterruptedException, SnapshotCouldNotBeCreatedException {
+        String exhibitionFolderName = getExhibitionFolderName();
         ExhibitionSnapshot exhibitionSnapshot = exhibitionSnapshotRepository.findByFolderName(exhibitionFolderName);        
         if(exhibitionSnapshot == null ) {
             exhibitionSnapshot = new ExhibitionSnapshot();
@@ -124,11 +126,13 @@ public class SnapshotManager  implements  ISnapshotManager {
      * @throws IOException - if an I/O error occurs during the snapshot creation
      * @throws InterruptedException - if the snapshot creation process is interrupted
      * @throws FileStorageException - if an error occurs while storing the snapshot
+     * @throws ImageCouldNotBeStoredException 
      */    
     @Async
     @Override
     @Transactional
-    public void createSnapshot(String resourcesPath, String exhibitionFolderName,SequenceHistory sequenceHistory, ExhibitionSnapshot exhibitionSnapshot) throws IOException, InterruptedException, FileStorageException {
+    public void createSnapshot(String resourcesPath, String exhibitionFolderName,SequenceHistory sequenceHistory, ExhibitionSnapshot exhibitionSnapshot) 
+            throws IOException, InterruptedException, FileStorageException {
         storageEngineDownloads.copyToFolder(exhibitionFolderName + File.separator + RESOURCES_FOLDER_NAME, resourcesPath);
         List<Space> spaces= spaceRepository.findAllBySpaceStatus(SpaceStatus.PUBLISHED);
 
@@ -164,12 +168,12 @@ public class SnapshotManager  implements  ISnapshotManager {
      * @throws IOException
      */
     @Override
-    public byte[] downloadExhibitionFolder(String id) throws ExhibitionSnapshotNotFoundException, IOException {
+    public byte[] getExhibitionFolder(String id) throws ExhibitionSnapshotNotFoundException, IOException {
         Optional<ExhibitionSnapshot> exhibitionDownload = exhibitionSnapshotRepository.findById(id);
 
         if(exhibitionDownload.isPresent()) {           
             try {
-                return storageEngineDownloads.downloadZip(exhibitionDownload.get().getFolderName());                
+                return storageEngineDownloads.getZip(exhibitionDownload.get().getFolderName());                
             }catch(FileSystemNotFoundException e) {
                 throw new ExhibitionSnapshotNotFoundException(id);
             }
@@ -184,7 +188,7 @@ public class SnapshotManager  implements  ISnapshotManager {
      */
     @Override
     @Transactional
-    public Boolean checkIfSnapshotCreated(String id) {
+    public Boolean doesSnapshotExist(String id) {
         Optional<ExhibitionSnapshot> exhibitionDownload = exhibitionSnapshotRepository.findById(id);
         if(exhibitionDownload.isPresent()) {
             return exhibitionDownload.get().getSnapshotTask().isTaskComplete();            

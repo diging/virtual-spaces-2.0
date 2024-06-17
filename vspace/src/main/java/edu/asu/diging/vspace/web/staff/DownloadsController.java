@@ -55,7 +55,7 @@ public class DownloadsController {
     public ResponseEntity<ExhibitionSnapshot> createExhibitionSnapshot(HttpServletRequest request, HttpServletResponse response,  Model model) {
         ExhibitionSnapshot exhibitionSnapshot = null;
         try {      
-            exhibitionSnapshot = snapshotManager.triggerExhibitionSnapshotCreation(snapshotManager.getExhibitionFolderName());
+            exhibitionSnapshot = snapshotManager.triggerExhibitionSnapshotCreation();
 
             return  ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_TYPE, "application/json")
@@ -70,10 +70,10 @@ public class DownloadsController {
     @RequestMapping(value = "/staff/exhibit/download/{id}", method = RequestMethod.GET) 
     public ResponseEntity<Resource> downloadExhibitionFolder(@PathVariable("id") String id, @RequestParam("folderName") String exhibitionSnapshotFolderName , HttpServletRequest request)
             throws ExhibitionSnapshotNotFoundException , IOException, FileStorageException {
-        Resource resource = null;      
+        Resource resource = null;
 
         try {
-            byte[] byteArrayResource = snapshotManager.downloadExhibitionFolder(id);
+            byte[] byteArrayResource = snapshotManager.getExhibitionFolder(id);
             resource = new ByteArrayResource(byteArrayResource);
             return  ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+exhibitionSnapshotFolderName+".zip")
@@ -89,7 +89,7 @@ public class DownloadsController {
     
     @RequestMapping(value = "/staff/exhibit/download/checkStatus/{id}", method = RequestMethod.GET) 
     public ResponseEntity<Boolean> exhibitionDownloadStatus(@PathVariable("id") String id, @RequestParam("folderName") String exhibitionDownloadFolderName , HttpServletRequest request) throws ExhibitionSnapshotNotFoundException {
-        if (snapshotManager.checkIfSnapshotCreated(id)) {
+        if (snapshotManager.doesSnapshotExist(id)) {
             return new ResponseEntity<Boolean>(true, HttpStatus.OK);
         }
         else {

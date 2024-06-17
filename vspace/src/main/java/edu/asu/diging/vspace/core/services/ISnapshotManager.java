@@ -13,11 +13,11 @@ import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
 import edu.asu.diging.vspace.core.model.impl.SnapshotTask;
 
 public interface ISnapshotManager {
-    ExhibitionSnapshot triggerExhibitionSnapshotCreation(String exhibitionFolderName) throws IOException, InterruptedException, SnapshotCouldNotBeCreatedException;
+    ExhibitionSnapshot triggerExhibitionSnapshotCreation() throws IOException, InterruptedException, SnapshotCouldNotBeCreatedException;
  
-    byte[] downloadExhibitionFolder(String id) throws ExhibitionSnapshotNotFoundException, IOException, FileStorageException;
+    byte[] getExhibitionFolder(String id) throws ExhibitionSnapshotNotFoundException, IOException, FileStorageException;
 
-    Boolean checkIfSnapshotCreated(String id);
+    Boolean doesSnapshotExist(String id);
 
     String getExhibitionFolderName();
 

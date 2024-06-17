@@ -1,5 +1,6 @@
 package edu.asu.diging.vspace.core.file;
 
+import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.model.IVSImage;
 
 public interface IStorageManager {
@@ -9,7 +10,8 @@ public interface IStorageManager {
      * 
      * @param image
      * @param imagesFolderPath
+     * @throws FileStorageException 
      */
-    void copyImage(IVSImage image, String imagesFolderPath);
+    void copyImage(IVSImage image, String imagesFolderPath) throws FileStorageException;
 
 }

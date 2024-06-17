@@ -1,7 +1,6 @@
 package edu.asu.diging.vspace.core.services.impl;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -9,14 +8,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 
-import edu.asu.diging.vspace.core.data.SnapshotTaskRepository;
-import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.SequenceNotFoundException;
 import edu.asu.diging.vspace.core.exception.SlideNotFoundException;
@@ -34,9 +29,7 @@ import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.BranchingPoint;
-import edu.asu.diging.vspace.core.model.impl.ExhibitionSnapshot;
 import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
-import edu.asu.diging.vspace.core.model.impl.SnapshotTask;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
@@ -89,9 +82,6 @@ public class RenderingManager implements IRenderingManager {
     private ISpaceManager spaceManager;
     
     @Autowired
-    private SnapshotTaskRepository snapshotTaskRepository;
-    
-    @Autowired
     private IStorageManager storageManager;
     
     private final String IMAGES_FOLDER_NAME = "images";
@@ -105,9 +95,9 @@ public class RenderingManager implements IRenderingManager {
     /**
      * 
      * Download given space and related modules into exhibitionFolderPath
-     * @param space
-     * @param exhibitionFolderPath
-     * @param context
+     * @param space                            the space object 
+     * @param exhibitionFolderName             the folder name of the exhibition where space contents will be stored           
+     * @param sequenceHistory                  the sequence history object having the history of sequences                        
      * @throws FileStorageException 
      */
     public void downloadSpace(Space space, String exhibitionFolderName,  SequenceHistory sequenceHistory) throws FileStorageException {
@@ -134,12 +124,12 @@ public class RenderingManager implements IRenderingManager {
     /**
      * Stores the processed template for space into spaceFolderPath.
      * 
-     * @param directory
-     * @param spaceFolderPath
-     * @param context
+     * @param spaceId                the space id to be rendered
+     * @param spaceFolderPath        the folder where the space content will be stored
+     * @param sequenceHistory        the sequence history object having the history of sequences 
      * @throws FileStorageException 
      */
-    public void renderSpace(String spaceId, String spaceFolderPath,  SequenceHistory sequenceHistory) throws FileStorageException {
+    private void renderSpace(String spaceId, String spaceFolderPath,  SequenceHistory sequenceHistory) throws FileStorageException {
 
         Context thymeleafContext = new Context();
         populateContextForSpace(thymeleafContext, spaceId, sequenceHistory);
@@ -152,13 +142,13 @@ public class RenderingManager implements IRenderingManager {
     /**
      * 
      * Downloads given module and related slides into space folder path.
-     * @param module
-     * @param space
-     * @param imagesFolderPath
-     * @param spaceFolderPath
-     * @param context
+     * @param module            the {@link IModule} object indicating the module
+     * @param space             the {@link ISpace} object 
+     * @param imagesFolderPath  the path of the folder where the module's images will be stored
+     * @param spaceFolderPath   he path of the folder where the module's content will be stored
+     * 
      */
-    public void downloadModule(IModule module, ISpace space, String imagesFolderPath, String spaceFolderPath) {
+    private void downloadModule(IModule module, ISpace space, String imagesFolderPath, String spaceFolderPath) {
         ISequence startSequence = module.getStartSequence();
         if(startSequence!= null) {
             try {
@@ -172,14 +162,15 @@ public class RenderingManager implements IRenderingManager {
     /**
      * 
      * Downloads given sequence into spacefolderPath.
-     * @param startSequence
-     * @param module
-     * @param space
-     * @param spaceFolderPath
-     * @param imagesFolderPath
-     * @param context
+     * @param startSequence      the {@link ISequence} object indicating the start sequence of the module
+     * @param module             the {@link IModule} object
+     * @param space              the {@link ISpace} object
+     * @param spaceFolderPath    the space folder path where space content will be stored
+     * @param imagesFolderPath   the images folder path where images will be stored
+     * @throws FileStorageException
+     * 
      */
-    public void downloadSequences(ISequence startSequence, IModule module, ISpace space, String spaceFolderPath,
+    private void downloadSequences(ISequence startSequence, IModule module, ISpace space, String spaceFolderPath,
             String imagesFolderPath) throws FileStorageException {
         List<ISlide> slides = startSequence.getSlides();
         slides.forEach(slide -> {
@@ -201,7 +192,11 @@ public class RenderingManager implements IRenderingManager {
                 IContentBlock contentBlock = slide.getFirstImageBlock();
                 if(contentBlock!= null) {
                     IVSImage image = slide.getFirstImageBlock().getImage();
-                    storageManager.copyImage(image, imagesFolderPath);
+                    try {
+                        storageManager.copyImage(image, imagesFolderPath);
+                    } catch (FileStorageException e) {
+                        logger.error("Could not download Sequence",e);
+                    }
                 }
                 try {
                     renderSlide(slide.getId(), spaceFolderPath ,  space.getId(), module.getId(), startSequence.getId());
@@ -215,15 +210,14 @@ public class RenderingManager implements IRenderingManager {
     /**
      * 
      * Stores the processed template for slide into spaceFolderPath
-     * @param slideId
-     * @param spaceFolderPath
-     * @param context
-     * @param spaceId
+     * @param slideId                the slide Id 
+     * @param spaceFolderPath        the space folder path where space content will be stored             
+     * @param spaceId                the id of the space to be rendered 
      * @param moduleId
      * @param sequenceId
      * @throws FileStorageException 
      */
-    public void renderSlide(String slideId, String spaceFolderPath, String spaceId, String moduleId, String sequenceId ) throws FileStorageException {
+    private void renderSlide(String slideId, String spaceFolderPath, String spaceId, String moduleId, String sequenceId ) throws FileStorageException {
         try {      
             Context thymeleafContext = new Context();
 
@@ -242,7 +236,8 @@ public class RenderingManager implements IRenderingManager {
      *@see IRenderingManager#populateContextForSlide(Context, String, String, String, String)
      */
     @Override
-    public void populateContextForSlide(Context context, String spaceId, String moduleId, String sequenceId, String slideId) throws SlidesInSequenceNotFoundException, SequenceNotFoundException, SlideNotFoundException {
+    public void populateContextForSlide(Context context, String spaceId, String moduleId, String sequenceId, String slideId) 
+            throws SlidesInSequenceNotFoundException, SequenceNotFoundException, SlideNotFoundException {
         IModule module = moduleManager.getModule(moduleId);
         context.setVariable("module", module);
         String startSequenceId = module.getStartSequence().getId();

@@ -8,7 +8,6 @@ import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.SequenceNotFoundException;
 import edu.asu.diging.vspace.core.exception.SlideNotFoundException;
 import edu.asu.diging.vspace.core.exception.SlidesInSequenceNotFoundException;
-import edu.asu.diging.vspace.core.model.impl.ExhibitionSnapshot;
 import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
 import edu.asu.diging.vspace.core.model.impl.Space;
 
@@ -41,10 +40,11 @@ public interface IRenderingManager {
     /**
      * 
      * Download given space and related modules into exhibitionFolderPath
-     * @param space
-     * @param exhibitionFolderPath
-     * @param context
-     * @throws FileStorageException 
+     * 
+     * @param space                  - space object of the space to be downloaded
+     * @param exhibitionFolderName   - The name of the folder where the space contents will be stored
+     * @param sequenceHistory        - The SequenceHistory object containing the history of sequences
+     * @throws FileStorageException
      */
     void downloadSpace(Space space, String exhibitionFolderName,  SequenceHistory sequenceHistory) throws FileStorageException;
 

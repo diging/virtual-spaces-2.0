@@ -12,6 +12,7 @@ import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -115,7 +116,7 @@ public class StorageEngine implements IStorageEngine {
         File parentDirectory = getDirectoryPath(directory);
         if (!parentDirectory.exists()) {
             parentDirectory.mkdir();
-        }
+        }        
         return new File(parentDirectory.getAbsolutePath() + File.separator + fileName);
     }
     
@@ -164,29 +165,36 @@ public class StorageEngine implements IStorageEngine {
      */
     @Override
     public byte[] generateZip(String folderName) throws IOException {
-        Path zipFile = Paths.get(path + File.separator + folderName);
+        Path folder = Paths.get(path + File.separator + folderName);
         ByteArrayOutputStream  byteArrayOutputStream = new ByteArrayOutputStream();
-        FileOutputStream fileOutputStream = new FileOutputStream(getFile("",folderName+".zip"));
+        String zipFile = folderName+".zip";
+        String folderPath = "";
+        FileOutputStream fileOutputStream = new FileOutputStream(getFile(folderPath,zipFile));
         
         try (BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
                 ZipOutputStream responseZipStream = new ZipOutputStream(bufferedOutputStream);
-                Stream<Path> paths = Files.walk(zipFile)) {
-            paths
-                .filter(path -> !Files.isDirectory(path))
-                .forEach(path -> {
-                    ZipEntry  zipEntry = new ZipEntry(zipFile.relativize(path).toString());
-                    try {
-                        responseZipStream.putNextEntry(zipEntry);
-                        Files.copy(path, responseZipStream);
-                        responseZipStream.closeEntry();
-                        //delete the folder 
-                        Files.delete(zipFile);
-                    } catch (IOException e) {
-                        logger.error("Could not generate Zip folder", e);
-                    }
-                });            
-        }
-        return byteArrayOutputStream.toByteArray();        
+                Stream<Path> paths = Files.walk(folder)) {
+               boolean success = true;
+               for (Path path : paths.filter(p -> !Files.isDirectory(p)).collect(Collectors.toList())) {
+                   ZipEntry zipEntry = new ZipEntry(folder.relativize(path).toString());
+                   try {
+                       responseZipStream.putNextEntry(zipEntry);
+                       Files.copy(path, responseZipStream);
+                       responseZipStream.closeEntry();
+                   } catch (IOException e) {
+                       deleteFile(folderPath, zipFile); // Delete the created folder if an exception occurs
+                       throw new IOException(e.getMessage(), e);
+                   }
+               }
+               
+               deleteFolder(folderPath, folderName); // Delete the folder
+           } catch (IOException e) {
+               deleteFile(folderPath, zipFile); // Delete the zip file if an exception occurred
+               deleteFolder(folderPath, folderName); // Delete the folder
+               
+               throw new IOException(e.getMessage(), e);
+           }
+           return byteArrayOutputStream.toByteArray();        
     }
     
     /**
@@ -207,8 +215,8 @@ public class StorageEngine implements IStorageEngine {
      *@param folderPath  path to the folder to be deleted
      */
     @Override
-    public void deleteFolder(String folderPath) throws IOException {
-        FileUtils.deleteDirectory(getFile("",folderPath));
+    public void deleteFolder(String folderPath, String folderName) throws IOException {
+        FileUtils.deleteDirectory(getFile(folderPath,folderName));
     }
     
     /**
@@ -230,7 +238,7 @@ public class StorageEngine implements IStorageEngine {
             byte[] buffer = in.readAllBytes();
             return buffer;
         } catch (IOException e) {
-            throw new ExhibitionSnapshotNotFoundException(e.getMessage());
+            throw new ExhibitionSnapshotNotFoundException(e.getMessage(), e);
         }                   
     }
 }   

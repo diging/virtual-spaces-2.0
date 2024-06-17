@@ -34,7 +34,7 @@ public class SnapshotTaskController {
         SnapshotTask snapshotTask = (id == null && id=="") ? snapshotManager.getLatestSnapshotTask() : snapshotManager.getSnapshotTask(id);   
         if(snapshotTask == null) {
             logger.error("Could not find snapshot task");
-            return new ResponseEntity<SnapshotTask>(snapshotTask, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<SnapshotTask>(snapshotTask, HttpStatus.NOT_FOUND);
         } else {
             return  ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_TYPE, "application/json")
