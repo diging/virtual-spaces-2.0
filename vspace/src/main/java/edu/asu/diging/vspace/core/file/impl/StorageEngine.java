@@ -174,28 +174,28 @@ public class StorageEngine implements IStorageEngine {
         try (BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
                 ZipOutputStream responseZipStream = new ZipOutputStream(bufferedOutputStream);
                 Stream<Path> paths = Files.walk(folder)) {
-               for (Path path : paths.filter(p -> !Files.isDirectory(p)).collect(Collectors.toList())) {
-                   ZipEntry zipEntry = new ZipEntry(folder.relativize(path).toString());
-                   try {
-                       responseZipStream.putNextEntry(zipEntry);
-                       Files.copy(path, responseZipStream);
-                       responseZipStream.closeEntry();
-                   } catch (IOException e) {
-                       // Delete the created zip if an exception occurs
-                       deleteFile(folderPath, zipFile);
-                       throw new IOException(e.getMessage(), e);
-                   }
-               }
-               // Delete the folder
-               deleteFolder(folderPath, folderName); 
-           } catch (IOException e) {
-               // Delete the zip file if an exception occurred
-               deleteFile(folderPath, zipFile);
-               deleteFolder(folderPath, folderName);
-               
-               throw new IOException(e.getMessage(), e);
-           }
-           return byteArrayOutputStream.toByteArray();        
+            for (Path path : paths.filter(p -> !Files.isDirectory(p)).collect(Collectors.toList())) {
+                ZipEntry zipEntry = new ZipEntry(folder.relativize(path).toString());
+                try {
+                    responseZipStream.putNextEntry(zipEntry);
+                    Files.copy(path, responseZipStream);
+                    responseZipStream.closeEntry();
+                } catch (IOException e) {
+                    // Delete the created zip if an exception occurs
+                    deleteFile(folderPath, zipFile);
+                    throw new IOException(e.getMessage(), e);
+                }
+            }
+            // Delete the folder
+            deleteFolder(folderPath, folderName); 
+        } catch (IOException e) {
+            // Delete the zip file if an exception occurred
+            deleteFile(folderPath, zipFile);
+            deleteFolder(folderPath, folderName);
+
+            throw new IOException(e.getMessage(), e);
+        }
+        return byteArrayOutputStream.toByteArray();        
     }
     
     /**
