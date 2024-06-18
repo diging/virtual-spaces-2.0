@@ -7,6 +7,23 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class ExhibitionSnapshotNotFoundException extends Exception{
     private static final long serialVersionUID = 1L;
     
+    public ExhibitionSnapshotNotFoundException() {
+        super();
+    }
+
+    public ExhibitionSnapshotNotFoundException(String message, Throwable cause, boolean enableSuppression,
+            boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
+
+    public ExhibitionSnapshotNotFoundException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public ExhibitionSnapshotNotFoundException(Throwable cause) {
+        super(cause);
+    }
+
     public ExhibitionSnapshotNotFoundException(String id) {
         super("Exhibition snapshot folder with id " + id + " not found");
     }

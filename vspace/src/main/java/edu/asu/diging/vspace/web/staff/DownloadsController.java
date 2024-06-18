@@ -73,7 +73,7 @@ public class DownloadsController {
         Resource resource = null;
 
         try {
-            byte[] byteArrayResource = snapshotManager.getExhibitionFolder(id);
+            byte[] byteArrayResource = snapshotManager.getExhibitionSnapshot(id);
             resource = new ByteArrayResource(byteArrayResource);
             return  ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+exhibitionSnapshotFolderName+".zip")

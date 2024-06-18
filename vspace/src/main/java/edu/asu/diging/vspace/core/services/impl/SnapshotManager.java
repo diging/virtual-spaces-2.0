@@ -160,22 +160,22 @@ public class SnapshotManager  implements  ISnapshotManager {
     }
 
     /**
-     * Downloads the given exhibition folder by the given ExhibitionDownload id
+     * Downloads the given exhibition folder by the given ExhibitionSnapshot id
      * 
-     * @param id
-     * @return
+     * @param id  - exhibition snapshot id
+     * @return - The zip file as a byte array
      * @throws ExhibitionDownloadNotFoundException
      * @throws IOException
      */
     @Override
-    public byte[] getExhibitionFolder(String id) throws ExhibitionSnapshotNotFoundException, IOException {
-        Optional<ExhibitionSnapshot> exhibitionDownload = exhibitionSnapshotRepository.findById(id);
+    public byte[] getExhibitionSnapshot(String id) throws ExhibitionSnapshotNotFoundException, IOException {
+        Optional<ExhibitionSnapshot> exhibitionSnapshot = exhibitionSnapshotRepository.findById(id);
 
-        if(exhibitionDownload.isPresent()) {           
+        if(exhibitionSnapshot.isPresent()) {           
             try {
-                return storageEngineDownloads.getZip(exhibitionDownload.get().getFolderName());                
+                return storageEngineDownloads.getZip(exhibitionSnapshot.get().getFolderName());                
             }catch(FileSystemNotFoundException e) {
-                throw new ExhibitionSnapshotNotFoundException(id);
+                throw new ExhibitionSnapshotNotFoundException(e.getMessage(), e);
             }
               
         } else {
