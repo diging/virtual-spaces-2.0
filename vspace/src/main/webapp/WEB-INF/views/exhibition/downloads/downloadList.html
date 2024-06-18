@@ -35,6 +35,12 @@
                 if(data.taskComplete ==  false) {
                     pollForExhibitionDownload(data.exhibitionSnapshot.id, data.exhibitionSnapshot.folderName);
                 }
+                else{
+                    var folderName = data.exhibitionSnapshot.folderName;
+                    var alert = $('<div class="alert alert-success alert-dismissible fade show" role="alert"><p>Snapshot '+folderName+' is ready. Please click to download. <a href=[[@{/staff/exhibit/download/'+id+'?folderName='+folderName+'}]] > <span class="btn primary-btn btn-sm">Download</span></a> </p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    $('.successAlert').empty();
+                    $('.successAlert').append(alert);
+                }
             },
             error : function(data) {
                 var loader = document.getElementById('downloadLoader');
@@ -83,13 +89,14 @@
                 const result = await fetch(url);
                 attempts++;
                 var text = await result.text();
-                if ( text == "true") {
+                if (text == "true") {
                     var alert = $('<div class="alert alert-success alert-dismissible fade show" role="alert"><p>Snapshot '+folderName+' is ready. Please click to download. <a href=[[@{/staff/exhibit/download/'+id+'?folderName='+folderName+'}]] > <span class="btn primary-btn btn-sm">Download</span></a> </p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
                     $('.successAlert').empty();
                     $('.successAlert').append(alert); 
                     return resolve(result);
                 } else if (maxAttempts && attempts === maxAttempts) {
-                    var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>Snapshot '+folderName+' creation is still in progress. Please check again later</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    var num = '[[${downloadsCurrentPageNumber}]]';
+                    var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>Snapshot '+folderName+' creation is still in progress. Please check again later <a href=[[@{/staff/downloads/list?downloadsPagenum='+num+'}]]> <span class="btn primary-btn btn-sm">Refresh</span></p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
                     $('.errorAdd').append(alert);
                     
                     var errorAlert = document.getElementById('downloadError');

@@ -174,7 +174,6 @@ public class StorageEngine implements IStorageEngine {
         try (BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
                 ZipOutputStream responseZipStream = new ZipOutputStream(bufferedOutputStream);
                 Stream<Path> paths = Files.walk(folder)) {
-               boolean success = true;
                for (Path path : paths.filter(p -> !Files.isDirectory(p)).collect(Collectors.toList())) {
                    ZipEntry zipEntry = new ZipEntry(folder.relativize(path).toString());
                    try {
@@ -182,15 +181,17 @@ public class StorageEngine implements IStorageEngine {
                        Files.copy(path, responseZipStream);
                        responseZipStream.closeEntry();
                    } catch (IOException e) {
-                       deleteFile(folderPath, zipFile); // Delete the created folder if an exception occurs
+                       // Delete the created zip if an exception occurs
+                       deleteFile(folderPath, zipFile);
                        throw new IOException(e.getMessage(), e);
                    }
                }
-               
-               deleteFolder(folderPath, folderName); // Delete the folder
+               // Delete the folder
+               deleteFolder(folderPath, folderName); 
            } catch (IOException e) {
-               deleteFile(folderPath, zipFile); // Delete the zip file if an exception occurred
-               deleteFolder(folderPath, folderName); // Delete the folder
+               // Delete the zip file if an exception occurred
+               deleteFile(folderPath, zipFile);
+               deleteFolder(folderPath, folderName);
                
                throw new IOException(e.getMessage(), e);
            }
