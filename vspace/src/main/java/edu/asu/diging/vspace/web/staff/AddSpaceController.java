@@ -17,12 +17,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.asu.diging.vspace.core.exception.ImageDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.ISpaceFactory;
-import edu.asu.diging.vspace.core.factory.impl.ExhibitionFactory;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
-import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
-import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
@@ -41,12 +38,6 @@ public class AddSpaceController {
 
     @Autowired
     private IImageService imageService;
-    
-    @Autowired
-    private IExhibitionManager exhibitManager;
-    
-    @Autowired
-    private ExhibitionFactory exhibitFactory;
 
 
     @RequestMapping(value = "/staff/space/add", method = RequestMethod.GET)
@@ -61,11 +52,6 @@ public class AddSpaceController {
     public String addSpace(Model model, @ModelAttribute SpaceForm spaceForm, @RequestParam("file") MultipartFile file,
             Principal principal, @RequestParam(value = "imageId", required=false) String imageId, RedirectAttributes redirectAttrs) throws IOException {
         ISpace space = spaceFactory.createSpace(spaceForm);
-        Exhibition exhibition = (Exhibition) exhibitManager.getStartExhibition();
-        if(exhibition==null) {
-            exhibition = (Exhibition) exhibitFactory.createExhibition();
-            exhibitManager.storeExhibition(exhibition);
-        }
         space.setSpaceStatus(SpaceStatus.UNPUBLISHED);
         byte[] bgImage = null;
         String filename = null;
