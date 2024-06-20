@@ -847,26 +847,26 @@
             	
             	$(document).on("click", ".deleteVideo", function(e) {
             		$("#videoIdToDelete").attr( 'value', $(this).attr('data-video-id'));
-		            $(".load").remove();
-		            $("#"+$(this).attr('data-video-id')).append($('<div class="load" style="font-size: 30px;display: none; text-align: center;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></div>'));
-		            $(".load").show();
-		            setTimeout(function() {
-			            //code to be executed after 3 second
-			            $(".load").hide();
-			            $("#confirmDeleteVideoAlert").show();
-		            }, 3000);
-	            });
-
-	            $(document).on("click", ".deleteChoiceBlock", function(e) {
-		            $("#confirmDeleteChoiceBlockAlert").show();
-		            var alert = $('<input type="hidden" id="deleteChoiceBlockId">');
-		            $(alert).attr( 'value', $(this).siblings('input').val());
-		            $('.modal-footer').append(alert);
-	            });
-
-	            $("#cancelSubmitText").click(function() {
-	            	$("#addTextAlert").hide();
-	            });
+            		$(".load").remove();
+            		$("#"+$(this).attr('data-video-id')).append($('<div class="load" style="font-size: 30px;display: none; text-align: center;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></div>'));
+            		$(".load").show();
+            		setTimeout(function() {
+            		    //code to be executed after 3 second
+            		    $(".load").hide();
+            		    $("#confirmDeleteVideoAlert").show();
+            		  }, 3000);
+              	});
+            	
+            	$(document).on("click", ".deleteChoiceBlock", function(e) {
+            		$("#confirmDeleteChoiceBlockAlert").show();
+            		var alert = $('<input type="hidden" id="deleteChoiceBlockId">');
+            		$(alert).attr( 'value', $(this).siblings('input').val());
+            		$('.modal-footer').append(alert); 
+              	});
+                
+                $("#cancelSubmitText").click(function() {
+            		$("#addTextAlert").hide();	
+            	});
 
 	            $("#cancelSpaceText").click(function() {
 	            	removeAllSelectOptions("spaceName");
@@ -877,13 +877,13 @@
 		            var element = document.getElementById(elementId);
 		            element.innerHTML="";
 	            }
-
-	            $("#cancelDeleteText").click(function() {
-		            $("#confirmDeleteTextAlert").find('input').remove();
-		            $("#confirmDeleteImageAlert").find('input').remove();
-		            $("#confirmDeleteChoiceBlockAlert").find('input').remove();
-		            $("#confirmDeleteTextAlert").hide();
-	            });
+            	
+            	$("#cancelDeleteText").click(function() {
+            		$("#confirmDeleteTextAlert").find('input').remove();
+            		$("#confirmDeleteImageAlert").find('input').remove();
+            		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
+            		$("#confirmDeleteTextAlert").hide();
+            	});
 	
 	            $("#cancelDeleteSpace").click(function() {
 		            $("#confirmDeleteSpaceAlert").find('input').remove();
@@ -893,56 +893,57 @@
 		            $("#confirmDeleteSpaceAlert").hide();
 	            });
 	
-	            $("#cancelDeleteImage").click(function() {
-		            $("#confirmDeleteImageAlert").hide();
-	            });
-	
-	            $("#cancelDeleteVideo").click(function() {
-		            $("#confirmDeleteVideoAlert").find('input').remove();
-		            $("#confirmDeleteVideoAlert").hide();
-	            });
-	
-	            $("#cancelDeleteChoiceBlock").click(function() {
-		            $("#confirmDeleteChoiceBlockAlert").find('input').remove();
-		            $("#confirmDeleteTextAlert").find('input').remove();
-		            $("#confirmDeleteImageAlert").find('input').remove();
-		            $("#confirmDeleteChoiceBlockAlert").hide();
-	            });
-	
-	            $("#cancelDelete").click(function() {
-		            $("#confirmDeleteTextAlert").find('input').remove();
-		            $("#confirmDeleteImageAlert").find('input').remove();
-		            $("#confirmDeleteChoiceBlockAlert").find('input').remove();
-		            $("#confirmDeleteImageAlert").hide();
-	            });
-
-            // ---------- Delete Text Block ------------- 
-
-	            $("#deleteText").on("click", function(e) {
-		            e.preventDefault();
-		            $("#confirmDeleteImageAlert").find('input').remove();
-		            $("#confirmDeleteChoiceBlockAlert").find('input').remove();
-		            $("#confirmDeleteSpaceAlert").find('input').remove();
-		            $("#confirmDeleteTextAlert").hide();
-		            var blockId = $('#deleteTextId').attr('value');
-		            $('#deleteTextId').remove()
-		
-		            // ------------- delete text content blocks ------------
-		            $.ajax({
-			            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/text/'})]"+blockId+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
-			            type: 'DELETE',
-			            success: function(result) {
-			            	$('#' + blockId).remove();
-			            },
-			            error: function(data) {
-				            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-				            $('.error').append(alert);
-				            $(".error").delay(4000).slideUp(500, function(){
-				            	$(".error").empty();
-				            });
-			            }
-		            });
-	            });
+            	
+            	$("#cancelDeleteImage").click(function() {
+            		$("#confirmDeleteImageAlert").hide();
+            	});
+            	
+            	$("#cancelDeleteVideo").click(function() {
+            		$("#confirmDeleteVideoAlert").find('input').remove();
+            		$("#confirmDeleteVideoAlert").hide();	
+            	});
+            	
+            	$("#cancelDeleteChoiceBlock").click(function() {
+            	    $("#confirmDeleteChoiceBlockAlert").find('input').remove();
+            	    $("#confirmDeleteTextAlert").find('input').remove();
+            		$("#confirmDeleteImageAlert").find('input').remove();
+            		$("#confirmDeleteChoiceBlockAlert").hide();
+            	});
+            	
+            	$("#cancelDelete").click(function() {
+            		$("#confirmDeleteTextAlert").find('input').remove();
+            		$("#confirmDeleteImageAlert").find('input').remove();
+            		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
+            		$("#confirmDeleteImageAlert").hide();	
+            	});
+            	
+                	// ---------- Delete Text Block -------------
+            	
+            		$("#deleteText").on("click", function(e) {
+            		e.preventDefault();
+            		$("#confirmDeleteImageAlert").find('input').remove();
+            		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
+            		$("#confirmDeleteTextAlert").hide();
+            		var blockId = $('#deleteTextId').attr('value');
+            		$('#deleteTextId').remove()
+            		
+            		// ------------- delete text content blocks ------------
+            		$.ajax({
+            		    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/text/'})]"+blockId+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
+            		    type: 'DELETE',
+            		    success: function(result) {
+            		        $('#' + blockId).remove();
+            		        
+            		    },
+            			error: function(data) {
+            				var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+            				$('.error').append(alert); 
+            				$(".error").delay(4000).slideUp(500, function(){
+            				    $(".error").empty();
+            				});
+            			}
+            		});
+            	});
 
 	            // ---------- Delete Space Block ------------- //
 	
@@ -975,19 +976,27 @@
 			            }
 		            });
 	            });
-
-	            // ---------- Delete Image Block ----------- 
-	
-	            $("#deleteImage").on("click", function(e) {
-		            e.preventDefault();
+            	
+	            
+            	// ---------- Delete Image Block -----------
+ 
+            	
+ 
+            	$("#deleteImage").on("click", function(e) {
+ 
+            		e.preventDefault();
+            		$("#confirmDeleteTextAlert").find('input').remove();
 		            $("#confirmDeleteTextAlert").find('input').remove();
-		            $("#confirmDeleteChoiceBlockAlert").find('input').remove();
+            		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
 		            $("#confirmDeleteSpaceAlert").find('input').remove();
+            		$("#confirmDeleteImageAlert").hide();
+		            $("#confirmDeleteSpaceAlert").find('input').remove();
+            		var blockId = $('#deleteImageId').attr('value');
 		            $("#confirmDeleteImageAlert").hide();
-		            var blockId = $('#deleteImageId').attr('value');
-		            if(blockId == null || blockId == ''){
-		            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-		            $('.error').append(alert);
+            		if(blockId == null || blockId == ''){
+            			var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+    		            if(blockId == null || blockId == ''){
+                			$('.error').append(alert); 
 		            $(".error").delay(4000).slideUp(500, function(){
 		            	$(".error").empty();
 		            });
@@ -1735,8 +1744,8 @@
                 </div>
             </div>
             <!-- Delete Video Modal -->
-            <div id="confirmDeleteVideoAlert" class="modal" 
-            tabindex="-1" role="dialog" th:draggable="true">
+            <div id="confirmDeleteVideoAlert" class="modal"
+                tabindex="-1" role="dialog" th:draggable="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -1751,16 +1760,16 @@
                         </div>
                         <input type="hidden" id="videoIdToDelete" />
                         <div class="modal-footer">
-                            <button id="cancelDeleteVideo" type="reset" 
+                            <button id="cancelDeleteVideo" type="reset"
                                 class="btn light">Cancel</button>
-                            <button type="submit" id="deleteVideo" 
+                            <button type="submit" id="deleteVideo"
                                 class="btn btn-primary">Submit</button>
                         </div>
                     </div>
                 </div>
             </div>
             <!-- Delete ChoiceBlock Modal -->
-            <div id="confirmDeleteChoiceBlockAlert" class="modal" 
+            <div id="confirmDeleteChoiceBlockAlert" class="modal"
                 tabindex="-1" role="dialog" th:draggable="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -1772,14 +1781,14 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <h6>Are you sure you want to delete this 
+                            <h6>Are you sure you want to delete this
                                 choices Block?
                             </h6>
                         </div>
                         <div class="modal-footer">
-                            <button id="cancelDeleteChoiceBlock" 
+                            <button id="cancelDeleteChoiceBlock"
                                 type="reset" class="btn light">Cancel</button>
-                            <button type="submit" id="deleteChoiceBlock" 
+                            <button type="submit" id="deleteChoiceBlock"
                                 class="btn btn-primary">Submit</button>
                         </div>
                     </div>
@@ -1795,17 +1804,17 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <form name="textForm" id="textUploadForm" 
+                        <form name="textForm" id="textUploadForm"
                             enctype="multipart/form-data" method="post">
                             <div class="modal-body">
                                 <h6>
                                     <small>Enter Text: </small>
                                 </h6>
-                                <textarea class="form-control" 
+                                <textarea class="form-control"
                                     id="textBlockText" rows="3"></textarea>
                             </div>
                             <div class="modal-footer">
-                                <button id="cancelSubmitText" type="reset" 
+                                <button id="cancelSubmitText" type="reset"
                                     class="btn light">Cancel</button>
                                 <button type="submit" id="submitText"
                                     class="btn btn-primary">Submit</button>
@@ -1835,7 +1844,7 @@
                                     <small>Choose from existing Spaces </small>
                                 </h6>
                                 <select id="spaceName" name="spacesNames" class="form-control-xs target" style="height: 50px; width: 200px;">
-                                    <!-- <option selected value="">Choose from existing</option> -->
+                                    <option selected value="">Choose from existing</option>
                                 </select>
                             </div>
                             <div class="modal-footer">
@@ -2087,7 +2096,7 @@
                         </a>
                     </div>
                     <div th:attr="data-position=${contents.contentOrder}" style="word-break: break-word;" th:id="${contents.id}" class="SpaceDivStaff tab row" th:if="${#strings.equals(contents['class'].simpleName,'SpaceBlock')}">
-                        <p class="col-md-10">Title: [[${contents.title}]]</p>
+                        <p class="col-md-10"> [[${contents.title}]]</p>
                         <p th:if="${contents.space != null}" th:hidden="true" class="col-md-10">
                             [[${contents.space.name}]]
                         </p>

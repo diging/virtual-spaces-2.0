@@ -27,22 +27,32 @@ public class StaffSearchSpaceController {
     @Autowired
     private IStaffSearchManager staffSearchManager;
     
+    @RequestMapping("/staff/spaces/search")
+    public ResponseEntity<String> search(@RequestParam(value = "term", required = false) String search){
+        List<ISpace> spaces = null;
+        if (search != null && !search.trim().isEmpty()) {
+            spaces = spaceManager.findByName(search);
+        } else {
+            spaces = spaceManager.getAllSpaces();
+        }
+
+        ObjectMapper mapper = new ObjectMapper();
+        ArrayNode idArray = mapper.createArrayNode();
+        for (ISpace space : spaces) {
+            ObjectNode spaceNode = mapper.createObjectNode();
+            spaceNode.put("id", space.getId());
+            spaceNode.put("name", space.getName());
+            idArray.add(spaceNode);
+        }
+        return new ResponseEntity<String>(idArray.toString(), HttpStatus.OK);
+    }
+    
     @Autowired
     private ISpaceManager spaceManager;
-
-    @RequestMapping(value = "/staff/search/space")
-    public ResponseEntity<StaffSearchSpaceResults> searchInVspace(
-            @RequestParam(value = "spacePagenum", required = false, defaultValue = "1") String spacePagenum,
-            Model model, @RequestParam(name = "searchText") String searchTerm) throws JsonProcessingException {
-
-        List<ISpace> spaceList = paginationForSpace(spacePagenum, searchTerm);
-        StaffSearchSpaceResults staffSearch = new StaffSearchSpaceResults();
-        staffSearch.setSpaces(spaceList);
-        return new ResponseEntity<StaffSearchSpaceResults>(staffSearch, HttpStatus.OK);
-    }
 
     private List<ISpace> paginationForSpace(String spacePagenum, String searchTerm) {
         Page<ISpace> spacePage = staffSearchManager.searchInSpaces(searchTerm, Integer.parseInt(spacePagenum));
         return spacePage.getContent();
     }
+    
 }
