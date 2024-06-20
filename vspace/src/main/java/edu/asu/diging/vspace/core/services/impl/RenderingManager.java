@@ -86,27 +86,30 @@ public class RenderingManager implements IRenderingManager {
     
     private final String IMAGES_FOLDER_NAME = "images";
        
-    private final String SPACE_TEMPLATE_DOWNLOAD_API = "exhibition/downloads/spaceDownloadTemplate";
+    private final String SPACE_TEMPLATE = "exhibition/downloads/spaceDownloadTemplate";
     
-    private final String SLIDE_TEMPLATE_DOWNLOAD_API = "exhibition/downloads/slideDownloadTemplate";
+    private final String SLIDE_TEMPLATE = "exhibition/downloads/slideDownloadTemplate";
     
-    private final String DOWNLOAD_FILE_EXTENSION = ".html"; 
+    private final String FILE_EXTENSION = ".html"; 
     
     /**
      * 
-     * Download given space and related modules into exhibitionFolderPath
+     * Creates a snapshot of the given space and related modules into exhibitionFolderPath
+     * 
      * @param space                            the space object 
      * @param exhibitionFolderName             the folder name of the exhibition where space contents will be stored           
      * @param sequenceHistory                  the sequence history object having the history of sequences                        
      * @throws FileStorageException 
      */
-    public void downloadSpace(Space space, String exhibitionFolderName,  SequenceHistory sequenceHistory) throws FileStorageException {
-
-        String spaceFolderPath = exhibitionFolderName + File.separator + space.getId();
+    public void createSpaceSnapshot(Space space, String exhibitionFolderName,  SequenceHistory sequenceHistory) throws FileStorageException {
+        
+        String spaceId = space.getId();
+        String spaceFolderPath = exhibitionFolderName + File.separator + spaceId;
         storageEngineDownloads.createFolder(spaceFolderPath);
-
-        renderSpace(space.getId(), spaceFolderPath , sequenceHistory);
-
+        
+        byte[] fileContent = renderSpace(spaceId, sequenceHistory);
+        storageEngineDownloads.storeFile(fileContent, spaceId+FILE_EXTENSION,spaceFolderPath );
+        
         String imagesFolderPath = spaceFolderPath + File.separator  + IMAGES_FOLDER_NAME;
         storageEngineDownloads.createFolder(imagesFolderPath); 
 
@@ -117,42 +120,42 @@ public class RenderingManager implements IRenderingManager {
 
         moduleLinks.forEach(moduleLink -> {
             IModule module =   moduleLink.getModule();
-            downloadModule(module, space,  imagesFolderPath, spaceFolderPath);
+            createModuleSnapshot(module, space,  imagesFolderPath, spaceFolderPath);
         });
     }
     
     /**
-     * Stores the processed template for space into spaceFolderPath.
+     * Renders the given space.
      * 
      * @param spaceId                the space id to be rendered
-     * @param spaceFolderPath        the folder where the space content will be stored
      * @param sequenceHistory        the sequence history object having the history of sequences 
+     * @return byte array as a rendered space content
      * @throws FileStorageException 
      */
-    private void renderSpace(String spaceId, String spaceFolderPath,  SequenceHistory sequenceHistory) throws FileStorageException {
+    private byte[] renderSpace(String spaceId, SequenceHistory sequenceHistory) throws FileStorageException {
 
         Context thymeleafContext = new Context();
         populateContextForSpace(thymeleafContext, spaceId, sequenceHistory);
         // add attributes to context
-        String response = springTemplateEngine.process(SPACE_TEMPLATE_DOWNLOAD_API, thymeleafContext);
-        byte[] fileContent = response.getBytes();
-        storageEngineDownloads.storeFile(fileContent, spaceId+DOWNLOAD_FILE_EXTENSION,spaceFolderPath );
+        String response = springTemplateEngine.process(SPACE_TEMPLATE, thymeleafContext);
+        return response.getBytes();
     }
 
     /**
      * 
-     * Downloads given module and related slides into space folder path.
+     * Creates a snapshot of the given module and related slides into space folder path.
+     * 
      * @param module            the {@link IModule} object indicating the module
      * @param space             the {@link ISpace} object 
      * @param imagesFolderPath  the path of the folder where the module's images will be stored
-     * @param spaceFolderPath   he path of the folder where the module's content will be stored
+     * @param spaceFolderPath   the path of the folder where the module's content will be stored
      * 
      */
-    private void downloadModule(IModule module, ISpace space, String imagesFolderPath, String spaceFolderPath) {
+    private void createModuleSnapshot(IModule module, ISpace space, String imagesFolderPath, String spaceFolderPath) {
         ISequence startSequence = module.getStartSequence();
         if(startSequence!= null) {
             try {
-                downloadSequences(startSequence, module, space, spaceFolderPath,imagesFolderPath );
+                createSequencesSnapshot(startSequence, module, space, spaceFolderPath,imagesFolderPath );
             } catch (FileStorageException e) {
                 logger.error("Could not download Module",e);
             }
@@ -161,7 +164,8 @@ public class RenderingManager implements IRenderingManager {
        
     /**
      * 
-     * Downloads given sequence into spacefolderPath.
+     * Creates snapshot of the given sequence into spacefolderPath.
+     * 
      * @param startSequence      the {@link ISequence} object indicating the start sequence of the module
      * @param module             the {@link IModule} object
      * @param space              the {@link ISpace} object
@@ -170,19 +174,16 @@ public class RenderingManager implements IRenderingManager {
      * @throws FileStorageException
      * 
      */
-    private void downloadSequences(ISequence startSequence, IModule module, ISpace space, String spaceFolderPath,
+    private void createSequencesSnapshot(ISequence startSequence, IModule module, ISpace space, String spaceFolderPath,
             String imagesFolderPath) throws FileStorageException {
         List<ISlide> slides = startSequence.getSlides();
         slides.forEach(slide -> {
-            if(slide instanceof BranchingPoint) {
-                BranchingPoint branchingPoint = (BranchingPoint) slide;
-                List<IChoice> choices  =  branchingPoint.getChoices();
-                choices.forEach(choice -> {
+            if(slide instanceof BranchingPoint) {              
+                ((BranchingPoint) slide).getChoices().forEach(choice -> {
 
                     if(!choice.getSequence().getId().equals(startSequence.getId())) {
-
                         try {
-                            downloadSequences(choice.getSequence(), module, space, spaceFolderPath, imagesFolderPath);
+                            createSequencesSnapshot(choice.getSequence(), module, space, spaceFolderPath, imagesFolderPath);
                         } catch (FileStorageException e) {
                             logger.error("Could not download Sequence",e);
                         } 
@@ -199,7 +200,9 @@ public class RenderingManager implements IRenderingManager {
                     }
                 }
                 try {
-                    renderSlide(slide.getId(), spaceFolderPath ,  space.getId(), module.getId(), startSequence.getId());
+                    String slideId = slide.getId();
+                    byte[] fileContent = renderSlide(slideId, space.getId(), module.getId(), startSequence.getId());
+                    storageEngineDownloads.storeFile(fileContent, slideId+FILE_EXTENSION,spaceFolderPath );
                 } catch (FileStorageException e) {
                     logger.error("Could not store template for the slide", e);
                 }
@@ -209,26 +212,24 @@ public class RenderingManager implements IRenderingManager {
 
     /**
      * 
-     * Stores the processed template for slide into spaceFolderPath
-     * @param slideId                the slide Id 
-     * @param spaceFolderPath        the space folder path where space content will be stored             
+     * Renders a slide to a byte array.
+     * 
+     * @param slideId                the slide id       
      * @param spaceId                the id of the space to be rendered 
-     * @param moduleId
-     * @param sequenceId
+     * @param moduleId               the id of the module containing the slide
+     * @param sequenceId             the id of the sequence containing the slide
      * @throws FileStorageException 
      */
-    private void renderSlide(String slideId, String spaceFolderPath, String spaceId, String moduleId, String sequenceId ) throws FileStorageException {
+    private byte[] renderSlide(String slideId, String spaceId, String moduleId, String sequenceId ) throws FileStorageException {
         try {      
             Context thymeleafContext = new Context();
-
             populateContextForSlide( thymeleafContext, spaceId, moduleId, sequenceId, slideId );
-            String response = springTemplateEngine.process(SLIDE_TEMPLATE_DOWNLOAD_API , thymeleafContext);
-            byte[] fileContent = response.getBytes();
-            storageEngineDownloads.storeFile(fileContent, slideId+DOWNLOAD_FILE_EXTENSION,spaceFolderPath );
-
+            
+            return springTemplateEngine.process(SLIDE_TEMPLATE, thymeleafContext).getBytes();
         } catch (SlidesInSequenceNotFoundException  | SequenceNotFoundException |SlideNotFoundException e ) {
             logger.error("Could not add html page for slide" , e);
-        }       
+        }
+        return null;
     }
 
     

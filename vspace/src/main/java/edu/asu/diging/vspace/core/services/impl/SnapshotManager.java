@@ -137,7 +137,7 @@ public class SnapshotManager  implements  ISnapshotManager {
         List<Space> spaces= spaceRepository.findAllBySpaceStatus(SpaceStatus.PUBLISHED);
 
         for(Space space : spaces) {
-            renderingManager.downloadSpace(space, exhibitionFolderName, sequenceHistory);                
+            renderingManager.createSpaceSnapshot(space, exhibitionFolderName, sequenceHistory);                
         }
         SnapshotTask snapshotTask = exhibitionSnapshot.getSnapshotTask();
         snapshotTask.setTaskComplete(true);
@@ -223,7 +223,6 @@ public class SnapshotManager  implements  ISnapshotManager {
     public SnapshotTask getSnapshotTask(String id) throws ExhibitionSnapshotNotFoundException{
         Optional<SnapshotTask> snapshotTask = snapshotTaskRepository.findById(id);
         if(snapshotTask.isPresent()) {
-            logger.debug("hereee");
             return snapshotTask.get();
         }
         else {

@@ -39,13 +39,13 @@ public interface IRenderingManager {
     
     /**
      * 
-     * Download given space and related modules into exhibitionFolderPath
+     * Creates a snapshot of space and related modules into exhibitionFolderPath
      * 
      * @param space                  - space object of the space to be downloaded
      * @param exhibitionFolderName   - The name of the folder where the space contents will be stored
      * @param sequenceHistory        - The SequenceHistory object containing the history of sequences
      * @throws FileStorageException
      */
-    void downloadSpace(Space space, String exhibitionFolderName,  SequenceHistory sequenceHistory) throws FileStorageException;
+    void createSpaceSnapshot(Space space, String exhibitionFolderName,  SequenceHistory sequenceHistory) throws FileStorageException;
 
 }
