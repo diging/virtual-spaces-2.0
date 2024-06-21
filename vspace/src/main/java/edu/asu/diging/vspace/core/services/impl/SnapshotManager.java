@@ -198,8 +198,7 @@ public class SnapshotManager  implements  ISnapshotManager {
 
     @Override
     public String getExhibitionFolderName() {
-        String folderName = "Exhibition"+ LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HHmmss"));
-        return folderName;
+        return "Exhibition"+ LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HHmmss"));
     }
 
     @Override

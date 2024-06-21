@@ -32,6 +32,7 @@ import edu.asu.diging.vspace.core.model.impl.BranchingPoint;
 import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
+import edu.asu.diging.vspace.core.services.IContentBlockManager;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IExternalLinkManager;
 import edu.asu.diging.vspace.core.services.IModuleLinkManager;
@@ -83,6 +84,9 @@ public class RenderingManager implements IRenderingManager {
     
     @Autowired
     private IStorageManager storageManager;
+    
+    @Autowired
+    private IContentBlockManager contentBlockManager;
     
     private final String IMAGES_FOLDER_NAME = "images";
        
@@ -174,14 +178,15 @@ public class RenderingManager implements IRenderingManager {
      * @throws FileStorageException
      * 
      */
-    private void createSequencesSnapshot(ISequence startSequence, IModule module, ISpace space, String spaceFolderPath,
+    private void createSequencesSnapshot(ISequence sequence, IModule module, ISpace space, String spaceFolderPath,
             String imagesFolderPath) throws FileStorageException {
-        List<ISlide> slides = startSequence.getSlides();
+        List<ISlide> slides = sequence.getSlides();
         slides.forEach(slide -> {
+            createSlideSnapshot(slide, sequence, module, space, spaceFolderPath, imagesFolderPath);
             if(slide instanceof BranchingPoint) {              
                 ((BranchingPoint) slide).getChoices().forEach(choice -> {
 
-                    if(!choice.getSequence().getId().equals(startSequence.getId())) {
+                    if(!choice.getSequence().getId().equals(sequence.getId())) {
                         try {
                             createSequencesSnapshot(choice.getSequence(), module, space, spaceFolderPath, imagesFolderPath);
                         } catch (FileStorageException e) {
@@ -189,25 +194,33 @@ public class RenderingManager implements IRenderingManager {
                         } 
                     }
                 });
-            } else {
-                IContentBlock contentBlock = slide.getFirstImageBlock();
-                if(contentBlock!= null) {
-                    IVSImage image = slide.getFirstImageBlock().getImage();
+            }
+        });            
+    }
+    
+    private void createSlideSnapshot(ISlide slide, ISequence sequence, IModule module, ISpace space, String spaceFolderPath,
+            String imagesFolderPath){
+        List<IContentBlock> contentBlocks = slide.getContents();
+        contentBlocks.forEach(contentBlock -> {
+            if(contentBlock!= null) {
+                if(contentBlockManager.getImageBlock(contentBlock.getId())!=null) {
+                    IVSImage image = contentBlockManager.getImageBlock(contentBlock.getId()).getImage();//slide.getFirstImageBlock().getImage();
                     try {
                         storageManager.copyImage(image, imagesFolderPath);
                     } catch (FileStorageException e) {
                         logger.error("Could not download Sequence",e);
                     }
                 }
-                try {
-                    String slideId = slide.getId();
-                    byte[] fileContent = renderSlide(slideId, space.getId(), module.getId(), startSequence.getId());
-                    storageEngineDownloads.storeFile(fileContent, slideId+FILE_EXTENSION,spaceFolderPath );
-                } catch (FileStorageException e) {
-                    logger.error("Could not store template for the slide", e);
-                }
+                
             }
         });
+        try {
+            String slideId = slide.getId();
+            byte[] fileContent = renderSlide(slideId, space.getId(), module.getId(), sequence.getId());
+            storageEngineDownloads.storeFile(fileContent, slideId+FILE_EXTENSION,spaceFolderPath );
+        } catch (FileStorageException e) {
+            logger.error("Could not store template for the slide", e);
+        }
     }
 
     /**
@@ -231,7 +244,6 @@ public class RenderingManager implements IRenderingManager {
         }
         return null;
     }
-
     
     /**
      *@see IRenderingManager#populateContextForSlide(Context, String, String, String, String)
@@ -241,15 +253,16 @@ public class RenderingManager implements IRenderingManager {
             throws SlidesInSequenceNotFoundException, SequenceNotFoundException, SlideNotFoundException {
         IModule module = moduleManager.getModule(moduleId);
         context.setVariable("module", module);
+        
         String startSequenceId = module.getStartSequence().getId();
-
         context.setVariable("startSequenceId", startSequenceId);
+        
         ISequence sequenceExist=moduleManager.checkIfSequenceExists(moduleId, sequenceId);
         if (sequenceExist==null) {
             throw new SequenceNotFoundException(sequenceId);
         }
+        
         List<ISlide> sequenceSlides = sequenceManager.getSequence(sequenceId).getSlides();
-
         boolean slideExist = sequenceSlides.stream().anyMatch(slide -> slide.getId().equals(slideId));
         if (!slideExist) {
             throw new SlideNotFoundException(slideId);
@@ -274,14 +287,11 @@ public class RenderingManager implements IRenderingManager {
         context.setVariable("currentSequenceId", sequenceId);
         context.setVariable("nextSlide", nextSlideId);
         context.setVariable("prevSlide", prevSlideId);
-
         context.setVariable("currentSlideCon", currentSlide);
-
         context.setVariable("numOfSlides", sequenceSlides.size());
         context.setVariable("currentNumOfSlide", slideIndex + 1);
         context.setVariable("spaceId", spaceId);
         context.setVariable("spaceName", spaceManager.getSpace(spaceId).getName());
-
     }
     
     /** Populates context with variables to process space template
