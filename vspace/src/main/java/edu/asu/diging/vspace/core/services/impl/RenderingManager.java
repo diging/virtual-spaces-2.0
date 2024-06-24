@@ -304,9 +304,7 @@ public class RenderingManager implements IRenderingManager {
 
         ISpace space = spaceManager.getSpace(id);
         List<ISpaceLinkDisplay> spaceLinks;
-        Boolean isSpacePublished = true;
-
-        context.setVariable("isSpacePublished", isSpacePublished);
+        context.setVariable("isSpacePublished", true);
         IExhibition exhibition = exhibitManager.getStartExhibition();
         context.setVariable("exhibitionConfig", exhibition);
         context.setVariable("space", space);

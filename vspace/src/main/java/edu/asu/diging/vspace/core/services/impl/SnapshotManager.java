@@ -83,14 +83,9 @@ public class SnapshotManager  implements  ISnapshotManager {
     @Transactional
     public ExhibitionSnapshot triggerExhibitionSnapshotCreation() throws IOException, InterruptedException, SnapshotCouldNotBeCreatedException {
         String exhibitionFolderName = getExhibitionFolderName();
-        ExhibitionSnapshot exhibitionSnapshot = exhibitionSnapshotRepository.findByFolderName(exhibitionFolderName);        
-        if(exhibitionSnapshot == null ) {
-            exhibitionSnapshot = new ExhibitionSnapshot();
-        }
-        createSnapshotFolder(exhibitionSnapshot, exhibitionFolderName);
-
+        ExhibitionSnapshot exhibitionSnapshot = new ExhibitionSnapshot();
+        createSnapshotFolder(exhibitionSnapshot, exhibitionFolderName);       
         SnapshotTask snapshotTask =  createSnapshotTask(exhibitionSnapshot);
-
         exhibitionSnapshot.setSnapshotTask(snapshotTask); 
         exhibitionSnapshotRepository.save(exhibitionSnapshot);
 
@@ -112,8 +107,7 @@ public class SnapshotManager  implements  ISnapshotManager {
     private SnapshotTask createSnapshotTask(ExhibitionSnapshot exhibitionSnapshot) {
         SnapshotTask snapshotTask = new SnapshotTask();  
         snapshotTask.setExhibitionSnapshot(exhibitionSnapshot);        
-        snapshotTaskRepository.save(snapshotTask);
-        return snapshotTask;
+        return snapshotTaskRepository.save(snapshotTask);
     }
     
     /**
@@ -184,20 +178,15 @@ public class SnapshotManager  implements  ISnapshotManager {
     }
 
     /**
-     * Return true is corresponding snapshot is created. Else return false.
+     * Return true if corresponding snapshot is created. Else return false.
      */
     @Override
     @Transactional
-    public Boolean doesSnapshotExist(String id) {
-        Optional<ExhibitionSnapshot> exhibitionDownload = exhibitionSnapshotRepository.findById(id);
-        if(exhibitionDownload.isPresent()) {
-            return exhibitionDownload.get().getSnapshotTask().isTaskComplete();            
-        }
-        return false;
+    public Boolean isSnapshotCreated(String id) {
+        return exhibitionSnapshotRepository.findById(id).isPresent();
     }
 
-    @Override
-    public String getExhibitionFolderName() {
+    private String getExhibitionFolderName() {
         return "Exhibition"+ LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HHmmss"));
     }
 
@@ -219,13 +208,13 @@ public class SnapshotManager  implements  ISnapshotManager {
     }
     
     @Override
-    public SnapshotTask getSnapshotTask(String id) throws ExhibitionSnapshotNotFoundException{
-        Optional<SnapshotTask> snapshotTask = snapshotTaskRepository.findById(id);
+    public SnapshotTask getSnapshotTask(String snapshotId) throws ExhibitionSnapshotNotFoundException{
+        Optional<SnapshotTask> snapshotTask = snapshotTaskRepository.findByExhibitionSnapshotId(snapshotId);
         if(snapshotTask.isPresent()) {
             return snapshotTask.get();
         }
         else {
-            throw new ExhibitionSnapshotNotFoundException(id);
+            throw new ExhibitionSnapshotNotFoundException(snapshotId);
         }
     }
 }

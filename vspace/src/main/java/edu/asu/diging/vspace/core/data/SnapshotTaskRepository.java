@@ -16,4 +16,6 @@ public interface SnapshotTaskRepository extends PagingAndSortingRepository<Snaps
     
     Optional<SnapshotTask> findById(String id);
     
+    Optional<SnapshotTask> findByExhibitionSnapshotId(String exhibitionSnapshotId);
+    
 }

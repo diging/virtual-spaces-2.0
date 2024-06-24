@@ -17,10 +17,8 @@ public interface ISnapshotManager {
  
     byte[] getExhibitionSnapshot(String id) throws ExhibitionSnapshotNotFoundException, IOException, FileStorageException;
 
-    Boolean doesSnapshotExist(String id);
-
-    String getExhibitionFolderName();
-
+    Boolean isSnapshotCreated(String id);
+    
     Page<ExhibitionSnapshot> getAllExhibitionSnapshots(int filesPagenum);
 
     SnapshotTask getLatestSnapshotTask();

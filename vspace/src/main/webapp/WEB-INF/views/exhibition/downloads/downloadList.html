@@ -29,7 +29,7 @@
     function checkSnapshotCreationStatus(id){
     	$.ajax({
             type : "GET",
-            url : "[(@{'/staff/exhibit/task/snapshot/status?'})]"+"snapshotTaskId="+id,
+            url : "[(@{'/staff/exhibit/task/snapshotTask/status?'})]"+"snapshotTaskId="+id,
             cache : false,
             success : function(data) {
                 if(data.taskComplete ==  false) {
@@ -54,6 +54,7 @@
             }
         });
     }
+    
     function triggerExhibitionSnapshotCreation(){ 
         $.ajax({
             type : "POST",
@@ -76,7 +77,7 @@
         });
     }
 
-    function pollForExhibitionDownload(id, folderName) {	
+    function pollForExhibitionDownload(id, folderName) {
     	var alert = $('<div class="alert alert-info alert-dismissible fade show" role="alert"><p>Snapshot '+folderName+' creation is in progress. Please wait. </p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
     	$('.successAlert').append(alert);
     	const poll = (id, folderName) => {
@@ -85,11 +86,11 @@
             let attempts = 0;
     
             const executePoll = async (resolve, reject) => {
-                const  url = "[(@{'/staff/exhibit/download/checkStatus/'})]"+id+"?folderName="+folderName;			  
-                const result = await fetch(url);
+                const url = "[(@{'/staff/exhibit/snapshotTask/status?snapshotId='})]"+id+"&folderName="+folderName;			  
+                const result = await fetch(url).then((response)=> response.json());
                 attempts++;
-                var text = await result.text();
-                if (text == "true") {
+                var text = await result;
+                if (text.taskComplete == true) {
                     var alert = $('<div class="alert alert-success alert-dismissible fade show" role="alert"><p>Snapshot '+folderName+' is ready. Please click to download. <a href=[[@{/staff/exhibit/download/'+id+'?folderName='+folderName+'}]] > <span class="btn primary-btn btn-sm">Download</span></a> </p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
                     $('.successAlert').empty();
                     $('.successAlert').append(alert); 
