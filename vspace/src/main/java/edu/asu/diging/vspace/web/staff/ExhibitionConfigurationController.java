@@ -99,6 +99,13 @@ public class ExhibitionConfigurationController {
         exhibition.setStartSpace(startSpace);
         exhibition.setTitle(title);
         exhibition.setMode(exhibitMode);
+        
+        if(languages.isEmpty()) {
+            attributes.addAttribute("showAlert", true);
+            attributes.addAttribute("alertType", "danger");
+            attributes.addAttribute("message", "Please select exhibition languages.");
+            return new RedirectView(request.getContextPath() + "/staff/exhibit/config");
+        }
         exhibitManager.updateExhibitionLanguages(exhibition,languages,defaultLanguage);
     
         if(exhibitMode.equals(ExhibitionModes.OFFLINE) && !customMessage.equals(ExhibitionModes.OFFLINE.getValue())) {

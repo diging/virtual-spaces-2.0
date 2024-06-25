@@ -83,7 +83,7 @@
 		            </select>
 		        </div>
 		         <div style="padding-top: 20px;">
-		            <label for="title">Exhibition Languages:<span class="fa fa-question-circle secondary" aria-hidden="true" data-toggle="tooltip" data-html="true" data-placement="right" title="To select multiple languages, hold down the shift key when selecting."></span>
+		            <label for="title">Exhibition Languages: <span class="fa fa-question-circle secondary" aria-hidden="true" data-toggle="tooltip" data-html="true" data-placement="right" title="To select multiple languages, hold down the shift key when selecting."></span>
                            </label>
 		            <select class="form-control" name="exhibitLanguage" multiple="multiple" required>
 		                <option th:each="language: ${languageList}" th:id=${language.code} th:value=${language.code} th:selected="${savedExhibitionLanguages!=null && savedExhibitionLanguages.contains(language.label)}">[[${language.label}]]</option>
