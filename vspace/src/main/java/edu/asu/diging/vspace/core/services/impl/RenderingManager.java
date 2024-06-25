@@ -96,6 +96,8 @@ public class RenderingManager implements IRenderingManager {
     
     private final String FILE_EXTENSION = ".html"; 
     
+    private final String PAGE_404 = "exhibition/downloads/page404Template";
+    
     /**
      * 
      * Creates a snapshot of the given space and related modules into exhibitionFolderPath
@@ -234,15 +236,14 @@ public class RenderingManager implements IRenderingManager {
      * @throws FileStorageException 
      */
     private byte[] renderSlide(String slideId, String spaceId, String moduleId, String sequenceId ) throws FileStorageException {
-        try {      
-            Context thymeleafContext = new Context();
-            populateContextForSlide( thymeleafContext, spaceId, moduleId, sequenceId, slideId );
-            
+        Context thymeleafContext = new Context();
+        try {
+            populateContextForSlide( thymeleafContext, spaceId, moduleId, sequenceId, slideId );            
             return springTemplateEngine.process(SLIDE_TEMPLATE, thymeleafContext).getBytes();
         } catch (SlidesInSequenceNotFoundException  | SequenceNotFoundException |SlideNotFoundException e ) {
             logger.error("Could not add html page for slide" , e);
+            return springTemplateEngine.process(PAGE_404, thymeleafContext).getBytes();
         }
-        return null;
     }
     
     /**
@@ -258,7 +259,7 @@ public class RenderingManager implements IRenderingManager {
         context.setVariable("startSequenceId", startSequenceId);
         
         ISequence sequenceExist=moduleManager.checkIfSequenceExists(moduleId, sequenceId);
-        if (sequenceExist==null) {
+        if (sequenceExist==null) {            
             throw new SequenceNotFoundException(sequenceId);
         }
         
