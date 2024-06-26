@@ -747,7 +747,7 @@
 			            },
 		            },
 		            templateResult: formatSpace,
-		            templateSelection: formatSpaceSelection
+		            templateSelection: formatSpace
 	            });
 
 	            $("#spaceName").select2({
@@ -764,7 +764,7 @@
 			            },
 		            },
 		            templateResult: formatSpace,
-		            templateSelection: formatSpaceSelection
+		            templateSelection: formatSpace
 	            });
 
 	            function formatSpace (space) {
@@ -775,16 +775,6 @@
 		            '<span>' + space.name + '</span>'
 		            );
 		            return $space;
-	            }
-
-	            function formatSpaceSelection(space) {
-		            if (!space.id) {
-		            return space.name;
-		            }
-		            var $image = $(
-		            '<span>' + space.name + '</span>'
-		            );
-		            return $image;
 	            }
 	
                 $("#addImage").click(function() {
