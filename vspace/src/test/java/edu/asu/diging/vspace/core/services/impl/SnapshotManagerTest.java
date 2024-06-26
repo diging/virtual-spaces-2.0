@@ -34,6 +34,7 @@ import edu.asu.diging.vspace.core.file.impl.StorageEngine;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionSnapshot;
 import edu.asu.diging.vspace.core.model.impl.SnapshotTask;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
+import edu.asu.diging.vspace.core.services.IRenderingManager;
 
 public class SnapshotManagerTest {
 
@@ -45,7 +46,7 @@ public class SnapshotManagerTest {
     StorageEngine storageEngine;
     
     @Mock
-    RenderingManager renderingManager;
+    IRenderingManager renderingManager;
 
     @Mock   
     ExhibitionSnapshotRepository exhibitionSnapshotRepo;

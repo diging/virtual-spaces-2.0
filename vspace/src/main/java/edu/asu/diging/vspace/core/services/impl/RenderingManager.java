@@ -107,6 +107,7 @@ public class RenderingManager implements IRenderingManager {
      * @param sequenceHistory                  the sequence history object having the history of sequences                        
      * @throws FileStorageException 
      */
+    @Override
     public void createSpaceSnapshot(Space space, String exhibitionFolderName,  SequenceHistory sequenceHistory) throws FileStorageException {
         
         String spaceId = space.getId();
@@ -249,8 +250,7 @@ public class RenderingManager implements IRenderingManager {
     /**
      *@see IRenderingManager#populateContextForSlide(Context, String, String, String, String)
      */
-    @Override
-    public void populateContextForSlide(Context context, String spaceId, String moduleId, String sequenceId, String slideId) 
+    private void populateContextForSlide(Context context, String spaceId, String moduleId, String sequenceId, String slideId) 
             throws SlidesInSequenceNotFoundException, SequenceNotFoundException, SlideNotFoundException {
         IModule module = moduleManager.getModule(moduleId);
         context.setVariable("module", module);
@@ -300,8 +300,7 @@ public class RenderingManager implements IRenderingManager {
      * @param context
      * @param id
      */
-    @Override
-    public void populateContextForSpace(Context context, String id, SequenceHistory sequenceHistory) {
+    private void populateContextForSpace(Context context, String id, SequenceHistory sequenceHistory) {
 
         ISpace space = spaceManager.getSpace(id);
         List<ISpaceLinkDisplay> spaceLinks;
