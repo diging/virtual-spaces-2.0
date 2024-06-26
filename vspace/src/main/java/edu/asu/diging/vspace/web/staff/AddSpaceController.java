@@ -45,9 +45,6 @@ public class AddSpaceController {
     @Autowired
     private IExhibitionManager exhibitManager;
     
-    @Autowired
-    private ExhibitionFactory exhibitFactory;
-
 
     @RequestMapping(value = "/staff/space/add", method = RequestMethod.GET)
     public String showAddSpace(Model model) {
@@ -61,12 +58,9 @@ public class AddSpaceController {
     public String addSpace(Model model, @ModelAttribute SpaceForm spaceForm, @RequestParam("file") MultipartFile file,
             Principal principal, @RequestParam(value = "imageId", required=false) String imageId, RedirectAttributes redirectAttrs) throws IOException {
         ISpace space = spaceFactory.createSpace(spaceForm);
-        Exhibition exhibition = (Exhibition) exhibitManager.getStartExhibition();
-        if(exhibition==null) {
-            exhibition = (Exhibition) exhibitFactory.createExhibition();
-            exhibitManager.storeExhibition(exhibition);
-        }
         space.setSpaceStatus(SpaceStatus.UNPUBLISHED);
+        exhibitManager.getStartExhibition();
+        
         byte[] bgImage = null;
         String filename = null;
         if (file != null) {
