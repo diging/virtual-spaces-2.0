@@ -17,10 +17,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.asu.diging.vspace.core.exception.ImageDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.ISpaceFactory;
-import edu.asu.diging.vspace.core.factory.impl.ExhibitionFactory;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
-import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IImageService;
@@ -43,8 +41,7 @@ public class AddSpaceController {
     private IImageService imageService;
     
     @Autowired
-    private IExhibitionManager exhibitManager;
-    
+    private IExhibitionManager exhibitManager;    
 
     @RequestMapping(value = "/staff/space/add", method = RequestMethod.GET)
     public String showAddSpace(Model model) {
