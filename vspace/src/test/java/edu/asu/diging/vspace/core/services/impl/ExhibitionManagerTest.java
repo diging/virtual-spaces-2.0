@@ -28,6 +28,7 @@ import edu.asu.diging.vspace.core.data.ExhibitionRepository;
 import edu.asu.diging.vspace.core.data.ImageRepository;
 import edu.asu.diging.vspace.core.exception.LanguageListConfigurationNotFoundException;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
+import edu.asu.diging.vspace.core.factory.impl.ExhibitionFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
@@ -52,8 +53,12 @@ public class ExhibitionManagerTest {
 
     @Mock
     private ImageRepository imageRepo;
-
+    
+    @Mock
     private ExhibitionLanguageConfig exhibitionLanguageConfig;
+    
+    @Mock
+    private ExhibitionFactory exhibitFactory;
 
 
     @InjectMocks
