@@ -1,10 +1,5 @@
 package edu.asu.diging.vspace.web.staff;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpHeaders;
@@ -23,7 +18,7 @@ import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IImageService;
 
 @Controller
-public class DefaultImageController {
+public class DefaultImageApiController {
 
     public static final String API_DEFAULT_SPACE_IMAGE_PATH = "/api/image/default/link/space/";
     public static final String API_DEFAULT_MODULE_IMAGE_PATH = "/api/image/default/link/module/";
