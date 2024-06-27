@@ -169,46 +169,58 @@
 	            });
             }
             
-            function onDoubleClick(e){
-                // get to the nearest divs class attribute
+            function textBlockDoubleClick(e){
+            	// get to the nearest divs class attribute
                 $(".EasyMDEContainer").remove();
                 var divName = $(e.target).closest('div').attr('class');
                 //if the div is a text content block 
-                if(divName.includes("textDivStaff")){
-                	$(e.target).closest('.textDivStaff').addClass("open");
-                    var description = $("div.open p:eq(0)").text();
-                	defaultValue = description;
+                $(e.target).closest('.textDivStaff').addClass("open");
+                var description = $("div.open p:eq(0)").text();
+            	defaultValue = description;
+        
+                $("#editTextAlert").show();
+                markDown = new EasyMDE({element: $('#editTextBlock')[0]});
+                markDown.value(description.trim());
+                //remove card border
+                $(".open").css('display', 'none');
+                $(".open").css('overflow-y', 'scroll');
+                $(".open").css('height', '400px');
+            }
             
-                    $("#editTextAlert").show();
-                    markDown = new EasyMDE({element: $('#editTextBlock')[0]});
-                    markDown.value(description.trim());
-                    //remove card border
-                    $(".open").css('display', 'none');
-                    $(".open").css('overflow-y', 'scroll');
-                    $(".open").css('height', '400px');
-                    } else if(divName.includes("SpaceDivStaff")){
-		            let spaceId = e.target.closest('div').id;
-		            $(e.target).closest('.SpaceDivStaff').addClass("open");
-		            defaultValue = $("div.open p:eq(0)").text();
-		            var editSpaceAlertHTML = document.getElementById('#editSpaceAlert')
-		            var blockId = $(this).closest("div").attr("id");
-		            getSelectedSpace(blockId);
-		            $("#editSpaceAlert").show();
-		            markDown = new EasyMDE({element: $('#editSpaceBlock')[0]});
-		            markDown.value(defaultValue.trim());
-		            //remove card border
-		            $(".open").css('display', 'none');
-		            $(".open").css('overflow-y', 'scroll');
-		            $(".open").css('height', '400px');
-                    } else {
-                    	// store image ID selected by the user to replace, onDoubleClick
-                    	var imgBlockID = $(e.target).attr('id'); 
-                    	if(imgBlockID != ''){
-                        	$("#uploadImage").data('value', imgBlockID); // sets image ID value
-                        	$("#addImgAlert").show();
-                    	}
-                	
-                    }
+            function spaceBlockDoubleClick(e){
+            	$(".EasyMDEContainer").remove();
+                var divName = $(e.target).closest('div').attr('class');
+                
+	            let spaceId = e.target.closest('div').id;
+	            $(e.target).closest('.SpaceDivStaff').addClass("open");
+	            defaultValue = $("div.open p:eq(0)").text();
+	            var editSpaceAlertHTML = document.getElementById('#editSpaceAlert')
+	            var blockId = $(this).closest("div").attr("id");
+	            getSelectedSpace(blockId);
+	            $("#editSpaceAlert").show();
+	            markDown = new EasyMDE({element: $('#editSpaceBlock')[0]});
+	            markDown.value(defaultValue.trim());
+	            //remove card border
+	            $(".open").css('display', 'none');
+	            $(".open").css('overflow-y', 'scroll');
+	            $(".open").css('height', '400px');
+            }
+            
+            function imageBlockDoubleClick(e){
+            	$(".EasyMDEContainer").remove();
+                var divName = $(e.target).closest('div').attr('class');
+                
+                var imgBlockID = $(e.target).attr('id'); 
+            	if(imgBlockID != ''){
+                	$("#uploadImage").data('value', imgBlockID); // sets image ID value
+                	$("#addImgAlert").show();
+            	}
+                
+            }
+            
+            function onDoubleClick(e){
+                // get to the nearest divs class attribute
+                $(".EasyMDEContainer").remove();
                 }
                 
             function uploadImage() {
@@ -246,7 +258,7 @@
             					{
             						imageblock = createImageBlock(reader, this.width);
             						$("#" + imageBlockId).replaceWith(imageblock);	
-            						$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+            						$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(imageBlockDoubleClick);
             					};
             				}
             			}
@@ -256,7 +268,7 @@
             				formData.append('imageId',imageId);
             				imageblock = createImageBlockWithExistingImage($('#selectedImage').find('img').attr('src'),image.width);
             				$("#" + imageBlockId).replaceWith(imageblock);	
-            				$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+            				$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(imageBlockDoubleClick);
             			}
             			// Reset data-attribute to get current selected image ID
             			$("#uploadImage").data('value', '');
@@ -272,7 +284,7 @@
             			{
             				imageblock = createImageBlock(reader, this.width);  
             				$('#slideSpace').append(imageblock); 
-            				$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+            				$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(imageBlockDoubleClick);
             			};          
             			} 
             		}
@@ -283,7 +295,7 @@
             			formData.append('imageId',imageId);
             			imageblock = createImageBlockWithExistingImage($('#selectedImage').find('img').attr('src'),image.width);  
             			$('#slideSpace').append(imageblock); 
-            			$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+            			$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(imageBlockDoubleClick);
             		}
             	}
             	if (!chooseFromExisting)
@@ -386,7 +398,7 @@
 				// Reset data-attribute to get current selected image ID
 				$("#videoFile").val('');
 				$("#videoLink").val('');
-				$(videoBlock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave);//.dblclick(onDoubleClick);
+				$(videoBlock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave);
 				if (vidFile) {
 					reader.readAsDataURL(vidFile);
 				}
@@ -1125,7 +1137,7 @@
                         success: function(data) {
 				            
                             var textblock = $('<div style="word-break:break-word;" id="'+ data +'" class="textDivStaff tab row"><label>Text Description: </label><p class="col-md-10">'+text+'</p>'+'<input type="hidden" id="deleteTextId" value="'+data+'" /><a class="btn deleteText col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a></div>');
-                            $(textblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+                            $(textblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(textBlockDoubleClick);
                             $('#slideSpace').append(textblock);             
                         },
                         error: function(data) {
@@ -1170,7 +1182,7 @@
 				            success: function(data) {
 					            var textblock = $('<div style="word-break:break-word;" id="'+ data +'" class="SpaceDivStaff tab row"><label>Title: </label><p class="col-md-10">'+title+'</p>'+'<input type="hidden" id="deleteSpaceId" value="'+data+'" /><a class="btn deleteSpace col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a></div>');
 					
-					            $(textblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+					            $(textblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(textBlockDoubleClick);
 					            $('#slideSpace').append(textblock);
 				            },
 				            error: function(data) {
@@ -1346,7 +1358,7 @@
 		            $(".open").append('<label>Text Description: </label><p class="col-md-10">'+text+'</p><input type="hidden" id="deleteTextId" value="'+blockId+'" /><a class="btn deleteText col-md-1" href="javascript:;" style="position: absolute; right:0;"><span class="icon-trash error"></span></a>');
                     // reset border of the card
                     //rebind event handlers
-                    $('.textDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+                    $('.textDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(textBlockDoubleClick);
                     //resetting the height and overflow-y so that the TextBlock doesn't expand
                     $('.textDivStaff').css('height', 'auto');
                     $('.textDivStaff').css('overflow-y', 'visible');
@@ -1374,7 +1386,7 @@
 		            $(".open").append('<label>Title: </label><p class="col-md-10">'+text+'</p><input type="hidden" id="deleteSpaceId" value="'+blockId+'" /><a class="btn deleteSpace col-md-1" href="javascript:;" style="position: absolute; right:0;"><span class="icon-trash error"></span></a>');
 		            // reset border of the card
 		            //rebind event handlers
-		            $('.SpaceDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+		            $('.SpaceDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(spaceBlockDoubleClick);
 		            //resetting the height and overflow-y so that the TextBlock doesn't expand
 		            $('.SpaceDivStaff').css('height', 'auto');
 		            $('.SpaceDivStaff').css('overflow-y', 'visible');
@@ -1397,9 +1409,9 @@
 	            });
 	
                 $('.valueDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
-                $('.textDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
-                $('.vidDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave);//.dblclick(onDoubleClick);
-	            $('.SpaceDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+                $('.textDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(textBlockDoubleClick);
+                $('.vidDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave);
+	            $('.SpaceDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(spaceBlockDoubleClick);
 
                 $("#submitTextBlock").on("click", function(e){
                 	e.preventDefault();
