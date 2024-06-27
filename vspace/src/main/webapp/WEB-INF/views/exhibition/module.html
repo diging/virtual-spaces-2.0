@@ -263,7 +263,6 @@
                             for (let sequence of otherSequences) {
                                 treeData = createFromSequence(sequence, treeData, isStartSequence);
                             }
-
                             // Add branching points to the tree structure
                             for (let branch of branchingPointsSet) {
                                 for (let branchSequence of branch.branchSequences) {
@@ -278,6 +277,7 @@
 
                         function createFromSequence(sequence, treeData, isStartSequence){                            
                             let startNodeSequence = {};
+                            startNodeSequence.children=[];
                             let slideIndex = 0;
                             for(slide of sequence.slideOverviews){
                                 let slideNode = {};                                                               	
@@ -289,9 +289,8 @@
                             	    for(seq of slide.choiceSequenceNames){
                             	    	let branchSeq = {};
                             	    	branchSeq.name = seq;
-                                        if(seq === sequence.name){
-                            	    	    branchSeq.name = seq;
-                            	    	    slideNode.children.push(branchSeq);
+                                        if(seq == sequence.name){
+                            	    	    slideNode.children.push(sequence);
                             	    	    continue;
                             	    	}
                             	    	slideNode.branchSequences.push(branchSeq);
@@ -312,7 +311,7 @@
                                     slideNode.parent=prev;                                                                 	    
                             	}
                                 startNodeSequence.parent = json.id;
-                                startNodeSequence.group ="startSequence";
+                                startNodeSequence.group ="sequence";
                             	prev = slideNode;
                             	source = slideNode.id;
                             	slideIndex=slideIndex+1;
@@ -366,13 +365,13 @@
                         
                         //function to open slide or sequence on clicking the node
                         function openSlide (d){
-                            window.open([[@{/exhibit/}]]+spaceId+'/module/'+moduleId+'/sequence/'+d.sequenceId+'/slide/'+d.slideId, "_self");
+                        	window.open([[@{/exhibit/}]]+spaceId+'/module/'+moduleId+'/sequence/'+d.sequenceId+'/slide/'+d.slideId, "_self");
                         }
 
                         // Add the circle for the nodes
-                        nodeEnter.append("circle").attr("r", function(d){
-                        	if((d.sequenceId.normalize() === sequenceId.normalize()) 
-                        			&& (d.slideId.normalize() === currentSlide.id.normalize())){
+                        nodeEnter.append("circle").attr("r", function(d){                        	
+                        	if((d.sequenceId === sequenceId) 
+                        			&& (d.slideId === currentSlide.id)){
                         		return 10;
                         	}
                         	return 1e-6;
@@ -398,14 +397,15 @@
 						
                         // update the node style
                         nodeUpdate.select("circle").attr("r", 
-                        		function(d){ if((d.group=== "slide" && d.sequenceId.normalize() === sequenceId.normalize() && d.branchingPoint != true)
-                        				&& (d.slideId.normalize() === currentSlide.id.normalize())){
+                        		function(d){ if((d.group=== "slide" && d.sequenceId.normalize() === sequenceId.normalize() 
+                        				&& d.branchingPoint != true)
+                        				&& (d.slideId === currentSlide.id)){
                         			return 20;
                         		}
                         		return 10;
                         }).style("opacity", function(d){ if((d.group=== "slide" 
-                        		&& d.sequenceId.normalize() === sequenceId.normalize() )
-                        		&& (d.slideId.normalize() === currentSlide.id.normalize())){
+                        		&& d.sequenceId === sequenceId )
+                        		&& (d.slideId === currentSlide.id)){
                         			return 1;
                         		}
                         		return 0.5;
