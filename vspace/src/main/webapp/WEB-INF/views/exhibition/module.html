@@ -311,7 +311,7 @@
                                     slideNode.parent=prev;                                                                 	    
                             	}
                                 startNodeSequence.parent = json.id;
-                                startNodeSequence.group ="sequence";
+                                startNodeSequence.group ="slide";
                             	prev = slideNode;
                             	source = slideNode.id;
                             	slideIndex=slideIndex+1;
@@ -397,8 +397,7 @@
 						
                         // update the node style
                         nodeUpdate.select("circle").attr("r", 
-                        		function(d){ if((d.group=== "slide" && d.sequenceId.normalize() === sequenceId.normalize() 
-                        				&& d.branchingPoint != true)
+                        		function(d){ if((d.group=== "slide" && d.sequenceId.normalize() === sequenceId.normalize())
                         				&& (d.slideId === currentSlide.id)){
                         			return 20;
                         		}
