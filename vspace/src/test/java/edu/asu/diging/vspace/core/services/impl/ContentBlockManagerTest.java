@@ -387,7 +387,6 @@ public class ContentBlockManagerTest {
         assertEquals(returnedContentBlock.get(0).getId(), contentBlockIdString);
         assertEquals(returnedContentBlock.size(), contentBlocks.size());
         assertEquals(returnedContentBlock.get(0).getContentOrder(), Integer.valueOf(3));
-        assertTrue(!returnedContentBlock.isEmpty());
 
     }
 
