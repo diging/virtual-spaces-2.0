@@ -89,8 +89,8 @@
                 <div th:if="${contents['class'].simpleName ==  'TextBlock'}" id="${contents.id}" class="textDiv">[(${contents.htmlRenderedText()})]</div>
                 <div th:if="${contents['class'].simpleName == 'ChoiceBlock'}" id="${contents.id}" class="textDiv" style="margin: 1%;">
                     <div th:if="${contents.showsAll eq true}" th:each="choice: ${choices}" class="list-group">
-                        <a  class="list-group-item list-group-item-action" >
-                        th:href="'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${choice.sequence.id}+'?branchingPoint='+${slideId}+'&previousSequenceId='+${currentSequenceId}"
+                        <a  class="list-group-item list-group-item-action" 
+                        href="'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${choice.sequence.id}+'?branchingPoint='+${slideId}+'&previousSequenceId='+${currentSequenceId}">
                             [[${choice.sequence.name}]]</a>
                     </div>
                     <div class="list-group" th:if="${contents.showsAll eq false}" th:each="choice: ${contents.choices}">

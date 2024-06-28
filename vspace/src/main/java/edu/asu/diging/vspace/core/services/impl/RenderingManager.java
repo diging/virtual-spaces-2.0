@@ -18,6 +18,7 @@ import edu.asu.diging.vspace.core.exception.SlideNotFoundException;
 import edu.asu.diging.vspace.core.exception.SlidesInSequenceNotFoundException;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.file.IStorageManager;
+import edu.asu.diging.vspace.core.model.IBranchingPoint;
 import edu.asu.diging.vspace.core.model.IChoice;
 import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.IExhibition;
@@ -293,6 +294,9 @@ public class RenderingManager implements IRenderingManager {
         context.setVariable("currentNumOfSlide", slideIndex + 1);
         context.setVariable("spaceId", spaceId);
         context.setVariable("spaceName", spaceManager.getSpace(spaceId).getName());
+        if(currentSlide instanceof BranchingPoint) {
+            context.setVariable("choices", ((IBranchingPoint)currentSlide).getChoices());
+        } 
     }
     
     /** Populates context with variables to process space template
