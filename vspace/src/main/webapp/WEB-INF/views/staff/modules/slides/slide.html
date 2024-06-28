@@ -39,7 +39,6 @@
                 z-index: 0;
             }
         </style>
-
         <script th:inline="javascript">
             $(function () {
 		        $('.close').on('click', function () {
@@ -258,7 +257,7 @@
             					{
             						imageblock = createImageBlock(reader, this.width);
             						$("#" + imageBlockId).replaceWith(imageblock);	
-            						$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(imageBlockDoubleClick);
+            						 $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(imageBlockDoubleClick);
             					};
             				}
             			}
@@ -1013,7 +1012,7 @@
             			});
             		}
             	});
-
+            	
             	// ---------- Delete Video Block -----------
             	
 				$("#deleteVideo").on("click", function(e) {
@@ -1047,7 +1046,7 @@
             			});
             		}
             	});
-
+            	
             	$("#deleteChoiceBlock").on("click", function(e) {
             	    e.preventDefault();
             	    $("#confirmDeleteTextAlert").find('input').remove();
@@ -1083,7 +1082,7 @@
             	$("#cancelSubmitChoice").click(function() {
                     $("#addChoiceAlert").hide();	
                 });
-
+            	
                 $("#cancelImageBtn").click(function() {
                     $('#chooseFromLocal').trigger( "click" );
                     // Initialize selected image ID to blank, on clicking cancel button
@@ -1135,7 +1134,7 @@
                         data: formData,
                         enctype: 'multipart/form-data',
                         success: function(data) {
-				            
+            
                             var textblock = $('<div style="word-break:break-word;" id="'+ data +'" class="textDivStaff tab row"><label>Text Description: </label><p class="col-md-10">'+text+'</p>'+'<input type="hidden" id="deleteTextId" value="'+data+'" /><a class="btn deleteText col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a></div>');
                             $(textblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(textBlockDoubleClick);
                             $('#slideSpace').append(textblock);             
@@ -1151,7 +1150,7 @@
                         }
                     });
                 });
-
+                
 	            $("#submitSpace").on("click", function(e) {
 		            var token =  $('input[name="_csrf"]').attr('value');
 		            $("#addSpaceAlert").hide();
@@ -1259,7 +1258,7 @@
                     });
                     $('#choiceForm')[0].reset();
                 });
-
+            
                 $("#urlLink").on("click", function (e) {
  				    if ($("#videoFile").val()) {
  						$("#videoTitle").prop('disabled', true);
@@ -1329,7 +1328,7 @@
     					}
                    }
  				});
-
+ 				
  				$("#videoLink").on("input", function (e) {
  				    if (!$("#videoLink").val()) {
  						$("#saveVideo").prop('disabled', true);
@@ -1351,7 +1350,7 @@
  						$("#saveVideo").prop('disabled', false);
  					}
  				}); 
- 				
+                
                 function updateTextBox(blockId, text) {
                     // clear text box and buttons
                     $(".open").empty();
@@ -1448,7 +1447,7 @@
                        		}
                        }
                    });
-                });
+                });    
 	            $("#submitSpaceBlock").on("click", function(e){
 		            var token = [[${_csrf.token}]];
 		            e.preventDefault();
@@ -1752,7 +1751,7 @@
                             <h5 class="modal-title">Confirm Delete</h5>
                             <button type="button" class="close" 
                                 data-bs-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
+                            <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
@@ -1776,7 +1775,7 @@
                             <h5 class="modal-title">Add new Text Block</h5>
                             <button type="button" class="close" 
                                 data-bs-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
+                            <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <form name="textForm" id="textUploadForm"
@@ -1840,19 +1839,19 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <form name="textForm" id="textEditUploadForm" 
+                        <form name="textForm" id="textEditUploadForm"
                             enctype="multipart/form-data" method="post">
                             <div class="modal-body">
                                 <h6>
                                     <small>Edit Text: </small>
                                 </h6>
-                                <textarea class="form-control" 
+                                <textarea class="form-control"
                                     id="editTextBlock" rows="3"></textarea>
                             </div>
                             <div class="modal-footer">
-                                <button id="cancelTextBlock" type="reset" 
+                                <button id="cancelTextBlock" type="reset"
                                     class="btn light">Cancel</button>
-                                <button type="submit" id="submitTextBlock" 
+                                <button type="submit" id="submitTextBlock"
                                     class="btn btn-primary">Submit</button>
                             </div>
                         </form>
@@ -1894,26 +1893,26 @@
                             <h5 class="modal-title">Add new Image Block</h5>
                             <button type="button" class="close" 
                                 data-bs-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
+                            <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <form name="photoForm" id="imageUploadForm" 
+                        <form name="photoForm" id="imageUploadForm"
                             enctype="multipart/form-data" method="post">
                             <div class="modal-body">
                                 <input type="radio" id="chooseFromLocal" name ="uploadRadioBtn" checked/>
                                 <h6>
                                     <small>Upload Image: </small>
                                 </h6>
-                                <input class="form-control" type="file" 
-                                    name="file" rows="5" cols="500" 
-                                    id="file" /> 
-                                <input type="radio" id="chooseFromExisting" name ="uploadRadioBtn" />
+                                <input class="form-control" type="file"
+                                    name="file" rows="5" cols="500"
+                                    id="file" />
+                                <input type="radio" id="chooseFromExisting" name ="uploadRadioBtn" />       
                                 <div>
                                     <h6>
                                         <small>Or choose an existing image: </small>
                                     </h6>
-                                    <select id="imageId" name="imageId" 
-                                        class="form-control-xs target" 
+                                    <select id="imageId" name="imageId"
+                                        class="form-control-xs target"
                                         style="height: 50px; width: 200px;">
                                         <option selected value="">Choose from existing</option>
                                     </select>
@@ -1923,10 +1922,10 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button id="cancelImageBtn" type="reset" 
+                                <button id="cancelImageBtn" type="reset"
                                     class="btn light">Cancel</button>
-                                <button type="submit" id="uploadImage" 
-                                    class="btn btn-primary" data-value="">Upload 
+                                <button type="submit" id="uploadImage"
+                                    class="btn btn-primary" data-value="">Upload
                                 Image</button>
                             </div>
                         </form>
@@ -1934,37 +1933,37 @@
                 </div>
             </div>
             <div id="addVideoAlert" class="modal" tabindex="-1" role="dialog" aria-hidden="true">
-                <div class="modal-dialog" role="document" draggable="true">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Add New Video Block</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <form name="videoForm" id="videoUploadForm" enctype="multipart/form-data" method="post">
-                            <div class="modal-body" style="background: var(--base-grey);">
-                                <div role="tabpanel">
-                                    <ul class="nav nav-tabs" role="tablist">
-                                        <li role="presentation" id="uploadLink" class="active show"><a class="active show nav-link" href="#uploadTab" 
-                                                aria-controls="uploadTab" role="tab" data-toggle="tab">Upload</a></li>
-                                        <li role="presentation" id="urlLink"><a class="nav-link" href="#urlTab" aria-controls="urlTab" role="tab" 
-                                                data-toggle="tab">Link</a></li>
-                                    </ul>
-                                    <!-- Tab panes -->
-                                    <div class="tab-content">
-                                    <br/>
-                                        <label for="videoFile">Video Title:</label><input class="form-control" id="videoTitle" type="text" name="videoTitle"/>
-                                        <div role="tabpanel" class="tab-pane active" id="uploadTab"><br />
-                                            <label for="videoFile">Upload Video in any of these format ( MP4, MOV, WEBM, MKV )<br>Note that not all encodings are supported. For .mov files make sure the encoding is H.264</label><input  id="videoFile" class="form-control-file" type="file" name="videoFile"/>
-                                        </div>
-                                        <div role="tabpanel" class="tab-pane" id="urlTab"><br />
-                                            <label for="videoLink">Enter URL: </label><input class="form-control" type="text" placeholder="Use Video Embed Link..." name="videoLink" rows="5" cols="500" 
-                                                id="videoLink" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+				<div class="modal-dialog" role="document" draggable="true">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Add New Video Block</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<form name="videoForm" id="videoUploadForm" enctype="multipart/form-data" method="post">
+							<div class="modal-body" style="background: var(--base-grey)">
+								<div role="tabpanel">
+									<ul class="nav nav-tabs" role="tablist">
+										<li role="presentation" id="uploadLink" class="active show"><a class="active show nav-link" href="#uploadTab"
+												aria-controls="uploadTab" role="tab" data-toggle="tab">Upload</a></li>
+										<li role="presentation" id="urlLink"><a class="nav-link" href="#urlTab" aria-controls="urlTab" role="tab"
+												data-toggle="tab">Link</a></li>
+									</ul>
+									<!-- Tab panes -->
+									<div class="tab-content">
+									<br/>
+										<label for="videoFile">Video Title:</label><input class="form-control" id="videoTitle" type="text" name="videoTitle"/>
+										<div role="tabpanel" class="tab-pane active" id="uploadTab"><br />
+											<label for="videoFile">Upload Video in any of these format ( MP4, MOV, WEBM, MKV )<br>Note that not all encodings are supported. For .mov files make sure the encoding is H.264</label><input  id="videoFile" class="form-control-file" type="file" name="videoFile"/>
+										</div>
+										<div role="tabpanel" class="tab-pane" id="urlTab"><br />
+											<label for="videoLink">Enter URL: </label><input class="form-control" type="text" placeholder="Use Video Embed Link..." name="videoLink" rows="5" cols="500"
+												id="videoLink" />
+										</div>
+									</div>
+								</div>
+							</div>
                             <div class="modal-footer">
                                 <button id="cancelVideoBtn" type="reset" class="btn light">Cancel</button>
                                 <button type="submit" id="saveVideo" class="btn btn-primary" disabled>Upload 
