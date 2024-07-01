@@ -1372,7 +1372,7 @@
                 	var blockId = $(this).closest(".open").attr("id");
                 	updateTextBox(blockId, defaultValue);
                 });
-	
+            
 	            $('#closeTextBlock').on('click',function(){
 		            $("#editTextAlert").hide();
 		            var blockId = $(this).closest(".open").attr("id");
@@ -1653,8 +1653,8 @@
                         <div class="modal-header">
                             <h5 class="modal-title">Confirm Delete</h5>
                             <button type="button" class="close"
-                            data-bs-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
+                                data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
@@ -1698,9 +1698,9 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Confirm Delete</h5>
-                            <button type="button" class="close" 
-                                data-bs-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
+                            <button type="button" class="close"
+                                data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
@@ -1724,9 +1724,9 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Confirm Delete</h5>
-                            <button type="button" class="close" 
-                            data-bs-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
+                            <button type="button" class="close"
+                                data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
@@ -1749,8 +1749,8 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Confirm Delete</h5>
-                            <button type="button" class="close" 
-                                data-bs-dismiss="modal" aria-label="Close">
+                            <button type="button" class="close"
+                                data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
@@ -1773,8 +1773,8 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Add new Text Block</h5>
-                            <button type="button" class="close" 
-                                data-bs-dismiss="modal" aria-label="Close">
+                            <button type="button" class="close"
+                                data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
@@ -1891,8 +1891,8 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Add new Image Block</h5>
-                            <button type="button" class="close" 
-                                data-bs-dismiss="modal" aria-label="Close">
+                            <button type="button" class="close"
+                                data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
@@ -1964,17 +1964,17 @@
 									</div>
 								</div>
 							</div>
-                            <div class="modal-footer">
-                                <button id="cancelVideoBtn" type="reset" class="btn light">Cancel</button>
-                                <button type="submit" id="saveVideo" class="btn btn-primary" disabled>Upload 
-                                    Video</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <div id="loginAlert" class="modal" tabindex="-1" role="dialog" 
-                backdrop="static" 
+							<div class="modal-footer">
+								<button id="cancelVideoBtn" type="reset" class="btn light">Cancel</button>
+								<button type="submit" id="saveVideo" class="btn btn-primary" disabled>Upload
+									Video</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+            <div id="loginAlert" class="modal" tabindex="-1" role="dialog"
+                backdrop="static"
                 style="display: none; background-color: rgba(0, 0, 0, 0.5);">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -1985,49 +1985,49 @@
                             <h6>You are not logged in, please login.</h6>
                         </div>
                         <div class="modal-footer">
-                            <a class="btn btn-primary" style="color: white;" 
+                            <a class="btn btn-primary" style="color: white;"
                                 onClick="window.location.reload();">Login</a>
                         </div>
                     </div>
                 </div>
             </div>
-            <div id="addChoiceAlert" class="modal" tabindex="-1" 
+            <div id="addChoiceAlert" class="modal" tabindex="-1"
                 role="dialog">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Select from the 
+                            <h5 class="modal-title">Select from the
                                 Choices
                             </h5>
-                            <button type="button" class="close" 
-                                data-bs-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
+                            <button type="button" class="close"
+                                data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <form name="choiceForm" id="choiceForm" 
+                        <form name="choiceForm" id="choiceForm"
                             enctype="multipart/form-data" method="post">
                             <div id="choiceDiv" class="modal-body">
-                                <input class="choiceOptions" 
-                                    id="showAllChoices" type="checkbox" 
-                                    name="showAll" value="showAll" 
-                                    checked="true" /> <label for="showAll">Always 
+                                <input class="choiceOptions"
+                                    id="showAllChoices" type="checkbox"
+                                    name="showAll" value="showAll"
+                                    checked="true" /> <label for="showAll">Always
                                 show all choices</label><br />
                                 <div id="selectChoices">
                                     <div th:each="choice: ${choices}">
-                                        <input class="choiceOptions" 
-                                            th:id="${choice.id}" 
-                                            type="checkbox" 
-                                            th:name="${choice.sequence.name}" 
+                                        <input class="choiceOptions"
+                                            th:id="${choice.id}"
+                                            type="checkbox"
+                                            th:name="${choice.sequence.name}"
                                             th:value="${choice.sequence.name}" />
-                                        <label th:for="${choice.id}">[[${choice.sequence.name}]]</label> 
+                                        <label th:for="${choice.id}">[[${choice.sequence.name}]]</label>
                                         <br />
                                     </div>
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button id="cancelSubmitChoice" type="reset" 
+                                <button id="cancelSubmitChoice" type="reset"
                                     class="btn light">Cancel</button>
-                                <button type="submit" id="submitChoices" 
+                                <button type="submit" id="submitChoices"
                                     class="btn btn-primary">Submit</button>
                             </div>
                         </form>
@@ -2038,35 +2038,35 @@
                 <div th:each="contents: ${slideContents}">
                     <div th:attr="data-position=${contents.contentOrder}" th:id="${contents.id}" class="valueDiv tab row" th:if="${#strings.equals(contents['class'].simpleName,'ImageBlock')}">
                         <img th:id="${contents.id}" class="imgDiv" th:src="@{'/api/image/'+${contents.image.id}}" />
-                        <input type="hidden" id="deleteImageId" th:value="${contents.id}">
-                        <a class="btn deleteImage col-md-1" href="javascript:;" style="position:absolute; right:25px;">
-                            <span class="icon-trash error"></span>
+                        <input type="hidden" id="deleteImageId" th:value="${contents.id}"> 
+                        <a class="btn deleteImage col-md-1" href="javascript:;" style="position:absolute; right:25px;"> 
+                        <span class="icon-trash error"></span>
                         </a>
                     </div>
-                    <div th:attr="data-position=${contents.contentOrder}" class="tab vidDiv row" th:id="${contents.id}" th:if="${#strings.equals(contents['class'].simpleName,'VideoBlock')}">
-                        <div>
-                            <h3><strong>[[${contents.video.title}]]</strong></h3>
-                            <br/>
-                            <iframe th:id="${contents.id}" width="800" height="530" th:src="${contents.video.url}" th:if="${contents.video.url}" frameborder="0"
-                                allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowfullscreen ></iframe>
-                            <video th:id="${contents.id}" width="800" height="530" th:if="${contents.video.url == null}" controls >
-                                <source th:src="@{'/api/video/'+${contents.video.id}}" type="video/mp4"/>
-                            </video>
-                        </div>
-
-                        <a class="btn deleteVideo col-md-1" href="javascript:;" th:attr="data-video-id=${contents.id}" style="position:absolute; right:25px;">
-                            <span class="icon-trash error"></span>
-                        </a>
-                        <a class="btn editVideo col-md-1" href="javascript:;" th:attr="data-editvideo-id=${contents.id}" style="position:absolute; top:60px;right:25px;">
-                            <span class="icon-edit"></span>
-                        </a>
-                    </div>
+                     <div th:attr="data-position=${contents.contentOrder}" class="tab vidDiv row" th:id="${contents.id}" th:if="${#strings.equals(contents['class'].simpleName,'VideoBlock')}">
+	                    <div>
+	                    	<h3><strong>[[${contents.video.title}]]</strong></h3>
+	                    	<br/>
+	                    	<iframe th:id="${contents.id}" width="800" height="530" th:src="${contents.video.url}" th:if="${contents.video.url}" frameborder="0"
+								allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+								allowfullscreen ></iframe>
+							<video th:id="${contents.id}" width="800" height="530" th:if="${contents.video.url == null}" controls >
+							  <source th:src="@{'/api/video/'+${contents.video.id}}" type="video/mp4"/>
+							</video>
+	                    </div>
+	                    
+	                    <a class="btn deleteVideo col-md-1" href="javascript:;" th:attr="data-video-id=${contents.id}" style="position:absolute; right:25px;"> 
+	                        <span class="icon-trash error"></span>
+	                    </a>
+	                    <a class="btn editVideo col-md-1" href="javascript:;" th:attr="data-editvideo-id=${contents.id}" style="position:absolute; top:60px;right:25px;"> 
+	                        <span class="icon-edit"></span>
+	                    </a>
+                	</div>
                     <div th:attr="data-position=${contents.contentOrder}" style="word-break:break-word;" th:id="${contents.id}" class="textDivStaff tab row" th:if="${#strings.equals(contents['class'].simpleName,'TextBlock')}">
-                        <p class="col-md-10"> Text description: [[${contents.text}]]</p>
+                        <p class="col-md-10"> [[${contents.text}]]</p>
                         <input type="hidden" id="deleteTextId" th:value="${contents.id}" />
                         <a class="btn deleteText col-md-1" href="javascript:;"> 
-                        <span class="icon-trash error"></span> 
+                        <span class="icon-trash error"></span>
                         </a>
                     </div>
                     <div th:attr="data-position=${contents.contentOrder}" style="word-break: break-word;" th:id="${contents.id}" class="SpaceDivStaff tab row" th:if="${#strings.equals(contents['class'].simpleName,'SpaceBlock')}">
@@ -2079,15 +2079,15 @@
                         <span class="icon-trash error"></span> 
                         </a>
                     </div>
-                    <div th:attr="data-position=${contents.contentOrder}" th:id="${contents.id}" class="choiceDiv tab row" th:if="${#strings.equals(contents['class'].simpleName,'ChoiceBlock')}" style="display: block;">
-                        <a th:if="${contents.showsAll}" th:each="choice: ${choices}" style="display: block; color: var(--primary);" th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${choice.sequence.id}}">
-                            [[${choice.sequence.name}]]
+                    <div th:attr="data-position=${contents.contentOrder}" th:id="${contents.id}" class="choiceDiv tab row" th:if="${#strings.equals(contents['class'].simpleName,'ChoiceBlock')}" style="display:block;">
+                        <a th:if="${contents.showsAll}" th:each="choice: ${choices}" style="display:block; color: var(--primary);"
+                            th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${choice.sequence.id}}">[[${choice.sequence.name}]]</a>
+                        <a th:if="!${contents.showsAll}" th:each="choice: ${contents.choices}" style="display:block; color: var(--primary);"
+                            th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${choice.sequence.id}}">[[${choice.sequence.name}]]</a>
+                        <input type="hidden" class="col-md-8" id="deleteChoiceBlockId" th:value="${contents.id}"> 
+                        <a class="btn deleteChoiceBlock col-md-1" href="javascript:;" style="position:absolute; right:0; top: 0;">
+                        <span class="icon-trash error"></span>
                         </a>
-                        <a th:if="!${contents.showsAll}" th:each="choice: ${contents.choices}" style="display: block; color: var(--primary);" th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${choice.sequence.id}}">
-                            [[${choice.sequence.name}]]
-                        </a>
-                        <input type="hidden" class="col-md-8" id="deleteChoiceBlockId" th:value="${contents.id}" />
-                        <a class="btn deleteChoiceBlock col-md-1" href="javascript:;" style="position: absolute; right: 0; top: 0;"> <span class="icon-trash error"></span> </a>
                     </div>
                 </div>
             </div>
