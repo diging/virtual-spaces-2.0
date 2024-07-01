@@ -205,6 +205,9 @@
                     <script th:inline="javascript">
                         const branchingPointsSet = new Set();
                         const sequencesMap = new Map();
+                        const visitedNodes = new Map();
+                        const visitedSequence = new Map();
+                        const visitedSlides = new Map();
                         var json =[[${overview}]];
                         var moduleId = [[${module.id}]];
                         var spaceId = [[${spaceId}]];
@@ -231,7 +234,6 @@
                         var tree = d3.layout.tree().size([height, width]);
                         var diagonal = d3.svg.diagonal().projection(function(d) { return [d.y, d.x]; });
                         
-
                         // Create the SVG container for the tree
                         var svg = d3.select("#svg-container").append("svg")
                                     .attr("width", width + margin.right + margin.left)
@@ -279,9 +281,15 @@
                             let startNodeSequence = {};
                             startNodeSequence.children=[];
                             let slideIndex = 0;
+                            
                             for(slide of sequence.slideOverviews){
                                 let slideNode = {};                                                               	
                                 slideNode.children=[];
+                                slideNode.name = slide.name;
+                                slideNode.group = "slide";
+                                slideNode.sequenceId = sequence.id;
+                                slideNode.slideId = slide.id;
+                                slideNode.id = sequence.id + slide.id;
                                 
                             	if(slide.branchingPoint == true){
                             	    slideNode.branchSequences = [];
@@ -290,31 +298,29 @@
                             	    	let branchSeq = {};
                             	    	branchSeq.name = seq;
                                         if(seq == sequence.name){
-                            	    	    slideNode.children.push(sequence);
-                            	    	    continue;
+                                    		slideNode.children.push(sequence);
+                                            continue;
                             	    	}
                             	    	slideNode.branchSequences.push(branchSeq);
                             	    	slideNode.sequence = sequence.name;
                             	    }
                                     branchingPointsSet.add(slideNode);
                             	}                                   
-                                slideNode.name = slide.name;
-                                slideNode.group = "slide";
-                                slideNode.sequenceId = sequence.id;
-                                slideNode.slideId = slide.id;
-                                slideNode.id = sequence.id + slide.id;
+                                
                             	if(slideIndex == 0){
                                     slideNode.parent=json.id;
                                     startNodeSequence = slideNode;
+                                    visitedSequence.set(sequence.id, slideNode);
                             	} else {                     
                                     prev.children.push(slideNode);
                                     slideNode.parent=prev;                                                                 	    
                             	}
                                 startNodeSequence.parent = json.id;
-                                startNodeSequence.group ="slide";
+                                startNodeSequence.group ="sequence";
                             	prev = slideNode;
                             	source = slideNode.id;
                             	slideIndex=slideIndex+1;
+                            	visitedSlides.set(slideNode.id, slideNode);
                             }
                             
                             if(isStartSequence == true){
@@ -369,7 +375,7 @@
                         }
 
                         // Add the circle for the nodes
-                        nodeEnter.append("circle").attr("r", function(d){                        	
+                        nodeEnter.append("circle").attr("r", function(d){ 
                         	if((d.sequenceId === sequenceId) 
                         			&& (d.slideId === currentSlide.id)){
                         		return 10;
@@ -442,12 +448,26 @@
                         // Enter any new links at the parent's previous position.
                         link.enter().insert("path", "g").attr("class", "link")
                             .attr("d", function(d) {
-                                var o = {x: source.x0, y: source.y0};					
+                                console.log("parent ", d);
+                                var o = {x: source.x0, y: source.y0};
+                                if(d.branchingPoint == true && d.target.slideOverviews.length > 1){
+                                    return curvedLine({source: o, target: o});
+                                }
                                 return diagonal({source: o, target: o});	
                             }).style("fill-opacity", function(d) { return d._children ? 1e-6 : 1e-6; });
                        
-                        // Transition links to their new position.
+                        
+
                         link.transition().duration(duration).attr("d", diagonal);
+
+                        function curvedLine(d) {
+                            var dx = d.target.x - d.source.x, dy = d.target.y - d.source.y, dr = Math.sqrt(dx * dx + dy * dy);
+                            return "M" + d.source.y + "," + d.source.x + "C" + d.target.y + "," + d.target.x*-1 + d.target.y-55 + "," + d.target.x;
+                        }
+
+                        function diagonal(d){
+                            return d3.svg.diagonal().projection(function(d) { return [d.y, d.x]; });
+                        }
                         
                         // Stash the old positions for transition.
                         nodes.forEach(function(d) {
