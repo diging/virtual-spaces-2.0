@@ -206,8 +206,7 @@
                         const branchingPointsSet = new Set();
                         const sequencesMap = new Map();
                         const visitedNodes = new Map();
-                        const visitedSequence = new Map();
-                        const visitedSlides = new Map();
+                        const firstSlides = new Map();
                         var json =[[${overview}]];
                         var moduleId = [[${module.id}]];
                         var spaceId = [[${spaceId}]];
@@ -232,7 +231,12 @@
                         // Initialize variables for tree layout
                         var i = 0, duration = 750, root;
                         var tree = d3.layout.tree().size([height, width]);
-                        var diagonal = d3.svg.diagonal().projection(function(d) { return [d.y, d.x]; });
+                        var diagonal = d3.svg.diagonal().projection(function(d) {
+                            if(d.parent!=null && d.parent.branchingPoint==true && d.removeNode == true){
+                            	return [visitedNodes.get(d.id).y, visitedNodes.get(d.id).x];
+                            }
+                        return [d.y, d.x];
+                        });
                         
                         // Create the SVG container for the tree
                         var svg = d3.select("#svg-container").append("svg")
@@ -245,7 +249,7 @@
                         root = treeData;
                         root.x0 = height / 2;
                         root.y0 = 0;
-
+                        
                         // Update the tree with the root node
                         update(root);
 
@@ -260,13 +264,15 @@
                             treeData = createFromSequence(startSequence, treeData, isStartSequence);
                             // Update the flag to indicate we're no longer processing the start sequence
                             isStartSequence = false;
-
+                            
                             // Add other sequences to the tree structure
                             for (let sequence of otherSequences) {
                                 treeData = createFromSequence(sequence, treeData, isStartSequence);
                             }
+                            
                             // Add branching points to the tree structure
                             for (let branch of branchingPointsSet) {
+                            	
                                 for (let branchSequence of branch.branchSequences) {
                                     // Avoid adding a branch to itself
                                     if (branch.sequence === branchSequence.name) continue;
@@ -281,7 +287,6 @@
                             let startNodeSequence = {};
                             startNodeSequence.children=[];
                             let slideIndex = 0;
-                            
                             for(slide of sequence.slideOverviews){
                                 let slideNode = {};                                                               	
                                 slideNode.children=[];
@@ -290,7 +295,6 @@
                                 slideNode.sequenceId = sequence.id;
                                 slideNode.slideId = slide.id;
                                 slideNode.id = sequence.id + slide.id;
-                                
                             	if(slide.branchingPoint == true){
                             	    slideNode.branchSequences = [];
                             	    slideNode.branchingPoint = true;
@@ -298,7 +302,14 @@
                             	    	let branchSeq = {};
                             	    	branchSeq.name = seq;
                                         if(seq == sequence.name){
-                                    		slideNode.children.push(sequence);
+                                            let tmp = {};
+                                            tmp.firstSlide = firstSlides.get(sequence.id);
+                                            tmp.parent = json.id;
+                                            tmp.slideOverviews = sequence.slideOverviews;
+                                            tmp.name = sequence.name;
+                                            tmp.removeNode = true;
+                                            tmp.id = sequence.id;
+                                    		slideNode.children.push(tmp);
                                             continue;
                             	    	}
                             	    	slideNode.branchSequences.push(branchSeq);
@@ -310,17 +321,16 @@
                             	if(slideIndex == 0){
                                     slideNode.parent=json.id;
                                     startNodeSequence = slideNode;
-                                    visitedSequence.set(sequence.id, slideNode);
+                                    firstSlides.set(sequence.id, slideNode);
                             	} else {                     
                                     prev.children.push(slideNode);
                                     slideNode.parent=prev;                                                                 	    
                             	}
                                 startNodeSequence.parent = json.id;
-                                startNodeSequence.group ="sequence";
+                                startNodeSequence.group ="slide";
                             	prev = slideNode;
                             	source = slideNode.id;
                             	slideIndex=slideIndex+1;
-                            	visitedSlides.set(slideNode.id, slideNode);
                             }
                             
                             if(isStartSequence == true){
@@ -332,33 +342,35 @@
                         }
 
                         function update(source) {
-                        	
                             // Compute the new tree layout.
                             var nodes = tree.nodes(root).reverse(),links = tree.links(nodes);
                             
                             // Normalize for fixed-depth.
                             nodes.forEach(function(d) { d.y = d.depth * 110; });
-
+                            
                             // filtering to remove the root node and link (Module name)
                             nodes = nodes.filter(function(d){
-                            	return  d.depth && d.depth != 0;
+                            	return  d.depth && d.depth != 0 && d.removeNode == null;
                             });
-
                             links = links.filter(function(d){ return  d.source.depth != 0 ; });
                             nodes.forEach(function(d){
-                            if(d.group == "slide" && d.parent.branchingPoint == true ){
-                            	d.x= d.parent.x;
-                            	d.x0 = d.parent.x;
-                            	temp = d;
-                                while(temp.children!=null && temp.children.length > 0){
-                                	child = temp.children[0];
-                                	child.x= temp.x;
-                                	child.x0 = temp.x0;
-                                	temp = child;
+                                visitedNodes.set(d.id, d);
+                                visitedNodes.set(d.sequenceId, d);
+
+                                if(d.group == "slide" && d.parent.branchingPoint == true ){
+                                	d.x= d.parent.x;
+                                	d.x0 = d.parent.x;
+                                	temp = d;
+                                    while(temp.children!=null && temp.children.length > 0){
+                                    	child = temp.children[0];
+                                    	child.x= temp.x;
+                                    	child.x0 = temp.x0;
+                                    	temp = child;
+                                    }
                                 }
-                            }
-                            return d;
-                        });
+                                return d;
+                            });
+                            
                         // Update the nodes
                         var node = svg.selectAll("g.node").data(nodes, function(d) { return d.id || (d.id = ++i); });
                         
@@ -447,33 +459,17 @@
                         
                         // Enter any new links at the parent's previous position.
                         link.enter().insert("path", "g").attr("class", "link")
-                            .attr("d", function(d) {
-                                console.log("parent ", d);
-                                var o = {x: source.x0, y: source.y0};
-                                if(d.branchingPoint == true && d.target.slideOverviews.length > 1){
-                                    return curvedLine({source: o, target: o});
-                                }
-                                return diagonal({source: o, target: o});	
-                            }).style("fill-opacity", function(d) { return d._children ? 1e-6 : 1e-6; });
+                            .attr("d", diagonal).style("fill-opacity", 1e-6);
                        
                         
 
                         link.transition().duration(duration).attr("d", diagonal);
-
-                        function curvedLine(d) {
-                            var dx = d.target.x - d.source.x, dy = d.target.y - d.source.y, dr = Math.sqrt(dx * dx + dy * dy);
-                            return "M" + d.source.y + "," + d.source.x + "C" + d.target.y + "," + d.target.x*-1 + d.target.y-55 + "," + d.target.x;
-                        }
-
-                        function diagonal(d){
-                            return d3.svg.diagonal().projection(function(d) { return [d.y, d.x]; });
-                        }
                         
                         // Stash the old positions for transition.
                         nodes.forEach(function(d) {
                         	d.x0 = d.x;
                         	d.y0 = d.y;});
-                        }                           
+                        }                  
              </script>
              </div>
                         </div>
