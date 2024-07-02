@@ -7,7 +7,7 @@ import org.springframework.data.domain.Page;
 import edu.asu.diging.vspace.core.exception.ExhibitionSnapshotNotFoundException;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.SnapshotCouldNotBeCreatedException;
-
+import edu.asu.diging.vspace.core.model.ISnapshotTask;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionSnapshot;
 import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
 import edu.asu.diging.vspace.core.model.impl.SnapshotTask;
@@ -21,11 +21,11 @@ public interface ISnapshotManager {
     
     Page<ExhibitionSnapshot> getAllExhibitionSnapshots(int filesPagenum);
 
-    SnapshotTask getLatestSnapshotTask();
+    ISnapshotTask getLatestSnapshotTask();
 
-    SnapshotTask getSnapshotTask(String id) throws ExhibitionSnapshotNotFoundException;
+    ISnapshotTask getSnapshotTask(String id) throws ExhibitionSnapshotNotFoundException;
         
-    void createSnapshot(String resourcesPath, String exhibitionFolderName, SequenceHistory sequenceHistory, ExhibitionSnapshot exhibitionSnapshot) 
+    ISnapshotTask createSnapshot(String resourcesPath, String exhibitionFolderName, SequenceHistory sequenceHistory, ExhibitionSnapshot exhibitionSnapshot) 
             throws IOException, InterruptedException, FileStorageException ;
 
 }

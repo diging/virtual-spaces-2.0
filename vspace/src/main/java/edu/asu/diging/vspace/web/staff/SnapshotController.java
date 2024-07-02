@@ -24,7 +24,6 @@ import edu.asu.diging.vspace.core.exception.ExhibitionSnapshotNotFoundException;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.SnapshotCouldNotBeCreatedException;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionSnapshot;
-import edu.asu.diging.vspace.core.model.impl.SnapshotTask;
 import edu.asu.diging.vspace.core.services.ISnapshotManager;
 
 @Controller

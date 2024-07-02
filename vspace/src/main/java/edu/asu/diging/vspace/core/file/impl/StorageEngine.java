@@ -154,7 +154,6 @@ public class StorageEngine implements IStorageEngine {
         }
         return folderName;
     }
-
     
     /**
      * To create a zip of a given folder

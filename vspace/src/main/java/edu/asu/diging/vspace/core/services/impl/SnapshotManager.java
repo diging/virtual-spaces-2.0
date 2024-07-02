@@ -29,6 +29,7 @@ import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.exception.SnapshotCouldNotBeCreatedException;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
+import edu.asu.diging.vspace.core.model.ISnapshotTask;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionSnapshot;
 import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
 import edu.asu.diging.vspace.core.model.impl.SnapshotTask;
@@ -87,10 +88,10 @@ public class SnapshotManager  implements  ISnapshotManager {
         createSnapshotFolder(exhibitionSnapshot, exhibitionFolderName);       
         SnapshotTask snapshotTask =  createSnapshotTask(exhibitionSnapshot);
         exhibitionSnapshot.setSnapshotTask(snapshotTask); 
-        exhibitionSnapshotRepository.save(exhibitionSnapshot);
+        exhibitionSnapshot = exhibitionSnapshotRepository.save(exhibitionSnapshot);
 
         try {
-            createSnapshot(resourcesPath, exhibitionFolderName, sequenceHistory, exhibitionSnapshot);
+            snapshotTask = createSnapshot(resourcesPath, exhibitionFolderName, sequenceHistory, exhibitionSnapshot);
             storageEngineDownloads.generateZip(exhibitionFolderName);
         } catch (IOException | InterruptedException | FileStorageException e) {
             throw new SnapshotCouldNotBeCreatedException(e.getMessage(), e);
@@ -117,6 +118,7 @@ public class SnapshotManager  implements  ISnapshotManager {
      * @param exhibitionFolderName - the name of the folder where the exhibition data is stored
      * @param sequenceHistory - the history of sequences to be included in the snapshot
      * @param exhibitionSnapshot - the snapshot object that will store the exhibition state
+     * @return 
      * @throws IOException - if an I/O error occurs during the snapshot creation
      * @throws InterruptedException - if the snapshot creation process is interrupted
      * @throws FileStorageException - if an error occurs while storing the snapshot
@@ -125,7 +127,7 @@ public class SnapshotManager  implements  ISnapshotManager {
     @Async
     @Override
     @Transactional
-    public void createSnapshot(String resourcesPath, String exhibitionFolderName,SequenceHistory sequenceHistory, ExhibitionSnapshot exhibitionSnapshot) 
+    public SnapshotTask createSnapshot(String resourcesPath, String exhibitionFolderName,SequenceHistory sequenceHistory, ExhibitionSnapshot exhibitionSnapshot) 
             throws IOException, InterruptedException, FileStorageException {
         storageEngineDownloads.copyToFolder(exhibitionFolderName + File.separator + RESOURCES_FOLDER_NAME, resourcesPath);
         List<Space> spaces= spaceRepository.findAllBySpaceStatus(SpaceStatus.PUBLISHED);
@@ -135,7 +137,7 @@ public class SnapshotManager  implements  ISnapshotManager {
         }
         SnapshotTask snapshotTask = exhibitionSnapshot.getSnapshotTask();
         snapshotTask.setTaskComplete(true);
-        snapshotTaskRepository.save(snapshotTask);   
+        return snapshotTaskRepository.save(snapshotTask);   
     }
 
     /**
@@ -149,8 +151,7 @@ public class SnapshotManager  implements  ISnapshotManager {
     private String createSnapshotFolder(ExhibitionSnapshot exhibitionSnapshot, String exhibitionFolderName) {
         storageEngineDownloads.createFolder(exhibitionFolderName);
         exhibitionSnapshot.setFolderName(exhibitionFolderName);
-        exhibitionSnapshotRepository.save(exhibitionSnapshot); 
-        return exhibitionFolderName;
+        return exhibitionSnapshotRepository.save(exhibitionSnapshot).getFolderName(); 
     }
 
     /**
