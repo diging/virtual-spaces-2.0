@@ -41,8 +41,10 @@ public class EditSpaceLinkController extends EditSpaceLinksController {
 		@RequestParam("spaceLinkLabel") String spaceLinkLabel,@RequestParam(value = "spaceLinkDesc", required = false) String spaceLinkDesc,
 		@RequestParam("spaceLinkIdValueEdit") String spaceLinkIdValueEdit,
 		@RequestParam("spaceLinkDisplayId") String spaceLinkDisplayId,
-		@RequestParam("type") String displayType, @RequestParam(value="spaceLinkImage", required = false) MultipartFile file,
-		@RequestParam(value = "imageId", required = false) String imageId) throws NumberFormatException,
+		@RequestParam("type") String displayType, @RequestParam(value="spaceLinkImage", required = false) MultipartFile file, 
+		@RequestParam(value="editSpaceLinkImage", required = false) MultipartFile newfile, 
+		@RequestParam(value = "imageId", required = false) String imageId,
+		@RequestParam(value = "editSpace-imageId", required = false) String editSpaceImageId) throws NumberFormatException,
 		SpaceDoesNotExistException, LinkDoesNotExistsException, IOException, ImageCouldNotBeStoredException, ImageDoesNotExistException {
 
         ResponseEntity<String> validation = checkIfSpaceExists(spaceManager, id, x, y);
@@ -55,12 +57,17 @@ public class EditSpaceLinkController extends EditSpaceLinksController {
             linkImage = file.getBytes();
             filename = file.getOriginalFilename();
         }
-        if (file == null && (imageId == null || imageId.equals(""))) {
+        
+        if (file == null && (imageId == null || imageId.equals("")) && newfile == null && (editSpaceImageId == null || editSpaceImageId.equals(""))) {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode node = mapper.createObjectNode();
             node.put("errorMessage", "No image provided for space link.");
             return new ResponseEntity<String>(mapper.writeValueAsString(node), HttpStatus.BAD_REQUEST);
         }
+        
+        imageId = (imageId == null || imageId.equals(""))? editSpaceImageId:imageId;
+        file = (file == null)? newfile: file;
+        
         DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
         ISpaceLinkDisplay display = (ISpaceLinkDisplay) spaceLinkManager.updateLink(title, id, new Float(x),
 				new Float(y), new Integer(rotation), linkedSpaceId, spaceLinkLabel,spaceLinkDesc, spaceLinkIdValueEdit,

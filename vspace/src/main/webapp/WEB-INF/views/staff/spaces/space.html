@@ -963,6 +963,13 @@ $(function(){
         		$('#space-imageId').prop("disabled",true);
         		$('#spaceLinkImage').prop("disabled",false);
         	});
+        	
+        	$('#editSpace-chooseFromLocal').click(function() {
+        		$("#selectedImage").empty();
+        		$('#editSpace-imageId').prop('selectedIndex',0).trigger( "change" );
+        		$('#editSpace-imageId').prop("disabled",true);
+        		$('#editSpaceLinkImage').prop("disabled",false);
+        	});
     		
         	$('#externalLink-chooseFromExisting').click(function() {
         		$('#externalLinkImage').val('');
@@ -980,6 +987,12 @@ $(function(){
         		$('#spaceLinkImage').val('');
         		$('#spaceLinkImage').prop("disabled",true);
         		$('#space-imageId').prop("disabled",false);
+        	  });
+        	
+        	$('#editSpace-chooseFromExisting').click(function() {
+        		$('#editSpaceLinkImage').val('');
+        		$('#editSpaceLinkImage').prop("disabled",true);
+        		$('#editSpace-imageId').prop("disabled",false);
         	  });
         	
         	$("#spaceLinkImage").click(function() {
@@ -1033,6 +1046,23 @@ $(function(){
             });
             
             $("#space-imageId").select2({
+        		ajax: {
+        		    url: function (params) {
+        		  		var imageURL = [[@{|/staff/images/search|}]];
+        		  		return imageURL;
+        		    },
+        		    dataType: 'json',
+        		    processResults: function (data) {
+        		        return {
+        		          results: data,
+        		        };
+        		      },
+        		},
+        		templateResult: formatImage,
+        		templateSelection: formatSelection
+            });
+            
+            $("#editSpace-imageId").select2({
         		ajax: {
         		    url: function (params) {
         		  		var imageURL = [[@{|/staff/images/search|}]];
@@ -2516,7 +2546,20 @@ $(function(){
 	                        <label>Image</label>
 	                    </div>
 	                    <div class="col-sm-8">
-	                        <input type="file" class="form-control-sm" name="spaceLinkImage" id="spaceLinkImageEdit" style="width: inherit"/>
+							<input type="radio" id="editSpace-chooseFromLocal" name="uploadRadioBtn" checked />
+	                    		<small>Upload Image: </small>
+	                        <input type="file" class="form-control-sm-xs" name="editSpaceLinkImage" id="editSpaceLinkImage" style="width: inherit">
+	                        <input type="radio" id="editSpace-chooseFromExisting" name="uploadRadioBtn" />
+	                        <div>
+								<small>Choose from existing: </small>
+								<select id="editSpace-imageId" name="editSpace-imageId" class="form-control-xs target"
+									style="height: 50px; width: 200px;">
+									<option selected value="">Choose from existing</option>
+								</select>
+							</div>
+							<div>
+								<span id="selectedImage" width="200px"></span>
+							</div>
 	                    </div>
 	                </div>
 	                
