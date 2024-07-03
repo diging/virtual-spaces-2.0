@@ -30,8 +30,8 @@ public class SnapshotTaskController {
     @RequestMapping(value = "/staff/exhibit/snapshotTask/status", method = RequestMethod.GET) 
     public ResponseEntity<SnapshotTask> getSnapshotTaskStatus(HttpServletRequest request, 
             @RequestParam(required = false, name = "snapshotId") String snapshotId, HttpServletResponse response,  Model model) throws ExhibitionSnapshotNotFoundException{                     
-        SnapshotTask snapshotTask = (snapshotId == null && snapshotId=="") ? snapshotManager.getLatestSnapshotTask() : 
-            snapshotManager.getSnapshotTask(snapshotId); 
+        SnapshotTask snapshotTask = (snapshotId == null && snapshotId=="") ? (SnapshotTask) snapshotManager.getLatestSnapshotTask() : 
+            (SnapshotTask) snapshotManager.getSnapshotTask(snapshotId); 
         if(snapshotTask == null) {
             logger.error("Could not find snapshot task");
             return new ResponseEntity<SnapshotTask>(snapshotTask, HttpStatus.NOT_FOUND);
