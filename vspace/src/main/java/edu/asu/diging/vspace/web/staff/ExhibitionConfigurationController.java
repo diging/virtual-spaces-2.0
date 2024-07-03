@@ -5,11 +5,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.javers.common.collections.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,6 +28,7 @@ import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
+import edu.asu.diging.vspace.web.staff.forms.ExhibitionForm;
 
 @Controller
 public class ExhibitionConfigurationController {
@@ -80,12 +84,14 @@ public class ExhibitionConfigurationController {
      */
     @RequestMapping(value = "/staff/exhibit/config", method = RequestMethod.POST)
     public RedirectView createOrUpdateExhibition(HttpServletRequest request,
+            @Valid @ModelAttribute ExhibitionForm exhibitionForm,
+            BindingResult result,
             @RequestParam(required = false, name = "exhibitionParam") String exhibitID,
             @RequestParam("spaceParam") String spaceID, @RequestParam("title") String title,
             @RequestParam("exhibitMode") ExhibitionModes exhibitMode,
             @RequestParam(value = "customMessage", required = false, defaultValue = "") String customMessage,
             @RequestParam("exhibitLanguage") List<String> languages,
-            @RequestParam("defaultExhibitLanguage") String defaultLanguage,
+            @RequestParam("defaultExhibitLanguage") String defaultLanguage,           
             RedirectAttributes attributes) throws IOException {
 
         ISpace startSpace = spaceManager.getSpace(spaceID);
@@ -100,10 +106,10 @@ public class ExhibitionConfigurationController {
         exhibition.setTitle(title);
         exhibition.setMode(exhibitMode);
         
-        if(languages.isEmpty()) {
+        if(result.hasErrors()) {
             attributes.addAttribute("showAlert", true);
             attributes.addAttribute("alertType", "danger");
-            attributes.addAttribute("message", "Please select exhibition languages.");
+            attributes.addAttribute("message", result.getAllErrors());
             return new RedirectView(request.getContextPath() + "/staff/exhibit/config");
         }
         exhibitManager.updateExhibitionLanguages(exhibition,languages,defaultLanguage);
