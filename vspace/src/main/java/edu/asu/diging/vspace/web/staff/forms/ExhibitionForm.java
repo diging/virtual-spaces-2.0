@@ -3,20 +3,23 @@ package edu.asu.diging.vspace.web.staff.forms;
 import java.util.List;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import edu.asu.diging.vspace.core.model.ExhibitionModes;
 
 public class ExhibitionForm {
     
     @NotEmpty(message = "Please enter title")
-    private String title;    
+    private String title;
+    
     @NotEmpty(message = "Please select exhibition languages")
     private List<String> exhibitLanguage;    
-    @NotEmpty
-    private ExhibitionModes exhibitMode;
-    @NotEmpty
-    private String spaceParam;
     
+    @NotNull(message = "Please select exhibit mode")
+    private ExhibitionModes exhibitMode;
+    
+    @NotEmpty
+    private String spaceParam;    
     private String exhibitionParam;
     private String customMessage;
     private String defaultExhibitLanguage;

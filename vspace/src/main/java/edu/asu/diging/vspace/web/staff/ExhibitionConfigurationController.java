@@ -81,21 +81,26 @@ public class ExhibitionConfigurationController {
      * @param spaceParam
      * @param attributes
      * @return
-     */
+     */    
     @RequestMapping(value = "/staff/exhibit/config", method = RequestMethod.POST)
     public RedirectView createOrUpdateExhibition(HttpServletRequest request,
-            @Valid @ModelAttribute ExhibitionForm exhibitionForm,
-            BindingResult result,
-            @RequestParam(required = false, name = "exhibitionParam") String exhibitID,
-            @RequestParam("spaceParam") String spaceID, @RequestParam("title") String title,
-            @RequestParam("exhibitMode") ExhibitionModes exhibitMode,
-            @RequestParam(value = "customMessage", required = false, defaultValue = "") String customMessage,
-            @RequestParam("exhibitLanguage") List<String> languages,
-            @RequestParam("defaultExhibitLanguage") String defaultLanguage,           
+            @Valid @ModelAttribute("exhibitionForm") ExhibitionForm exhibitionForm,
+            BindingResult result,           
             RedirectAttributes attributes) throws IOException {
-
-        ISpace startSpace = spaceManager.getSpace(spaceID);
-
+        if(result.hasErrors()) {
+            attributes.addAttribute("showAlert", true);
+            attributes.addAttribute("alertType", "danger");
+            attributes.addAttribute("message", result.getFieldError().getDefaultMessage());
+            return new RedirectView(request.getContextPath() + "/staff/exhibit/config");
+        }
+        String spaceID = exhibitionForm.getExhibitionParam();
+        String exhibitID = exhibitionForm.getExhibitionParam();
+        String title = exhibitionForm.getTitle();
+        ExhibitionModes exhibitMode = exhibitionForm.getExhibitMode();
+        List<String> languages = exhibitionForm.getExhibitLanguage();
+        String defaultLanguage = exhibitionForm.getDefaultExhibitLanguage();
+        String customMessage = exhibitionForm.getCustomMessage();
+        ISpace startSpace = spaceManager.getSpace(spaceID);       
         Exhibition exhibition;
         if (exhibitID == null || exhibitID.isEmpty()) {
             exhibition = (Exhibition) exhibitFactory.createExhibition();
@@ -105,13 +110,6 @@ public class ExhibitionConfigurationController {
         exhibition.setStartSpace(startSpace);
         exhibition.setTitle(title);
         exhibition.setMode(exhibitMode);
-        
-        if(result.hasErrors()) {
-            attributes.addAttribute("showAlert", true);
-            attributes.addAttribute("alertType", "danger");
-            attributes.addAttribute("message", result.getAllErrors());
-            return new RedirectView(request.getContextPath() + "/staff/exhibit/config");
-        }
         exhibitManager.updateExhibitionLanguages(exhibition,languages,defaultLanguage);
     
         if(exhibitMode.equals(ExhibitionModes.OFFLINE) && !customMessage.equals(ExhibitionModes.OFFLINE.getValue())) {
