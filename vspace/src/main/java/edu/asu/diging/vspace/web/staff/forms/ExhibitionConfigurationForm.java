@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
 
 import edu.asu.diging.vspace.core.model.ExhibitionModes;
 
-public class ExhibitionForm {
+public class ExhibitionConfigurationForm {
     
     @NotEmpty(message = "Please enter title")
     private String title;

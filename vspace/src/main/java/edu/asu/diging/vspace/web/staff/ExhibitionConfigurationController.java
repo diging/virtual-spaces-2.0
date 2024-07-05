@@ -28,7 +28,7 @@ import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
-import edu.asu.diging.vspace.web.staff.forms.ExhibitionForm;
+import edu.asu.diging.vspace.web.staff.forms.ExhibitionConfigurationForm;
 
 @Controller
 public class ExhibitionConfigurationController {
@@ -84,7 +84,7 @@ public class ExhibitionConfigurationController {
      */    
     @RequestMapping(value = "/staff/exhibit/config", method = RequestMethod.POST)
     public RedirectView createOrUpdateExhibition(HttpServletRequest request,
-            @Valid @ModelAttribute("exhibitionForm") ExhibitionForm exhibitionForm,
+            @Valid @ModelAttribute("exhibitionConfigurationForm") ExhibitionConfigurationForm exhibitionConfigForm,
             BindingResult result,           
             RedirectAttributes attributes) throws IOException {
         if(result.hasErrors()) {
@@ -93,13 +93,13 @@ public class ExhibitionConfigurationController {
             attributes.addAttribute("message", result.getFieldError().getDefaultMessage());
             return new RedirectView(request.getContextPath() + "/staff/exhibit/config");
         }
-        String spaceID = exhibitionForm.getExhibitionParam();
-        String exhibitID = exhibitionForm.getExhibitionParam();
-        String title = exhibitionForm.getTitle();
-        ExhibitionModes exhibitMode = exhibitionForm.getExhibitMode();
-        List<String> languages = exhibitionForm.getExhibitLanguage();
-        String defaultLanguage = exhibitionForm.getDefaultExhibitLanguage();
-        String customMessage = exhibitionForm.getCustomMessage();
+        String spaceID = exhibitionConfigForm.getExhibitionParam();
+        String exhibitID = exhibitionConfigForm.getExhibitionParam();
+        String title = exhibitionConfigForm.getTitle();
+        ExhibitionModes exhibitMode = exhibitionConfigForm.getExhibitMode();
+        List<String> languages = exhibitionConfigForm.getExhibitLanguage();
+        String defaultLanguage = exhibitionConfigForm.getDefaultExhibitLanguage();
+        String customMessage = exhibitionConfigForm.getCustomMessage();
         ISpace startSpace = spaceManager.getSpace(spaceID);       
         Exhibition exhibition;
         if (exhibitID == null || exhibitID.isEmpty()) {

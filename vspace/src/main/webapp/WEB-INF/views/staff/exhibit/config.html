@@ -61,7 +61,7 @@
 	     <a style="color:blue;" th:href="@{|/preview/${exhibition.previewId}|}"> [[${#strings.defaultString(@environment.getProperty('baseUrl'),'')}]][[@{|/preview/${exhibition.previewId}|}]]</a></p>
 	    </div>
 		<div style="padding: 30px 0;">
-		    <form th:action="@{/staff/exhibit/config}" method="POST" name="f" modelAttribute="${exhibitionForm}">
+		    <form th:action="@{/staff/exhibit/config}" method="POST" name="f" modelAttribute="${exhibitionConfigurationForm}">
 		        <input type="hidden"  th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 		        <input type="hidden" th:value="${exhibition?.id}" name="exhibitionParam"/>
 		        <label for="space">Select the start space of the exhibition:</label>
