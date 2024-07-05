@@ -9,20 +9,23 @@ import edu.asu.diging.vspace.core.model.ExhibitionModes;
 
 public class ExhibitionConfigurationForm {
     
-    @NotEmpty(message = "Please enter title")
-    private String title;
+    private String customMessage;
+    
+    private String defaultExhibitLanguage;    
+    
+    private String exhibitionParam;
     
     @NotEmpty(message = "Please select exhibition languages")
-    private List<String> exhibitLanguage;    
+    private List<String> exhibitLanguage;
     
     @NotNull(message = "Please select exhibit mode")
     private ExhibitionModes exhibitMode;
     
     @NotEmpty
-    private String spaceParam;    
-    private String exhibitionParam;
-    private String customMessage;
-    private String defaultExhibitLanguage;
+    private String spaceParam;
+    
+    @NotEmpty(message = "Please enter title")
+    private String title;
     
     public String getCustomMessage() {
         return customMessage;
@@ -42,6 +45,9 @@ public class ExhibitionConfigurationForm {
     public String getSpaceParam() {
         return spaceParam;
     }
+    public String getTitle() {
+        return title;
+    }
     public void setCustomMessage(String customMessage) {
         this.customMessage = customMessage;
     }
@@ -56,12 +62,9 @@ public class ExhibitionConfigurationForm {
     }
     public void setExhibitMode(ExhibitionModes exhibitMode) {
         this.exhibitMode = exhibitMode;
-    }
+    }  
     public void setSpaceParam(String spaceParam) {
         this.spaceParam = spaceParam;
-    }  
-    public String getTitle() {
-        return title;
     }
     public void setTitle(String title) {
         this.title = title;
