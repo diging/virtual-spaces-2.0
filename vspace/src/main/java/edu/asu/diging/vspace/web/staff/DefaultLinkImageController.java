@@ -5,26 +5,26 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IImageService;
 
+@Controller
 public class DefaultLinkImageController {
     
     @Autowired
     IExhibitionManager exhibitManager;
     
-    IImageService imageService;
-    
-    
+    @Autowired
+    IImageService imageService;   
 
     /**
      * To create or update the default link images.
@@ -40,7 +40,8 @@ public class DefaultLinkImageController {
             @RequestParam(name = "image", required = false) MultipartFile image,
             @RequestParam(name="linkType") String linkType,
             RedirectAttributes attributes) throws IOException {
-        Exhibition exhibition = (Exhibition) exhibitManager.getStartExhibition();       
+        Exhibition exhibition = (Exhibition) exhibitManager.getStartExhibition();
+        
         if(linkType.equals("space")) {
             IVSImage spaceDefaultImage = imageService.storeImage(image.getBytes(), image.getOriginalFilename()); 
             exhibition.setSpaceLinkDefaultImage(spaceDefaultImage);

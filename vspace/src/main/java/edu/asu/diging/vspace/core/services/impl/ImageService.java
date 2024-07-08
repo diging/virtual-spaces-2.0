@@ -263,7 +263,7 @@ public class ImageService implements IImageService {
     }   
     
     /**
-     * Method to store an image in the file location
+     * Method to store an image in the file 
      * 
      *@param image - The image data as a byte array
      *@param filename - The name of the file to be stored
@@ -282,12 +282,14 @@ public class ImageService implements IImageService {
 
         CreationReturnValue returnValue = new CreationReturnValue();
         returnValue.setErrorMsgs(new ArrayList<>());
-
         if (storedImage != null) {
             String relativePath = null;
             try {
                 relativePath = storage.storeFile(image, filename, storedImage.getId());
             } catch (FileStorageException e) {
+                // don't store a VSImage instance, if an exception occurs
+                imageRepo.deleteById(storedImage.getId());
+                
                 logger.error(DEFAULT_IMAGE_EXCEPTION,e);
                 returnValue.getErrorMsgs().add(DEFAULT_IMAGE_EXCEPTION + e.getMessage());
             }

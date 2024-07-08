@@ -300,7 +300,7 @@ public class ImageServiceTest {
     }
 
     @Test
-    public void test_storeDefaultImage_Error() throws FileStorageException, IOException {
+    public void test_storeDefaultImage_error() throws FileStorageException, IOException {
         InputStream fis = getClass().getResourceAsStream("/files/testImage.png");
         byte[] imageBytes = IOUtils.toByteArray(fis);
 
