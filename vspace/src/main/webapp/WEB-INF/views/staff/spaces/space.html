@@ -1076,7 +1076,24 @@ $(function(){
         		      },
         		},
         		templateResult: formatImage,
-        		templateSelection: formatSelection
+        		templateSelection: editSpaceFormatSelection
+            });
+            
+            $("#editModule-imageId").select2({
+        		ajax: {
+        		    url: function (params) {
+        		  		var imageURL = [[@{|/staff/images/search|}]];
+        		  		return imageURL;
+        		    },
+        		    dataType: 'json',
+        		    processResults: function (data) {
+        		        return {
+        		          results: data,
+        		        };
+        		      },
+        		},
+        		templateResult: formatImage,
+        		templateSelection: editModuleLinkFormatSelection
             });
             
             function formatImage (image) {
@@ -1100,6 +1117,32 @@ $(function(){
                 );
                 $("#selectedImage").empty();
                 $("#selectedImage").append('<img width="200px" src="' + tbaseUrl + image.id + '" class="img-thumbnail" />');
+                return $image;
+            }
+            
+            function editSpaceFormatSelection(image) {
+            	if (!image.id) {
+                    return image.text;
+                }
+            	var tbaseUrl = [[@{|/api/image/|}]];
+                var $image = $(
+                        '<span>' + image.text + '</span>'
+                );
+                $("#editSpace-selectedImage").empty();
+                $("#editSpace-selectedImage").append('<img width="200px" src="' + tbaseUrl + image.id + '" class="img-thumbnail" />');
+                return $image;
+            }
+            
+            function editModuleLinkFormatSelection(image) {
+            	if (!image.id) {
+                    return image.text;
+                }
+            	var tbaseUrl = [[@{|/api/image/|}]];
+                var $image = $(
+                        '<span>' + image.text + '</span>'
+                );
+                $("#editModuleLink-selectedImage").empty();
+                $("#editModuleLink-selectedImage").append('<img width="200px" src="' + tbaseUrl + image.id + '" class="img-thumbnail" />');
                 return $image;
             }
         });
@@ -2558,7 +2601,7 @@ $(function(){
 								</select>
 							</div>
 							<div>
-								<span id="selectedImage" width="200px"></span>
+								<span id="editSpace-selectedImage" width="200px"></span>
 							</div>
 	                    </div>
 	                </div>
@@ -2667,32 +2710,10 @@ $(function(){
 								</select>
 							</div>
 							<div>
-								<span id="selectedImage" width="200px"></span>
+								<span id="editModuleLink-selectedImage" width="200px"></span>
 							</div>
                         </div>
                     </div>
-                    
-              <div class="row">
-	                    <div class="col-sm-4" style="padding-right: 0;">
-	                        <label>Image</label>
-	                    </div>
-	                    <div class="col-sm-8">
-							<input type="radio" id="space-chooseFromLocal" name="uploadRadioBtn" checked />
-	                    		<small>Upload Image: </small>
-	                        <input type="file" class="form-control-sm-xs" name="spaceLinkImage" id="spaceLinkImage" style="width: inherit">
-	                        <input type="radio" id="space-chooseFromExisting" name="uploadRadioBtn" />
-	                        <div>
-								<small>Choose from existing: </small>
-								<select id="space-imageId" name="space-imageId" class="form-control-xs target"
-									style="height: 50px; width: 200px;">
-									<option selected value="">Choose from existing</option>
-								</select>
-							</div>
-							<div>
-								<span id="selectedImage" width="200px"></span>
-							</div>
-	                    </div>
-	                </div>
                     
                     <p class="mt-5 text-center">
                         <button id="deleteModuleLinkButton" type="reset" class="btn delete-btn btn-sm"><i class="fa fa-trash"></i>Delete</button>
