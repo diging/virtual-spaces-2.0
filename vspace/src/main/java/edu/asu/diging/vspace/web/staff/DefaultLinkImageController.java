@@ -1,6 +1,9 @@
 package edu.asu.diging.vspace.web.staff;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.BiConsumer;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -19,6 +22,14 @@ import edu.asu.diging.vspace.core.services.IImageService;
 
 @Controller
 public class DefaultLinkImageController {
+    
+    private static final Map<String, BiConsumer<Exhibition, IVSImage>> imageSetterMap = new HashMap<>();
+
+    static {
+        imageSetterMap.put("space", Exhibition::setSpaceLinkDefaultImage);
+        imageSetterMap.put("module", Exhibition::setModuleLinkDefaultImage);
+        imageSetterMap.put("external", Exhibition::setExternalLinkDefaultImage);
+    }
     
     @Autowired
     IExhibitionManager exhibitManager;
@@ -41,26 +52,17 @@ public class DefaultLinkImageController {
             @RequestParam(name="linkType") String linkType,
             RedirectAttributes attributes) throws IOException {
         Exhibition exhibition = (Exhibition) exhibitManager.getStartExhibition();
+        IVSImage defaultImage = imageService.storeImage(image.getBytes(), image.getOriginalFilename());
         
-        if(linkType.equals("space")) {
-            IVSImage spaceDefaultImage = imageService.storeImage(image.getBytes(), image.getOriginalFilename()); 
-            exhibition.setSpaceLinkDefaultImage(spaceDefaultImage);
-        }
-        else if(linkType.equals("module")) {
-            IVSImage moduleDefaultImage = imageService.storeImage(image.getBytes(), image.getOriginalFilename());            
-            exhibition.setModuleLinkDefaultImage(moduleDefaultImage);
-        }
-        else if(linkType.equals("external")) {
-            IVSImage externalLinkDefaultImage = imageService.storeImage(image.getBytes(), image.getOriginalFilename());         
-            exhibition.setExternalLinkDefaultImage(externalLinkDefaultImage);
-        }
-        else {
+        BiConsumer<Exhibition, IVSImage> setter = imageSetterMap.get(linkType);
+        if(setter == null) {
+            attributes.addAttribute("exhibitId", exhibition.getId());
             attributes.addAttribute("alertType", "danger");
+            attributes.addAttribute("message", "Could not save default image");
             attributes.addAttribute("showAlert", "true");
-            attributes.addAttribute("message", "Couldn't save the default image");
             return "redirect:/staff/exhibit/config";
         }
-        
+        setter.accept(exhibition, defaultImage);
         exhibition = (Exhibition) exhibitManager.storeExhibition(exhibition);
         attributes.addAttribute("exhibitId", exhibition.getId());
         attributes.addAttribute("alertType", "success");
