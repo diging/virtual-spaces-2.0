@@ -54,7 +54,7 @@
     background: rgba(0, 0, 0, 0.6);
 }
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
+<script src="https://d3js.org/d3.v4.js"></script>
 <script th:inline="javascript">       
          $( document ).ready(function() {
             $("#blocks a").css('color','rgb(150, 45, 62)').css('font-weight','bold');
@@ -213,263 +213,21 @@
                         var currentSlide = [[${currentSlideCon}]];
                         var sequenceId = [[${currentSequenceId}]];
 
-                        // Initialize tree data and set up the basic structure
-                        let treeData = [];
-                        treeData.children = [];
+                        const nodes =[];
                         let startSequence = json['startSequence'];
-                        let otherSequences = json['otherSequences'];
-                        let startSequenceslides = [];
-                        let isStartSequence = true;
                         
-                        //populate the data into the tree
-                        populateTreeData(treeData, startSequence, otherSequences);
-                        // Set up dimensions for the tree layout
-                        var margin = {top: 20, right: 120, bottom: 20, left: 120},
-                            width = 2000 - margin.right - margin.left,
-                            height = 500 - margin.top - margin.bottom;
-
-                        // Initialize variables for tree layout
-                        var i = 0, duration = 750, root;
-                        var tree = d3.layout.tree().size([height, width]);
-                        var diagonal = d3.svg.diagonal().projection(function(d) {
-                            if(d.parent!=null && d.parent.branchingPoint==true && d.removeNode == true){
-                            	return [visitedNodes.get(d.id).y, visitedNodes.get(d.id).x];
-                            }
-                        return [d.y, d.x];
-                        });
+                        // for start sequence
+                        populateNodeData(startSequence, nodes);
                         
-                        // Create the SVG container for the tree
-                        var svg = d3.select("#svg-container").append("svg")
-                                    .attr("width", width + margin.right + margin.left)
-                                    .attr("height", height + margin.top + margin.bottom)
-                                    .append("g")
-                                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-                        // Set the root node and initialize its position
-                        root = treeData;
-                        root.x0 = height / 2;
-                        root.y0 = 0;
-                        
-                        // Update the tree with the root node
-                        update(root);
-
-                        // Set the height of the frame
-                        d3.select(self.frameElement).style("height", "500px");
-
-                        function populateTreeData(treeData, startSequence, otherSequences){
-                            // Set the name of the root node
-                            treeData.name = json.name;
-
-                            // Create the tree structure starting with the start sequence
-                            treeData = createFromSequence(startSequence, treeData, isStartSequence);
-                            // Update the flag to indicate we're no longer processing the start sequence
-                            isStartSequence = false;
-                            
-                            // Add other sequences to the tree structure
-                            for (let sequence of otherSequences) {
-                                treeData = createFromSequence(sequence, treeData, isStartSequence);
-                            }
-                            
-                            // Add branching points to the tree structure
-                            for (let branch of branchingPointsSet) {
-                            	
-                                for (let branchSequence of branch.branchSequences) {
-                                    // Avoid adding a branch to itself
-                                    if (branch.sequence === branchSequence.name) continue;
-                                    
-                                    // Add the branch sequence to the children of the branch node
-                                    branch.children.push(sequencesMap.get(branchSequence.name));
-                                }
-                            }
+                        //populating data required to create nodes
+                        function populateNodeData(sequence, nodes){	
+                        	for(slide of sequence.slideOverviews){
+                        		let nodeMap = {};
+                        		nodeMap.id = slide.id;
+                        		nodeMap.name = slide.name;
+                        		nodes.push(nodeMap);
+                        	}                        	
                         }
-
-                        function createFromSequence(sequence, treeData, isStartSequence){                            
-                            let startNodeSequence = {};
-                            startNodeSequence.children=[];
-                            let slideIndex = 0;
-                            for(slide of sequence.slideOverviews){
-                                let slideNode = {};                                                               	
-                                slideNode.children=[];
-                                slideNode.name = slide.name;
-                                slideNode.group = "slide";
-                                slideNode.sequenceId = sequence.id;
-                                slideNode.slideId = slide.id;
-                                slideNode.id = sequence.id + slide.id;
-                            	if(slide.branchingPoint == true){
-                            	    slideNode.branchSequences = [];
-                            	    slideNode.branchingPoint = true;
-                            	    for(seq of slide.choiceSequenceNames){
-                            	    	let branchSeq = {};
-                            	    	branchSeq.name = seq;
-                                        if(seq == sequence.name){
-                                            let tmp = {};
-                                            tmp.firstSlide = firstSlides.get(sequence.id);
-                                            tmp.parent = json.id;
-                                            tmp.slideOverviews = sequence.slideOverviews;
-                                            tmp.name = sequence.name;
-                                            tmp.removeNode = true;
-                                            tmp.id = sequence.id;
-                                    		slideNode.children.push(tmp);
-                                            continue;
-                            	    	}
-                            	    	slideNode.branchSequences.push(branchSeq);
-                            	    	slideNode.sequence = sequence.name;
-                            	    }
-                                    branchingPointsSet.add(slideNode);
-                            	}                                   
-                                
-                            	if(slideIndex == 0){
-                                    slideNode.parent=json.id;
-                                    startNodeSequence = slideNode;
-                                    firstSlides.set(sequence.id, slideNode);
-                            	} else {                     
-                                    prev.children.push(slideNode);
-                                    slideNode.parent=prev;                                                                 	    
-                            	}
-                                startNodeSequence.parent = json.id;
-                                startNodeSequence.group ="slide";
-                            	prev = slideNode;
-                            	source = slideNode.id;
-                            	slideIndex=slideIndex+1;
-                            }
-                            
-                            if(isStartSequence == true){
-                                treeData.children.push(startNodeSequence);
-                            }
-                                                      
-                            sequencesMap.set(sequence.name, startNodeSequence);
-                            return treeData;
-                        }
-
-                        function update(source) {
-                            // Compute the new tree layout.
-                            var nodes = tree.nodes(root).reverse(),links = tree.links(nodes);
-                            
-                            // Normalize for fixed-depth.
-                            nodes.forEach(function(d) { d.y = d.depth * 110; });
-                            
-                            // filtering to remove the root node and link (Module name)
-                            nodes = nodes.filter(function(d){
-                            	return  d.depth && d.depth != 0 && d.removeNode == null;
-                            });
-                            links = links.filter(function(d){ return  d.source.depth != 0 ; });
-                            nodes.forEach(function(d){
-                                visitedNodes.set(d.id, d);
-                                visitedNodes.set(d.sequenceId, d);
-
-                                if(d.group == "slide" && d.parent.branchingPoint == true ){
-                                	d.x= d.parent.x;
-                                	d.x0 = d.parent.x;
-                                	temp = d;
-                                    while(temp.children!=null && temp.children.length > 0){
-                                    	child = temp.children[0];
-                                    	child.x= temp.x;
-                                    	child.x0 = temp.x0;
-                                    	temp = child;
-                                    }
-                                }
-                                return d;
-                            });
-                            
-                        // Update the nodes
-                        var node = svg.selectAll("g.node").data(nodes, function(d) { return d.id || (d.id = ++i); });
-                        
-                        // Enter any new nodes at the parent's previous position.
-                        var nodeEnter = node.enter().append("g").attr("class", "node")
-                        	.attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; }); 
-						
-                        // On click event for nodes
-                        nodeEnter.on("click", openSlide);
-                        
-                        //function to open slide or sequence on clicking the node
-                        function openSlide (d){
-                        	window.open([[@{/exhibit/}]]+spaceId+'/module/'+moduleId+'/sequence/'+d.sequenceId+'/slide/'+d.slideId, "_self");
-                        }
-
-                        // Add the circle for the nodes
-                        nodeEnter.append("circle").attr("r", function(d){ 
-                        	if((d.sequenceId === sequenceId) 
-                        			&& (d.slideId === currentSlide.id)){
-                        		return 10;
-                        	}
-                        	return 1e-6;
-                        }).style("fill", "orange" )
-                        .style("opacity", function(d, i) { return !d.depth ? 0 : 1; })
-                        .style("cursor","pointer");
-                        
-                        // Add the text for the nodes
-                        nodeEnter.append("text").attr("class","text")
-                        	.attr("x", function(d) { return d.children || d._children ? 10 :10; })
-                        	.attr("dy", "2.3em")
-                        	.attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
-                        	.text(function(d) { return d.name; })
-                        	.style("fill-opacity", 1e-6)
-                        	.style("opacity", function(d, i) {
-                        		return !d.depth ? 0 : 1; 
-                        	});;;
-							
-                        // Transition nodes to their new position.
-                        var nodeUpdate = node.transition()
-                        	.duration(duration)
-                        	.attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
-						
-                        // update the node style
-                        nodeUpdate.select("circle").attr("r", 
-                        		function(d){ if((d.group=== "slide" && d.sequenceId.normalize() === sequenceId.normalize())
-                        				&& (d.slideId === currentSlide.id)){
-                        			return 20;
-                        		}
-                        		return 10;
-                        }).style("opacity", function(d){ if((d.group=== "slide" 
-                        		&& d.sequenceId === sequenceId )
-                        		&& (d.slideId === currentSlide.id)){
-                        			return 1;
-                        		}
-                        		return 0.5;
-                        })
-                        .style("fill", "orange")
-                        .style("opacity", function(d, i) {
-                            return !d.depth ? 0 : 1;
-                        });;
-                        
-                        nodeUpdate.select("text").style("fill-opacity", 1);
-                        
-                        // Appends a text element to each entering node
-                        nodeEnter.append("text").attr("class","text")
-                        	.attr("x", function(d) { return d.children || d._children ? 10 :10; })
-                        	.attr("dy", "1.5em")
-                        	.attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
-                        	.text(function(d) { return d.name; })
-                        	.style("fill-opacity", 1e-6)
-                        	.style("opacity", function(d, i) {
-                        		return !d.depth ? 0 : 1;
-                            });;;
-						
-                        // Transition exiting nodes to the parent's new position.
-                        var nodeExit = node.exit().transition().duration(duration)
-                        	.attr("transform", function(d) { return "translate(" + source.y + "," + source.x + ")"; })
-                        	.remove();
-						
-                        nodeExit.select("text").style("fill-opacity", 1e-6);
-
-                        // Update the links
-                        var link = svg.selectAll("path.link")
-                            .data(links, function(d) { return d.target.id; })
-                        
-                        
-                        // Enter any new links at the parent's previous position.
-                        link.enter().insert("path", "g").attr("class", "link")
-                            .attr("d", diagonal).style("fill-opacity", 1e-6);
-                       
-                        
-
-                        link.transition().duration(duration).attr("d", diagonal);
-                        
-                        // Stash the old positions for transition.
-                        nodes.forEach(function(d) {
-                        	d.x0 = d.x;
-                        	d.y0 = d.y;});
-                        }                  
              </script>
              </div>
                         </div>
