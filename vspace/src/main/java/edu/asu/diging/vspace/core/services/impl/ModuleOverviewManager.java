@@ -76,10 +76,10 @@ public class ModuleOverviewManager implements IModuleOverviewManager {
             if(slide instanceof BranchingPoint) {
                 slideOverview.setBranchingPoint(true);
                 List<IChoice> sequenceChoices = ((BranchingPoint)slide).getChoices();
-                List<String> slideOverviewSequenceNames = new ArrayList<String>();
+                List<String> slideOverviewSequenceIds = new ArrayList<String>();
                 sequenceChoices.stream().forEach(sequenceChoice -> 
-                    slideOverviewSequenceNames.add(sequenceChoice.getSequence().getId()));
-                slideOverview.setChoiceSequenceIds(slideOverviewSequenceNames);
+                slideOverviewSequenceIds.add(sequenceChoice.getSequence().getId()));
+                slideOverview.setChoiceSequenceIds(slideOverviewSequenceIds);
             } 
             slideOverviews.add(slideOverview);          
         } 
