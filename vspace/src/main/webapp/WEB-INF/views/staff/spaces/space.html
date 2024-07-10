@@ -2527,7 +2527,6 @@ $(function(){
 					</div>
 	                
 	                <input type="hidden" name="spaceLinkIdValueEdit" id="spaceLinkIdValueEdit" />
-	
 	                <input type="hidden" name="x" id="spaceLinkXEdit" /> 
 	                <input type="hidden" name="y" id="spaceLinkYEdit" /> 
 	                <input type="hidden" name="spaceLinkDisplayId" id="spaceLinkDisplayId" />
@@ -2806,9 +2805,20 @@ $(function(){
                             <label>Image:</label>
                         </div>
                         <div class="col-sm-9">
-                            <input type="file" class="form-control-sm"
-                                name="externalLinkImage"
-                                id="externalLinkImageEdit" style="width: inherit" />
+                            <input type="file" class="form-control-sm" name="externalLinkImage" id="externalLinkImageEdit" style="width: inherit" />
+                            <small>Upload Image: </small>
+	                        	<input type="file" class="form-control-sm" name="editExternalLinkInfoImage" id="editExternalLinkInfoImageEdit" style="width: inherit" />
+	                        <input type="radio" id="editModule-chooseFromExisting" name="uploadRadioBtn" />
+	                        <div>
+								<small>Choose from existing: </small>
+								<select id="editExternalLinkInfo-imageId" name="editExternalLinkInfo-imageId" class="form-control-xs target"
+									style="height: 50px; width: 200px;">
+									<option selected value="">Choose from existing</option>
+								</select>
+							</div>
+							<div>
+								<span id="editExternalLinkInfo-selectedImage" width="200px"></span>
+							</div>
                         </div>
                     </div>
                     
