@@ -23,19 +23,16 @@ import edu.asu.diging.vspace.core.services.IImageService;
 @Controller
 public class DefaultLinkImageController {
     
-    private static final Map<String, BiConsumer<Exhibition, IVSImage>> imageSetterMap = new HashMap<>();
-
-    static {
-        imageSetterMap.put("space", Exhibition::setSpaceLinkDefaultImage);
-        imageSetterMap.put("module", Exhibition::setModuleLinkDefaultImage);
-        imageSetterMap.put("external", Exhibition::setExternalLinkDefaultImage);
-    }
+    private final Map<String, BiConsumer<Exhibition, IVSImage>> imageSetterMap = Map.of(
+            "space", Exhibition::setSpaceLinkDefaultImage,
+            "module", Exhibition::setModuleLinkDefaultImage,
+            "external", Exhibition::setExternalLinkDefaultImage);
     
     @Autowired
-    IExhibitionManager exhibitManager;
+    private IExhibitionManager exhibitManager;
     
     @Autowired
-    IImageService imageService;   
+    private IImageService imageService;   
 
     /**
      * To create or update the default link images.
