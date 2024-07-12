@@ -775,6 +775,9 @@ function makeSpaceLinksEditable(spaceLinkName, spaceLinkId, rotation, selectedSp
     });
     hideLinkInfoTabs();
     displayForms("#editSpaceLinkInfo");
+	$('#editSpace-imageId').prop('selectedIndex',0).trigger( "change" );
+	$('#editSpace-imageId').prop("disabled",true);
+	$('#editSpaceLinkImage').prop("disabled",false);
 }
 function displayForms(formToShow){
     drawLinks();
@@ -815,6 +818,9 @@ function makeModuleLinksEditable(moduleLinkName, moduleLinkId, rotation, selecte
     });
     hideLinkInfoTabs();
     displayForms("#editModuleLinkInfo");
+    $('#editModule-imageId').prop('selectedIndex',0).trigger( "change" );
+	$('#editModule-imageId').prop("disabled",true);
+	$('#editModuleImage').prop("disabled",false);
 }
 
 function makeExternalLinksEditable(linkName, linkId, externalLinkURL, posXEdit, posYEdit, displayLinkId, linkType,tabOpenType) {
@@ -848,6 +854,9 @@ function makeExternalLinksEditable(linkName, linkId, externalLinkURL, posXEdit, 
     });
     hideLinkInfoTabs();
     displayForms("#editExternalLinkInfo");
+    $('#editExternalLinkInfo-imageId').prop('selectedIndex',0).trigger( "change" );
+	$('#editExternalLinkInfo-imageId').prop("disabled",true);
+	$('#editExternalLinkInfoImage').prop("disabled",false);
 }
 
 function makeTextBlockEditable(blockDisplayId,blockId,text,posX,posY,width,height, textColor, borderColor){
@@ -942,6 +951,7 @@ $(function(){
             $('#module-imageId').prop("disabled",true);
             $('#space-imageId').prop("disabled",true);
             
+        	// Choose from Local for Space, Modules and External Links
         	$('#externalLink-chooseFromLocal').click(function() {
         		$("#selectedImage").empty();
         		$('#externalLink-imageId').prop('selectedIndex',0).trigger( "change" );
@@ -964,26 +974,27 @@ $(function(){
         		$('#spaceLinkImage').prop("disabled",false);
         	});
         	
+        	
+        	// Edit choose from Local for Space, Modules and External Links
         	$('#editSpace-chooseFromLocal').click(function() {
-        		$("#selectedImage").empty();
         		$('#editSpace-imageId').prop('selectedIndex',0).trigger( "change" );
         		$('#editSpace-imageId').prop("disabled",true);
         		$('#editSpaceLinkImage').prop("disabled",false);
         	});
         	
+        	$('#editModule-chooseFromLocal').click(function() {
+        		$('#editModule-imageId').prop('selectedIndex',0).trigger( "change" );
+        		$('#editModule-imageId').prop("disabled",true);
+        		$('#editModuleImage').prop("disabled",false);
+        	});
+        	
         	$('#editExternalLinkInfo-chooseFromLocal').click(function() {
-        		$("#selectedImage").empty();
         		$('#editExternalLinkInfo-imageId').prop('selectedIndex',0).trigger( "change" );
         		$('#editExternalLinkInfo-imageId').prop("disabled",true);
         		$('#editExternalLinkInfoImage').prop("disabled",false);
         	});
-    		
-        	$('#externalLink-chooseFromExisting').click(function() {
-        		$('#externalLinkImage').val('');
-        		$('#externalLinkImage').prop("disabled",true);
-        		$('#externalLink-imageId').prop("disabled",false);
-        	});
-        	
+
+        	// Choose from exisiting Images for Space, Module and ExtrernalLinks
         	$('#module-chooseFromExisting').click(function() {
         		$('#moduleLinkImage').val('');
         		$('#moduleLinkImage').prop("disabled",true);
@@ -995,6 +1006,19 @@ $(function(){
         		$('#spaceLinkImage').prop("disabled",true);
         		$('#space-imageId').prop("disabled",false);
         	  });
+        	
+        	$('#externalLink-chooseFromExisting').click(function() {
+        		$('#externalLinkImage').val('');
+        		$('#externalLinkImage').prop("disabled",true);
+        		$('#externalLink-imageId').prop("disabled",false);
+        	});
+        	
+        	
+        	// Edit choose from exisiting images for Space, Module and ExtrernalLinks
+        	$('#editModule-chooseFromExisting').click(function() {
+        		$('#editModuleImage').prop("disabled",true);
+        		$('#editModule-imageId').prop("disabled",false);
+        	});
         	
         	$('#editSpace-chooseFromExisting').click(function() {
         		$('#editSpaceLinkImage').val('');
@@ -1008,6 +1032,7 @@ $(function(){
         		$('#editExternalLinkInfo-imageId').prop("disabled",false);
         	  });
         	
+    		// Linked Images for Space, Module and ExtrernalLinks
         	$("#spaceLinkImage").click(function() {
             	$("#selectedImage").empty();
             	$('#space-imageId').prop('selectedIndex',0).trigger( "change" );
@@ -2738,7 +2763,7 @@ $(function(){
                         <div class="col-sm-9">
                         	<input type="radio" id="editModule-chooseFromLocal" name="uploadRadioBtn" checked />
 	                    		<small>Upload Image: </small>
-	                        	<input type="file" class="form-control-sm" name="moduleLinkImage" id="moduleLinkImageEdit" style="width: inherit" />
+	                        	<input type="file" class="form-control-sm" name="editModuleImage" id="editModuleImage" style="width: inherit" />
 	                        <input type="radio" id="editModule-chooseFromExisting" name="uploadRadioBtn" />
 	                        <div>
 								<small>Choose from existing: </small>
@@ -2847,7 +2872,7 @@ $(function(){
 							<input type="radio" id="editExternalLinkInfo-chooseFromLocal" name="uploadRadioBtn" checked />
                         
                             <small>Upload Image: </small>
-	                        	<input type="file" class="form-control-sm" name="editExternalLinkInfoImage" id="editExternalLinkInfoImageEdit" style="width: inherit" />
+	                        	<input type="file" class="form-control-sm" name="editExternalLinkInfoImage" id="editExternalLinkInfoImage" style="width: inherit" />
 	                        <input type="radio" id="editExternalLinkInfo-chooseFromExisting" name="uploadRadioBtn" />
 	                        <div>
 								<small>Choose from existing: </small>
