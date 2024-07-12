@@ -84,6 +84,8 @@ public class ExhibitionConfigurationController {
      */    
     @RequestMapping(value = "/staff/exhibit/config", method = RequestMethod.POST)
     public RedirectView createOrUpdateExhibition(HttpServletRequest request,
+            @RequestParam(required = false, name = "exhibitionParam") String exhibitID,
+            @RequestParam("spaceParam") String spaceID,
             @Valid @ModelAttribute("exhibitionConfigurationForm") ExhibitionConfigurationForm exhibitionConfigForm,
             BindingResult result,           
             RedirectAttributes attributes) throws IOException {
@@ -93,8 +95,6 @@ public class ExhibitionConfigurationController {
             attributes.addAttribute("message", result.getFieldError().getDefaultMessage());
             return new RedirectView(request.getContextPath() + "/staff/exhibit/config");
         }
-        String spaceID = exhibitionConfigForm.getExhibitionParam();
-        String exhibitID = exhibitionConfigForm.getExhibitionParam();
         String title = exhibitionConfigForm.getTitle();
         ExhibitionModes exhibitMode = exhibitionConfigForm.getExhibitMode();
         List<String> languages = exhibitionConfigForm.getExhibitLanguage();
