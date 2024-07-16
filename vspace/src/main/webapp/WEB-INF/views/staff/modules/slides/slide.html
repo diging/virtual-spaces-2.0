@@ -793,30 +793,22 @@
                      data: jsonData,
                      success: function(data) {
                      	data = JSON.parse(data);
-                     	console.log("Success");
-                     	console.log(data);
                      	var biblioblock = $('<div id="' + data.id + '" class="biblioDivStaff tab row"> \
-                                 <p class="col-md-10">\
-                                 Bibliography Title: <span>' + data.biblioTitle + '</span>,\
-                                 Description: <span>' + data.description + '</span>\
-                                 </p> \
-                                 <input type="hidden" id="deleteBiblioId" value="' + data.id + '" />\
-                                 <a class="btn deleteBiblio" href="javascript:;" style="position: absolute; right: 0px;">\
-                                 <span class="icon-trash error"></span>\
-                                 </a> \
-                                 <a class="btn addReference primary-btn btn-sm" style="padding-top: 8px;">\
-                                     + New Reference \
-                                 </a> \
-                                 <div id="referenceSpace" class="col-md-10">\
-                                 </div>\
-                         </div> \
+                                <p class="col-md-10">\
+                                Bibliography Title: <span>' + data.biblioTitle + '</span>,\
+                                Description: <span>' + data.description + '</span>\
+                                </p> \
+                                <input type="hidden" id="deleteBiblioId" value="' + data.id + '" />\
+                                <a class="btn deleteBiblio col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a>\
+                                <a class="btn addReference primary-btn btn-sm" style="padding-top: 8px;">+ New Reference</a>\
+                                <div id="referenceSpace" class="col-md-10">\
+                                </div>\
+                        </div> \
          ');
-         
                      	$(biblioblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
                          $('#slideSpace').append(biblioblock); 
                      },
                      error: function(data) {
-                     	console.log("fail");
                      	if (data.status == 403){
                      		$("#loginAlert").show();
                      	}
@@ -858,7 +850,7 @@
                  formData.append('type', type);
                  formData.append('note', note);
                  var biblioBlockId = $('#currentBiblioId').attr('value');
-                 
+                 console.log(biblioBlockId);
                  $("#titleRef").val('');
                  $("#authorRef").val('');
                  $("#yearRef").val('');
@@ -899,7 +891,8 @@
          
                      	$(referenceblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
                      	var elem = $('#' + biblioBlockId).find('#referenceSpace');
-                     	elem.append(referenceblock);             
+                     	elem.append(referenceblock);
+                     	$('#currentBiblioId').remove();
                      },
                      error: function(data) {
                      	if (data.status == 403){
