@@ -15,7 +15,7 @@ public class SlideOverview {
 
     private boolean isBranchingPoint;
 
-    private List<String> choiceSequenceNames;
+    private List<String> choiceSequenceIds;
 
     public String getId() {
         return id;
@@ -41,12 +41,12 @@ public class SlideOverview {
         this.isBranchingPoint = isBranchingPoint;
     }
 
-    public List<String> getChoiceSequenceNames() {
-        return choiceSequenceNames;
+    public List<String> getChoiceSequenceIds() {
+        return choiceSequenceIds;
     }
 
-    public void setChoiceSequenceNames(List<String> choiceSequenceNames) {
-        this.choiceSequenceNames = choiceSequenceNames;
+    public void setChoiceSequenceIds(List<String> choiceSequenceIds) {
+        this.choiceSequenceIds = choiceSequenceIds;
     }
 
 }

@@ -205,6 +205,7 @@
                     <script th:inline="javascript">
                         const branchingPointsSet = new Set();
                         const sequencesMap = new Map();
+                        const visitedNodes = new Set();
                         var json =[[${overview}]];
                         var moduleId = [[${module.id}]];
                         var spaceId = [[${spaceId}]];
@@ -218,6 +219,8 @@
                         let otherSequences = json['otherSequences'];
                         let startSequenceslides = [];
                         let isStartSequence = true;
+                        let otherLinks = new Map();
+                        let sequenceFirstSlides = new Map();
                         
                         //populate the data into the tree
                         populateTreeData(treeData, startSequence, otherSequences);
@@ -268,51 +271,55 @@
                             for (let branch of branchingPointsSet) {
                                 for (let branchSequence of branch.branchSequences) {
                                     // Avoid adding a branch to itself
-                                    if (branch.sequence === branchSequence.name) continue;
-                                    
+                                    if (branch.sequence === branchSequence.id) continue;
                                     // Add the branch sequence to the children of the branch node
-                                    branch.children.push(sequencesMap.get(branchSequence.name));
+                                    otherLinks.set(sequencesMap.get(branchSequence.id).id,sequencesMap.get(branchSequence.id));
+                                    //branch.children.push(sequencesMap.get(branchSequence.name).children[0]);
                                 }
                             }
                         }
 
-                        function createFromSequence(sequence, treeData, isStartSequence){                            
-                            let startNodeSequence = {};
+                        function createFromSequence(sequence, treeData, isStartSequence){  
+                        	visitedNodes.add(sequence.id);
+                        	let startNodeSequence = {};
                             let slideIndex = 0;
                             for(slide of sequence.slideOverviews){
                                 let slideNode = {};                                                               	
                                 slideNode.children=[];
-                                
+                                slideNode.group = "slide";
                             	if(slide.branchingPoint == true){
                             	    slideNode.branchSequences = [];
                             	    slideNode.branchingPoint = true;
-                            	    for(seq of slide.choiceSequenceNames){
+                            	    slideNode.group = "branchingPoint";
+                            	    for(seq of slide.choiceSequenceIds){
                             	    	let branchSeq = {};
-                            	    	branchSeq.name = seq;
-                                        if(seq === sequence.name){
-                            	    	    branchSeq.name = seq;
-                            	    	    slideNode.children.push(branchSeq);
-                            	    	    continue;
+                            	    	branchSeq.id = seq;
+                            	    	if(visitedNodes.has(seq)){
+                            	    		console.log("visited ", seq);
                             	    	}
+                                        //if(seq === sequence.id){
+                            	    	  //  slideNode.children.push(branchSeq);
+                            	    	   // continue;
+                            	    	//}
                             	    	slideNode.branchSequences.push(branchSeq);
-                            	    	slideNode.sequence = sequence.name;
+                            	    	slideNode.sequence = sequence.id;
                             	    }
                                     branchingPointsSet.add(slideNode);
                             	}                                   
                                 slideNode.name = slide.name;
-                                slideNode.group = "slide";
                                 slideNode.sequenceId = sequence.id;
                                 slideNode.slideId = slide.id;
                                 slideNode.id = sequence.id + slide.id;
                             	if(slideIndex == 0){
                                     slideNode.parent=json.id;
                                     startNodeSequence = slideNode;
+                                    sequenceFirstSlides.set(sequence.id, slideNode.id);
                             	} else {                     
                                     prev.children.push(slideNode);
                                     slideNode.parent=prev;                                                                 	    
                             	}
                                 startNodeSequence.parent = json.id;
-                                startNodeSequence.group ="startSequence";
+                                startNodeSequence.group ="sequence";
                             	prev = slideNode;
                             	source = slideNode.id;
                             	slideIndex=slideIndex+1;
@@ -322,7 +329,8 @@
                                 treeData.children.push(startNodeSequence);
                             }
                                                       
-                            sequencesMap.set(sequence.name, startNodeSequence);
+                            sequencesMap.set(sequence.id, startNodeSequence);
+                            console.log("sequenceFirstSlides ",sequenceFirstSlides);
                             return treeData;
                         }
 

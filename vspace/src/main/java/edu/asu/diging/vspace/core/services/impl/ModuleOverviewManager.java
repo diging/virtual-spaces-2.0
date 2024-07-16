@@ -78,8 +78,8 @@ public class ModuleOverviewManager implements IModuleOverviewManager {
                 List<IChoice> sequenceChoices = ((BranchingPoint)slide).getChoices();
                 List<String> slideOverviewSequenceNames = new ArrayList<String>();
                 sequenceChoices.stream().forEach(sequenceChoice -> 
-                    slideOverviewSequenceNames.add(sequenceChoice.getSequence().getName()));
-                slideOverview.setChoiceSequenceNames(slideOverviewSequenceNames);
+                    slideOverviewSequenceNames.add(sequenceChoice.getSequence().getId()));
+                slideOverview.setChoiceSequenceIds(slideOverviewSequenceNames);
             } 
             slideOverviews.add(slideOverview);          
         } 
