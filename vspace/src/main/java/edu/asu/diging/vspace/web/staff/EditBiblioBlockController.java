@@ -37,7 +37,6 @@ public class EditBiblioBlockController {
         String id = rootNode.get("id").asText();
         
         IBiblioBlock biblioBlock = contentBlockManager.getBiblioBlock(id);
-        
         if (biblioBlock == null) {
             return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
         }
