@@ -221,6 +221,8 @@
                         let isStartSequence = true;
                         let otherLinks = new Map();
                         let sequenceFirstSlides = new Map();
+                        let branchToFrmMap = new Map();
+                        let positionsMap = new Map();
                         
                         //populate the data into the tree
                         populateTreeData(treeData, startSequence, otherSequences);
@@ -232,9 +234,15 @@
                         // Initialize variables for tree layout
                         var i = 0, duration = 750, root;
                         var tree = d3.layout.tree().size([height, width]);
-                        var diagonal = d3.svg.diagonal().projection(function(d) { return [d.y, d.x]; });
+                        var diagonal = d3.svg.diagonal().projection(function(d) {                        	
+                            return [d.y, d.x];
+                        });
                         
-
+                        function curvedLine(source, target){
+                        	var dx = Math.abs(target.y - source.y), dy = Math.abs(target.x - source.x), dr = Math.sqrt(dx * dx + dy * dy);
+                            return "M" + source.x + "," + source.y + "C" + (dx/2) + "," + (source.y-dy)/2 +" "+(target.x+dx)+","+(target.y+dy)+" " + target.x + "," + target.y;
+                        }
+                        
                         // Create the SVG container for the tree
                         var svg = d3.select("#svg-container").append("svg")
                                     .attr("width", width + margin.right + margin.left)
@@ -246,10 +254,9 @@
                         root = treeData;
                         root.x0 = height / 2;
                         root.y0 = 0;
-
+                        
                         // Update the tree with the root node
                         update(root);
-
                         // Set the height of the frame
                         d3.select(self.frameElement).style("height", "500px");
 
@@ -266,14 +273,24 @@
                             for (let sequence of otherSequences) {
                                 treeData = createFromSequence(sequence, treeData, isStartSequence);
                             }
-
+                            let visitedSequencesSet = new Set();
                             // Add branching points to the tree structure
                             for (let branch of branchingPointsSet) {
+                            	visitedSequencesSet.add(branch.sequence);
+                            	let branchToSet = new Set();
                                 for (let branchSequence of branch.branchSequences) {
+                                	branchToSet.add(sequenceFirstSlides.get(branchSequence.id));
+                                	branchToFrmMap.set(branch.id,branchToSet);
                                     // Avoid adding a branch to itself
                                     if (branch.sequence === branchSequence.id) continue;
+                                    
                                     // Add the branch sequence to the children of the branch node
-                                    otherLinks.set(sequencesMap.get(branchSequence.id).id,sequencesMap.get(branchSequence.id));
+                                    //otherLinks.set(sequencesMap.get(branchSequence.id).id,);
+                                    if(visitedSequencesSet.has(branchSequence.id) == false){
+                                    	branch.children.push(sequencesMap.get(branchSequence.id));
+                                    }
+
+                                    visitedSequencesSet.add(branchSequence.id);
                                     //branch.children.push(sequencesMap.get(branchSequence.name).children[0]);
                                 }
                             }
@@ -294,9 +311,6 @@
                             	    for(seq of slide.choiceSequenceIds){
                             	    	let branchSeq = {};
                             	    	branchSeq.id = seq;
-                            	    	if(visitedNodes.has(seq)){
-                            	    		console.log("visited ", seq);
-                            	    	}
                                         //if(seq === sequence.id){
                             	    	  //  slideNode.children.push(branchSeq);
                             	    	   // continue;
@@ -330,38 +344,37 @@
                             }
                                                       
                             sequencesMap.set(sequence.id, startNodeSequence);
-                            console.log("sequenceFirstSlides ",sequenceFirstSlides);
                             return treeData;
                         }
 
                         function update(source) {
-                        	
                             // Compute the new tree layout.
-                            var nodes = tree.nodes(root).reverse(),links = tree.links(nodes);
+                            var nodes = tree.nodes(root).reverse(),links = tree.links(nodes);                           
                             
                             // Normalize for fixed-depth.
                             nodes.forEach(function(d) { d.y = d.depth * 110; });
 
                             // filtering to remove the root node and link (Module name)
                             nodes = nodes.filter(function(d){
+                            	positionsMap.set(d.id, d);
                             	return  d.depth && d.depth != 0;
+                            });
+                            
+                            let extraLinks = [];
+                            links.forEach(function(d){
+                                if(d.source.branchingPoint == true){
+                                	for(branchTo of branchToFrmMap.get(d.source.id)){
+                                        var o ={x:d.source.x, y:d.source.y};
+                                        var t = {x:positionsMap.get(branchTo).x, y:positionsMap.get(branchTo).y};
+                                        links.push({source:positionsMap.get(d.source.id), target:positionsMap.get(branchTo)});
+                                    }
+                                }
+                                
                             });
 
                             links = links.filter(function(d){ return  d.source.depth != 0 ; });
-                            nodes.forEach(function(d){
-                            if(d.group == "slide" && d.parent.branchingPoint == true ){
-                            	d.x= d.parent.x;
-                            	d.x0 = d.parent.x;
-                            	temp = d;
-                                while(temp.children!=null && temp.children.length > 0){
-                                	child = temp.children[0];
-                                	child.x= temp.x;
-                                	child.x0 = temp.x0;
-                                	temp = child;
-                                }
-                            }
-                            return d;
-                        });
+                           
+                        
                         // Update the nodes
                         var node = svg.selectAll("g.node").data(nodes, function(d) { return d.id || (d.id = ++i); });
                         
@@ -406,13 +419,12 @@
 						
                         // update the node style
                         nodeUpdate.select("circle").attr("r", 
-                        		function(d){ if((d.group=== "slide" && d.sequenceId.normalize() === sequenceId.normalize() && d.branchingPoint != true)
+                        		function(d){ if((d.sequenceId.normalize() === sequenceId.normalize())
                         				&& (d.slideId.normalize() === currentSlide.id.normalize())){
                         			return 20;
                         		}
                         		return 10;
-                        }).style("opacity", function(d){ if((d.group=== "slide" 
-                        		&& d.sequenceId.normalize() === sequenceId.normalize() )
+                        }).style("opacity", function(d){ if((d.sequenceId.normalize() === sequenceId.normalize() )
                         		&& (d.slideId.normalize() === currentSlide.id.normalize())){
                         			return 1;
                         		}
@@ -452,9 +464,17 @@
                         link.enter().insert("path", "g").attr("class", "link")
                             .attr("d", function(d) {
                                 var o = {x: source.x0, y: source.y0};					
-                                return diagonal({source: o, target: o});	
+                                return diagonal({source: o, target: d.target});	
                             }).style("fill-opacity", function(d) { return d._children ? 1e-6 : 1e-6; });
-                       
+                        
+                     // Enter any new links at the parent's previous position.
+                        link.enter().insert("path", "g").attr("class", "link")
+                            .attr("d", function(d) {
+                                if(d.source.branchingPoint == true){
+                                    return curvedLine(d.source, d.target);
+                                }
+                            })
+                                                                    
                         // Transition links to their new position.
                         link.transition().duration(duration).attr("d", diagonal);
                         
