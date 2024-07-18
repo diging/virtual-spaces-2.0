@@ -78,7 +78,7 @@
 		        </div>
 		        <div style="padding-top: 20px;">
 		            <label for="title">Exhibition Mode:</label>
-		            <select class="form-control" name="exhibitMode" onChange="modeChange(exhibitMode.value)">
+		            <select class="form-control" name="exhibitionMode" onChange="modeChange(exhibitMode.value)">
 		                <option th:each="mode: ${exhibitionModes}" th:id=${mode} th:value=${mode} th:selected="${#strings.equals(mode,exhibition.mode)}">[[${mode}]]</option>
 		            </select>
 		        </div>

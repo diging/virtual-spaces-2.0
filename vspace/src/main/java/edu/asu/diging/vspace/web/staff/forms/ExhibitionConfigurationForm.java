@@ -16,8 +16,8 @@ public class ExhibitionConfigurationForm {
     @NotEmpty(message = "Please select exhibition languages")
     private List<String> exhibitLanguage;
     
-    @NotNull(message = "Please select exhibit mode")
-    private ExhibitionModes exhibitMode;
+    @NotNull(message = "Please select exhibition mode")
+    private ExhibitionModes exhibitionMode;
     
     @NotEmpty(message = "Please enter title")
     private String title;
@@ -46,12 +46,12 @@ public class ExhibitionConfigurationForm {
         this.exhibitLanguage = exhibitLanguage;
     }
 
-    public ExhibitionModes getExhibitMode() {
-        return exhibitMode;
+    public ExhibitionModes getExhibitionMode() {
+        return exhibitionMode;
     }
 
-    public void setExhibitMode(ExhibitionModes exhibitMode) {
-        this.exhibitMode = exhibitMode;
+    public void setExhibitionMode(ExhibitionModes exhibitionMode) {
+        this.exhibitionMode = exhibitionMode;
     }
 
     public String getTitle() {

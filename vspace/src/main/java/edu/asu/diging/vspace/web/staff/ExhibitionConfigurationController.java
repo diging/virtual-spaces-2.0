@@ -96,7 +96,7 @@ public class ExhibitionConfigurationController {
             return new RedirectView(request.getContextPath() + "/staff/exhibit/config");
         }
         String title = exhibitionConfigForm.getTitle();
-        ExhibitionModes exhibitMode = exhibitionConfigForm.getExhibitMode();
+        ExhibitionModes exhibitMode = exhibitionConfigForm.getExhibitionMode();
         List<String> languages = exhibitionConfigForm.getExhibitLanguage();
         String defaultLanguage = exhibitionConfigForm.getDefaultExhibitLanguage();
         String customMessage = exhibitionConfigForm.getCustomMessage();
