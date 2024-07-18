@@ -37,7 +37,8 @@ public class EditExternalLinkController extends EditSpaceLinksController {
             @RequestParam("externalLinkIdValueEdit") String externalLinkIdValueEdit,
             @RequestParam("externalLinkDisplayId") String externalLinkDisplayId,
             @RequestParam("tabOpen") String howToOpen, @RequestParam("type") String displayType,
-            @RequestParam("externalLinkImage") MultipartFile file) throws SpaceDoesNotExistException, IOException,
+            @RequestParam("editExternalLinkInfoImage") MultipartFile file,
+            @RequestParam(value = "editExternalLinkInfo-imageId", required = false) String imageId) throws SpaceDoesNotExistException, IOException,
             LinkDoesNotExistsException, NumberFormatException, ImageCouldNotBeStoredException {
 
         ResponseEntity<String> validation = checkIfSpaceExists(spaceManager, id, x, y);

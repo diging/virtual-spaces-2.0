@@ -103,6 +103,7 @@ function setLinkPosition(modalLink, link, isSpaceLink, isModal, isExternalLink, 
     modalLink.find("span").css('fill', 'grey');
     modalLink.css('color', 'rgba(128,128,128,1)');
     modalLink.css('font-size', "16px");
+    modalLink.css('height', "10%");
     var positionX = isModal ? posXModal : posX;
     var positionY = isModal ? posYModal : posY;
     if(isSpaceLink && (link.link.targetSpace==null || link.link.targetSpace.spaceStatus=="UNPUBLISHED")){
@@ -953,7 +954,7 @@ $(function(){
             
         	// Choose from Local for Space, Modules and External Links
         	$('#externalLink-chooseFromLocal').click(function() {
-        		$("#selectedImage").empty();
+        		$("#externalLinkInfo-selectedImage").empty();
         		$('#externalLink-imageId').prop('selectedIndex',0).trigger( "change" );
         		$('#externalLink-imageId').prop("disabled",true);
         		$('#externalLinkImage').prop("disabled",false);
@@ -961,14 +962,14 @@ $(function(){
         	  });
         	
         	$('#module-chooseFromLocal').click(function() {
-        		$("#selectedImage").empty();
+        		$("#module-selectedImage").empty();
         		$('#module-imageId').prop('selectedIndex',0).trigger( "change" );
         		$('#module-imageId').prop("disabled",true);
         		$('#moduleLinkImage').prop("disabled",false);
         	});
     		
         	$('#space-chooseFromLocal').click(function() {
-        		$("#selectedImage").empty();
+        		$("#space-selectedImage").empty();
         		$('#space-imageId').prop('selectedIndex',0).trigger( "change" );
         		$('#space-imageId').prop("disabled",true);
         		$('#spaceLinkImage').prop("disabled",false);
@@ -1034,17 +1035,17 @@ $(function(){
         	
     		// Linked Images for Space, Module and ExtrernalLinks
         	$("#spaceLinkImage").click(function() {
-            	$("#selectedImage").empty();
+            	$("#space-selectedImage").empty();
             	$('#space-imageId').prop('selectedIndex',0).trigger( "change" );
             });
         	
         	$("#moduleLinkImage").click(function() {
-            	$("#selectedImage").empty();
+            	$("#module-selectedImage").empty();
             	$('#module-imageId').prop('selectedIndex',0).trigger( "change" );
             });
         	
         	$("#externalLinkImage").click(function() {
-            	$("#selectedImage").empty();
+            	$("#externalLinkInfo-selectedImage").empty();
             	$('#externalLink-imageId').prop('selectedIndex',0).trigger( "change" );
             });
         	
@@ -1549,7 +1550,7 @@ $(function(){
                     $("#link").attr("id","");
                     $("#createModuleLinkAlert").hide();
                     $("#errorMsg").text("");
-                    $("#selectedImage").empty();
+                    $("#module-selectedImage").empty();
                     $("#module-imageId").value("");
                     $('#errorAlert').hide();
                     $("."+linkData["id"]).remove();
@@ -1783,7 +1784,7 @@ $(function(){
                     $("#createExternalLinkAlert").hide();
                     $("#errorMsg").text("");
                     $("externalLink-imageId").value = "";
-                    $("#selectedImage").empty();
+                    $("#externalLinkInfo-selectedImage").empty();
                     $('#errorAlert').hide();
                     $("."+linkData["id"]).remove();
                     form[0].reset();
@@ -2289,7 +2290,7 @@ $(function(){
 								</select>
 							</div>
 							<div>
-								<span id="selectedImage" width="200px"></span>
+								<span id="space-selectedImage" width="200px"></span>
 							</div>
 	                    </div>
 	                </div>
@@ -2386,7 +2387,7 @@ $(function(){
 								</select>
 							</div>
 							<div>
-								<span id="selectedImage" width="200px"></span>
+								<span id="module-selectedImage" width="200px"></span>
 							</div>
 	                    </div>
 	                </div>
@@ -2479,7 +2480,7 @@ $(function(){
 								</select>
 							</div>
 							<div>
-								<span id="selectedImage" width="200px"></span>
+								<span id="externalLink-selectedImage" width="200px"></span>
 							</div>
 	                    </div>
 	                </div>
