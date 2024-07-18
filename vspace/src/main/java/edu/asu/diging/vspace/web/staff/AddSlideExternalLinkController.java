@@ -30,19 +30,17 @@ public class AddSlideExternalLinkController {
     private ISlideExternalLinkManager slideExternalLinkManager;
         
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/externallink", method = RequestMethod.POST)
-    public ResponseEntity<String> createSlideExternalLink(@PathVariable("id") String id, @PathVariable("moduleId") String moduleId, 
+    public ResponseEntity<String> createSlideExternalLink(@PathVariable("id") String slideId, @PathVariable("moduleId") String moduleId, 
             @RequestParam("externalLinkLabel") String label, @RequestParam("url") String externalLink)
             throws NumberFormatException, SlideDoesNotExistException, IOException {
 
-        ISlide slide = slideManager.getSlide(id);
+        ISlide slide = slideManager.getSlide(slideId);
         
         if (slide == null) {
             return new ResponseEntity<>("{'error': 'Slide could not be found.'}", HttpStatus.NOT_FOUND);
         }
 
-        IExternalLinkSlide externalLinkSlide = slideExternalLinkManager.createExternalLink(label, externalLink, id);
-        slide.getExternalLinks().add(externalLinkSlide);
-    	slideManager.updateSlide(slide);
+        IExternalLinkSlide externalLinkSlide = slideExternalLinkManager.createExternalLink(label, externalLink, slideId);
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode linkNode = mapper.createObjectNode();
         linkNode.put("label", externalLinkSlide.getLabel());

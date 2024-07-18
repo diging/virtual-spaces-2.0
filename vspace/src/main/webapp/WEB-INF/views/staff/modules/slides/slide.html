@@ -526,72 +526,6 @@
 	            		}
             		});
         		}
-        	
-           	function hideLinkInfoTabs(){
-           	    $("#editExternalLinkInfo").hide();
-           	    $("#editSpaceLinkInfo").hide();
-           	    $("#editModuleLinkInfo").hide();
-           	    $("#editTextBlockInfo").hide();
-           	    $("#createExternalLinkAlert").hide();
-           	    $("#createSpaceLinkAlert").hide();
-           	    $("#createModuleLinkAlert").hide();
-           	    $("#errorMsg").text("");
-           	}
-           	
-           	function displayForms(formToShow){
-           	    $("#space").css("display", "-webkit-box");
-           	    $(formToShow).css("display", "flex");
-           	    modalBgImageHeight = parseInt($("#bgImage").css("height"));
-           	    modalBgImageWidth = parseInt($("#bgImage").css("width"));
-           	}
-           	
-           	function resetHighlighting() {
-           	    // reset icon links
-           	    $('[data-link-id]').css("color", "red");
-
-           	    // reset alert links
-           	    $('div[data-link-id]').removeClass("alert-warning");
-           	    $('div[data-link-id]').addClass("alert-primary");
-
-           	    // reset image links
-           	    $('img[data-link-id]').css("border-width", "0");
-           	}
-           	
-           	function getTextArea(x,y) {
-           	    var posX = $("#bgImage").position().left;
-           	    var posY = $("#bgImage").position().top;
-           	    var text = $('<span id="text"><textarea id="textB" name="textBlock" type="textarea" class="textBlock" style="resize:both; background: rgba(0, 0, 0, 0.4);"></textarea></span>');
-           	    text.css('position', 'absolute');
-           	    text.css('left', x + posX);
-           	    text.css('top', y);
-           	    $("#space").append(text);
-           	    
-           	    var textB = $('#textB')[0],
-           	    tHeight = textB.clientHeight,
-           	    tWidth = textB.clientWidth;
-           	    
-           	    var height = modalBgImageHeight;
-           	    var width = modalBgImageWidth;
-           	    
-           	    $("#textBoxWidthID").val(tWidth);
-           	    $("#textBoxHeightID").val(tHeight);
-           	    textB.onmouseup = function (e) {
-           	        if (tHeight !== textB.clientHeight || tWidth !== textB.clientWidth ) {
-           	            tHeight = textB.clientHeight;
-           	            tWidth = textB.clientWidth;
-           	            let percentileHeight = (tHeight*100)/height;
-           	            let percentileWidth = (tWidth*100)/width;
-           	            $("#textBoxWidthID").val(percentileWidth);
-           	            $("#textBoxHeightID").val(percentileHeight);
-           	            $("#textContentID").val(textB.value);
-           	        }
-           	    };
-           	    var percentileHeight = (tHeight*100)/height;
-           	    var percentileWidth = (tWidth*100)/width;
-           	    $("#textBoxWidthID").val(percentileWidth);
-           	    $("#textBoxHeightID").val(percentileHeight);
-           	    $("#textContentID").val(textB.value);
-           	}
            	
             [# th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}"]
         		$('#addChoice').show();
@@ -721,6 +655,84 @@
 		            	}
 	            	}
             	});
+            	
+            	function hideLinkInfoTabs(){
+               	    $("#editExternalLinkInfo").hide();
+               	    $("#editSpaceLinkInfo").hide();
+               	    $("#editModuleLinkInfo").hide();
+               	    $("#editTextBlockInfo").hide();
+               	    $("#createExternalLinkAlert").hide();
+               	    $("#createSpaceLinkAlert").hide();
+               	    $("#createModuleLinkAlert").hide();
+               	    $("#errorMsg").text("");
+               	}
+            	
+            	function showExternalLinks(externalLink) {
+           		   var externalLinkMainDiv = $('<div id="'+ externalLink["id"] +'" style="margin-top: 15px;"><div class="link_headers">Name:'+ externalLink["label"] +'</div><div>Link:<br/><a style="text-decoration: underline; color:blue; overflow: hidden;text-overflow: ellipsis;max-width: 20%;display:inline-block;" href="'+ externalLink["url"] +'">'+ externalLink["url"]+ '</a></div><a class="btn deleteExternalLink col-md-1" style="text-align: left; padding-left: 0;" href="javascript:;"><span class="icon-trash error" style="text-align: left;"></span></a><a class="btn editExternalLink col-md-1" style="text-align: left; padding-left: 0;" href="javascript:;"><span class="icon-edit" style="text-align: left;"></span></a></div>');
+                	   var externalLinkFormDiv = $('<div id="'+ externalLink["id"] +'form"> - <a style="text-decoration: underline; color:blue;" href="'+ externalLink["url"] +'">'+ externalLink["label"] +'</a></div>');
+                    externalLinkMainDiv.find('.deleteExternalLink').attr("data-link-id", externalLink["id"]);
+                    externalLinkMainDiv.find('.editExternalLink').attr("data-link-id", externalLink["id"]);
+                    externalLinkMainDiv.find('.editExternalLink').attr("data-label", externalLink["label"]);
+                    externalLinkMainDiv.find('.editExternalLink').attr("data-url", externalLink["url"]);
+
+                    $('#Ext_Links_Module_Slide2').append(externalLinkMainDiv);
+                    $('#Ext_Links_Module_Slide1').append(externalLinkFormDiv);
+                }
+               	
+               	function displayForms(formToShow){
+               	    $("#space").css("display", "-webkit-box");
+               	    $(formToShow).css("display", "flex");
+               	    modalBgImageHeight = parseInt($("#bgImage").css("height"));
+               	    modalBgImageWidth = parseInt($("#bgImage").css("width"));
+               	}
+               	
+               	function resetHighlighting() {
+               	    // reset icon links
+               	    $('[data-link-id]').css("color", "red");
+
+               	    // reset alert links
+               	    $('div[data-link-id]').removeClass("alert-warning");
+               	    $('div[data-link-id]').addClass("alert-primary");
+
+               	    // reset image links
+               	    $('img[data-link-id]').css("border-width", "0");
+               	}
+               	
+                function getTextArea(x,y) {
+					var posX = $("#bgImage").position().left;
+					var posY = $("#bgImage").position().top;
+					var text = $('<span id="text"><textarea id="textB" name="textBlock" type="textarea" class="textBlock" style="resize:both; background: rgba(0, 0, 0, 0.4);"></textarea></span>');
+					text.css('position', 'absolute');
+					text.css('left', x + posX);
+					text.css('top', y);
+					$("#space").append(text);
+		       	    
+		       	    var textB = $('#textB')[0],
+		       	    tHeight = textB.clientHeight,
+		       	    tWidth = textB.clientWidth;
+		       	    
+		       	    var height = modalBgImageHeight;
+		       	    var width = modalBgImageWidth;
+		       	    
+		       	    $("#textBoxWidthID").val(tWidth);
+		       	    $("#textBoxHeightID").val(tHeight);
+		       	    textB.onmouseup = function (e) {
+		       	        if (tHeight !== textB.clientHeight || tWidth !== textB.clientWidth ) {
+		       	            tHeight = textB.clientHeight;
+		       	            tWidth = textB.clientWidth;
+		       	            let percentileHeight = (tHeight*100)/height;
+		       	            let percentileWidth = (tWidth*100)/width;
+		       	            $("#textBoxWidthID").val(percentileWidth);
+		       	            $("#textBoxHeightID").val(percentileHeight);
+		       	            $("#textContentID").val(textB.value);
+		       	        }
+		       	    };
+		       	    var percentileHeight = (tHeight*100)/height;
+		       	    var percentileWidth = (tWidth*100)/width;
+		       	    $("#textBoxWidthID").val(percentileWidth);
+		       	    $("#textBoxHeightID").val(percentileHeight);
+		       	    $("#textContentID").val(textB.value);
+			    }
            
                //-------- edit contentblock description --------
            
@@ -839,23 +851,20 @@
                   addVideoClk =1;
                   editVideoClk=0;
               });
+               
+              $("#addExternalLinkButton").click(function(e) {
+           	   $('#errorAlert')[0].style.display = "none";
+                  hideLinkInfoTabs();
+                  displayForms("#createExternalLinkAlert");
+              });
 
               $(document).on("click", ".editExternalLink", function(e) {
        			  externalLink = {};
        			  externalLink["id"] = $(this).attr("data-link-id");
                   externalLink["label"] = $(this).attr("data-label");
                   externalLink["url"] = $(this).attr("data-url");
-                  makeExternalLinksEditable(externalLink);
        		      displayForms("#editExternalLinkInfo");
          	  });
-	
-	          function makeExternalLinksEditable(externalLink) {
-	        	  $(".externalLinkIdEdit").attr('data-link-id', externalLink['id']);
-	        	  $(".externalLinkLabelEdit").val(externalLink['label']);
-	        	  $(".externalLinkURLEdit").val(externalLink['url']);
-	        	    
-	        	  hideLinkInfoTabs();
-	          }
                
               $("#editExternalLinkBtn").click(function(e) {
             	  e.preventDefault();
@@ -886,12 +895,6 @@
                           showExternalLinks(linkData);;
                       }
                   });
-              });
-               
-               $("#addExternalLinkButton").click(function(e) {
-            	   $('#errorAlert')[0].style.display = "none";
-                   hideLinkInfoTabs();
-                   displayForms("#createExternalLinkAlert");
                });
 				
                const closeButton = document.createElement('button');
@@ -941,18 +944,6 @@
                        }
                    });
                });
-         	   
-          	  function showExternalLinks(externalLink) {
-          		   var externalLinkMainDiv = $('<div id="'+ externalLink["id"] +'" style="margin-top: 15px;"><div class="link_headers">Name:'+ externalLink["label"] +'</div><div>Link:<br/><a style="text-decoration: underline; color:blue; overflow: hidden;text-overflow: ellipsis;max-width: 20%;display:inline-block;" href="'+ externalLink["url"] +'">'+ externalLink["url"]+ '</a></div><a class="btn deleteExternalLink col-md-1" style="text-align: left; padding-left: 0;" href="javascript:;"><span class="icon-trash error" style="text-align: left;"></span></a><a class="btn editExternalLink col-md-1" style="text-align: left; padding-left: 0;" href="javascript:;"><span class="icon-edit" style="text-align: left;"></span></a></div>');
-               	   var externalLinkFormDiv = $('<div id="'+ externalLink["id"] +'form"> - <a style="text-decoration: underline; color:blue;" href="'+ externalLink["url"] +'">'+ externalLink["label"] +'</a></div>');
-                   externalLinkMainDiv.find('.deleteExternalLink').attr("data-link-id", externalLink["id"]);
-                   externalLinkMainDiv.find('.editExternalLink').attr("data-link-id", externalLink["id"]);
-                   externalLinkMainDiv.find('.editExternalLink').attr("data-label", externalLink["label"]);
-                   externalLinkMainDiv.find('.editExternalLink').attr("data-url", externalLink["url"]);
-
-                   $('#Ext_Links_Module_Slide2').append(externalLinkMainDiv);
-                   $('#Ext_Links_Module_Slide1').append(externalLinkFormDiv);
-               }
                
                $(document).on("click", ".deleteExternalLink", function(e) {
             	   $("#confirmDeleteLinkAlert").show();

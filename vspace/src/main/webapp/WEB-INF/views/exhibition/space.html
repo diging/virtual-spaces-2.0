@@ -211,6 +211,7 @@
 $(document).ready(function() {
 	const textBlock = document.getElementByClassName("textBlock");
 	const color = textBlock.style.borderColor;
+	console.log("color" + color);
 	textBlock.addEventListener('focus-visible', function(e) {
 		e.target.style.outline = "2px solid blue";
 	});
@@ -527,6 +528,7 @@ $(document).ready(function() {
             Array.from(textBlockElements).forEach(function(textBlock, index){
             	if(textBlock != null) {
             	   	const color = textBlock.style.borderColor;
+                 	console.log("color" + color);
                  	textBlock.addEventListener('focus', function(e) {
                		e.target.style.outline = "2px solid "+ color;
                  	});

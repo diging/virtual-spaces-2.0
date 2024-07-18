@@ -20,12 +20,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.diging.vspace.core.model.IBranchingPoint;
 import edu.asu.diging.vspace.core.model.IContentBlock;
-import edu.asu.diging.vspace.core.model.IImageBlock;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.impl.BranchingPoint;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
-import edu.asu.diging.vspace.core.services.ISlideExternalLinkManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 import edu.asu.diging.vspace.web.staff.forms.SequenceForm;
 
@@ -42,25 +40,18 @@ public class SlideController {
     @Autowired
     private IContentBlockManager contentBlockManager;
 
-    @Autowired
-    private ISlideExternalLinkManager externalLinkManager;
-
     @RequestMapping("/staff/module/{moduleId}/slide/{id}")
-    public String listSlides(@PathVariable("id") String id, @PathVariable("moduleId") String moduleId, Model model) {
-        ISlide slide = slideManager.getSlide(id);
+    public String listSlides(@PathVariable("id") String slideId, @PathVariable("moduleId") String moduleId, Model model) {
+        ISlide slide = slideManager.getSlide(slideId);
         model.addAttribute("module", moduleManager.getModule(moduleId));
         model.addAttribute("slide", slide);
-        model.addAttribute("externalLinks", externalLinkManager.getLinks(id));
-        model.addAttribute("slideSequences", slideManager.getSlideSequences(id, moduleId));
-        List<IContentBlock> slideContents = contentBlockManager.getAllContentBlocks(id);
-        if (slideContents.size() > 0) {
-            IImageBlock imageblock = contentBlockManager.getImageBlock(slideContents.get(0).getId());
-            slideManager.storeSlideDisplay(slide, imageblock.getImage());
-        }
+        model.addAttribute("externalLinks", slide.getExternalLinks());
+        model.addAttribute("slideSequences", slideManager.getSlideSequences(slideId, moduleId));
+        List<IContentBlock> slideContents = contentBlockManager.getAllContentBlocks(slideId);
         model.addAttribute("slideContents", slideContents);
         model.addAttribute("contentCount",
                 slideContents.size() > 0 ? slideContents.get(slideContents.size() - 1).getContentOrder() : 0);
-        if (slideManager.getSlide(id) instanceof BranchingPoint) {
+        if (slideManager.getSlide(slideId) instanceof BranchingPoint) {
             model.addAttribute("choices", ((IBranchingPoint) slide).getChoices());
         }
         return "staff/modules/slides/slide";
@@ -76,9 +67,10 @@ public class SlideController {
     }
 
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/links", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, Object>> showSlideLinks(@PathVariable String id, Model model) {
+    public ResponseEntity<Map<String, Object>> showSlideLinks(@PathVariable("id") String slideId, Model model) {
         Map<String, Object> responseData = new HashMap<String, Object>();
-        responseData.put("externalLinks", externalLinkManager.getLinks(id));
+        ISlide slide = slideManager.getSlide(slideId);
+        responseData.put("externalLinks", slide.getExternalLinks());
         return new ResponseEntity<>(responseData, HttpStatus.OK);
     }
 }

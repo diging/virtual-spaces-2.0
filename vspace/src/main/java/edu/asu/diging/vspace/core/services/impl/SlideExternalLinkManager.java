@@ -1,6 +1,5 @@
 package edu.asu.diging.vspace.core.services.impl;
 
-import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -25,11 +24,6 @@ public class SlideExternalLinkManager
 
     @Autowired
     private SlideExternalLinkRepository externalLinkRepo;
-
-    @Transactional
-    public List<IExternalLinkSlide> getLinks(String slideId) {
-        return externalLinkRepo.findBySlide_Id(slideId);
-    }
 
     @Override
     public IExternalLinkSlide getLink(String externalLinkID) {
@@ -65,6 +59,8 @@ public class SlideExternalLinkManager
         externalLink.setLabel(label);
         externalLink.setSlide(slide);
         externalLinkRepo.save((ExternalLinkSlide) externalLink);
+        slide.getExternalLinks().add(externalLink);
+        slideManager.updateSlide(slide);
         return externalLink;
     }
 
