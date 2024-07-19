@@ -1771,7 +1771,6 @@ $(function(){
                     $(".saveLoader").hide();
                     },
                 success: function(data) {
-                	console.log("Success");
                     var linkData = JSON.parse(data);
                     $("#bgImage").off("click");
                     externalLinkInfo["id"] = linkData["id"];
