@@ -85,6 +85,7 @@ public class SnapshotManager  implements  ISnapshotManager {
     public ExhibitionSnapshot triggerExhibitionSnapshotCreation() throws IOException, InterruptedException, SnapshotCouldNotBeCreatedException {
         String exhibitionFolderName = getExhibitionFolderName();
         ExhibitionSnapshot exhibitionSnapshot = new ExhibitionSnapshot();
+        exhibitionSnapshot.setId("snashot01");
         createSnapshotFolder(exhibitionSnapshot, exhibitionFolderName);       
         SnapshotTask snapshotTask =  createSnapshotTask(exhibitionSnapshot);
         exhibitionSnapshot.setSnapshotTask(snapshotTask); 
@@ -107,7 +108,7 @@ public class SnapshotManager  implements  ISnapshotManager {
      */
     private SnapshotTask createSnapshotTask(ExhibitionSnapshot exhibitionSnapshot) {
         SnapshotTask snapshotTask = new SnapshotTask();  
-        snapshotTask.setExhibitionSnapshot(exhibitionSnapshot);        
+        snapshotTask.setExhibitionSnapshot(exhibitionSnapshot);      
         return snapshotTaskRepository.save(snapshotTask);
     }
     
@@ -142,16 +143,20 @@ public class SnapshotManager  implements  ISnapshotManager {
 
     /**
      * 
-     * Creates folder for ExhibitionSnapshot and updates entity. 
+     * Creates folder for ExhibitionSnapshot. 
      * 
      * @param exhibitionSnapshot     {@link ExhibitionSnapshot} for which the folder is created
      * @param exhibitionFolderName   the folder name of the snapshot
      * @return the name of the exhibition folder
      */
     private String createSnapshotFolder(ExhibitionSnapshot exhibitionSnapshot, String exhibitionFolderName) {
-        storageEngineDownloads.createFolder(exhibitionFolderName);
+        logger.debug(exhibitionFolderName);
+        exhibitionFolderName = storageEngineDownloads.createFolder(exhibitionFolderName);
         exhibitionSnapshot.setFolderName(exhibitionFolderName);
-        return exhibitionSnapshotRepository.save(exhibitionSnapshot).getFolderName(); 
+        logger.debug("exhibitionSnapshotRepository.save(exhibitionSnapshot)"+exhibitionSnapshot);
+        exhibitionSnapshot = exhibitionSnapshotRepository.save(exhibitionSnapshot);
+        
+        return exhibitionFolderName; 
     }
 
     /**
