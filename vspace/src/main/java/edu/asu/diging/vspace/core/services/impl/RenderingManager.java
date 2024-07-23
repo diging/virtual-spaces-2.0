@@ -188,7 +188,6 @@ public class RenderingManager implements IRenderingManager {
             createSlideSnapshot(slide, sequence, module, space, spaceFolderName, imagesFolderName);
             if(slide instanceof BranchingPoint) {              
                 ((BranchingPoint) slide).getChoices().forEach(choice -> {
-
                     if(!choice.getSequence().getId().equals(sequence.getId())) {
                         try {
                             createSequencesSnapshot(choice.getSequence(), module, space, spaceFolderName, imagesFolderName);

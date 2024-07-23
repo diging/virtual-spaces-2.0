@@ -15,10 +15,10 @@ public interface IRenderingManager {
 
     /**
      * 
-     * Creates a snapshot of the given space and related modules into exhibitionFolderPath
+     * Creates a snapshot of the given space and related modules into exhibitionFolder
      * 
      * @param space                            the space object 
-     * @param exhibitionFolderName             the folder name of the exhibition where space contents will be stored           
+     * @param exhibitionFolderName             the folder name where space contents will be stored           
      * @param sequenceHistory                  the sequence history object having the history of sequences                        
      * @throws FileStorageException 
      */

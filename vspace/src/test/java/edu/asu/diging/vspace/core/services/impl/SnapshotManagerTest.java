@@ -24,6 +24,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import edu.asu.diging.vspace.core.data.ExhibitionSnapshotRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
@@ -37,6 +39,7 @@ import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.IRenderingManager;
 
 public class SnapshotManagerTest {
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Spy 
     @InjectMocks
@@ -60,37 +63,37 @@ public class SnapshotManagerTest {
     }
 
     @Test
-    public void test_downloadExhibitionFolder_success() throws Exception {
-        ExhibitionSnapshot exhibitionDownload = new ExhibitionSnapshot();
-        exhibitionDownload.setId("ID1");
-        exhibitionDownload.setFolderName("Name");
+    public void test_getExhibitionSnapshot_success() throws Exception {
+        ExhibitionSnapshot exhibitionSnapshot = new ExhibitionSnapshot();
+        exhibitionSnapshot.setId("ID1");
+        exhibitionSnapshot.setFolderName("Name");
         String fileContent =  "file content"; 
         byte[] byteArray = fileContent.getBytes();   
-        when(exhibitionSnapshotRepo.findById("ID1")).thenReturn(Optional.of(exhibitionDownload));
+        when(exhibitionSnapshotRepo.findById("ID1")).thenReturn(Optional.of(exhibitionSnapshot));
         when(storageEngine.generateZip("Name")).thenReturn(byteArray);
 
-        byte[] response = serviceToTest.downloadExhibitionFolder("ID1") ;
+        byte[] response = serviceToTest.getExhibitionSnapshot("ID1") ;
         assertEquals(response, byteArray);
     }
 
     @Test
-    public void test_downloadExhibitionFolder_exhibitionDownloadNotPresent() {
+    public void test_getExhibitionSnapshot_exhibitionDownloadNotPresent() {
         when(exhibitionSnapshotRepo.findById("ID")).thenReturn(Optional.ofNullable(null));
-        assertThrows(ExhibitionSnapshotNotFoundException.class, () ->  serviceToTest.downloadExhibitionFolder("ID") );
+        assertThrows(ExhibitionSnapshotNotFoundException.class, () ->  serviceToTest.getExhibitionSnapshot("ID") );
     }  
     
     @Test
-    public void test_triggerDownloadExhibition_success() throws IOException, InterruptedException, ExecutionException, FileStorageException, SnapshotCouldNotBeCreatedException {
+    public void test_triggerExhibitionSnapshotCreation_success() throws IOException, InterruptedException, ExecutionException, FileStorageException, SnapshotCouldNotBeCreatedException {
         String resourcesPath = "/Resources";
         String exhibitionFolderName = "folderName";
-        serviceToTest.triggerExhibitionSnapshotCreation(exhibitionFolderName);
+        serviceToTest.triggerExhibitionSnapshotCreation();
 
         Mockito.verify(storageEngine).createFolder(exhibitionFolderName);
         Mockito.verify(serviceToTest).createSnapshot(resourcesPath, exhibitionFolderName, null,  null);    
     }
   
     @Test
-    public void test_checkIfSnapshotCreated_success() {
+    public void test_isSnapshotCreated_success() {
 
         ExhibitionSnapshot exhibitionDownload = new ExhibitionSnapshot();
         exhibitionDownload.setId("ID1");
@@ -99,11 +102,11 @@ public class SnapshotManagerTest {
         exhibitionDownload.setSnapshotTask(snapshotTask);
         when(exhibitionSnapshotRepo.findById("ID1")).thenReturn(Optional.of(exhibitionDownload));
 
-        assertTrue(serviceToTest.checkIfSnapshotCreated("ID1"));
+        assertTrue(serviceToTest.isSnapshotCreated("ID1"));
     }
     
     @Test
-    public void test_downloadExhibition_createSnapShotfailure() throws IOException {
+    public void test_createSnapshot_createSnapShotfailure() throws IOException {
         String resourcesPath = "/Resources";
         ExhibitionSnapshot exhibitionSnapshot = new ExhibitionSnapshot();
         exhibitionSnapshot.setId("ID1");
