@@ -217,12 +217,10 @@
                         treeData.children = [];
                         let startSequence = json['startSequence'];
                         let otherSequences = json['otherSequences'];
-                        let startSequenceslides = [];
                         let isStartSequence = true;
-                        let otherLinks = new Map();
                         let sequenceFirstSlides = new Map();
                         let branchToFrmMap = new Map();
-                        let positionsMap = new Map();
+                        let nodesPositionMap = new Map();
                         
                         //populate the data into the tree
                         populateTreeData(treeData, startSequence, otherSequences);
@@ -235,7 +233,7 @@
                         var i = 0, duration = 750, root;
                         var tree = d3.layout.tree().size([height, width]);
                         
-                        // Custom path generator to conditionally create curved paths
+                        //To create curved paths
                         function customLink(d) {
                             if (d.source != null && d.source.y > d.target.y) {
                             	const midPoint = { x: (d.source.y + d.target.y) / 4, y: (d.source.x + d.target.x) / 4 };
@@ -283,6 +281,7 @@
                             for (let sequence of otherSequences) {
                                 treeData = createFromSequence(sequence, treeData, isStartSequence);
                             }
+                            
                             let visitedSequencesSet = new Set();
                             // Add branching points to the tree structure
                             for (let branch of branchingPointsSet) {
@@ -295,7 +294,6 @@
                                     if (branch.sequence === branchSequence.id) continue;
                                     
                                     // Add the branch sequence to the children of the branch node
-                                    //otherLinks.set(sequencesMap.get(branchSequence.id).id,);
                                     if(visitedSequencesSet.has(branchSequence.id) == false){
                                     	branch.children.push(sequencesMap.get(branchSequence.id));
                                     }
@@ -362,17 +360,17 @@
 
                             // filtering to remove the root node and link (Module name)
                             nodes = nodes.filter(function(d){
-                            	positionsMap.set(d.id, d);
+                            	nodesPositionMap.set(d.id, d);
                             	return  d.depth && d.depth != 0;
                             });
                             
-                            let extraLinks = [];
+                            //adding extra links to branching points
                             links.forEach(function(d){
                                 if(d.source.branchingPoint == true){
                                 	for(branchTo of branchToFrmMap.get(d.source.id)){
                                         var o ={x:d.source.x, y:d.source.y};
-                                        var t = {x:positionsMap.get(branchTo).x, y:positionsMap.get(branchTo).y};
-                                        links.push({source:positionsMap.get(d.source.id), target:positionsMap.get(branchTo)});
+                                        var t = {x:nodesPositionMap.get(branchTo).x, y:nodesPositionMap.get(branchTo).y};
+                                        links.push({source:nodesPositionMap.get(d.source.id), target:nodesPositionMap.get(branchTo)});
                                     }
                                 }
                                 
@@ -380,106 +378,107 @@
 
                             links = links.filter(function(d){ return  d.source.depth > 0 ; });
                         
-                        // Update the nodes
-                        var node = svg.selectAll("g.node").data(nodes, function(d) { return d.id || (d.id = ++i); });
-                        
-                        // Enter any new nodes at the parent's previous position.
-                        var nodeEnter = node.enter().append("g").attr("class", "node")
-                        	.attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; }); 
-						
-                        // On click event for nodes
-                        nodeEnter.on("click", openSlide);
+                            // Update the nodes
+                            var node = svg.selectAll("g.node").data(nodes, function(d) { return d.id || (d.id = ++i); });
+                            
+                            // Enter any new nodes at the parent's previous position.
+                            var nodeEnter = node.enter().append("g").attr("class", "node")
+                            	.attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; }); 
+    						
+                            // On click event for nodes
+                            nodeEnter.on("click", openSlide);
+                                                        
+                            // Add the circle for the nodes
+                            nodeEnter.append("circle").attr("r", function(d){
+                            	if((d.sequenceId === sequenceId) 
+                            			&& (d.slideId === currentSlide.id)){
+                            		return 10;
+                            	}
+                            	return 1e-6;
+                            }).style("fill", "orange" )
+                            .style("opacity", function(d, i) { return !d.depth ? 0 : 1; })
+                            .style("cursor","pointer");
+                            
+                            // Add the text for the nodes
+                            nodeEnter.append("text").attr("class","text")
+                            	.attr("x", function(d) { return d.children || d._children ? 10 :10; })
+                            	.attr("dy", "2.3em")
+                            	.attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
+                            	.text(function(d) { return d.name; })
+                            	.style("fill-opacity", 1e-6)
+                            	.style("opacity", function(d, i) {
+                            		return !d.depth ? 0 : 1; 
+                            	});;;
+    							
+                            // Transition nodes to their new position.
+                            var nodeUpdate = node.transition()
+                            	.duration(duration)
+                            	.attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
+    						
+                            // update the node style
+                            nodeUpdate.select("circle").attr("r", 
+                            		function(d){ if((d.sequenceId.normalize() === sequenceId.normalize())
+                            				&& (d.slideId.normalize() === currentSlide.id.normalize())){
+                            			return 20;
+                            		}
+                            		return 10;
+                            }).style("opacity", function(d){ if((d.sequenceId.normalize() === sequenceId.normalize() )
+                            		&& (d.slideId.normalize() === currentSlide.id.normalize())){
+                            			return 1;
+                            		}
+                            		return 0.5;
+                            })
+                            .style("fill", "orange")
+                            .style("opacity", function(d, i) {
+                                return !d.depth ? 0 : 1;
+                            });;
+                            
+                            nodeUpdate.select("text").style("fill-opacity", 1);
+                            
+                            // Appends a text element to each entering node
+                            nodeEnter.append("text").attr("class","text")
+                            	.attr("x", function(d) { return d.children || d._children ? 10 :10; })
+                            	.attr("dy", "1.5em")
+                            	.attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
+                            	.text(function(d) { return d.name; })
+                            	.style("fill-opacity", 1e-6)
+                            	.style("opacity", function(d, i) {
+                            		return !d.depth ? 0 : 1;
+                                });;;
+    						
+                            // Transition exiting nodes to the parent's new position.
+                            var nodeExit = node.exit().transition().duration(duration)
+                            	.attr("transform", function(d) { return "translate(" + source.y + "," + source.x + ")"; })
+                            	.remove();
+    						
+                            nodeExit.select("text").style("fill-opacity", 1e-6);
+    
+                            // Update the links
+                            var link = svg.selectAll("path.link")
+                                .data(links, function(d) { return d.target.id; })
+                            
+                            
+                            // Enter any new links at the parent's previous position.
+                            link.enter().insert("path", "g").attr("class", "link")
+                                .attr("d", function(d) {
+                                	var o = {x: source.x0, y: source.y0};
+                                	return customLink(d);
+                                }).style("fill-opacity", function(d) { return d._children ? 1e-6 : 1e-6; });
+                                                                 
+                            // Transition links to their new position.
+                            link.transition().duration(duration).attr("d",function(d) { return customLink(source)});
+                            
+                            // Stash the old positions for transition.
+                            nodes.forEach(function(d) {
+                            	d.x0 = d.x;
+                            	d.y0 = d.y;});
+                        }
                         
                         //function to open slide or sequence on clicking the node
                         function openSlide (d){
                             window.open([[@{/exhibit/}]]+spaceId+'/module/'+moduleId+'/sequence/'+d.sequenceId+'/slide/'+d.slideId, "_self");
                         }
 
-                        // Add the circle for the nodes
-                        nodeEnter.append("circle").attr("r", function(d){
-                        	if((d.sequenceId === sequenceId) 
-                        			&& (d.slideId === currentSlide.id)){
-                        		return 10;
-                        	}
-                        	return 1e-6;
-                        }).style("fill", "orange" )
-                        .style("opacity", function(d, i) { return !d.depth ? 0 : 1; })
-                        .style("cursor","pointer");
-                        
-                        // Add the text for the nodes
-                        nodeEnter.append("text").attr("class","text")
-                        	.attr("x", function(d) { return d.children || d._children ? 10 :10; })
-                        	.attr("dy", "2.3em")
-                        	.attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
-                        	.text(function(d) { return d.name; })
-                        	.style("fill-opacity", 1e-6)
-                        	.style("opacity", function(d, i) {
-                        		return !d.depth ? 0 : 1; 
-                        	});;;
-							
-                        // Transition nodes to their new position.
-                        var nodeUpdate = node.transition()
-                        	.duration(duration)
-                        	.attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
-						
-                        // update the node style
-                        nodeUpdate.select("circle").attr("r", 
-                        		function(d){ if((d.sequenceId.normalize() === sequenceId.normalize())
-                        				&& (d.slideId.normalize() === currentSlide.id.normalize())){
-                        			return 20;
-                        		}
-                        		return 10;
-                        }).style("opacity", function(d){ if((d.sequenceId.normalize() === sequenceId.normalize() )
-                        		&& (d.slideId.normalize() === currentSlide.id.normalize())){
-                        			return 1;
-                        		}
-                        		return 0.5;
-                        })
-                        .style("fill", "orange")
-                        .style("opacity", function(d, i) {
-                            return !d.depth ? 0 : 1;
-                        });;
-                        
-                        nodeUpdate.select("text").style("fill-opacity", 1);
-                        
-                        // Appends a text element to each entering node
-                        nodeEnter.append("text").attr("class","text")
-                        	.attr("x", function(d) { return d.children || d._children ? 10 :10; })
-                        	.attr("dy", "1.5em")
-                        	.attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
-                        	.text(function(d) { return d.name; })
-                        	.style("fill-opacity", 1e-6)
-                        	.style("opacity", function(d, i) {
-                        		return !d.depth ? 0 : 1;
-                            });;;
-						
-                        // Transition exiting nodes to the parent's new position.
-                        var nodeExit = node.exit().transition().duration(duration)
-                        	.attr("transform", function(d) { return "translate(" + source.y + "," + source.x + ")"; })
-                        	.remove();
-						
-                        nodeExit.select("text").style("fill-opacity", 1e-6);
-
-                        // Update the links
-                        var link = svg.selectAll("path.link")
-                            .data(links, function(d) { return d.target.id; })
-                        
-                        
-                        // Enter any new links at the parent's previous position.
-                        link.enter().insert("path", "g").attr("class", "link")
-                            .attr("d", function(d) {
-                            	var o = {x: source.x0, y: source.y0};
-                            	return customLink(d);
-                            }).style("fill-opacity", function(d) { return d._children ? 1e-6 : 1e-6; });
-                                                             
-                        // Transition links to their new position.
-                        link.transition().duration(duration).attr("d",function(d) { return customLink(source)});
-                        
-                        // Stash the old positions for transition.
-                        nodes.forEach(function(d) {
-                        	d.x0 = d.x;
-                        	d.y0 = d.y;});
-                        }                           
              </script>
              </div>
                         </div>
