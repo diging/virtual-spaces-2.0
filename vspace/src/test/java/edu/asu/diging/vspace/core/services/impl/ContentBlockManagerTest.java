@@ -3,7 +3,6 @@ package edu.asu.diging.vspace.core.services.impl;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
@@ -25,7 +24,6 @@ import edu.asu.diging.vspace.core.data.ChoiceContentBlockRepository;
 import edu.asu.diging.vspace.core.data.ContentBlockRepository;
 import edu.asu.diging.vspace.core.data.ImageContentBlockRepository;
 import edu.asu.diging.vspace.core.data.ImageRepository;
-import edu.asu.diging.vspace.core.data.SlideRepository;
 import edu.asu.diging.vspace.core.data.SpaceContentBlockRepository;
 import edu.asu.diging.vspace.core.data.TextContentBlockRepository;
 import edu.asu.diging.vspace.core.data.VideoContentBlockRepository;
@@ -277,7 +275,7 @@ public class ContentBlockManagerTest {
     }
 
     @Test
-    public void test_updateSpaceBlock_success() {
+    public void test_saveSpaceBlock_updateSuccess() {
         String updatedSpaceId = "spaceId1";
         String updatedTitle = "Title1";
         SpaceBlock spaceBlock = new SpaceBlock();

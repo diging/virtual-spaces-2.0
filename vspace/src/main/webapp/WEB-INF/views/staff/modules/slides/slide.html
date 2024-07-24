@@ -206,14 +206,12 @@
             }
             
             function imageBlockDoubleClick(e){
-            	/* $(".EasyMDEContainer").remove(); */
                 var divName = $(e.target).closest('div').attr('class');
                 var imgBlockID = $(e.target).attr('id'); 
             	if(imgBlockID != ''){
                 	$("#uploadImage").data('value', imgBlockID); // sets image ID value
                 	$("#addImgAlert").show();
             	}
-                
             }
                 
             function uploadImage() {
@@ -740,10 +738,7 @@
 
 	            $("#editSpaceName").select2({
 		            ajax: {
-			            url: function (params) {
-				            var spaceURL = [[@{|/staff/spaces/search|}]];
-				            return spaceURL;
-			            },
+			            url: [[@{|/staff/spaces/search|}]],
 			            dataType: 'json',
 			            processResults: function (data) {
 				            return {
@@ -757,10 +752,7 @@
 
 	            $("#spaceName").select2({
 		            ajax: {
-			            url: function (params) {
-			            	var spaceURL = [[@{|/staff/spaces/search|}]];
-			            	return spaceURL;
-			            },
+			            url: [[@{|/staff/spaces/search|}]],
 			            dataType: 'json',
 			            processResults: function (data) {
 				            return {
@@ -1146,7 +1138,6 @@
                 });
                 
 	            $("#submitSpace").on("click", function(e) {
-		            var token =  $('input[name="_csrf"]').attr('value');
 		            $("#addSpaceAlert").hide();
 		            e.preventDefault();
 		            // ------------- creating space content blocks ------------
@@ -1155,22 +1146,19 @@
 		            var text = markDown.value();
 		            var title = document.getElementById('spaceTitle').value;
 		            var selectedSpace = document.getElementById('spaceName');
-		            if (selectedSpace.selectedIndex != -1){
+		            if (selectedSpace.selectedIndex != -1 && selectedSpace.value != ""){
 			            var spaceId = selectedSpace.options[selectedSpace.selectedIndex].value;
 			            document.getElementById('spaceTitle').value="";
 			            formData.append('title', title);
 			            formData.append('spaceId', spaceId);
 			            markDown.value('');
 			            $.ajax({
-				            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space'})]",
+				            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space?' +${_csrf.parameterName}+'='+${_csrf.token}})]", 
 				            type: 'POST',
 				            cache       : false,
 				            contentType : false,
 				            processData : false,
 				            data: formData,
-				            headers:{
-				            	'X-CSRF-Token':token
-				            },
 				            enctype: 'multipart/form-data',
 				            success: function(data) {
 					            var textblock = $('<div style="word-break:break-word;" id="'+ data +'" class="SpaceDivStaff tab row"><label>Title: </label><p class="col-md-10">'+title+'</p>'+'<input type="hidden" id="deleteSpaceId" value="'+data+'" /><a class="btn deleteSpace col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a></div>');
