@@ -81,10 +81,6 @@ public class ContentBlockManagerTest {
     private ImageContentBlockRepository imageBlockRepo;
 
     @Mock
-
-    private SlideRepository slideRepo;
-
-    @Mock
     private ISlideManager slideManager;
 
     @Mock

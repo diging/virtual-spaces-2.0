@@ -20,20 +20,9 @@ import edu.asu.diging.vspace.core.services.impl.model.StaffSearchSpaceResults;
 @Controller
 public class StaffSearchSpaceController {
     
-    /**
-     * This method is used to search the search string specified in the input
-     * parameter(searchTerm) and return the spaces corresponding to
-     * the page number specified in the input parameter(spacePagenum) whose name or
-     * description contains the search string.
-     * 
-     * @param spacePagenum current page number sent as request parameter in the URL.
-     * @param searchTerm   This is the search string which is being searched.
-     */
-
-
     @Autowired
     private IStaffSearchManager staffSearchManager;
-    
+
     @RequestMapping(value = "/staff/search/space")
     public ResponseEntity<StaffSearchSpaceResults> searchInVspace(
             @RequestParam(value = "spacePagenum", required = false, defaultValue = "1") String spacePagenum,
@@ -45,9 +34,20 @@ public class StaffSearchSpaceController {
         return new ResponseEntity<StaffSearchSpaceResults>(staffSearch, HttpStatus.OK);
     }
     
+    /**
+     * This method is used to search the search string specified in the input
+     * parameter(searchTerm) and return the spaces corresponding to
+     * the page number specified in the input parameter(spacePagenum) whose name or
+     * description contains the search string.
+     * 
+     * @param spacePagenum current page number sent as request parameter in the URL.
+     * @param searchTerm   This is the search string which is being searched.
+     */
+    
     private List<ISpace> paginationForSpace(String spacePagenum, String searchTerm) {
         Page<ISpace> spacePage = staffSearchManager.searchInSpaces(searchTerm, Integer.parseInt(spacePagenum));
         return spacePage.getContent();
     }
     
 }
+

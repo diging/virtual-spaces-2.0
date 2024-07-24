@@ -206,9 +206,8 @@
             }
             
             function imageBlockDoubleClick(e){
-            	$(".EasyMDEContainer").remove();
+            	/* $(".EasyMDEContainer").remove(); */
                 var divName = $(e.target).closest('div').attr('class');
-                
                 var imgBlockID = $(e.target).attr('id'); 
             	if(imgBlockID != ''){
                 	$("#uploadImage").data('value', imgBlockID); // sets image ID value
@@ -216,11 +215,6 @@
             	}
                 
             }
-            
-            function onDoubleClick(e){
-                // get to the nearest divs class attribute
-                $(".EasyMDEContainer").remove();
-                }
                 
             function uploadImage() {
             	var imgBlockID = $("#uploadImage").data('value') // gets image ID
@@ -1407,7 +1401,7 @@
 		            updateSpaceBox(blockId, defaultValue);
 	            });
 	
-                $('.valueDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+                $('.valueDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick((e)=>{$(".EasyMDEContainer").remove();});
                 $('.textDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(textBlockDoubleClick);
                 $('.vidDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave);
 	            $('.SpaceDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(spaceBlockDoubleClick);
