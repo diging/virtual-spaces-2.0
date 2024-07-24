@@ -106,6 +106,7 @@ public class RenderingManager implements IRenderingManager {
      * @param exhibitionFolderName             the folder name of the exhibition where space contents will be stored           
      * @param sequenceHistory                  the sequence history object having the history of sequences                        
      * @throws FileStorageException 
+     * @return
      */
     @Override
     public void createSpaceSnapshot(Space space, String exhibitionFolderName,  SequenceHistory sequenceHistory) throws FileStorageException {
@@ -238,9 +239,9 @@ public class RenderingManager implements IRenderingManager {
     private byte[] renderSlide(String slideId, String spaceId, String moduleId, String sequenceId ) throws FileStorageException {
         Context thymeleafContext = new Context();
         try {
-            populateContextForSlide( thymeleafContext, spaceId, moduleId, sequenceId, slideId );            
+            populateContextForSlide(thymeleafContext, spaceId, moduleId, sequenceId, slideId );            
             return springTemplateEngine.process(SLIDE_DOWNLOAD_TEMPLATE, thymeleafContext).getBytes();
-        } catch (SlidesInSequenceNotFoundException  | SequenceNotFoundException |SlideNotFoundException e ) {
+        } catch (SlidesInSequenceNotFoundException  | SequenceNotFoundException | SlideNotFoundException e ) {
             logger.error("Could not add html page for slide" , e);
             return springTemplateEngine.process(ERROR_PAGE_404, thymeleafContext).getBytes();
         }
@@ -258,7 +259,7 @@ public class RenderingManager implements IRenderingManager {
         context.setVariable("startSequenceId", startSequenceId);
         
         ISequence sequenceExist=moduleManager.checkIfSequenceExists(moduleId, sequenceId);
-        if (sequenceExist==null) {            
+        if (sequenceExist==null) {
             throw new SequenceNotFoundException(sequenceId);
         }
         

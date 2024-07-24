@@ -85,7 +85,6 @@ public class SnapshotManager  implements  ISnapshotManager {
     public ExhibitionSnapshot triggerExhibitionSnapshotCreation() throws IOException, InterruptedException, SnapshotCouldNotBeCreatedException {
         String exhibitionFolderName = getExhibitionFolderName();
         ExhibitionSnapshot exhibitionSnapshot = new ExhibitionSnapshot();
-        exhibitionSnapshot.setId("snashot01");
         createSnapshotFolder(exhibitionSnapshot, exhibitionFolderName);       
         SnapshotTask snapshotTask =  createSnapshotTask(exhibitionSnapshot);
         exhibitionSnapshot.setSnapshotTask(snapshotTask); 
@@ -150,10 +149,8 @@ public class SnapshotManager  implements  ISnapshotManager {
      * @return the name of the exhibition folder
      */
     private String createSnapshotFolder(ExhibitionSnapshot exhibitionSnapshot, String exhibitionFolderName) {
-        logger.debug(exhibitionFolderName);
         exhibitionFolderName = storageEngineDownloads.createFolder(exhibitionFolderName);
         exhibitionSnapshot.setFolderName(exhibitionFolderName);
-        logger.debug("exhibitionSnapshotRepository.save(exhibitionSnapshot)"+exhibitionSnapshot);
         exhibitionSnapshot = exhibitionSnapshotRepository.save(exhibitionSnapshot);
         
         return exhibitionFolderName; 

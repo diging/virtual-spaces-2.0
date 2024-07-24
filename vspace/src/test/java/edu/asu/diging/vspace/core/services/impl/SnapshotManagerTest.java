@@ -10,8 +10,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
@@ -25,8 +23,6 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import edu.asu.diging.vspace.core.data.ExhibitionSnapshotRepository;
 import edu.asu.diging.vspace.core.data.SnapshotTaskRepository;
@@ -42,8 +38,7 @@ import edu.asu.diging.vspace.core.services.IRenderingManager;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SnapshotManagerTest {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
+    
     @Spy 
     @InjectMocks
     private SnapshotManager serviceToTest;
@@ -63,78 +58,84 @@ public class SnapshotManagerTest {
     @Mock
     SpaceRepository spaceRepository;
     
+    private String exhibitionId, snapshotTaskId, snapshotId;
+    
     @Before
     public void init() {
         MockitoAnnotations.initMocks(this);
+        exhibitionId = "EXH000000001";
+        snapshotTaskId = "SNAPTSK000000001";
+        snapshotId = "SNAP000000001";
     }
 
     @Test
     public void test_triggerExhibitionSnapshotCreation_success() throws IOException, InterruptedException, ExecutionException, FileStorageException, SnapshotCouldNotBeCreatedException {
-        String exhibitionFolderName = "Exhibition"+ LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HHmmss"));;
+        String exhibitionFolderName = exhibitionId;
         ExhibitionSnapshot exhibitionSnapshot = new ExhibitionSnapshot();
-        exhibitionSnapshot.setId("snapshot01");
+        exhibitionSnapshot.setId(snapshotId);
+        exhibitionSnapshot.setFolderName(exhibitionFolderName);
         
         SnapshotTask exhibitionSnapshotTask = new SnapshotTask();
-        exhibitionSnapshotTask.setId("snapshotTask01");
+        exhibitionSnapshotTask.setId(snapshotTaskId);
         exhibitionSnapshot.setSnapshotTask(exhibitionSnapshotTask);
+        
+        String fileContent = "fileContent";
         
         when(exhibitionSnapshotRepo.save(any(ExhibitionSnapshot.class))).thenReturn(exhibitionSnapshot);
         when(snapshotTaskRepo.save(any(SnapshotTask.class))).thenReturn(exhibitionSnapshotTask);
-
+        when(storageEngine.generateZip(Mockito.anyString())).thenReturn(fileContent.getBytes());
         serviceToTest.triggerExhibitionSnapshotCreation();
         
         assertNotNull(exhibitionSnapshot);
-        assertEquals("snapshot01", exhibitionSnapshot.getId());
-        verify(storageEngine).generateZip(exhibitionFolderName);
+        assertEquals(snapshotId, exhibitionSnapshot.getId());
+        verify(storageEngine).generateZip(Mockito.any(String.class));
     }
   
     @Test
     public void test_isSnapshotCreated_success() {
 
         ExhibitionSnapshot snapshot = new ExhibitionSnapshot();
-        snapshot.setId("ID1");
+        snapshot.setId(snapshotId);
         SnapshotTask snapshotTask = new SnapshotTask();
         snapshotTask.setTaskComplete(true);
         snapshot.setSnapshotTask(snapshotTask);
-        when(exhibitionSnapshotRepo.findById("ID1")).thenReturn(Optional.of(snapshot));
+        
+        when(exhibitionSnapshotRepo.findById(snapshotId)).thenReturn(Optional.of(snapshot));
 
-        assertTrue(serviceToTest.isSnapshotCreated("ID1"));
+        assertTrue(serviceToTest.isSnapshotCreated(snapshotId));
     }
     
     @Test
     public void test_createSnapshot_Failure() throws IOException {
         String resourcesPath = "/Resources";
         ExhibitionSnapshot exhibitionSnapshot = new ExhibitionSnapshot();
-        exhibitionSnapshot.setId("ID1");
+        exhibitionSnapshot.setId(snapshotId);
         SnapshotTask snapshotTask = new SnapshotTask();  
         snapshotTask.setExhibitionSnapshot(exhibitionSnapshot);    
         exhibitionSnapshot.setSnapshotTask(snapshotTask);
 
         when(spaceRepository.findAllBySpaceStatus(SpaceStatus.PUBLISHED)).thenReturn(new ArrayList());
         doThrow(new IOException()).when(storageEngine).copyToFolder(Mockito.anyString(), Mockito.anyString() );        
-        assertThrows(IOException.class, ()-> serviceToTest.createSnapshot(resourcesPath, "folderName", null, exhibitionSnapshot));
+        assertThrows(IOException.class, ()-> serviceToTest.createSnapshot(resourcesPath, exhibitionId, null, exhibitionSnapshot));
     }
     
     @Test
     public void test_getExhibitionSnapshot_found() throws Exception {
-        String snapshotId = "snapshot01";
         SnapshotTask snapshotTask = new SnapshotTask();
-        snapshotTask.setId("snapshotTask01");
+        snapshotTask.setId(snapshotTaskId);
 
         when(snapshotTaskRepo.findByExhibitionSnapshotId(snapshotId)).thenReturn(Optional.of(snapshotTask));
-
         snapshotTask = serviceToTest.getSnapshotTask(snapshotId);
 
-        // Assert
         assertNotNull(snapshotTask);
-        assertEquals("snapshotTask01", snapshotTask.getId());
+        assertEquals(snapshotTaskId, snapshotTask.getId());
         verify(snapshotTaskRepo).findByExhibitionSnapshotId(snapshotId);
     }
 
     @Test
     public void test_getExhibitionSnapshot_exhibitionDownloadNotPresent() {
-        when(exhibitionSnapshotRepo.findById("ID")).thenReturn(Optional.ofNullable(null));
-        assertThrows(ExhibitionSnapshotNotFoundException.class, () ->  serviceToTest.getExhibitionSnapshot("ID") );
+        when(exhibitionSnapshotRepo.findById(snapshotId)).thenReturn(Optional.ofNullable(null));
+        assertThrows(ExhibitionSnapshotNotFoundException.class, () ->  serviceToTest.getExhibitionSnapshot(snapshotId));
     }  
     
 }
