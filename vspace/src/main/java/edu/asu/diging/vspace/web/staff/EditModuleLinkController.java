@@ -26,23 +26,23 @@ public class EditModuleLinkController extends EditSpaceLinksController {
     private ISpaceManager spaceManager;
 
     @Autowired
-    private IModuleLinkManager moduleLinkManager;
-
+    private IModuleLinkManager moduleLinkManager;   
+    
     @RequestMapping(value = "/staff/space/link/module/{id}", method = RequestMethod.POST)
     public ResponseEntity<String> editModuleLink(@PathVariable("id") String id, @RequestParam("x") String x,
         @RequestParam("y") String y, @RequestParam("rotation") String rotation,
         @RequestParam("moduleLinkLabel") String title, @RequestParam("linkedModule") String linkedModuleId,
         @RequestParam("moduleLinkLabel") String moduleLinkLabel,
-        @RequestParam(value = "moduleLinkDesc", required = false) String moduleLinkDesc,
         @RequestParam("moduleLinkIdValueEdit") String moduleLinkIdValueEdit,
         @RequestParam("moduleLinkDisplayId") String moduleLinkDisplayId, @RequestParam("type") String displayType,
-        @RequestParam("moduleLinkImage") MultipartFile file, @RequestParam(value="imageId", required=false) String imageId) throws NumberFormatException,
+        @RequestParam(value = "moduleLinkImage", required=false) MultipartFile file, @RequestParam(value="editModule-imageId", required=false) String imageId) throws NumberFormatException,
         SpaceDoesNotExistException, LinkDoesNotExistsException, IOException, ImageCouldNotBeStoredException, ImageDoesNotExistException {
 
         ResponseEntity<String> validation = checkIfSpaceExists(spaceManager, id, x, y);
         if (validation != null) {
             return validation;
         }
+        String moduleLinkDesc = "";
         byte[] linkImage = null;
         String filename = null;
         if (file != null) {
@@ -58,3 +58,5 @@ public class EditModuleLinkController extends EditSpaceLinksController {
     }
 
 }
+
+
