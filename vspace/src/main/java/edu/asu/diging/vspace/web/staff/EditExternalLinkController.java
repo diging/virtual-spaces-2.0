@@ -21,22 +21,6 @@ import edu.asu.diging.vspace.core.services.IExternalLinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.impl.ExternalLinkManager;
 
-
-
-
-
-//@RequestMapping(value = "/staff/space/link/external/{id}", method = RequestMethod.POST)
-//public ResponseEntity<String> createExternalLink(@PathVariable("id") String id, @RequestParam("x") String x,
-//        @RequestParam("y") String y, @RequestParam("externalLinkLabel") String title,
-//        @RequestParam("url") String externalLink,
-//        @RequestParam("externalLinkIdValueEdit") String externalLinkIdValueEdit,
-//        @RequestParam("externalLinkDisplayId") String externalLinkDisplayId,
-//        @RequestParam("tabOpen") String howToOpen, @RequestParam("type") String displayType,
-//        @RequestParam("editExternalLinkInfoImage") MultipartFile file,
-//        @RequestParam(value = "editExternalLinkInfo-imageId", required = false) String imageId) throws SpaceDoesNotExistException, IOException,
-//        LinkDoesNotExistsException, NumberFormatException, ImageCouldNotBeStoredException {
-    
-
 @Controller
 public class EditExternalLinkController extends EditSpaceLinksController {
 
