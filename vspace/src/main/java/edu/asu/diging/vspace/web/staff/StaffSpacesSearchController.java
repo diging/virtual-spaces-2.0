@@ -20,30 +20,28 @@ import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Controller
 public class StaffSpacesSearchController {
-    
+
     @Autowired
     private ISpaceManager spaceManager;
 
-@RequestMapping("/staff/spaces/search")
-public ResponseEntity<String> search(@RequestParam(value = "term", required = false) String search){
-    List<ISpace> spaces = null;
-    if (search != null && !search.trim().isEmpty()) {
-        spaces = spaceManager.findByName(search);
-    } else {
-        spaces = spaceManager.getAllSpaces();
+    @RequestMapping("/staff/spaces/search")
+    public ResponseEntity < String > search(@RequestParam(value = "term", required = false) String search) {
+        List < ISpace > spaces = null;
+        if (search != null && !search.trim().isEmpty()) {
+            spaces = spaceManager.findByName(search);
+        } else {
+            spaces = spaceManager.getAllSpaces();
+        }
+
+        ObjectMapper mapper = new ObjectMapper();
+        ArrayNode idArray = mapper.createArrayNode();
+        for (ISpace space: spaces) {
+            ObjectNode spaceNode = mapper.createObjectNode();
+            spaceNode.put("id", space.getId());
+            spaceNode.put("name", space.getName());
+            idArray.add(spaceNode);
+        }
+        return new ResponseEntity < String > (idArray.toString(), HttpStatus.OK);
     }
 
-    ObjectMapper mapper = new ObjectMapper();
-    ArrayNode idArray = mapper.createArrayNode();
-    for (ISpace space : spaces) {
-        ObjectNode spaceNode = mapper.createObjectNode();
-        spaceNode.put("id", space.getId());
-        spaceNode.put("name", space.getName());
-        idArray.add(spaceNode);
-    }
-    return new ResponseEntity<String>(idArray.toString(), HttpStatus.OK);
 }
-
-}
-
-
