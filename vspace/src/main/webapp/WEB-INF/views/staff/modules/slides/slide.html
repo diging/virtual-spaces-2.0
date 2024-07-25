@@ -1431,9 +1431,9 @@
                    });
                 });    
 	            $("#submitSpaceBlock").on("click", function(e){
-		            var token = [[${_csrf.token}]];
 		            e.preventDefault();
 		            // ------------- editting text content blocks ------------
+		            if(document.getElementById('editSpaceName') != ""){
 		            var selectedSpace = document.getElementById('editSpaceName');
 		            var spaceId = selectedSpace.options[selectedSpace.selectedIndex].value;
 		            var formData = new FormData();
@@ -1446,14 +1446,11 @@
 		            formData.append('spaceBlockTitle', text);
 		            $("#editSpaceAlert").hide();
 		            $.ajax({
-			            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space/edit'})]",
+			            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space/edit?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
 			            type: 'POST',
 			            cache       : false,
 			            contentType : false,
 			            processData : false,
-			            headers:{
-			            	'X-CSRF-Token':token
-			            },
 			            data: formData,
 			            enctype: 'multipart/form-data',
 			            success: function(data) {
@@ -1470,6 +1467,7 @@
 				            }
 			            }
 		            });
+		          }
 	            });
                 $("#imageId").select2({
             		ajax: {
