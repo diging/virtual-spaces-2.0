@@ -38,6 +38,7 @@ import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.IModuleLink;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
+import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.impl.Module;
 import edu.asu.diging.vspace.core.model.impl.ModuleLink;
@@ -108,7 +109,15 @@ public class RenderingManagerTest {
     @Spy
     private SpringTemplateEngine springTemplateEngine;
     
-    private String exhibitionId, moduleId, sequenceId, spaceId, slide1Id, slide2Id, snapshotId;
+    private String exhibitionId, moduleId, sequenceId, spaceId, slide1Id, slide2Id;
+    
+    private Space space;
+    private IModule module;
+    private ISlide slide1;
+    private ISequence sequence;
+    private List<IModuleLink> moduleLinks;
+    private List<ISlide> slides;
+    
     
     @Before
     public void init() {
@@ -119,36 +128,34 @@ public class RenderingManagerTest {
         sequenceId = "SEQ000000001";
         slide1Id = "SLI000000001";
         slide2Id = "SLI000000002";
-        snapshotId = "SNAP000000001";
-    }
-
-    @Test
-    public void test_createSpaceSnapshot_success() throws FileStorageException, ExhibitionSnapshotNotFoundException, IOException {
-        Space space = new Space();
+        
+        space = new Space();
         space.setId(spaceId);
-        
-        ISequence newSequence = new Sequence();
-        newSequence.setId(sequenceId);
-        
-        IModule module = new Module();
+        module = new Module();
         module.setId(moduleId);
-        module.setStartSequence(newSequence);
+        sequence = new Sequence();
+        sequence.setId(sequenceId);
+        module.setStartSequence(sequence);
         
         IModuleLink moduleLink = new ModuleLink();
         moduleLink.setId("MOL001");
         moduleLink.setSpace(space);
         moduleLink.setModule(module);
-        List<IModuleLink> moduleLinks = new ArrayList<IModuleLink>();
+        moduleLinks = new ArrayList<IModuleLink>();
         moduleLinks.add(moduleLink);
+        space.setModuleLinks(moduleLinks);
         
-        Slide slide1 = new Slide();
+        slide1 = new Slide();
         slide1.setId(slide1Id);
         slide1.setContents(new ArrayList<IContentBlock>()); 
-        List<ISlide> slides = new ArrayList<>();
+        slides = new ArrayList<>();
         slides.add(slide1);
+        sequence.setSlides(slides);
 
-        space.setModuleLinks(moduleLinks);
-        newSequence.setSlides(slides);
+    }
+
+    @Test
+    public void test_createSpaceSnapshot_success() throws FileStorageException, ExhibitionSnapshotNotFoundException, IOException {
         SequenceHistory sequenceHistory = new SequenceHistory();
 
         when(spaceRepository.save((Space) space)).thenReturn(space);
@@ -161,26 +168,7 @@ public class RenderingManagerTest {
     }        
 
     @Test
-    public void test_createSpaceSnapshot_folderCreationFailure() throws FileStorageException {
-        Space space = new Space();
-        space.setId(spaceId);
-        
-        Sequence sequence = new Sequence();
-        sequence.setId(sequenceId);
-        
-        Module module = new Module();
-        module.setId(moduleId);
-        module.setStartSequence(sequence);
-        
-        IModuleLink moduleLink = new ModuleLink();
-        moduleLink.setId("modl001");
-        moduleLink.setSpace(space);
-        moduleLink.setModule(module);
-        List<IModuleLink> moduleLinks = new ArrayList<IModuleLink>();
-        moduleLinks.add(moduleLink);
-        
-        Slide slide1 = new Slide();
-        slide1.setId(slide1Id);       
+    public void test_createSpaceSnapshot_folderCreationFailure() throws FileStorageException {     
         Slide slide2 = new Slide();
         slide2.setId(slide2Id);
         
@@ -206,26 +194,7 @@ public class RenderingManagerTest {
     }
 
     @Test
-    public void test_createSpaceSnapshot_withModuleSuccess() throws FileStorageException {
-        Space space = new Space();
-        space.setId(spaceId);
-        
-        Sequence sequence = new Sequence();
-        sequence.setId(sequenceId);
-        
-        Module module = new Module();
-        module.setId(moduleId);
-        module.setStartSequence(sequence);
-        
-        IModuleLink moduleLink = new ModuleLink();
-        moduleLink.setId("modl001");
-        moduleLink.setSpace(space);
-        moduleLink.setModule(module);
-        List<IModuleLink> moduleLinks = new ArrayList<IModuleLink>();
-        moduleLinks.add(moduleLink);
-        
-        Slide slide1 = new Slide();
-        slide1.setId(slide1Id);       
+    public void test_createSpaceSnapshot_withModuleSuccess() throws FileStorageException {  
         Slide slide2 = new Slide();
         slide2.setId(slide2Id);
         
