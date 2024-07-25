@@ -32,7 +32,6 @@ public class Reference extends VSpaceElement implements IReference {
     
     @ManyToMany
     @JoinTable(name = "Biblio_Reference", joinColumns = @JoinColumn(name = "REFERENCE_ID"), inverseJoinColumns = @JoinColumn(name = "BIBLIO_ID"))
-    
     private List<BiblioBlock> biblios = new ArrayList<>();
 
     private String title;

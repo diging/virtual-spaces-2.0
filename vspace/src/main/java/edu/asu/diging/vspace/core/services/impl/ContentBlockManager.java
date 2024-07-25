@@ -489,7 +489,7 @@ public class ContentBlockManager implements IContentBlockManager {
         try {
             biblioBlockRepo.deleteById(id);         
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException(e);
+            System.err.println("Failed to delete biblio block: " + e.getMessage());
         } 
     }
 
