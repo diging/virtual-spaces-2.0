@@ -1374,7 +1374,7 @@
 		            $(".open").removeClass("open");
 	            }
 
-            // must add the event to the document since the buttons are added dynamically
+            	// must add the event to the document since the buttons are added dynamically
 	            $('#cancelSpaceBlock').on('click',function(){
 		            $("#editSpaceAlert").hide();
 		            var blockId = $(this).closest(".open").attr("id");
@@ -1467,6 +1467,7 @@
 		            });
 		          }
 	            });
+	            
                 $("#imageId").select2({
             		ajax: {
             		    url: [[@{|/staff/images/search|}]],
@@ -1524,7 +1525,6 @@
             		}
             	}
             });
-            
             
 			// editing video block
             $(document).on("click", ".editVideo", function(e) {
