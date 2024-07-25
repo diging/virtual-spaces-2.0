@@ -1143,7 +1143,6 @@
 		            // ------------- creating space content blocks ------------
 		
 		            var formData = new FormData();
-		            var text = markDown.value();
 		            var title = document.getElementById('spaceTitle').value;
 		            var selectedSpace = document.getElementById('spaceName');
 		            if (selectedSpace.selectedIndex != -1 && selectedSpace.value != ""){
@@ -1151,7 +1150,6 @@
 			            document.getElementById('spaceTitle').value="";
 			            formData.append('title', title);
 			            formData.append('spaceId', spaceId);
-			            markDown.value('');
 			            $.ajax({
 				            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space?' +${_csrf.parameterName}+'='+${_csrf.token}})]", 
 				            type: 'POST',
@@ -1471,10 +1469,7 @@
 	            });
                 $("#imageId").select2({
             		ajax: {
-            		    url: function (params) {
-            		  		var imageURL = [[@{|/staff/images/search|}]];
-            		  		return imageURL;
-            		    },
+            		    url: [[@{|/staff/images/search|}]],
             		    dataType: 'json',
             		    processResults: function (data) {
             		        return {
