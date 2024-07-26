@@ -34,11 +34,11 @@ public class LocalizedTextForm {
         this.text = text;
     }
 
-    public String getLocalisedTextId() {
+    public String getLocalizedTextId() {
         return localizedTextId;
     }
 
-    public void setLocalisedTextId(String localisedTextId) {
+    public void setLocalizedTextId(String localisedTextId) {
         this.localizedTextId = localisedTextId;
     }
 

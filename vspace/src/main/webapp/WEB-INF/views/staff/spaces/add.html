@@ -56,12 +56,10 @@ $(document).ready(function(){
 		ajax: {
 		    url: function (params) {
 		  		var imageURL = [[@{|/staff/images/search|}]];
-		  		console.log(imageURL);
 		  		return imageURL;
 		    },
 		    dataType: 'json',
 		    processResults: function (data) {
-		        console.log(data);
 		        return {
 		          results: data,
 		        };

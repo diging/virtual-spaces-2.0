@@ -36,7 +36,7 @@ public class LocalizedTextFormDataManager implements ILocalizedTextFormDataManag
             return;
         }
         
-        LocalizedText localizedText = localizedTextRepo.findById(localizedTextFormData.getLocalisedTextId()).orElse(null);
+        LocalizedText localizedText = localizedTextRepo.findById(localizedTextFormData.getLocalizedTextId()).orElse(null);
         if (localizedText != null) {
             localizedText.setText(localizedTextFormData.getText());
         } else {

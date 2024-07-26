@@ -29,7 +29,7 @@ public class LocalizedTextFormFactory {
 
         if(localizedText != null) {
             localizedAboutTextForm.setText(localizedText.getText());
-            localizedAboutTextForm.setLocalisedTextId( localizedText.getId());
+            localizedAboutTextForm.setLocalizedTextId( localizedText.getId());
         } 
         localizedAboutTextForm.setIsDefaultExhibitionLanguage(language.isDefault());
         return localizedAboutTextForm;
