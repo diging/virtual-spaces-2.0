@@ -33,7 +33,6 @@ public class StaffSearchSpaceController {
         staffSearch.setSpaces(spaceList);
         return new ResponseEntity<StaffSearchSpaceResults>(staffSearch, HttpStatus.OK);
     }
-    
     /**
      * This method is used to search the search string specified in the input
      * parameter(searchTerm) and return the spaces corresponding to
@@ -43,11 +42,9 @@ public class StaffSearchSpaceController {
      * @param spacePagenum current page number sent as request parameter in the URL.
      * @param searchTerm   This is the search string which is being searched.
      */
-    
     private List<ISpace> paginationForSpace(String spacePagenum, String searchTerm) {
         Page<ISpace> spacePage = staffSearchManager.searchInSpaces(searchTerm, Integer.parseInt(spacePagenum));
         return spacePage.getContent();
     }
-    
 }
 

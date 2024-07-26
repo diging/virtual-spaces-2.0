@@ -41,7 +41,7 @@ public class StaffSpacesSearchController {
             spaceNode.put("name", space.getName());
             idArray.add(spaceNode);
         }
-        return new ResponseEntity < String > (idArray.toString(), HttpStatus.OK);
+        return new ResponseEntity <String> (idArray.toString(), HttpStatus.OK);
     }
 
 }

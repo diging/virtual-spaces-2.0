@@ -159,7 +159,7 @@
 		            	$("#selectedSpace").text(result.name);
 		            },
 		            error: function(data) {
-				            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+				            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
 				            $('.error').append(alert);
 				            $(".error").delay(4000).slideUp(500, function(){
 				            $(".error").empty();
@@ -189,7 +189,6 @@
             function spaceBlockDoubleClick(e){
             	$(".EasyMDEContainer").remove();
                 var divName = $(e.target).closest('div').attr('class');
-                
 	            let spaceId = e.target.closest('div').id;
 	            $(e.target).closest('.SpaceDivStaff').addClass("open");
 	            defaultValue = $("div.open p:eq(0)").text();
@@ -197,8 +196,6 @@
 	            var blockId = $(this).closest("div").attr("id");
 	            getSelectedSpace(blockId);
 	            $("#editSpaceAlert").show();
-	            markDown = new EasyMDE({element: $('#editSpaceBlock')[0]});
-	            markDown.value(defaultValue.trim());
 	            //remove card border
 	            $(".open").css('display', 'none');
 	            $(".open").css('overflow-y', 'scroll');
@@ -766,11 +763,9 @@
 
 	            function formatSpace (space) {
 		            if (!space.id) {
-		            return space.name;
+		            	return space.name;
 		            }
-		            var $space = $(
-		            '<span>' + space.name + '</span>'
-		            );
+		            var $space = $('<span>' + space.name + '</span>');
 		            return $space;
 	            }
 	
@@ -814,9 +809,8 @@
             		$("#confirmDeleteTextAlert").show();
             		var alert = $('<input type="hidden" id="deleteTextId">');
             		$(alert).attr( 'value', $(this).siblings('input').val());
-            		$('.modal-footer').append(alert); 
+            		$('.modal-footer').append(alert);
               	});
-            	
 
 	            $(document).on("click", ".deleteSpace", function(e) {
 		            $("#confirmDeleteSpaceAlert").show();
@@ -873,14 +867,13 @@
             	});
 	
 	            $("#cancelDeleteSpace").click(function() {
-		            $("#confirmDeleteSpaceAlert").find('input').remove();
-		            $("#confirmDeleteTextAlert").find('input').remove();
-		            $("#confirmDeleteImageAlert").find('input').remove();
-		            $("#confirmDeleteChoiceBlockAlert").find('input').remove();
-		            $("#confirmDeleteSpaceAlert").hide();
+					$("#confirmDeleteSpaceAlert").find('input').remove();
+					$("#confirmDeleteTextAlert").find('input').remove();
+					$("#confirmDeleteImageAlert").find('input').remove();
+					$("#confirmDeleteChoiceBlockAlert").find('input').remove();
+					$("#confirmDeleteSpaceAlert").hide();
 	            });
-	
-            	
+	            
             	$("#cancelDeleteImage").click(function() {
             		$("#confirmDeleteImageAlert").hide();
             	});
@@ -1435,8 +1428,7 @@
 		            var selectedSpace = document.getElementById('editSpaceName');
 		            var spaceId = selectedSpace.options[selectedSpace.selectedIndex].value;
 		            var formData = new FormData();
-		            var text = markDown.value();
-		            markDown.value('');
+		            var text = document.getElementById("editSpaceBlock").value;
 		            var formData = new FormData();
 		            var blockId = $(".open").attr("id");
 		            formData.append('spaceBlockId', blockId);
@@ -1842,7 +1834,7 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <form name="spaceForm" id="SpaceEditUploadForm" enctype="multipart/form-data" method="post">
+                        <form name="spaceForm" id="SpaceEditUploadForm" enctype="multipart/form-data" method="post" style="padding:20px;">
                             <div class="modal-body">
                                 <h6>
                                     <small>Edit Title: </small>
