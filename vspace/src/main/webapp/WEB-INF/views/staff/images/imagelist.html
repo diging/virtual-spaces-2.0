@@ -62,7 +62,7 @@ $( document ).ready(function() {
         lastClass: 'last',
         firstClass: 'first'
     }).on("page", function(event, num){
-        window.location.assign("./"+num+"?imageCat="+[[${imageCategory}]]+"&sort="+[[${sortProperty}]]+"&order="+[[${order}]]);
+        window.location.assign("./"+num+"?searchText=" + [[${searchText}]]+"&imageCat="+[[${imageCategory}]]+"&sort="+[[${sortProperty}]]+"&order="+[[${order}]]);
     });
 
   $("table.table thead th").each(function(){
@@ -76,26 +76,30 @@ $( document ).ready(function() {
    $("table.table thead th").click(function() {
     var headerSortPropName = $(this).attr("sort-prop");
     if(headerSortPropName != 'tag') {
-        if(headerSortPropName=='[(${sortProperty})]'){
+        if(headerSortPropName =='[(${sortProperty})]'){
             window.location.href = window.location.pathname+
-            '?imageCat=[(${imageCategory})]&sort='+ headerSortPropName+'&order='+
+            '?searchText=[(${searchText})]&imageCat=[(${imageCategory})]&sort='+ headerSortPropName+'&order='+
             ('[(${order})]' == 'desc'?'asc':'desc');
-        }else{
+        } else{
             window.location.href = window.location.pathname+
-            '?imageCat=[(${imageCategory})]&sort='+ headerSortPropName+'&order=asc';
+            '?searchText=[(${searchText})]&imageCat=[(${imageCategory})]&sort='+ headerSortPropName+'&order=asc';
         }
     }
-    });
+   });
    
    $("#filterTag").on("change", function(e) {
        e.preventDefault();
        var selectedId=e.target.value;
        var formData = new FormData();
+       let baseResultsUrl = "[(@{'/staff/images/search/full/'})]";
+       if('[(${searchText})]' == null || '[(${searchText})]' ==""){
+    	   baseResultsUrl = "[(@{'/staff/images/list/'})]"
+       }
        if(selectedId === "all"){
-           var url = "[(@{'/staff/images/list/'})]"+'?imageCat=&sort='+[[${sortProperty}]]+'&order='+[[${order}]];
+           var url = baseResultsUrl+[(${currentPageNumber})]+"?searchText=[(${searchText})]"+"&imageCat=&sort="+[[${sortProperty}]]+"&order="+[[${order}]];
            window.location = url;
-       }else{
-           var url = "[(@{'/staff/images/list/'})]"+'?imageCat='+selectedId+'&sort='+[[${sortProperty}]]+'&order='+[[${order}]];
+       } else{
+           var url = baseResultsUrl+[(${currentPageNumber})]+'?searchText=[(${searchText})]'+'&imageCat='+selectedId+'&sort='+[[${sortProperty}]]+'&order='+[[${order}]];
            window.location = url;
        }
        
@@ -120,6 +124,7 @@ $( document ).ready(function() {
     height: 100px;
     width: 140px;
 }
+
 </style>
 </head>
 <body>
@@ -127,6 +132,11 @@ $( document ).ready(function() {
         <h2>Images</h2>
         <div style="padding-bottom: 20px;">This virtual exhibition
             contains the following images.</div>
+         <div class="searchInput" style="margin-bottom: 10px !important">
+            <input class="form-control" style="margin-left: 70%;width: 20%; padding-bottom: 5px; margin-right: 3px;" type="text" id="searchImageField" placeholder="Search..." th:value="${searchText}">
+            <a id="searchImageLink"><button class="btn primary-btn" type="submit" id="searchImageButton">
+            <span class="icon-search"></span></button></a>
+         </div>   
         <table class="table">
             <thead>
                 <tr>
@@ -199,6 +209,33 @@ $( document ).ready(function() {
             </tbody>
         </table>
         <div id="page-selection"></div>
+        <span th:if="${searchText!=null && searchText!=''}" >
+            <a class="btn-sm" style="text-decoration: underline; text-underline-offset: 2px;" th:href="@{/staff/images/list}">Clear Search</a>
+         </span>
+         <script>
+            $(document).on('input', '#searchImageField', function(e){
+                if($("#searchImageField").val().trim()) {
+                    $('#searchImageButton').removeAttr('disabled');
+                }
+                else {
+                    $('#searchImageButton').attr('disabled','true');
+                }
+                if (!$('#searchImageButton').attr('disabled') && $("#searchImageField").val().trim()){
+                    let imageCat = $("#filterTag :selected").val() !== 'all' ? 
+                        $("#filterTag :selected").val() : '';
+                    $("#searchImageLink").attr('href','[[@{/staff/images/search/full/1?searchText=}]]'+$("#searchImageField").val()+
+                        "&imageCat="+imageCat+"&sort=[(${sortProperty})]&order=[(${order})]");
+                } 
+                else{
+                    $("#searchImageLink").attr('href','');
+                }
+            });
+            $(document).on('keydown', function(e) {
+                if((e.key  === 'Enter' || e.keyCode === 13) && $("#searchImageField").val().trim()) {
+                    $("#searchImageButton").trigger('click');
+                }
+            }) 
+         </script>
     </div>
 </body>
 </html>
