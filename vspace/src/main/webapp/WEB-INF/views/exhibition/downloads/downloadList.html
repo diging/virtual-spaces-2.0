@@ -29,7 +29,7 @@
     function checkSnapshotCreationStatus(id){
     	$.ajax({
             type : "GET",
-            url : "[(@{'/staff/exhibit/task/snapshotTask/status?'})]"+"snapshotTaskId="+id,
+            url : "[(@{'/staff/exhibit/task/snapshot/status?'})]"+"snapshotTaskId="+id,
             cache : false,
             success : function(data) {
                 if(data.taskComplete ==  false) {
@@ -86,7 +86,7 @@
             let attempts = 0;
     
             const executePoll = async (resolve, reject) => {
-                const url = "[(@{'/staff/exhibit/snapshotTask/status?snapshotId='})]"+id+"&folderName="+folderName;			  
+                const url = "[(@{'/staff/exhibit/snapshot/status?snapshotId='})]"+id+"&folderName="+folderName;			  
                 const result = await fetch(url).then((response)=> response.json());
                 attempts++;
                 var text = await result;

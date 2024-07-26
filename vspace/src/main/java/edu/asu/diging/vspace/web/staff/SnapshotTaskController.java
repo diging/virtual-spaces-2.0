@@ -27,7 +27,7 @@ public class SnapshotTaskController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
    
-    @RequestMapping(value = "/staff/exhibit/snapshotTask/status", method = RequestMethod.GET) 
+    @RequestMapping(value = "/staff/exhibit/snapshot/status", method = RequestMethod.GET) 
     public ResponseEntity<SnapshotTask> getSnapshotTaskStatus(HttpServletRequest request, 
             @RequestParam(required = false, name = "snapshotId") String snapshotId, HttpServletResponse response,  Model model) throws ExhibitionSnapshotNotFoundException{                     
         SnapshotTask snapshotTask = (snapshotId == null && snapshotId=="") ? (SnapshotTask) snapshotManager.getLatestSnapshotTask() : 
