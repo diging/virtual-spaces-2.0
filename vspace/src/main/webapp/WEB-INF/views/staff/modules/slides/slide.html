@@ -1152,10 +1152,11 @@
 				            data: formData,
 				            enctype: 'multipart/form-data',
 				            success: function(data) {
-					            var textblock = $('<div style="word-break:break-word;" id="'+ data +'" class="SpaceDivStaff tab row"><label>Title: </label><p class="col-md-10">'+title+'</p>'+'<input type="hidden" id="deleteSpaceId" value="'+data+'" /><a class="btn deleteSpace col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a></div>');
+					            var space = $('<div style="word-break:break-word;" id="'+ data +'" class="SpaceDivStaff tab row"><label>Title: </label><p class="col-md-10">'+title+'</p>'+'<input type="hidden" id="deleteSpaceId" value="'+data+'" /><a class="btn deleteSpace col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a></div>');
 					
-					            $(textblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(spaceBlockDoubleClick);
-					            $('#slideSpace').append(textblock);
+					            $(space[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(spaceBlockDoubleClick);
+					            $('#slideSpace').append(space);
+					            console.log(contents)
 				            },
 				            error: function(data) {
 					            if (data.status == 403){
@@ -1372,12 +1373,14 @@
 		            $("#editSpaceAlert").hide();
 		            var blockId = $(this).closest(".open").attr("id");
 		            updateSpaceBox(blockId, defaultValue);
+		            $(".open").removeClass("open");
 	            });
 
 	            $('#closeSpaceBlock').on('click',function(){
 		            $("#editSpaceAlert").hide();
 		            var blockId = $(this).closest(".open").attr("id");
 		            updateSpaceBox(blockId, defaultValue);
+		            $(".open").removeClass("open");
 	            });
 	
                 $('.valueDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick((e)=>{$(".EasyMDEContainer").remove();});
@@ -2037,10 +2040,20 @@
                         </a>
                     </div>
                     <div th:attr="data-position=${contents.contentOrder}" style="word-break: break-word;" th:id="${contents.id}" class="SpaceDivStaff tab row" th:if="${#strings.equals(contents['class'].simpleName,'SpaceBlock')}">
-                        <p class="col-md-10"> [[${contents.title}]]</p>
-                        <p th:if="${contents.space != null}" th:hidden="true" class="col-md-10">
-                            [[${contents.space.name}]]
-                        </p>
+                        <div style="display: flex; flex-direction: column; width: 100%;">
+						
+						<div style = "display:flex; flex-direction: row; width: 100%;">
+						<label>Title: </label>
+                        <p class="col-md-10">[[${contents.title}]]</p>
+						</div>
+						
+						<div style = "display:flex; flex-direction: row;width: 100%;">
+						<label>Space: </label>
+                        <p th:if="${contents.space != null}" th:hidden="true" class="col-md-10"> [[${contents.space.name}]]</p>
+						</div>
+						
+                        </div>
+
                         <input type="hidden" id="deleteSpaceId" th:value="${contents.id}" />
                         <a class="btn deleteSpace col-md-1" href="javascript:;" style="position: absolute; right: 0px; bottom: 10px;"> 
                         <span class="icon-trash error"></span> 
