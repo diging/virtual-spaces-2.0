@@ -19,6 +19,7 @@ import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.display.SlideType;
 import edu.asu.diging.vspace.core.model.impl.Slide;
+import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 import edu.asu.diging.vspace.core.services.impl.ExhibitionManager;
@@ -26,6 +27,9 @@ import edu.asu.diging.vspace.web.staff.forms.SlideForm;
 
 @Controller
 public class AddSlideController {
+    
+    @Autowired
+    private IExhibitionManager exhibitionManager;
 
     @Autowired
     private ISlideManager slideManager;
@@ -35,9 +39,7 @@ public class AddSlideController {
     
     @Autowired
     private ISlideFormFactory slideFormFactory;
-    
-    @Autowired
-    private ExhibitionManager exhibitionManager;
+
 
     @RequestMapping(value = "/staff/module/{id}/slide/add", method = RequestMethod.GET)
     public String showAddSlide(@PathVariable("id") String moduleId, Model model) {

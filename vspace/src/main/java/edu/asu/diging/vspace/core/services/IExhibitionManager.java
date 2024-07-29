@@ -8,8 +8,6 @@ import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.ILocalizedText;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
-import edu.asu.diging.vspace.core.model.impl.LocalizedText;
-
 /*
  * (non-Javadoc)
  * 

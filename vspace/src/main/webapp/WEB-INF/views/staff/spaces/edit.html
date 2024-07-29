@@ -75,18 +75,17 @@
 			<div>
 				<div class="tab" >	
 					<button class="tablinks"  th:onclick="openForm(event, [[${spaceForm.defaultName.exhibitionLanguageLabel}]] )">[[${spaceForm.defaultName.exhibitionLanguageLabel}]]</button>				
-							
 					<div th:each= "title,  stat : ${spaceForm.names}">
 					  <button class="tablinks"  th:onclick="openForm(event, [[${title.exhibitionLanguageLabel}]] )">[[${title.exhibitionLanguageLabel}]]</button>				
 					</div>
 				</div>
 				<div>
-					<div th:id = "${spaceForm.defaultName.exhibitionLanguageLabel}" class = "tabcontent">
-						<p>  [[${spaceForm.defaultName.exhibitionLanguageLabel}]]</p>	
+					<div th:id = "[[${spaceForm.defaultName.exhibitionLanguageLabel}]]" class = "tabcontent">
+						<p>[[${spaceForm.defaultName.exhibitionLanguageLabel}]]</p>	
 					<label for="title">Space Name:</label>
-					<input type="hidden" class="form-control" id="title" th:value="${spaceForm.defaultName.localisedTextId}" th:name="defaultName.localisedTextId" ></input>
+					<input type="hidden" class="form-control" id="title" th:value="${spaceForm.defaultName.getLocalisedTextId()}" th:name="defaultName.localisedTextId" ></input>
 					<input type="hidden" class="form-control" id="title" th:value="${spaceForm.defaultName.exhibitionLanguageId}" th:name="defaultName.exhibitionLanguageId" ></input> 					
-					<input type="text" class="form-control" id="title" th:value="${spaceForm.defaultName.text}" th:name="defaultName.text" ></input>
+					<input type="text" class="form-control" id="title" th:value="${spaceForm.defaultName.getText()}" th:name="defaultName.getText()" ></input>
 					<label for="description">Description:</label>
 								<textarea class="form-control" rows="5" cols="30" id="spacePageText" th:value= "${spaceForm.defaultDescription.text}" th:name="defaultDescription.text">[[${spaceForm.defaultDescription.text}]]</textarea>
 		 						<input type="hidden"   class="form-control"  id="spaceText" th:value="${spaceForm.defaultDescription.localisedTextId}" th:name="defaultDescription.localisedTextId" ></input>

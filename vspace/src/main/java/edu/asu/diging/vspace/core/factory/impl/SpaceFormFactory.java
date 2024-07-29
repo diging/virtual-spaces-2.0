@@ -28,12 +28,13 @@ public class SpaceFormFactory implements ISpaceFormFactory {
         spaceForm.setDescription(space.getDescription());
         
         startExhibition.getLanguages().forEach(language -> {
-            if(!language.isDefault()) {
+            if(language.isDefault()) {
+                spaceForm.setDefaultName(localizedTextFormCreation.createLocalizedTextForm(startExhibition.getDefaultLanguage(), space.getSpaceNames()));
+                spaceForm.setDefaultDescription(localizedTextFormCreation.createLocalizedTextForm(startExhibition.getDefaultLanguage(), space.getSpaceDescriptions()));                
+            }
+            else {
                 spaceForm.getNames().add(localizedTextFormCreation.createLocalizedTextForm(language, space.getSpaceNames()));               
                 spaceForm.getDescriptions().add(localizedTextFormCreation.createLocalizedTextForm(language, space.getSpaceDescriptions())); 
-            } else {
-                spaceForm.setDefaultName(localizedTextFormCreation.createLocalizedTextForm(startExhibition.getDefaultLanguage(), space.getSpaceNames()));
-                spaceForm.setDefaultDescription(localizedTextFormCreation.createLocalizedTextForm(startExhibition.getDefaultLanguage(), space.getSpaceDescriptions()));
             }
         });
         
@@ -42,9 +43,7 @@ public class SpaceFormFactory implements ISpaceFormFactory {
     
     @Override
     public SpaceForm getSpaceForm(ISpace space, IExhibition startExhibition) {
-        SpaceForm slideForm = createNewSpaceForm(space, startExhibition);   
-        slideForm.setName(space.getName());
-        slideForm.setDescription(space.getDescription());
+        SpaceForm slideForm = createNewSpaceForm(space, startExhibition);  
         return slideForm; 
     }
 }

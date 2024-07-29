@@ -205,9 +205,11 @@ public class SlideManagerTest {
 
         LocalizedText locText1 =  new LocalizedText();
         locText1.setId( "ID1");
+        locText1.setText("title");
 
         LocalizedText locText2 =  new LocalizedText();
-        locText1.setId( "ID2");
+        locText2.setId( "ID2");
+        locText2.setText("title");
         when(localizedRextRepo.findById("ID1") ).thenReturn(Optional.of(locText1));
         when(localizedRextRepo.findById("ID2") ).thenReturn(Optional.of(locText2));
         
@@ -234,7 +236,7 @@ public class SlideManagerTest {
 
         slideForm.setNames(titleList);
         slideForm.setDescriptions(slideTextList);
-        slideForm.setType("Slide");
+        slideForm.setType("SLIDE");
         when(slideRepo.findAll()).thenReturn(slidePageList);
 
         LocalizedText locText1 =  new LocalizedText();
