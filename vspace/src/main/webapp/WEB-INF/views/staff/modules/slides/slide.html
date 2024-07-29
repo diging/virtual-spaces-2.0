@@ -1152,7 +1152,7 @@
 				            data: formData,
 				            enctype: 'multipart/form-data',
 				            success: function(data) {
-					            var space = $('<div style="word-break:break-word;" id="'+ data +'" class="SpaceDivStaff tab row"><label>Title: </label><p class="col-md-10">'+title+'</p>'+'<input type="hidden" id="deleteSpaceId" value="'+data+'" /><a class="btn deleteSpace col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a></div>');
+					            var space = $('<div style="word-break:break-word;" id="'+ data +'" class="SpaceDivStaff tab row"><label>Title: </label><p class="col-md-10">'+title+'</p> <div style = "display:flex; flex-direction: row;width: 100%;"><label>Space: </label><p class="col-md-10">'+ selectedSpace.name +'</p></div>'+'<input type="hidden" id="deleteSpaceId" value="'+data+'" /><a class="btn deleteSpace col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a></div>');
 					
 					            $(space[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(spaceBlockDoubleClick);
 					            $('#slideSpace').append(space);
@@ -2049,7 +2049,7 @@
 						
 						<div style = "display:flex; flex-direction: row;width: 100%;">
 						<label>Space: </label>
-                        <p th:if="${contents.space != null}" th:hidden="true" class="col-md-10"> [[${contents.space.name}]]</p>
+                        <p th:if="${contents.space}" th:hidden="true" class="col-md-10"> [[${contents.space.name}]]</p>
 						</div>
 						
                         </div>
