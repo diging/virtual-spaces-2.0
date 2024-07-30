@@ -22,6 +22,7 @@ import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceDisplayFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
+import edu.asu.diging.vspace.core.model.ILocalizedText;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.display.ISpaceDisplay;
@@ -304,22 +305,24 @@ public class SpaceManager implements ISpaceManager {
      * @param name The localized text form containing the name to be added.
      */
     @Override
-    public void addSpaceDetails(ISpace space, LocalizedTextForm name) {
-        localizedTextFormDataManager.addLocalizedDetails(space, name, space.getSpaceNames());
+    public void addSpaceDetails(ISpace space, LocalizedTextForm name, List<ILocalizedText> localizedTextList) {
+        localizedTextFormDataManager.addLocalizedDetails(space, name, localizedTextList);
     }
     
     @Override
     public void updateNameAndDescription(ISpace space, SpaceForm spaceForm) {
         space.setName(spaceForm.getDefaultName().getText());
         space.setDescription(spaceForm.getDefaultDescription().getText());
-        addSpaceDetails(space,spaceForm.getDefaultName());
-        addSpaceDetails(space,spaceForm.getDefaultDescription());
+        List<ILocalizedText> names = space.getSpaceNames();
+        List<ILocalizedText> descriptions = space.getSpaceDescriptions();
         
+        addSpaceDetails(space,spaceForm.getDefaultName(), names);
+        addSpaceDetails(space,spaceForm.getDefaultDescription(), descriptions);
         for(LocalizedTextForm title:spaceForm.getNames()) {   
-            addSpaceDetails(space,title);
+            addSpaceDetails(space,title, names);
         }
         for(LocalizedTextForm text:spaceForm.getDescriptions()) {
-            addSpaceDetails(space,text);
+            addSpaceDetails(space,text, descriptions);
         }
     }
    

@@ -32,7 +32,7 @@ public class LocalizedTextFormDataManager implements ILocalizedTextFormDataManag
      */
     @Override
     public void addLocalizedDetails(Object entity, LocalizedTextForm localizedTextFormData, List<ILocalizedText> detailList) {
-        if (entity == null || StringUtils.isEmpty(localizedTextFormData.getText())) {
+        if (StringUtils.isEmpty(localizedTextFormData.getText())) {
             return;
         }
         
@@ -46,6 +46,7 @@ public class LocalizedTextFormDataManager implements ILocalizedTextFormDataManag
                 detailList.add(localizedText);
             }
         }
+        
     }
 
 

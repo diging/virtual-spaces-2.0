@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
+import edu.asu.diging.vspace.core.model.ILocalizedText;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.impl.Space;
@@ -44,6 +45,6 @@ public interface ISpaceManager {
 
     void updateNameAndDescription(ISpace space, SpaceForm spaceForm);
 
-    void addSpaceDetails(ISpace space, LocalizedTextForm names);
+    void addSpaceDetails(ISpace space, LocalizedTextForm names, List<ILocalizedText> localizedTextList);
     
 }

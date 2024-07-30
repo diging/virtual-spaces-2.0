@@ -104,5 +104,4 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
             }
         }
     }
-   
 }

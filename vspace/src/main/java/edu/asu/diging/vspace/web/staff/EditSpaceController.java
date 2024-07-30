@@ -28,7 +28,6 @@ public class EditSpaceController {
    
     @RequestMapping(value="/staff/space/{spaceId}/edit", method=RequestMethod.GET)
     public String show(Model model, @PathVariable("spaceId") String spaceId) {
-
         model.addAttribute("spaceForm", spaceFormFactory.getSpaceForm(spaceManager.getSpace(spaceId), exhibitionManager.getStartExhibition()));
         model.addAttribute("spaceId", spaceId);
         return "staff/spaces/edit";
@@ -37,8 +36,6 @@ public class EditSpaceController {
     @RequestMapping(value="/staff/space/{spaceId}/edit", method=RequestMethod.POST)
     public String save(@ModelAttribute SpaceForm spaceForm, @PathVariable("spaceId") String spaceId) {
         ISpace space = spaceManager.getSpace(spaceId);
-        space.setName(spaceForm.getName());
-        space.setDescription(spaceForm.getDescription());
         spaceManager.updateNameAndDescription(space, spaceForm);
         spaceManager.storeSpace(space, null, null);
         return "redirect:/staff/space/{spaceId}";
