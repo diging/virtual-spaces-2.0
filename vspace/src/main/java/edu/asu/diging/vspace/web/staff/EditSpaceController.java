@@ -28,7 +28,7 @@ public class EditSpaceController {
    
     @RequestMapping(value="/staff/space/{spaceId}/edit", method=RequestMethod.GET)
     public String show(Model model, @PathVariable("spaceId") String spaceId) {
-        model.addAttribute("spaceForm", spaceFormFactory.getSpaceForm(spaceManager.getSpace(spaceId), exhibitionManager.getStartExhibition()));
+        model.addAttribute("spaceForm", spaceFormFactory.createNewSpaceForm(spaceManager.getSpace(spaceId), exhibitionManager.getStartExhibition()));
         model.addAttribute("spaceId", spaceId);
         return "staff/spaces/edit";
     }

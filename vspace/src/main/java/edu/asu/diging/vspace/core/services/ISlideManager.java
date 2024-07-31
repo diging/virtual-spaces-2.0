@@ -8,9 +8,11 @@ import org.springframework.data.domain.Pageable;
 
 import edu.asu.diging.vspace.core.model.IBranchingPoint;
 import edu.asu.diging.vspace.core.model.IChoice;
+import edu.asu.diging.vspace.core.model.ILocalizedText;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.display.SlideType;
+import edu.asu.diging.vspace.core.model.impl.LocalizedText;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.web.staff.forms.LocalizedTextForm;
@@ -38,7 +40,7 @@ public interface ISlideManager {
     
     void updateNameAndDescription(ISlide slide, SlideForm slideForm);
 
-    void addSlideDetails(ISlide slide, LocalizedTextForm name);
+    void addSlideDetails(ISlide slide, LocalizedTextForm localizedTextFormData, List<ILocalizedText> localizedTextList);
 
     SlideForm getSlideForm(String slideId);
 

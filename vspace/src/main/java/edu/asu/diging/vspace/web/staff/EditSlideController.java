@@ -79,8 +79,6 @@ public class EditSlideController {
     @RequestMapping(value="/staff/module/{moduleId}/slide/{slideId}/edit", method=RequestMethod.POST)
     public String save(@ModelAttribute SlideForm slideForm, @PathVariable("moduleId") String moduleId, @PathVariable("slideId") String slideId) {
         ISlide slide = slideManager.getSlide(slideId);
-        slide.setName(slideForm.getDefaultName().getText());
-        slide.setDescription(slideForm.getDefaultName().getText());
         SlideType type = slideForm.getType().isEmpty() ? null : SlideType.valueOf(slideForm.getType());
         slideManager.updateNameAndDescription(slide, slideForm);
         if(type.equals(SlideType.BRANCHING_POINT)) {

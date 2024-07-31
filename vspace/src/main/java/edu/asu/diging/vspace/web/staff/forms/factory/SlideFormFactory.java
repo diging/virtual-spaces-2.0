@@ -1,4 +1,4 @@
-package edu.asu.diging.vspace.core.factory.impl;
+package edu.asu.diging.vspace.web.staff.forms.factory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -36,6 +36,6 @@ public class SlideFormFactory implements ISlideFormFactory{
                 slideForm.getDescriptions().add(localizedTextFormCreation.createLocalizedTextForm(language, slide.getSlideDescriptions())); 
             }
         });
-        return slideForm;      
+        return slideForm;
     }
 }

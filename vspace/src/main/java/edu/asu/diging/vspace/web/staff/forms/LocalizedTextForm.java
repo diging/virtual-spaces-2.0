@@ -65,8 +65,5 @@ public class LocalizedTextForm {
     public void setIsDefaultExhibitionLanguage(Boolean isDefaultExhibitionLanguage) {
         this.isDefaultExhibitionLanguage = isDefaultExhibitionLanguage;
     }
-
-
-
 }
 

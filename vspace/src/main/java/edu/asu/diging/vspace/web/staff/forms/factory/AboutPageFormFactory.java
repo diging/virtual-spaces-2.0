@@ -1,4 +1,4 @@
-package edu.asu.diging.vspace.core.factory.impl;
+package edu.asu.diging.vspace.web.staff.forms.factory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

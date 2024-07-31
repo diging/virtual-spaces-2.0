@@ -7,5 +7,5 @@ import edu.asu.diging.vspace.web.staff.forms.SpaceForm;
 public interface ISpaceFactory {
     
     ISpace createSpace(SpaceForm form);
-    
+
 }

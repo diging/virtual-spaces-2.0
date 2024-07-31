@@ -1,4 +1,4 @@
-package edu.asu.diging.vspace.core.factory.impl;
+package edu.asu.diging.vspace.web.staff.forms.factory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -39,11 +39,5 @@ public class SpaceFormFactory implements ISpaceFormFactory {
         });
         
         return spaceForm;      
-    }
-    
-    @Override
-    public SpaceForm getSpaceForm(ISpace space, IExhibition startExhibition) {
-        SpaceForm slideForm = createNewSpaceForm(space, startExhibition);  
-        return slideForm; 
     }
 }

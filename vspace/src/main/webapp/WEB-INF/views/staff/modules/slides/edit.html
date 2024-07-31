@@ -129,12 +129,12 @@
 					<div th:id = "${slideForm.defaultName.exhibitionLanguageLabel}" class = "tabcontent">
 						<p>  [[${slideForm.defaultName.exhibitionLanguageLabel}]]</p>	
 					<label for="title">Slide Name:</label>
-					<input type="hidden" class="form-control" id="title" th:value="${slideForm.defaultName.localisedTextId}" th:name="defaultName.localisedTextId" ></input>
+					<input type="hidden" class="form-control" id="title" th:value="${slideForm.defaultName.localizedTextId}" th:name="defaultName.localizedTextId" ></input>
 					<input type="hidden" class="form-control" id="title" th:value="${slideForm.defaultName.exhibitionLanguageId}" th:name="defaultName.exhibitionLanguageId" ></input> 					
 					<input type="text" class="form-control" id="title" th:value="${slideForm.defaultName.text}" th:name="defaultName.text" ></input>
 					<label for="description">Description:</label>
 								<textarea class="form-control" rows="5" cols="30" id="slidePageText" th:value= "${slideForm.defaultDescription.text}" th:name="defaultDescription.text">[[${slideForm.defaultDescription.text}]]</textarea>
-		 						<input type="hidden"   class="form-control"  id="slideText" th:value="${slideForm.defaultDescription.localisedTextId}" th:name="defaultDescription.localisedTextId" ></input>
+		 						<input type="hidden"   class="form-control"  id="slideText" th:value="${slideForm.defaultDescription.localizedTextId}" th:name="defaultDescription.localizedTextId" ></input>
 								<input type="hidden" class="form-control"  id="slideText" th:value="${slideForm.defaultDescription.exhibitionLanguageId}" th:name="defaultDescription.exhibitionLanguageId" ></input>			
  						
  					</div>
@@ -143,13 +143,13 @@
 					<div th:id = "${title.exhibitionLanguageLabel}" class = "tabcontent">
 						<p>  [[${title.exhibitionLanguageLabel}]]</p>	
 					<label for="title">Slide Name:</label>
-					<input type="hidden" class="form-control" id="title" th:value="${title.localisedTextId}" th:name="|names[${stat.index}].localisedTextId|" ></input>
+					<input type="hidden" class="form-control" id="title" th:value="${title.localizedTextId}" th:name="|names[${stat.index}].localizedTextId|" ></input>
 					<input type="hidden" class="form-control" id="title" th:value="${title.exhibitionLanguageId}" th:name="|names[${stat.index}].exhibitionLanguageId|" ></input> 					
 					<input type="text" class="form-control" id="title" th:value="${title.text}" th:name="|names[${stat.index}].text|" ></input>
 						<div th:each= "description : ${slideForm.descriptions}"  > 								
 								<label th:if="${description.exhibitionLanguageId} == ${title.exhibitionLanguageId} "  for="description">Description:</label>
 								<textarea  th:if="${description.exhibitionLanguageId} == ${title.exhibitionLanguageId} " class="form-control" rows="5" cols="30" id="description" th:value= "${description.text}" th:name="|descriptions[${stat.index}].text|">[[${description.text}]]</textarea>
-		 						<input type="hidden"  th:if="${description.exhibitionLanguageId} == ${title.exhibitionLanguageId} " class="form-control"  id="slideText" th:value="${description.localisedTextId}" th:name="|descriptions[${stat.index}].localisedTextId|" ></input>
+		 						<input type="hidden"  th:if="${description.exhibitionLanguageId} == ${title.exhibitionLanguageId} " class="form-control"  id="slideText" th:value="${description.localizedTextId}" th:name="|descriptions[${stat.index}].localizedTextId|" ></input>
 								<input type="hidden" th:if="${description.exhibitionLanguageId} == ${title.exhibitionLanguageId} " class="form-control"  id="slideText" th:value="${description.exhibitionLanguageId}" th:name="|descriptions[${stat.index}].exhibitionLanguageId|" ></input>
 
 		 				</div>

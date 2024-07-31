@@ -16,6 +16,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.springframework.data.jpa.repository.Query;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 

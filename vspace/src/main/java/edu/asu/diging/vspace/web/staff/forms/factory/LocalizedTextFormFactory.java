@@ -1,4 +1,4 @@
-package edu.asu.diging.vspace.core.factory.impl;
+package edu.asu.diging.vspace.web.staff.forms.factory;
 
 import java.util.List;
 
