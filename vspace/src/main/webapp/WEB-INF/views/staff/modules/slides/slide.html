@@ -755,6 +755,7 @@
 				            return {
 				            	results: data,
 				            };
+				            console.log(data),
 			            },
 		            },
 		            templateResult: formatSpace,
@@ -1356,7 +1357,7 @@
 	            function updateSpaceBox(blockId, text) {
 		            // clear text box and buttons
 		            $(".open").empty();
-		            $(".open").append('<label>Title: </label><p class="col-md-10">'+text+'</p><input type="hidden" id="deleteSpaceId" value="'+blockId+'" /><a class="btn deleteSpace col-md-1" href="javascript:;" style="position: absolute; right:0;"><span class="icon-trash error"></span></a>');
+		            $(".open").append('<div style = "display:flex; flex-direction: row; width: 100%;"><label>Title: </label><p class="col-md-10">'+text+'</p></div><div style = "display:flex; flex-direction: row;width: 100%;"><label>Space: </label><p hidden="true" class="col-md-10"> '+text+'</p></div><input type="hidden" id="deleteSpaceId" value="'+blockId+'" /><a class="btn deleteSpace col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a></div>');
 		            // reset border of the card
 		            //rebind event handlers
 		            $('.SpaceDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(spaceBlockDoubleClick);
@@ -1430,6 +1431,7 @@
 		            if(document.getElementById('editSpaceName') != ""){
 		            var selectedSpace = document.getElementById('editSpaceName');
 		            var spaceId = selectedSpace.options[selectedSpace.selectedIndex].value;
+		            console.log(selectedSpace)
 		            var formData = new FormData();
 		            var text = document.getElementById("editSpaceBlock").value;
 		            var formData = new FormData();
