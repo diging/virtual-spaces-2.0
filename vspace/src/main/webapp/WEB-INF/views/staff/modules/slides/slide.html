@@ -157,6 +157,7 @@
 		            type: 'GET',
 		            success: function(result) {
 		            	$("#selectedSpace").text(result.name);
+		            	$("#selectedSpaceName").text(result.name);
 		            },
 		            error: function(data) {
 				            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
@@ -187,7 +188,6 @@
             }
             
             function spaceBlockDoubleClick(e){
-            	$(".EasyMDEContainer").remove();
                 var divName = $(e.target).closest('div').attr('class');
 	            let spaceId = e.target.closest('div').id;
 	            $(e.target).closest('.SpaceDivStaff').addClass("open");
@@ -525,6 +525,7 @@
             	tour.start();
             }
             $(document).ready(function() {
+
             	if (localStorage.getItem("newSlide") == null) {
             		guidedTour();
             		localStorage.setItem("newSlide", false);
@@ -755,7 +756,6 @@
 				            return {
 				            	results: data,
 				            };
-				            console.log(data),
 			            },
 		            },
 		            templateResult: formatSpace,
@@ -763,9 +763,7 @@
 	            });
 
 	            function formatSpace (space) {
-		            if (!space.id) {
-		            	return space.name;
-		            }
+
 		            var $space = $('<span>' + space.name + '</span>');
 		            return $space;
 	            }
@@ -1153,11 +1151,23 @@
 				            data: formData,
 				            enctype: 'multipart/form-data',
 				            success: function(data) {
-					            var space = $('<div style="word-break:break-word;" id="'+ data +'" class="SpaceDivStaff tab row"><label>Title: </label><p class="col-md-10">'+title+'</p> <div style = "display:flex; flex-direction: row;width: 100%;"><label>Space: </label><p class="col-md-10">'+ selectedSpace.name +'</p></div>'+'<input type="hidden" id="deleteSpaceId" value="'+data+'" /><a class="btn deleteSpace col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a></div>');
+				            	var selectElement = document.getElementById('spaceName');
+				                console.log("action");
+				                // Get the selected value
+				                var selectedValue = selectElement.value;
+				                
+				                // Get the selected option text
+				                var selectedText = selectElement;
+
+				                // Display the selected value
+				                console.log('Selected Value:', selectedValue);
+				                console.log('Selected Text:', selectedText);
+				                console.log(selectElement);
+				                
+					            var space = $('<div style="word-break:break-word;" id="'+ data +'" class="SpaceDivStaff tab row"><label>Title: </label><p class="col-md-10">'+title+'</p> <div style = "display:flex; flex-direction: row;width: 100%;"><label>Space: </label><p class="col-md-10">'+ "Space" +'</p></div>'+'<input type="hidden" id="deleteSpaceId" value="'+data+'" /><a class="btn deleteSpace col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a></div>');
 					
 					            $(space[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(spaceBlockDoubleClick);
 					            $('#slideSpace').append(space);
-					            console.log(contents)
 				            },
 				            error: function(data) {
 					            if (data.status == 403){
@@ -1431,7 +1441,7 @@
 		            if(document.getElementById('editSpaceName') != ""){
 		            var selectedSpace = document.getElementById('editSpaceName');
 		            var spaceId = selectedSpace.options[selectedSpace.selectedIndex].value;
-		            console.log(selectedSpace)
+		            console.log(selectedSpace);
 		            var formData = new FormData();
 		            var text = document.getElementById("editSpaceBlock").value;
 		            var formData = new FormData();
@@ -1789,7 +1799,7 @@
                                 <h6>
                                     <small>Choose from existing Spaces </small>
                                 </h6>
-                                <select id="spaceName" name="spacesNames" class="form-control-xs target" style="height: 50px; width: 200px;">
+                                <select id="spaceName" name="spaceName" class="form-control-xs target" style="height: 50px; width: 200px;">
                                     <option selected value="">Choose from existing</option>
                                 </select>
                             </div>
@@ -2051,7 +2061,7 @@
 						
 						<div style = "display:flex; flex-direction: row;width: 100%;">
 						<label>Space: </label>
-                        <p th:if="${contents.space}" th:hidden="true" class="col-md-10"> [[${contents.space.name}]]</p>
+                        <p class="col-md-10">[[${contents.space.name}]]</p>
 						</div>
 						
                         </div>
