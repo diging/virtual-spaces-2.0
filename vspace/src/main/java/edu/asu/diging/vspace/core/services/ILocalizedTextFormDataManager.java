@@ -8,6 +8,6 @@ import edu.asu.diging.vspace.core.model.ILocalizedText;
 
 public interface ILocalizedTextFormDataManager {
     
-    public void addLocalizedDetails(Object entity, LocalizedTextForm localizedTextFormData, List<ILocalizedText> detailList);
+    public void addLocalizedText(Object entity, LocalizedTextForm localizedTextFormData, List<ILocalizedText> detailList);
 
 }

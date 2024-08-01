@@ -16,6 +16,7 @@ import org.springframework.util.StringUtils;
 
 import edu.asu.diging.vspace.config.ConfigConstants;
 import edu.asu.diging.vspace.config.ExhibitionLanguageConfig;
+import edu.asu.diging.vspace.core.data.ExhibitionLanguageRepository;
 import edu.asu.diging.vspace.core.data.ExhibitionRepository;
 import edu.asu.diging.vspace.core.data.LocalizedTextRepository;
 import edu.asu.diging.vspace.core.exception.ExhibitionLanguageDeletionException;
@@ -44,6 +45,9 @@ public class ExhibitionManager implements IExhibitionManager {
     
     @Autowired
     private LocalizedTextRepository localizedTextRepo;
+    
+    @Autowired
+    private ExhibitionLanguageRepository exhibitionLanguageRepository;
 
     /*
      * (non-Javadoc)
@@ -102,7 +106,7 @@ public class ExhibitionManager implements IExhibitionManager {
      * @param exhibition
      * @param defaultLanguage 
      * @param languages
-     * @throws LanguageListConfigurationNotFoundException 
+     * @throws ExhibitionLanguageDeletionException 
      */
     @Override
     public void updateExhibitionLanguages(Exhibition exhibition, List<String> codes, String defaultLanguage) throws ExhibitionLanguageDeletionException{
@@ -132,11 +136,7 @@ public class ExhibitionManager implements IExhibitionManager {
 
         for (IExhibitionLanguage language  : exhibitionLanguageToBeRemoved ) {
             if(checkIfLocalizedTextsExists(language))  {
-                /**
-                 *  ExhibitionLanguageDeletionException is thrown to let the user know that the 
-                 *  particular language has some information associated with it and that it cannot be deleted.
-                 */
-                throw new ExhibitionLanguageDeletionException() ;
+                throw new ExhibitionLanguageDeletionException("Exhibition cannot be deleted as it is not empty") ;
             }
 
         }       
@@ -186,6 +186,10 @@ public class ExhibitionManager implements IExhibitionManager {
         }
 
         return exhibitionLanguage;
+    }
+    
+    public IExhibitionLanguage getDefaultLanguage(IExhibition exhibition){
+        return exhibitionLanguageRepository.findByExhibitionAndIsDefault(exhibition);
     }
 
 }

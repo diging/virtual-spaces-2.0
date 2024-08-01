@@ -40,7 +40,7 @@ public interface ISlideManager {
     
     void updateNameAndDescription(ISlide slide, SlideForm slideForm);
 
-    void addSlideDetails(ISlide slide, LocalizedTextForm localizedTextFormData, List<ILocalizedText> localizedTextList);
+    void addSlideLocalizedText(ISlide slide, LocalizedTextForm localizedTextFormData, List<ILocalizedText> localizedTextList);
 
     SlideForm getSlideForm(String slideId);
 

@@ -54,7 +54,9 @@
 <script th:inline="javascript">
 	$(document).ready(function() {
 		$(".EasyMDEContainer").remove();
-		markDown = new EasyMDE({element : $('#textBlockText')[0]});
+		$('.tabcontent textarea').each(function() {
+			new EasyMDE({ element: this });
+		});
 	});
 	
 	function openForm(evt, label) {
@@ -92,34 +94,32 @@
 					</div>
 				</div>
 				<div>
-						<div th:id = "${aboutPage.defaultTitle.exhibitionLanguageLabel}" class = "tabcontent">
-							<p>  [[${aboutPage.defaultTitle.exhibitionLanguageLabel}]]</p>	
+					<div th:id = "${aboutPage.defaultTitle.exhibitionLanguageLabel}" class = "tabcontent">
+						<p>  [[${aboutPage.defaultTitle.exhibitionLanguageLabel}]]</p>	
 						<label for="title">About Page Title:</label>
-						<input type="hidden" class="form-control" id="title" th:value="${aboutPage.defaultTitle.localisedTextId}" th:name="defaultTitle.localisedTextId" ></input>
+						<input type="hidden" class="form-control" id="title" th:value="${aboutPage.defaultTitle.localizedTextId}" th:name="defaultTitle.localizedTextId" ></input>
 						<input type="hidden" class="form-control" id="title" th:value="${aboutPage.defaultTitle.exhibitionLanguageId}" th:name="defaultTitle.exhibitionLanguageId" ></input> 					
 						<input type="text" class="form-control" id="title" th:value="${aboutPage.defaultTitle.text}" th:name="defaultTitle.text" ></input>
-						<label for="aboutPageText">About Page Text:</label>
-									<textarea class="form-control" rows="5" cols="30" id="aboutPageText" th:value= "${aboutPage.defaultAboutPageText.text}" th:name="defaultAboutPageText.text">[[${aboutPage.defaultAboutPageText.text}]]</textarea>
-			 						<input type="hidden"   class="form-control"  id="aboutText" th:value="${aboutPage.defaultAboutPageText.localisedTextId}" th:name="defaultAboutPageText.localisedTextId" ></input>
-									<input type="hidden" class="form-control"  id="aboutText" th:value="${aboutPage.defaultAboutPageText.exhibitionLanguageId}" th:name="defaultAboutPageText.exhibitionLanguageId" ></input>			
-	 						
-	 					</div>
-					<div style="padding-top: 20px;" th:each= "title,  stat : ${aboutPage.titles}" > 
+                        <div style="padding-top: 20px;">
+    						<label for="aboutPageText">About Page Text:</label>
+                            <textarea class="form-control" rows="5" cols="30" id="aboutPageText" th:value= "${aboutPage.defaultAboutPageText.text}" th:name="defaultAboutPageText.text">[[${aboutPage.defaultAboutPageText.text}]]</textarea>
+                            <input type="hidden" class="form-control"  id="aboutText" th:value="${aboutPage.defaultAboutPageText.localizedTextId}" th:name="defaultAboutPageText.localizedTextId" ></input>
+                            <input type="hidden" class="form-control"  id="aboutText" th:value="${aboutPage.defaultAboutPageText.exhibitionLanguageId}" th:name="defaultAboutPageText.exhibitionLanguageId" ></input>
+                        </div>
+ 					</div>
+					<div th:each= "title,  stat : ${aboutPage.titles}" > 
 						<div th:id = "${title.exhibitionLanguageLabel}" class = "tabcontent">
 							<p>  [[${title.exhibitionLanguageLabel}]]</p>	
 						<label for="title">About Page Title:</label>
-						<input type="hidden" class="form-control" id="title" th:value="${title.localisedTextId}" th:name="|titles[${stat.index}].localisedTextId|" ></input>
+						<input type="hidden" class="form-control" id="title" th:value="${title.localizedTextId}" th:name="|titles[${stat.index}].localizedTextId|" ></input>
 						<input type="hidden" class="form-control" id="title" th:value="${title.exhibitionLanguageId}" th:name="|titles[${stat.index}].exhibitionLanguageId|" ></input> 					
 						<input type="text" class="form-control" id="title" th:value="${title.text}" th:name="|titles[${stat.index}].text|" ></input>
-							<div style="padding-top: 20px;" th:each= "aboutPageText : ${aboutPage.aboutPageTexts}"  > 								
-									<label th:if="${aboutPageText.exhibitionLanguageId} == ${title.exhibitionLanguageId} "  for="aboutPageText">About Page Text:</label>
-									<textarea  th:if="${aboutPageText.exhibitionLanguageId} == ${title.exhibitionLanguageId} " class="form-control" rows="5" cols="30" id="aboutPageText" th:value= "${aboutPageText.text}" th:name="|aboutPageTexts[${stat.index}].text|">[[${aboutPageText.text}]]</textarea>
-			 						<input type="hidden"  th:if="${aboutPageText.exhibitionLanguageId} == ${title.exhibitionLanguageId} " class="form-control"  id="aboutText" th:value="${aboutPageText.localisedTextId}" th:name="|aboutPageTexts[${stat.index}].localisedTextId|" ></input>
-									<input type="hidden" th:if="${aboutPageText.exhibitionLanguageId} == ${title.exhibitionLanguageId} " class="form-control"  id="aboutText" th:value="${aboutPageText.exhibitionLanguageId}" th:name="|aboutPageTexts[${stat.index}].exhibitionLanguageId|" ></input>
-	 						 					
+							<div style="padding-top: 20px;" th:each= "aboutPageText : ${aboutPage.aboutPageTexts}">
+                                <label th:if="${aboutPageText.exhibitionLanguageId} == ${title.exhibitionLanguageId} "  for="aboutPageText">About Page Text:</label>
+                                <textarea class="form-control" rows="5" cols="30" id="aboutPageText" th:if="${aboutPageText.exhibitionLanguageId} == ${title.exhibitionLanguageId}" th:value= "${aboutPageText.text}" th:name="|aboutPageTexts[${stat.index}].text|">[[${aboutPageText.text}]]</textarea>
+                                <input type="hidden"  th:if="${aboutPageText.exhibitionLanguageId} == ${title.exhibitionLanguageId} " class="form-control"  id="aboutText" th:value="${aboutPageText.localizedTextId}" th:name="|aboutPageTexts[${stat.index}].localizedTextId|" ></input>
+                                <input type="hidden" th:if="${aboutPageText.exhibitionLanguageId} == ${title.exhibitionLanguageId} " class="form-control"  id="aboutText" th:value="${aboutPageText.exhibitionLanguageId}" th:name="|aboutPageTexts[${stat.index}].exhibitionLanguageId|" ></input>	 					
 			 				</div>
-				
-	 						
 	 					</div>
  					</div>				
 				</div>

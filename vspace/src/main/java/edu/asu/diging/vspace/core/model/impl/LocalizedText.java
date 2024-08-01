@@ -7,6 +7,8 @@ import javax.persistence.ManyToOne;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import edu.asu.diging.vspace.core.model.ILocalizedText;
 
 @Entity
@@ -19,7 +21,7 @@ public class LocalizedText implements ILocalizedText {
     
     @ManyToOne
     @JoinColumn(name = "LOC_EXH_LANG")
-    @JsonBackReference()
+    @JsonManagedReference()
     private ExhibitionLanguage exhibitionLanguage;
     
     private String text;

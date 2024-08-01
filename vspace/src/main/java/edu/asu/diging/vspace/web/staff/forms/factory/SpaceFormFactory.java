@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import edu.asu.diging.vspace.core.factory.ISpaceFormFactory;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.web.staff.forms.SpaceForm;
 
 @Service
@@ -14,6 +15,9 @@ public class SpaceFormFactory implements ISpaceFormFactory {
     
     @Autowired
     private LocalizedTextFormFactory localizedTextFormCreation;
+    
+    @Autowired
+    private IExhibitionManager exhibitionManager;
 
     /**
      * 
@@ -29,8 +33,8 @@ public class SpaceFormFactory implements ISpaceFormFactory {
         
         startExhibition.getLanguages().forEach(language -> {
             if(language.isDefault()) {
-                spaceForm.setDefaultName(localizedTextFormCreation.createLocalizedTextForm(startExhibition.getDefaultLanguage(), space.getSpaceNames()));
-                spaceForm.setDefaultDescription(localizedTextFormCreation.createLocalizedTextForm(startExhibition.getDefaultLanguage(), space.getSpaceDescriptions()));                
+                spaceForm.setDefaultName(localizedTextFormCreation.createLocalizedTextForm(exhibitionManager.getDefaultLanguage(startExhibition), space.getSpaceNames()));
+                spaceForm.setDefaultDescription(localizedTextFormCreation.createLocalizedTextForm(exhibitionManager.getDefaultLanguage(startExhibition), space.getSpaceDescriptions()));                
             }
             else {
                 spaceForm.getNames().add(localizedTextFormCreation.createLocalizedTextForm(language, space.getSpaceNames()));               

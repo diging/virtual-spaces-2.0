@@ -18,6 +18,7 @@ import edu.asu.diging.vspace.core.data.BranchingPointRepository;
 import edu.asu.diging.vspace.core.data.ChoiceRepository;
 import edu.asu.diging.vspace.core.data.SequenceRepository;
 import edu.asu.diging.vspace.core.data.SlideRepository;
+import edu.asu.diging.vspace.core.factory.ILocalizedTextFactory;
 import edu.asu.diging.vspace.core.factory.impl.ChoiceFactory;
 import edu.asu.diging.vspace.core.factory.impl.SlideFactory;
 import edu.asu.diging.vspace.core.model.IBranchingPoint;
@@ -66,7 +67,7 @@ public class SlideManager implements ISlideManager {
     private IExhibitionManager exhibitionManager;
     
     @Autowired
-    private ILocalizedTextFormDataManager localizedTextFormDataManager;
+    private ILocalizedTextFactory localizedTextFactory;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -190,20 +191,20 @@ public class SlideManager implements ISlideManager {
         List<ILocalizedText> localizedTextNames = slide.getSlideNames();
         List<ILocalizedText> localizedTextDescriptions = slide.getSlideDescriptions();
         
-        addSlideDetails(slide,slideForm.getDefaultName(), localizedTextNames);
-        addSlideDetails(slide,slideForm.getDefaultDescription(), localizedTextDescriptions);
+        addSlideLocalizedText(slide,slideForm.getDefaultName(), localizedTextNames);
+        addSlideLocalizedText(slide,slideForm.getDefaultDescription(), localizedTextDescriptions);
 
         for(LocalizedTextForm title:slideForm.getNames()) {        
-            addSlideDetails(slide, title, localizedTextNames);
+            addSlideLocalizedText(slide, title, localizedTextNames);
         }
         for(LocalizedTextForm text: slideForm.getDescriptions()) {
-            addSlideDetails(slide, text, localizedTextDescriptions);
+            addSlideLocalizedText(slide, text, localizedTextDescriptions);
         }   
     }
 
     @Override
-    public void addSlideDetails(ISlide slide, LocalizedTextForm localizedTextFormData, List<ILocalizedText> localizedTextList) {
-        localizedTextFormDataManager.addLocalizedDetails(slide, localizedTextFormData, localizedTextList);
+    public void addSlideLocalizedText(ISlide slide, LocalizedTextForm localizedTextFormData, List<ILocalizedText> localizedTextList) {
+        localizedTextFactory.createLocalizedText(slide, localizedTextFormData, localizedTextList);
     }
 
     @Override

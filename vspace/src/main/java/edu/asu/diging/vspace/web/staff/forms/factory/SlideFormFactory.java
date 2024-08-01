@@ -8,6 +8,7 @@ import edu.asu.diging.vspace.core.factory.ISlideFormFactory;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.ISlide;
+import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.web.staff.forms.SlideForm;
 
 @Service
@@ -15,6 +16,9 @@ public class SlideFormFactory implements ISlideFormFactory{
     
     @Autowired
     private LocalizedTextFormFactory localizedTextFormCreation;
+    
+    @Autowired
+    private IExhibitionManager exhibitionManager;
     
     /**
      * 
@@ -27,7 +31,7 @@ public class SlideFormFactory implements ISlideFormFactory{
         SlideForm slideForm = new SlideForm();
         slideForm.setName(slide.getName());
         slideForm.setDescription(slide.getDescription());
-        IExhibitionLanguage defaultLanguage = startExhibition.getDefaultLanguage();
+        IExhibitionLanguage defaultLanguage = exhibitionManager.getDefaultLanguage(startExhibition);
         slideForm.setDefaultName(localizedTextFormCreation.createLocalizedTextForm(defaultLanguage, slide.getSlideNames()));
         slideForm.setDefaultDescription(localizedTextFormCreation.createLocalizedTextForm(defaultLanguage, slide.getSlideDescriptions()));
         startExhibition.getLanguages().forEach(language -> {

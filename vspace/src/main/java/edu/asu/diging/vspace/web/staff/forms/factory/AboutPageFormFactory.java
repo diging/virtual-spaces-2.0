@@ -2,6 +2,8 @@ package edu.asu.diging.vspace.web.staff.forms.factory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import edu.asu.diging.vspace.core.data.ExhibitionLanguageRepository;
 import edu.asu.diging.vspace.core.factory.IAboutPageFormFactory;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
@@ -27,14 +29,14 @@ public class AboutPageFormFactory  implements IAboutPageFormFactory{
         aboutPageForm.setAboutPageText(exhibitionAboutPage.getAboutPageText());
         aboutPageForm.setTitle(exhibitionAboutPage.getTitle());        
 
-        IExhibition startExhibtion = exhibitionManager.getStartExhibition();    
-        IExhibitionLanguage defaultLanguage = startExhibtion.getDefaultLanguage();
+        IExhibition startExhibition = exhibitionManager.getStartExhibition();    
+        IExhibitionLanguage defaultLanguage = exhibitionManager.getDefaultLanguage(startExhibition);
 
         aboutPageForm.setDefaultTitle(localizedTextFormCreation.createLocalizedTextForm( defaultLanguage, 
                 exhibitionAboutPage.getExhibitionTitles()));
         aboutPageForm.setDefaultAboutPageText(localizedTextFormCreation.createLocalizedTextForm( defaultLanguage, 
                 exhibitionAboutPage.getExhibitionTextDescriptions()));
-        startExhibtion.getLanguages().forEach(language -> {
+        startExhibition.getLanguages().forEach(language -> {
             if(!language.isDefault()) {
                 aboutPageForm.getTitles().add(localizedTextFormCreation.createLocalizedTextForm( language, 
                         exhibitionAboutPage.getExhibitionTitles()));               

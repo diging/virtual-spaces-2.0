@@ -43,4 +43,6 @@ public interface IExhibitionManager {
 
     void deleteLocalizedTexts(List<ILocalizedText> emptyLocalizedTexts);
     
+    IExhibitionLanguage getDefaultLanguage(IExhibition exhibition);
+    
 }

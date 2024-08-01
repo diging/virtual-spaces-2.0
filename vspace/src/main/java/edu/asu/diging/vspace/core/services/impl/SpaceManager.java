@@ -20,6 +20,7 @@ import edu.asu.diging.vspace.core.data.display.SpaceLinkDisplayRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
+import edu.asu.diging.vspace.core.factory.ILocalizedTextFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceDisplayFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.ILocalizedText;
@@ -80,6 +81,9 @@ public class SpaceManager implements ISpaceManager {
 
     @Autowired
     private ILocalizedTextFormDataManager localizedTextFormDataManager;
+
+    @Autowired
+    private ILocalizedTextFactory localizedTextFactory;
    
     /*
      * (non-Javadoc)
@@ -148,7 +152,6 @@ public class SpaceManager implements ISpaceManager {
      * VSImage)
      */
     @Override
-    @Transactional
     public CreationReturnValue storeSpace(ISpace space, IVSImage image) {
         List<SpaceDisplay> displays = null;
         if (space.getId() != null) {
@@ -306,7 +309,7 @@ public class SpaceManager implements ISpaceManager {
      */
     @Override
     public void addSpaceDetails(ISpace space, LocalizedTextForm name, List<ILocalizedText> localizedTextList) {
-        localizedTextFormDataManager.addLocalizedDetails(space, name, localizedTextList);
+        localizedTextFactory.createLocalizedText(space, name, localizedTextList);
     }
     
     @Override

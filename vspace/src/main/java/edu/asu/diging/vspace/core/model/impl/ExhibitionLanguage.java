@@ -10,7 +10,7 @@ import javax.persistence.ManyToOne;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
 
@@ -25,7 +25,7 @@ public class ExhibitionLanguage extends VSpaceElement implements IExhibitionLang
     private String label;
     
     @ManyToOne(targetEntity = Exhibition.class)
-    @JsonManagedReference()
+    @JsonBackReference()
     private Exhibition exhibition;
     
     private String code;
