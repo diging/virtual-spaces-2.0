@@ -37,7 +37,7 @@ public class StaffSpacesSearchController {
         ArrayNode idArray = mapper.createArrayNode();
         for (ISpace space: spaces) {
             ObjectNode spaceNode = mapper.createObjectNode();
-            //spaceNode.put("id", space.getId());
+            spaceNode.put("id", space.getId());
             spaceNode.put("name", space.getName());
             idArray.add(spaceNode);
         }

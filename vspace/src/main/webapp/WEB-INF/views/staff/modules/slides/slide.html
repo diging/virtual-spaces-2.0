@@ -156,8 +156,10 @@
 		            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space/'})]"+ blockId,
 		            type: 'GET',
 		            success: function(result) {
+/* 		            	const selectElement = document.getElementById('editSpaceName');
+		            	selectElement.option.value = result.name */
+		            	console.log(result.id)
 		            	$("#selectedSpace").text(result.name);
-		            	$("#selectedSpaceName").text(result.name);
 		            },
 		            error: function(data) {
 				            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
@@ -192,7 +194,6 @@
 	            let spaceId = e.target.closest('div').id;
 	            $(e.target).closest('.SpaceDivStaff').addClass("open");
 	            defaultValue = $("div.open p:eq(0)").text();
-	            var editSpaceAlertHTML = document.getElementById('#editSpaceAlert')
 	            var blockId = $(this).closest("div").attr("id");
 	            getSelectedSpace(blockId);
 	            $("#editSpaceAlert").show();
@@ -763,7 +764,9 @@
 	            });
 
 	            function formatSpace (space) {
-
+		            if (!space.id) {
+		            	return space.name;
+		            }
 		            var $space = $('<span>' + space.name + '</span>');
 		            return $space;
 	            }
@@ -1151,18 +1154,6 @@
 				            data: formData,
 				            enctype: 'multipart/form-data',
 				            success: function(data) {
-				            	var selectElement = document.getElementById('spaceName');
-				                console.log("action");
-				                // Get the selected value
-				                var selectedValue = selectElement.value;
-				                
-				                // Get the selected option text
-				                var selectedText = selectElement;
-
-				                // Display the selected value
-				                console.log('Selected Value:', selectedValue);
-				                console.log('Selected Text:', selectedText);
-				                console.log(selectElement);
 				                
 					            var space = $('<div style="word-break:break-word;" id="'+ data +'" class="SpaceDivStaff tab row"><label>Title: </label><p class="col-md-10">'+title+'</p> <div style = "display:flex; flex-direction: row;width: 100%;"><label>Space: </label><p class="col-md-10">'+ "Space" +'</p></div>'+'<input type="hidden" id="deleteSpaceId" value="'+data+'" /><a class="btn deleteSpace col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a></div>');
 					
@@ -1799,7 +1790,7 @@
                                 <h6>
                                     <small>Choose from existing Spaces </small>
                                 </h6>
-                                <select id="spaceName" name="spaceName" class="form-control-xs target" style="height: 50px; width: 200px;">
+                                <select id="spaceName" name="spacesNames" class="form-control-xs target" style="height: 50px; width: 200px;">
                                     <option selected value="">Choose from existing</option>
                                 </select>
                             </div>
