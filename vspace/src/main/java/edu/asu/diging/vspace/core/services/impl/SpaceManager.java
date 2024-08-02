@@ -35,7 +35,6 @@ import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IImageService;
-import edu.asu.diging.vspace.core.services.ILocalizedTextFormDataManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.impl.model.ImageData;
 import edu.asu.diging.vspace.web.staff.forms.LocalizedTextForm;
@@ -78,9 +77,6 @@ public class SpaceManager implements ISpaceManager {
 
     @Autowired
     private SpaceLinkDisplayRepository spaceLinkDisplayRepo;
-
-    @Autowired
-    private ILocalizedTextFormDataManager localizedTextFormDataManager;
 
     @Autowired
     private ILocalizedTextFactory localizedTextFactory;

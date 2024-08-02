@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -24,12 +25,15 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import edu.asu.diging.vspace.config.ExhibitionLanguageConfig;
 import edu.asu.diging.vspace.core.data.ExhibitionRepository;
+import edu.asu.diging.vspace.core.data.LocalizedTextRepository;
 import edu.asu.diging.vspace.core.exception.ExhibitionLanguageDeletionException;
 import edu.asu.diging.vspace.core.exception.LanguageListConfigurationNotFoundException;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
+import edu.asu.diging.vspace.core.model.ILocalizedText;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
+import edu.asu.diging.vspace.core.model.impl.LocalizedText;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ExhibitionManagerTest {
@@ -39,12 +43,15 @@ public class ExhibitionManagerTest {
 
     @Mock
     private ExhibitionLanguageConfig exhibitionLanguageConfig;
+    
+    @Mock
+    private ExhibitionManager serviceToTestMock;
 
     @InjectMocks
     private ExhibitionManager serviceToTest;
     
     @Mock
-    private ExhibitionManager serviceToTestMock;
+    private LocalizedTextRepository localizedTextRepo;
 
     @Before
     public void init() {
@@ -153,7 +160,6 @@ public class ExhibitionManagerTest {
         when(exhibitionLanguageConfig.getExhibitionLanguageList()).thenReturn(mappedLanguages);
         serviceToTest.updateExhibitionLanguages(exhibition, languages, null);
         assertEquals(exhibition.getLanguages().size(), 1);
-
     }
 
     @Test
@@ -224,6 +230,10 @@ public class ExhibitionManagerTest {
         language2.put("label", "Afar");
         mappedLanguages.add(language1);
         mappedLanguages.add(language2);
+        
+        ExhibitionLanguage language = new ExhibitionLanguage();
+        language.setLabel("English");
+        language.setCode("en");
 
         List<String> languages = new ArrayList();
         languages.add("en");
@@ -235,6 +245,10 @@ public class ExhibitionManagerTest {
         assertEquals(exhibition.getLanguages().size(), 2);
 
         languages.remove("en");
+        List<LocalizedText> localizedTexts = new ArrayList();
+        when(localizedTextRepo.findByExhibitionLanguage(any())).thenReturn(localizedTexts);
+        //when(serviceToTestMock.checkIfLocalizedTextsExists(any())).thenReturn(false);
+        
         serviceToTest.updateExhibitionLanguages(exhibition, languages, "aa");
         assertEquals(exhibition.getLanguages().size(),1);
    
@@ -265,17 +279,17 @@ public class ExhibitionManagerTest {
         language.setLabel("English");
         
         
-        when(serviceToTestMock.checkIfLocalizedTextsExists(language)).thenReturn(false);
+        when(serviceToTestMock.checkIfLocalizedTextsExists(any(language.getClass()))).thenReturn(false);
 
         serviceToTest.updateExhibitionLanguages(exhibition, languages, "aa");
         assertEquals(exhibition.getLanguages().size(),2);
         
-
         languages.remove("en");
         Assert.assertThrows(ExhibitionLanguageDeletionException.class,
                 () ->   serviceToTest.updateExhibitionLanguages(exhibition, languages, "aa"));       
         
     }
 
+    
 }
 

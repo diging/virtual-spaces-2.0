@@ -33,7 +33,6 @@ import edu.asu.diging.vspace.core.model.impl.LocalizedText;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
-import edu.asu.diging.vspace.core.services.ILocalizedTextFormDataManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 import edu.asu.diging.vspace.web.staff.forms.LocalizedTextForm;
 import edu.asu.diging.vspace.web.staff.forms.SlideForm;

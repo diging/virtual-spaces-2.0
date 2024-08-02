@@ -20,6 +20,7 @@ import edu.asu.diging.vspace.core.data.LocalizedTextRepository;
 import edu.asu.diging.vspace.core.data.SequenceRepository;
 import edu.asu.diging.vspace.core.data.SlideRepository;
 import edu.asu.diging.vspace.core.exception.SlideDoesNotExistException;
+import edu.asu.diging.vspace.core.factory.impl.SlideFactory;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISlide;
@@ -45,6 +46,9 @@ public class SlideManagerTest {
     
     @Mock
     private ExhibitionManager exhibitionManager;
+    
+    @Mock
+    private SlideFactory slideFactory;
 
 
     @InjectMocks
@@ -205,11 +209,11 @@ public class SlideManagerTest {
 
         LocalizedText locText1 =  new LocalizedText();
         locText1.setId( "ID1");
-        locText1.setText("title");
+        locText1.setText("Title1");
 
         LocalizedText locText2 =  new LocalizedText();
         locText2.setId( "ID2");
-        locText2.setText("title");
+        locText2.setText("Title2");
         when(localizedRextRepo.findById("ID1") ).thenReturn(Optional.of(locText1));
         when(localizedRextRepo.findById("ID2") ).thenReturn(Optional.of(locText2));
         
@@ -217,8 +221,8 @@ public class SlideManagerTest {
         Exhibition exhibition = new Exhibition();
         when(exhibitionManager.getStartExhibition()).thenReturn((IExhibition)exhibition);
         when(slideRepo.save(slide)).thenReturn(slide);
-        assertEquals(locText1.getText(), "title");
-        assertEquals(locText2.getText(), "slide text");
+        assertEquals(locText1.getText(), "Title1");
+        assertEquals(locText2.getText(), "Title2");
     }
     
     @Test
