@@ -12,7 +12,6 @@ import org.mockito.Mock;
 
 import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.factory.impl.SpaceFactory;
-import edu.asu.diging.vspace.core.factory.impl.SpaceFormFactory;
 import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.ILocalizedText;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
@@ -20,6 +19,7 @@ import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.impl.LocalizedText;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.web.staff.forms.SpaceForm;
+import edu.asu.diging.vspace.web.staff.forms.factory.SpaceFormFactory;
 
 public class SpaceFactoryTest {
     

@@ -13,17 +13,23 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import edu.asu.diging.vspace.core.data.SlideRepository;
+import edu.asu.diging.vspace.core.factory.impl.ModuleFactory;
 import edu.asu.diging.vspace.core.factory.impl.SlideFactory;
-import edu.asu.diging.vspace.core.factory.impl.SlideFormFactory;
 import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.ILocalizedText;
+import edu.asu.diging.vspace.core.model.IModule;
+import edu.asu.diging.vspace.core.model.ISlide;
+import edu.asu.diging.vspace.core.model.display.SlideType;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.impl.LocalizedText;
+import edu.asu.diging.vspace.core.model.impl.Module;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.web.staff.forms.SlideForm;
+import edu.asu.diging.vspace.web.staff.forms.factory.LocalizedTextFormFactory;
+import edu.asu.diging.vspace.web.staff.forms.factory.SlideFormFactory;
 
-public class SlideFactoryTest {
+public class SlideFormFactoryTest {
     
     @Mock
     private SlideRepository slideRepo;
@@ -31,11 +37,14 @@ public class SlideFactoryTest {
     @Mock
     private ExhibitionManager exhibitionManager;
     
-    @Mock
-    private SlideFormFactory slideFormFactory;
-    
     @InjectMocks
-    private SlideFactory serviceToTest;
+    private SlideFormFactory serviceToTest;
+    
+    @Mock
+    private ModuleFactory moduleFactory;
+    
+    @Mock
+    private LocalizedTextFormFactory localizedTextFormCreation;
     
     @Before
     public void setUp() {
@@ -63,23 +72,14 @@ public class SlideFactoryTest {
         slidePage.setSlideNames(titleList);       
         slidePage.setSlideDescriptions(slideTextList);
         slidePageList.add(slidePage);
-        
-        
+
         when(slideRepo.findAll()).thenReturn(slidePageList);
-
-        when(exhibitionManager.getStartExhibition()).thenReturn(exhibition);   
-        
-        //when(slideFormFactory.createNewSlideForm(slidePage, exhibition)).thenReturn(slideForm);
-        
-        SlideForm  slideForm =   serviceToTest.createSlide(slidePage, exhibitionManager.getStartExhibition());
-
+        when(exhibitionManager.getStartExhibition()).thenReturn(exhibition);           
+        SlideForm slideForm =   serviceToTest.createNewSlideForm(slidePage, exhibition);
 
         assertEquals(slideForm.getDescriptions().size(), 1);
-
         assertEquals(slideForm.getNames().size(), 1);
-
         assertEquals(slideForm.getDescriptions().get(0).getText(), "slide text");
-
     }
 
 }

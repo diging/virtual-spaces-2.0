@@ -247,7 +247,7 @@ public class ExhibitionManagerTest {
         languages.remove("en");
         List<LocalizedText> localizedTexts = new ArrayList();
         when(localizedTextRepo.findByExhibitionLanguage(any())).thenReturn(localizedTexts);
-        //when(serviceToTestMock.checkIfLocalizedTextsExists(any())).thenReturn(false);
+        when(serviceToTestMock.checkIfLocalizedTextsExists(any())).thenReturn(false);
         
         serviceToTest.updateExhibitionLanguages(exhibition, languages, "aa");
         assertEquals(exhibition.getLanguages().size(),1);

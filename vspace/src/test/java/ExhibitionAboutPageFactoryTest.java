@@ -9,18 +9,18 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import edu.asu.diging.vspace.core.data.ExhibitionAboutPageRepository;
-import edu.asu.diging.vspace.core.factory.impl.AboutPageFormFactory;
 import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.ILocalizedText;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionAboutPage;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.impl.LocalizedText;
-import edu.asu.diging.vspace.core.services.impl.ExhibitionAboutPageManager;
 import edu.asu.diging.vspace.core.services.impl.ExhibitionManager;
 import edu.asu.diging.vspace.web.staff.forms.AboutPageForm;
+import edu.asu.diging.vspace.web.staff.forms.factory.AboutPageFormFactory;
 
 public class ExhibitionAboutPageFactoryTest {
+    
     @InjectMocks
     private AboutPageFormFactory serviceToTest;
     
