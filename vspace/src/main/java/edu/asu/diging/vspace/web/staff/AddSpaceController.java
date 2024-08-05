@@ -62,8 +62,7 @@ public class AddSpaceController {
     @RequestMapping(value = "/staff/space/add", method = RequestMethod.POST)
     public String addSpace(Model model, @ModelAttribute SpaceForm spaceForm, @RequestParam("file") MultipartFile file,
             Principal principal, @RequestParam(value = "imageId", required=false) String imageId, RedirectAttributes redirectAttrs) throws IOException {
-      
-        ISpace space = new Space();
+        ISpace space;
         /*
          * Check if the default name is provided. If a non-default name is provided, create a new form without default values
          */
@@ -82,6 +81,8 @@ public class AddSpaceController {
         } 
         
         space.setSpaceStatus(SpaceStatus.UNPUBLISHED);      
+        exhibitionManager.getStartExhibition();
+
         byte[] bgImage = null;
         String filename = null;
         if (file != null) {
