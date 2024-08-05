@@ -45,4 +45,6 @@ public interface IExhibitionManager {
     
     IExhibitionLanguage getDefaultLanguage(IExhibition exhibition);
     
+    IExhibitionLanguage getLanguageFromCode(IExhibition exhibition, String code);
+    
 }

@@ -198,5 +198,10 @@ public class ExhibitionManager implements IExhibitionManager {
     public IExhibitionLanguage getDefaultLanguage(IExhibition exhibition){
         return exhibitionLanguageRepository.findByExhibitionAndIsDefault(exhibition);
     }
+    
+    @Override
+    public IExhibitionLanguage getLanguageFromCode(IExhibition exhibition, String code) {
+        return exhibitionLanguageRepository.findByExhibitionAndCode(exhibition, code);
+    }
 
 }
