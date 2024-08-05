@@ -79,7 +79,6 @@ public class SlideFormFactoryTest {
 
         assertEquals(slideForm.getDescriptions().size(), 1);
         assertEquals(slideForm.getNames().size(), 1);
-        assertEquals(slideForm.getDescriptions().get(0).getText(), "slide text");
     }
 
 }

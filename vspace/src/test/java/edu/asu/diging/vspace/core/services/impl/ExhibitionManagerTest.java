@@ -250,8 +250,7 @@ public class ExhibitionManagerTest {
         when(serviceToTestMock.checkIfLocalizedTextsExists(any())).thenReturn(false);
         
         serviceToTest.updateExhibitionLanguages(exhibition, languages, "aa");
-        assertEquals(exhibition.getLanguages().size(),1);
-   
+        assertEquals(exhibition.getLanguages().size(),1);   
     }
     
     @Test
