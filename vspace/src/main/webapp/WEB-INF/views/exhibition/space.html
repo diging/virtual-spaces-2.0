@@ -671,11 +671,21 @@ $(document).ready(function() {
                         </div>
                         <div class="text-Div" >
                             <h3 class="spaceName">
-                                [[${space.name}]] <span
+                            <span th:if="${spaceName==null}">[[${space.name}]]</span>
+                            <span th:if="${spaceName!=null}">[[${spaceName.getText()}]]</span>
+                            
+                            <span
                                     th:if="${!#strings.isEmpty(space.description)}"
                                     class="icon-info-circle"
                                     style="font-size: 20px; color: rgba(150, 45, 62, 1);"
                                     th:onclick="openSpaceDescription()"></span>
+                            
+                            <span
+                                    th:if="${spaceDescription!=null && !#strings.isEmpty(spaceDescription.getText())}"
+                                    class="icon-info-circle"
+                                    style="font-size: 20px; color: rgba(150, 45, 62, 1);"
+                                    th:onclick="openSpaceDescription()"></span>
+                                    
                                 <a sec:authorize="isAuthenticated()"
                                     th:href="@{|/staff/space/${space?.id}|}"><span
                                     style="display: inline-block; color: rgba(150, 45, 62, 1);">

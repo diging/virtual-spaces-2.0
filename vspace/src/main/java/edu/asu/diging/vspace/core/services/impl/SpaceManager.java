@@ -23,12 +23,15 @@ import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.factory.ILocalizedTextFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceDisplayFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
+import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.ILocalizedText;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.display.ISpaceDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.SpaceDisplay;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
+import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
+import edu.asu.diging.vspace.core.model.impl.LocalizedText;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
@@ -44,7 +47,7 @@ import edu.asu.diging.vspace.web.staff.forms.SpaceForm;
 @Service
 @PropertySource("classpath:/config.properties")
 public class SpaceManager implements ISpaceManager {
-
+    
     @Autowired
     private SpaceRepository spaceRepo;
 
@@ -305,7 +308,11 @@ public class SpaceManager implements ISpaceManager {
      */
     @Override
     public void addSpaceDetails(ISpace space, LocalizedTextForm name, List<ILocalizedText> localizedTextList) {
-        localizedTextFactory.createLocalizedText(space, name, localizedTextList);
+        ILocalizedText localizedText = localizedTextFactory.createLocalizedText(space, name, localizedTextList);
+        if(!localizedTextList.contains(localizedText)) {
+            localizedTextList.add(localizedText);
+        }
+        
     }
     
     @Override
@@ -318,11 +325,21 @@ public class SpaceManager implements ISpaceManager {
         addSpaceDetails(space,spaceForm.getDefaultName(), names);
         addSpaceDetails(space,spaceForm.getDefaultDescription(), descriptions);
         for(LocalizedTextForm title:spaceForm.getNames()) {   
-            addSpaceDetails(space,title, names);
+            addSpaceDetails(space,title, space.getSpaceNames());
         }
         for(LocalizedTextForm text:spaceForm.getDescriptions()) {
-            addSpaceDetails(space,text, descriptions);
+            addSpaceDetails(space,text, space.getSpaceDescriptions());
         }
+    }
+    
+    @Override
+    public LocalizedText getLanguageLocalizedSpaceName(ISpace space, IExhibitionLanguage language) {
+        return spaceRepo.findNamesBySpaceAndExhibitionLanguage((Space) space, (ExhibitionLanguage) language);
+    }
+    
+    @Override
+    public LocalizedText getLanguageLocalizedSpaceDescription(ISpace space, IExhibitionLanguage language) {
+        return spaceRepo.findDescriptionsBySpaceAndExhibitionLanguage((Space) space, (ExhibitionLanguage) language);
     }
    
 }

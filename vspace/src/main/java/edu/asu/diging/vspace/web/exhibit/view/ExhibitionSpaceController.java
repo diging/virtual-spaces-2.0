@@ -16,6 +16,7 @@ import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionAboutPage;
+import edu.asu.diging.vspace.core.model.impl.LocalizedText;
 import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager;
@@ -129,6 +130,9 @@ public class ExhibitionSpaceController {
         } else {
             spaceLinks = spaceLinkManager.getSpaceLinkForGivenOrNullSpaceStatus(id, SpaceStatus.PUBLISHED);
         }
+        
+        LocalizedText spaceName = spaceManager.getLanguageLocalizedSpaceName(space, exhibitionLanguage);
+        LocalizedText spaceDescription = spaceManager.getLanguageLocalizedSpaceDescription(space, exhibitionLanguage);
         List<ISpaceLinkDisplay> filteredSpaceLinks = spaceLinks.stream().filter(
                 spaceLinkDisplayObj -> !spaceLinkDisplayObj.getLink().getTargetSpace().isHideIncomingLinks())
                 .collect(Collectors.toList());
@@ -136,8 +140,9 @@ public class ExhibitionSpaceController {
         model.addAttribute("display", spaceDisplayManager.getBySpace(space));
         model.addAttribute("externalLinkList", externalLinkManager.getLinkDisplays(id));
         model.addAttribute("language", exhibitionLanguage);
-        model.addAttribute("spaceForm",spaceFormFactory.createNewSpaceForm(space, exhibition));
-
+        model.addAttribute("spaceName",spaceName);
+        model.addAttribute("spaceDescription",spaceDescription);
+        
         if (sequenceHistory.hasHistory()) {
             sequenceHistory.flushFromHistory();
         }

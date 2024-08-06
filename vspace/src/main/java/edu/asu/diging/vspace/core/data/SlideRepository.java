@@ -10,8 +10,11 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import edu.asu.diging.vspace.core.model.ISlide;
+import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
+import edu.asu.diging.vspace.core.model.impl.LocalizedText;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
 import edu.asu.diging.vspace.core.model.impl.Slide;
+import edu.asu.diging.vspace.core.model.impl.Space;
 
 @Repository
 @JaversSpringDataAuditable
@@ -25,5 +28,11 @@ public interface SlideRepository extends PagingAndSortingRepository<Slide, Strin
 
     Page<ISlide> findDistinctByNameContainingOrDescriptionContaining(Pageable requestedPage, String name,
             String description);
+    
+    @Query("SELECT distinct l FROM Slide s JOIN s.slideNames l WHERE l.exhibitionLanguage=?2 AND s=?1")
+    public LocalizedText findNamesBySlideAndExhibitionLanguage(Slide slide, ExhibitionLanguage language);
+
+    @Query("SELECT distinct l FROM Slide s JOIN s.slideDescriptions l WHERE l.exhibitionLanguage=?2 AND s=?1")
+    public LocalizedText findDescriptionsBySlideAndExhibitionLanguage(Slide slide, ExhibitionLanguage language);
 
 }

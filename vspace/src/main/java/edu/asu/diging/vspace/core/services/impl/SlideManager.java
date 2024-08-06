@@ -23,15 +23,19 @@ import edu.asu.diging.vspace.core.factory.impl.ChoiceFactory;
 import edu.asu.diging.vspace.core.factory.impl.SlideFactory;
 import edu.asu.diging.vspace.core.model.IBranchingPoint;
 import edu.asu.diging.vspace.core.model.IChoice;
+import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.ILocalizedText;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISlide;
+import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.display.SlideType;
 import edu.asu.diging.vspace.core.model.impl.BranchingPoint;
 import edu.asu.diging.vspace.core.model.impl.Choice;
+import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.impl.LocalizedText;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
 import edu.asu.diging.vspace.core.model.impl.Slide;
+import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 import edu.asu.diging.vspace.web.staff.forms.LocalizedTextForm;
@@ -213,5 +217,15 @@ public class SlideManager implements ISlideManager {
         slideForm.setName(slide.getName());
         slideForm.setDescription(slide.getDescription());
         return slideForm;
+    }
+    
+    @Override
+    public LocalizedText getLanguageLocalizedSlideName(ISlide slide, IExhibitionLanguage language) {
+        return slideRepo.findNamesBySlideAndExhibitionLanguage((Slide) slide, (ExhibitionLanguage) language);
+    }
+    
+    @Override
+    public LocalizedText getLanguageLocalizedSlideDescription(ISlide slide, IExhibitionLanguage language) {
+        return slideRepo.findDescriptionsBySlideAndExhibitionLanguage((Slide) slide, (ExhibitionLanguage) language);
     }
 }
