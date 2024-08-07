@@ -15,11 +15,9 @@ import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
-import edu.asu.diging.vspace.core.model.impl.ExhibitionAboutPage;
 import edu.asu.diging.vspace.core.model.impl.LocalizedText;
 import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
-import edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IExternalLinkManager;
 import edu.asu.diging.vspace.core.services.IModuleLinkManager;
@@ -27,7 +25,6 @@ import edu.asu.diging.vspace.core.services.ISpaceDisplayManager;
 import edu.asu.diging.vspace.core.services.ISpaceLinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.ISpaceTextBlockManager;
-import edu.asu.diging.vspace.core.services.impl.ExhibitionManager;
 
 @Controller
 public class ExhibitionSpaceController {

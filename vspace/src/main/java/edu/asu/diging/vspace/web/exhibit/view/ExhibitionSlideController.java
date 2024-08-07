@@ -17,6 +17,7 @@ import edu.asu.diging.vspace.core.exception.SlidesInSequenceNotFoundException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.exception.SpaceNotFoundException;
 import edu.asu.diging.vspace.core.model.IExhibition;
+import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
@@ -149,5 +150,93 @@ public class ExhibitionSlideController {
         model.addAttribute("showAlert", true);
         model.addAttribute("message", "Sorry, module has not been configured yet.");
         return "/exhibition/module";
+    }
+    
+    @RequestMapping(value = {
+            "/exhibit/{spaceId}/module/{moduleId}/sequence/{sequenceId}/slide/{slideId}/{languageCode}",
+            "/preview/{"+ExhibitionConstants.PREVIEW_ID+"}/{spaceId}/module/{moduleId}/sequence/{sequenceId}/slide/{slideId}/{languageCode}"
+            }, method = RequestMethod.GET)
+    public String localizedSlide(Model model, @PathVariable("slideId") String slideId, @PathVariable("moduleId") String moduleId,
+            @PathVariable("sequenceId") String sequenceId, @PathVariable("spaceId") String spaceId,
+            @PathVariable("languageCode") String languageCode,
+            @PathVariable(name = ExhibitionConstants.PREVIEW_ID, required = false) String previewId,
+            @RequestParam(required = false, name = "back") boolean back,
+            @RequestParam(required = false, name = "branchingPoint") String branchingPointId,
+            @RequestParam(required = false, name = "previousSequenceId") String previousSequenceId)
+            throws ModuleNotFoundException, SequenceNotFoundException, SlidesInSequenceNotFoundException,
+            SlideNotFoundException, SpaceDoesNotExistException, SpaceNotFoundException {
+
+        ISpace space = spaceManager.getSpace(spaceId);
+        if (space == null) {
+            return "redirect:/exhibit/404";
+        }
+        IModule module = moduleManager.getModule(moduleId);
+        model.addAttribute("module", module);
+        if (module == null) {
+            return "redirect:/exhibit/404";
+        }
+        if (module.getStartSequence() == null) {
+            return moduleNotConfigured(model);
+        }
+        String startSequenceId = module.getStartSequence().getId();
+        model.addAttribute("startSequenceId", startSequenceId);
+        IExhibition exhibition = exhibitManager.getStartExhibition();
+        model.addAttribute("exhibitionConfig", exhibition);
+        ISequence sequenceExist = moduleManager.checkIfSequenceExists(moduleId, sequenceId);
+        if (sequenceExist == null) {
+            throw new SequenceNotFoundException(sequenceId);
+        }
+        List<ISlide> sequenceSlides = sequenceManager.getSequence(sequenceId).getSlides();
+
+        boolean slideExist = sequenceSlides.stream().anyMatch(slide -> slide.getId().equals(slideId));
+        if (!slideExist) {
+            throw new SlideNotFoundException(slideId);
+        }
+
+        if (sequenceSlides.size() == 0) {
+            throw new SlidesInSequenceNotFoundException();
+        }
+        model.addAttribute("firstSlide", module.getStartSequence().getSlides().get(0).getId());
+        String nextSlideId = "";
+        String prevSlideId = "";
+
+        ISlide currentSlide = slideManager.getSlide(slideId);
+        int slideIndex = sequenceSlides.indexOf(currentSlide);
+
+        int slideSize = sequenceSlides.size();
+        if (slideSize > slideIndex + 1) {
+            nextSlideId = sequenceSlides.get(slideIndex + 1).getId();
+        }
+        if (slideIndex > 0) {
+            prevSlideId = sequenceSlides.get(slideIndex - 1).getId();
+        }
+        model.addAttribute("sequences", moduleManager.getModuleSequences(moduleId));
+        model.addAttribute("sequence", sequenceExist);
+        model.addAttribute("slides", sequenceSlides);
+        model.addAttribute("currentSequenceId", sequenceId);
+        model.addAttribute("nextSlide", nextSlideId);
+        model.addAttribute("prevSlide", prevSlideId);
+
+        model.addAttribute("currentSlideCon", currentSlide);
+        if (currentSlide instanceof BranchingPoint) {
+            handleBranchingPoint(model, slideId, back, currentSlide);
+        }
+        if (branchingPointId != null && !branchingPointId.isEmpty()) {
+            sequenceHistory.addToHistory(previousSequenceId, branchingPointId);
+        }
+        if (sequenceHistory.hasHistory()) {
+            model.addAttribute("showBackToPreviousChoice", true);
+            model.addAttribute("previousSequenceId", sequenceHistory.peekSequenceId());
+            model.addAttribute("previousBranchingPoint",
+                    ((BranchingPoint) slideManager.getSlide(sequenceHistory.peekBranchingPointId())));
+        }
+        IExhibitionLanguage exhibitionLanguage = exhibitManager.getLanguageFromCode(exhibition, languageCode);
+        model.addAttribute("numOfSlides", sequenceSlides.size());
+        model.addAttribute("currentNumOfSlide", slideIndex + 1);
+        model.addAttribute("spaceId", spaceId);
+        model.addAttribute("spaceName", spaceManager.getSpace(spaceId).getName());
+        model.addAttribute("slideName", slideManager.getLanguageLocalizedSlideName(currentSlide, exhibitionLanguage));
+        model.addAttribute("slideDescription", slideManager.getLanguageLocalizedSlideDescription(currentSlide, exhibitionLanguage));
+        return "exhibition/module";
     }
 }

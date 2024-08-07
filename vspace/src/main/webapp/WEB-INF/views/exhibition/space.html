@@ -675,7 +675,7 @@ $(document).ready(function() {
                             <span th:if="${spaceName!=null}">[[${spaceName.getText()}]]</span>
                             
                             <span
-                                    th:if="${!#strings.isEmpty(space.description)}"
+                                    th:if="${spaceDescription==null && !#strings.isEmpty(space.description)}"
                                     class="icon-info-circle"
                                     style="font-size: 20px; color: rgba(150, 45, 62, 1);"
                                     th:onclick="openSpaceDescription()"></span>
@@ -700,9 +700,10 @@ $(document).ready(function() {
                                 id="bgImage" th:src="@{'/api/image/'+${space.image?.id}}"/>
                         </div>
                     </div>
-                    <div id="rightContent" th:if="${space.description!=NULL}">
+                    <div id="rightContent" th:if="${spaceDescription!=null || space.description!=NULL}">
                         <span class="icon-circle-close closebtn" th:onclick="closeSpaceDescription()"></span>
-                        <div class="spaceDescription">[[${space.description}]]</div>
+                        <div th:if="${spaceDescription==null}" class="spaceDescription">[[${space.description}]]</div>
+                        <div th:if="${spaceDescription!=null}" class="spaceDescription">[[${spaceDescription.getText()}]]</div>
                     </div>
                 </div>
             </div>
