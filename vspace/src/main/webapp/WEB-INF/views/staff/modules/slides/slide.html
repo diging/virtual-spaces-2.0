@@ -152,14 +152,17 @@
             }
 
             function getSelectedSpace(blockId){
-            	let selectedSpaceName;
 	            $.ajax({
 		            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space/'})]"+ blockId,
 		            type: 'GET',
 		            success: function(result) {
-		            	$("#selectedSpace").text(result.name);
+		            	console.log(result);
+		            	$("#selectedSpace").text(result.space.name)
+		            	$("#editSpaceBlock").text(result.title)
+		            	console.log(result.space.id)
+		            	$("#editSpaceName").value = result.space.id;
 		            },
-		            error: function(data) {
+		      		error: function(data) {
 				            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
 				            $('.error').append(alert);
 				            $(".error").delay(4000).slideUp(500, function(){
@@ -167,7 +170,6 @@
 		            	});
 		            }
 	            });
-	            return selectedSpaceName;
             }
             
             function textBlockDoubleClick(e){
@@ -194,7 +196,7 @@
 	            $(e.target).closest('.SpaceDivStaff').addClass("open");
 	            defaultValue = $("div.open p:eq(0)").text();
 	            var blockId = $(this).closest("div").attr("id");
-	            getSelectedSpace(blockId);
+	            getSelectedSpace(blockId);//"editSpaceBlock"
 	            $("#editSpaceAlert").show();
 	            //remove card border
 	            $(".open").css('display', 'none');
@@ -1131,22 +1133,20 @@
                     });
                 });
                 
-                function getSpaceById(spaceId) {
+                function getSpaceById(spaceId, callback) {
                     $.ajax({
-                        url:  [[@{|/staff/spaces/search|}]],
+                        url: [[@{|/staff/spaces/search|}]],
                         dataType: 'json',
                         success: function(result) {
-                            let spaceName = null; 
+                            let spaceName = null;
                             for (let i = 0; i < result.length; i++) {
-                                const space = result[i];                               
+                                const space = result[i];
                                 if (space.id === spaceId) {
                                     spaceName = space.name;
-                                    console.log("spacename");
-                                    console.log(spaceName)
                                     break;
                                 }
                             }
-                            
+                            callback(spaceName);
                         },
                         error: function(data) {
                             var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
@@ -1154,6 +1154,8 @@
                             $(".error").delay(4000).slideUp(500, function() {
                                 $(".error").empty();
                             });
+                            // Call the callback with null in case of error
+                            callback(null);
                         }
                     });
                 }
@@ -1167,33 +1169,34 @@
 		            var title = document.getElementById('spaceTitle').value;
 		            var selectedSpace = document.getElementById('spaceName');
 		            if (selectedSpace.selectedIndex != -1 && selectedSpace.value != ""){
+
 			            var spaceId = selectedSpace.options[selectedSpace.selectedIndex].value;
-			            console.log("SpaceIDA");
-			            console.log(spaceId)
 			            formData.append('title', title);
 			            formData.append('spaceId', spaceId);
-			            $.ajax({
-				            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space?' +${_csrf.parameterName}+'='+${_csrf.token}})]", 
-				            type: 'POST',
-				            cache       : false,
-				            contentType : false,
-				            processData : false,
-				            data: formData,
-				            enctype: 'multipart/form-data',
-				            success: function(data) {
-					            var space = $('<div style="word-break:break-word;" id="'+ data +'" class="SpaceDivStaff tab row"><label>Title: </label><p class="col-md-10">'+title+'</p> <div style = "display:flex; flex-direction: row;width: 100%;"><label>Space: </label><p class="col-md-10">'+ "Space" +'</p></div>'+'<input type="hidden" id="deleteSpaceId" value="'+data+'" /><a class="btn deleteSpace col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a></div>');
-					
-					            $(space[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(spaceBlockDoubleClick);
-					            $('#slideSpace').append(space);
-				            },
-				            error: function(data) {
-					            if (data.status == 403){
-					            	$("#loginAlert").show();
-					            } else {
-						            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-						            $('.error').append(alert);
+			            getSpaceById(spaceId, function(spaceName){
+				            $.ajax({
+					            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space?' +${_csrf.parameterName}+'='+${_csrf.token}})]", 
+					            type: 'POST',
+					            cache       : false,
+					            contentType : false,
+					            processData : false,
+					            data: formData,
+					            enctype: 'multipart/form-data',
+					            success: function(data) {
+						            var space = $('<div style="word-break:break-word;" id="'+ data +'" class="SpaceDivStaff tab row"><label>Title: </label><p class="col-md-10">'+title+'</p> <div style = "display:flex; flex-direction: row;width: 100%;"><label>Space: </label><p class="col-md-10">'+ spaceName +'</p></div>'+'<input type="hidden" id="deleteSpaceId" value="'+data+'" /><a class="btn deleteSpace col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a></div>');
+						
+						            $(space[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(spaceBlockDoubleClick);
+						            $('#slideSpace').append(space);
+					            },
+					            error: function(data) {
+						            if (data.status == 403){
+						            	$("#loginAlert").show();
+						            } else {
+							            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+							            $('.error').append(alert);
+						            }
 					            }
-				            }
+				            });
 			            });
 		            }
 	            });
@@ -1464,8 +1467,8 @@
 		            var formData = new FormData();
 		            var blockId = $(".open").attr("id");
 		            formData.append('spaceBlockId', blockId);
-		            formData.append('spaceId', spaceId);
 		            formData.append('spaceBlockTitle', text);
+		            formData.append('spaceId', spaceId);
 		            $("#editSpaceAlert").hide();
 		            $.ajax({
 			            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space/edit?'+${_csrf.parameterName}+'='+${_csrf.token}})]",

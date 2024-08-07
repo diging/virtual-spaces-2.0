@@ -21,13 +21,13 @@ public class SpaceBlockController {
     private IContentBlockManager contentBlockManager;
     
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/space/{blockId}", method = RequestMethod.GET)
-    public ResponseEntity<ISpace> getSpaceBlockSpace(@PathVariable("id") String slideId,
+    public ResponseEntity<ISpaceBlock> getSpaceBlockSpace(@PathVariable("id") String slideId,
             @PathVariable("blockId") String blockId) throws IOException {
         ISpaceBlock spaceBlock = contentBlockManager.getSpaceBlock(blockId);
         if(spaceBlock == null) {
-            return new ResponseEntity<ISpace>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<ISpaceBlock>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<ISpace>(spaceBlock.getSpace(),HttpStatus.OK);
+        return new ResponseEntity<ISpaceBlock>(spaceBlock,HttpStatus.OK);
     }
 
 }
