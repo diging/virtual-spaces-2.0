@@ -29,7 +29,6 @@ import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.display.SlideType;
 import edu.asu.diging.vspace.core.model.impl.BranchingPoint;
 import edu.asu.diging.vspace.core.model.impl.Choice;
-import edu.asu.diging.vspace.core.model.impl.LocalizedText;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
@@ -58,13 +57,7 @@ public class SlideManager implements ISlideManager {
 
     @Autowired
     private ChoiceFactory choiceFactory;
-    
-    @Autowired
-    private SlideFormFactory slideFormFactory;
-    
-    @Autowired
-    private IExhibitionManager exhibitionManager;
-    
+       
     @Autowired
     private ILocalizedTextFactory localizedTextFactory;
 
@@ -189,7 +182,6 @@ public class SlideManager implements ISlideManager {
         slide.setDescription(slideForm.getDefaultDescription().getText());
         List<ILocalizedText> localizedTextNames = slide.getSlideNames();
         List<ILocalizedText> localizedTextDescriptions = slide.getSlideDescriptions();
-        
         addSlideLocalizedText(slide,slideForm.getDefaultName(), localizedTextNames);
         addSlideLocalizedText(slide,slideForm.getDefaultDescription(), localizedTextDescriptions);
 
@@ -198,20 +190,11 @@ public class SlideManager implements ISlideManager {
         }
         for(LocalizedTextForm text: slideForm.getDescriptions()) {
             addSlideLocalizedText(slide, text, localizedTextDescriptions);
-        }   
+        }
     }
 
     @Override
     public void addSlideLocalizedText(ISlide slide, LocalizedTextForm localizedTextFormData, List<ILocalizedText> localizedTextList) {
         localizedTextFactory.createLocalizedText(slide, localizedTextFormData, localizedTextList);
-    }
-
-    @Override
-    public SlideForm getSlideForm(String slideId) {
-        ISlide slide = getSlide(slideId);
-        SlideForm slideForm = slideFormFactory.createNewSlideForm(slide, exhibitionManager.getStartExhibition());   
-        slideForm.setName(slide.getName());
-        slideForm.setDescription(slide.getDescription());
-        return slideForm;
     }
 }

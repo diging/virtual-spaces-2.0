@@ -42,6 +42,4 @@ public interface ISlideManager {
 
     void addSlideLocalizedText(ISlide slide, LocalizedTextForm localizedTextFormData, List<ILocalizedText> localizedTextList);
 
-    SlideForm getSlideForm(String slideId);
-
 }
