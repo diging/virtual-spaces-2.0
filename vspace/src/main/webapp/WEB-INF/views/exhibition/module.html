@@ -32,6 +32,11 @@
             $(".nav-bar").css('position','fixed').css('width','100%').css('z-index','125');
          });
          
+         function changeLanguage(language){
+             var url = "[(@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${currentSequenceId}+'/slide/'+${currentSlideId}})]";
+             window.location.href = url+"/"+language.value;            
+         }
+         
          function imageFullScreen(){
 			   var elem = document.getElementById("Module_1");
 			   $(".imgFullScreen").hide();

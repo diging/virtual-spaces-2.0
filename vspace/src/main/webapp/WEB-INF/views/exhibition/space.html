@@ -213,10 +213,9 @@ $(document).ready(function() {
 	console.log("color" + color);
 	textBlock.addEventListener('focus-visible', function(e) {
 		e.target.style.outline = "2px solid blue";
-	});
+	})
 
 }
-
 </script>
 </head>
 
@@ -224,7 +223,12 @@ $(document).ready(function() {
     <div id="mainDivContent" layout:fragment="content">
         <script th:inline="javascript">
 		//# sourceURL=click.js
-			
+		
+		function changeLanguage(language){
+			var url = "[(@{'/exhibit/space/'+${space.id}+'/'})]";
+			window.location.href = url+language.value;            
+		}
+						
 		function toggleImgSize(isClicked){
 			var maxImgWidth = $(window).width();
 			var spaceWidth = $("#bgImage").css("width");
@@ -371,6 +375,11 @@ $(document).ready(function() {
 		    	toggleImgSize(false);
 		});
 		
+		var lang = [[${languages}]];
+		function selectLanguages(){
+			console.log("langg ", lang);
+		}
+        
 		function drawLinks() {
 			var spaceLinks = [[${spaceLinks}]];
 			var moduleLinks = [[${moduleList}]];
@@ -540,6 +549,8 @@ $(document).ready(function() {
               
                 	
 		}
+		
+		
 		</script>
 		
 		<div sec:authorize="hasAnyRole('ROLE_STAFF','ROLE_ADMIN')" class="alert alert-warning alert-dismissible fade show" role="alert" style="margin: -60px 0 60px; z-index: 2;">

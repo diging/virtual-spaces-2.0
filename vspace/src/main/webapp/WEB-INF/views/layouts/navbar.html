@@ -16,10 +16,12 @@
 					      	<em style="color: var(--dark-grey); font-size: 12px; margin-left: 10px">logged in as <span th:text="${#authentication.name}"></span></em>
 					    </div>
 		        	</li>
-                    <span>
-                    <a th:href="@{/exhibit/about}">
-                    <i class="fa fa-language secondary" style="font-size: 22px; cursor: pointer; font-weight: bold;
-                                   margin-right:10px; margin-left:-10px; padding-right:15px; "></i></a></span>
+                    <li class="nav-item active" style="padding-right: 20px;">
+                    <select onchange="changeLanguage(this)" id="languageSelected" name="languageSelected">
+                        <option th:each="language : ${languages}" th:value=${language.getCode()} th:text=${language.getLabel()} th:selected="${#strings.equals(language.code, languageCode)}">
+                        </option>
+                    </select>
+                    </li>
 		        	<span style="padding-bottom:4px" th:if="${aboutPageConfigured==true}">
 		        	<a th:href="@{/exhibit/about}">
 		        	<span title="About" class = "icon-info secondary" style="font-size: 22px; cursor: pointer; font-weight: bold;

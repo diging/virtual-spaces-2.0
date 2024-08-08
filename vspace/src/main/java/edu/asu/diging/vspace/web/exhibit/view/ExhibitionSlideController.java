@@ -117,6 +117,10 @@ public class ExhibitionSlideController {
         model.addAttribute("currentSequenceId", sequenceId);
         model.addAttribute("nextSlide", nextSlideId);
         model.addAttribute("prevSlide", prevSlideId);
+        model.addAttribute("languages", exhibition.getLanguages());
+        
+        IExhibitionLanguage language = exhibitManager.getDefaultLanguage(exhibition);
+        model.addAttribute("languageCode",language.getCode());
 
         model.addAttribute("currentSlideCon", currentSlide);
         if (currentSlide instanceof BranchingPoint) {
@@ -136,6 +140,7 @@ public class ExhibitionSlideController {
         model.addAttribute("currentNumOfSlide", slideIndex + 1);
         model.addAttribute("spaceId", spaceId);
         model.addAttribute("spaceName", spaceManager.getSpace(spaceId).getName());
+        model.addAttribute("currentSlideId",slideId);
         return "exhibition/module";
     }
 
@@ -237,6 +242,10 @@ public class ExhibitionSlideController {
         model.addAttribute("spaceName", spaceManager.getSpace(spaceId).getName());
         model.addAttribute("slideName", slideManager.getLanguageLocalizedSlideName(currentSlide, exhibitionLanguage));
         model.addAttribute("slideDescription", slideManager.getLanguageLocalizedSlideDescription(currentSlide, exhibitionLanguage));
+        model.addAttribute("languages", exhibition.getLanguages());
+        model.addAttribute("languageCode",languageCode);
+        model.addAttribute("currentSlideId",slideId);
+        
         return "exhibition/module";
     }
 }

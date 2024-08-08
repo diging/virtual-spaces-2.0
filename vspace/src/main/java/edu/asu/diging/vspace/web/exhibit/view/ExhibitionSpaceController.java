@@ -15,6 +15,7 @@ import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
+import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.impl.LocalizedText;
 import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
@@ -88,11 +89,14 @@ public class ExhibitionSpaceController {
         List<ISpaceLinkDisplay> filteredSpaceLinks = spaceLinks.stream().filter(
                 spaceLinkDisplayObj -> !spaceLinkDisplayObj.getLink().getTargetSpace().isHideIncomingLinks())
                 .collect(Collectors.toList());
+        IExhibitionLanguage language = exhibitManager.getDefaultLanguage(exhibition);
         model.addAttribute("spaceLinks", filteredSpaceLinks);
         model.addAttribute("display", spaceDisplayManager.getBySpace(space));
         model.addAttribute("externalLinkList", externalLinkManager.getLinkDisplays(id));
-        model.addAttribute("defaultLanguage", exhibitManager.getDefaultLanguage(exhibition));
+        model.addAttribute("defaultLanguage", language);
         model.addAttribute("spaceForm",spaceFormFactory.createNewSpaceForm(space, exhibition));
+        model.addAttribute("languages", exhibition.getLanguages());
+        model.addAttribute("languageCode", language.getCode());
 
         if (sequenceHistory.hasHistory()) {
             sequenceHistory.flushFromHistory();
@@ -139,6 +143,8 @@ public class ExhibitionSpaceController {
         model.addAttribute("language", exhibitionLanguage);
         model.addAttribute("spaceName",spaceName);
         model.addAttribute("spaceDescription",spaceDescription);
+        model.addAttribute("languages", exhibition.getLanguages());
+        model.addAttribute("languageCode",languageCode);
         
         if (sequenceHistory.hasHistory()) {
             sequenceHistory.flushFromHistory();
