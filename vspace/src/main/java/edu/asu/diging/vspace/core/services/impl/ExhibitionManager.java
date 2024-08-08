@@ -74,19 +74,26 @@ public class ExhibitionManager implements IExhibitionManager {
         return results;
     }
 
+    /**
+     * Returns the start exhibition. If it does not exist, a new exhibition is created.
+     */
     @Override
     public IExhibition getStartExhibition() {
         // for now we just take the first one created, there shouldn't be more than one
         List<Exhibition> exhibitions = exhibitRepo.findAllByOrderByIdAsc();
+        Exhibition exhibition;
         if (exhibitions.size() > 0) {
-            Exhibition exhibition = exhibitions.get(0);
+            exhibition = exhibitions.get(0);
             String previewId = exhibition.getPreviewId();
             if(previewId==null || previewId.isEmpty()) {
                 exhibitFactory.updatePreviewId(exhibition);
             }
-            return exhibition;
         }
-        return null;
+        else {
+            exhibition = (Exhibition) exhibitFactory.createExhibition();
+            storeExhibition(exhibition);
+        }
+        return exhibition;
     }
     
 
@@ -146,7 +153,7 @@ public class ExhibitionManager implements IExhibitionManager {
 
         return exhibitionLanguage;
     }
-	
+
     @Override
     public IExhibition updateSpaceOrderMode(ExhibitionSpaceOrderMode mode) {
         Exhibition exhibition = (Exhibition) getStartExhibition();

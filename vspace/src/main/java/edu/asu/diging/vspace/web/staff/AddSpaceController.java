@@ -20,6 +20,7 @@ import edu.asu.diging.vspace.core.factory.ISpaceFactory;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
+import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
@@ -38,7 +39,9 @@ public class AddSpaceController {
 
     @Autowired
     private IImageService imageService;
-
+    
+    @Autowired
+    private IExhibitionManager exhibitManager;    
 
     @RequestMapping(value = "/staff/space/add", method = RequestMethod.GET)
     public String showAddSpace(Model model) {
@@ -53,6 +56,8 @@ public class AddSpaceController {
             Principal principal, @RequestParam(value = "imageId", required=false) String imageId, RedirectAttributes redirectAttrs) throws IOException {
         ISpace space = spaceFactory.createSpace(spaceForm);
         space.setSpaceStatus(SpaceStatus.UNPUBLISHED);
+        exhibitManager.getStartExhibition();
+        
         byte[] bgImage = null;
         String filename = null;
         if (file != null) {
