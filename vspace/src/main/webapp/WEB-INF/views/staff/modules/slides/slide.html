@@ -50,6 +50,7 @@
             var contentCount = [[${#lists.size(slideContents)}]];
             var markDown = null;
             var defaultValue;
+            var currentSpaceId;
             var addVideoClk=0;
             var editVideoClk=0;
             
@@ -151,25 +152,23 @@
                 $(this).removeClass("hova");
             }
 
-            function getSelectedSpace(blockId){
-	            $.ajax({
-		            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space/'})]"+ blockId,
-		            type: 'GET',
-		            success: function(result) {
-		            	console.log(result);
-		            	$("#selectedSpace").text(result.space.name)
-		            	$("#editSpaceBlock").text(result.title)
-		            	console.log(result.space.id)
-		            	$("#editSpaceName").value = result.space.id;
-		            },
-		      		error: function(data) {
-				            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-				            $('.error').append(alert);
-				            $(".error").delay(4000).slideUp(500, function(){
-				            $(".error").empty();
-		            	});
-		            }
-	            });
+            function getSelectedSpace(blockId, callback) {
+                $.ajax({
+                    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space/'})]" + blockId,
+                    type: 'GET',
+                    success: function(result) {
+                        $("#selectedSpace").text(result.space.name);
+                        $("#editSpaceBlock").text(result.title);
+                        callback(result.id);
+                    },
+                    error: function(data) {
+                        var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        $('.error').append(alert);
+                        $(".error").delay(4000).slideUp(500, function(){
+                            $(".error").empty();
+                        });
+                    }
+                });
             }
             
             function textBlockDoubleClick(e){
@@ -190,18 +189,22 @@
                 $(".open").css('height', '400px');
             }
             
-            function spaceBlockDoubleClick(e){
+            function spaceBlockDoubleClick(e) {
                 var divName = $(e.target).closest('div').attr('class');
-	            let spaceId = e.target.closest('div').id;
-	            $(e.target).closest('.SpaceDivStaff').addClass("open");
-	            defaultValue = $("div.open p:eq(0)").text();
-	            var blockId = $(this).closest("div").attr("id");
-	            getSelectedSpace(blockId);//"editSpaceBlock"
-	            $("#editSpaceAlert").show();
-	            //remove card border
-	            $(".open").css('display', 'none');
-	            $(".open").css('overflow-y', 'scroll');
-	            $(".open").css('height', '400px');
+                let spaceId = e.target.closest('div').id;
+                $(e.target).closest('.SpaceDivStaff').addClass("open");
+                defaultValue = $("div.open p:eq(0)").text();
+                var blockId = $(this).closest("div").attr("id");
+                getSelectedSpace(blockId, function(id) {
+                    currentSpaceId = id;
+                    console.log("Result ID:", currentSpaceId);
+                });
+                
+                $("#editSpaceAlert").show();
+                // Remove card border
+                $(".open").css('display', 'none');
+                $(".open").css('overflow-y', 'scroll');
+                $(".open").css('height', '400px');
             }
             
             function imageBlockDoubleClick(e){
@@ -1160,6 +1163,33 @@
                     });
                 }
                 
+                function getCurrentSpace(blockId) {
+                    $.ajax({
+                        url: [[@{|/staff/spaces/search|}]],
+                        dataType: 'json',
+                        success: function(result) {
+                            let spaceName = null;
+                            for (let i = 0; i < result.length; i++) {
+                                const space = result[i];
+                                if (space.id === spaceId) {
+                                    spaceName = space.name;
+                                    break;
+                                }
+                            }
+                            callback(spaceName);
+                        },
+                        error: function(data) {
+                            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                            $('.error').append(alert);
+                            $(".error").delay(4000).slideUp(500, function() {
+                                $(".error").empty();
+                            });
+                            // Call the callback with null in case of error
+                            callback(null);
+                        }
+                    });
+                }
+                
 	            $("#submitSpace").on("click", function(e) {
 		            $("#addSpaceAlert").hide();
 		            e.preventDefault();
@@ -1384,10 +1414,10 @@
 		            updateTextBox(blockId, defaultValue);
 	            });
 
-	            function updateSpaceBox(blockId, text) {
+	            function updateSpaceBox(blockId, text, spaceName) {
 		            // clear text box and buttons
 		            $(".open").empty();
-		            $(".open").append('<div style = "display:flex; flex-direction: row; width: 100%;"><label>Title: </label><p class="col-md-10">'+text+'</p></div><div style = "display:flex; flex-direction: row;width: 100%;"><label>Space: </label><p hidden="true" class="col-md-10"> '+text+'</p></div><input type="hidden" id="deleteSpaceId" value="'+blockId+'" /><a class="btn deleteSpace col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a></div>');
+		            $(".open").append('<div style="word-break:break-word;" id="'+ blockId +'" class="SpaceDivStaff tab row"><label>Title: </label><p class="col-md-10">'+text+'</p></div><div style = "display:flex; flex-direction: row;width: 100%;"><label>Space: </label><p class="col-md-10"> '+spaceName+'</p></div><input type="hidden" id="deleteSpaceId" value="'+blockId+'" /><a class="btn deleteSpace col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a></div>');
 		            // reset border of the card
 		            //rebind event handlers
 		            $('.SpaceDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(spaceBlockDoubleClick);
@@ -1468,7 +1498,12 @@
 		            var blockId = $(".open").attr("id");
 		            formData.append('spaceBlockId', blockId);
 		            formData.append('spaceBlockTitle', text);
+		            if(spaceId =="" || spaceId == null){
+		            	console.log("trueee");
+		            	spaceId = currentSpaceId;
+		            }
 		            formData.append('spaceId', spaceId);
+		            
 		            $("#editSpaceAlert").hide();
 		            $.ajax({
 			            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space/edit?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
@@ -1480,7 +1515,7 @@
 			            enctype: 'multipart/form-data',
 			            success: function(data) {
 			            	// replace space box with new description
-			            	updateSpaceBox(blockId, text)
+			            	updateSpaceBox(blockId, text, spaceName)
 			            	$(".open").removeClass("open");
 			            },
 			            error: function(data) {
