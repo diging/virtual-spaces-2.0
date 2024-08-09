@@ -230,7 +230,7 @@
             	}
             	var imageblock = "";
             	var oldImageBlock = "";
-            			    
+            	var token = [[${_csrf.token}]];
             	// Ashmi changes for Story VSPC-64
             			    
             	// checks if image ID is present to replace
@@ -238,7 +238,7 @@
             			oldImageBlock = $("#" + imgBlockID);
             			var imageBlockId = imgBlockID;
             			formData.append('imageBlockId',imageBlockId);
-            			var url = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image/'})]" + imageBlockId + '?[(${_csrf.parameterName})]=[(${_csrf.token})]';
+            			var url = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image/'})]" + imageBlockId;
             			if(!chooseFromExisting){
             				reader.onload = function (theFile)
             				{
@@ -264,7 +264,7 @@
             			$("#uploadImage").data('value', '');
             	}
             	else {
-            		var url = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image/?'+${_csrf.parameterName}+'='+${_csrf.token}})]";
+            		var url = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image'})]";
             		if(!chooseFromExisting){
             			reader.onload = function (theFile) 
             			{        	
@@ -300,6 +300,9 @@
             		cache       : false,
             		contentType : false,
             		processData : false,
+            		headers: {
+	                    'X-CSRF-TOKEN': token
+	                },
             		data: formData,    
             		success: function(data) {
             			$(".open").removeClass("open");
@@ -361,7 +364,7 @@
 				}
 				if (videoID) {
 					oldVideoBlock = $("#" + videoID);
-					ajaxUrl = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/video/'})]" + videoID + '?[(${_csrf.parameterName})]=[(${_csrf.token})]';
+					ajaxUrl = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/video/'})]" + videoID;
 					formData.append('videoBlockId', videoID);
 					if (url) {
 						$("#" + videoID).replaceWith(videoBlock);
@@ -383,7 +386,7 @@
 							$('#slideSpace').append(videoBlock);
 						}
 					}
-					ajaxUrl = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/video?'+${_csrf.parameterName}+'='+${_csrf.token}})]";
+					ajaxUrl = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/video'})]";
 				}
 				// Reset data-attribute to get current selected image ID
 				$("#videoFile").val('');
@@ -393,6 +396,7 @@
 					reader.readAsDataURL(vidFile);
 				}
 				formData.append('videoTitle', title);
+				var token = [[${_csrf.token}]];
 				$.ajax({
 					enctype: 'multipart/form-data',
 					// ------------- creating video content blocks ------------
@@ -402,6 +406,9 @@
 					contentType: false,
 					processData: false,
 					data: formData,
+					headers:{
+            			'X-CSRF-Token':token
+            		},
 					success: function (data) {
 					    if(videoBlock){
 							var videoBlk = "";
@@ -626,8 +633,8 @@
             
                 //-------- edit contentblock description --------
             
-                $("#submitDescription").hide()
-                $("#cancelEditDescription").hide()
+                $("#submitDescription").hide();
+                $("#cancelEditDescription").hide();
                 var description = $("#description").text()
                 $("#editDescription").click(function() {
                     $('<textarea id="newDescription" style="margin-top: 1%;" class="form-control" type="text">'+description+'</textarea>').insertBefore( "#description" );
@@ -640,13 +647,17 @@
             
                 $("#submitDescription").click(function() {
                     var formData = new FormData();
+                    var token = [[${_csrf.token}]];
                     formData.append('description', $("#newDescription").val());
                     $.ajax({ 
-            	        url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/edit/description?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+            	        url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/edit/description'})]",
             	        type: 'POST',
             	        cache       : false,
             	        contentType : false,
             	        processData : false,
+            	        headers:{
+	            			'X-CSRF-Token':token
+	            		},
             	        data: formData,
             	        enctype: 'multipart/form-data',
             	        success: function(data) {
@@ -691,14 +702,18 @@
                 });
                 
                 $("#submitTitle").click(function() {
+                	var token = [[${_csrf.token}]];
                     var formData = new FormData();
                     formData.append('title', $("#newTitle").val());
                     $.ajax({
-                        url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/edit/title?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+                        url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/edit/title'})]",
                         type: 'POST',
                         cache       : false,
                         contentType : false,
                         processData : false,
+                        headers:{
+	            			'X-CSRF-Token':token
+	            		},
                         data: formData,
                         enctype: 'multipart/form-data',
                         success: function(data) {
@@ -1104,16 +1119,20 @@
                     // ------------- creating text content blocks ------------
                     
                     var formData = new FormData();
+                    var token = [[${_csrf.token}]];
                     var text = markDown.value();
                     formData.append('content', text);
                     markDown.value('');
                     $.ajax({
-                        url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/textcontent?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+                        url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/textcontent'})]",
                         type: 'POST',
                         cache       : false,
                         contentType : false,
                         processData : false,
                         data: formData,
+                        headers:{
+	            			'X-CSRF-Token':token
+	            		},
                         enctype: 'multipart/form-data',
                         success: function(data) {
             
@@ -1195,6 +1214,7 @@
 		            var formData = new FormData();
 		            var title = document.getElementById('spaceTitle').value;
 		            var selectedSpace = document.getElementById('spaceName');
+		            var token = [[${_csrf.token}]];
 		            if (selectedSpace.selectedIndex != -1 && selectedSpace.value != ""){
 
 			            var spaceId = selectedSpace.options[selectedSpace.selectedIndex].value;
@@ -1202,12 +1222,15 @@
 			            formData.append('spaceId', spaceId);
 			            getSpaceById(spaceId, function(spaceName){
 				            $.ajax({
-					            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space?' +${_csrf.parameterName}+'='+${_csrf.token}})]", 
+					            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space'})]", 
 					            type: 'POST',
 					            cache       : false,
 					            contentType : false,
 					            processData : false,
 					            data: formData,
+					            headers:{
+			            			'X-CSRF-Token':token
+			            		},
 					            enctype: 'multipart/form-data',
 					            success: function(data) {
 						            var space = $('<div style="word-break:break-word;" id="'+ data +'" class="SpaceDivStaff tab row"><label>Title: </label><p class="col-md-10">'+title+'</p> <div style = "display:flex; flex-direction: row;width: 100%;"><label>Space: </label><p class="col-md-10">'+ spaceName +'</p></div>'+'<input type="hidden" id="deleteSpaceId" value="'+data+'" /><a class="btn deleteSpace col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a></div>');
@@ -1242,6 +1265,7 @@
                     $("#addChoiceAlert").hide();
                     var selectedChoice = [];
                     var showsAll = false;
+                    var token = [[${_csrf.token}]];
                     $('#selectChoices :checked').each(function() {
                     	selectedChoice.push($(this).attr("id"));
                       });
@@ -1253,12 +1277,15 @@
                     formData.append('selectedChoices', selectedChoice);
                     formData.append('showsAll', showsAll);
                     $.ajax({
-                        url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/choice/content?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+                        url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/choice/content'})]",
                         type: 'POST',
                         cache       : false,
                         contentType : false,
                         processData : false,
                         data: formData,
+                        headers:{
+	            			'X-CSRF-Token':token
+	            		},
                         enctype: 'multipart/form-data',
                         success: function(data) {
                             var choiceblock = $('<div id="'+ data['choiceBlock'].id +'" class="choiceDiv tab row" style="display:block;">');
@@ -1455,16 +1482,20 @@
                     markDown.value('');
                     var formData = new FormData();
                     var blockId = $(".open").attr("id");
+                    var token = [[${_csrf.token}]];
                     formData.append('textBlockDesc', text);
                     formData.append('textBlockId', blockId);
                 	$("#editTextAlert").hide();
                     $.ajax({
-                        url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/text/edit?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+                        url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/text/edit'})]",
                         type: 'POST',
                         cache       : false,
                         contentType : false,
                         processData : false,
                         data: formData,
+                        headers:{
+	            			'X-CSRF-Token':token
+	            		},
                         enctype: 'multipart/form-data',
                         success: function(data) {
                             // replace text box with new description
@@ -1488,7 +1519,6 @@
 		            if(document.getElementById('editSpaceName') != ""){
 		            var selectedSpace = document.getElementById('editSpaceName');
 		            var spaceId = selectedSpace.options[selectedSpace.selectedIndex].value;
-		            console.log(selectedSpace);
 		            var formData = new FormData();
 		            var text = document.getElementById("editSpaceBlock").value;
 		            var formData = new FormData();
@@ -1496,24 +1526,25 @@
 		            formData.append('spaceBlockId', blockId);
 		            formData.append('spaceBlockTitle', text);
 		            if(spaceId == "" || spaceId == null){
-		            	console.log("trueee");
 		            	spaceId = currentSpaceId;
 		            }
+		            var token = [[${_csrf.token}]];
 		            formData.append('spaceId', spaceId);
-		            
 		            getSpaceById(spaceId, function(spaceName){
 		            
 			            $("#editSpaceAlert").hide();
 			            $.ajax({
-				            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space/edit?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+				            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space/edit'})]",
 				            type: 'POST',
 				            cache       : false,
 				            contentType : false,
 				            processData : false,
+				            headers: {
+			                    'X-CSRF-TOKEN': token
+			                },
 				            data: formData,
 				            enctype: 'multipart/form-data',
 				            success: function(data) {
-				            	// replace space box with new description
 				            	updateSpaceBox(blockId, text, spaceName)
 				            	$(".open").removeClass("open");
 				            },
