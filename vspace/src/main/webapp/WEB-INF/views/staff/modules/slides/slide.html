@@ -46,7 +46,7 @@
 		        })
             })
 
-            let currentSelectedSpace="";
+            var currentSpaceName;
             var contentCount = [[${#lists.size(slideContents)}]];
             var markDown = null;
             var defaultValue;
@@ -152,14 +152,15 @@
                 $(this).removeClass("hova");
             }
 
-            function getSelectedSpace(blockId, callback) {
+            function getSelectedSpace(blockId) {
                 $.ajax({
                     url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space/'})]" + blockId,
                     type: 'GET',
                     success: function(result) {
-                        $("#selectedSpace").text(result.space.name);
+                    	currentSpaceName = result.space.name;
+                        $("#selectedSpace").text(currentSpaceName);
                         $("#editSpaceBlock").text(result.title);
-                        callback(result.id);
+                        currentSpaceId = result.space.id;
                     },
                     error: function(data) {
                         var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
@@ -195,11 +196,7 @@
                 $(e.target).closest('.SpaceDivStaff').addClass("open");
                 defaultValue = $("div.open p:eq(0)").text();
                 var blockId = $(this).closest("div").attr("id");
-                getSelectedSpace(blockId, function(id) {
-                    currentSpaceId = id;
-                    console.log("Result ID:", currentSpaceId);
-                });
-                
+                getSelectedSpace(blockId);
                 $("#editSpaceAlert").show();
                 // Remove card border
                 $(".open").css('display', 'none');
@@ -1417,7 +1414,7 @@
 	            function updateSpaceBox(blockId, text, spaceName) {
 		            // clear text box and buttons
 		            $(".open").empty();
-		            $(".open").append('<div style="word-break:break-word;" id="'+ blockId +'" class="SpaceDivStaff tab row"><label>Title: </label><p class="col-md-10">'+text+'</p></div><div style = "display:flex; flex-direction: row;width: 100%;"><label>Space: </label><p class="col-md-10"> '+spaceName+'</p></div><input type="hidden" id="deleteSpaceId" value="'+blockId+'" /><a class="btn deleteSpace col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a></div>');
+		            $(".open").append('<label>Title: </label><p class="col-md-10">'+text+'</p></div><div style = "display:flex; flex-direction: row;width: 100%;"><label>Space: </label><p class="col-md-10"> '+spaceName+'</p></div><input type="hidden" id="deleteSpaceId" value="'+blockId+'" /><a class="btn deleteSpace col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a>');
 		            // reset border of the card
 		            //rebind event handlers
 		            $('.SpaceDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(spaceBlockDoubleClick);
@@ -1433,7 +1430,7 @@
 	            $('#cancelSpaceBlock').on('click',function(){
 		            $("#editSpaceAlert").hide();
 		            var blockId = $(this).closest(".open").attr("id");
-		            updateSpaceBox(blockId, defaultValue);
+		            updateSpaceBox(blockId, defaultValue, currentSpaceName);
 		            $(".open").removeClass("open");
 	            });
 
@@ -1498,34 +1495,37 @@
 		            var blockId = $(".open").attr("id");
 		            formData.append('spaceBlockId', blockId);
 		            formData.append('spaceBlockTitle', text);
-		            if(spaceId =="" || spaceId == null){
+		            if(spaceId == "" || spaceId == null){
 		            	console.log("trueee");
 		            	spaceId = currentSpaceId;
 		            }
 		            formData.append('spaceId', spaceId);
 		            
-		            $("#editSpaceAlert").hide();
-		            $.ajax({
-			            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space/edit?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
-			            type: 'POST',
-			            cache       : false,
-			            contentType : false,
-			            processData : false,
-			            data: formData,
-			            enctype: 'multipart/form-data',
-			            success: function(data) {
-			            	// replace space box with new description
-			            	updateSpaceBox(blockId, text, spaceName)
-			            	$(".open").removeClass("open");
-			            },
-			            error: function(data) {
-				            if (data.status == 403) {
-				            	$("#loginAlert").show();
-				            } else {
-					            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-					            $('.error').append(alert);
+		            getSpaceById(spaceId, function(spaceName){
+		            
+			            $("#editSpaceAlert").hide();
+			            $.ajax({
+				            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space/edit?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+				            type: 'POST',
+				            cache       : false,
+				            contentType : false,
+				            processData : false,
+				            data: formData,
+				            enctype: 'multipart/form-data',
+				            success: function(data) {
+				            	// replace space box with new description
+				            	updateSpaceBox(blockId, text, spaceName)
+				            	$(".open").removeClass("open");
+				            },
+				            error: function(data) {
+					            if (data.status == 403) {
+					            	$("#loginAlert").show();
+					            } else {
+						            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+						            $('.error').append(alert);
+					            }
 				            }
-			            }
+			            });
 		            });
 		          }
 	            });
@@ -1872,7 +1872,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Edit Text Block</h5>
-                            <button type="button" id="closeTextBlock" data-bs-dismiss="modal" aria-label="Close">
+                            <button class = "close" type="button" id="closeTextBlock" data-bs-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
@@ -1900,7 +1900,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Edit Space Block</h5>
-                            <button type="button" id="closeSpaceBlock" data-bs-dismiss="modal" aria-label="Close">
+                            <button type="button" class="close" id="closeSpaceBlock" data-bs-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
@@ -2100,6 +2100,7 @@
 	                    </a>
                 	</div>
                     <div th:attr="data-position=${contents.contentOrder}" style="word-break:break-word;" th:id="${contents.id}" class="textDivStaff tab row" th:if="${#strings.equals(contents['class'].simpleName,'TextBlock')}">
+                        <label>Text Description: </label>
                         <p class="col-md-10"> [[${contents.text}]]</p>
                         <input type="hidden" id="deleteTextId" th:value="${contents.id}" />
                         <a class="btn deleteText col-md-1" href="javascript:;"> 
