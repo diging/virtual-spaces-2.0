@@ -22,6 +22,7 @@
 		    }
 	
 	}
+		
 </script>
 <style>
 .tooltiptext {
@@ -41,6 +42,14 @@
 
 .previewExhb:hover .tooltiptext {
 	visibility: visible;
+}
+
+.customOrderLinkContainer {
+    padding: 15px 0;
+}
+
+.customOrderLink {
+    text-decoration: underline;
 }
 </style>
 </head>
@@ -97,7 +106,32 @@
 		        <p style="padding-top: 20px;">
 		            <input class="btn primary-btn" type="submit" value="Submit" />
 		        </p>	
-		    </form>
+		    </form>            
+            <div id="spaceOrder">
+            Select how you want to arrange this in the exhibition navigation bar:
+            <div class="startSequence" style="padding-bottom: 10px;">
+            <form th:action="@{/staff/space/order/mode}" method ="POST" name="f" >
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                <p>Select spaces display order.</p>
+                <select class="form-control col-md-4" id="spaceOrderMode" name="spaceOrderMode" style="display: inline-block !important; height:auto;">
+                    <option value="ALPHABETICAL" th:selected="${#strings.equals('ALPHABETICAL',currentSpaceOrder)}">Alphabetical</option>
+                    <option value="CREATION_DATE" th:selected="${#strings.equals('CREATION_DATE',currentSpaceOrder)}">Creation Date</option>
+                    <option value="CUSTOM" th:selected="${#strings.equals('CUSTOM',currentSpaceOrder) && currentCustomSpaceOrder==null}">Custom</option>
+                    <option th:each="spaceOrder: ${customSpaceOrderModes}" th:value="${spaceOrder.getId()}" th:selected="${#currentCustomSpaceOrder!=null && strings.equals(spaceOrder.getId(), currentCustomSpaceOrder.)}">[[${spaceOrder.getCustomOrderName()}]]</option>
+                </select>
+                <button type="submit" id="changeOrder" class="btn primary-btn btn-sm">Change Order</button>
+                
+            </form>
+            <div sec:authorize="hasRole('ADMIN')" class="customOrderLinkContainer">
+            <a th:style="${currentPage == 'users' ? 'active' : '' }"
+               th:href="@{/staff/space/order}"> 
+               <span class="customOrderLink">Manage Custom Order</span>
+            </a>
+            </div>
+            
+        </div>
+        
+        </div>    
 		</div>
 	</div>
 </body>

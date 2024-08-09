@@ -20,11 +20,14 @@ import edu.asu.diging.vspace.config.ExhibitionLanguageConfig;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.factory.impl.ExhibitionFactory;
 import edu.asu.diging.vspace.core.model.ExhibitionModes;
+import edu.asu.diging.vspace.core.model.ExhibitionSpaceOrderMode;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
+import edu.asu.diging.vspace.core.services.ISpacesCustomOrderManager;
+import edu.asu.diging.vspace.core.services.impl.SpacesCustomOrderManager;
 
 @Controller
 public class ExhibitionConfigurationController {
@@ -44,6 +47,8 @@ public class ExhibitionConfigurationController {
     @Autowired
     private ExhibitionLanguageConfig exhibitionLanguageConfig;
     
+    @Autowired
+    private ISpacesCustomOrderManager spacesCustomOrderManager;
 
 
     public static final String EXH_PREVIEW = "EXH_PREVIEW_";
@@ -67,6 +72,9 @@ public class ExhibitionConfigurationController {
         model.addAttribute("spacesList", spaceRepo.findAll());
         model.addAttribute("languageList", exhibitionLanguageConfig.getExhibitionLanguageList());
         model.addAttribute("exhibition", exhibition);
+        model.addAttribute("customSpaceOrderModes",spacesCustomOrderManager.findAll());
+        model.addAttribute("currentSpaceOrder",exhibition.getSpaceOrderMode());
+        model.addAttribute("currentCustomSpaceOrder",exhibition.getSpacesCustomOrder());
         return "staff/exhibit/config";
     }
 
