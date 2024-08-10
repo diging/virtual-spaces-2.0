@@ -12,16 +12,10 @@
 			padding-bottom:10px;
 		}
 		.spaceDropdownSelect {
-			display: inline-block !important; 
-			height: auto; 
-			border: 1px solid; 
-			width: 11%; 
-			margin-right: 6px; 
-			position: absolute; 
-			right: 10%; 
-			z-index: 999; 
-			padding: 0;
-			border-radius: 4px;
+			display: inline-block !important;
+			background: #D3D3D3;
+			height: auto;
+			width: 15%;
 		}
 		.customOrderList:hover, .spaceDropdownOption:hover {
 			background: #D3D3D3;	
@@ -50,7 +44,7 @@
 		        <form th:action="@{'/staff/space/order/'+${selectedCustomOrderId}+'/set'}" method ="POST" name="f" style="text-align: right;">
 		        	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 					<div style="padding-bottom:10px; padding-right: 6px;">Select Custom Order to be used</div>
-					<select class="spaceDropdownSelect" name="selectedCustomOrderId" onfocus='size=10;' onblur='this.size=1;' onchange='this.size=1; this.blur();'>
+					<select class="spaceDropdownSelect form-control " name="selectedCustomOrderId" onchange='this.size=1; this.blur();'>
 						<option class="spaceDropdownOption" th:value="Select" th:text="Select"></option>
 		            	<option class="spaceDropdownOption" th:each="customOrders: ${customSpaceOrders}" th:value=${customOrders.id} th:selected="${customOrders==currentSelectedCustomOrder}">[[${customOrders.customOrderName}]]</option>
 		          	</select>
