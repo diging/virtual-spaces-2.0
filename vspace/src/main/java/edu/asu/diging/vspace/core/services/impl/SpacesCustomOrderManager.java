@@ -6,10 +6,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.persistence.EntityNotFoundException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,8 +32,6 @@ import edu.asu.diging.vspace.core.services.ISpacesCustomOrderManager;
 @Service
 @Transactional(rollbackFor = { Exception.class })
 public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
-    
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private SpacesCustomOrderRepository spacesCustomOrderRepository;
@@ -89,7 +84,10 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
     public void addSpaceToCustomOrders(ISpace space) {
         Iterable<SpacesCustomOrder> spacesCustomOrders = findAll();
         for(ISpacesCustomOrder spaceCustomOrder :  spacesCustomOrders) {
-            spaceCustomOrder.getCustomOrderedSpaces().add(space);
+            List<ISpace> customOrderSpaces = spaceCustomOrder.getCustomOrderedSpaces();
+            if(!customOrderSpaces.contains(space)) {
+                spaceCustomOrder.getCustomOrderedSpaces().add(space);
+            }
         }
         save(spacesCustomOrders);
     }
@@ -118,8 +116,11 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
     @Override
     public void updateSpaces(String spacesCustomOrderId, List<String> spacesIds) {
         List<ISpace> spaces = new ArrayList<ISpace>();
-        spacesIds.stream().filter(spaceId -> spaceManager.getSpace(spaceId) != null)
-            .map(id -> spaces.add(spaceManager.getSpace(id)));
+        for(String spaceId: spacesIds) {
+            if(spaceManager.getSpace(spaceId) != null){
+                spaces.add(spaceManager.getSpace(spaceId));
+            }
+        }
         ISpacesCustomOrder spaceCustomOrder = get(spacesCustomOrderId);
         spaceCustomOrder.setCustomOrderedSpaces(spaces);
         spacesCustomOrderRepository.save((SpacesCustomOrder)spaceCustomOrder);
