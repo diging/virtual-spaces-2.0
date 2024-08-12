@@ -30,7 +30,7 @@ public class ExhibitionSpaceOrderUtility implements IExhibitionSpaceOrderUtility
     /**
      * This method sorts the spaces in alphabetical order.
      * @param publishedSpaces
-     * @return
+     * @return list of {@link ISpace}
      */
     private List<ISpace> sortSpacesAlphabetically(List<ISpace> publishedSpaces){
         Collections.sort(publishedSpaces, new Comparator<ISpace>() {
@@ -45,7 +45,7 @@ public class ExhibitionSpaceOrderUtility implements IExhibitionSpaceOrderUtility
     /**
      * This method sorts the spaces based on the space creation date.
      * @param publishedSpaces
-     * @return
+     * @return list of {@link ISpace}
      */
     private List<ISpace> sortSpacesOnCreationDate(List<ISpace> publishedSpaces){
         Collections.sort(publishedSpaces, new Comparator<ISpace>() {
@@ -61,7 +61,7 @@ public class ExhibitionSpaceOrderUtility implements IExhibitionSpaceOrderUtility
     /**
      * This method sorts the spaces based on user defined order.
      * @param publishedSpaces
-     * @return
+     * @return list of {@link ISpace}
      */
     private List<ISpace>  sortSpacesByCustomOrder(List<ISpace> publishedSpaces){
         IExhibition exhibition  = exhibitionManager.getStartExhibition();
@@ -82,7 +82,7 @@ public class ExhibitionSpaceOrderUtility implements IExhibitionSpaceOrderUtility
      * This method used to sort spaces based on given mode.
      * @param publishedSpaces
      * @param mode
-     * @return
+     * @return list of {@link ISpace}
      */
     @Override
     public List<ISpace> sortSpaces(List<ISpace> publishedSpaces, ExhibitionSpaceOrderMode mode){

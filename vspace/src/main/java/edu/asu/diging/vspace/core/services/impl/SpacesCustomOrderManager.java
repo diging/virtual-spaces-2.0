@@ -112,6 +112,7 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
      * This method updated custom order of spaces
      * @param spacesCustomOrderId
      * @param spacesIds
+     * @return
      */
     @Override
     public void updateSpaces(String spacesCustomOrderId, List<String> spacesIds) {

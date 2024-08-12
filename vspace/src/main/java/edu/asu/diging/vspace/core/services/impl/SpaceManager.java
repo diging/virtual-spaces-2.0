@@ -332,6 +332,7 @@ public class SpaceManager implements ISpaceManager {
      * Method to sort published spaces based on the given order, i.e Alphabetical,
      * Creation Date, or, Custom
      * @param publishedSpaces
+     * @return list of space
      */
     @Override
     public List<ISpace> sortPublishedSpacesByGivenOrder(List<ISpace> publishedSpaces) {
