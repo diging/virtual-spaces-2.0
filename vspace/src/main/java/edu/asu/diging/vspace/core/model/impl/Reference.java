@@ -22,14 +22,12 @@ import edu.asu.diging.vspace.core.model.IReference;
 
 @Entity
 public class Reference extends VSpaceElement implements IReference {
-    
     @Id
     @GeneratedValue(generator = "reference_id_generator")
     @GenericGenerator(name = "reference_id_generator", 
         parameters = @Parameter(name = "prefix", value = "REF"),
         strategy = "edu.asu.diging.vspace.core.data.IdGenerator")
     private String id;
-    
     @ManyToMany
     @JoinTable(name = "Biblio_Reference", joinColumns = @JoinColumn(name = "REFERENCE_ID"), inverseJoinColumns = @JoinColumn(name = "BIBLIO_ID"))
     private List<BiblioBlock> biblios = new ArrayList<>();
@@ -172,7 +170,6 @@ public class Reference extends VSpaceElement implements IReference {
                 + ", volume=" + volume + ", issue=" + issue + ", pages=" + pages + ", editors=" + editors + ", type="
                 + type + ", note=" + note;
     }
-
 
     public String htmlRenderedReference() {
         Parser parser = Parser.builder().build();

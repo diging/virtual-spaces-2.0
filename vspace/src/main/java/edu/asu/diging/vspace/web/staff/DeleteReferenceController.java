@@ -42,26 +42,20 @@ public class DeleteReferenceController {
             @PathVariable("biblioId") String biblioId, @PathVariable("refId") String refId) throws IOException {
         
         ISlide slide = slideManager.getSlide(slideId);
-
         if(slide==null) {
             logger.warn("Slide Id does not exist, 404 not found.");
             return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
         }
-        
         IModule module = moduleManager.getModule(moduleId);
-        
         if(module==null) {
             logger.warn("Module Id does not exist, 404 not found.");
             return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
         }
-        
         IBiblioBlock biblio = contentBlockManager.getBiblioBlock(biblioId);
-        
         if(biblio==null) {
             logger.warn("Biblio Block Id does not exist, 404 not found.");
             return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
         }
-        
         referenceManager.deleteReferenceById(refId, biblioId);
 
         return new ResponseEntity<String>(HttpStatus.OK);
