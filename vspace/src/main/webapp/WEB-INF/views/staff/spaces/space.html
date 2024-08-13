@@ -7,6 +7,10 @@
 <script src="//use.fontawesome.com/releases/v5.8.1/js/all.js"
     data-auto-replace-svg="nest"></script>
 <script th:src="@{'/resources/extra/space.js'}"></script>
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+<script th:src="@{/assets/bootstrap-colorpicker/js/bootstrap-colorpicker.js}"></script>
 <style type="text/css">
 
 .right-aligned {
@@ -26,11 +30,29 @@ $(function () {
     $('[data-toggle="tooltip"]').tooltip()
 });
 
+$(function () {
+    $('#textColor').colorpicker();
+});
+
 $(window).on("load", function() {
     $( window ).resize(function() {
         drawLinks();
     });
     drawLinks();
+    
+    var textBlockElements = document.getElementsByClassName("textBlock");
+    Array.from(textBlockElements).forEach(function(textBlock, index){
+    	if(textBlock != null) {
+    	   	const color = textBlock.style.borderColor;
+         	textBlock.addEventListener('focus', function(e) {
+       		e.target.style.outline = "2px solid "+ color;
+         	});
+         	textBlock.addEventListener('blur', function(e) {
+         		e.target.style.outline = "none";
+        	});
+    	}
+ 
+    })
 });
 //store where a user clicked on an image
 var storeX;
@@ -47,6 +69,8 @@ const displaceLableOnX = 10;
 const displaceLableOnY = 35;
 var modalBgImageHeight;
 var modalBgImageWidth;
+var textAreaBorderColor;
+var textAreaTextColor;
 
 //link icons for space links
 var linkIconReader = new FileReader();
@@ -210,17 +234,30 @@ function generateExternalLinks(link,spanId,divId,isModal, posX, posY, posXModal,
 }
 
 function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, posYModal, imageHeight, imageWidth){
+    let textColorPicker = document.querySelector("#textColorID");
+    let borderColorPicker = document.querySelector("#borderColorID");
+    let textEditColorPicker = document.querySelector("#textColorIDEdit");
+    let borderEditColorPicker = document.querySelector("#borderColorIDEdit");
+	
+    //adding event listeners for adding new text block
+    textColorPicker.addEventListener("input", changeTextColor, false);
+    borderColorPicker.addEventListener("input", changeBorderColor, false);
+	
+    //adding event listeners while editing existing text block
+    textEditColorPicker.addEventListener("input", changeTextAreaOnEditTextColor, false);
+    borderEditColorPicker.addEventListener("input", changeTextAreaOnEditBorderColor, false);
+	
     if(block != null){
         var height = (block.height*imageHeight)/100;
         var width = (block.width*imageWidth)/100;
-        var textBlock = $('<span id="'+spanId+block.spaceTextBlock.id+'" data-link-id="'+block.spaceTextBlock.id+'" data-blockId="'+block.id+'" data-text="'+block.spaceTextBlock.text+'" data-width="'+block.width+'"  data-height="'+block.height+'" class="textBlockClass spaceLink-'+block.spaceTextBlock.id+'"><textarea class="textBlock" style="height:'+height+'px; width:'+width+'px; resize:none; background: rgba(0, 0, 0, 0.4);" readonly type="textarea">'+block.spaceTextBlock.text+'</textarea></span>');
+        var textBlock = $('<span id="'+spanId+block.spaceTextBlock.id+'" data-link-id="'+block.spaceTextBlock.id+'" data-blockId="'+block.id+'" data-text="'+block.spaceTextBlock.text+'" data-width="'+block.width+'"  data-height="'+block.height+'" class="textBlockClass spaceLink-'+block.spaceTextBlock.id+'"><textarea class="textBlock" style="height:'+height+'px; width:'+width+'px; resize:none; background: rgba(0, 0, 0, 0.4); color:'+block.textColor+'; border-color: '+block.borderColor+';" readonly type="textarea">'+block.spaceTextBlock.text+'</textarea></span>');
         setLinkPosition(textBlock,block,false,isModal,false, posX, posY, posXModal, posYModal, true);
         $(divId).append(textBlock);
         if(spanId === "textBlockId-"){
             $('#'+spanId+block.spaceTextBlock.id).css('cursor', 'pointer');
             $('#'+spanId+block.spaceTextBlock.id).click(function(e) {  
                 var blockData = $('#'+spanId+block.spaceTextBlock.id).data();
-                makeTextBlockEditable(blockData["blockid"],blockData["linkId"],blockData["text"],block.positionX,block.positionY,blockData["width"],blockData["height"]);
+                makeTextBlockEditable(blockData["blockid"],blockData["linkId"],blockData["text"],block.positionX,block.positionY,blockData["width"],blockData["height"], block.textColor, block.borderColor);
             });
         }
         
@@ -378,6 +415,8 @@ function showTextBlockEdit(textBlock){
     $(selectedTextArea).css('width', (textBlock["width"]*imageWidth)/100);
     $(selectedTextArea).css('height', (textBlock["height"]*imageHeight)/100);   
     $(selectedTextArea).text(textBlock["text"]);
+    $(selectedClass).css('color', textBlock["textColor"]);
+    $(selectedClass).css('border-color', textBlock["borderColor"]);
 }
 
 function showSpaceLink(spaceLink, show, x, y) {
@@ -669,6 +708,8 @@ function createTextBlockInfo() {
     info["text"] = $("#textContentID").val();
     info["height"] = $("#textBoxHeightID").val();
     info["width"] = $("#textBoxWidthID").val();
+    info["textColor"] = $("#textColorID").val();
+    info["borderColor"] = $("#borderColorID").val();
     return info;
 }
 
@@ -679,6 +720,8 @@ function editTextBlockInfo() {
     info["text"] = $("#textContentIDForEdit").val();
     info["height"] = $("#textBoxHeightIDEdit").val();
     info["width"] = $("#textBoxWidthIDEdit").val();
+    info["textColor"] = $("#textColorIDEdit").val();
+    info["borderColor"] = $("#borderColorIDEdit").val();
     return info;
 }
 
@@ -824,7 +867,7 @@ function makeExternalLinksEditable(linkName, linkId, externalLinkURL, posXEdit, 
     displayForms("#editExternalLinkInfo");
 }
 
-function makeTextBlockEditable(blockDisplayId,blockId,text,posX,posY,width,height){
+function makeTextBlockEditable(blockDisplayId,blockId,text,posX,posY,width,height, textColor, borderColor){
     selectedTextBlockId=blockId;
     storeX=posX;
     storeY=posY;
@@ -835,6 +878,8 @@ function makeTextBlockEditable(blockDisplayId,blockId,text,posX,posY,width,heigh
     $("#textBoxWidthIDEdit").val(width);
     $("#textBoxHeightIDEdit").val(height);
     $("#textContentIDForEdit").val(text);
+    $("#textColorIDEdit").val(textColor);
+    $("#borderColorIDEdit").val(borderColor);
     resetHighlighting();
     $("#bgImage").on("click", function(e){
         e.preventDefault();
@@ -847,6 +892,7 @@ function makeTextBlockEditable(blockDisplayId,blockId,text,posX,posY,width,heigh
     hideLinkInfoTabs();
     displayForms("#editTextBlockInfo");
 }
+
 function resetHighlighting() {
     // reset icon links
     $('[data-link-id]').css("color", "red");
@@ -1083,6 +1129,7 @@ $(function(){
                     textBlockInfo["y"]=linkData["y"];
                     textBlockInfo["height"]=linkData["height"];
                     textBlockInfo["width"]=linkData["width"];
+                    textBlockInfo["textColor"] = linkData["textColor"];
                     showTextBlockEdit(textBlockInfo);
                     hideLinkInfoTabs();
                     $("#space").css("display", "none");
@@ -1753,6 +1800,34 @@ $(function(){
             drawLinks();
         });
 });
+
+function changeTextAreaOnEditBorderColor(){
+    var textModalBlock = $("#textModalBlockId-"+selectedTextBlockId).find("textarea");
+    changeStyle(textModalBlock,"borderColor",$("#borderColorIDEdit").val());
+}
+
+function changeTextAreaOnEditTextColor(){
+    var textModalBlock = $("#textModalBlockId-"+selectedTextBlockId).find("textarea");
+    changeStyle(textModalBlock,"color",$("#textColorIDEdit").val());
+}
+
+//called while adding new text blocks 
+function changeTextColor(){
+    changeStyle($("#textB"),"color",$("#textColorID").val());
+}
+
+function changeBorderColor(){
+    changeStyle($("#textB"),"borderColor",$("#borderColorID").val());
+}
+
+//function to change style property of an element
+function changeStyle(elementId, styleProperty, value) {
+    var element = $(elementId);
+    if (element.length === 0) {
+        return;
+    }
+    element[0].style[styleProperty] = value;
+}
 </script>
 <style>
 .Info_cz_Class .tooltiptext {
@@ -2174,17 +2249,35 @@ $(function(){
                                 name="height" style="width: inherit;"><br>
                         </div>
                     </div>
-    
+            		<div class="row" style="height: 32%;">
+                        <div class="col-sm-4">
+                            <label>Text Color:</label>
+                        </div>
+                        <div class="col-sm-8" >
+                        	<input type="color" class="form-control input-lg" name="textColor" id="textColorID"/>
+                                <br>
+                        </div>
+                    </div>
+                    <div class="row" style="height: 32%;">
+                        <div class="col-sm-4">
+                            <label>Border Color:</label>
+                        </div>
+                        <div class="col-sm-8" >
+                        	<input type="color" class="form-control input-lg" name="borderColor" id="borderColorID"/>
+                                <br>
+                        </div>
+                    </div>
                     <div class="row" style="height: 32%;">
                         <div class="col-sm-4">
                             <label>Text:</label>
                         </div>
                         <div class="col-sm-8">
-                            <textarea class="form-control-xs textContent"
+                   		 <textarea class="form-control-xs textContent"
                                  name="textContent"
                                 id="textContentID" style="width: 140%; height: 400%;"></textarea><br>
                         </div>
                     </div>
+            
                     <div class="row">
                         <p class="mt-5 text-center" style="padding-top: 80%">
                             <button type="reset" class="btn btn-light btn-sm cancelAddTextBlockBtn">Cancel</button>
@@ -2537,7 +2630,24 @@ $(function(){
                                 name="height" style="width: inherit;"><br>
                         </div>
                     </div>
-    
+              		<div class="row" style="height: 32%;">
+                        <div class="col-sm-4">
+                            <label>Text Color:</label>
+                        </div>
+                        <div class="col-sm-8" >
+                        	<input type="color" class="form-control input-lg" name="textColor" id="textColorIDEdit"/>
+                                <br>
+                        </div>
+                    </div>
+                    <div class="row" style="height: 32%;">
+                        <div class="col-sm-4">
+                            <label>Border Color:</label>
+                        </div>
+                        <div class="col-sm-8" >
+                        	<input type="color" class="form-control input-lg" name="borderColor" id="borderColorIDEdit"/>
+                                <br>
+                        </div>
+                    </div>
                     <div class="row" style="height: 32%;">
                         <div class="col-sm-4">
                             <label>Text:</label>
@@ -2548,7 +2658,7 @@ $(function(){
                                 id="textContentIDForEdit" style="width: 140%; height: 400%;"></textarea><br>
                         </div>
                     </div>
-                    
+          
                     <p class="mt-5 text-center" style="padding-top: 80%; padding-bottom: 10%">
                         <button id="deleteTextBlockButton" type="reset" class="btn delete-btn btn-sm"><i class="fa fa-trash"></i>Delete</button>
                         <button id="editTextBlockBtn" type="reset" class="btn primary-btn btn-sm">Save</button>
