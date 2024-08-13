@@ -1467,12 +1467,10 @@
 		            updateSpaceBox(blockId, defaultValue);
 		            $(".open").removeClass("open");
 	            });
-	
                 $('.valueDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick((e)=>{$(".EasyMDEContainer").remove();});
                 $('.textDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(textBlockDoubleClick);
                 $('.vidDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave);
 	            $('.SpaceDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(spaceBlockDoubleClick);
-
                 $("#submitTextBlock").on("click", function(e){
                 	e.preventDefault();
                     // ------------- editting text content blocks ------------
