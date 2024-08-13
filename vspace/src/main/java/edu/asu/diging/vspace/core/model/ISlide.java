@@ -22,5 +22,5 @@ public interface ISlide extends IVSpaceElement {
 
     void setSlideDescriptions(List<ILocalizedText> slideDescriptions);
 
-    List<ILocalizedText> getSlideDescriptions() ;
+    List<ILocalizedText> getSlideDescriptions();
 }

@@ -1,9 +1,6 @@
 package edu.asu.diging.vspace.core.model.impl;
 
 import java.util.ArrayList;
-
-
-
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.CascadeType;
