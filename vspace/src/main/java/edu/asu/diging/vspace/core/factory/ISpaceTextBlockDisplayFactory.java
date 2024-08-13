@@ -9,7 +9,7 @@ import edu.asu.diging.vspace.core.model.display.ISpaceTextBlockDisplay;
  * edu.asu.diging.vspace.core.model.display.ISpaceTextBlockDisplay.
  */
 public interface ISpaceTextBlockDisplayFactory {
-    
+
     /**
      * Creates an ISpaceTextBlockDisplay object with the provided parameters.
      *
@@ -20,5 +20,5 @@ public interface ISpaceTextBlockDisplayFactory {
      * @param width     The width of the text block display.
      * @return An ISpaceTextBlockDisplay instance representing the visual display of the text block.
      */
-    ISpaceTextBlockDisplay createSpaceTextBlockDisplay(ISpaceTextBlock textBlock, float positionX, float positionY, float height, float width);
+    ISpaceTextBlockDisplay createSpaceTextBlockDisplay(ISpaceTextBlock textBlock, float positionX, float positionY, float height, float width, String textColor, String borderColor);
 }
