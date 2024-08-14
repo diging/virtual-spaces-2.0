@@ -20,7 +20,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SlideFactoryTest {
-
+    
     @InjectMocks
     private SlideFactory slideFactory;
     
@@ -42,6 +42,7 @@ public class SlideFactoryTest {
         String description = "This is a test Slide";
         when(form.getName()).thenReturn(name);
         when(form.getDescription()).thenReturn(description);
+        when(form.getType()).thenReturn("SLIDE");
         
         IModule module = moduleManager.getModule(moduleId);
         SlideType type = form.getType().isEmpty() ? null : SlideType.valueOf(form.getType());

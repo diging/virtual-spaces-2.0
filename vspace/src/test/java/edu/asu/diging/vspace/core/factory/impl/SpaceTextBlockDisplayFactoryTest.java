@@ -34,8 +34,10 @@ public class SpaceTextBlockDisplayFactoryTest {
         float positionY = 200.0f;
         float height = 50.0f;
         float width = 80.0f;
+        String textColor = "#000000";
+        String borderColor = "#ffffff";
         
-        ISpaceTextBlockDisplay display= spaceTextBlockDisplayFactory.createSpaceTextBlockDisplay(textBlock, positionX, positionY, height, width);
+        ISpaceTextBlockDisplay display= spaceTextBlockDisplayFactory.createSpaceTextBlockDisplay(textBlock, positionX, positionY, height, width, textColor, borderColor);
         
         assertEquals(textBlock, display.getSpaceTextBlock());
         assertEquals(positionX, display.getPositionX(), 0.001); 

@@ -18,6 +18,8 @@ public interface ISpaceTextBlockDisplayFactory {
      * @param positionY The Y-coordinate position of the text block display.
      * @param height    The height of the text block display.
      * @param width     The width of the text block display.
+     * @param textColor The color of text in the text block display.
+     * @param borderColor The border corder of the text block display.
      * @return An ISpaceTextBlockDisplay instance representing the visual display of the text block.
      */
     ISpaceTextBlockDisplay createSpaceTextBlockDisplay(ISpaceTextBlock textBlock, float positionX, float positionY, float height, float width, String textColor, String borderColor);
