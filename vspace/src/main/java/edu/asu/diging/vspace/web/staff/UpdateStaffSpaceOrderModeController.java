@@ -29,6 +29,6 @@ public class UpdateStaffSpaceOrderModeController {
             exhibitionManager.updateSpaceOrderMode(ExhibitionSpaceOrderMode.valueOf(spaceOrderMode));
         }
         
-        return "redirect:/staff/space/list";
+        return "redirect:/staff/exhibit/config";
     }
 }

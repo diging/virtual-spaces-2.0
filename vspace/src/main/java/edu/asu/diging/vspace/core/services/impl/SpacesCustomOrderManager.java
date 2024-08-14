@@ -118,8 +118,8 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
     public void updateSpaces(String spacesCustomOrderId, List<String> spacesIds) {
         List<ISpace> spaces = new ArrayList<ISpace>();
         spacesIds.stream()
-        .filter(spaceId -> spaceManager.getSpace(spaceId) != null)
-        .forEach(id -> spaces.add(spaceManager.getSpace(id)));
+            .filter(spaceId -> spaceManager.getSpace(spaceId) != null)
+            .forEach(id -> spaces.add(spaceManager.getSpace(id)));
   
         ISpacesCustomOrder spaceCustomOrder = get(spacesCustomOrderId);
         spaceCustomOrder.setCustomOrderedSpaces(spaces);
