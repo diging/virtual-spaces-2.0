@@ -31,12 +31,12 @@ public class EditBiblioBlockController {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(biblioBlockData);
 
-        // Extract biblioTitle and description from the JSON
         String biblioTitle = rootNode.get("biblioTitle").asText();
         String description = rootNode.get("description").asText();
         String id = rootNode.get("id").asText();
         
         IBiblioBlock biblioBlock = contentBlockManager.getBiblioBlock(id);
+        
         if (biblioBlock == null) {
             return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
         }
