@@ -3,8 +3,6 @@ package edu.asu.diging.vspace.web.staff;
 
 import java.security.Principal;
 
-
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -61,8 +59,7 @@ public class AddSlideController {
             IBranchingPoint branchingPoint = slideManager.createBranchingPoint(module, slideForm, type);
             slideId = branchingPoint.getId();
         } 
-        else {
-            
+        else {          
             ISlide slide = slideManager.createSlide(module, slideForm, type);
             slideId = slide.getId();
             slideManager.updateNameAndDescription(slide,slideForm);

@@ -7,10 +7,10 @@ public interface IExhibitionLanguage extends IVSpaceElement {
     
     String getLabel();
     
+    void setLabel(String label);
+    
     boolean isDefault();
     
-    void setDefault(boolean isDefault);
-    
-    void setLabel(String label);
+    void setDefault(boolean isDefault);   
 
 }

@@ -66,5 +66,4 @@ public class AboutPageForm {
         this.aboutPageTexts = aboutPageTexts;
     }
 
-
 }

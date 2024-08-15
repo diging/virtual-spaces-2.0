@@ -74,7 +74,6 @@ public class ExhibitionAboutPageManagerTest {
 
         aboutTextList.add(new LocalizedTextForm( "about text","ID2", "langId", "English"));
 
-
         aboutPageForm.setTitles(titleList);
         aboutPageForm.setAboutPageTexts(aboutTextList);
         when(repo.findAll()).thenReturn(exhibitionAboutPageList);
