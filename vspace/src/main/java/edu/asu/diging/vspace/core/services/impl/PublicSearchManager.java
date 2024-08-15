@@ -38,10 +38,8 @@ import edu.asu.diging.vspace.core.services.impl.model.SlideWithSpace;
 
 @Service
 public class PublicSearchManager extends SearchManager implements IPublicSearchManager{
-
     
     private final Logger logger = LoggerFactory.getLogger(getClass());
-
     
     @Autowired
     private ISpaceManager spaceManager;
@@ -61,8 +59,7 @@ public class PublicSearchManager extends SearchManager implements IPublicSearchM
     @Override
     protected Page<ISpace> searchSpaces(Pageable requestedPageForSpace, String searchTerm) {
         return spaceManager.findBySpaceStatusAndNameOrDescription(requestedPageForSpace, SpaceStatus.PUBLISHED, searchTerm);
-    }
-    
+    }   
     
     @Override
     protected Page<ISlide> updateSlidePageWithSpaceInfo(Page<ISlide> slidePage) {
@@ -83,8 +80,7 @@ public class PublicSearchManager extends SearchManager implements IPublicSearchM
                 slideWithSpace.setStartSequenceId(slide.getModule().getStartSequence().getId());
                 slideList.add(slideWithSpace);
             }
-        }
-        
+        }       
         return new PageImpl<>(slideList, slidePage.getPageable(), slidePage.getTotalElements());
     }
 
@@ -106,10 +102,8 @@ public class PublicSearchManager extends SearchManager implements IPublicSearchM
                 moduleList.add(modWithSpace);
             }
         }
-
         return new PageImpl<>(moduleList, modulePage.getPageable(), modulePage.getTotalElements());
     }
-
 
     @Override
     protected Page<ISlide> updateSlideTextPageWithSpaceInfo(Page<ISlide> slideTextPage) {
@@ -134,27 +128,21 @@ public class PublicSearchManager extends SearchManager implements IPublicSearchM
         return new PageImpl<>(slideTextList, slideTextPage.getPageable(), slideTextPage.getTotalElements());
     }
 
-
     @Override
     protected Page<IModule> searchModules(Pageable requestedPageForModule, String searchTerm) {
         Page<IModule> modulePage =  moduleManager.findByNameOrDescriptionLinkedToSpace(requestedPageForModule, searchTerm);
         updateModulePageWithSpaceInfo(modulePage);
-        return modulePage;
-        
+        return modulePage;        
     }
-
 
     @Override
     protected Page<ISlide> searchSlides(Pageable requestedPageForSlide, String searchTerm) { 
         return slideManager.findByNameOrDescriptionLinkedToSpace(requestedPageForSlide, searchTerm);      
     }
 
-
     @Override
     protected Page<ISlide> searchSlideTexts(Pageable requestedPageForSlideText, String searchTerm) {
         return textContentBlockRepo.findWithNameOrDescriptionLinkedToSpace(requestedPageForSlideText, searchTerm, SpaceStatus.PUBLISHED, ModuleStatus.PUBLISHED);
     }
-
-
-   
+    
 }

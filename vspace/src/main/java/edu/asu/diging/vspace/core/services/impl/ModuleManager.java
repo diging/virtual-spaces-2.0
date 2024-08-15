@@ -134,8 +134,7 @@ public class ModuleManager implements IModuleManager {
             throw new ModuleNotFoundException("Module not found");
         }
         moduleRepo.deleteById(moduleId);
-    }
-    
+    } 
     
     public Page<IModule> findByNameOrDescriptionLinkedToSpace(Pageable requestedPage,String searchText){
               

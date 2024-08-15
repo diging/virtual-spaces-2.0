@@ -41,9 +41,7 @@ public class StaffSearchManager extends SearchManager implements IStaffSearchMan
     
     @Autowired
     private TextContentBlockRepository textContentBlockRepo;
-
-
-    
+   
     @Override
     protected Page<ISpace> searchSpaces(Pageable requestedPageForSpace, String searchTerm) {
         return spaceManager.findBySpaceStatusAndNameOrDescription(requestedPageForSpace, null, searchTerm);
@@ -72,8 +70,7 @@ public class StaffSearchManager extends SearchManager implements IStaffSearchMan
 
 
     @Override
-    protected Page<ISlide> updateSlideTextPageWithSpaceInfo(Page<ISlide> slideTextPage) {
-       
+    protected Page<ISlide> updateSlideTextPageWithSpaceInfo(Page<ISlide> slideTextPage) {       
         return slideTextPage;
     }
 

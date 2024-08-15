@@ -104,5 +104,4 @@ public interface ISearchManager {
      */
     SearchSpaceResults convertToSearchSpaceResults(Page<ISpace> spacePage);
     
-    
 }

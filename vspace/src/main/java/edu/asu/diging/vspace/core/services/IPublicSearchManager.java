@@ -17,5 +17,4 @@ import edu.asu.diging.vspace.core.services.impl.model.SearchSpaceResults;
 
 public interface IPublicSearchManager extends ISearchManager{
 
-
 }

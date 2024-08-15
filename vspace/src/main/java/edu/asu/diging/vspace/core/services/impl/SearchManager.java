@@ -26,7 +26,6 @@ import edu.asu.diging.vspace.core.services.impl.model.SearchSlideResults;
 import edu.asu.diging.vspace.core.services.impl.model.SearchSlideTextBlockResults;
 import edu.asu.diging.vspace.core.services.impl.model.SearchSpaceResults;
 
-
 public abstract class SearchManager implements ISearchManager {
 
     @Value("${page_size}")
@@ -336,8 +335,5 @@ public abstract class SearchManager implements ISearchManager {
         }
         return updateSlideTextPageWithSpaceInfo(slidetextPage);
     }
-
-
-
 
 }

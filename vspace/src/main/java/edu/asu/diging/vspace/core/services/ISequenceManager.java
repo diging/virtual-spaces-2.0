@@ -15,5 +15,4 @@ public interface ISequenceManager {
 
     List<ISequence> getAllSequencesForModules();
     
-
 }

@@ -34,5 +34,4 @@ public class SearchSpaceResults {
         this.totalPages = totalPages;
     }
     
-
 }

@@ -31,7 +31,6 @@ public interface SlideRepository extends PagingAndSortingRepository<Slide, Strin
     
     @Query(value="SELECT d.Slide_Id FROM Sequence_Slides d, Module m WHERE d.Sequence_Id = m.startSequence_id", nativeQuery = true)
     Set<String> findAllSlidesFromStartSequences();
-
     
     @Query("SELECT DISTINCT s from Slide s where  s.module.id IN "
             + "(SELECT DISTINCT module.id from Module module JOIN ModuleLink moduleLink ON module.id = moduleLink.module.id JOIN Space space "

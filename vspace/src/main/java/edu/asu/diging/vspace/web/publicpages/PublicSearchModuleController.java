@@ -23,10 +23,7 @@ public class PublicSearchModuleController  {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private IPublicSearchManager publicSearchManager;
-    
-
-
+    private IPublicSearchManager publicSearchManager;    
 
     @RequestMapping(value = "/exhibit/search/module")
     public ResponseEntity<SearchModuleResults> searchInVspace(

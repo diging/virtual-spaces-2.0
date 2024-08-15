@@ -32,6 +32,5 @@ public class PublicSearchSpaceController {
         SearchSpaceResults searchResults = publicSearchManager.convertToSearchSpaceResults(spacePage);
         return new ResponseEntity<SearchSpaceResults>(searchResults, HttpStatus.OK);
     }
-  
    
 }
