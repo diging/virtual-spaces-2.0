@@ -62,6 +62,7 @@
 	bottom: 0;
 	font-size: 12px;
 	color: var(--dark-grey);
+	top: 18%;
 }
 
 .status {
