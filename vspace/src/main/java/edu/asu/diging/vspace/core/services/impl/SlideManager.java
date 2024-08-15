@@ -31,8 +31,10 @@ import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.display.SlideType;
 import edu.asu.diging.vspace.core.model.impl.BranchingPoint;
 import edu.asu.diging.vspace.core.model.impl.Choice;
+
 import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.impl.LocalizedText;
+
 import edu.asu.diging.vspace.core.model.impl.Sequence;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.model.impl.Space;
@@ -68,7 +70,7 @@ public class SlideManager implements ISlideManager {
     
     @Autowired
     private IExhibitionManager exhibitionManager;
-    
+       
     @Autowired
     private ILocalizedTextFactory localizedTextFactory;
 
@@ -193,7 +195,6 @@ public class SlideManager implements ISlideManager {
         slide.setDescription(slideForm.getDefaultDescription().getText());
         List<ILocalizedText> localizedTextNames = slide.getSlideNames();
         List<ILocalizedText> localizedTextDescriptions = slide.getSlideDescriptions();
-        
         addSlideLocalizedText(slide,slideForm.getDefaultName(), localizedTextNames);
         addSlideLocalizedText(slide,slideForm.getDefaultDescription(), localizedTextDescriptions);
 
@@ -202,7 +203,7 @@ public class SlideManager implements ISlideManager {
         }
         for(LocalizedTextForm text: slideForm.getDescriptions()) {
             addSlideLocalizedText(slide, text, localizedTextDescriptions);
-        }   
+        }
     }
 
     @Override

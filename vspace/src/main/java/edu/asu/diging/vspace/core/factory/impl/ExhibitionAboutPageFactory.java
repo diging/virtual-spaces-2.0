@@ -15,16 +15,13 @@ public class ExhibitionAboutPageFactory implements IExhibitionAboutPageFactory{
     public ExhibitionAboutPage createExhibitionAboutPage(String title, String aboutPageText,
             List<ILocalizedText> localizedTitles, List<ILocalizedText> localizedDescriptions) {
         
-        ExhibitionAboutPage exhibitionAboutPage = new ExhibitionAboutPage();
-        
+        ExhibitionAboutPage exhibitionAboutPage = new ExhibitionAboutPage();       
         exhibitionAboutPage.setTitle(title);
         exhibitionAboutPage.setAboutPageText(aboutPageText);
         exhibitionAboutPage.setExhibitionTitles(localizedTitles);
         exhibitionAboutPage.setExhibitionTextDescriptions(localizedDescriptions);
         
         return exhibitionAboutPage;
-    }
+    }  
     
-    
-
 }

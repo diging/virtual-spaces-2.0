@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import edu.asu.diging.vspace.core.factory.ISlideFormFactory;
 import edu.asu.diging.vspace.core.model.IBranchingPoint;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISlide;
@@ -36,6 +37,9 @@ public class EditSlideController {
     
     @Autowired
     private IExhibitionManager exhibitionManager;
+    
+    @Autowired
+    private ISlideFormFactory slideFormFactory;
 
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{slideId}/edit/description", method = RequestMethod.POST)
     public ResponseEntity<String> saveDescription(@RequestParam("description") String description,
@@ -58,7 +62,7 @@ public class EditSlideController {
     @RequestMapping(value="/staff/module/{moduleId}/slide/{slideId}/edit", method=RequestMethod.GET)
     public String show(Model model, @PathVariable("moduleId") String moduleId, @PathVariable("slideId") String slideId) {
         ISlide slide = slideManager.getSlide(slideId);
-        SlideForm slideForm = slideManager.getSlideForm(slideId);   
+        SlideForm slideForm = slideFormFactory.createNewSlideForm(slide, exhibitionManager.getStartExhibition());  
         if(slide instanceof BranchingPoint) {
             slideForm.setType(SlideType.BRANCHING_POINT.toString());
             IBranchingPoint branchingPoint = (IBranchingPoint) slide;           
@@ -80,13 +84,13 @@ public class EditSlideController {
     public String save(@ModelAttribute SlideForm slideForm, @PathVariable("moduleId") String moduleId, @PathVariable("slideId") String slideId) {
         ISlide slide = slideManager.getSlide(slideId);
         SlideType type = slideForm.getType().isEmpty() ? null : SlideType.valueOf(slideForm.getType());
-        slideManager.updateNameAndDescription(slide, slideForm);
+        
         if(type.equals(SlideType.BRANCHING_POINT)) {
             List<String> editedChoices = slideForm.getChoices();
             slideManager.updateBranchingPoint((IBranchingPoint)slide, editedChoices);
-        } else {
-            slideManager.updateSlide((Slide)slide);
         }
+        slideManager.updateNameAndDescription(slide, slideForm);
+        slideManager.updateSlide((Slide)slide);
         return "redirect:/staff/module/{moduleId}/slide/{slideId}";
     }
 }
