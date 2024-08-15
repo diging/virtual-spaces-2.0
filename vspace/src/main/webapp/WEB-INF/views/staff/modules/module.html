@@ -344,6 +344,22 @@ $(document).ready(function() {
                 </div>
             </div>              
         </div>
+        <div class="tab sequences" style="margin-top: 10px;">
+            <div style="display: flex; justify-content: space-between">
+               <h4>Spaces linking to this Module</h4>
+            </div>
+            <span th:if="${spacesList.isEmpty()}">This module has not been linked from a space yet.</span>
+            <div id="list" style="margin-top: 0">
+               <ul class="list-group list-group-flush" th:each="space: ${spacesList}">
+                  <li class="list-group-item">
+                  	<a th:href="@{'/staff/space/'+${space.id}}">
+                     	<span class="icon-layers secondary"></span>&emsp;[[${space.name}]]
+                     </a>
+                     
+                  </li>
+               </ul>
+            </div>
+         </div>
 			
 		<div id="deleteSlideAlert" class="modal fade" role="dialog" data-value="0">
 		    <div class="modal-dialog">

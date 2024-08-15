@@ -31,6 +31,7 @@
     overflow-x: hidden;
     transition: 0.5s;
     padding-top: 60px;
+
 }
 
 .sidenav a {
@@ -40,6 +41,9 @@
     color: #818181;
     display: block;
     transition: 0.3s;
+    white-space: normal; /* Add this property to allow text wrapping */
+    word-break: normal;
+  
 }
 
 .sidenav .closebtn {
@@ -53,6 +57,7 @@
 @media screen and (max-height: 450px) {
     .sidenav {
         padding-top: 15px;
+  
     }
     .sidenav a {
         font-size: 18px;
@@ -89,6 +94,9 @@
     visibility: visible;
 }
 
+
+
+
 .exitfullscreen:hover .tooltiptextForExitFullscreen {
     visibility: visible;
 }
@@ -108,6 +116,7 @@
 }
 
 
+
 .tooltiptextForExitFullscreen {
     visibility: hidden;
     width: 120px;
@@ -125,6 +134,9 @@
 
 .barPosition {
     top: 25px;
+}
+#previewNavBarItem {
+	display: inline-flex;
 }
 
 @media only screen and (max-width: 800px) { /* For mobile phones: */
@@ -164,6 +176,7 @@
     /* top layer */
     z-index: 9999;
     transition: all 0.5s;
+
 }
 
 #sidebar.active {
@@ -192,6 +205,19 @@
     }
 }
 </style>
+
+<script th:inline="javascript">
+$(document).ready(function() {
+	const textBlock = document.getElementByClassName("textBlock");
+	const color = textBlock.style.borderColor;
+	console.log("color" + color);
+	textBlock.addEventListener('focus-visible', function(e) {
+		e.target.style.outline = "2px solid blue";
+	});
+
+}
+
+</script>
 </head>
 
 <body>
@@ -233,7 +259,8 @@
 					$("#Module_1").css("margin-bottom", "60px");
 				}
 			}
-			$("#space a").remove();        
+			$("#space a").remove(); 
+			$(".Info_cz_Class").remove();
 			drawLinks();
 		}
 		
@@ -269,9 +296,12 @@
 		let maxWidth='(max-width: 1200px)';
 		function openNav(){
 		  $("#mySidenav").css("width", "250px");
+		  $("#mySidenav").css("overflow", "visible");
+		  
 		}
         function closeNav(){
         	$("#mySidenav").css("width", "0");
+        	 $("#mySidenav").css("overflow", "hidden");
 		}
 		function openModuleNav(){
 		    if (window.matchMedia(maxWidth).matches){
@@ -333,8 +363,9 @@
 		    	let spaceHeight = $("#bgImage").css("height");
 		    	$("#Module_1").css("height",spaceHeight);
 			$( window ).resize(function() {
-				$("#space a").remove();
-		    		drawLinks();
+					$("#space a").remove();
+					$(".Info_cz_Class").remove();
+			    	drawLinks();
 		    	});
 		    	drawLinks();
 		    	toggleImgSize(false);
@@ -345,10 +376,11 @@
 			var moduleLinks = [[${moduleList}]];
 			var isExhPreview  =[[${isExhPreview}]];
 			var externalLinks = [[${externalLinkList}]];
+			var spaceTextBlocks = [[${spaceTextBlocks}]];
 			var height = parseInt($("#bgImage").css("height"));
 			var width = parseInt($("#bgImage").css("width"));
 			let relativeHeight = ([(${display?.width})]/width)*height;
-		    spaceLinks.forEach(function(link,index){
+			spaceLinks.forEach(function(link,index) {
                 if(link!=null){
                     var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left; 
     		        var posY = $("#space").position().top;
@@ -469,6 +501,44 @@
   		          });
                 }
             })
+            
+            spaceTextBlocks.forEach(function(block,index){
+                if(block!=null){
+                    var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left;
+                    var posY = $("#space").position().top;
+                    var heightText = (block.height*height)/100;
+                    var widthText = (block.width*width)/100;
+                    var textBlock = $('<span data-link-id="'+block.id+'" class="spaceLink-'+block.id+' Info_cz_Class"><textarea class="textBlock" style="height:'+heightText+'px; width:'+widthText+'px; resize:none; color: '+block.textColor+'; border-color:'+block.borderColor+';" readonly>'+block.spaceTextBlock.text+'</textarea></span>');
+                    textBlock.css('position', 'absolute');   
+                    
+                    var	linkPosX=(width*block.positionX)/[(${display.width})];
+                    var	linkPosY=(height*block.positionY)/relativeHeight;
+                    textBlock.css('left', linkPosX + posX);
+                    textBlock.css('top', linkPosY + posY);
+                    
+               
+                    $("#space").append(textBlock);
+                    
+                    
+                }
+            })
+            
+            var textBlockElements = document.getElementsByClassName("textBlock");
+            Array.from(textBlockElements).forEach(function(textBlock, index){
+            	if(textBlock != null) {
+            	   	const color = textBlock.style.borderColor;
+                 	console.log("color" + color);
+                 	textBlock.addEventListener('focus', function(e) {
+               		e.target.style.outline = "2px solid "+ color;
+                 	});
+                 	textBlock.addEventListener('blur', function(e) {
+                 		e.target.style.outline = "none";
+                	});
+            	}
+         
+            })
+              
+                	
 		}
 		</script>
 		
@@ -489,6 +559,8 @@
 		</div>
 		
 		</div>
+
+     
 		<div class="imgResizeDiv">
                 <button class="btn circle-btn" id="toggleBtn" style="width: 35px; height: 35px; margin-left: 10px; margin-top: 5px; padding: 3px;"
                     onclick="toggleImgSize(1)">
@@ -507,6 +579,7 @@
                 </button>
             </div>
             
+           
         <div class="container-fluid"
             th:style="${showAlert} ? 'display:none' : 'display:block'">
             <div class="modalDown alert alert-warning center col-md-12"
@@ -518,21 +591,24 @@
                     th:unless="${exhibitionConfig.customMessage != '' && exhibitionConfig.mode == 'OFFLINE'}">[[${exhibitionConfig.mode?.value}]]</h6>
             </div>
             <div id="Module_1" class="Home_Class" style="margin: -45px 0 60px auto;">
+             
                 <div  th:if="${isExhPreview} == null OR ${isExhPreview} == false" id="mySidenav" class="sidenav">
                     <a href="javascript:void(0)" class="closebtn"
                         onclick="closeNav()">&times;</a>
                     <ul th:each="space: ${publishedSpaces}">
                         <li><a class="dropdown-item"
-                            th:href="@{'/exhibit/space/'+${space?.id}}">[[${space.name}]]</a>
+                            th:href="@{'/exhibit/space/'+${space?.id}}">[[${space.name}]]</a> 
+                             
+                            
                         </li>
                     </ul>
                 </div>
-                  <div  th:if="${isExhPreview} == true" id="mySidenav" class="sidenav">
-                    <a href="javascript:void(0)" class="closebtn"
-                        onclick="closeNav()">&times;</a>
+              	   
+                <div  th:if="${isExhPreview} == true" id="mySidenav" class="sidenav">
+                  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
                     <ul th:each="space: ${publishedSpaces}">
-                        <li><a class="dropdown-item"
-                            th:href="@{'/preview/'+${previewId}+'/space/'+${space?.id}}">[[${space.name}]]</a>
+                        <li><a class="dropdown-item" id="previewNavBarItem" th:href="@{'/preview/'+${previewId}+'/space/'+${space?.id}}">[[${space.name}]]
+                            </a>
                         </li>
                     </ul>
                 </div>

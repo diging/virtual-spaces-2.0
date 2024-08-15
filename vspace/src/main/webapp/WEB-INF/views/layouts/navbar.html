@@ -1,8 +1,7 @@
 <html layout:decorate="~{layouts/main}">
 	<head>
-	
+
 	</head>
-	
 	<body>
 		<div th:if="${isExhPreview} == null OR ${isExhPreview} == false" th:fragment="navbar">
 			<nav class="nav-bar" style="height:48px">
@@ -83,6 +82,21 @@
 		      [[${exhibition?.title}]]</a>
 		        <div class="nav" id="navbarCollapse">
 		        <ul class="navbar-nav mr-auto" style="list-style: none; display: contents;">
+		        	<li th:if="${#strings.equals(exhibitionConfig.mode,'MAINTENANCE')} " >
+		        		<div class="exhModeAlert" style="top:28px;" > <span> Maintenance </span> <span class="tooltiptextforExhModeAlert">The virtual space is currently under Maintenance and cannot be viewed via
+                                     its public url.</span>	</div>
+		        	
+		        	</li>
+		        		<li th:if="${#strings.equals(exhibitionConfig.mode,'OFFLINE')}" >
+		        		<div class="exhModeAlert" style="top:20px;"  > <span>Offline </span> <span class="tooltiptextforExhModeAlert">The virtual space is currently Offline and cannot be viewed via
+                                     its public url.</span>	</div>
+		        	
+		        	</li>
+		        	<li >
+		        		<div class="previewModeAlert" ><span> Preview  </span> <span class="tooltiptextforPreviewModeAlert">You’re currently viewing a preview of this virtual space.</span> </div>
+		        	
+		        	</li>
+		     
 					<li class="nav-item active" style="padding-top: 8px;padding-right: 35px;">
 					        <a class="nav-link" th:href="@{'/preview/'+${previewId}}" title="Go to exhibition"><span class="icon-play-circle secondary"></span>
 			                </a>

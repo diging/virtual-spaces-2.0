@@ -16,6 +16,7 @@ import edu.asu.diging.vspace.core.exception.SlideNotFoundException;
 import edu.asu.diging.vspace.core.exception.SlidesInSequenceNotFoundException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.exception.SpaceNotFoundException;
+import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
@@ -24,6 +25,7 @@ import edu.asu.diging.vspace.core.model.impl.BranchingPoint;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionAboutPage;
 import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
 import edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager;
+import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISequenceManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
@@ -46,6 +48,10 @@ public class ExhibitionSlideController {
 
     @Autowired
     private SequenceHistory sequenceHistory;
+    
+    
+    @Autowired
+    private IExhibitionManager exhibitManager;
 
     @RequestMapping(value = {
         "/exhibit/{spaceId}/module/{moduleId}/sequence/{sequenceId}/slide/{slideId}",
@@ -74,6 +80,8 @@ public class ExhibitionSlideController {
         }
         String startSequenceId = module.getStartSequence().getId();
         model.addAttribute("startSequenceId", startSequenceId);
+        IExhibition exhibition = exhibitManager.getStartExhibition();
+        model.addAttribute("exhibitionConfig", exhibition);
         ISequence sequenceExist = moduleManager.checkIfSequenceExists(moduleId, sequenceId);
         if (sequenceExist == null) {
             throw new SequenceNotFoundException(sequenceId);
