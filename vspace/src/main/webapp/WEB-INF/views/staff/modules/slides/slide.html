@@ -1,161 +1,167 @@
 <html layout:decorate="~{layouts/main_staff}">
-   <head>
-      <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
+    <head>
+        <link rel="stylesheet"
+            href="https://unpkg.com/easymde/dist/easymde.min.css">
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
-      <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
-      <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
-      <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
-      <script th:src="@{/resources/jquery/jquery-ui.min_custom_sortable.js}"></script>
-      <script src="//use.fontawesome.com/releases/v5.8.1/js/all.js" data-auto-replace-svg="nest"></script>
-      <style type="text/css">
-         .hova {
-         background-color: #f2f2f2;
-         }
-         .EasyMDEContainer .CodeMirror-wrap{
-         overflow-y: scroll;
-         height: 400px;
-         }
-         .fixed {
-         position: fixed;
-         top:0; left:0;
-         width: 100%;
-         z-index:100;
-         }
-         li.active>a{
-         background: solid var(--primary);
-         color: #fff;
-         font-size: 15px;
-         }
-         a.nav-link.active.show {
-         border-color: transparent;
-         border-bottom: 4px solid var(--primary);
-         color: var(--primary) !important;
-         background: transparent;
-         }
-      </style>
-      <script th:inline="javascript">
-         //# sourceURL=click.js
-         var contentCount = [[${#lists.size(slideContents)}]];
-         var markDown = null;
-         var defaultValue;
+        <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+        <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+		<script th:src="@{/resources/jquery/jquery-ui.min_custom_sortable.js}"></script>
+		<script src="//use.fontawesome.com/releases/v5.8.1/js/all.js"
+    	data-auto-replace-svg="nest"></script>
+        <style type="text/css">
+            .hova {
+            background-color: #f2f2f2;
+            }
+            .EasyMDEContainer .CodeMirror-wrap{
+            overflow-y: scroll;
+            height: 400px;
+            }
+            .fixed {
+		    position: fixed;
+		    top:0; left:0;
+		    width: 100%;
+		    z-index:100;
+     		}
+     		
+     		li.active>a{
+			background: solid var(--primary);
+			color: #fff;
+			font-size: 15px;
+			}
+			
+			a.nav-link.active.show {
+			border-color: transparent;
+			border-bottom: 4px solid var(--primary);
+			color: var(--primary) !important;
+			background: transparent;
+			}
+			
+			
+        </style>
+        <script th:inline="javascript">
+            //# sourceURL=click.js
+            var contentCount = [[${#lists.size(slideContents)}]];
+            var markDown = null;
+            var defaultValue;
          var formDataCancel;
-         var addVideoClk=0;
-         var editVideoClk=0;
-         
-         $(function () {
-         	  $('[data-toggle="tooltip"]').tooltip()
-         });
-         
-         $(window).scroll(function(){
-             var sticky = $('.sticky'),
-                 scroll = $(window).scrollTop();
-             if (scroll >= 100) sticky.addClass('fixed');
-             else sticky.removeClass('fixed');
-         });
-         
-         function createImageBlock(reader, width) {
-             var imageblock = $('<div id="current" class="valueDiv tab row"><img src="#" style="imgDiv tab row"/><input type="hidden" id="deleteImageId" /><a class="btn deleteImage" href="javascript:;" style="position: absolute; right:64px;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a></div>');
-             imageblock.find('img').attr('src', reader.result);
-             if(width > 800)
-             	imageblock.find('img').attr('width', '800px');
-             return imageblock;
-         }
-         
-         function createImageBlockWithExistingImage(src, width) {
-                     var imageblock = $('<div id="current" class="valueDiv tab row"><img src="#" style="imgDiv tab row"/><input type="hidden" id="deleteImageId" /><a class="btn deleteImage col-md-1" href="javascript:;" style="position:absolute; right:25px;"><span class="icon-trash error"></span></a></div>');
-                     imageblock.find('img').attr('src', src);
-                     if(width > 800)
-                     	imageblock.find('img').attr('width', '800px');
-                     return imageblock;
-                 }
-         function createVideoBlock(reader, videoSrc, title,isUrlProvided) {
-                 var videoBlock = $("<div></div>");
-                 videoBlock.attr('id',"currentVideo");
-                 videoBlock.attr('class',"tab vidDiv row");
-                 videoBlock.css('border','1px solid rgba(0, 0, 0, 0.125)');
-                 var innerDiv1 = $("<div></div>");
-                 var heading = $("<h3></h3>");
-                 heading.append($("<strong></strong>"));
-                 innerDiv1.append(heading);
-                 if (isUrlProvided) {
-                 	var iframe = $("<iframe></iframe>");
-                 	iframe.attr('width',"800");
-                 	iframe.attr('height',"530");
-                 	iframe.attr('src',videoSrc);
-                 	iframe.attr('frameborder',"0");
-                 	iframe.attr('allow',"accelerometer; clipboard-write; encrypted-media;gyroscope; picture-in-picture");
-                 	iframe.attr('allowFullScreen', '');
-                 	innerDiv1.append(iframe);
-                 }else{
-                 	var video = $("<video></video>");
-                 	video.attr('width',"800");
-                 	video.attr('height',"530");
-                 	video.attr('controls', true);
-                 	var source = $("<source></source>");
-                 	source.attr('src', videoSrc);
-                 	source.attr('type',"video/mp4");
-                 	video.append(source);
-                 	innerDiv1.append(video);
-                 }
-                 videoBlock.append(innerDiv1);
-                 var anchor1 = $("<a></a>");
-                 anchor1.attr('href',"javascript:;");
-                 anchor1.attr('class',"btn deleteVideo col-md-1");
-                 anchor1.attr('data-video-id',"");
-                 anchor1.css('position','absolute');
-                 anchor1.css('right','25px');
-                 var span1 = $("<span></span>");
-                 span1.attr('class',"icon-trash error");
-                 anchor1.append(span1);
-                 videoBlock.append(anchor1);
-                 var anchor2 = $("<a></a>");
-                 anchor2.attr('href',"javascript:;");
-                 anchor2.attr('class',"btn editVideo col-md-1");
-                 anchor2.attr('data-editvideo-id',"");
-                 anchor2.css('position','absolute');
-                 anchor2.css('top','60px');
-                 anchor2.css('right','25px');
-                 var span2 = $("<span></span>");
-                 span2.attr('class',"icon-edit");
-                 anchor2.append(span2);
-                 videoBlock.append(anchor2);
-                 videoBlock.find('h3 strong').html(title);
-                 return videoBlock;
-             }
-         
-         function onMouseEnter(e){
-             var target = $( e.target );
+            var addVideoClk=0;
+            var editVideoClk=0;
             
-             $(".hova").removeClass("hova");
-             $(e.target).addClass("hova");
-             // This is needed to prevent only the p tag from being highlighted
-             if(target.is('p')){
-                 $(e.target).parent().addClass("hova");
-             }
-             //prevent normal hover actions
-             e.preventDefault();
-         }
-         function onMouseLeave(e) {
-             $(this).removeClass("hova");
-         }
-         
-         function onDoubleClick(e){
-             // get to the nearest divs class attribute
-             $(".EasyMDEContainer").remove();
-             var divName = $(e.target).closest('div').attr('class');
-             //if the div is a text content block 
-             if(divName.includes("textDivStaff")){
-         
-             	$(e.target).closest('.textDivStaff').addClass("open");
-                 var description = $("div.open p:eq(0)").text();
-             	defaultValue = description;
-         
-                 $("#editTextAlert").show();
-                 markDown = new EasyMDE({element: $('#editTextBlock')[0]});
-                 markDown.value(description.trim());
-                 //remove card border
-                 $(".open").css('display', 'none');
-                 $(".open").css('overflow-y', 'scroll');
+            $(function () {
+            	  $('[data-toggle="tooltip"]').tooltip()
+            });
+            
+            $(window).scroll(function(){
+            	  var sticky = $('.sticky'),
+            	      scroll = $(window).scrollTop();
+            	  if (scroll >= 100) sticky.addClass('fixed');
+            	  else sticky.removeClass('fixed');
+            });
+            
+            function createImageBlock(reader, width) {
+                var imageblock = $('<div id="current" class="valueDiv tab row"><img src="#" style="imgDiv tab row"/><input type="hidden" id="deleteImageId" /><a class="btn deleteImage" href="javascript:;" style="position: absolute; right:64px;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a></div>');
+                imageblock.find('img').attr('src', reader.result);
+                if(width > 800)
+                	imageblock.find('img').attr('width', '800px');
+                return imageblock;
+            }
+            
+            function createImageBlockWithExistingImage(src, width) {
+                var imageblock = $('<div id="current" class="valueDiv tab row"><img src="#" style="imgDiv tab row"/><input type="hidden" id="deleteImageId" /><a class="btn deleteImage col-md-1" href="javascript:;" style="position:absolute; right:25px;"><span class="icon-trash error"></span></a></div>');
+                imageblock.find('img').attr('src', src);
+                if(width > 800)
+                	imageblock.find('img').attr('width', '800px');
+                return imageblock;
+            }
+            
+            function createVideoBlock(reader, videoSrc, title,isUrlProvided) {
+                var videoBlock = $("<div></div>");
+                videoBlock.attr('id',"currentVideo");
+                videoBlock.attr('class',"tab vidDiv row");
+                videoBlock.css('border','1px solid rgba(0, 0, 0, 0.125)');
+                var innerDiv1 = $("<div></div>");
+                var heading = $("<h3></h3>");
+                heading.append($("<strong></strong>"));
+                innerDiv1.append(heading);
+                if (isUrlProvided) {
+                	var iframe = $("<iframe></iframe>");
+                	iframe.attr('width',"800");
+                	iframe.attr('height',"530");
+                	iframe.attr('src',videoSrc);
+                	iframe.attr('frameborder',"0");
+                	iframe.attr('allow',"accelerometer; clipboard-write; encrypted-media;gyroscope; picture-in-picture");
+                	iframe.attr('allowFullScreen', '');
+                	innerDiv1.append(iframe);
+                }else{
+                	var video = $("<video></video>");
+                	video.attr('width',"800");
+                	video.attr('height',"530");
+                	video.attr('controls', true);
+                	var source = $("<source></source>");
+                	source.attr('src', videoSrc);
+                	source.attr('type',"video/mp4");
+                	video.append(source);
+                	innerDiv1.append(video);
+                }
+                videoBlock.append(innerDiv1);
+                var anchor1 = $("<a></a>");
+                anchor1.attr('href',"javascript:;");
+                anchor1.attr('class',"btn deleteVideo col-md-1");
+                anchor1.attr('data-video-id',"");
+                anchor1.css('position','absolute');
+                anchor1.css('right','25px');
+                var span1 = $("<span></span>");
+                span1.attr('class',"icon-trash error");
+                anchor1.append(span1);
+                videoBlock.append(anchor1);
+                var anchor2 = $("<a></a>");
+                anchor2.attr('href',"javascript:;");
+                anchor2.attr('class',"btn editVideo col-md-1");
+                anchor2.attr('data-editvideo-id',"");
+                anchor2.css('position','absolute');
+                anchor2.css('top','60px');
+                anchor2.css('right','25px');
+                var span2 = $("<span></span>");
+                span2.attr('class',"icon-edit");
+                anchor2.append(span2);
+                videoBlock.append(anchor2);
+                videoBlock.find('h3 strong').html(title);
+                return videoBlock;
+            }
+            
+            function onMouseEnter(e){
+                var target = $( e.target );
+               
+                $(".hova").removeClass("hova");
+                $(e.target).addClass("hova");
+                // This is needed to prevent only the p tag from being highlighted
+                if(target.is('p')){
+                    $(e.target).parent().addClass("hova");
+                }
+                //prevent normal hover actions
+                e.preventDefault();
+            }
+            function onMouseLeave(e) {
+                $(this).removeClass("hova");
+            }
+            
+            function onDoubleClick(e){
+                // get to the nearest divs class attribute
+                $(".EasyMDEContainer").remove();
+                var divName = $(e.target).closest('div').attr('class');
+                //if the div is a text content block 
+                if(divName.includes("textDivStaff")){
+                	$(e.target).closest('.textDivStaff').addClass("open");
+                    var description = $("div.open p:eq(0)").text();
+                	defaultValue = description;
+            
+                    $("#editTextAlert").show();
+                    markDown = new EasyMDE({element: $('#editTextBlock')[0]});
+                    markDown.value(description.trim());
+                    //remove card border
+                    $(".open").css('display', 'none');
+                    $(".open").css('overflow-y', 'scroll');
                  $(".open").css('max-height', '200px');
              } else if(divName.includes("biblioDivStaff")){
          	   $(e.target).closest('.biblioDivStaff').addClass("open");
@@ -240,93 +246,128 @@
              }
          }
          
-         function uploadImage() {
-            	
-         	var imgID = $("#uploadImage").data('value') // gets image ID
-             var file = $('#file')[0].files[0];
-         	var fileName = file.name;
-             var reader  = new FileReader();
-             var formData = new FormData();
-             formData.append('file', file);
-             formData.append('content', file.name);
-             formData.append('contentOrder', contentCount);
-             var imageblock = "";
-          	var oldImageBlock = "";
-             
-             // Ashmi changes for Story VSPC-64
-             
-         	// checks if image ID is present to replace
-             if (imgID != '') {
-             	oldImageBlock = $("#" + imgID);
-             	var imageBlockId = imgID;
-             	formData.append('imageBlockId',imageBlockId);
-                 var url = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image/'})]" + imageBlockId + '?[(${_csrf.parameterName})]=[(${_csrf.token})]';
-                 reader.onload = function (theFile) {
-         	        var image = new Image();
-         	        image.src = theFile.target.result;
-         	        image.onload = function () {
-         	            imageblock = createImageBlock(reader, this.width);
-         	            $("#" + imageBlockId).replaceWith(imageblock);	
-         	            $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
-                 	};
-                 }
-                 // Reset data-attribute to get current selected image ID
-                 $("#uploadImage").data('value', '');
-               }
-           	else {
-           	  var url = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image/?'+${_csrf.parameterName}+'='+${_csrf.token}})]";
-                 reader.onload = function (theFile) {        	
-                 	var image = new Image();
-                     image.src = theFile.target.result;
-                     image.onload = function() {
-                     	imageblock = createImageBlock(reader, this.width);  
-                     	$('#slideSpace').append(imageblock); 
-                         $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
-                     };          
-                 }
-                 ++contentCount; 
-             }
-           	
-             reader.readAsDataURL(file);
-             $.ajax({
-                 enctype: 'multipart/form-data',
-                 // ------------- creating image content blocks ------------
-                 url: url,
-                 type: 'POST',
-                 cache       : false,
-                 contentType : false,
-                 processData : false,
-                 data: formData,
-                 
-                 success: function(data) {
-                     $(".open").removeClass("open");
-                    	var img = imageblock.find('img');
-                    	if(data != ''){
-                    		img.attr('id', data);
-                    		$("#current").find('#deleteImageId').val(data);
-                    		$("#current").attr('id', data);
-                    	}
-                    	else{
-                    		img.attr('id', imgID);
-                    		$("#current").find('#deleteImageId').val(imgID);
-                    		$("#current").attr('id', imgID);
-                    	}
-                 },
-                 error: function(data) {
-                 	if (imgID == '') {
-                 		$("#current").remove();
-                 	}
-                 	else {
-                 		$("#current").replaceWith(oldImageBlock);
-                 	}
-                 	if (data.status == 403) {
-                 		$("#loginAlert").show();
-                 	}
-                 }
-             });
-             // Reset the image file name 
+            function uploadImage() {
+            	var imgBlockID = $("#uploadImage").data('value') // gets image ID
+            	var file = $('#file')[0].files[0];
+            	var reader  = new FileReader();
+            	var formData = new FormData();
+            	var chooseFromExisting = true;
+            	if (typeof(file) != "undefined"){
+            		chooseFromExisting = false;
+            		formData.append('file', file);
+            	}
+            	var imageSource = $('#selectedImage').find('img').attr('src');
+            	var imageId = "";
+            	if(typeof(imageSource) != "undefined"){
+            		imageId = imageSource.split("/").pop().split(".")[0];
+            	}
+            	var imageblock = "";
+            	var oldImageBlock = "";
+            			    
+            	// Ashmi changes for Story VSPC-64
+            			    
+            	// checks if image ID is present to replace
+            	if (imgBlockID != '') {
+            			oldImageBlock = $("#" + imgBlockID);
+            			var imageBlockId = imgBlockID;
+            			formData.append('imageBlockId',imageBlockId);
+            			var url = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image/'})]" + imageBlockId + '?[(${_csrf.parameterName})]=[(${_csrf.token})]';
+            			if(!chooseFromExisting){
+            				reader.onload = function (theFile)
+            				{
+            					var image = new Image();
+            					image.src = theFile.target.result;
+            					image.onload = function ()
+            					{
+            						imageblock = createImageBlock(reader, this.width);
+            						$("#" + imageBlockId).replaceWith(imageblock);	
+            						$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+            					};
+            				}
+            			}
+            			else{
+            				var image = new Image();
+            				image.src = $('#selectedImage').find('img').attr('src');
+            				formData.append('imageId',imageId);
+            				imageblock = createImageBlockWithExistingImage($('#selectedImage').find('img').attr('src'),image.width);
+            				$("#" + imageBlockId).replaceWith(imageblock);	
+            				$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+            			}
+            			// Reset data-attribute to get current selected image ID
+            			$("#uploadImage").data('value', '');
+            	}
+            	else {
+            		var url = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image/?'+${_csrf.parameterName}+'='+${_csrf.token}})]";
+            		if(!chooseFromExisting){
+            			reader.onload = function (theFile) 
+            			{        	
+            			var image = new Image();
+            			image.src = theFile.target.result;
+            			image.onload = function() 
+            			{
+            				imageblock = createImageBlock(reader, this.width);  
+            				$('#slideSpace').append(imageblock); 
+            				$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+            			};          
+            			} 
+            		}
+            		else
+            		{
+            			var image = new Image();
+            			image.src = $('#selectedImage').find('img').attr('src');
+            			formData.append('imageId',imageId);
+            			imageblock = createImageBlockWithExistingImage($('#selectedImage').find('img').attr('src'),image.width);  
+            			$('#slideSpace').append(imageblock); 
+            			$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+            		}
+            	}
+            	if (!chooseFromExisting)
+            	{
+            		reader.readAsDataURL(file)
+            	}
+            	$.ajax({
+            		enctype: 'multipart/form-data',
+            		// ------------- creating image content blocks ------------
+            		url: url,
+            		type: 'POST',
+            		cache       : false,
+            		contentType : false,
+            		processData : false,
+            		data: formData,    
+            		success: function(data) {
+            			$(".open").removeClass("open");
+            			var img = imageblock.find('img');
+            			if(data != ''){
+            				img.attr('id', data);
+            				$("#current").find('#deleteImageId').val(data);
+            				$("#current").attr('id', data);
+            			}
+            			else{
+            				img.attr('id', imgBlockID);
+            				$("#current").find('#deleteImageId').val(imgBlockID);
+            				$("#current").attr('id', imgBlockID);
+            			}
+            		},
+            		error: function(data) {
+            		if (imgBlockID == '') {
+            			$("#current").remove();
+            		}
+            		else {
+            			$("#current").replaceWith(oldImageBlock);
+            		}
+            		if (data.status == 403) {
+            			$("#loginAlert").show();
+            		}
+            		}
+            	});
+            	// Reset the image file name 
             	$('#file').val('');
-         }
+            	if(chooseFromExisting)
+            	{
+            		$("#selectedImage").empty();
+            		$('#imageId').prop('selectedIndex',0).trigger( "change" );
+            	}
+            }
          
          $(document).ready(function() {
              
@@ -2927,7 +2968,6 @@
                   </a>
                </div>
             </div>
-         </div>
-      </div>
-   </body>
+        </div>
+    </body>
 </html>
