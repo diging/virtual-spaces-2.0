@@ -9,6 +9,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +41,9 @@ public class ExhibitionManagerTest {
 
     @Mock
     private ExhibitionRepository exhibitRepo;
+    
+    @Mock
+    private LocalizedTextRepository localizedTextRepo;
 
     @Mock
     private ExhibitionLanguageConfig exhibitionLanguageConfig;
@@ -50,9 +54,6 @@ public class ExhibitionManagerTest {
     @InjectMocks
     private ExhibitionManager serviceToTest;
     
-    @Mock
-    private LocalizedTextRepository localizedTextRepo;
-
     @Before
     public void init() {
         MockitoAnnotations.initMocks(this);
@@ -245,9 +246,9 @@ public class ExhibitionManagerTest {
         assertEquals(exhibition.getLanguages().size(), 2);
 
         languages.remove("en");
-        List<LocalizedText> localizedTexts = new ArrayList();
-        when(localizedTextRepo.findByExhibitionLanguage(any())).thenReturn(localizedTexts);
-        when(serviceToTestMock.checkIfLocalizedTextsExists(any())).thenReturn(false);
+        
+        when(localizedTextRepo.findByExhibitionLanguage(any())).thenReturn(Arrays.asList());
+        when(serviceToTest.checkIfLocalizedTextsExists(any(ExhibitionLanguage.class))).thenReturn(false);
         
         serviceToTest.updateExhibitionLanguages(exhibition, languages, "aa");
         assertEquals(exhibition.getLanguages().size(),1);   
