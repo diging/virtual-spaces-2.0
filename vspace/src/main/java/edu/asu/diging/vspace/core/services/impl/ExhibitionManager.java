@@ -158,7 +158,7 @@ public class ExhibitionManager implements IExhibitionManager {
     public boolean checkIfLocalizedTextsExists(IExhibitionLanguage language)  {               
 
         //This returns true if non empty localized texts exist
-        return localizedTextRepo.findByExhibitionLanguage(language).isEmpty();
+        return !localizedTextRepo.findByExhibitionLanguage(language).isEmpty();
     }
     
     /**
