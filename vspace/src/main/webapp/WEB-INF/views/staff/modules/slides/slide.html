@@ -827,7 +827,7 @@
             		$("#confirmDeleteTextAlert").show();
             		var alert = $('<input type="hidden" id="deleteTextId">');
             		$(alert).attr( 'value', $(this).siblings('input').val());
-            		$('.modal-footer').append(alert);
+            		$('.modal-footer').append(alert); 
               	});
 
 	            $(document).on("click", ".deleteSpace", function(e) {
@@ -1413,7 +1413,7 @@
                 function updateTextBox(blockId, text) {
                     // clear text box and buttons
                     $(".open").empty();
-		            $(".open").append('<label>Text Description: </label><p class="col-md-10">'+text+'</p><input type="hidden" id="deleteTextId" value="'+blockId+'" /><a class="btn deleteText col-md-1" href="javascript:;" style="position: absolute; right:0;"><span class="icon-trash error"></span></a>');
+                    $(".open").append('<label>Text Description: </label><p class="col-md-10">'+text+'</p><input type="hidden" id="deleteTextId" value="'+blockId+'" /><a class="btn deleteText col-md-1" href="javascript:;" style="position: absolute; right:0;"><span class="icon-trash error"></span></a>');
                     // reset border of the card
                     //rebind event handlers
                     $('.textDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(textBlockDoubleClick);

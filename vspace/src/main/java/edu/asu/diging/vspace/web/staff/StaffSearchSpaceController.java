@@ -19,7 +19,7 @@ import edu.asu.diging.vspace.core.services.impl.model.StaffSearchSpaceResults;
 
 @Controller
 public class StaffSearchSpaceController {
-    
+
     @Autowired
     private IStaffSearchManager staffSearchManager;
 
@@ -33,6 +33,7 @@ public class StaffSearchSpaceController {
         staffSearch.setSpaces(spaceList);
         return new ResponseEntity<StaffSearchSpaceResults>(staffSearch, HttpStatus.OK);
     }
+
     /**
      * This method is used to search the search string specified in the input
      * parameter(searchTerm) and return the spaces corresponding to
@@ -47,4 +48,3 @@ public class StaffSearchSpaceController {
         return spacePage.getContent();
     }
 }
-

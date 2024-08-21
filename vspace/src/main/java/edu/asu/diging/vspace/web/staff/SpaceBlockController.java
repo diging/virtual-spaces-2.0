@@ -9,8 +9,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
-import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.ISpaceBlock;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
 
@@ -21,7 +19,7 @@ public class SpaceBlockController {
     private IContentBlockManager contentBlockManager;
     
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/space/{blockId}", method = RequestMethod.GET)
-    public ResponseEntity<ISpaceBlock> getSpaceBlockSpace(@PathVariable("id") String slideId,
+    public ResponseEntity<ISpaceBlock> getSpaceBlock(@PathVariable("id") String slideId,
             @PathVariable("blockId") String blockId) throws IOException {
         ISpaceBlock spaceBlock = contentBlockManager.getSpaceBlock(blockId);
         if(spaceBlock == null) {
