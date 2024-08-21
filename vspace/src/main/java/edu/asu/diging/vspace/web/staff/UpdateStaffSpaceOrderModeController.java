@@ -21,7 +21,7 @@ public class UpdateStaffSpaceOrderModeController {
     
     @RequestMapping(value = "/staff/space/order/mode", method = RequestMethod.POST)
     public String updateSpaceOrderMode(String mode, @RequestParam String spaceOrderMode) {
-        if(!ExhibitionSpaceOrderMode.getAllValues().contains(spaceOrderMode)) {
+        if(ExhibitionSpaceOrderMode.valueOf(spaceOrderMode)==ExhibitionSpaceOrderMode.CUSTOM) {
             spacesCustomOrderManager.setExhibitionSpacesCustomOrder(spaceOrderMode);
             exhibitionManager.updateSpaceOrderMode(ExhibitionSpaceOrderMode.CUSTOM);
         }

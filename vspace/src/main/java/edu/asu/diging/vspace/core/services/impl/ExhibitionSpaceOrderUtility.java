@@ -29,32 +29,32 @@ public class ExhibitionSpaceOrderUtility implements IExhibitionSpaceOrderUtility
     
     /**
      * This method sorts the spaces in alphabetical order.
-     * @param publishedSpaces
+     * @param spaces list of {@link ISpace} objects to be sorted
      * @return list of {@link ISpace}
      */
-    private List<ISpace> sortSpacesAlphabetically(List<ISpace> publishedSpaces){
-        Collections.sort(publishedSpaces, new Comparator<ISpace>() {
+    private List<ISpace> sortSpacesAlphabetically(List<ISpace> spaces){
+        Collections.sort(spaces, new Comparator<ISpace>() {
             @Override
             public int compare(ISpace space1, ISpace space2) {
                 return (space1.getName().toLowerCase()).compareTo(space2.getName().toLowerCase());
             }
         });
-        return publishedSpaces;
+        return spaces;
     }
 
     /**
      * This method sorts the spaces based on the space creation date.
-     * @param publishedSpaces
+     * @param spaces list of {@link ISpace} objects to be sorted
      * @return list of {@link ISpace}
      */
-    private List<ISpace> sortSpacesOnCreationDate(List<ISpace> publishedSpaces){
-        Collections.sort(publishedSpaces, new Comparator<ISpace>() {
+    private List<ISpace> sortSpacesOnCreationDate(List<ISpace> spaces){
+        Collections.sort(spaces, new Comparator<ISpace>() {
             @Override
             public int compare(ISpace space1, ISpace space2) {
                 return (space1.getCreationDate()).compareTo(space2.getCreationDate());
             }
         });
-        return publishedSpaces;
+        return spaces;
     }
     
 
@@ -63,11 +63,11 @@ public class ExhibitionSpaceOrderUtility implements IExhibitionSpaceOrderUtility
      * @param publishedSpaces
      * @return list of {@link ISpace}
      */
-    private List<ISpace>  sortSpacesByCustomOrder(List<ISpace> publishedSpaces){
+    private List<ISpace>  sortSpacesByCustomOrder(List<ISpace> spaces){
         IExhibition exhibition  = exhibitionManager.getStartExhibition();
         SpacesCustomOrder spacesCustomOrder = exhibition.getSpacesCustomOrder();
         if(spacesCustomOrder == null) {
-            return sortSpacesAlphabetically(publishedSpaces);
+            return sortSpacesAlphabetically(spaces);
         }
         List<ISpace> allSpaces = spacesCustomOrder.getCustomOrderedSpaces();
         
@@ -80,8 +80,8 @@ public class ExhibitionSpaceOrderUtility implements IExhibitionSpaceOrderUtility
 
     /**
      * This method used to sort spaces based on given mode.
-     * @param publishedSpaces
-     * @param mode
+     * @param publishedSpaces - list of published spaces
+     * @param mode - the sorting mode of the exhibition spaces
      * @return list of {@link ISpace}
      */
     @Override
