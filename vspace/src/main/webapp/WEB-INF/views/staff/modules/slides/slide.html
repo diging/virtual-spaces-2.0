@@ -610,6 +610,40 @@
          		$("#confirmDeleteImageAlert").hide();	
          	});
          	
+         	// ---------- Delete Video Block -----------
+         	
+				$("#deleteVideo").on("click", function(e) {
+         		e.preventDefault();
+         		$("#confirmDeleteTextAlert").find('input').remove();
+         		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
+         		$("#confirmDeleteVideoAlert").hide();
+         		var blockId = $('#videoIdToDelete').attr('value');
+         		$('#videoIdToDelete').val("");
+         		if(blockId == null || blockId == ''){
+         			var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+         			$('.error').append(alert); 
+         			$(".error").delay(4000).slideUp(500, function(){
+         			    $(".error").empty();
+         			});
+         		} else{
+         		    // ------------- delete video content blocks ------------
+         			$.ajax({
+         			    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/video/'})]"+blockId+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
+         			    type: 'DELETE',
+         			    success: function(result) {
+         			    	$('#' + blockId).remove();
+         			    },
+         				error: function(data) {
+         					var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+         					$('.error').append(alert); 
+         					$(".error").delay(4000).slideUp(500, function(){
+         					    $(".error").empty();
+         					});
+         				}
+         			});
+         		}
+         	});
+         	
              	// ---------- Delete Text Block -------------
          	
          		$("#deleteText").on("click", function(e) {
@@ -1271,536 +1305,504 @@
              }
          });
          
-         function embedVideo() {
-         				var videoID = $("#saveVideo").data('value'); // gets video ID
-         				var oldUrl = $("#saveVideo").data('url');
-         				var url = $("#videoLink").val();
-         				var title = $("#videoTitle").val();
-         				var vidFile = $("#videoFile")[0].files[0];
-         				var reader = new FileReader();
-         				var videoBlock = "";
-         				var ajaxUrl = '';
-         				var oldVideoBlock = '';
-         				var formData = new FormData();
-         				if (url) {
-         					if(url.startsWith("https://www.youtube.com/watch?v="))
-         					{
-         						videoId = url.substring(url.indexOf("v=")+2);
-         						url = "https://www.youtube.com/embed/"+videoId;
-         					}
-         					formData.append('url', url);
-         					videoBlock = createVideoBlock(reader, url, title,true);
-         				}
-         				if (vidFile) {
-         					formData.append('videoFile', vidFile);
-         				}
-         				if (videoID) {
-         					oldVideoBlock = $("#" + videoID);
-         					ajaxUrl = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/video/'})]" + videoID + '?[(${_csrf.parameterName})]=[(${_csrf.token})]';
-         					formData.append('videoBlockId', videoID);
-         					if (url) {
-         						$("#" + videoID).replaceWith(videoBlock);
-         					}
-         					if (vidFile) {
-         						reader.onload = function (theFile) {
-         							videoBlock = createVideoBlock(reader, theFile.target.result,title,false);
-         							$("#" + videoID).replaceWith(videoBlock);
-         						};
-         					}
-         				}
-         				else {
-         					if (url) {
-         						$('#slideSpace').append(videoBlock);
-         					}
-         					if (vidFile) {
-         						reader.onload = function (theFile) {
-         							videoBlock = createVideoBlock(reader, theFile.target.result,title,false);
-         							$('#slideSpace').append(videoBlock);
-         						}
-         					}
-         					ajaxUrl = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/video?'+${_csrf.parameterName}+'='+${_csrf.token}})]";
-         				}
-         				// Reset data-attribute to get current selected image ID
-         				$("#videoFile").val('');
-         				$("#videoLink").val('');
-         				$(videoBlock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave);//.dblclick(onDoubleClick);
-         				if (vidFile) {
-         					reader.readAsDataURL(vidFile);
-         				}
-         				formData.append('videoTitle', title);
-         				$.ajax({
-         					enctype: 'multipart/form-data',
-         					// ------------- creating video content blocks ------------
-         					url: ajaxUrl,
-         					type: 'POST',
-         					cache: false,
-         					contentType: false,
-         					processData: false,
-         					data: formData,
-         					success: function (data) {
-         					    if(videoBlock){
-         							var videoBlk = "";
-         							if(url){
-         								videoBlk = videoBlock.find('iframe');
-         							}
-         							else{
-         								videoBlk = videoBlock.find('video');
-         							}
-         							if (data != '') {
-         								videoBlk.attr('id', data);
-         								$("#currentVideo >.deleteVideo").attr('data-video-id', data);
-         								$("#currentVideo >.editVideo").attr('data-editvideo-id', data);
-         								$("#currentVideo").attr('id', data);
-         							}
-         							else {
-         								videoBlk.attr('id', videoID);
-         								$("#currentVideo >.deleteVideo").find('a:first').attr('data-video-id', videoID);
-         								$("#currentVideo >.editVideo").attr('data-editvideo-id', videoID);
-         								$("#currentVideo").attr('id', videoID);
-         							}
-         					    }
-         					    else{
-         					        if(videoID){
-         					        	$("#" + videoID).find('h3 strong').html(title);
-         					        }
-         					    }
-         					},
-         					error: function (data) {
-         						if (videoID == '') {
-         							$("#current").remove();
-         						}
-         						else {
-         							$("#current").replaceWith(oldVideoBlock);
-         						}
-         						if (data.status == 403) {
-         							$("#loginAlert").show();
-         						}
-         						else{
-         							var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>Please try again.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-         							$('.error').append(alert);
-         						}
-         					}
-         				});
-         			}
-                     
-                     function guidedTour() {
-                     	const tour = new Shepherd.Tour({
-                     		  defaultStepOptions: {
-                     		    cancelIcon: {
-                     		      enabled: true
-                     		    },
-                     		    classes: '',
-                     		    scrollTo: { behavior: 'smooth', block: 'center' },
-                     		  },
-                     		  useModalOverlay: true,
-                     		});
-                     
-                     	tour.addStep({
-                     	  title: 'Welcome to the slide editor!',
-                     	  text: `Add or edit the content you want to show on your slides.`,
-                     	  buttons: [
-                     	    {
-                     	      action() {
-                     	        return this.next();
-                     	      },
-                     	      text: 'Next'
-                     	    }
-                     	  ],
-                     	  id: 'creating1'
-                     	});
-                     	
-                     	tour.addStep({
-                     	  title: 'Easy navigation',
-                     	  text: `Keep track of your location in the module or navigate back.`,
-                     	  attachTo: {
-                     	    element: '.breadcrumb',
-                     	    on: 'bottom'
-                     	  },
-                     	  buttons: [
-                     	    {
-                     	      action() {
-                     	        return this.back();
-                     	      },
-                     	      classes: 'shepherd-button-secondary',
-                     	      text: 'Back'
-                     	    },
-                     	    {
-                     	      action() {
-                     	        return this.next();
-                     	      },
-                     	      classes: 'btn primary-btn',
-                     	      text: 'Next'
-                     	    }
-                     	  ],
-                     	  id: 'creating2'
-                     	});
-                     	
-                     	tour.addStep({
-                     	  title: 'Adding content',
-                     	  text: `Add content to your slide. The content will be shown in the exhibition in the order you define here.`,
-                     	  attachTo: {
-                     	    element: '.content-btns',
-                     	    on: 'bottom'
-                     	  },
-                     	  buttons: [
-                     	    {
-                     	      action() {
-                     	        return this.back();
-                     	      },
-                     	      classes: 'shepherd-button-secondary',
-                     	      text: 'Back'
-                     	    },
-                     	    {
-                     	      action() {
-                     	        return this.next();
-                     	      },
-                     	      text: 'Done'
-                     	    }
-                     	  ],
-                     	  id: 'creating3'
-                     	});
-                     	tour.start();
-                     }
          
-                     $(document).ready(function() {
-                     	if (localStorage.getItem("newSlide") == null) {
-                     		guidedTour();
-                     		localStorage.setItem("newSlide", false);
-                     	}
-                     	$('#imageId').prop("disabled",true);
-                     	$('#chooseFromLocal').click(function() {
-                     		$("#selectedImage").empty();
-                     		$('#imageId').prop('selectedIndex',0).trigger( "change" );
-                     		$('#imageId').prop("disabled",true);
-                     		$('#file').prop("disabled",false);
-                     		
-                     	  });
-                     	
-                     	$('#chooseFromExisting').click(function() {
-                     		$('#file').val('');
-                     		$('#file').prop("disabled",true);
-                     		$('#imageId').prop("disabled",false);
-                     	  });
-                     	var timeout=null;
-                     	$('#slideSpace').sortable({
-         	            	update: function(event,ui) {
-         		            	var jsonObj = [];
-         		            	var blockId;
-         		            	$(this).children().each(function(index,element){
-         			            	if(typeof($(element.innerHTML).filter('div').attr('data-position'))=="undefined") {
-         			            		blockId=$(element).attr('id');
-         			            	}else {
-         			            		blockId = $(element.innerHTML).filter('div').attr('id');
-         			            	}
-         			            	item = {}
-         			            	item ["id"] = blockId;
-         			            	item ["contentOrder"] = index;
-         			            	jsonObj.push(item);
-         			            	$(element.innerHTML).filter('div').attr('data-position',index);
-         		            	});
-         		            	var token = [[${_csrf.token}]];
-         		            	if (jsonObj.length != 0){
-         			            	if (timeout != null){
-         			            		clearTimeout(timeout);
-         			            	}
-         			            	timeout = setTimeout(updateContentOrder(jsonObj,token), 1000);
-         		            	}
-         	            	}
-                     	});
-                         function updateContentOrder(jsonObj,token){
-         	            		$.ajax({
-         	            		 // ------------- adjusting content order of blocks if their position changed after dragging ----------
-         		            		url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/blocks/order/update'})]",
-         		            		type: 'POST',
-         		            		beforeSend: function(){
-         			            		$(".loader").remove();
-         			            		$('#contOrdUpdStatus').empty();
-         			            		$('#contOrdUpdStatus').append($('<div class="loader" style="font-size: 30px;display: none; text-align: center;"><i class="icon-spinner" aria-hidden="true">Saving...</i></div>'));
-         			            		$(".loader").show();
-         		            		},
-         		            		complete: function(){
-         			            		$(".loader").hide();
-         			            		timeout = null;
-         		            		},
-         		            		cache       : false,
-         		            		contentType: 'application/json; charset=utf-8',
-         		            		processData :false,
-         		            		headers:{
-         		            			'X-CSRF-Token':token
-         		            		},
-         		            		data: JSON.stringify(jsonObj),
-         		            		success: function(data) {
-         			            		$(".save").remove();
-         			            		for(let i=0;i<data.length;i++) {
-         				            		$('#'+data[i].id).attr('data-position',data[i].contentOrder);
-         			            		} 
-         			            		var successDiv = $('<div style="width: 100%;height: 50px;" class="save alert alert-success alert-dismissible fade show" role="alert">');
-         			            		successDiv.append('<p>Successfully Saved.</p>');
-         			            		successDiv.append('<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
-         			            		successDiv.append('</div>');
-         			            		$('#contOrdUpdStatus').empty();
-         			            		$('#contOrdUpdStatus').append(successDiv);
-         		            		},
-         		            		error: function(data) {
-         			            		$(".errInSave").remove();
-         			            		var errorDiv = $('<div style="width: 100%;height: 50px;" class="errInSave alert alert-danger alert-dismissible fade show" role="alert">');
-         			            		errorDiv.append('<p>We are sorry but something went wrong. Please try again later.</p>');
-         			            		errorDiv.append('<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
-         			            		errorDiv.append('</div>');
-         			            		$('#contOrdUpdStatus').empty();
-         			            		$('#contOrdUpdStatus').append(errorDiv);
-         		            		}
-         	            		});
-                     		}
-                         [# th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}"]
-                     		$('#addChoice').show();
-                     		$('#choiceSpace').show();
-                     	[/]
-                     	
-                     
-                         //-------- edit contentblock description --------
-                     
-                         $("#submitDescription").hide()
-                         $("#cancelEditDescription").hide()
-                         var description = $("#description").text()
-                         $("#editDescription").click(function() {
-                             $('<textarea id="newDescription" style="margin-top: 1%;" class="form-control" type="text">'+description+'</textarea>').insertBefore( "#description" );
-                             $("#description").remove()
-                             $("#editDescription").hide()
-                             $("#submitDescription").show()
-                             $("#cancelEditDescription").show()
-                             
-                         });
-                     
-                         $("#submitDescription").click(function() {
-                             var formData = new FormData();
-                             formData.append('description', $("#newDescription").val());
-                             $.ajax({ 
-                     	        url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/edit/description?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
-                     	        type: 'POST',
-                     	        cache       : false,
-                     	        contentType : false,
-                     	        processData : false,
-                     	        data: formData,
-                     	        enctype: 'multipart/form-data',
-                     	        success: function(data) {
-                     	            // replace text box with new description
-                     	            $("#submitDescription").hide()
-                     	            $("#cancelEditDescription").hide()
-                     	            $("#editDescription").show()
-                     	            var val = $("#newDescription").val();
-                     	            $('<p id="description"style="margin-top: .5rem; margin-bottom: .5rem;"></p>').insertBefore( "#newDescription" );
-                     	            $("#newDescription").remove();
-                     	            $("#description").text(val)
-                     	        },
-                     	        error: function(data) {
-                     	            $(".open").removeClass("open");
-                     	                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                     	                $('.error').append(alert);
-                     	        }
-                              });       
-                           });
-                         
-                         $("#cancelEditDescription").click(function(){
-                             $("#submitDescription").hide()
-                             $("#editDescription").show()
-                             $("#cancelEditDescription").hide()
-                             $('<p id="description" style="margin-top: .5rem; margin-bottom: .5rem;"></p>').insertBefore( "#newDescription" );
-                             $("#newDescription").remove()
-                             $("#description").text(description)
-                             
-                         });
-                         
-                         //------- edit title --------
-                         $("#submitTitle").hide();
-                         $("#cancelEditTitle").hide();
-                         var getTitleText = $("#title").text().split(": ")[1]
-                         $("#editTitle").click(function() {
-                             $('<div class="col-4"><input id="newTitle" class="form-control" type="text"></div>').insertAfter( "#title" );
-                             $('#title').text('Slide: ')
-                             $("#newTitle").val(getTitleText)
-                             $("#editTitle").hide()
-                             $("#submitTitle").show()
-                             $("#cancelEditTitle").show()       
-                         });
-                         
-                         $("#submitTitle").click(function() {
-                             var formData = new FormData();
-                             formData.append('title', $("#newTitle").val());
-                             $.ajax({
-                                 url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/edit/title?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
-                                 type: 'POST',
-                                 cache       : false,
-                                 contentType : false,
-                                 processData : false,
-                                 data: formData,
-                                 enctype: 'multipart/form-data',
-                                 success: function(data) {
-                                     // replace text box with new description
-                                     $("#submitTitle").hide()
-                                     $("#cancelEditTitle").hide();
-                                     $("#editTitle").show()
-                                     var val = $("#newTitle").val();
-                                     $("#newTitle").closest('div').remove();
-                                     $("#title").text("Silde: " + val)
-                                     
-                                 },
-                                 error: function(data) {
-                                     var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                                     $('.error').append(alert);
-                                 }
-                             });
-                           });
-                        $("#cancelEditTitle").click(function(){
-                             $("#submitTitle").hide()
-                             $("#editTitle").show()
-                             $("#cancelEditTitle").hide()
-                             $("#newTitle").closest('div').remove();
-                             $("#title").text("Silde: " + getTitleText);
-                        });
-                        
-                         $("#addText").click(function() {
-                             $(".EasyMDEContainer").remove();
-                         	markDown = new EasyMDE({element: $('#textBlockText')[0]});
-                             $("#addTextAlert").show();
-                         });
-                         
-                         $("#addImage").click(function() {
-                             $("#addImgAlert").show();
-                         });
-                         
-                         $("#addVideo").click(function() {
-                             $("#videoTitle").value = "";
-                             $("#addVideoAlert").show();
-                             addVideoClk =1;
-                             editVideoClk=0;
-                         });
-                         
-                         $("#uploadImage").click(function(e) {
-                             e.preventDefault();
-                             $("#addImgAlert").hide();
-                             uploadImage();
-                             $('#chooseFromLocal').trigger( "click" );
-                         });
-                         
-                         $("#saveVideo").click(function(e) {
-                             e.preventDefault();
-                             $("#addVideoAlert").hide();
-                             embedVideo();
-                             $("#saveVideo").data('value', '');
-                             $("#saveVideo").data('url', '');
-                             $("#uploadTab").addClass("active");
-                             $("#urlTab").removeClass("active");
-                             $("#urlLink").removeClass("active show");
-                             $("#urlLink>a").removeClass("active show");
-                             $("#uploadLink").addClass("active show");
-                             $("#uploadLink>a").addClass("active show");
-                         });
-                         
-                         $("#addChoice").click(function() {
-                             $("#addChoiceAlert").show();
-                         });
-                         
-                         $(document).on("click", ".deleteText", function(e) {
-                     		$("#confirmDeleteTextAlert").show();
-                     		var alert = $('<input type="hidden" id="deleteTextId">');
-                     		$(alert).attr( 'value', $(this).siblings('input').val());
-                     		$('.modal-footer').append(alert); 
-                       	});
-                     	
-                     	$(document).on("click", ".deleteImage", function(e) {
-                     		$("#confirmDeleteImageAlert").show();
-                     		var alert = $('<input type="hidden" id="deleteImageId">');
-                     		$(alert).attr( 'value', $(this).siblings('input').val());
-                     		$('.modal-footer').append(alert); 
-                       	});
-                     	
-                     	$(document).on("click", ".deleteVideo", function(e) {
-                     		$("#videoIdToDelete").attr( 'value', $(this).attr('data-video-id'));
-                     		$(".load").remove();
-                     		$("#"+$(this).attr('data-video-id')).append($('<div class="load" style="font-size: 30px;display: none; text-align: center;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></div>'));
-                     		$(".load").show();
-                     		setTimeout(function() {
-                     		    //code to be executed after 3 second
-                     		    $(".load").hide();
-                     		    $("#confirmDeleteVideoAlert").show();
-                     		  }, 3000);
-                       	});
-                     	
-                     	$(document).on("click", ".deleteChoiceBlock", function(e) {
-                     		$("#confirmDeleteChoiceBlockAlert").show();
-                     		var alert = $('<input type="hidden" id="deleteChoiceBlockId">');
-                     		$(alert).attr( 'value', $(this).siblings('input').val());
-                     		$('.modal-footer').append(alert); 
-                       	});
-                         
-                         $("#cancelSubmitText").click(function() {
-                     		$("#addTextAlert").hide();	
-                     	});
-                     	
-                     	$("#cancelDeleteText").click(function() {
-                     		$("#confirmDeleteTextAlert").find('input').remove();
-                     		$("#confirmDeleteImageAlert").find('input').remove();
-                     		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
-                     		$("#confirmDeleteTextAlert").hide();
-                     	});
-                     	
-                     	$("#cancelDeleteImage").click(function() {
-                     		$("#confirmDeleteImageAlert").hide();
-                     	});
-                     	
-                     	$("#cancelDeleteVideo").click(function() {
-                     		$("#confirmDeleteVideoAlert").find('input').remove();
-                     		$("#confirmDeleteVideoAlert").hide();	
-                     	});
-                     	
-                     	$("#cancelDeleteChoiceBlock").click(function() {
-                     	    $("#confirmDeleteChoiceBlockAlert").find('input').remove();
-                     	    $("#confirmDeleteTextAlert").find('input').remove();
-                     		$("#confirmDeleteImageAlert").find('input').remove();
-                     		$("#confirmDeleteChoiceBlockAlert").hide();
-                     	});
-                     	
-                     	$("#cancelDelete").click(function() {
-                     		$("#confirmDeleteTextAlert").find('input').remove();
-                     		$("#confirmDeleteImageAlert").find('input').remove();
-                     		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
-                     		$("#confirmDeleteImageAlert").hide();	
-                     	});
-                     	
-                     	// ---------- Delete Video Block -----------
-                     	
-         				$("#deleteVideo").on("click", function(e) {
-                     		e.preventDefault();
-                     		$("#confirmDeleteTextAlert").find('input').remove();
-                     		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
-                     		$("#confirmDeleteVideoAlert").hide();
-                     		var blockId = $('#videoIdToDelete').attr('value');
-                     		$('#videoIdToDelete').val("");
-                     		if(blockId == null || blockId == ''){
-                     			var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                     			$('.error').append(alert); 
-                     			$(".error").delay(4000).slideUp(500, function(){
-                     			    $(".error").empty();
-                     			});
-                     		} else{
-                     		    // ------------- delete video content blocks ------------
-                     			$.ajax({
-                     			    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/video/'})]"+blockId+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
-                     			    type: 'DELETE',
-                     			    success: function(result) {
-                     			    	$('#' + blockId).remove();
-                     			    },
-                     				error: function(data) {
-                     					var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                     					$('.error').append(alert); 
-                     					$(".error").delay(4000).slideUp(500, function(){
-                     					    $(".error").empty();
-                     					});
-                     				}
-                     			});
-                     		}
-                     	});
+            function embedVideo() {
+				var videoID = $("#saveVideo").data('value'); // gets video ID
+				var oldUrl = $("#saveVideo").data('url');
+				var url = $("#videoLink").val();
+				var title = $("#videoTitle").val();
+				var vidFile = $("#videoFile")[0].files[0];
+				var reader = new FileReader();
+				var videoBlock = "";
+				var ajaxUrl = '';
+				var oldVideoBlock = '';
+				var formData = new FormData();
+				if (url) {
+					if(url.startsWith("https://www.youtube.com/watch?v="))
+					{
+						videoId = url.substring(url.indexOf("v=")+2);
+						url = "https://www.youtube.com/embed/"+videoId;
+					}
+					formData.append('url', url);
+					videoBlock = createVideoBlock(reader, url, title,true);
+				}
+				if (vidFile) {
+					formData.append('videoFile', vidFile);
+				}
+				if (videoID) {
+					oldVideoBlock = $("#" + videoID);
+					ajaxUrl = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/video/'})]" + videoID + '?[(${_csrf.parameterName})]=[(${_csrf.token})]';
+					formData.append('videoBlockId', videoID);
+					if (url) {
+						$("#" + videoID).replaceWith(videoBlock);
+					}
+					if (vidFile) {
+						reader.onload = function (theFile) {
+							videoBlock = createVideoBlock(reader, theFile.target.result,title,false);
+							$("#" + videoID).replaceWith(videoBlock);
+						};
+					}
+				}
+				else {
+					if (url) {
+						$('#slideSpace').append(videoBlock);
+					}
+					if (vidFile) {
+						reader.onload = function (theFile) {
+							videoBlock = createVideoBlock(reader, theFile.target.result,title,false);
+							$('#slideSpace').append(videoBlock);
+						}
+					}
+					ajaxUrl = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/video?'+${_csrf.parameterName}+'='+${_csrf.token}})]";
+				}
+				// Reset data-attribute to get current selected image ID
+				$("#videoFile").val('');
+				$("#videoLink").val('');
+				$(videoBlock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave);//.dblclick(onDoubleClick);
+				if (vidFile) {
+					reader.readAsDataURL(vidFile);
+				}
+				formData.append('videoTitle', title);
+				$.ajax({
+					enctype: 'multipart/form-data',
+					// ------------- creating video content blocks ------------
+					url: ajaxUrl,
+					type: 'POST',
+					cache: false,
+					contentType: false,
+					processData: false,
+					data: formData,
+					success: function (data) {
+					    if(videoBlock){
+							var videoBlk = "";
+							if(url){
+								videoBlk = videoBlock.find('iframe');
+							}
+							else{
+								videoBlk = videoBlock.find('video');
+							}
+							if (data != '') {
+								videoBlk.attr('id', data);
+								$("#currentVideo >.deleteVideo").attr('data-video-id', data);
+								$("#currentVideo >.editVideo").attr('data-editvideo-id', data);
+								$("#currentVideo").attr('id', data);
+							}
+							else {
+								videoBlk.attr('id', videoID);
+								$("#currentVideo >.deleteVideo").find('a:first').attr('data-video-id', videoID);
+								$("#currentVideo >.editVideo").attr('data-editvideo-id', videoID);
+								$("#currentVideo").attr('id', videoID);
+							}
+					    }
+					    else{
+					        if(videoID){
+					        	$("#" + videoID).find('h3 strong').html(title);
+					        }
+					    }
+					},
+					error: function (data) {
+						if (videoID == '') {
+							$("#current").remove();
+						}
+						else {
+							$("#current").replaceWith(oldVideoBlock);
+						}
+						if (data.status == 403) {
+							$("#loginAlert").show();
+						}
+						else{
+							var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>Please try again.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+							$('.error').append(alert);
+						}
+					}
+				});
+			}
+            
+            function guidedTour() {
+            	const tour = new Shepherd.Tour({
+            		  defaultStepOptions: {
+            		    cancelIcon: {
+            		      enabled: true
+            		    },
+            		    classes: '',
+            		    scrollTo: { behavior: 'smooth', block: 'center' },
+            		  },
+            		  useModalOverlay: true,
+            		});
+            
+            	tour.addStep({
+            	  title: 'Welcome to the slide editor!',
+            	  text: `Add or edit the content you want to show on your slides.`,
+            	  buttons: [
+            	    {
+            	      action() {
+            	        return this.next();
+            	      },
+            	      text: 'Next'
+            	    }
+            	  ],
+            	  id: 'creating1'
+            	});
+            	
+            	tour.addStep({
+            	  title: 'Easy navigation',
+            	  text: `Keep track of your location in the module or navigate back.`,
+            	  attachTo: {
+            	    element: '.breadcrumb',
+            	    on: 'bottom'
+            	  },
+            	  buttons: [
+            	    {
+            	      action() {
+            	        return this.back();
+            	      },
+            	      classes: 'shepherd-button-secondary',
+            	      text: 'Back'
+            	    },
+            	    {
+            	      action() {
+            	        return this.next();
+            	      },
+            	      classes: 'btn primary-btn',
+            	      text: 'Next'
+            	    }
+            	  ],
+            	  id: 'creating2'
+            	});
+            	
+            	tour.addStep({
+            	  title: 'Adding content',
+            	  text: `Add content to your slide. The content will be shown in the exhibition in the order you define here.`,
+            	  attachTo: {
+            	    element: '.content-btns',
+            	    on: 'bottom'
+            	  },
+            	  buttons: [
+            	    {
+            	      action() {
+            	        return this.back();
+            	      },
+            	      classes: 'shepherd-button-secondary',
+            	      text: 'Back'
+            	    },
+            	    {
+            	      action() {
+            	        return this.next();
+            	      },
+            	      text: 'Done'
+            	    }
+            	  ],
+            	  id: 'creating3'
+            	});
+            	tour.start();
+            }
+            $(document).ready(function() {
+            	if (localStorage.getItem("newSlide") == null) {
+            		guidedTour();
+            		localStorage.setItem("newSlide", false);
+            	}
+            	$('#imageId').prop("disabled",true);
+            	$('#chooseFromLocal').click(function() {
+            		$("#selectedImage").empty();
+            		$('#imageId').prop('selectedIndex',0).trigger( "change" );
+            		$('#imageId').prop("disabled",true);
+            		$('#file').prop("disabled",false);
+            		
+            	  });
+            	
+            	$('#chooseFromExisting').click(function() {
+            		$('#file').val('');
+            		$('#file').prop("disabled",true);
+            		$('#imageId').prop("disabled",false);
+            	  });
+            	var timeout=null;
+            	$('#slideSpace').sortable({
+	            	update: function(event,ui) {
+		            	var jsonObj = [];
+		            	var blockId;
+		            	$(this).children().each(function(index,element){
+			            	if(typeof($(element.innerHTML).filter('div').attr('data-position'))=="undefined") {
+			            		blockId=$(element).attr('id');
+			            	}else {
+			            		blockId = $(element.innerHTML).filter('div').attr('id');
+			            	}
+			            	item = {}
+			            	item ["id"] = blockId;
+			            	item ["contentOrder"] = index;
+			            	jsonObj.push(item);
+			            	$(element.innerHTML).filter('div').attr('data-position',index);
+		            	});
+		            	var token = [[${_csrf.token}]];
+		            	if (jsonObj.length != 0){
+			            	if (timeout != null){
+			            		clearTimeout(timeout);
+			            	}
+			            	timeout = setTimeout(updateContentOrder(jsonObj,token), 1000);
+		            	}
+	            	}
+            	});
+
+            	function updateContentOrder(jsonObj,token){
+	            		$.ajax({
+	            		 // ------------- adjusting content order of blocks if their position changed after dragging ----------
+		            		url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/blocks/order/update'})]",
+		            		type: 'POST',
+		            		beforeSend: function(){
+			            		$(".loader").remove();
+			            		$('#contOrdUpdStatus').empty();
+			            		$('#contOrdUpdStatus').append($('<div class="loader" style="font-size: 30px;display: none; text-align: center;"><i class="icon-spinner" aria-hidden="true">Saving...</i></div>'));
+			            		$(".loader").show();
+		            		},
+		            		complete: function(){
+			            		$(".loader").hide();
+			            		timeout = null;
+		            		},
+		            		cache       : false,
+		            		contentType: 'application/json; charset=utf-8',
+		            		processData :false,
+		            		headers:{
+		            			'X-CSRF-Token':token
+		            		},
+		            		data: JSON.stringify(jsonObj),
+		            		success: function(data) {
+			            		$(".save").remove();
+			            		for(let i=0;i<data.length;i++) {
+				            		$('#'+data[i].id).attr('data-position',data[i].contentOrder);
+			            		} 
+			            		var successDiv = $('<div style="width: 100%;height: 50px;" class="save alert alert-success alert-dismissible fade show" role="alert">');
+			            		successDiv.append('<p>Successfully Saved.</p>');
+			            		successDiv.append('<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
+			            		successDiv.append('</div>');
+			            		$('#contOrdUpdStatus').empty();
+			            		$('#contOrdUpdStatus').append(successDiv);
+		            		},
+		            		error: function(data) {
+			            		$(".errInSave").remove();
+			            		var errorDiv = $('<div style="width: 100%;height: 50px;" class="errInSave alert alert-danger alert-dismissible fade show" role="alert">');
+			            		errorDiv.append('<p>We are sorry but something went wrong. Please try again later.</p>');
+			            		errorDiv.append('<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
+			            		errorDiv.append('</div>');
+			            		$('#contOrdUpdStatus').empty();
+			            		$('#contOrdUpdStatus').append(errorDiv);
+		            		}
+	            		});
+            		}
+                [# th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}"]
+            		$('#addChoice').show();
+            		$('#choiceSpace').show();
+            	[/]
+            	
+            
+                //-------- edit contentblock description --------
+            
+                $("#submitDescription").hide()
+                $("#cancelEditDescription").hide()
+                var description = $("#description").text()
+                $("#editDescription").click(function() {
+                    $('<textarea id="newDescription" style="margin-top: 1%;" class="form-control" type="text">'+description+'</textarea>').insertBefore( "#description" );
+                    $("#description").remove()
+                    $("#editDescription").hide()
+                    $("#submitDescription").show()
+                    $("#cancelEditDescription").show()
+                    
+                });
+            
+                $("#submitDescription").click(function() {
+                    var formData = new FormData();
+                    formData.append('description', $("#newDescription").val());
+                    $.ajax({ 
+            	        url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/edit/description?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+            	        type: 'POST',
+            	        cache       : false,
+            	        contentType : false,
+            	        processData : false,
+            	        data: formData,
+            	        enctype: 'multipart/form-data',
+            	        success: function(data) {
+            	            // replace text box with new description
+            	            $("#submitDescription").hide()
+            	            $("#cancelEditDescription").hide()
+            	            $("#editDescription").show()
+            	            var val = $("#newDescription").val();
+            	            $('<p id="description"style="margin-top: .5rem; margin-bottom: .5rem;"></p>').insertBefore( "#newDescription" );
+            	            $("#newDescription").remove();
+            	            $("#description").text(val)
+            	        },
+            	        error: function(data) {
+            	            $(".open").removeClass("open");
+            	                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+            	                $('.error').append(alert);
+            	        }
+                     });       
+                  });
+                
+                $("#cancelEditDescription").click(function(){
+                    $("#submitDescription").hide()
+                    $("#editDescription").show()
+                    $("#cancelEditDescription").hide()
+                    $('<p id="description" style="margin-top: .5rem; margin-bottom: .5rem;"></p>').insertBefore( "#newDescription" );
+                    $("#newDescription").remove()
+                    $("#description").text(description)
+                    
+                });
+                
+                //------- edit title --------
+                $("#submitTitle").hide();
+                $("#cancelEditTitle").hide();
+                var getTitleText = $("#title").text().split(": ")[1]
+                $("#editTitle").click(function() {
+                    $('<div class="col-4"><input id="newTitle" class="form-control" type="text"></div>').insertAfter( "#title" );
+                    $('#title').text('Slide: ')
+                    $("#newTitle").val(getTitleText)
+                    $("#editTitle").hide()
+                    $("#submitTitle").show()
+                    $("#cancelEditTitle").show()       
+                });
+                
+                $("#submitTitle").click(function() {
+                    var formData = new FormData();
+                    formData.append('title', $("#newTitle").val());
+                    $.ajax({
+                        url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/edit/title?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+                        type: 'POST',
+                        cache       : false,
+                        contentType : false,
+                        processData : false,
+                        data: formData,
+                        enctype: 'multipart/form-data',
+                        success: function(data) {
+                            // replace text box with new description
+                            $("#submitTitle").hide()
+                            $("#cancelEditTitle").hide();
+                            $("#editTitle").show()
+                            var val = $("#newTitle").val();
+                            $("#newTitle").closest('div').remove();
+                            $("#title").text("Silde: " + val)
+                            
+                        },
+                        error: function(data) {
+                            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                            $('.error').append(alert);
+                        }
+                    });
+                  });
+               $("#cancelEditTitle").click(function(){
+                    $("#submitTitle").hide()
+                    $("#editTitle").show()
+                    $("#cancelEditTitle").hide()
+                    $("#newTitle").closest('div').remove();
+                    $("#title").text("Silde: " + getTitleText);
+               });
+               
+                $("#addText").click(function() {
+                    $(".EasyMDEContainer").remove();
+                	markDown = new EasyMDE({element: $('#textBlockText')[0]});
+                    $("#addTextAlert").show();
+                });
+                
+                $("#addImage").click(function() {
+                    $("#addImgAlert").show();
+                });
+                
+                $("#addVideo").click(function() {
+                    $("#videoTitle").value = "";
+                    $("#addVideoAlert").show();
+                    addVideoClk =1;
+                    editVideoClk=0;
+                });
+                
+                $("#uploadImage").click(function(e) {
+                    e.preventDefault();
+                    $("#addImgAlert").hide();
+                    uploadImage();
+                    $('#chooseFromLocal').trigger( "click" );
+                });
+                
+                $("#saveVideo").click(function(e) {
+                    e.preventDefault();
+                    $("#addVideoAlert").hide();
+                    embedVideo();
+                    $("#saveVideo").data('value', '');
+                    $("#saveVideo").data('url', '');
+                    $("#uploadTab").addClass("active");
+                    $("#urlTab").removeClass("active");
+                    $("#urlLink").removeClass("active show");
+                    $("#urlLink>a").removeClass("active show");
+                    $("#uploadLink").addClass("active show");
+                    $("#uploadLink>a").addClass("active show");
+                });
+                
+                $("#addChoice").click(function() {
+                    $("#addChoiceAlert").show();
+                });
+                
+                $(document).on("click", ".deleteText", function(e) {
+            		$("#confirmDeleteTextAlert").show();
+            		var alert = $('<input type="hidden" id="deleteTextId">');
+            		$(alert).attr( 'value', $(this).siblings('input').val());
+            		$('.modal-footer').append(alert); 
+              	});
+            	
+            	$(document).on("click", ".deleteImage", function(e) {
+            		$("#confirmDeleteImageAlert").show();
+            		var alert = $('<input type="hidden" id="deleteImageId">');
+            		$(alert).attr( 'value', $(this).siblings('input').val());
+            		$('.modal-footer').append(alert); 
+              	});
+            	
+            	$(document).on("click", ".deleteVideo", function(e) {
+            		$("#videoIdToDelete").attr( 'value', $(this).attr('data-video-id'));
+            		$(".load").remove();
+            		$("#"+$(this).attr('data-video-id')).append($('<div class="load" style="font-size: 30px;display: none; text-align: center;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></div>'));
+            		$(".load").show();
+            		setTimeout(function() {
+            		    //code to be executed after 3 second
+            		    $(".load").hide();
+            		    $("#confirmDeleteVideoAlert").show();
+            		  }, 3000);
+              	});
+            	
+            	$(document).on("click", ".deleteChoiceBlock", function(e) {
+            		$("#confirmDeleteChoiceBlockAlert").show();
+            		var alert = $('<input type="hidden" id="deleteChoiceBlockId">');
+            		$(alert).attr( 'value', $(this).siblings('input').val());
+            		$('.modal-footer').append(alert); 
+              	});
+                
+                $("#cancelSubmitText").click(function() {
+            		$("#addTextAlert").hide();	
+            	});
+            	
+            	$("#cancelDeleteText").click(function() {
+            		$("#confirmDeleteTextAlert").find('input').remove();
+            		$("#confirmDeleteImageAlert").find('input').remove();
+            		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
+            		$("#confirmDeleteTextAlert").hide();
+            	});
+            	
+            	$("#cancelDeleteImage").click(function() {
+            		$("#confirmDeleteImageAlert").hide();
+            	});
+            	
+            	$("#cancelDeleteVideo").click(function() {
+            		$("#confirmDeleteVideoAlert").find('input').remove();
+            		$("#confirmDeleteVideoAlert").hide();	
+            	});
+            	
+            	$("#cancelDeleteChoiceBlock").click(function() {
+            	    $("#confirmDeleteChoiceBlockAlert").find('input').remove();
+            	    $("#confirmDeleteTextAlert").find('input').remove();
+            		$("#confirmDeleteImageAlert").find('input').remove();
+            		$("#confirmDeleteChoiceBlockAlert").hide();
+            	});
+            	
+            	$("#cancelDelete").click(function() {
+            		$("#confirmDeleteTextAlert").find('input').remove();
+            		$("#confirmDeleteImageAlert").find('input').remove();
+            		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
+            		$("#confirmDeleteImageAlert").hide();	
+            	});
+
                      	
                      	$("#deleteChoiceBlock").on("click", function(e) {
                      	    e.preventDefault();
