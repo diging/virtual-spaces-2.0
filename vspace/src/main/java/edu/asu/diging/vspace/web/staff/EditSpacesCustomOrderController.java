@@ -18,7 +18,7 @@ public class EditSpacesCustomOrderController {
     @Autowired
     private ISpacesCustomOrderManager spacesCustomOrderManager;
     
-    @RequestMapping(value = "/staff/space/order/{customOrderId}/edit/info", method = RequestMethod.POST)
+    @RequestMapping(value = "/staff/space/order/{customOrderId}", method = RequestMethod.POST)
     public String saveTitleDescription(
             @RequestParam("title") String title, 
             @RequestParam("description") String description, 

@@ -60,7 +60,7 @@ public class ExhibitionSpaceOrderUtility implements IExhibitionSpaceOrderUtility
 
     /**
      * This method sorts the spaces based on user defined order.
-     * @param publishedSpaces
+     * @param spaces
      * @return list of {@link ISpace}
      */
     private List<ISpace>  sortSpacesByCustomOrder(List<ISpace> spaces){
@@ -69,12 +69,7 @@ public class ExhibitionSpaceOrderUtility implements IExhibitionSpaceOrderUtility
         if(spacesCustomOrder == null) {
             return sortSpacesAlphabetically(spaces);
         }
-        List<ISpace> allSpaces = spacesCustomOrder.getCustomOrderedSpaces();
-        
-        //only show published spaces        
-        return allSpaces.stream()
-                .filter(space -> space.getSpaceStatus() == SpaceStatus.PUBLISHED)
-                .collect(Collectors.toList());
+        return spacesCustomOrder.getCustomOrderedSpaces();
     }
     
 
@@ -88,10 +83,10 @@ public class ExhibitionSpaceOrderUtility implements IExhibitionSpaceOrderUtility
     public List<ISpace> sortSpaces(List<ISpace> publishedSpaces, ExhibitionSpaceOrderMode mode){
         if(mode == null || mode == ExhibitionSpaceOrderMode.ALPHABETICAL) {
             return sortSpacesAlphabetically(publishedSpaces);
-        } else if(mode == ExhibitionSpaceOrderMode.CREATION_DATE) {
-            return sortSpacesOnCreationDate(publishedSpaces);
-        } else {
-            return sortSpacesByCustomOrder(publishedSpaces);
         }
+        if(mode == ExhibitionSpaceOrderMode.CREATION_DATE) {
+            return sortSpacesOnCreationDate(publishedSpaces);
+        }
+        return sortSpacesByCustomOrder(publishedSpaces);
     }
 }

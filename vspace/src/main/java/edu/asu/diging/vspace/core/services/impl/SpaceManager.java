@@ -329,10 +329,16 @@ public class SpaceManager implements ISpaceManager {
     }
 
     /**
-     * Method to sort published spaces based on the given order, i.e Alphabetical,
-     * Creation Date, or, Custom
-     * @param publishedSpaces
-     * @return list of space
+     * Sorts a list of published exhibition spaces based on a specified order mode.
+     * 
+     * <p>
+     * This method retrieves the current exhibition's space order mode and sorts the 
+     * given list of published spaces accordingly. The sorting logic is from 
+     * the {@code exhibitionSpaceOrderUtility} which uses the retrieved space order mode.
+     * </p>
+     * 
+     * @param publishedSpaces - list of published spaces to be sorted
+     * @return A sorted list of {@code ISpace}
      */
     @Override
     public List<ISpace> sortPublishedSpacesByGivenOrder(List<ISpace> publishedSpaces) {

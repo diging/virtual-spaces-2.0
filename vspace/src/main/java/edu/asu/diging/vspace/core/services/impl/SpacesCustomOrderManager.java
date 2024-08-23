@@ -23,12 +23,13 @@ import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.ISpacesCustomOrderManager;
 
 /**
- * SpacesCustomOrderManager is the manager
- * to allow custom ordering of spaces
+ * This is the class that manages custom ordering of exhibition spaces
+ * It has methods for creating, updating, retrieving, and deleting 
+ * custom orders of exhibition spaces.
+ * 
  * @author Glen D'souza
- *
+ * 
  */
-
 @Service
 @Transactional(rollbackFor = { Exception.class })
 public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
@@ -43,14 +44,15 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
     private IExhibitionManager exhibitionManager;
     
     @Override
-    public ISpacesCustomOrder create(List<String> spaceOrders,
+    public ISpacesCustomOrder create(List<String> spaceOrder,
             String name,
             String description) {
         SpacesCustomOrder spacesCustomOrder = new SpacesCustomOrder();
         spacesCustomOrder.setCustomOrderName(name);
         spacesCustomOrder.setDescription(description);
-        List<ISpace> orderedSpaces = spaceOrders.stream()
+        List<ISpace> orderedSpaces = spaceOrder.stream()
                 .map(spaceId -> spaceManager.getSpace(spaceId))
+                .filter(space -> space.getSpaceStatus() == SpaceStatus.PUBLISHED )
                 .collect(Collectors.toList());
         spacesCustomOrder.setCustomOrderedSpaces(orderedSpaces);
         return spacesCustomOrderRepository.save(spacesCustomOrder);
@@ -70,11 +72,6 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
         }          
         return null;
     }
-    
-    @Override
-    public void save(Iterable<SpacesCustomOrder> spacesCustomOrder) {
-        spacesCustomOrderRepository.saveAll(spacesCustomOrder);
-    }
 
     /**
      * This method adds the newly created spaces to all custom orders at the end of the list
@@ -82,14 +79,14 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
      */
     @Override
     public void addSpaceToCustomOrders(ISpace space) {
-        Iterable<SpacesCustomOrder> spacesCustomOrders = findAll();
-        for(ISpacesCustomOrder spaceCustomOrder :  spacesCustomOrders) {
+        Iterable<SpacesCustomOrder> spacesCustomOrder = findAll();
+        for(ISpacesCustomOrder spaceCustomOrder :  spacesCustomOrder) {
             List<ISpace> customOrderSpaces = spaceCustomOrder.getCustomOrderedSpaces();
             if(!customOrderSpaces.contains(space)) {
                 spaceCustomOrder.getCustomOrderedSpaces().add(space);
             }
         }
-        save(spacesCustomOrders);
+        spacesCustomOrderRepository.saveAll(spacesCustomOrder);
     }
     
   
@@ -109,9 +106,15 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
     }
 
     /**
-     * This method updated custom order of spaces
-     * @param spacesCustomOrderId
-     * @param spacesIds
+     * This method updates list of spaces in a custom order
+     * 
+     * <p>
+     * This method takes a list of space IDs, retrieves its corresponding {@link ISpace} objects,
+     * and updates the custom order ({@code spacesCustomOrderId}) with the retrieved spaces.
+     * </p>
+     * 
+     * @param spacesCustomOrderId - The ID of the custom space order to be updated
+     * @param spacesIds - The list of space IDs to set as the custom ordered spaces
      * @return
      */
     @Override
@@ -135,8 +138,9 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
         IExhibition exhibition = exhibitionManager.getStartExhibition();
         Optional<SpacesCustomOrder> spacesCustomOrder = spacesCustomOrderRepository
                 .findById(customOrderId);
-        if(spacesCustomOrder.isPresent())
+        if(spacesCustomOrder.isPresent()) {
             exhibition.setSpacesCustomOrder(spacesCustomOrder.get());
+        }            
     }
     
     /**
@@ -146,8 +150,7 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
     @Override
     public void delete(String id) {
         IExhibition exhibition = exhibitionManager.getStartExhibition();
-        SpacesCustomOrder spaceCustomOrder = exhibition
-                .getSpacesCustomOrder();
+        SpacesCustomOrder spaceCustomOrder = exhibition.getSpacesCustomOrder();
         if(spaceCustomOrder!=null && spaceCustomOrder.getId().equals(id)) {
             exhibition.setSpacesCustomOrder(null);
             exhibitionManager.storeExhibition((Exhibition)exhibition);
