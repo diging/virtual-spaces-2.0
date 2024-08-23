@@ -610,40 +610,6 @@
          		$("#confirmDeleteImageAlert").hide();	
          	});
          	
-         	// ---------- Delete Video Block -----------
-         	
-				$("#deleteVideo").on("click", function(e) {
-         		e.preventDefault();
-         		$("#confirmDeleteTextAlert").find('input').remove();
-         		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
-         		$("#confirmDeleteVideoAlert").hide();
-         		var blockId = $('#videoIdToDelete').attr('value');
-         		$('#videoIdToDelete').val("");
-         		if(blockId == null || blockId == ''){
-         			var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-         			$('.error').append(alert); 
-         			$(".error").delay(4000).slideUp(500, function(){
-         			    $(".error").empty();
-         			});
-         		} else{
-         		    // ------------- delete video content blocks ------------
-         			$.ajax({
-         			    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/video/'})]"+blockId+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
-         			    type: 'DELETE',
-         			    success: function(result) {
-         			    	$('#' + blockId).remove();
-         			    },
-         				error: function(data) {
-         					var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-         					$('.error').append(alert); 
-         					$(".error").delay(4000).slideUp(500, function(){
-         					    $(".error").empty();
-         					});
-         				}
-         			});
-         		}
-         	});
-         	
              	// ---------- Delete Text Block -------------
          	
          		$("#deleteText").on("click", function(e) {
@@ -652,6 +618,7 @@
          		$("#confirmDeleteRefAlert").find('input').remove();
          		$("#confirmDeleteImageAlert").find('input').remove();
          		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
+         		$("#confirmDeleteVideoAlert").find('input').remove();
          		$("#confirmDeleteTextAlert").hide();
          		var blockId = $('#deleteTextId').attr('value');
          		$('#deleteTextId').remove()
@@ -784,6 +751,7 @@
          	    $("#confirmDeleteBiblioAlert").find('input').remove();
          	    $("#confirmDeleteRefAlert").find('input').remove();
          	    $("#confirmDeleteImageAlert").find('input').remove();
+         	    $("#confirmDeleteVideoAlert").find('input').remove();
          		$("#confirmDeleteChoiceBlockAlert").hide();
          		var blockId = $('#deleteChoiceBlockId').attr('value');
          		if(blockId == null || blockId == ''){
@@ -1802,7 +1770,39 @@
             		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
             		$("#confirmDeleteImageAlert").hide();	
             	});
-
+                     	// ---------- Delete Video Block -----------
+                     	
+         				$("#deleteVideo").on("click", function(e) {
+                     		e.preventDefault();
+                     		$("#confirmDeleteTextAlert").find('input').remove();
+                     		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
+                     		$("#confirmDeleteVideoAlert").hide();
+                     		var blockId = $('#videoIdToDelete').attr('value');
+                     		$('#videoIdToDelete').val("");
+                     		if(blockId == null || blockId == ''){
+                     			var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                     			$('.error').append(alert); 
+                     			$(".error").delay(4000).slideUp(500, function(){
+                     			    $(".error").empty();
+                     			});
+                     		} else{
+                     		    // ------------- delete video content blocks ------------
+                     			$.ajax({
+                     			    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/video/'})]"+blockId+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
+                     			    type: 'DELETE',
+                     			    success: function(result) {
+                     			    	$('#' + blockId).remove();
+                     			    },
+                     				error: function(data) {
+                     					var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                     					$('.error').append(alert); 
+                     					$(".error").delay(4000).slideUp(500, function(){
+                     					    $(".error").empty();
+                     					});
+                     				}
+                     			});
+                     		}
+                     	});
                      	
                      	$("#deleteChoiceBlock").on("click", function(e) {
                      	    e.preventDefault();
