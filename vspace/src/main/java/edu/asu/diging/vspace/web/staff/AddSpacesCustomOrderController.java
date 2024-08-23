@@ -30,7 +30,7 @@ public class AddSpacesCustomOrderController {
     }
     
     @RequestMapping(value = "/staff/space/order/customorder/add", method = RequestMethod.POST)
-    public String createCustomOrder(Model model, @RequestParam("spaceOrder") List<String> spaceOrders,
+    public String createCustomOrder(Model model, @RequestParam("spaceOrder") List<String> spaceOrder,
             @RequestParam("name") String name,
             @RequestParam("description") String description, RedirectAttributes attributes) {
         if(name == null || name.isEmpty()) {
@@ -39,7 +39,7 @@ public class AddSpacesCustomOrderController {
             attributes.addFlashAttribute("showAlert", "true");
             return "redirect:/staff/space/order/add";
         }
-        spacesCustomOrderManager.create(spaceOrders, name, description);
+        spacesCustomOrderManager.create(spaceOrder, name, description);
         attributes.addFlashAttribute("alertType", "success");
         attributes.addFlashAttribute("message", "Custom Order has been successfully added.");
         attributes.addFlashAttribute("showAlert", "true");

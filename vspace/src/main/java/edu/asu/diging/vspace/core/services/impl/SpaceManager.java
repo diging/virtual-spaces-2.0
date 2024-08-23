@@ -337,13 +337,13 @@ public class SpaceManager implements ISpaceManager {
      * the {@code exhibitionSpaceOrderUtility} which uses the retrieved space order mode.
      * </p>
      * 
-     * @param publishedSpaces - list of published spaces to be sorted
+     * @param spaces - list of spaces to be sorted
      * @return A sorted list of {@code ISpace}
      */
     @Override
-    public List<ISpace> sortPublishedSpacesByGivenOrder(List<ISpace> publishedSpaces) {
+    public List<ISpace> sortPublishedSpacesByGivenOrder(List<ISpace> spaces) {
         IExhibition exhibition = exhibitionManager.getStartExhibition();
-        return exhibitionSpaceOrderUtility.sortSpaces(publishedSpaces, exhibition.getSpaceOrderMode());
+        return exhibitionSpaceOrderUtility.sortSpaces(spaces, exhibition.getSpaceOrderMode());
     }
 
 }
