@@ -23,7 +23,7 @@ import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.ISpacesCustomOrderManager;
 
 /**
- * This is the class that manages custom ordering of exhibition spaces
+ * SpacesCustomOrderManager manages custom ordering of exhibition spaces
  * It has methods for creating, updating, retrieving, and deleting 
  * custom orders of exhibition spaces.
  * 
@@ -89,8 +89,6 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
         spacesCustomOrderRepository.saveAll(spacesCustomOrder);
     }
     
-  
-
     @Override
     /**
      * This method updates the custom order name and description
@@ -156,5 +154,15 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
             exhibitionManager.storeExhibition((Exhibition)exhibition);
         }
         spacesCustomOrderRepository.deleteById(id);
+    }
+    
+    @Override
+    public void removeSpaceFromAllCustomOrders(ISpace space) {
+        Iterable<SpacesCustomOrder> spacesCustomOrder = findAll();
+        for(SpacesCustomOrder spaceCustomOrder : spacesCustomOrder) {
+            if(spaceCustomOrder.getCustomOrderedSpaces().remove(space)) {
+                spacesCustomOrderRepository.save(spaceCustomOrder);
+            }
+        } 
     }
 }

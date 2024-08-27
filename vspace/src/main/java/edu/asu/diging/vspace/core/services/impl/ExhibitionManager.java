@@ -46,8 +46,8 @@ public class ExhibitionManager implements IExhibitionManager {
      * asu.diging.vspace.core.model.impl.Exhibition)
      */
     @Override
-    public IExhibition storeExhibition(Exhibition exhibition) {
-        return exhibitRepo.save(exhibition);
+    public IExhibition storeExhibition(IExhibition exhibition) {
+        return exhibitRepo.save((Exhibition)exhibition);
     }
 
     /*

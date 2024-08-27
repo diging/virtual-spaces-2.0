@@ -24,4 +24,6 @@ public interface ISpacesCustomOrderManager {
 
     void delete(String id);
 
+    void removeSpaceFromAllCustomOrders(ISpace space);
+
 }

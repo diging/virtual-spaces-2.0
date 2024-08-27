@@ -251,12 +251,7 @@ public class SpaceManager implements ISpaceManager {
                 fromSpaceLinks = spaceLinkRepo.findByTargetSpace(space.get());
                 
                 //To remove the current space from all existing custom orders
-                Iterable<SpacesCustomOrder> spacesCustomOrder = spacesCustomOrderManager.findAll();
-                for(SpacesCustomOrder spaceCustomOrder : spacesCustomOrder) {
-                    if(spaceCustomOrder.getCustomOrderedSpaces().remove(space.get())) {
-                        spacesCustomOrderRepo.save(spaceCustomOrder);
-                    }
-                }   
+                spacesCustomOrderManager.removeSpaceFromAllCustomOrders(space.get());
             } 
             Exhibition exhibition = (Exhibition) exhibitionManager.getStartExhibition();
             // When space has other links attached to it

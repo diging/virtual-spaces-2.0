@@ -11,7 +11,7 @@ import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.ISpacesCustomOrderManager;
 
 @Controller
-public class UpdateStaffSpaceOrderModeController {
+public class UpdateSpaceOrderModeController {
     
     @Autowired
     private IExhibitionManager exhibitionManager;

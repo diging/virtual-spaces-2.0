@@ -29,7 +29,7 @@ public class ExhibitionSpaceOrderUtility implements IExhibitionSpaceOrderUtility
     
     /**
      * This method sorts the spaces in alphabetical order.
-     * @param spaces list of {@link ISpace} objects to be sorted
+     * @param list of {@link ISpace} objects to be sorted
      * @return list of {@link ISpace}
      */
     private List<ISpace> sortSpacesAlphabetically(List<ISpace> spaces){
@@ -75,18 +75,18 @@ public class ExhibitionSpaceOrderUtility implements IExhibitionSpaceOrderUtility
 
     /**
      * This method used to sort spaces based on given mode.
-     * @param publishedSpaces - list of published spaces
+     * @param spaces - list of spaces
      * @param mode - the sorting mode of the exhibition spaces
      * @return list of {@link ISpace}
      */
     @Override
-    public List<ISpace> sortSpaces(List<ISpace> publishedSpaces, ExhibitionSpaceOrderMode mode){
+    public List<ISpace> sortSpaces(List<ISpace> spaces, ExhibitionSpaceOrderMode mode){
         if(mode == null || mode == ExhibitionSpaceOrderMode.ALPHABETICAL) {
-            return sortSpacesAlphabetically(publishedSpaces);
+            return sortSpacesAlphabetically(spaces);
         }
         if(mode == ExhibitionSpaceOrderMode.CREATION_DATE) {
-            return sortSpacesOnCreationDate(publishedSpaces);
+            return sortSpacesOnCreationDate(spaces);
         }
-        return sortSpacesByCustomOrder(publishedSpaces);
+        return sortSpacesByCustomOrder(spaces);
     }
 }
