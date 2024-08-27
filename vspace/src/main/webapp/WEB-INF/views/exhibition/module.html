@@ -13,14 +13,13 @@
 }
 
 .modal-content {
-    width: 1300px;
-    height: 1200px;
-    margin-left: -400px;
+    width: calc(97vw - 20px);
+    height: calc(97vh - 20px);
 }
 
 .modal-dialog {
-    width: 800px;
-    height: 800px;
+    width: 100%;
+    margin-left: 20px;
 }
 
 .text {
@@ -200,8 +199,8 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div id="graph" class="modal-body" style="width: 100%; overflow: auto;">
-                    <div id="svg-container" style="width:2000px; height:2000px; overflow-y: auto;">
+                    <div id="graph" class="modal-body" style="overflow: auto;">
+                    <div id="svg-container" style="width:100%; overflow-y: auto;">
                     <script th:inline="javascript">
                         const branchingPointsSet = new Set();
                         const sequencesMap = new Map();
@@ -211,6 +210,8 @@
                         var spaceId = [[${spaceId}]];
                         var currentSlide = [[${currentSlideCon}]];
                         var sequenceId = [[${currentSequenceId}]];
+                        var totalHeight = $(window).height();
+                        var totalWidth = $(window).height();
 
                         // Initialize tree data and set up the basic structure
                         let treeData = [];
@@ -226,8 +227,8 @@
                         populateTreeData(treeData, startSequence, otherSequences);
                         // Set up dimensions for the tree layout
                         var margin = {top: 20, right: 120, bottom: 20, left: 120},
-                            width = 2000 - margin.right - margin.left,
-                            height = 500 - margin.top - margin.bottom;
+                            width = totalWidth - margin.right - margin.left,
+                            height = totalHeight - margin.top - margin.bottom;
 
                         // Initialize variables for tree layout
                         var i = 0, duration = 750, root;
@@ -266,7 +267,7 @@
                         // Update the tree with the root node
                         update(root);
                         // Set the height of the frame
-                        d3.select(self.frameElement).style("height", "500px");
+                        d3.select(self.frameElement).style("height", "97vh");
 
                         function populateTreeData(treeData, startSequence, otherSequences){
                             // Set the name of the root node
@@ -279,27 +280,31 @@
 
                             // Add other sequences to the tree structure
                             for (let sequence of otherSequences) {
-                                treeData = createFromSequence(sequence, treeData, isStartSequence);
+                                treeData = createFromSequence(sequence, treeData, isStartSequence);               
                             }
                             
                             let visitedSequencesSet = new Set();
                             // Add branching points to the tree structure
                             for (let branch of branchingPointsSet) {
+                            	totalWidth+=20;
                             	visitedSequencesSet.add(branch.sequence);
                             	let branchToSet = new Set();
                                 for (let branchSequence of branch.branchSequences) {
                                 	branchToSet.add(sequenceFirstSlides.get(branchSequence.id));
-                                	branchToFrmMap.set(branch.id,branchToSet);
+                                	branchToFrmMap.set(branch.id,branchToSet)
+                                	totalWidth+=sequenceFirstSlides.size * 20;
                                     // Avoid adding a branch to itself
                                     if (branch.sequence === branchSequence.id) continue;
                                     
                                     // Add the branch sequence to the children of the branch node
                                     if(visitedSequencesSet.has(branchSequence.id) == false){
                                     	branch.children.push(sequencesMap.get(branchSequence.id));
+                                    	len = sequencesMap.get(branchSequence.id).children.length;
                                     }
 
                                     visitedSequencesSet.add(branchSequence.id);
                                     //branch.children.push(sequencesMap.get(branchSequence.name).children[0]);
+                                    
                                 }
                             }
                         }
@@ -323,7 +328,8 @@
                             	    	slideNode.sequence = sequence.id;
                             	    }
                                     branchingPointsSet.add(slideNode);
-                            	}                                   
+                            	}   
+                            	totalWidth+=20;
                                 slideNode.name = slide.name;
                                 slideNode.sequenceId = sequence.id;
                                 slideNode.slideId = slide.id;
@@ -345,6 +351,7 @@
                             
                             if(isStartSequence == true){
                                 treeData.children.push(startNodeSequence);
+                                
                             }
                                                       
                             sequencesMap.set(sequence.id, startNodeSequence);
