@@ -4,7 +4,7 @@
 .link {
     stroke: #999;
     stroke-opacity: 0.6;
-    stroke-width: 2px;
+    stroke-width: 1.5px;
 }
 
 .nodes circle {
@@ -210,8 +210,8 @@
                         var spaceId = [[${spaceId}]];
                         var currentSlide = [[${currentSlideCon}]];
                         var sequenceId = [[${currentSequenceId}]];
-                        var totalHeight = $(window).height();
-                        var totalWidth = $(window).height();
+                        var totalHeight = $(window).height()-120;
+                        var totalWidth = $(window).width();
 
                         // Initialize tree data and set up the basic structure
                         let treeData = [];
@@ -226,7 +226,7 @@
                         //populate the data into the tree
                         populateTreeData(treeData, startSequence, otherSequences);
                         // Set up dimensions for the tree layout
-                        var margin = {top: 20, right: 120, bottom: 20, left: 120},
+                        var margin = {top: 20, right: 100, bottom: 20, left: 100},
                             width = totalWidth - margin.right - margin.left,
                             height = totalHeight - margin.top - margin.bottom;
 
@@ -267,7 +267,7 @@
                         // Update the tree with the root node
                         update(root);
                         // Set the height of the frame
-                        d3.select(self.frameElement).style("height", "97vh");
+                        d3.select(self.frameElement).style("height", "95vh");
 
                         function populateTreeData(treeData, startSequence, otherSequences){
                             // Set the name of the root node
@@ -286,25 +286,21 @@
                             let visitedSequencesSet = new Set();
                             // Add branching points to the tree structure
                             for (let branch of branchingPointsSet) {
-                            	totalWidth+=20;
                             	visitedSequencesSet.add(branch.sequence);
                             	let branchToSet = new Set();
                                 for (let branchSequence of branch.branchSequences) {
                                 	branchToSet.add(sequenceFirstSlides.get(branchSequence.id));
                                 	branchToFrmMap.set(branch.id,branchToSet)
-                                	totalWidth+=sequenceFirstSlides.size * 20;
+                                	totalWidth+=(sequenceFirstSlides.size * 25);
                                     // Avoid adding a branch to itself
                                     if (branch.sequence === branchSequence.id) continue;
                                     
                                     // Add the branch sequence to the children of the branch node
                                     if(visitedSequencesSet.has(branchSequence.id) == false){
                                     	branch.children.push(sequencesMap.get(branchSequence.id));
-                                    	len = sequencesMap.get(branchSequence.id).children.length;
                                     }
 
                                     visitedSequencesSet.add(branchSequence.id);
-                                    //branch.children.push(sequencesMap.get(branchSequence.name).children[0]);
-                                    
                                 }
                             }
                         }
@@ -326,6 +322,10 @@
                             	    	branchSeq.id = seq;                                       
                             	    	slideNode.branchSequences.push(branchSeq);
                             	    	slideNode.sequence = sequence.id;
+                            	    	//increase the height of the svg container as the sequence gets added to branch
+                            	    	if(isStartSequence == false){
+                            	    		totalHeight+=15;
+                            	    	}
                             	    }
                                     branchingPointsSet.add(slideNode);
                             	}   
@@ -350,8 +350,7 @@
                             }
                             
                             if(isStartSequence == true){
-                                treeData.children.push(startNodeSequence);
-                                
+                                treeData.children.push(startNodeSequence);                                
                             }
                                                       
                             sequencesMap.set(sequence.id, startNodeSequence);
@@ -410,7 +409,7 @@
                             nodeEnter.append("text").attr("class","text")
                             	.attr("x", function(d) { return d.children || d._children ? 10 :10; })
                             	.attr("dy", "2.3em")
-                            	.attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
+                            	.attr("text-anchor", function(d) { return d.children || d._children ? "middle" : "end"; })
                             	.text(function(d) { return d.name; })
                             	.style("fill-opacity", 1e-6)
                             	.style("opacity", function(d, i) {
@@ -462,7 +461,8 @@
     
                             // Update the links
                             var link = svg.selectAll("path.link")
-                                .data(links, function(d) { return d.target.id; })
+                                .data(links, function(d) { totalWidth = Math.max(totalWidth, d.target.y); 
+                                return d.target.id; })
                             
                             
                             // Enter any new links at the parent's previous position.
