@@ -17,12 +17,13 @@ public class EditSpacesCustomOrderController {
     
     @Autowired
     private ISpacesCustomOrderManager spacesCustomOrderManager;
-    
+
     @RequestMapping(value = "/staff/space/order/{customOrderId}", method = RequestMethod.POST)
-    public String saveTitleDescription(
-            @RequestParam("title") String title, 
-            @RequestParam("description") String description, 
+    public String saveOrder(
             @PathVariable("customOrderId") String spacesCustomOrderId, 
+            @RequestParam("spaceOrder") List<String> spaceOrders, 
+            @RequestParam("title") String title, 
+            @RequestParam("description") String description,
             RedirectAttributes attributes) {
         if(title == null || title.isEmpty()) {
             attributes.addFlashAttribute("alertType", "danger");
@@ -31,20 +32,9 @@ public class EditSpacesCustomOrderController {
             return "redirect:/staff/space/order/"+spacesCustomOrderId;
         }
         spacesCustomOrderManager.updateNameAndDescription(spacesCustomOrderId, title, description);
-        attributes.addFlashAttribute("alertType", "success");
-        attributes.addFlashAttribute("message", "Custom order info has been updated.");
-        attributes.addFlashAttribute("showAlert", "true");
-        return "redirect:/staff/space/order/"+spacesCustomOrderId;
-    }
-
-    @RequestMapping(value = "/staff/space/order/{customOrderId}/edit/spaceorders", method = RequestMethod.POST)
-    public String saveOrder(
-            @PathVariable("customOrderId") String spacesCustomOrderId, 
-            @RequestParam("spaceOrder") List<String> spaceOrders, 
-            RedirectAttributes attributes) {
         spacesCustomOrderManager.updateSpaces(spacesCustomOrderId, spaceOrders);
         attributes.addFlashAttribute("alertType", "success");
-        attributes.addFlashAttribute("message", "The order of spaces has been updated.");
+        attributes.addFlashAttribute("message", "The custom order has been updated.");
         attributes.addFlashAttribute("showAlert", "true");
         return "redirect:/staff/space/order/"+spacesCustomOrderId;
     }

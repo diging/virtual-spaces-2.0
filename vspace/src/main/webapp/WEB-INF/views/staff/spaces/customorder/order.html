@@ -100,9 +100,6 @@
 		$("#goBackContainer").click(function() {
 			window.location.href = "[(@{'/staff/space/order'})]";
 		});
-		$("#editTitleDescription").click(function() {
-			$('#myModal').modal('show');
-		});
 		
 	    $("#deleteOrder").click(function() {
 	        $.ajax({
@@ -143,11 +140,7 @@
 						<h2 style="margin-bottom: 0; margin-right: 15px">
 							<span style="color: var(--dark-grey)">Custom Space Order:</span> 
 							<span id="customOrderTitle">[[${customSpaceOrder.customOrderName}]]</span>
-						</h2>
-						<div id="editTitleDescription" style="align-self: center; cursor: pointer;">
-							<span class="icon-edit" style="vertical-align: sub;"></span>
-							<span>Edit</span>
-						</div>
+						</h2>						
 					</div>
 					<p id="description" class="para">[[${customSpaceOrder.description}]]</p>
 				</div>
@@ -157,58 +150,39 @@
 					by [[${customSpaceOrder.modifiedBy}]].
 				</div>
 			</div>
-			<div id="draganddrop">
-			<span>Drag and drop to arrange spaces</span>
-			</div>
-			<form th:action="@{'/staff/space/order/'+${customSpaceOrder.id}+'/edit/spaceorders'}" method ="POST">
-				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-				<input type="hidden" id="spaceOrder" name="spaceOrder" value=""/>
-				<div id="sortableSpaces" class="sortableSpaces">
-					<div th:each="selectedSpace: ${selectedSpaces}"  class="main-content" >
-				    	<div  th:draggable="true"  th:id="${selectedSpace.id}" th:attr="data-position=1"class="valueDiv tab row paraContent" >
-				             <p class="para">[[${selectedSpace.name}]]</p>
-					    </div>
-			    	</div>
-				</div>
-				<div style="padding-top:20px;">
-					<button id="saveOrder" type="submit" class="btn primary-btn" style="float: left; margin-right: 1%;">Change Space Order</button>
-		        </div>
+			
+			
+			<form th:action="@{'/staff/space/order/'+${customSpaceOrder.id}}" method ="POST">
+                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                            <input type="hidden" id="spaceOrder" name="spaceOrder" value=""/>
+                            <div class="modal-body">
+                                <div class="flexContainer">
+                                    <span style="flex: 1;">Title: </span>
+                                    <input style="flex: 5; border: 1px solid;" id="editSpaceCustomOrderTitle" name="title" class="form-control" type="text" th:value="${customSpaceOrder.customOrderName}">
+                                    
+                                </div>
+                                <div class="flexContainer">
+                                    <span style="flex: 1;">Description: </span>
+                                    <textarea id="editSpaceCustomOrderDescription" name="description" rows=5 class="form-control editSpaceCustomOrderDescription" th:text="${customSpaceOrder.description}"></textarea>
+                                </div>
+                            </div>
+                            <div id="draganddrop">
+                                <span>Drag and drop to arrange spaces</span>
+                            </div>
+                            <div id="sortableSpaces" class="sortableSpaces">
+                                <div th:each="selectedSpace: ${selectedSpaces}" class="main-content" >
+                                       <div  th:draggable="true"  th:id="${selectedSpace.id}" th:attr="data-position=1"class="valueDiv tab row paraContent" >
+                                            <p class="para">[[${selectedSpace.name}]]</p>
+                                       </div>
+                                </div>
+                            </div>
+                            <div style="padding-top:20px;">
+                                <button id="saveOrder" type="submit" class="btn primary-btn" style="float: left; margin-right: 1%;">Change Space Order</button>
+                            </div>
 			</form>
             <button id="deleteOrder" class="btn primary-btn">
                 <i class="icon-trash" style="font-size: 1.3rem;vertical-align: text-bottom;padding-right: 3px;"></i>Delete Custom Order
-            </button>
-            
-	        <!-- Modal -->
-			<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-		        <div class="modal-dialog modal-lg" role="document">
-		            <div class="modal-content">
-		            	<form th:action="@{'/staff/space/order/'+${customSpaceOrder.id}}" method ="POST">
-							<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-			                <div class="modal-header">
-			                    <h3 class="modal-title">Edit Custom Order</h3>
-			                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="outline: none;">
-			                    <span aria-hidden="true">&times;</span>
-			                    </button>
-			                </div>
-			                <div class="modal-body">
-			                    <div class="flexContainer">
-			                    	<span style="flex: 1;">Title: </span>
-			                    	<input style="flex: 5; border: 1px solid;" id="editSpaceCustomOrderTitle" name="title" class="form-control" type="text" th:value="${customSpaceOrder.customOrderName}">
-			                    	
-			                    </div>
-			                    <div class="flexContainer">
-			                    	<span style="flex: 1;">Description: </span>
-			                    	<textarea id="editSpaceCustomOrderDescription" name="description" rows=5 class="form-control editSpaceCustomOrderDescription" th:text="${customSpaceOrder.description}"></textarea>
-			                    </div>
-			                </div>
-			                <div class="modal-footer">
-			                    <button id="editCustomOrderSubmit" type="submit" class="btn primary-btn btn-md editSaveBtn">Save</button>
-								<button id="cancel" type="button" class="btn primary-btn btn-md editSaveBtn" data-dismiss="modal" style="margin-left: 1%;">Cancel</button>
-			                </div>
-		                </form>
-		            </div>
-		        </div>
-	        </div>        
+            </button>              
 		</div>
 	</body>
 </html>
