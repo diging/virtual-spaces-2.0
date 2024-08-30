@@ -30,10 +30,6 @@ import edu.asu.diging.vspace.core.services.IPublicSearchManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.impl.model.ModuleWithSpace;
-import edu.asu.diging.vspace.core.services.impl.model.SearchModuleResults;
-import edu.asu.diging.vspace.core.services.impl.model.SearchSlideResults;
-import edu.asu.diging.vspace.core.services.impl.model.SearchSlideTextBlockResults;
-import edu.asu.diging.vspace.core.services.impl.model.SearchSpaceResults;
 import edu.asu.diging.vspace.core.services.impl.model.SlideWithSpace;
 
 @Service

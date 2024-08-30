@@ -37,7 +37,7 @@ public interface SlideRepository extends PagingAndSortingRepository<Slide, Strin
             + "on space.id = moduleLink.space.id WHERE space.spaceStatus = ?3 AND module.moduleStatus = ?4) "
             + "AND s.id IN (Select d.id from Sequence ss join ss.slides d , Module m where m.startSequence.id = ss.id)"
             + "AND s.name like %?1% OR s.description like %?2%")
-    Page<ISlide> findDistinctByNameContainingOrDescriptionContainingLinkedToSpace(Pageable requestedPage, String name,
+    Page<ISlide> findDistinctSlidesInSpaceContainingNameOrDescription(Pageable requestedPage, String name,
             String description, SpaceStatus spaceStatus, ModuleStatus moduleStatus);
 
 }

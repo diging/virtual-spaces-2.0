@@ -9,22 +9,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 
-import edu.asu.diging.vspace.core.data.TextContentBlockRepository;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.ISpace;
-import edu.asu.diging.vspace.core.model.impl.Module;
 import edu.asu.diging.vspace.core.model.impl.Slide;
-import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISearchManager;
 import edu.asu.diging.vspace.core.services.ISequenceManager;
-import edu.asu.diging.vspace.core.services.ISlideManager;
 import edu.asu.diging.vspace.core.services.impl.model.SearchModuleResults;
 import edu.asu.diging.vspace.core.services.impl.model.SearchSlideResults;
 import edu.asu.diging.vspace.core.services.impl.model.SearchSlideTextBlockResults;
-import edu.asu.diging.vspace.core.services.impl.model.SearchSpaceResults;
 
 public abstract class SearchManager implements ISearchManager {
 
@@ -47,16 +41,7 @@ public abstract class SearchManager implements ISearchManager {
     protected abstract Page<ISlide> updateSlideTextPageWithSpaceInfo(Page<ISlide> slideTextPage);
 
     protected abstract Page<ISlide> updateSlidePageWithSpaceInfo(Page<ISlide> slidePage);
-
-    @Override
-    public SearchSpaceResults convertToSearchSpaceResults(Page<ISpace> spacePage) {
-        SearchSpaceResults staffSearchSpaceResults = new SearchSpaceResults();
-        staffSearchSpaceResults.setSpaces(spacePage.getContent());
-        staffSearchSpaceResults.setCurrentPage(spacePage.getNumber() + 1);
-        staffSearchSpaceResults.setTotalPages(spacePage.getTotalPages());
-        return staffSearchSpaceResults;
-    }
-    
+   
     protected SearchModuleResults convertToSearchModuleResults(List<IModule> moduleList) {
 
         SearchModuleResults searchModuleResults = new SearchModuleResults();
@@ -162,24 +147,6 @@ public abstract class SearchManager implements ISearchManager {
         Page<ISlide> slidePage = searchSlidesAndPaginate(searchTerm, Integer.parseInt(slidePagenum));
         return convertToSearchSlideResults(slidePage.getContent());
     }
-    
-    /**
-     * This method is used to search the search string specified in the input
-     * parameter(searchTerm) and return the spaces corresponding to
-     * the page number specified in the input parameter(spacePagenum) whose name or
-     * description contains the search string. This also filters Slides from modules 
-     * which are linked to the spaces.
-     * 
-     * @param slidePagenum current page number sent as request parameter in the URL.
-     * @param searchTerm   This is the search string which is being searched.
-     */
-    @Override
-    public SearchSpaceResults searchForSpace(String spacePagenum, String searchTerm) {
-        Page<ISpace> spacePage = searchSpacesAndPaginate(searchTerm, Integer.parseInt(spacePagenum));
-        return convertToSearchSpaceResults(spacePage);
-    }
-    
-
 
     /**
      * This method is used to search the searched string specified in the input
