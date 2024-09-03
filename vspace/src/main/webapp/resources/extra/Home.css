@@ -57,7 +57,7 @@
 }
 
 .footer {
-	position: relative;
+	position: sticky;
 	text-align: center;
 	bottom: 0;
 	font-size: 12px;
