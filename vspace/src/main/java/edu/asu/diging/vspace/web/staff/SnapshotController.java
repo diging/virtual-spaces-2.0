@@ -34,7 +34,7 @@ public class SnapshotController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @RequestMapping(value = "/staff/exhibit/snapshot", method = RequestMethod.POST) 
+    @RequestMapping(value = "/staff/snapshot/create", method = RequestMethod.POST) 
     public ResponseEntity<ExhibitionSnapshot> createExhibitionSnapshot(HttpServletRequest request, HttpServletResponse response,  Model model) {
         ExhibitionSnapshot exhibitionSnapshot = null;
         try {      
@@ -49,7 +49,7 @@ public class SnapshotController {
         }
     }
 
-    @RequestMapping(value = "/staff/exhibit/download/{id}", method = RequestMethod.GET) 
+    @RequestMapping(value = "/staff/snapshot/{id}", method = RequestMethod.GET) 
     public ResponseEntity<Resource> downloadSnapshot(@PathVariable("id") String id, @RequestParam("folderName") String exhibitionSnapshotFolderName , HttpServletRequest request)
             throws ExhibitionSnapshotNotFoundException , IOException, FileStorageException {
         Resource resource = null;

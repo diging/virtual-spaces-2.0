@@ -73,7 +73,7 @@
 			        <li class="nav-item" sec:authorize="hasAnyRole('ADMIN', 'STAFF')">
 			            <a class="nav-link"
 			               th:style="${currentPage == 'downloads' ? 'active' : '' }"
-			               th:href="@{/staff/downloads/list}">
+			               th:href="@{/staff/snapshots/list}">
 			               <span class="icon-download secondary"></span><span class="custom_Text">&nbsp;Downloads</span>
 			            </a>
 			        </li>

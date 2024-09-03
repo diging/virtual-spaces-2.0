@@ -39,15 +39,5 @@ public interface IStorageEngine {
      *@param folderPath path to the folder to be deleted
      */
     void deleteFolder(String folderPath, String folderName) throws IOException;
-
-    /**
-     * To return the zip file
-     * 
-     * @param zipFilename - name of the folder to be zipped
-     * @return byte[] - zipped data as a byte array
-     * @throws ExhibitionSnapshotNotFoundException 
-     * @throws IOException 
-     */
-    byte[] getZip(String zipFilename) throws ExhibitionSnapshotNotFoundException, IOException, FileNotFoundException;
 }
 

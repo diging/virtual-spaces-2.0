@@ -19,7 +19,7 @@ public class DownloadsController {
     @Autowired
     private ISnapshotManager snapshotManager;
     
-    @RequestMapping("/staff/downloads/list")
+    @RequestMapping("/staff/snapshots/list")
     public String listDownloads(Model model, @RequestParam(value = "downloadsPagenum", required = false, defaultValue = "1") String downloadsPagenum) {
         Integer pageNum = 1;
         try {           

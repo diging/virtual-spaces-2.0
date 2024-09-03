@@ -1,7 +1,9 @@
 package edu.asu.diging.vspace.core.services.impl;
 
 import java.io.File;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -163,7 +165,8 @@ public class RenderingManager implements IRenderingManager {
         ISequence startSequence = module.getStartSequence();
         if(startSequence!= null) {
             try {
-                createSequencesSnapshot(startSequence, module, space, spaceFolderName, imagesFolder);
+                Set<String> visitedSequences = new HashSet<String>();
+                createSequencesSnapshot(startSequence, module, space, spaceFolderName, imagesFolder, visitedSequences);
             } catch (FileStorageException e) {
                 logger.error("Could not download Module",e);
             }
@@ -183,15 +186,17 @@ public class RenderingManager implements IRenderingManager {
      * 
      */
     private void createSequencesSnapshot(ISequence sequence, IModule module, ISpace space, String spaceFolderName,
-            String imagesFolderName) throws FileStorageException {
+            String imagesFolderName, Set<String> visitedSequences) throws FileStorageException {
         List<ISlide> slides = sequence.getSlides();
         slides.forEach(slide -> {
             createSlideSnapshot(slide, sequence, module, space, spaceFolderName, imagesFolderName);
+            visitedSequences.add(sequence.getId());
             if(slide instanceof BranchingPoint) {              
                 ((BranchingPoint) slide).getChoices().forEach(choice -> {
-                    if(!choice.getSequence().getId().equals(sequence.getId())) {
+                    //to prevent infinite loop because of branching to previous sequences 
+                    if(!visitedSequences.contains(choice.getSequence().getId())) {
                         try {
-                            createSequencesSnapshot(choice.getSequence(), module, space, spaceFolderName, imagesFolderName);
+                            createSequencesSnapshot(choice.getSequence(), module, space, spaceFolderName, imagesFolderName, visitedSequences);
                         } catch (FileStorageException e) {
                             logger.error("Could not download Sequence",e);
                         } 

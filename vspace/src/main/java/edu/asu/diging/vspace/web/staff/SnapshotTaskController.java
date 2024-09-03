@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,19 +27,19 @@ public class SnapshotTaskController {
     private ISnapshotManager snapshotManager;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
-   
-    @RequestMapping(value = "/staff/exhibit/snapshot/status", method = RequestMethod.GET) 
-    public ResponseEntity<SnapshotTask> getSnapshotTaskStatus(HttpServletRequest request, 
-            @RequestParam(required = false, name = "snapshotId") String snapshotId, HttpServletResponse response,  Model model) throws ExhibitionSnapshotNotFoundException{                     
-        SnapshotTask snapshotTask = (snapshotId == null && snapshotId=="") ? (SnapshotTask) snapshotManager.getLatestSnapshotTask() : 
-            (SnapshotTask) snapshotManager.getSnapshotTask(snapshotId); 
-        if(snapshotTask == null) {
+
+    @RequestMapping(value = "/staff/snapshot/{id}/status", method = RequestMethod.GET)
+    public ResponseEntity<SnapshotTask> getSnapshotTaskStatus(HttpServletRequest request,
+            @PathVariable(required = false, name = "id") String snapshotId, HttpServletResponse response, Model model)
+            throws ExhibitionSnapshotNotFoundException {
+        SnapshotTask snapshotTask = (snapshotId == null && snapshotId == "")
+                ? (SnapshotTask) snapshotManager.getLatestSnapshotTask()
+                : (SnapshotTask) snapshotManager.getSnapshotTask(snapshotId);
+        if (snapshotTask == null) {
             logger.error("Could not find snapshot task");
             return new ResponseEntity<SnapshotTask>(snapshotTask, HttpStatus.NOT_FOUND);
         } else {
-            return  ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_TYPE, "application/json")
-                    .body(snapshotTask);   
+            return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "application/json").body(snapshotTask);
         }
     }
 }

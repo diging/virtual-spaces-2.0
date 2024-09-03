@@ -92,7 +92,8 @@ public class SnapshotManager  implements  ISnapshotManager {
 
         try {
             snapshotTask = createSnapshot(resourcesPath, exhibitionFolderName, sequenceHistory, exhibitionSnapshot);
-            storageEngineDownloads.generateZip(exhibitionFolderName);
+            storageEngineDownloads.generateZip(exhibitionFolderName);           
+            snapshotTask.setTaskComplete(true);
         } catch (IOException | InterruptedException | FileStorageException e) {
             throw new SnapshotCouldNotBeCreatedException(e.getMessage(), e);
         }
@@ -136,7 +137,6 @@ public class SnapshotManager  implements  ISnapshotManager {
             renderingManager.createSpaceSnapshot(space, exhibitionFolderName, sequenceHistory);                
         }
         SnapshotTask snapshotTask = exhibitionSnapshot.getSnapshotTask();
-        snapshotTask.setTaskComplete(true);
         return snapshotTaskRepository.save(snapshotTask);   
     }
 
@@ -170,7 +170,7 @@ public class SnapshotManager  implements  ISnapshotManager {
 
         if(exhibitionSnapshot.isPresent()) {           
             try {
-                return storageEngineDownloads.getZip(exhibitionSnapshot.get().getFolderName());                
+                return storageEngineDownloads.getMediaContent("",exhibitionSnapshot.get().getFolderName()+".zip");                
             }catch(FileSystemNotFoundException e) {
                 throw new ExhibitionSnapshotNotFoundException(e.getMessage(), e);
             }

@@ -218,27 +218,4 @@ public class StorageEngine implements IStorageEngine {
     public void deleteFolder(String folderPath, String folderName) throws IOException {
         FileUtils.deleteDirectory(getFile(folderPath,folderName));
     }
-    
-    /**
-     * To return the zip file
-     * 
-     * @param zipFilename - name of the folder to be zipped
-     * @return byte[] - zipped data as a byte array
-     * @throws ExhibitionSnapshotNotFoundException 
-     * @throws IOException 
-     */
-    @Override
-    public byte[] getZip(String zipFilename) throws ExhibitionSnapshotNotFoundException, IOException, FileNotFoundException {
-        File file = new File(path + File.separator + zipFilename + ".zip");
-        if(!file.exists()){
-            throw new ExhibitionSnapshotNotFoundException(zipFilename);
-        }
-        try {
-            FileInputStream in = new FileInputStream(file);
-            byte[] buffer = in.readAllBytes();
-            return buffer;
-        } catch (IOException e) {
-            throw new ExhibitionSnapshotNotFoundException(e.getMessage(), e);
-        }                   
-    }
 }   
