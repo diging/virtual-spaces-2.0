@@ -62,23 +62,15 @@ public class AddSpaceController {
     public String addSpace(Model model, @ModelAttribute SpaceForm spaceForm, @RequestParam("file") MultipartFile file,
             Principal principal, @RequestParam(value = "imageId", required=false) String imageId, RedirectAttributes redirectAttrs) throws IOException {
         ISpace space;
-        /*
-         * Check if the default name is provided. If a non-default name is provided, create a new form without default values
-         */
-        if (!spaceForm.getDefaultName().getText().isEmpty()) {
-            SpaceForm nonDefaultSpaceForm = new SpaceForm(); 
-            LocalizedTextForm nameSpace = spaceForm.getNames().stream().filter(name -> name != null).findFirst().orElse(null);
-            LocalizedTextForm descriptionSpace = spaceForm.getDescriptions().stream().filter(description -> description != null).findFirst().orElse(null);
-            nonDefaultSpaceForm.setDefaultDescription(descriptionSpace);
-            nonDefaultSpaceForm.setDefaultName(nameSpace);
-            space = spaceFactory.createSpace(nonDefaultSpaceForm);
-            spaceManager.updateNameAndDescription(space, nonDefaultSpaceForm);
-        } else {
-            // If only the default name is provided, create the space with the default form
-            space = spaceFactory.createSpace(spaceForm);
-            spaceManager.updateNameAndDescription(space, spaceForm);
-        } 
         
+        SpaceForm nonDefaultSpaceForm = new SpaceForm(); 
+        LocalizedTextForm nameSpace = spaceForm.getNames().stream().filter(name -> name != null).findFirst().orElse(null);
+        LocalizedTextForm descriptionSpace = spaceForm.getDescriptions().stream().filter(description -> description != null).findFirst().orElse(null);
+        nonDefaultSpaceForm.setDefaultDescription(descriptionSpace);
+        nonDefaultSpaceForm.setDefaultName(nameSpace);
+        space = spaceFactory.createSpace(nonDefaultSpaceForm);
+        spaceManager.updateNameAndDescription(space, nonDefaultSpaceForm);
+
         space.setSpaceStatus(SpaceStatus.UNPUBLISHED);      
         exhibitionManager.getStartExhibition();
 
