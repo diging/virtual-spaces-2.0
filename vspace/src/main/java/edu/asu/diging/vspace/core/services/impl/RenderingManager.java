@@ -188,9 +188,9 @@ public class RenderingManager implements IRenderingManager {
     private void createSequencesSnapshot(ISequence sequence, IModule module, ISpace space, String spaceFolderName,
             String imagesFolderName, Set<String> visitedSequences) throws FileStorageException {
         List<ISlide> slides = sequence.getSlides();
+        visitedSequences.add(sequence.getId());
         slides.forEach(slide -> {
             createSlideSnapshot(slide, sequence, module, space, spaceFolderName, imagesFolderName);
-            visitedSequences.add(sequence.getId());
             if(slide instanceof BranchingPoint) {              
                 ((BranchingPoint) slide).getChoices().forEach(choice -> {
                     //to prevent infinite loop because of branching to previous sequences 
@@ -203,7 +203,7 @@ public class RenderingManager implements IRenderingManager {
                     }
                 });
             }
-        });            
+        });
     }
     
     private void createSlideSnapshot(ISlide slide, ISequence sequence, IModule module, ISpace space, String spaceFolderName,

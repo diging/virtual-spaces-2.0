@@ -69,6 +69,7 @@ public class SnapshotManager  implements  ISnapshotManager {
     private SpaceRepository spaceRepository;
     
     private final String RESOURCES_FOLDER_NAME = "resources";
+    private final String ZIP_FILE_EXTENSION = ".zip";
 
     /**
      * Triggers the creation of an exhibition snapshot.
@@ -170,14 +171,13 @@ public class SnapshotManager  implements  ISnapshotManager {
 
         if(exhibitionSnapshot.isPresent()) {           
             try {
-                return storageEngineDownloads.getMediaContent("",exhibitionSnapshot.get().getFolderName()+".zip");                
+                return storageEngineDownloads.getMediaContent("",exhibitionSnapshot.get().getFolderName()+ZIP_FILE_EXTENSION);                
             }catch(FileSystemNotFoundException e) {
                 throw new ExhibitionSnapshotNotFoundException(e.getMessage(), e);
             }
               
-        } else {
-            throw new ExhibitionSnapshotNotFoundException(id);
         }
+        return null;
     }
 
     /**
