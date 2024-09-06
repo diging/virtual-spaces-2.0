@@ -63,13 +63,12 @@ public class AddSpaceController {
             Principal principal, @RequestParam(value = "imageId", required=false) String imageId, RedirectAttributes redirectAttrs) throws IOException {
         ISpace space;
         
-        SpaceForm nonDefaultSpaceForm = new SpaceForm(); 
         LocalizedTextForm nameSpace = spaceForm.getNames().stream().filter(name -> name != null).findFirst().orElse(null);
         LocalizedTextForm descriptionSpace = spaceForm.getDescriptions().stream().filter(description -> description != null).findFirst().orElse(null);
-        nonDefaultSpaceForm.setDefaultDescription(descriptionSpace);
-        nonDefaultSpaceForm.setDefaultName(nameSpace);
-        space = spaceFactory.createSpace(nonDefaultSpaceForm);
-        spaceManager.updateNameAndDescription(space, nonDefaultSpaceForm);
+        spaceForm.setDefaultDescription(descriptionSpace);
+        spaceForm.setDefaultName(nameSpace);
+        space = spaceFactory.createSpace(spaceForm);
+        spaceManager.updateNameAndDescription(space, spaceForm);
 
         space.setSpaceStatus(SpaceStatus.UNPUBLISHED);      
         exhibitionManager.getStartExhibition();
