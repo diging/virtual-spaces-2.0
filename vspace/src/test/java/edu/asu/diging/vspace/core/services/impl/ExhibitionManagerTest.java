@@ -238,6 +238,7 @@ public class ExhibitionManagerTest {
         exhibition.getLanguages().forEach(language -> {
             if (language.getCode().equals("en")) {
                 assertFalse(language.isDefault());
+
             }
             if (language.getCode().equals("aa")) {
                 assertTrue(language.isDefault());
