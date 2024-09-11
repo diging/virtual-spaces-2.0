@@ -62,13 +62,14 @@
     padding: 0 20px;
     background: white;
     box-shadow: 0px 5px 10px rgba(0,0,0,0.08);
-    z-index: 1;
+    z-index: 99;
     top: 0;
     height:8%;
 }
 
 .footer {
-	position: absolute;
+	position: relative;
+	height: 10%;
 	text-align: center;
 	bottom: 0;
 	font-size: 12px;
@@ -139,6 +140,7 @@
 
 .navbar-brand {
     padding: 0 !important;
+
 }
 
 .nav {
@@ -239,7 +241,7 @@
 
 .register-form {	
     padding: 48px;	
-    width: 30%;	
+    width: 50%;	
     margin: auto;	
     border-radius: 10px;	
     background: #f2f2f2;	
@@ -277,6 +279,7 @@
     transition: 0.5s;
     padding-top: 70px;
     word-break: break-all;
+    overflow-y: scroll;
 }
 
 .btn-light {
@@ -293,6 +296,7 @@
 .side-list {
 	list-style: none;
 	margin-top: 40px;
+	height: 90%;
 }
 
 .sidenav a {
