@@ -14,11 +14,13 @@ import edu.asu.diging.vspace.core.services.impl.model.ModuleWithSpace;
 
 public class SearchController {
 
-    protected void  updateModelWithSpaceSearchResult(Model model, Page<ISpace> spacePage, String spacePagenum ) {
+    protected Page<ISpace>  updateModelWithSpaceSearchResult(Model model, Page<ISpace> spacePage, String spacePagenum ) {
         model.addAttribute("spaceCurrentPageNumber", Integer.parseInt(spacePagenum));
         model.addAttribute("spaceTotalPages", spacePage.getTotalPages());
         model.addAttribute("spaceSearchResults", spacePage.getContent());
         model.addAttribute("spaceCount", spacePage.getTotalElements());
+        
+        return spacePage;
     }
 
     /**
