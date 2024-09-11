@@ -138,7 +138,7 @@ public class ModuleManager implements IModuleManager {
     
     public Page<IModule> findByNameOrDescriptionLinkedToSpace(Pageable requestedPage,String searchText){
               
-        return moduleRepo.findDistinctByModuleStatusNameContainingOrDescriptionContainingLinkedToSpace(requestedPage, ModuleStatus.PUBLISHED, SpaceStatus.PUBLISHED, searchText,  searchText);
+        return moduleRepo.searchByNameOrDescriptionInSpace(requestedPage, ModuleStatus.PUBLISHED, SpaceStatus.PUBLISHED, searchText,  searchText);
         
     }
 }

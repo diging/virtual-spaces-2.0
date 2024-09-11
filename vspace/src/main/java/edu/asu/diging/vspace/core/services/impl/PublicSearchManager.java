@@ -66,15 +66,16 @@ public class PublicSearchManager extends SearchManager implements IPublicSearchM
         for(ISlide slide : slidePage.getContent()) {
             ModuleLink moduleLink = moduleLinkManager.findFirstByModule(slide.getModule());
             if(moduleLink!=null) {
-                SlideWithSpace slideWithSpace = new SlideWithSpace();
+                
                 try {
+                    SlideWithSpace slideWithSpace = new SlideWithSpace();
+                    slideWithSpace.setSpaceId(moduleLink.getSpace().getId());
+                    slideWithSpace.setStartSequenceId(slide.getModule().getStartSequence().getId());
+                    slideList.add(slideWithSpace);
                     BeanUtils.copyProperties(slideWithSpace, slide);
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     logger.error("Could not create slideWithSpace.", e);
-                }
-                slideWithSpace.setSpaceId(moduleLink.getSpace().getId());
-                slideWithSpace.setStartSequenceId(slide.getModule().getStartSequence().getId());
-                slideList.add(slideWithSpace);
+                }               
             }
         }       
         return new PageImpl<>(slideList, slidePage.getPageable(), slidePage.getTotalElements());
@@ -88,14 +89,15 @@ public class PublicSearchManager extends SearchManager implements IPublicSearchM
         for(IModule module : modulePage.getContent()) {
             ModuleLink moduleLink = moduleLinkManager.findFirstByModule(module);
             if(moduleLink!=null) {
-                ModuleWithSpace modWithSpace = new ModuleWithSpace();
                 try {
+                    ModuleWithSpace modWithSpace = new ModuleWithSpace();
+                    modWithSpace.setSpaceId(moduleLink.getSpace().getId());
+                    moduleList.add(modWithSpace);
                     BeanUtils.copyProperties(modWithSpace, module);
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     logger.error("Could not create moduleWithSpace.", e);
                 }
-                modWithSpace.setSpaceId(moduleLink.getSpace().getId());
-                moduleList.add(modWithSpace);
+                
             }
         }
         return new PageImpl<>(moduleList, modulePage.getPageable(), modulePage.getTotalElements());
@@ -110,15 +112,15 @@ public class PublicSearchManager extends SearchManager implements IPublicSearchM
         for(ISlide slide : slideTextPage.getContent()) {
             ModuleLink moduleLink = moduleLinkManager.findFirstByModule(slide.getModule());
             if(moduleLink!=null) {
-                SlideWithSpace slideWithSpace = new SlideWithSpace();
                 try {
+                    SlideWithSpace slideWithSpace = new SlideWithSpace();
+                    slideWithSpace.setSpaceId(moduleLink.getSpace().getId());
+                    slideWithSpace.setStartSequenceId(slide.getModule().getStartSequence().getId());
+                    slideTextList.add(slideWithSpace);
                     BeanUtils.copyProperties(slideWithSpace, slide);
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     logger.error("Could not create slideTextWithSpace.", e);
                 }
-                slideWithSpace.setSpaceId(moduleLink.getSpace().getId());
-                slideWithSpace.setStartSequenceId(slide.getModule().getStartSequence().getId());
-                slideTextList.add(slideWithSpace);
             }
         }
         return new PageImpl<>(slideTextList, slideTextPage.getPageable(), slideTextPage.getTotalElements());
@@ -138,7 +140,7 @@ public class PublicSearchManager extends SearchManager implements IPublicSearchM
 
     @Override
     protected Page<ISlide> searchSlideTexts(Pageable requestedPageForSlideText, String searchTerm) {
-        return textContentBlockRepo.findWithNameOrDescriptionLinkedToSpace(requestedPageForSlideText, searchTerm, SpaceStatus.PUBLISHED, ModuleStatus.PUBLISHED);
+        return textContentBlockRepo.searchByNameOrDescription(requestedPageForSlideText, searchTerm, SpaceStatus.PUBLISHED, ModuleStatus.PUBLISHED);
     }
     
 }

@@ -178,6 +178,6 @@ public class SlideManager implements ISlideManager {
     
     @Override
     public Page<ISlide> findByNameOrDescriptionLinkedToSpace(Pageable requestedPage, String searchText) {
-        return slideRepo.findDistinctSlidesInSpaceContainingNameOrDescription(requestedPage, searchText,searchText, SpaceStatus.PUBLISHED, ModuleStatus.PUBLISHED);
+        return slideRepo.searchByNameOrDescription(requestedPage, searchText,searchText, SpaceStatus.PUBLISHED, ModuleStatus.PUBLISHED);
     }
 }
