@@ -483,14 +483,17 @@ public class ContentBlockManager implements IContentBlockManager {
     @Override
     public void deleteBiblioBlockById(String id) throws BlockDoesNotExistException {
         if (id == null) {
+            logger.warn("Attempted to delete biblio block with null id.");
             return;
         }
-        
+
         try {
-            biblioBlockRepo.deleteById(id);         
+            biblioBlockRepo.deleteById(id);
+            logger.info("Successfully deleted biblio block with id: {}", id);
         } catch (IllegalArgumentException e) {
-            System.err.println("Failed to delete biblio block: " + e.getMessage());
-        } 
+            logger.error("Failed to delete biblio block with id: {}. Reason: {}", id, e.getMessage());
+            throw new BlockDoesNotExistException("Biblio block with id " + id + " does not exist.", e);
+        }
     }
 
     @Override
