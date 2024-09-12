@@ -941,7 +941,7 @@
          		
          		// ------------- delete Bibliography content blocks ------------
          		$.ajax({
-         		    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/biblio/'})]"+blockId,
+         		    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/bibliography/'})]"+blockId,
          		    type: 'DELETE',
          		    headers: {
                          'X-CSRF-Token': token 
@@ -977,7 +977,7 @@
          		
          		// ------------- delete Reference ------------
          		$.ajax({
-         		    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/biblio/'})]" + biblioBlockId + ['/reference/'] + refId,
+         		    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/bibliography/'})]" + biblioBlockId + ['/reference/'] + refId,
          		    type: 'DELETE',
          		    headers: {
                          'X-CSRF-Token': token 
@@ -1264,7 +1264,7 @@
                  var token =  $('input[name="_csrf"]').attr('value');
                  
                  $.ajax({
-                     url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/biblio/'})]" + biblioBlockId + ['/references'],
+                     url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/bibliography/'})]" + biblioBlockId + ['/references'],
                      type: 'POST',
                      cache       : false,
                      contentType : 'application/json; charset=utf-8',
@@ -1660,7 +1660,7 @@
                  var token =  $('input[name="_csrf"]').attr('value');
                  
                  $.ajax({
-                     url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/biblio/edit'})]",
+                     url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/bibliography/edit'})]",
                      type: 'POST',
                      cache       : false,
                      contentType : 'application/json; charset=utf-8',
@@ -1726,7 +1726,7 @@
                var token =  $('input[name="_csrf"]').attr('value');
                
                $.ajax({
-                   url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/biblio/'})]" + biblioBlockId + ['/reference/edit'],
+                   url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/bibliography/'})]" + biblioBlockId + ['/reference/edit'],
                    type: 'POST',
                    cache       : false,
                    contentType : 'application/json; charset=utf-8',

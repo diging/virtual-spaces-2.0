@@ -29,7 +29,7 @@ public class AddReferenceController {
     @Autowired
     private IContentBlockManager contentBlockManager;
 
-    @RequestMapping(value = "/staff/module/{id}/slide/{slideId}/biblio/{biblioId}/references", method = RequestMethod.POST)
+    @RequestMapping(value = "/staff/module/{id}/slide/{slideId}/bibliography/{biblioId}/references", method = RequestMethod.POST)
     public ResponseEntity<String> addReference(@PathVariable("id") String moduleId, @PathVariable("slideId") String slideId, 
             @PathVariable("biblioId") String biblioId, 
             @RequestBody String reference, Model model) throws JsonProcessingException {

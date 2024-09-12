@@ -37,7 +37,7 @@ public class DeleteReferenceController {
     @Autowired
     private IReferenceManager referenceManager;
 
-    @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/biblio/{biblioId}/reference/{refId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/bibliography/{biblioId}/reference/{refId}", method = RequestMethod.DELETE)
     public ResponseEntity<String> deleteReference(@PathVariable("moduleId") String moduleId, @PathVariable("id") String slideId, 
             @PathVariable("biblioId") String biblioId, @PathVariable("refId") String refId) throws IOException {
         

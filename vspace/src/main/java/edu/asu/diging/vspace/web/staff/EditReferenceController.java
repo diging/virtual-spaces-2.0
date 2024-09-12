@@ -24,7 +24,7 @@ public class EditReferenceController {
     @Autowired
     private IReferenceManager referenceManager;
 
-    @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/biblio/{biblioId}/reference/edit", method = RequestMethod.POST)
+    @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/bibliography/{biblioId}/reference/edit", method = RequestMethod.POST)
     public ResponseEntity<String> editReference(@PathVariable("id") String slideId,
             @PathVariable("moduleId") String moduleId, @PathVariable("biblioId") String biblioId, 
             @RequestBody String ref) throws IOException {

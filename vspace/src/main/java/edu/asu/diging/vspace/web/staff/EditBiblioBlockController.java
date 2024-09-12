@@ -24,7 +24,7 @@ public class EditBiblioBlockController {
     @Autowired
     private IContentBlockManager contentBlockManager;
 
-    @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/biblio/edit", method = RequestMethod.POST)
+    @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/bibliography/edit", method = RequestMethod.POST)
     public ResponseEntity<String> editTextBlock(@PathVariable("id") String slideId,
             @PathVariable("moduleId") String moduleId, @RequestBody String biblioBlockData) throws IOException {
 

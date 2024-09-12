@@ -34,7 +34,7 @@ public class DeleteBiblioBlockController {
     @Autowired
     private ISlideManager slideManager;
     
-    @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/biblio/{blockId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/bibliography/{blockId}", method = RequestMethod.DELETE)
     public ResponseEntity<String> deleteBiblioBlock(@PathVariable("moduleId") String moduleId, @PathVariable("id") String slideId, 
             @PathVariable("blockId") String blockId) throws IOException, ReferenceListDeletionForBiblioException {
         
