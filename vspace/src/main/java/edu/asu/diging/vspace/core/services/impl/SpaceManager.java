@@ -295,12 +295,10 @@ public class SpaceManager implements ISpaceManager {
     
     @Override
     public Page<ISpace> findBySpaceStatusAndNameOrDescription(Pageable requestedPage, SpaceStatus spaceStatus, String searchTerm) {
-
-        if(spaceStatus == null) {
-            return spaceRepo.findDistinctByNameContainingOrDescriptionContaining(requestedPage, searchTerm ,searchTerm);
-        } else {
-            return spaceRepo.findDistinctBySpaceStatusAndNameContainingOrDescriptionContaining(requestedPage, spaceStatus, searchTerm, searchTerm);
-
+        searchTerm = "%"+searchTerm+"%";
+        if(spaceStatus != null) {
+            return spaceRepo.findDistinctBySpaceStatusAndNameLikeOrDescriptionLike(requestedPage, spaceStatus, searchTerm, searchTerm);            
         }
+        return spaceRepo.findDistinctByNameLikeOrDescriptionLike(requestedPage, searchTerm ,searchTerm);
     }
 }
