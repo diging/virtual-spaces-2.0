@@ -29,7 +29,7 @@ public class AddBiblioBlockController {
     private IContentBlockManager contentBlockManager;
 
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/bibliography", method = RequestMethod.POST)
-    public ResponseEntity<String> addTextBlock(@PathVariable("id") String slideId,
+    public ResponseEntity<String> addBiblioBlock(@PathVariable("id") String slideId,
             @PathVariable("moduleId") String moduleId, @RequestBody String biblioBlockData) throws JsonProcessingException {
         
         // Parse the JSON string using ObjectMapper

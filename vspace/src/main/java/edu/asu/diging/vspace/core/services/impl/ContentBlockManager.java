@@ -489,7 +489,6 @@ public class ContentBlockManager implements IContentBlockManager {
 
         try {
             biblioBlockRepo.deleteById(id);
-            logger.info("Successfully deleted biblio block with id: {}", id);
         } catch (IllegalArgumentException e) {
             logger.error("Failed to delete biblio block with id: {}. Reason: {}", id, e.getMessage());
             throw new BlockDoesNotExistException("Biblio block with id " + id + " does not exist.", e);
