@@ -534,7 +534,6 @@
             	tour.start();
             }
             $(document).ready(function() {
-
             	if (localStorage.getItem("newSlide") == null) {
             		guidedTour();
             		localStorage.setItem("newSlide", false);
@@ -830,12 +829,12 @@
             		$('.modal-footer').append(alert); 
               	});
 
-	            $(document).on("click", ".deleteSpace", function(e) {
-		            $("#confirmDeleteSpaceAlert").show();
-		            var alert = $('<input type="hidden" id="deleteSpaceId">');
-		            $(alert).attr( 'value', $(this).siblings('input').val());
-		            $('.modal-footer').append(alert);
-	            });
+                $(document).on("click", ".deleteSpace", function(e) {
+            		$("#confirmDeleteSpaceAlert").show();
+            		var alert = $('<input type="hidden" id="deleteSpaceId">');
+            		$(alert).attr( 'value', $(this).siblings('input').val());
+            		$('.modal-footer').append(alert);
+              	});
 
             	$(document).on("click", ".deleteImage", function(e) {
             		$("#confirmDeleteImageAlert").show();
@@ -884,7 +883,7 @@
             		$("#confirmDeleteTextAlert").hide();
             	});
 	
-	            $("#cancelDeleteSpace").click(function() {
+            	$("#cancelDeleteSpace").click(function() {
 					$("#confirmDeleteSpaceAlert").find('input').remove();
 					$("#confirmDeleteTextAlert").find('input').remove();
 					$("#confirmDeleteImageAlert").find('input').remove();
