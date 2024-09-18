@@ -325,6 +325,7 @@ public class ContentBlockManagerTest {
         biblioBlock.setSlide(slide);
         biblioBlock.setBiblioTitle("TestTitle");
         biblioBlock.setDescription("Test Description");
+        biblioBlock.setContentOrder(contentOrder);
         when(slideManager.getSlide(slide.getId())).thenReturn(slide);
         managerToTest.createBiblioBlock(slide.getId(), "TestTitle", "Test Description", contentOrder);
         Mockito.verify(biblioBlockRepo).save((BiblioBlock)biblioBlock);
