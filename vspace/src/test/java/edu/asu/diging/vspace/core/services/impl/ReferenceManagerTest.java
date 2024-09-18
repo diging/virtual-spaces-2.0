@@ -58,7 +58,7 @@ public class ReferenceManagerTest {
         Optional<Reference> refObj = Optional.of(ref);
         Mockito.when(refRepo.findById(ref.getId())).thenReturn(refObj);
         refManagerToTest.deleteReferenceById(refId, biblioId);
-        Mockito.verify(refRepo).deleteById(refId);
+        Mockito.verify(refRepo).delete(ref);
     }
 
     @Test
