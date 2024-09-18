@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -321,14 +322,19 @@ public class ContentBlockManagerTest {
         Integer contentOrder = 1;
         Slide slide = new Slide();
         slide.setId("slide1");
-        IBiblioBlock biblioBlock = new BiblioBlock();
-        biblioBlock.setSlide(slide);
-        biblioBlock.setBiblioTitle("TestTitle");
-        biblioBlock.setDescription("Test Description");
-        biblioBlock.setContentOrder(contentOrder);
+
         when(slideManager.getSlide(slide.getId())).thenReturn(slide);
+
         managerToTest.createBiblioBlock(slide.getId(), "TestTitle", "Test Description", contentOrder);
-        Mockito.verify(biblioBlockRepo).save((BiblioBlock)biblioBlock);
+
+        ArgumentCaptor<BiblioBlock> captor = ArgumentCaptor.forClass(BiblioBlock.class);
+        Mockito.verify(biblioBlockRepo).save(captor.capture());
+
+        BiblioBlock capturedBlock = captor.getValue();
+        assertEquals("TestTitle", capturedBlock.getBiblioTitle());
+        assertEquals("Test Description", capturedBlock.getDescription());
+        assertEquals(contentOrder, capturedBlock.getContentOrder());
+        assertEquals(slide, capturedBlock.getSlide());
     }
 
     @Test
