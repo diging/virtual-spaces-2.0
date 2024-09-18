@@ -473,8 +473,8 @@ public class ContentBlockManager implements IContentBlockManager {
     public IBiblioBlock createBiblioBlock(String slideId, String title, String description, Integer contentOrder) {
         ISlide slide = slideManager.getSlide(slideId);
         IBiblioBlock bilioBlock = new BiblioBlock();
-        bilioBlock.setDescription(title);
-        bilioBlock.setBiblioTitle(description);
+        bilioBlock.setDescription(description);
+        bilioBlock.setBiblioTitle(title);
         bilioBlock.setSlide(slide);
         bilioBlock.setContentOrder(contentOrder);
         return biblioBlockRepo.save((BiblioBlock) bilioBlock);
