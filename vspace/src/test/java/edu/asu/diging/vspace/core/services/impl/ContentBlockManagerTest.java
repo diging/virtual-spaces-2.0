@@ -296,7 +296,7 @@ public class ContentBlockManagerTest {
         refList.add(refObj);
         
         when(refManager.getReferencesForBiblio(biblioId)).thenReturn(refList);
-        doNothing().when(refRepo).deleteById(refId);
+//        doNothing().when(refRepo).deleteById(refId);
         managerToTest.deleteBiblioBlockById(biblioId);
         Mockito.verify(refManager).deleteReferences(refList, biblioId);
         Mockito.verify(biblioBlockRepo).deleteById(biblioId);
