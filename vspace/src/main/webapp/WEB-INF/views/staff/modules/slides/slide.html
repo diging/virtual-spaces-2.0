@@ -866,15 +866,15 @@
             		$("#addTextAlert").hide();	
             	});
 
-	            $("#cancelSpaceText").click(function() {
-	            	removeAllSelectOptions("spaceName");
-	            	$("#addSpaceAlert").hide();
-	            });
+                $("#cancelSpaceText").click(function() {
+            		removeAllSelectOptions("spaceName");
+            		$("#addSpaceAlert").hide();
+            	});
 
-	            function removeAllSelectOptions(elementId){
-		            var element = document.getElementById(elementId);
-		            element.innerHTML="";
-	            }
+                function removeAllSelectOptions(elementId){
+            		var element = document.getElementById(elementId);
+            		element.innerHTML="";
+            	}
             	
             	$("#cancelDeleteText").click(function() {
             		$("#confirmDeleteTextAlert").find('input').remove();
@@ -889,7 +889,7 @@
 					$("#confirmDeleteImageAlert").find('input').remove();
 					$("#confirmDeleteChoiceBlockAlert").find('input').remove();
 					$("#confirmDeleteSpaceAlert").hide();
-	            });
+            	});
 	            
             	$("#cancelDeleteImage").click(function() {
             		$("#confirmDeleteImageAlert").hide();
