@@ -53,6 +53,7 @@
             var currentSpaceId;
             var addVideoClk=0;
             var editVideoClk=0;
+            var currentBlockId;
             
             $(function () {
             	  $('[data-toggle="tooltip"]').tooltip()
@@ -196,6 +197,7 @@
                 $(e.target).closest('.SpaceDivStaff').addClass("open");
                 defaultValue = $("div.open p:eq(0)").text();
                 var blockId = $(this).closest("div").attr("id");
+                currentBlockId = blockId;
                 getSelectedSpace(blockId);
                 $("#editSpaceAlert").show();
                 // Remove card border
@@ -1236,6 +1238,8 @@
 						
 						            $(space[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(spaceBlockDoubleClick);
 						            $('#slideSpace').append(space);
+						            $('#spaceTitle').val("");
+						            removeAllSelectOptions("spaceName");
 					            },
 					            error: function(data) {
 						            if (data.status == 403){
@@ -1454,8 +1458,9 @@
 
             	// must add the event to the document since the buttons are added dynamically
 	            $('#cancelSpaceBlock').on('click',function(){
+	            	removeAllSelectOptions("editSpaceName");
 		            $("#editSpaceAlert").hide();
-		            var blockId = $(this).closest(".open").attr("id");
+		            var blockId = currentBlockId;
 		            updateSpaceBox(blockId, defaultValue, currentSpaceName);
 		            $(".open").removeClass("open");
 	            });
