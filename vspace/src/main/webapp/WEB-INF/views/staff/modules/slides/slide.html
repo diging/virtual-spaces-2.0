@@ -407,7 +407,7 @@
 					processData: false,
 					data: formData,
 					headers:{
-            			'X-CSRF-Token':token
+						'X-CSRF-Token':token
             		},
 					success: function (data) {
 					    if(videoBlock){
@@ -701,7 +701,7 @@
                 });
                 
                 $("#submitTitle").click(function() {
-                	var token = [[${_csrf.token}]];
+                    var token = [[${_csrf.token}]];
                     var formData = new FormData();
                     formData.append('title', $("#newTitle").val());
                     $.ajax({
@@ -980,7 +980,7 @@
             		e.preventDefault();
             		$("#confirmDeleteTextAlert").find('input').remove();
             		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
-		            $("#confirmDeleteSpaceAlert").find('input').remove();
+            		$("#confirmDeleteSpaceAlert").find('input').remove();
             		$("#confirmDeleteImageAlert").hide();
             		var blockId = $('#deleteImageId').attr('value');
             		if(blockId == null || blockId == ''){
@@ -1047,8 +1047,8 @@
             	    e.preventDefault();
             	    $("#confirmDeleteTextAlert").find('input').remove();
             	    $("#confirmDeleteImageAlert").find('input').remove();
-		            $("#confirmDeleteSpaceAlert").find('input').remove();
-            		$("#confirmDeleteChoiceBlockAlert").hide();
+            	    $("#confirmDeleteSpaceAlert").find('input').remove();
+            	    $("#confirmDeleteChoiceBlockAlert").hide();
             		var blockId = $('#deleteChoiceBlockId').attr('value');
             		if(blockId == null || blockId == ''){
             			var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
@@ -1469,9 +1469,9 @@
                 $('.valueDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick((e)=>{$(".EasyMDEContainer").remove();});
                 $('.textDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(textBlockDoubleClick);
                 $('.vidDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave);
-	            $('.SpaceDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(spaceBlockDoubleClick);
+                $('.SpaceDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(spaceBlockDoubleClick);
                 $("#submitTextBlock").on("click", function(e){
-                	e.preventDefault();
+                    e.preventDefault();
                     // ------------- editting text content blocks ------------
                     
                     var formData = new FormData();
@@ -1880,10 +1880,10 @@
                             </div>
                             <div class="modal-body">
                                 <h6>
-                                    <small>Choose from existing Spaces </small>
+                                    <small>Choose a Space</small>
                                 </h6>
                                 <select id="spaceName" name="spacesNames" class="form-control-xs target" style="height: 50px; width: 200px;">
-                                    <option selected value="">Choose from existing</option>
+                                    <option selected value="">Choose a Space</option>
                                 </select>
                             </div>
                             <div class="modal-footer">
