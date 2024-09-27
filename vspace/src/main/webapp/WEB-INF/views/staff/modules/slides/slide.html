@@ -162,6 +162,9 @@
                         $("#selectedSpace").text(currentSpaceName);
                         $("#editSpaceBlock").text(result.title);
                         currentSpaceId = result.space.id;
+                        $("#editSpaceName").val(currentSpaceId).trigger('change');
+                        console.log(currentSpaceId);
+                        console.log($("#editSpaceName"));
                     },
                     error: function(data) {
                         var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
@@ -876,6 +879,11 @@
                 function removeAllSelectOptions(elementId){
             		var element = document.getElementById(elementId);
             		element.innerHTML="";
+            	}
+            	
+                function setSelectOption(elementId, option){
+            		var element = document.getElementById(elementId);
+            		element.innerHTML= option;
             	}
             	
             	$("#cancelDeleteText").click(function() {
@@ -2142,19 +2150,15 @@
                     </div>
                     <div th:attr="data-position=${contents.contentOrder}" style="word-break: break-word;" th:id="${contents.id}" class="SpaceDivStaff tab row" th:if="${#strings.equals(contents['class'].simpleName,'SpaceBlock')}">
                         <div style="display: flex; flex-direction: column; width: 100%;">
-						
 						<div style = "display:flex; flex-direction: row; width: 100%;">
 						<label>Title: </label>
                         <p class="col-md-10">[[${contents.title}]]</p>
 						</div>
-						
 						<div style = "display:flex; flex-direction: row;width: 100%;">
 						<label>Space: </label>
                         <p class="col-md-10">[[${contents.space.name}]]</p>
 						</div>
-						
                         </div>
-
                         <input type="hidden" id="deleteSpaceId" th:value="${contents.id}" />
                         <a class="btn deleteSpace col-md-1" href="javascript:;" style="position: absolute; right: 0px; bottom: 10px;"> 
                         <span class="icon-trash error"></span> 
