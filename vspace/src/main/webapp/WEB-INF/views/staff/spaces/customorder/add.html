@@ -92,7 +92,7 @@
 	            <input type="hidden" id="spaceOrder" name="spaceOrder" value=""/>
 		        <div class="form-group row sortableSpaces" id="sortableSpaces">
 					<div th:each="selectedSpace: ${spaces}"  class="main-content">
-				    	<div th:draggable="true"  th:id="${selectedSpace.id}" th:attr="data-position=1"class="valueDiv tab row paraContent" >
+				    	<div th:draggable="true"  th:id="${selectedSpace.id}" th:attr="data-position=1" class="valueDiv tab row paraContent" >
 				             <p class="para">[[${selectedSpace.name}]]</p>
 					    </div>
 			    	</div>

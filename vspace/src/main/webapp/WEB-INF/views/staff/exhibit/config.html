@@ -114,10 +114,9 @@
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                 <p>Select spaces display order.</p>
                 <select class="form-control col-md-4" id="spaceOrderMode" name="spaceOrderMode" style="display: inline-block !important; height:auto;">
-                    <option value="ALPHABETICAL" th:selected="${#strings.equals('alphabetical',currentSpaceOrder)}">Alphabetical</option>
-                    <option value="CREATION_DATE" th:selected="${#strings.equals('creationDate',currentSpaceOrder)}">Creation Date</option>
-                    <option value="CUSTOM" th:selected="${#strings.equals('custom',currentSpaceOrder) && currentCustomSpaceOrder==null}">Custom</option>
-                    <option th:each="spaceOrder: ${customSpaceOrderModes}" th:value="${spaceOrder.getId()}" th:selected="${currentCustomSpaceOrder!=null && spaceOrder.getId()==currentCustomSpaceOrder.getId()}">[[${spaceOrder.getCustomOrderName()}]]</option>
+                    <option value="ALPHABETICAL" th:selected="${#strings.equals('ALPHABETICAL',currentSpaceOrder)}">Alphabetical</option>
+                    <option value="CREATION_DATE" th:selected="${#strings.equals('CREATION_DATE',currentSpaceOrder)}">Creation Date</option>
+                    <option value="CUSTOM" th:selected="${#strings.equals('CUSTOM',currentSpaceOrder)}">Custom</option>                   
                 </select>
                 <button type="submit" id="changeOrder" class="btn primary-btn btn-sm">Change Order</button>
                 

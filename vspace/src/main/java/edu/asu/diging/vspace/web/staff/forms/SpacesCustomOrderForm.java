@@ -2,10 +2,13 @@ package edu.asu.diging.vspace.web.staff.forms;
 
 import java.util.List;
 
+import javax.validation.constraints.NotEmpty;
+
 import edu.asu.diging.vspace.core.model.ISpace;
 
 public class SpacesCustomOrderForm {
     
+    @NotEmpty(message="Please enter a name")
     private String name;
     private String description;
     

@@ -151,7 +151,7 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
         SpacesCustomOrder spaceCustomOrder = exhibition.getSpacesCustomOrder();
         if(spaceCustomOrder!=null && spaceCustomOrder.getId().equals(id)) {
             exhibition.setSpacesCustomOrder(null);
-            exhibitionManager.storeExhibition((Exhibition)exhibition);
+            exhibitionManager.storeExhibition(exhibition);
         }
         spacesCustomOrderRepository.deleteById(id);
     }
