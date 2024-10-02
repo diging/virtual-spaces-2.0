@@ -41,7 +41,7 @@
 	        <h2>Custom Orders for Spaces</h2>
 	        <div class="customOrderText">This virtual exhibition contains the following custom orders for spaces.</div>	        
 	        <div class="startSequence" style="padding-bottom: 10px;">
-		        <form th:action="@{'/staff/space/order/'+${selectedCustomOrderId}+'/set'}" method ="POST" name="f" style="text-align: right;">
+		        <form th:action="@{'/staff/space/order/'}" method ="POST" name="f" style="text-align: right;">
 		        	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 					<div style="padding-bottom:10px; padding-right: 6px;">Select Custom Order to be used</div>
 					<select class="spaceDropdownSelect form-control " name="selectedCustomOrderId" onchange='this.size=1; this.blur();'>

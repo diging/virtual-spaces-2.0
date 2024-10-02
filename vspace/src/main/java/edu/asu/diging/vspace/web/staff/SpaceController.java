@@ -47,7 +47,6 @@ public class SpaceController {
     @Autowired
     private IExternalLinkManager externalLinkManager;
 
-
     @Autowired
     private ISpaceTextBlockManager spaceTextBlockManager;
 
@@ -83,6 +82,5 @@ public class SpaceController {
         responseData.put("textBlocks", spaceTextBlockManager.getSpaceTextBlockDisplays(id));
         return new ResponseEntity<>(responseData, HttpStatus.OK);
     }
-
 
 }
