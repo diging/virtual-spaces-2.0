@@ -77,19 +77,18 @@
 		    	<span style="vertical-align: middle;">Go Back</span>
 	    	</div>
 	        <h2>Add New Custom Order</h2>
-	        
 	        <form method="POST" th:action="@{|/staff/space/order/customorder/add?${_csrf.parameterName}=${_csrf.token}|}" enctype="multipart/form-data">
 	        	<input type="hidden"  th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 		        <div class="form-group row">
 		            <label class="col-md-2 col-form-label" for="name">Order Name</label>
-		            <input placeholder="Name" class="form-control col-md-6 orderName" type="text" id="name" name="name" />
+		            <input placeholder="Name" class="form-control col-md-6 orderName" type="text" id="name" name="name" th:value="${spacesCustomOrderForm!=null?spacesCustomOrderForm.getName():''}" />
 		        </div>
 	            <div class="form-group row">
 	                <label class="col-md-2 col-form-label" for="description">Order Description</label>
-	                <textarea placeholder="Description" rows="5" class="form-control col-md-6 orderDescription" id="description" name="description"></textarea>
+	                <textarea placeholder="Description" rows="5" class="form-control col-md-6 orderDescription" id="description" name="description" th:text="${spacesCustomOrderForm!=null?spacesCustomOrderForm.getDescription():''}"></textarea>
 	            </div>
 	            <div class="dragDropText">Drag and drop to arrange spaces</div>
-	            <input type="hidden" id="spaceOrder" name="spaceOrder" value=""/>
+	            <input type="hidden" id="spaceOrder" name="orderedSpaces" value=""/>
 		        <div class="form-group row sortableSpaces" id="sortableSpaces">
 					<div th:each="selectedSpace: ${spaces}"  class="main-content">
 				    	<div th:draggable="true"  th:id="${selectedSpace.id}" th:attr="data-position=1" class="valueDiv tab row paraContent" >
