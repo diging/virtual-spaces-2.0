@@ -7,10 +7,14 @@ import edu.asu.diging.vspace.core.exception.VideoCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.model.IChoiceBlock;
 import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.IImageBlock;
+import edu.asu.diging.vspace.core.model.ISlide;
+import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.ISpaceBlock;
 import edu.asu.diging.vspace.core.model.ITextBlock;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.IVideoBlock;
 import edu.asu.diging.vspace.core.model.impl.ContentBlock;
+import edu.asu.diging.vspace.core.model.impl.SpaceBlock;
 import edu.asu.diging.vspace.core.model.impl.TextBlock;
 import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
 
@@ -57,8 +61,35 @@ public interface IContentBlockManager {
             boolean showsAll);
 
     Integer findMaxContentOrder(String slideId);
+    
+    ISpaceBlock createSpaceBlock(String slideId, String title, Integer contentOrder, ISpace space);
 
+    ISpaceBlock getSpaceBlock(String spaceBlockId);
+
+    void saveSpaceBlock(ISpaceBlock textBlock);
+
+    /**
+     * Delete a space block using an id and also decrease content order by 1 of all
+     * the slide's block which are after this block
+     * 
+     * @param blockId - id of resource to be deleted. If the id is null then the
+     *                functions returns nothing.
+     * @param slideId - id of the slide in which the text block with blockId is
+     *                present.
+     * 
+     */
+    void deleteSpaceBlockById(String blockId, String slideId) throws BlockDoesNotExistException;
+    
+    /**
+     * Adjusting the content order of the blocks of slide once it is dragged and
+     * changed position.
+     * 
+     * @param contentBlockList - The list contains the blocks and the updated
+     *                         content order corresponding to each blocks.
+     */
     void updateContentOrder(List<ContentBlock> contentBlockList) throws BlockDoesNotExistException;
 
     void saveVideoBlock(IVideoBlock videoBlock);
+    
+
 }
