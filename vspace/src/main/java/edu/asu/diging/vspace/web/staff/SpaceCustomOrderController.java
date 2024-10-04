@@ -12,15 +12,14 @@ import edu.asu.diging.vspace.core.model.ISpacesCustomOrder;
 import edu.asu.diging.vspace.core.services.ISpacesCustomOrderManager;
 
 /**
- * SpacesCustomOrderController is used for managing and displaying the custom order
- * of spaces in an exhibition. This controller allows staff to view, select, 
- * and set the order of spaces as defined by custom configurations.
+ * SpaceCustomOrderController is used for managing and displaying the custom order
+ * of spaces in an exhibition. This controller allows staff to view as defined by custom configurations.
  * 
  * @author Glen D'souza
  *
  */
 @Controller
-public class SpacesCustomOrderController {
+public class SpaceCustomOrderController {
     
     @Autowired
     private ISpacesCustomOrderManager spacesCustomOrderManager;
@@ -32,12 +31,5 @@ public class SpacesCustomOrderController {
         model.addAttribute("selectedSpaces", spacesCustomOrder.getCustomOrderedSpaces());
         return "/staff/spaces/customorder/order";
     }
-        
-    @RequestMapping(value = "/staff/space/order", method = RequestMethod.POST)
-    public String setExhibitionSpacesCustomOrder(Model model,
-            @RequestParam("selectedCustomOrderId") String orderId) {
-        spacesCustomOrderManager.setExhibitionSpacesCustomOrder(orderId);
-        return "redirect:/staff/space/order";
-    }
-    
+           
 }
