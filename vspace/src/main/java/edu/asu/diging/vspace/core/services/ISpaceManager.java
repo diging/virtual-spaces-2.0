@@ -38,4 +38,7 @@ public interface ISpaceManager {
     Iterable<Space> addIncomingLinkInfoToSpaces(Iterable<Space> spaces);
     
     Page<ISpace> findByNameOrDescription(Pageable requestedPage,String searchText);
+    
+    List<ISpace> sortPublishedSpacesByGivenOrder(List<ISpace> publishedSpaces);
+    
 }

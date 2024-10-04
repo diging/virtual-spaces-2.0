@@ -2,6 +2,7 @@ package edu.asu.diging.vspace.core.services;
 
 import java.util.List;
 
+import edu.asu.diging.vspace.core.model.ExhibitionSpaceOrderMode;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 
@@ -20,7 +21,7 @@ public interface IExhibitionManager {
      * @see edu.asu.diging.vspace.core.services.IExhibitionManager#storeExhibition(edu.
      * asu.diging.vspace.core.model.impl.Exhibition)
      */
-    IExhibition storeExhibition(Exhibition exhibit);
+    IExhibition storeExhibition(IExhibition exhibit);
 
     /*
      * (non-Javadoc)
@@ -33,6 +34,8 @@ public interface IExhibitionManager {
     List<IExhibition> findAll();
 
     IExhibition getStartExhibition();
+    
+    IExhibition updateSpaceOrderMode(ExhibitionSpaceOrderMode mode);
 
     void updateExhibitionLanguages(Exhibition exhibition, List<String> languages, String defaultLanguage);
 

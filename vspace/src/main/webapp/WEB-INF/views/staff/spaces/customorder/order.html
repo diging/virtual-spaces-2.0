@@ -1,0 +1,188 @@
+<html layout:decorate="~{layouts/main_staff}">
+<head>
+<link th:href="@{/resources/multiselect/css/multiselect.css}"
+    type="text/css" rel="stylesheet">
+<link rel="stylesheet"
+        href="https://unpkg.com/easymde/dist/easymde.min.css">
+<script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
+<link th:href="@{/resources/extra/Sequence.css}"
+    type="text/css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+        <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+<style type="text/css">
+	.hova {
+		background-color: #f2f2f2;
+	}
+	.EasyMDEContainer .CodeMirror-wrap{
+		 overflow-y: scroll;
+		 height: 400px;
+	}
+	.editCustomOrder {
+		background: white;
+		padding: 25px 40px;
+	}
+	.sortableSpaces {
+		max-height: 385px;
+		overflow-y: scroll;
+	}
+	.paraContent {
+		cursor: pointer;
+		border: 1px solid;
+		padding: 15px;
+		margin-top: 20px;
+	}
+	.paraContent:hover {
+		background: #D3D3D3;
+		font-weight: bold;
+	}
+	.para {
+		margin: 0;
+	}
+	.createdDates {
+		margin-bottom: 0;
+	}
+	.goBackContainer {
+		float: right;
+	}
+	.goBackContainer:hover {
+		cursor: pointer;
+		font-weight: bold;
+	}
+	.editSaveBtn {
+		margin-top: 1%;
+		margin-bottom: 1%;
+	}
+	.flexContainer {
+		display: flex;
+	}
+	.editSpaceCustomOrderDescription {
+		margin-top: 1%; 
+		flex: 5; 
+		border: 1px solid; 
+		resize: none;
+	}
+	.alertPopUp {
+		position: absolute;
+		top: 8%;
+		width: 65%;
+		display:none;
+	}
+</style>
+
+<script th:inline="javascript">
+	let spaceDivs=[];
+	$(document).ready(function() {
+	 	spaceDivs = document.getElementById('sortableSpaces').children;
+		var spaceIds = [];
+		let index =0;
+		for(ele of spaceDivs){
+			spaceIds.push(spaceDivs[index].children[0].id);
+			index++;
+		} 
+		spaceDivs=[];
+		spaceDivs = spaceIds;
+		$("#spaceOrder").val(spaceDivs);
+		if([[${customSpaceOrder.description}]] == "") {
+			$("#description").hide();
+		}
+	 
+		$("#sortableSpaces").sortable({
+		  	update: function(event,ui) {
+		  		spaceDivs = [];
+		      	$(this).children().each(function(index,element){
+		      		spaceDivs.push(element.children[0].id);
+		      	});
+		      	$("#spaceOrder").val(spaceDivs);
+		  	}
+		});
+		
+		$("#goBackContainer").click(function() {
+			window.location.href = "[(@{'/staff/space/order'})]";
+		});
+		
+	    $("#deleteOrder").click(function() {
+	        $.ajax({
+	            url: "[(@{'/staff/space/customorder/'+${customSpaceOrder.id}})]"+ '?[(${_csrf.parameterName})]=[(${_csrf.token})]',
+	            method: "DELETE",                
+	            success:function(data) {
+	                window.location.href = "[(@{'/staff/space/order'})]";
+	            }
+	        });
+	    });
+
+	});
+	
+</script>
+</head>
+
+	<body>
+		<div layout:fragment="content" class="main-content editCustomOrder">
+			<div id="goBackContainer" class="goBackContainer">
+		    	<span class="icon-arrow-left" style="font-size: 28px"></span>
+		    	<span style="vertical-align: middle;">Go Back</span>
+	    	</div>
+			<div id="successPopUp" class="alert customWindow alert-success alertPopUp">
+				<button type="button" class="close" id="closeSuccessPopUp" aria-label="Close">
+		        	<span aria-hidden="true">&times;</span>
+		        </button>
+				<span id="successText"></span>
+			</div>
+			<div id="failedPopUp" class="alert alert-danger alert-dismissible fade show alertPopUp" role="alert">
+				<span>We are sorry but something went wrong. Please try again later.</span>
+				<button type="button" id="closeErrorPopUp" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class ="blur">
+				<div>		
+					<div class="flexContainer">
+						<h2 style="margin-bottom: 0; margin-right: 15px">
+							<span style="color: var(--dark-grey)">Custom Space Order:</span> 
+							<span id="customOrderTitle">[[${customSpaceOrder.customOrderName}]]</span>
+						</h2>						
+					</div>
+					<p id="description" class="para">[[${customSpaceOrder.description}]]</p>
+				</div>
+				<div id="createdDates" class="alert alert-light createdDates" role="alert">
+					Created on <span class="date">[[${customSpaceOrder.creationDate}]]</span> by
+					[[${customSpaceOrder.createdBy}]].<br> Modified on <span class="date">[[${customSpaceOrder.modificationDate}]]</span>
+					by [[${customSpaceOrder.modifiedBy}]].
+				</div>
+			</div>
+			
+			
+			<form th:action="@{'/staff/space/order/'+${customSpaceOrder.id}}" method ="POST">
+                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                            <input type="hidden" id="spaceOrder" name="spaceOrder" value=""/>
+                            <div class="modal-body">
+                                <div class="flexContainer">
+                                    <span style="flex: 1;">Title: </span>
+                                    <input style="flex: 5; border: 1px solid;" id="editSpaceCustomOrderTitle" name="name" class="form-control" type="text" th:value="${customSpaceOrder.customOrderName}">
+                                    
+                                </div>
+                                <div class="flexContainer">
+                                    <span style="flex: 1;">Description: </span>
+                                    <textarea id="editSpaceCustomOrderDescription" name="description" rows=5 class="form-control editSpaceCustomOrderDescription" th:text="${customSpaceOrder.description}"></textarea>
+                                </div>
+                            </div>
+                            <div id="draganddrop">
+                                <span>Drag and drop to arrange spaces</span>
+                            </div>
+                            <div id="sortableSpaces" class="sortableSpaces">
+                                <div th:each="selectedSpace: ${selectedSpaces}" class="main-content" >
+                                       <div  th:draggable="true"  th:id="${selectedSpace.id}" th:attr="data-position=1"class="valueDiv tab row paraContent" >
+                                            <p class="para">[[${selectedSpace.name}]]</p>
+                                       </div>
+                                </div>
+                            </div>
+                            <div style="padding-top:20px;">
+                                <button id="saveOrder" type="submit" class="btn primary-btn" style="float: left; margin-right: 1%;">Change Space Order</button>
+                            </div>
+			</form>
+            <button id="deleteOrder" class="btn primary-btn">
+                <i class="icon-trash" style="font-size: 1.3rem;vertical-align: text-bottom;padding-right: 3px;"></i>Delete Custom Order
+            </button>              
+		</div>
+	</body>
+</html>

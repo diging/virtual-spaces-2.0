@@ -2,11 +2,18 @@
 <html layout:decorate="~{layouts/main_staff}">
 <head>
 <script th:src="@{/resources/extra/space.js}"></script>
+<script th:inline="javascript">
+	var currentCustomMode = [[${currentMode}]];
+</script>
 <script>
+	
     $(document).ready(function() {
         onPageReady($("#deleteSpace"), $('#confirm-space-delete'));
         $("#list").hide();
         $("#grid-btn").hide();
+        
+        var spaceOrderElement = document.getElementById('spaceOrderMode');
+        spaceOrderElement.value=currentCustomMode;
         
         $(function () {
 	  		  $('[data-toggle="tooltip"]').tooltip()
@@ -27,31 +34,34 @@
     	$("#grid").show();
     }
     
+ 
+    
 </script>
 <style>
-.unpublishedtooltiptext {
-    display: none;
-    color: var(--secondary);
-    font-weight: bold;
-    font-size: 0.875rem;
-    float: left;
-}
+	.unpublishedtooltiptext {
+	    display: none;
+	    color: var(--secondary);
+	    font-weight: bold;
+	    font-size: 0.875rem;
+	    float: left;
+	}
+	
+	.unpublishedSpaceClass:hover+.unpublishedtooltiptext {
+	    display: block;
+	}
+	
+	.noIncomingLinkMessage {
+	    display: none;
+	    color: var(--secondary);
+	    font-weight: bold;
+	    font-size: 0.875rem;
+	    float: left;
+	}
+	
+	.noIncomingLinks:hover+.noIncomingLinkMessage {
+	    display: block;
+	}
 
-.unpublishedSpaceClass:hover+.unpublishedtooltiptext {
-    display: block;
-}
-
-.noIncomingLinkMessage {
-    display: none;
-    color: var(--secondary);
-    font-weight: bold;
-    font-size: 0.875rem;
-    float: left;
-}
-
-.noIncomingLinks:hover+.noIncomingLinkMessage {
-    display: block;
-}
 </style>
 </head>
 
@@ -61,8 +71,9 @@
         <h2>Spaces</h2>
         <div>
             This virtual exhibition contains the following spaces. 
-            <span class="icon-play-circle secondary"></span> indicates the start space.
-        </div>            
+            <span class="icon-play-circle secondary"></span> indicates the start space.          
+
+        </div>               
         
         <div style="text-align: right">
         	<button class="btn" onclick="list()" style="background: white; margin-right: 15px" id="list-btn">
@@ -108,9 +119,8 @@
         	<ul class="list-group list-group-flush" th:each="space: ${spaces}">
 	            <li class="list-group-item"><span class="icon-play-circle secondary"
 	                th:if="${startSpace != null and space.id == startSpace.id}"></span>
-	                <a  th:href="@{'/staff/space/'+${space.id}}"> <span
-	                    data-feather="box"
-	                    th:if="${startSpace != null and space.id != startSpace.id}"></span>
+	                <a th:href="@{'/staff/space/'+${space.id}}"> 
+	                <span data-feather="box" th:if="${startSpace != null and space.id != startSpace.id}"></span>
 	                    &emsp;[[${space.name}]]
 	            	</a> (Created on <span class="date">[[${space.creationDate}]]</span>
 	                by [[${space.createdBy}]])
@@ -176,6 +186,5 @@
                 </div>
             </div>
         </div>
-    </div>
 </body>
 </html>

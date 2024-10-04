@@ -18,6 +18,7 @@ import edu.asu.diging.vspace.config.ExhibitionLanguageConfig;
 import edu.asu.diging.vspace.core.data.ExhibitionRepository;
 import edu.asu.diging.vspace.core.exception.LanguageListConfigurationNotFoundException;
 import edu.asu.diging.vspace.core.factory.impl.ExhibitionFactory;
+import edu.asu.diging.vspace.core.model.ExhibitionSpaceOrderMode;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
@@ -45,8 +46,8 @@ public class ExhibitionManager implements IExhibitionManager {
      * asu.diging.vspace.core.model.impl.Exhibition)
      */
     @Override
-    public IExhibition storeExhibition(Exhibition exhibition) {
-        return exhibitRepo.save(exhibition);
+    public IExhibition storeExhibition(IExhibition exhibition) {
+        return exhibitRepo.save((Exhibition)exhibition);
     }
 
     /*
@@ -94,6 +95,7 @@ public class ExhibitionManager implements IExhibitionManager {
         }
         return exhibition;
     }
+    
 
     /**
      * Updates the Exhibition with given list of languages. It fetches the language from exhibitionLanguageConfig using code.
@@ -151,4 +153,12 @@ public class ExhibitionManager implements IExhibitionManager {
 
         return exhibitionLanguage;
     }
+
+    @Override
+    public IExhibition updateSpaceOrderMode(ExhibitionSpaceOrderMode mode) {
+        Exhibition exhibition = (Exhibition) getStartExhibition();
+        exhibition.setSpaceOrderMode(mode);
+        return exhibitRepo.save(exhibition);
+    }
+
 }

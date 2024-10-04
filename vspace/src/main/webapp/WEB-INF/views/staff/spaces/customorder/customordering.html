@@ -1,0 +1,74 @@
+<html layout:decorate="~{layouts/main_staff}">
+<head>
+	<style>
+		.customOrderContainer {
+			background: white; 
+			padding: 25px;
+		}
+		.newOrder {
+			float: right;
+		}
+		.customOrderText {
+			padding-bottom:10px;
+		}
+		.spaceDropdownSelect {
+			display: inline-block !important;
+			background: #D3D3D3;
+			height: auto;
+			width: 15%;
+		}
+		.customOrderList:hover, .spaceDropdownOption:hover {
+			background: #D3D3D3;	
+		}
+		.spaceListItem {
+			vertical-align: text-top;
+		}
+		.spaceListItem:hover {
+			font-weight: bold;
+		}
+	</style>
+	<script>
+		$(document).ready(function() {
+	        $(function () {
+	  		  $('[data-toggle="tooltip"]').tooltip()
+	  		});
+	    });
+	</script>
+</head>
+	<body>
+	    <div class="main-content customOrderContainer" layout:fragment="content">
+	    	<a th:href="@{/staff/space/order/add}" method="GET" class="btn primary-btn btn-sm newOrder">+ New Order</a>
+	        <h2>Custom Orders for Spaces</h2>
+	        <div class="customOrderText">This virtual exhibition contains the following custom orders for spaces.</div>	        
+	        <div class="startSequence" style="padding-bottom: 10px;">
+		        <form th:action="@{'/staff/space/order/'}" method ="POST" name="f" style="text-align: right;">
+		        	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+					<div style="padding-bottom:10px; padding-right: 6px;">Select Custom Order to be used</div>
+					<select class="spaceDropdownSelect form-control " name="selectedCustomOrderId" onchange='this.size=1; this.blur();'>
+						<option class="spaceDropdownOption" th:value="Select" th:text="Select"></option>
+		            	<option class="spaceDropdownOption" th:each="customOrders: ${customSpaceOrders}" th:value=${customOrders.id} th:selected="${customOrders==currentSelectedCustomOrder}">[[${customOrders.customOrderName}]]</option>
+		          	</select>
+		        	<button id="selectCustomOrder" type="submit" class="btn primary-btn btn-sm">Submit</button>
+				</form>
+	    	</div>
+	        <div class="tab sequences" style="margin-top: 0;">    
+			    <div style="display: flex; justify-content: space-between">
+					<h4>Custom Orders</h4>			
+				</div>
+			    <div id="list" style="margin-top: 0; overflow-y: scroll; max-height: 315px;">
+		            <ul class="list-group list-group-flush" th:each="order: ${customSpaceOrders}">
+		            	<li class="list-group-item customOrderList">
+		               		<a th:href="@{'/staff/space/order/'+${order.id}}">
+		                   		<span class="icon-2x2-grid">&emsp;</span>
+		                   		<span class="spaceListItem">[[${order.customOrderName}]]</span>
+		               		</a>
+		            	</li>
+		            </ul>
+			    </div>
+		    </div>
+	    </div>
+	</body>
+</html>
+
+
+

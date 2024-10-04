@@ -1,10 +1,8 @@
 package edu.asu.diging.vspace.core.model.impl;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -12,15 +10,17 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+
 import edu.asu.diging.vspace.core.model.ExhibitionModes;
-import edu.asu.diging.vspace.core.model.IContentBlock;
+import edu.asu.diging.vspace.core.model.ExhibitionSpaceOrderMode;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
-import edu.asu.diging.vspace.core.model.IExternalLink;
 import edu.asu.diging.vspace.core.model.ISpace;
 
 /**
@@ -46,6 +46,13 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     private ExhibitionModes mode;
 
     private String customMessage;
+    
+    @Enumerated(EnumType.STRING)
+    private ExhibitionSpaceOrderMode spaceOrderMode;
+    
+    @OneToOne(targetEntity = SpacesCustomOrder.class)
+    @JoinColumn(name = "Space_Custom_Order_Id", referencedColumnName = "id")
+    private SpacesCustomOrder spacesCustomOrder;
     
     private boolean aboutPageConfigured;
     
@@ -123,6 +130,26 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     }
     
     @Override
+    public ExhibitionSpaceOrderMode getSpaceOrderMode() {
+        return spaceOrderMode;
+    }
+
+    @Override
+    public void setSpaceOrderMode(ExhibitionSpaceOrderMode spaceOrderMode) {
+        this.spaceOrderMode = spaceOrderMode;
+    }
+    
+    @Override
+    public SpacesCustomOrder getSpacesCustomOrder() {
+        return spacesCustomOrder;
+    }
+
+    @Override
+    public void setSpacesCustomOrder(SpacesCustomOrder spacesCustomOrder) {
+        this.spacesCustomOrder = spacesCustomOrder;
+    }
+        
+        
     public boolean isAboutPageConfigured() {
         return aboutPageConfigured;
     }
