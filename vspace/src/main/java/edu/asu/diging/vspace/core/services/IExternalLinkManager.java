@@ -2,6 +2,7 @@ package edu.asu.diging.vspace.core.services;
 
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
+import edu.asu.diging.vspace.core.exception.SlideDoesNotExistException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.IExternalLink;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
@@ -19,4 +20,6 @@ public interface IExternalLinkManager extends ILinkManager<IExternalLink, Extern
             String linkLabel, String linkId, String linkDisplayId, DisplayType displayType, byte[] linkImage,
             String imageFilename,ExternalLinkDisplayMode howToOpen)
             throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException;
+
+   
 }

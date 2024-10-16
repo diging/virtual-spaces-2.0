@@ -24,7 +24,7 @@
     font-size: larger;
 }
 
-.SLideshow_option_Class {
+.Slideshow_option_Class {
     position: absolute;
     width: 43.846px;
     height: 44px;
@@ -217,7 +217,8 @@ a, a:hover, a:focus {
 
 .textBlock{
     color: white;
-    font-size: 12px padding: 3px 0;
+    font-size: 12px;
+    padding: 3px 0;
     border-radius: 6px;
     position: absolute;
     z-index: 1;
