@@ -20,15 +20,17 @@ import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Controller
 public class StaffSpacesSearchController {
+	private static final int PAGE_SIZE = 10; 
 
     @Autowired
     private ISpaceManager spaceManager;
 
     @RequestMapping("/staff/spaces/search")
-    public ResponseEntity <String> search(@RequestParam(value = "term", required = false) String search) {
+    public ResponseEntity <String> search(@RequestParam(value = "term", required = false) String search,
+    		@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         List <ISpace> spaces = null;
         if (search != null && !search.trim().isEmpty()) {
-            spaces = spaceManager.findByName(search);
+            spaces = spaceManager.findByNamePaginated(search, page, PAGE_SIZE);
         } else {
             spaces = spaceManager.getAllSpaces();
         }
