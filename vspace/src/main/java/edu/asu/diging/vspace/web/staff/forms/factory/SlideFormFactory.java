@@ -39,7 +39,7 @@ public class SlideFormFactory implements ISlideFormFactory{
                 slideForm.setDefaultDescription(localizedTextFormCreation.createLocalizedTextForm(language, slide.getSlideDescriptions())); 
             }
             else {
-                slideForm.getNames().add(localizedTextFormCreation.createLocalizedTextForm(language, slide.getSlideNames()));               
+                slideForm.getNames().add(localizedTextFormCreation.createLocalizedTextForm(language, slide.getSlideNames()));
                 slideForm.getDescriptions().add(localizedTextFormCreation.createLocalizedTextForm(language, slide.getSlideDescriptions())); 
             }
         });

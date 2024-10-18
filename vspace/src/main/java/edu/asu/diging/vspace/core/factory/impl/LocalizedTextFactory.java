@@ -38,7 +38,6 @@ public class LocalizedTextFactory implements ILocalizedTextFactory {
         if (StringUtils.isEmpty(localizedTextFormData.getText())) {
             return null;
         }
-        
         LocalizedText localizedText = localizedTextRepo.findById(localizedTextFormData.getLocalizedTextId()).orElse(null);
         if (localizedText != null) {
             localizedText.setText(localizedTextFormData.getText());
@@ -47,7 +46,9 @@ public class LocalizedTextFactory implements ILocalizedTextFactory {
             if (exhibitionLanguage != null) {
                 localizedText = new LocalizedText(exhibitionLanguage, localizedTextFormData.getText());
             }
+            detailList.add(localizedText);
         }
+        
         return localizedText;
     }
 }

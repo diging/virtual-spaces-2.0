@@ -185,7 +185,7 @@ public class SlideManager implements ISlideManager {
         addSlideLocalizedText(slide,slideForm.getDefaultName(), localizedTextNames);
         addSlideLocalizedText(slide,slideForm.getDefaultDescription(), localizedTextDescriptions);
 
-        for(LocalizedTextForm title:slideForm.getNames()) {        
+        for(LocalizedTextForm title:slideForm.getNames()) { 
             addSlideLocalizedText(slide, title, localizedTextNames);
         }
         for(LocalizedTextForm text: slideForm.getDescriptions()) {

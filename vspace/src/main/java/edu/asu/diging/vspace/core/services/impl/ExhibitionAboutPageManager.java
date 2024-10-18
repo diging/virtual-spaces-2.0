@@ -65,8 +65,8 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
         }
 
         ExhibitionAboutPage exhibitionAboutPage = getExhibitionAboutPage();       
-        exhibitionAboutPage.setTitle(aboutPageForm.getTitle());
-        exhibitionAboutPage.setAboutPageText(aboutPageForm.getAboutPageText());
+        exhibitionAboutPage.setTitle(aboutPageForm.getDefaultTitle().getText());
+        exhibitionAboutPage.setAboutPageText(aboutPageForm.getDefaultAboutPageText().getText());
         setLocalizedText(aboutPageForm.getDefaultTitle(), exhibitionAboutPage.getExhibitionTitles());
         setLocalizedText(aboutPageForm.getDefaultAboutPageText(), exhibitionAboutPage.getExhibitionTextDescriptions());
         
