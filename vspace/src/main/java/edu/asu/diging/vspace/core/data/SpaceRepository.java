@@ -29,4 +29,6 @@ public interface SpaceRepository extends PagingAndSortingRepository<Space, Strin
     List<Space> findByNameLike(String name);
     
     Page<Space> findByNameLike(String searchTerm, Pageable pageable);
+    
+    Page<Space> findAll(Pageable pageable);
 }

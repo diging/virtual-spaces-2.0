@@ -20,30 +20,41 @@ import edu.asu.diging.vspace.core.services.ISpaceManager;
 
 @Controller
 public class StaffSpacesSearchController {
-	private static final int PAGE_SIZE = 10; 
+
+    private static final int PAGE_SIZE = 10;
 
     @Autowired
     private ISpaceManager spaceManager;
 
     @RequestMapping("/staff/spaces/search")
-    public ResponseEntity <String> search(@RequestParam(value = "term", required = false) String search,
-    		@RequestParam(value = "page", required = false, defaultValue = "1") int page) {
-        List <ISpace> spaces = null;
+    public ResponseEntity<String> search(
+            @RequestParam(value = "term", required = false) String search,
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
+
+        List<ISpace> spaces;
+        boolean hasMore;
+
         if (search != null && !search.trim().isEmpty()) {
             spaces = spaceManager.findByNamePaginated(search, page, PAGE_SIZE);
+            hasMore = spaces.size() == PAGE_SIZE;
         } else {
-            spaces = spaceManager.getAllSpaces();
+            spaces = spaceManager.getAllSpacesPaginated(page, PAGE_SIZE);
+            hasMore = spaces.size() == PAGE_SIZE;
         }
 
         ObjectMapper mapper = new ObjectMapper();
-        ArrayNode idArray = mapper.createArrayNode();
-        for (ISpace space: spaces) {
+        ArrayNode itemsArray = mapper.createArrayNode();
+        for (ISpace space : spaces) {
             ObjectNode spaceNode = mapper.createObjectNode();
             spaceNode.put("id", space.getId());
             spaceNode.put("name", space.getName());
-            idArray.add(spaceNode);
+            itemsArray.add(spaceNode);
         }
-        return new ResponseEntity <String> (idArray.toString(), HttpStatus.OK);
-    }
 
+        ObjectNode result = mapper.createObjectNode();
+        result.set("items", itemsArray);
+        result.put("hasMore", hasMore);
+
+        return new ResponseEntity<>(result.toString(), HttpStatus.OK);
+    }
 }

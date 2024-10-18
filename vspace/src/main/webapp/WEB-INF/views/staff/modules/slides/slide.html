@@ -802,26 +802,44 @@
 	            });
 
 	            $("#spaceName").select2({
-		            ajax: {
-			            url: [[@{|/staff/spaces/search|}]],
-			            dataType: 'json',
-			            processResults: function (data) {
-				            return {
-				            	results: data,
-				            };
-			            },
-		            },
-		            templateResult: formatSpace,
-		            templateSelection: formatSpace
+	                ajax: {
+	                    url: [[@{|/staff/spaces/search|}]], 
+	                    dataType: 'json',
+	                    delay: 250, 
+	                    data: function (params) {
+	                    	console.log("Hwll")
+	                        return {
+	                            term: params.term, 
+	                            page: params.page || 1 
+	                        };
+	                    },
+	                    processResults: function (data, params) {
+	                        console.log("Received data:", data);
+
+	                        params.page = params.page || 1;
+
+	                        return {
+	                            results: data.items,
+	                            pagination: {
+	                                more: data.hasMore
+	                            }
+	                        };
+	                    },
+	                    cache: true
+	                },
+	                templateResult: formatSpace,
+	                templateSelection: formatSpace,
+	                minimumInputLength: 1
 	            });
 
-	            function formatSpace (space) {
-		            if (!space.id) {
-		            	return space.name;
-		            }
-		            var $space = $('<span>' + space.name + '</span>');
-		            return $space;
+	            function formatSpace(space) {
+	                if (!space.id) {
+	                    return space.name;
+	                }
+	                var $space = $('<span>' + space.name + '</span>');
+	                return $space;
 	            }
+
 	
                 $("#addImage").click(function() {
                     $("#addImgAlert").show();
