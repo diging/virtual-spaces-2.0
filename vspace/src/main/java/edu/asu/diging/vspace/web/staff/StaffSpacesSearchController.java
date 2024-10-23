@@ -21,7 +21,7 @@ import edu.asu.diging.vspace.core.services.ISpaceManager;
 @Controller
 public class StaffSpacesSearchController {
 
-    private static final int PAGE_SIZE = 10;
+    private static final int PAGE_SIZE = 5;
 
     @Autowired
     private ISpaceManager spaceManager;

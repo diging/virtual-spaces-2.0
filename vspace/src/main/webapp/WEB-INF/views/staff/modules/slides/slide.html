@@ -154,79 +154,88 @@
             }
 
             function getSelectedSpace(blockId) {
-            	  $.ajax({
-            	    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space/'})]" + blockId,
-            	    type: 'GET',
-            	    success: function(result) {
-            	      currentSpaceName = result.space.name;
-            	      $("#selectedSpace").text(currentSpaceName);
-            	      $("#editSpaceBlock").text(result.title);
-            	      currentSpaceId = result.space.id;
-            	      if ($("#editSpaceName").find("option[value='" + currentSpaceId + "']").length == 0) {
-            	        var newOption = new Option(currentSpaceName, currentSpaceId, true, true);
-            	        $("#editSpaceName").append(newOption).trigger('change');
-            	      } else {
-            	        $("#editSpaceName").val(currentSpaceId).trigger('change');
-            	      }
+                // Initialize Select2
+                $("#editSpaceName").select2({
+                    ajax: {
+                        url: [[@{|/staff/spaces/search|}]], // API URL for searching spaces
+                        dataType: 'json',
+                        delay: 1000, // Delay to prevent excessive requests
+                        data: function (params) {
+                            return {
+                                term: params.term, // Search term input
+                                page: params.page || 1 // Page number for pagination
+                            };
+                        },
+                        processResults: function (data, params) {
+                            params.page = params.page || 1;
 
-            	      $("#editSpaceName").select2({
-            	        ajax: {
-            	          url: [[@{|/staff/spaces/search|}]],
-            	          dataType: 'json',
-            	          delay: 250,
-            	          data: function(params) {
-            	            return {
-            	              //q: params.term,
-            	              page: params.page || 1,
-            	              limit: 5 // number of items to load per page
-            	            };
-            	          },
-            	          processResults: function(data, params) {
-            	            params.page = params.page || 1;
+                            return {
+                                results: data.items || [], // Handle empty results gracefully
+                                pagination: {
+                                    more: data.hasMore // Detect if more pages are available
+                                }
+                            };
+                        },
+                        cache: false // Avoid caching to always fetch fresh data
+                    },
+                    templateResult: formatSpace,
+                    templateSelection: formatSpace,
+                    dropdownAutoWidth: true,
+                    width: '100%',
+                    escapeMarkup: function (markup) {
+                        return markup; // Allow safe HTML rendering
+                    }
+                });
 
-            	            return {
-            	              results: $.map(data.items, function(item) {
-            	                return {
-            	                  id: item.id,
-            	                  text: item.name
-            	                };
-            	              }),
-            	              pagination: {
-            	                more: (params.page * 5) < data.total_count
-            	              }
-            	            };
-            	          },
-            	          cache: true
-            	        },
-            	        placeholder: 'Search for a space',
-            	        minimumInputLength: 1,
-            	        templateResult: function(data) {
-            	          if (!data.id) {
-            	            return data.text;
-            	          }
-            	          return $('<span>').text(data.text);
-            	        },
-            	        templateSelection: function(data) {
-            	          return $('<span>').text(data.text);
-            	        }
-            	      });
-            	    },
-            	    error: function(data) {
-            	      var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-            	      $('.error').append(alert);
-            	      $(".error").delay(4000).slideUp(500, function() {
-            	        $(".error").empty();
-            	      });
-            	    }
-            	  });
-            	}
+                // Perform AJAX call to fetch the selected space details
+                $.ajax({
+                    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space/'})]" + blockId,
+                    type: 'GET',
+                    success: function (result) {
+                        const currentSpaceName = result.space.name;
+                        const currentSpaceId = result.space.id;
+
+                        // Update the displayed text and block title
+                        $("#selectedSpace").text(currentSpaceName);
+                        $("#editSpaceBlock").text(result.title);
+
+                        // Create a new option and mark it as selected
+                        const newOption = new Option(currentSpaceName, currentSpaceId, true, true);
+                        console.log(newOption); // Log for debugging
+
+                        // Append the new option to the Select2 dropdown and trigger change
+                        $("#editSpaceName").append(newOption).trigger('change');
+                    },
+                    error: function (data) {
+                        const alert = $(
+                            '<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
+                                '<p>We are sorry but something went wrong. Please try again later.</p>' +
+                                '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+                                '<span aria-hidden="true">&times;</span>' +
+                                '</button></div>'
+                        );
+                        $('.error').append(alert);
+                        $('.error').delay(4000).slideUp(500, function () {
+                            $('.error').empty();
+                        });
+                    }
+                });
+
+                // Helper function to format spaces in the dropdown
+                function formatSpace(space) {
+                    if (!space.id) {
+                        return space.text || space.name; // Handle empty names gracefully
+                    }
+                    return $('<span>').text(space.name);
+                }
+            }
+
+
 
             
             function textBlockDoubleClick(e){
-            	// get to the nearest divs class attribute
                 $(".EasyMDEContainer").remove();
                 var divName = $(e.target).closest('div').attr('class');
-                //if the div is a text content block 
                 $(e.target).closest('.textDivStaff').addClass("open");
                 var description = $("div.open p:eq(0)").text();
             	defaultValue = description;
@@ -234,7 +243,6 @@
                 $("#editTextAlert").show();
                 markDown = new EasyMDE({element: $('#editTextBlock')[0]});
                 markDown.value(description.trim());
-                //remove card border
                 $(".open").css('display', 'none');
                 $(".open").css('overflow-y', 'scroll');
                 $(".open").css('height', '400px');
@@ -805,19 +813,16 @@
 	                ajax: {
 	                    url: [[@{|/staff/spaces/search|}]], 
 	                    dataType: 'json',
-	                    delay: 250, 
+	                    delay:1000,
 	                    data: function (params) {
-	                    	console.log("Hwll")
 	                        return {
 	                            term: params.term, 
 	                            page: params.page || 1 
 	                        };
 	                    },
 	                    processResults: function (data, params) {
-	                        console.log("Received data:", data);
 
 	                        params.page = params.page || 1;
-
 	                        return {
 	                            results: data.items,
 	                            pagination: {
@@ -825,11 +830,13 @@
 	                            }
 	                        };
 	                    },
-	                    cache: true
+	                    cache: false
 	                },
 	                templateResult: formatSpace,
 	                templateSelection: formatSpace,
-	                minimumInputLength: 1
+	                dropdownAutoWidth: true,
+	                width: '100%',
+	                escapeMarkup: function (markup) { return markup; }
 	            });
 
 	            function formatSpace(space) {
@@ -1259,7 +1266,6 @@
                             $(".error").delay(4000).slideUp(500, function() {
                                 $(".error").empty();
                             });
-                            // Call the callback with null in case of error
                             callback(null);
                         }
                     });
