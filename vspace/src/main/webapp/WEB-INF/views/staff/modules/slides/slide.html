@@ -154,40 +154,38 @@
             }
 
             function getSelectedSpace(blockId) {
-                // Initialize Select2
                 $("#editSpaceName").select2({
                     ajax: {
-                        url: [[@{|/staff/spaces/search|}]], // API URL for searching spaces
+                        url: [[@{|/staff/spaces/search|}]],
                         dataType: 'json',
-                        delay: 1000, // Delay to prevent excessive requests
+                        delay: 1000,
                         data: function (params) {
                             return {
-                                term: params.term, // Search term input
-                                page: params.page || 1 // Page number for pagination
+                                term: params.term, 
+                                page: params.page || 1 
                             };
                         },
                         processResults: function (data, params) {
                             params.page = params.page || 1;
 
                             return {
-                                results: data.items || [], // Handle empty results gracefully
+                                results: data.items || [],
                                 pagination: {
-                                    more: data.hasMore // Detect if more pages are available
+                                    more: data.hasMore 
                                 }
                             };
                         },
-                        cache: false // Avoid caching to always fetch fresh data
+                        cache: false
                     },
                     templateResult: formatSpace,
                     templateSelection: formatSpace,
                     dropdownAutoWidth: true,
                     width: '100%',
                     escapeMarkup: function (markup) {
-                        return markup; // Allow safe HTML rendering
+                        return markup;
                     }
                 });
 
-                // Perform AJAX call to fetch the selected space details
                 $.ajax({
                     url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space/'})]" + blockId,
                     type: 'GET',
@@ -195,15 +193,12 @@
                         const currentSpaceName = result.space.name;
                         const currentSpaceId = result.space.id;
 
-                        // Update the displayed text and block title
                         $("#selectedSpace").text(currentSpaceName);
                         $("#editSpaceBlock").text(result.title);
 
-                        // Create a new option and mark it as selected
                         const newOption = new Option(currentSpaceName, currentSpaceId, true, true);
-                        console.log(newOption); // Log for debugging
+                        console.log(newOption);
 
-                        // Append the new option to the Select2 dropdown and trigger change
                         $("#editSpaceName").append(newOption).trigger('change');
                     },
                     error: function (data) {
@@ -221,18 +216,14 @@
                     }
                 });
 
-                // Helper function to format spaces in the dropdown
                 function formatSpace(space) {
                     if (!space.id) {
-                        return space.text || space.name; // Handle empty names gracefully
+                        return space.text || space.name;
                     }
                     return $('<span>').text(space.name);
                 }
             }
 
-
-
-            
             function textBlockDoubleClick(e){
                 $(".EasyMDEContainer").remove();
                 var divName = $(e.target).closest('div').attr('class');
@@ -1228,6 +1219,7 @@
                                 const space = result[i];
                                 if (space.id === spaceId) {
                                     spaceName = space.name;
+                                    console.log(spaceName)
                                     break;
                                 }
                             }
@@ -1281,7 +1273,6 @@
 		            var selectedSpace = document.getElementById('spaceName');
 		            var token = [[${_csrf.token}]];
 		            if (selectedSpace.selectedIndex != -1 && selectedSpace.value != ""){
-
 			            var spaceId = selectedSpace.options[selectedSpace.selectedIndex].value;
 			            formData.append('title', title);
 			            formData.append('spaceId', spaceId);
@@ -1298,6 +1289,7 @@
 			            		},
 					            enctype: 'multipart/form-data',
 					            success: function(data) {
+					            	console.log(data)
 						            var space = $('<div style="word-break:break-word;" id="'+ data +'" class="SpaceDivStaff tab row"><label>Title: </label><p class="col-md-10">'+title+'</p> <div style = "display:flex; flex-direction: row;width: 100%;"><label>Space: </label><p class="col-md-10">'+ spaceName +'</p></div>'+'<input type="hidden" id="deleteSpaceId" value="'+data+'" /><a class="btn deleteSpace col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a></div>');
 						
 						            $(space[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(spaceBlockDoubleClick);
@@ -1315,6 +1307,9 @@
 					            }
 				            });
 			            });
+		            }
+		            else{
+		            	console.log("empty")
 		            }
 	            });
 
