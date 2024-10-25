@@ -197,7 +197,6 @@
                         $("#editSpaceBlock").text(result.title);
 
                         const newOption = new Option(currentSpaceName, currentSpaceId, true, true);
-                        console.log(newOption);
 
                         $("#editSpaceName").append(newOption).trigger('change');
                     },
@@ -1214,9 +1213,12 @@
                         url: [[@{|/staff/spaces/search|}]],
                         dataType: 'json',
                         success: function(result) {
+                        	console.log("results")
+                        	console.log(result)
+                        	items = result['items']
                             let spaceName = null;
-                            for (let i = 0; i < result.length; i++) {
-                                const space = result[i];
+                            for (let i = 0; i < items.length; i++) {
+                                const space = items[i];
                                 if (space.id === spaceId) {
                                     spaceName = space.name;
                                     console.log(spaceName)
@@ -1231,7 +1233,6 @@
                             $(".error").delay(4000).slideUp(500, function() {
                                 $(".error").empty();
                             });
-                            // Call the callback with null in case of error
                             callback(null);
                         }
                     });
@@ -1289,7 +1290,6 @@
 			            		},
 					            enctype: 'multipart/form-data',
 					            success: function(data) {
-					            	console.log(data)
 						            var space = $('<div style="word-break:break-word;" id="'+ data +'" class="SpaceDivStaff tab row"><label>Title: </label><p class="col-md-10">'+title+'</p> <div style = "display:flex; flex-direction: row;width: 100%;"><label>Space: </label><p class="col-md-10">'+ spaceName +'</p></div>'+'<input type="hidden" id="deleteSpaceId" value="'+data+'" /><a class="btn deleteSpace col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a></div>');
 						
 						            $(space[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(spaceBlockDoubleClick);
@@ -1307,9 +1307,6 @@
 					            }
 				            });
 			            });
-		            }
-		            else{
-		            	console.log("empty")
 		            }
 	            });
 
