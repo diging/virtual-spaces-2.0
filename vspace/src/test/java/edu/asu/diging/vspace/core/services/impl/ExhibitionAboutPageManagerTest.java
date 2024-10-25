@@ -1,8 +1,6 @@
 package edu.asu.diging.vspace.core.services.impl;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -12,21 +10,19 @@ import java.util.Optional;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import edu.asu.diging.vspace.core.data.ExhibitionAboutPageRepository;
 import edu.asu.diging.vspace.core.data.ExhibitionLanguageRepository;
 import edu.asu.diging.vspace.core.data.LocalizedTextRepository;
 import edu.asu.diging.vspace.core.model.IExhibition;
-import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
-import edu.asu.diging.vspace.core.model.ILocalizedText;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionAboutPage;
-import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.impl.LocalizedText;
 import edu.asu.diging.vspace.web.staff.forms.AboutPageForm;
 import edu.asu.diging.vspace.web.staff.forms.LocalizedTextForm;
@@ -36,6 +32,7 @@ import edu.asu.diging.vspace.web.staff.forms.LocalizedTextForm;
  * @author Avirup Biswas
  *
  */
+@RunWith(MockitoJUnitRunner.class)
 public class ExhibitionAboutPageManagerTest {
     
     @Mock
@@ -57,7 +54,7 @@ public class ExhibitionAboutPageManagerTest {
     private ExhibitionLanguageRepository exhibitionLanguageRepository;
 
     @Before
-    public void init() {
+    public void setup() {
         MockitoAnnotations.initMocks(this);
     }
 
@@ -68,14 +65,17 @@ public class ExhibitionAboutPageManagerTest {
         exhibitionAboutPageList.add(new ExhibitionAboutPage());
 
         AboutPageForm aboutPageForm = new AboutPageForm();
-        List<LocalizedTextForm> titleList = new ArrayList<LocalizedTextForm>();
-        titleList.add(new LocalizedTextForm("title", "ID1", "langId", "English"));
+        LocalizedTextForm aboutPageTitle = new LocalizedTextForm("title", "ID1", "langId", "English");
+        LocalizedTextForm aboutPageText = new LocalizedTextForm( "about text","ID2", "langId", "English");
+        List<LocalizedTextForm> titleList = new ArrayList<LocalizedTextForm>();        
+        titleList.add(aboutPageTitle);
         List<LocalizedTextForm> aboutTextList = new ArrayList<LocalizedTextForm>();
-
-        aboutTextList.add(new LocalizedTextForm( "about text","ID2", "langId", "English"));
+        aboutTextList.add(aboutPageText);
 
         aboutPageForm.setTitles(titleList);
         aboutPageForm.setAboutPageTexts(aboutTextList);
+        aboutPageForm.setDefaultTitle(aboutPageText);
+        aboutPageForm.setDefaultAboutPageText(aboutPageText);
         when(repo.findAll()).thenReturn(exhibitionAboutPageList);
 
         LocalizedText locText1 =  new LocalizedText();
@@ -91,7 +91,8 @@ public class ExhibitionAboutPageManagerTest {
         Exhibition exhibition = new Exhibition();
         when(exhibitionManager.getStartExhibition()).thenReturn((IExhibition)exhibition);
         when(repo.save(aboutPage)).thenReturn(aboutPage);
-        ExhibitionAboutPage savedExhibAbtPage = serviceToTest.store(aboutPageForm);
+        
+        serviceToTest.store(aboutPageForm);
         assertEquals(locText1.getText(), "title");
         assertEquals(locText2.getText(), "about text");
     }
@@ -120,19 +121,24 @@ public class ExhibitionAboutPageManagerTest {
 
         AboutPageForm aboutPageForm = new AboutPageForm();
         List<LocalizedTextForm> titleList = new ArrayList<LocalizedTextForm>();
-        titleList.add(new LocalizedTextForm("title", "ID1", "langId", "English"));
+        LocalizedTextForm title = new LocalizedTextForm("title", "ID1", "langId", "English");
+        titleList.add(title);
         List<LocalizedTextForm> aboutTextList = new ArrayList<LocalizedTextForm>();
 
         LocalizedText locText1 =  new LocalizedText();
         locText1.setId( "ID1");
-        aboutTextList.add(new LocalizedTextForm( "about text","ID2", "langId", "English"));
+        LocalizedTextForm aboutPageTxt = new LocalizedTextForm( "about text","ID2", "langId", "English");
+        aboutTextList.add(aboutPageTxt);
         aboutPageForm.setTitles(titleList);
         aboutPageForm.setAboutPageTexts(aboutTextList);
+        aboutPageForm.setDefaultTitle(title);
+        aboutPageForm.setDefaultAboutPageText(aboutPageTxt);;
         
         when(exhibitionManager.getStartExhibition()).thenReturn((IExhibition)exhibition);
         when(localizedTextRepo.findById("ID1") ).thenReturn(Optional.empty());
         when(localizedTextRepo.findById("ID2") ).thenReturn(Optional.empty());
         when(exhibitionLanguageRepository.findById("langId")).thenReturn(Optional.empty());
+        //when(aboutPageForm.getDefaultTitle()).thenReturn(title);
         when(repo.findAll()).thenReturn(exhibitionAboutPageList);
         
         serviceToTest.store(aboutPageForm);
