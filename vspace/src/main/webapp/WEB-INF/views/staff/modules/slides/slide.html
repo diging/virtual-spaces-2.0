@@ -158,44 +158,46 @@
                     url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space/'})]" + blockId,
                     type: 'GET',
                     success: function(result) {
-                        currentSpaceName = result.space.name;
-                        $("#selectedSpace").text(currentSpaceName);
-                        $("#editSpaceBlock").text(result.title);
-                        currentSpaceId = result.space.id;
-                        if ($("#editSpaceName").find("option[value='" + currentSpaceId + "']").length == 0) {
-                            var newOption = new Option(currentSpaceName, currentSpaceId, true, true);
-                            $("#editSpaceName").append(newOption).trigger('change');
-                        } else {
-                           
-                            $("#editSpaceName").val(currentSpaceId).trigger('change');
-                        }
-
-                        $("#editSpaceName").select2({
-                            ajax: {
-                                url: [[@{|/staff/spaces/search|}]],
-                                dataType: 'json',
-                                processResults: function (data) {
-                                    
-                                    return {
-                                        results: $.map(data, function(item) {
-                                            return {
-                                                id: item.id,
-                                                text: item.name 
-                                            };
-                                        })
-                                    };
-                                }
-                            },
-                            templateResult: function(data) {
-                                if (!data.id) {
-                                    return data.text;
-                                }
-                                return $('<span>').text(data.text);
-                            },
-                            templateSelection: function(data) {
-                                return $('<span>').text(data.text);
+                    	if (result != null && result.space != null){
+                            currentSpaceName = result.space.name;
+                            $("#selectedSpace").text(currentSpaceName);
+                            $("#editSpaceBlock").text(result.title);
+                            currentSpaceId = result.space.id;
+                            if ($("#editSpaceName").find("option[value='" + currentSpaceId + "']").length == 0) {
+                                var newOption = new Option(currentSpaceName, currentSpaceId, true, true);
+                                $("#editSpaceName").append(newOption).trigger('change');
+                            } else {
+                                $("#editSpaceName").val(currentSpaceId).trigger('change');
                             }
-                        });
+
+                            $("#editSpaceName").select2({
+                                ajax: {
+                                    url: [[@{|/staff/spaces/search|}]],
+                                    dataType: 'json',
+                                    processResults: function (data) {
+                                        
+                                        return {
+                                            results: $.map(data, function(item) {
+                                                return {
+                                                    id: item.id,
+                                                    text: item.name 
+                                                };
+                                            })
+                                        };
+                                    }
+                                },
+                                templateResult: function(data) {
+                                    if (!data.id) {
+                                        return data.text;
+                                    }
+                                    return $('<span>').text(data.text);
+                                },
+                                templateSelection: function(data) {
+                                    return $('<span>').text(data.text);
+                                }
+                            });
+                    	}
+
                     },
                     error: function(data) {
                         var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
