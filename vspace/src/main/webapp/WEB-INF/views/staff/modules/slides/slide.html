@@ -158,7 +158,7 @@
                     url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space/'})]" + blockId,
                     type: 'GET',
                     success: function(result) {
-                    	if (result != null && result.space != null){
+                    	if (result != null && result.space != null && result.space.name != null){
                             currentSpaceName = result.space.name;
                             $("#selectedSpace").text(currentSpaceName);
                             $("#editSpaceBlock").text(result.title);
@@ -211,7 +211,6 @@
 
             
             function textBlockDoubleClick(e){
-            	console.log("Test")
             	// get to the nearest divs class attribute
                 $(".EasyMDEContainer").remove();
                 var divName = $(e.target).closest('div').attr('class');
@@ -2177,7 +2176,7 @@
 						</div>
 						<div style = "display:flex; flex-direction: row;width: 100%;">
 						<label>Space: </label>
-                        <p class="col-md-10">[[${contents.space.name}]]</p>
+                        <p class="col-md-10" th:if="${contents.space != null}">[[${contents.space.name}]]</p>
 						</div>
                         </div>
                         <input type="hidden" id="deleteSpaceId" th:value="${contents.id}" />
@@ -2187,9 +2186,9 @@
                     </div>
                     <div th:attr="data-position=${contents.contentOrder}" th:id="${contents.id}" class="choiceDiv tab row" th:if="${#strings.equals(contents['class'].simpleName,'ChoiceBlock')}" style="display:block;">
                         <a th:if="${contents.showsAll}" th:each="choice: ${choices}" style="display:block; color: var(--primary);"
-                            th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${choice.sequence.id}}">[[${choice.sequence.name}]]</a>
+                            th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${choice.sequence.id}}">[[${choice.sequence?.name}]]</a>
                         <a th:if="!${contents.showsAll}" th:each="choice: ${contents.choices}" style="display:block; color: var(--primary);"
-                            th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${choice.sequence.id}}">[[${choice.sequence.name}]]</a>
+                            th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${choice.sequence.id}}">[[${choice.sequence?.name}]]</a>
                         <input type="hidden" class="col-md-8" id="deleteChoiceBlockId" th:value="${contents.id}"> 
                         <a class="btn deleteChoiceBlock col-md-1" href="javascript:;" style="position:absolute; right:0; top: 0;">
                         <span class="icon-trash error"></span>
