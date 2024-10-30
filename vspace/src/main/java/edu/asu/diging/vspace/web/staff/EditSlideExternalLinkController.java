@@ -17,7 +17,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
 import edu.asu.diging.vspace.core.exception.SlideDoesNotExistException;
 import edu.asu.diging.vspace.core.model.IExternalLinkSlide;
-import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.services.ISlideExternalLinkManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 
@@ -36,22 +35,11 @@ public class EditSlideExternalLinkController {
             @RequestParam("url") String externalLink)
             throws SlideDoesNotExistException, IOException, LinkDoesNotExistsException, NumberFormatException {
 
-        ResponseEntity<String> validation = checkIfSlideExists(slideManager, slideId);
-        if (validation != null) {
-            return validation;
-        }
-
-        IExternalLinkSlide link = externalLinkManager.updateExternalLink(title, externalLink, id);
-        return success(link.getId(), link.getExternalLink(), title, null, null);
-
-    }
-    
-    public ResponseEntity<String> checkIfSlideExists(ISlideManager slideManager, String id) throws IOException{
-        ISlide source = slideManager.getSlide(id);
-        if (source == null) {
+        if (slideManager.getSlide(slideId) == null) {
             return new ResponseEntity<>("{'error': 'Slide could not be found.'}", HttpStatus.NOT_FOUND);
         }
-        return null;
+        IExternalLinkSlide link = externalLinkManager.updateExternalLink(title, externalLink, id);
+        return success(link.getId(), link.getExternalLink(), title, null, null);
     }
     
     public ResponseEntity<String> success(String id, String url, String label, String linkedId, String linkedSlideStatus) throws IOException{

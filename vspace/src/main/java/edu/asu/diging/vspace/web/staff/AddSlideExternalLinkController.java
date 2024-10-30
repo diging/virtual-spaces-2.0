@@ -28,7 +28,7 @@ public class AddSlideExternalLinkController {
 
     @Autowired
     private ISlideExternalLinkManager slideExternalLinkManager;
-        
+    
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/externallink", method = RequestMethod.POST)
     public ResponseEntity<String> createSlideExternalLink(@PathVariable("id") String slideId, @PathVariable("moduleId") String moduleId, 
             @RequestParam("externalLinkLabel") String label, @RequestParam("url") String externalLink)
@@ -41,13 +41,14 @@ public class AddSlideExternalLinkController {
         }
 
         IExternalLinkSlide externalLinkSlide = slideExternalLinkManager.createExternalLink(label, externalLink, slideId);
+        slide.getExternalLinks().add(externalLinkSlide);
+        slideManager.updateSlide(slide);
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode linkNode = mapper.createObjectNode();
         linkNode.put("label", externalLinkSlide.getLabel());
-        linkNode.put("id", externalLinkSlide.getId());
+        linkNode.put("id", slide.getExternalLinks().get(slide.getExternalLinks().size() - 1).getId());
         linkNode.put("url", externalLinkSlide.getExternalLink());
  
         return new ResponseEntity<>(mapper.writeValueAsString(linkNode), HttpStatus.OK);
     }
-
 }

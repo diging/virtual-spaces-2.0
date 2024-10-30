@@ -33,21 +33,10 @@ public class SlideExternalLinkManager
         }
         return null;
     }
-    
-    @Override
-    public void addToLinkList(ISlide slide, IExternalLinkSlide link) {
-        slide.getExternalLinks().add(link);
-    }
-
-    @Override
-    public void removeFromLinkList(ISlide slide, IExternalLinkSlide link) {
-        slide.getExternalLinks().remove(link);
-    }
 
     @Override
     public void deleteLink(String linkId) {
         IExternalLinkSlide link = getLink(linkId);
-        removeFromLinkList(link.getSlide(), link);
         externalLinkRepo.delete((ExternalLinkSlide) link);
     }
 
@@ -58,9 +47,6 @@ public class SlideExternalLinkManager
         externalLink.setExternalLink(url);
         externalLink.setLabel(label);
         externalLink.setSlide(slide);
-        externalLinkRepo.save((ExternalLinkSlide) externalLink);
-        slide.getExternalLinks().add(externalLink);
-        slideManager.updateSlide(slide);
         return externalLink;
     }
 
@@ -71,8 +57,6 @@ public class SlideExternalLinkManager
             externalLink.setExternalLink(url);
             externalLink.setLabel(label);
             externalLinkRepo.save((ExternalLinkSlide) externalLink);
-        } else {
-            externalLink = new ExternalLinkSlide();
         }
         return externalLink;
     }

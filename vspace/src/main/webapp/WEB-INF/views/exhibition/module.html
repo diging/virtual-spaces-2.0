@@ -45,7 +45,6 @@
         $( window ).on('load', function() {
            $("#blocks a").css('color','rgb(150, 45, 62)').css('font-weight','bold');
            $(".nav-bar").css('position','fixed').css('width','100%').css('z-index','125');
-           drawLinks();
         });
         
         function imageFullScreen(){
@@ -175,7 +174,7 @@
             </div>
             <div class="External_Links_Class"> External Resources:
 	     		<div th:if="${slideExternalLinkList}" th:each="link: ${slideExternalLinkList}"> -
-	      			<a style="text-decoration: underline; color:blue;" th:href="@{${link.externalLink.externalLink}}">[[${link.externalLink.name}]]</a>
+	      			<a style="text-decoration: underline; color:blue;" th:href="@{${link.getExternalLink()}}">[[${link.getLabel()}]]</a>
 	     		</div>
      		</div>
         </div>

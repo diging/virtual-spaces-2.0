@@ -59,6 +59,7 @@ public class SpaceController {
         model.addAttribute("space", space);
         model.addAttribute("spaceLinks", spaceLinkManager.getLinkDisplays(id));
         model.addAttribute("externalLinks", externalLinkManager.getLinkDisplays(id));
+        System.out.println("EXTERNAL LINKS 1: " + externalLinkManager.getLinkDisplays(id));
         model.addAttribute("moduleLinks", moduleLinkManager.getLinkDisplays(id));
         model.addAttribute("spaces", spaceManager.getAllSpaces());
         model.addAttribute("display", spaceDisplayManager.getBySpace(space));
@@ -78,6 +79,7 @@ public class SpaceController {
         Map<String,Object> responseData = new HashMap<String,Object>();
         responseData.put("spaceLinks", spaceLinkManager.getLinkDisplays(id));
         responseData.put("externalLinks", externalLinkManager.getLinkDisplays(id));
+        System.out.println("EXTERNAL LINKS 2: " + externalLinkManager.getLinkDisplays(id));
         responseData.put("moduleLinks", moduleLinkManager.getLinkDisplays(id));
         responseData.put("textBlocks", spaceTextBlockManager.getSpaceTextBlockDisplays(id));
         return new ResponseEntity<>(responseData, HttpStatus.OK);

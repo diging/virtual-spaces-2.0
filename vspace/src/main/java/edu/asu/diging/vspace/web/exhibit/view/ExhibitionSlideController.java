@@ -26,7 +26,6 @@ import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISequenceManager;
-import edu.asu.diging.vspace.core.services.ISlideExternalLinkManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
@@ -51,9 +50,6 @@ public class ExhibitionSlideController {
     @Autowired
     private IExhibitionManager exhibitManager;
     
-    @Autowired
-    private ISlideExternalLinkManager slideExternalLinkManager;
-
     @RequestMapping(value = {
         "/exhibit/{spaceId}/module/{moduleId}/sequence/{sequenceId}/slide/{slideId}",
         "/preview/{"+ExhibitionConstants.PREVIEW_ID+"}/{spaceId}/module/{moduleId}/sequence/{sequenceId}/slide/{slideId}"
@@ -136,7 +132,7 @@ public class ExhibitionSlideController {
         model.addAttribute("currentNumOfSlide", slideIndex + 1);
         model.addAttribute("spaceId", spaceId);
         model.addAttribute("spaceName", spaceManager.getSpace(spaceId).getName());
-        model.addAttribute("slideExternalLinkList", slideExternalLinkManager.getLinks(slideId));
+        model.addAttribute("slideExternalLinkList", currentSlide.getExternalLinks());
         return "exhibition/module";
     }
 

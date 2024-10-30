@@ -8,16 +8,19 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import edu.asu.diging.vspace.core.data.ExternalLinkDisplayRepository;
 import edu.asu.diging.vspace.core.data.ExternalLinkRepository;
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
+import edu.asu.diging.vspace.core.factory.IExternalLinkDisplayFactory;
 import edu.asu.diging.vspace.core.factory.IExternalLinkFactory;
 import edu.asu.diging.vspace.core.model.IExternalLink;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.ExternalLinkDisplayMode;
 import edu.asu.diging.vspace.core.model.display.IExternalLinkDisplay;
+import edu.asu.diging.vspace.core.model.display.impl.ExternalLinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.ExternalLink;
 import edu.asu.diging.vspace.core.model.impl.ExternalLinkValue;
 import edu.asu.diging.vspace.core.services.IExternalLinkManager;
@@ -35,7 +38,18 @@ public class ExternalLinkManager extends LinkManager<IExternalLink, ExternalLink
     private ExternalLinkRepository externalLinkRepo;
 
     @Autowired
-    private IExternalLinkFactory externalLinkFactory;   
+    private ExternalLinkDisplayRepository externalLinkDisplayRepo;
+
+    @Autowired
+    private IExternalLinkFactory externalLinkFactory;
+
+    @Autowired
+    private IExternalLinkDisplayFactory externalLinkDisplayFactory;
+
+    @Override
+    public List<IExternalLinkDisplay> getLinkDisplays(String spaceId) {
+        return externalLinkDisplayRepo.findExternalLinkDisplaysForSpace(spaceId);
+    }
 
     @Override
     protected IExternalLink createLinkObject(String title, String id) {
@@ -43,10 +57,25 @@ public class ExternalLinkManager extends LinkManager<IExternalLink, ExternalLink
         IExternalLink link = externalLinkFactory.createExternalLink(title, source);
         return externalLinkRepo.save((ExternalLink) link);
     }
-    
+
     @Override
     protected ExternalLinkValue getTarget(String externalLink) {
         return new ExternalLinkValue(externalLink);
+    }
+
+    @Override
+    protected IExternalLinkDisplay updateLinkAndDisplay(IExternalLink link, IExternalLinkDisplay displayLink) {
+        externalLinkRepo.save((ExternalLink) link);
+        return externalLinkDisplayRepo.save((ExternalLinkDisplay) displayLink);
+    }
+
+    @Override
+    protected IExternalLinkDisplay getDisplayLink(String externalLinkDisplayId) {
+        Optional<ExternalLinkDisplay> externalLinkDisplay = externalLinkDisplayRepo.findById(externalLinkDisplayId);
+        if (externalLinkDisplay.isPresent()) {
+            return externalLinkDisplay.get();
+        }
+        return null;
     }
 
     @Override
@@ -56,6 +85,16 @@ public class ExternalLinkManager extends LinkManager<IExternalLink, ExternalLink
             return externalLink.get();
         }
         return null;
+    }
+
+    @Override
+    protected IExternalLinkDisplay createDisplayLink(IExternalLink link) {
+        return externalLinkDisplayFactory.createExternalLinkDisplay(link);
+    }
+
+    @Override
+    protected void deleteLinkDisplayRepo(IExternalLink link) {
+        externalLinkDisplayRepo.deleteByExternalLink(link);
     }
 
     @Override
@@ -105,30 +144,6 @@ public class ExternalLinkManager extends LinkManager<IExternalLink, ExternalLink
                 linkLabel, linkId, linkDisplayId, displayType, linkImage, imageFilename);
         externalLinkDisplay.setHowToOpen(howToOpen);
         return externalLinkDisplay;
-    }
-
-    @Override
-    public List<IExternalLinkDisplay> getLinkDisplays(String spaceId) {
-        return null;
-    }
-
-    @Override
-    protected void deleteLinkDisplayRepo(IExternalLink link) {        
-    }
-
-    @Override
-    protected IExternalLinkDisplay updateLinkAndDisplay(IExternalLink link, IExternalLinkDisplay displayLink) {
-        return null;
-    }
-
-    @Override
-    protected IExternalLinkDisplay getDisplayLink(String linkDisplayId) throws LinkDoesNotExistsException {
-        return null;
-    }
-
-    @Override
-    protected IExternalLinkDisplay createDisplayLink(IExternalLink link) {
-        return null;
     }
 
 }
