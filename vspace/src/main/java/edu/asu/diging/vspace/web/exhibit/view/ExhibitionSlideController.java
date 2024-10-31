@@ -28,6 +28,9 @@ import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISequenceManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
+import edu.asu.diging.vspace.core.services.impl.ModuleOverviewManager;
+import edu.asu.diging.vspace.core.services.impl.SlideManager;
+import edu.asu.diging.vspace.core.services.impl.model.ModuleOverview;
 
 @Controller
 public class ExhibitionSlideController {
@@ -48,18 +51,22 @@ public class ExhibitionSlideController {
     private SequenceHistory sequenceHistory;
     
     @Autowired
+    private ModuleOverviewManager moduleOverviewManager;
+    
+    @Autowired
     private IExhibitionManager exhibitManager;
     
     @RequestMapping(value = {
         "/exhibit/{spaceId}/module/{moduleId}/sequence/{sequenceId}/slide/{slideId}",
         "/preview/{"+ExhibitionConstants.PREVIEW_ID+"}/{spaceId}/module/{moduleId}/sequence/{sequenceId}/slide/{slideId}"
         }, method = RequestMethod.GET)
-    public String slide(Model model, @PathVariable("slideId") String slideId, @PathVariable("moduleId") String moduleId,
+    public String slide(Model model, @PathVariable("slideId") String slideId, 
             @PathVariable("sequenceId") String sequenceId, @PathVariable("spaceId") String spaceId,
             @PathVariable(name = ExhibitionConstants.PREVIEW_ID, required = false) String previewId,
             @RequestParam(required = false, name = "back") boolean back,
             @RequestParam(required = false, name = "branchingPoint") String branchingPointId,
-            @RequestParam(required = false, name = "previousSequenceId") String previousSequenceId)
+            @RequestParam(required = false, name = "previousSequenceId") String previousSequenceId,
+            @PathVariable("moduleId") String moduleId)
             throws ModuleNotFoundException, SequenceNotFoundException, SlidesInSequenceNotFoundException,
             SlideNotFoundException, SpaceDoesNotExistException, SpaceNotFoundException {
 
@@ -125,9 +132,13 @@ public class ExhibitionSlideController {
             model.addAttribute("showBackToPreviousChoice", true);
             model.addAttribute("previousSequenceId", sequenceHistory.peekSequenceId());
             model.addAttribute("previousBranchingPoint",
-                    ((BranchingPoint) slideManager.getSlide(sequenceHistory.peekBranchingPointId())));
+                    ( slideManager.getSlide(sequenceHistory.peekBranchingPointId())));
         }
-
+             
+        ModuleOverview moduleOverview = moduleOverviewManager.getModuleOverview(moduleId);
+        moduleOverview.setName(module.getName());
+        moduleOverview.setId(module.getId());
+        model.addAttribute("overview", moduleOverview);
         model.addAttribute("numOfSlides", sequenceSlides.size());
         model.addAttribute("currentNumOfSlide", slideIndex + 1);
         model.addAttribute("spaceId", spaceId);
