@@ -110,7 +110,6 @@
 				</div>
 				<div>
 					<div th:id = "${slideForm.defaultName.exhibitionLanguageLabel}" class = "tabcontent">
-						<p>  [[${slideForm.defaultName.exhibitionLanguageLabel}]]</p>	
 					<label for="title">Slide Name:</label>
 					<input type="hidden" class="form-control" id="title" th:value="${slideForm.defaultName.localizedTextId}" th:name="defaultName.localizedTextId" ></input>
 					<input type="hidden" class="form-control" id="title" th:value="${slideForm.defaultName.exhibitionLanguageId}" th:name="defaultName.exhibitionLanguageId" ></input> 					
@@ -124,7 +123,6 @@
  					
 					<div th:each= "title,  stat : ${slideForm.names}" > 
 					<div th:id = "${title.exhibitionLanguageLabel}" class = "tabcontent">
-						<p>  [[${title.exhibitionLanguageLabel}]]</p>	
 					<label for="title">Slide Name:</label>
 					<input type="hidden" class="form-control" id="title" th:value="${title.localizedTextId}" th:name="|names[${stat.index}].localizedTextId|" ></input>
 					<input type="hidden" class="form-control" id="title" th:value="${title.exhibitionLanguageId}" th:name="|names[${stat.index}].exhibitionLanguageId|" ></input> 					

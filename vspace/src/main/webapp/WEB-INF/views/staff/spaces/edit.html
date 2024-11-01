@@ -77,7 +77,6 @@
  					
 					<div th:each= "title,  stat : ${spaceForm.names}" > 
 					<div th:id = "${title.exhibitionLanguageLabel}" class = "tabcontent">
-						<p>  [[${title.exhibitionLanguageLabel}]]</p>	
 					<label for="title">Space Name:</label>
 					<input type="hidden" class="form-control" id="title" th:value="${title.localizedTextId}" th:name="|names[${stat.index}].localizedTextId|" ></input>
 					<input type="hidden" class="form-control" id="title" th:value="${title.exhibitionLanguageId}" th:name="|names[${stat.index}].exhibitionLanguageId|" ></input> 					
