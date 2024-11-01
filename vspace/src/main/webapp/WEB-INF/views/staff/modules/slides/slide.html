@@ -158,11 +158,11 @@
                     url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space/'})]" + blockId,
                     type: 'GET',
                     success: function(result) {
-                    	if (result != null && result.space != null && result.space.name != null){
+                    	if (result != null && result.space != null){
                             currentSpaceName = result.space.name;
+                            currentSpaceId = result.space.id;
                             $("#selectedSpace").text(currentSpaceName);
                             $("#editSpaceBlock").text(result.title);
-                            currentSpaceId = result.space.id;
                             if ($("#editSpaceName").find("option[value='" + currentSpaceId + "']").length == 0) {
                                 var newOption = new Option(currentSpaceName, currentSpaceId, true, true);
                                 $("#editSpaceName").append(newOption).trigger('change');
@@ -228,14 +228,14 @@
                 $(".open").css('height', '400px');
             }
             
-            async function spaceBlockDoubleClick(e) {
+            function spaceBlockDoubleClick(e) {
                 var divName = $(e.target).closest('div').attr('class');
                 let spaceId = e.target.closest('div').id;
                 $(e.target).closest('.SpaceDivStaff').addClass("open");
                 defaultValue = $("div.open p:eq(0)").text();
                 var blockId = $(this).closest("div").attr("id");
                 currentBlockId = blockId;
-                await getSelectedSpace(blockId);
+                getSelectedSpace(blockId);
                 $("#editSpaceAlert").show();
                 // Remove card border
                 $(".open").css('display', 'none');
