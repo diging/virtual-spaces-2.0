@@ -132,7 +132,7 @@ public class ExhibitionAboutPageManagerTest {
         aboutPageForm.setTitles(titleList);
         aboutPageForm.setAboutPageTexts(aboutTextList);
         aboutPageForm.setDefaultTitle(title);
-        aboutPageForm.setDefaultAboutPageText(aboutPageTxt);;
+        aboutPageForm.setDefaultAboutPageText(aboutPageTxt);
         
         when(exhibitionManager.getStartExhibition()).thenReturn((IExhibition)exhibition);
         when(localizedTextRepo.findById("ID1") ).thenReturn(Optional.empty());
