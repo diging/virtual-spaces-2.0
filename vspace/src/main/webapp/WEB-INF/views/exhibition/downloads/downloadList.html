@@ -28,7 +28,6 @@
 
     function checkSnapshotCreationStatus(id){
     	let snapshotId = id;
-    	console.log("id ", snapshotId);
     	$.ajax({
             type : "GET",
             url : "[(@{'/staff/snapshot/'})]"+id+'/status',
@@ -38,7 +37,6 @@
                     pollForExhibitionDownload(data.exhibitionSnapshot.id, data.exhibitionSnapshot.folderName);
                 }
                 else{
-                	console.log("else ");
                     var folderName = data.exhibitionSnapshot.folderName;
                     var alert = $('<div class="alert alert-success alert-dismissible fade show" role="alert"><p>Snapshot '+folderName+' is ready. Please click to download. <a href=[[@{/staff/snapshot/'+id+'?folderName='+folderName+'}]] > <span class="btn primary-btn btn-sm">Download</span></a> </p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
                     $('.successAlert').empty();
@@ -87,7 +85,6 @@
             maxAttempts = 10;
             interval= 3000;
             let attempts = 0;
-            console.log("here ",id);
             const executePoll = async (resolve, reject) => {
                 const url = "[(@{'/staff/snapshot/'})]"+id+"/status?folderName="+folderName;			  
                 const result = await fetch(url).then((response)=> response.json());
