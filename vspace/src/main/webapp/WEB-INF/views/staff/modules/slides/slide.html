@@ -1181,33 +1181,6 @@
                     });
                 });
                 
-                function getSpaceById(spaceId, callback) {
-                    $.ajax({
-                        url: `/staff/spaces/search/${spaceId}`,
-                        dataType: 'json',
-                        success: function(result) {
-                        	console.log(result);
-                            const spaceName = result[0].name;
-                            callback(spaceName);
-                        },
-                        error: function() {
-                            var alert = $(
-                                '<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
-                                '<p>We are sorry but something went wrong. Please try again later.</p>' +
-                                '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
-                                '<span aria-hidden="true">&times;</span></button></div>'
-                            );
-                            $('.error').append(alert);
-                            $(".error").delay(4000).slideUp(500, function() {
-                                $(".error").empty();
-                            });
-                            // Call the callback with null in case of error
-                            callback(null);
-                        }
-                    });
-                }
-
-                
 	            $("#submitSpace").on("click", function(e) {
 		            $("#addSpaceAlert").hide();
 		            e.preventDefault();
@@ -1216,41 +1189,40 @@
 		            var formData = new FormData();
 		            var title = document.getElementById('spaceTitle').value;
 		            var selectedSpace = document.getElementById('spaceName');
+		            var spaceName = $('#spaceName').select2('data')[0].name;
 		            var token = [[${_csrf.token}]];
 		            if (selectedSpace.selectedIndex != -1 && selectedSpace.value != ""){
 
 			            var spaceId = selectedSpace.options[selectedSpace.selectedIndex].value;
 			            formData.append('title', title);
 			            formData.append('spaceId', spaceId);
-			            getSpaceById(spaceId, function(spaceName){
-				            $.ajax({
-					            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space'})]", 
-					            type: 'POST',
-					            cache       : false,
-					            contentType : false,
-					            processData : false,
-					            data: formData,
-					            headers:{
-			            			'X-CSRF-Token':token
-			            		},
-					            enctype: 'multipart/form-data',
-					            success: function(data) {
-						            var space = $('<div style="word-break:break-word;" id="'+ data +'" class="SpaceDivStaff tab row"><label>Title: </label><p class="col-md-10">'+title+'</p> <div style = "display:flex; flex-direction: row;width: 100%;"><label>Space: </label><p class="col-md-10">'+ spaceName +'</p></div>'+'<input type="hidden" id="deleteSpaceId" value="'+data+'" /><a class="btn deleteSpace col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a></div>');
-						
-						            $(space[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(spaceBlockDoubleClick);
-						            $('#slideSpace').append(space);
-						            $('#spaceTitle').val("");
-						            removeAllSelectOptions("spaceName");
-					            },
-					            error: function(data) {
-						            if (data.status == 403){
-						            	$("#loginAlert").show();
-						            } else {
-							            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-							            $('.error').append(alert);
-						            }
+			            $.ajax({
+				            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space'})]", 
+				            type: 'POST',
+				            cache       : false,
+				            contentType : false,
+				            processData : false,
+				            data: formData,
+				            headers:{
+		            			'X-CSRF-Token':token
+		            		},
+				            enctype: 'multipart/form-data',
+				            success: function(data) {
+					            var space = $('<div style="word-break:break-word;" id="'+ data +'" class="SpaceDivStaff tab row"><label>Title: </label><p class="col-md-10">'+title+'</p> <div style = "display:flex; flex-direction: row;width: 100%;"><label>Space: </label><p class="col-md-10">'+ spaceName +'</p></div>'+'<input type="hidden" id="deleteSpaceId" value="'+data+'" /><a class="btn deleteSpace col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a></div>');
+					
+					            $(space[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(spaceBlockDoubleClick);
+					            $('#slideSpace').append(space);
+					            $('#spaceTitle').val("");
+					            removeAllSelectOptions("spaceName");
+				            },
+				            error: function(data) {
+					            if (data.status == 403){
+					            	$("#loginAlert").show();
+					            } else {
+						            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+						            $('.error').append(alert);
 					            }
-				            });
+				            }
 			            });
 		            }
 	            });
@@ -1461,15 +1433,13 @@
 	            $('#cancelSpaceBlock').on('click',function(){
 	            	removeAllSelectOptions("editSpaceName");
 		            $("#editSpaceAlert").hide();
-		            var blockId = currentBlockId;
-		            updateSpaceBox(blockId, defaultValue, currentSpaceName);
+		            updateSpaceBox(currentBlockId, defaultValue, currentSpaceName);
 		            $(".open").removeClass("open");
 	            });
 
 	            $('#closeSpaceBlock').on('click',function(){
 		            $("#editSpaceAlert").hide();
-		            var blockId = $(this).closest(".open").attr("id");
-		            updateSpaceBox(blockId, defaultValue);
+		            updateSpaceBox(currentBlockId, defaultValue, currentSpaceName);
 		            $(".open").removeClass("open");
 	            });
                 $('.valueDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick((e)=>{$(".EasyMDEContainer").remove();});
@@ -1516,25 +1486,25 @@
                        }
                    });
                 });    
+                
 	            $("#submitSpaceBlock").on("click", function(e){
 		            e.preventDefault();
 		            // ------------- editting text content blocks ------------
 		            if(document.getElementById('editSpaceName') != ""){
-		            var selectedSpace = document.getElementById('editSpaceName');
-		            var spaceId = selectedSpace.options[selectedSpace.selectedIndex].value;
-		            var formData = new FormData();
-		            var text = document.getElementById("editSpaceBlock").value;
-		            var formData = new FormData();
-		            var blockId = $(".open").attr("id");
-		            formData.append('spaceBlockId', blockId);
-		            formData.append('spaceBlockTitle', text);
-		            if(spaceId == "" || spaceId == null){
-		            	spaceId = currentSpaceId;
-		            }
-		            var token = [[${_csrf.token}]];
-		            formData.append('spaceId', spaceId);
-		            getSpaceById(spaceId, function(spaceName){
-		            
+			            var selectedSpace = document.getElementById('editSpaceName');
+			            var spaceId = selectedSpace.options[selectedSpace.selectedIndex].value;
+			            var spaceName = $('#editSpaceName').select2('data')[0].text;
+			            var formData = new FormData();
+			            var text = document.getElementById("editSpaceBlock").value;
+			            var formData = new FormData();
+			            var blockId = $(".open").attr("id");
+			            formData.append('spaceBlockId', blockId);
+			            formData.append('spaceBlockTitle', text);
+			            if(spaceId == "" || spaceId == null){
+			            	spaceId = currentSpaceId;
+			            }
+			            var token = [[${_csrf.token}]];
+			            formData.append('spaceId', spaceId);
 			            $("#editSpaceAlert").hide();
 			            $.ajax({
 				            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space/edit'})]",
@@ -1560,7 +1530,6 @@
 					            }
 				            }
 			            });
-		            });
 		          }
 	            });
 	            
