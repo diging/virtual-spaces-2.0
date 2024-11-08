@@ -85,22 +85,29 @@ public class StorageEngine implements IStorageEngine {
         InputStream input = con.getInputStream();
 
         byte[] buffer = new byte[4096];
-
-        ByteArrayOutputStream byteOutput = new ByteArrayOutputStream();
-        BufferedOutputStream output = new BufferedOutputStream(byteOutput);
-
-        int n = -1;
-        while ((n = input.read(buffer)) != -1) {
-            output.write(buffer, 0, n);
+        byte[] bytes;
+        
+        try {
+            ByteArrayOutputStream byteOutput = new ByteArrayOutputStream();
+            BufferedOutputStream output = new BufferedOutputStream(byteOutput);
+    
+            int n = -1;
+            while ((n = input.read(buffer)) != -1) {
+                output.write(buffer, 0, n);
+            }
+            input.close();
+            output.flush();
+            output.close();
+    
+            byteOutput.flush();
+            bytes = byteOutput.toByteArray();
+            byteOutput.close();
+            return bytes;
         }
-        input.close();
-        output.flush();
-        output.close();
-
-        byteOutput.flush();
-        byte[] bytes = byteOutput.toByteArray();
-        byteOutput.close();
-        return bytes;
+        catch(IOException e) {
+            logger.error("Could not get media content", e);
+        }
+        return null;
     }
 
     @Override

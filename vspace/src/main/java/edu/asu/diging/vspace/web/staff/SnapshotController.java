@@ -44,7 +44,7 @@ public class SnapshotController {
                     .body(exhibitionSnapshot);
         } 
         catch (IOException | SnapshotCouldNotBeCreatedException | InterruptedException e) {
-            logger.error("Could not download exhibition", e);
+            logger.error("Could not create exhibition snapshot", e);
             return new ResponseEntity<ExhibitionSnapshot>(exhibitionSnapshot, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
