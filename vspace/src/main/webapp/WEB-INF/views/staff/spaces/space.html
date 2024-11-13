@@ -67,6 +67,8 @@ const displaceLableOnX = 10;
 const displaceLableOnY = 35;
 var modalBgImageHeight;
 var modalBgImageWidth;
+var textAreaBorderColor;
+var textAreaTextColor;
 
 //link icons for space links
 var linkIconReader = new FileReader();
@@ -231,6 +233,19 @@ function generateExternalLinks(link,spanId,divId,isModal, posX, posY, posXModal,
 }
 
 function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, posYModal, imageHeight, imageWidth){
+    let textColorPicker = document.querySelector("#textColorID");
+    let borderColorPicker = document.querySelector("#borderColorID");
+    let textEditColorPicker = document.querySelector("#textColorIDEdit");
+    let borderEditColorPicker = document.querySelector("#borderColorIDEdit");
+	
+    //adding event listeners for adding new text block
+    textColorPicker.addEventListener("input", changeTextColor, false);
+    borderColorPicker.addEventListener("input", changeBorderColor, false);
+	
+    //adding event listeners while editing existing text block
+    textEditColorPicker.addEventListener("input", changeTextAreaOnEditTextColor, false);
+    borderEditColorPicker.addEventListener("input", changeTextAreaOnEditBorderColor, false);
+	
     if(block != null){
         var height = (block.height*imageHeight)/100;
         var width = (block.width*imageWidth)/100;
@@ -2070,6 +2085,34 @@ $(function(){
             drawLinks();
         });
 });
+
+function changeTextAreaOnEditBorderColor(){
+    var textModalBlock = $("#textModalBlockId-"+selectedTextBlockId).find("textarea");
+    changeStyle(textModalBlock,"borderColor",$("#borderColorIDEdit").val());
+}
+
+function changeTextAreaOnEditTextColor(){
+    var textModalBlock = $("#textModalBlockId-"+selectedTextBlockId).find("textarea");
+    changeStyle(textModalBlock,"color",$("#textColorIDEdit").val());
+}
+
+//called while adding new text blocks 
+function changeTextColor(){
+    changeStyle($("#textB"),"color",$("#textColorID").val());
+}
+
+function changeBorderColor(){
+    changeStyle($("#textB"),"borderColor",$("#borderColorID").val());
+}
+
+//function to change style property of an element
+function changeStyle(elementId, styleProperty, value) {
+    var element = $(elementId);
+    if (element.length === 0) {
+        return;
+    }
+    element[0].style[styleProperty] = value;
+}
 </script>
 <style>
 .Info_cz_Class .tooltiptext {
