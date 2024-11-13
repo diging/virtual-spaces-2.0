@@ -33,7 +33,7 @@ public class AddModuleLinkController {
     private IModuleLinkManager moduleLinkManager;
 
     @RequestMapping(value = "/staff/space/{id}/modulelink", method = RequestMethod.POST)
-	public ResponseEntity<String> createModuleLink(@PathVariable("id") String id, @RequestParam("x") String x,
+    public ResponseEntity<String> createModuleLink(@PathVariable("id") String id, @RequestParam("x") String x,
 		@RequestParam("y") String y, @RequestParam("rotation") String rotation,
 		@RequestParam("moduleLinkLabel") String title, @RequestParam("linkedModule") String linkedModuleId,
 		@RequestParam("moduleLinkLabel") String moduleLinkLabel,
