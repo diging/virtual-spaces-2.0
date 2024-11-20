@@ -1566,9 +1566,8 @@ $(function(){
                     $("#createModuleLinkAlert").hide();
                     $("#errorMsg").text("");
                     $("#module-selectedImage").empty();
-                    $("#module-imageId").val(null).trigger('change');
+                    $("#module-imageId").value("");
                     $('#errorAlert').hide();
-                    console.log("Success");
                     $("."+linkData["id"]).remove();
                     form[0].reset();
                     $("#space").css("display", "none");
