@@ -15,6 +15,7 @@ import org.mockito.MockitoAnnotations;
 import edu.asu.diging.vspace.core.data.ExternalLinkDisplayRepository;
 import edu.asu.diging.vspace.core.data.ExternalLinkRepository;
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
+import edu.asu.diging.vspace.core.exception.ImageDoesNotExistException;
 import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.IExternalLinkDisplayFactory;
@@ -66,7 +67,7 @@ public class ExternalLinkManagerTest {
     }
 
     @Test
-    public void test_createLink_success() throws SpaceDoesNotExistException, ImageCouldNotBeStoredException {
+    public void test_createLink_success() throws SpaceDoesNotExistException, ImageCouldNotBeStoredException, ImageDoesNotExistException {
 
         Space space = new Space();
         space.setId(spaceId1);
@@ -89,7 +90,7 @@ public class ExternalLinkManagerTest {
         Mockito.when(spaceManager.getSpace(spaceId1)).thenReturn(space);
         Mockito.when(externalLinkFactory.createExternalLink("New External Link", space)).thenReturn(externalLink);
 
-        Mockito.when(externalLinkRepo.save((ExternalLink) externalLink)).thenReturn((ExternalLink) externalLink);
+        Mockito.when(externalLinkRepo.save((ExternalLink) externalLink)).thenReturn((ExternalLink)externalLink);
 
         IExternalLinkDisplay externalDisplayLink = new ExternalLinkDisplay();
         externalDisplayLink.setId("EXLD001");
@@ -101,25 +102,10 @@ public class ExternalLinkManagerTest {
         externalDisplayLink.setExternalLink(externalLink);
         Mockito.when(externalLinkDisplayFactory.createExternalLinkDisplay(externalLink)).thenReturn(externalDisplayLink);
 
-        Mockito.when(externalLinkRepo.save((ExternalLink) externalLink)).thenReturn((ExternalLink) externalLink);
-        Mockito.when(externalLinkDisplayRepo.save((ExternalLinkDisplay) externalDisplayLink)).thenReturn((ExternalLinkDisplay) externalDisplayLink);
+        Mockito.when(externalLinkRepo.save((ExternalLink) externalLink)).thenReturn((ExternalLink)externalLink);
+        Mockito.when(externalLinkDisplayRepo.save((ExternalLinkDisplay)externalDisplayLink)).thenReturn((ExternalLinkDisplay)externalDisplayLink);
 
-
-        IExternalLinkDisplay savedExternalLinkDisplay1 = managerToTest.createLink(
-            "New External Link",  
-            spaceId1,             
-            10,                   
-            30,                   
-            "EXL001",            
-            "New External Link",  
-            "Description here",   
-            DisplayType.ARROW,    
-            null,                 
-            null,                 
-            ExternalLinkDisplayMode.INLINE, 
-            "IMG001"             
-        );
-
+        IExternalLinkDisplay savedExternalLinkDisplay1 = managerToTest.createLink("New External Link","EXL001", 10.0f, 30.0f, 40, "EXL001", "New External Link", "Description", DisplayType.ARROW, null, null, null, null);
         Assert.assertEquals(externalDisplayLink.getId(), savedExternalLinkDisplay1.getId());
         Assert.assertEquals(externalDisplayLink.getName(), savedExternalLinkDisplay1.getName());
         Assert.assertEquals(new Double(externalDisplayLink.getPositionX()), new Double(savedExternalLinkDisplay1.getPositionX()));
@@ -128,12 +114,11 @@ public class ExternalLinkManagerTest {
         Assert.assertEquals(externalDisplayLink.getType(), savedExternalLinkDisplay1.getType());
         Assert.assertEquals(externalDisplayLink.getExternalLink(), savedExternalLinkDisplay1.getExternalLink());
         Assert.assertEquals(externalDisplayLink.getExternalLink().getTarget().getValue(), savedExternalLinkDisplay1.getExternalLink().getTarget().getValue());
-        Mockito.verify(externalLinkDisplayRepo).save((ExternalLinkDisplay) externalDisplayLink);
+        Mockito.verify(externalLinkDisplayRepo).save((ExternalLinkDisplay)externalDisplayLink);
     }
 
-
     @Test
-    public void test_updateLink_success() throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException {
+    public void test_updateLink_success() throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException, ImageDoesNotExistException {
         ISpace space = new Space();
         space.setId(spaceId1);
         IVSImage spaceImage = new VSImage();
@@ -172,7 +157,7 @@ public class ExternalLinkManagerTest {
         Mockito.when(externalLinkRepo.save((ExternalLink) externalLink)).thenReturn((ExternalLink)externalLink);
         Mockito.when(externalLinkDisplayRepo.save((ExternalLinkDisplay)externalLinkDisplay)).thenReturn((ExternalLinkDisplay)externalLinkDisplay);
 
-        IExternalLinkDisplay actualUpdatedLink = managerToTest.updateLink("TestExternalNew", spaceId1, 20, 40, 0, "www.google.com", "TestExternalNew", "EXL001", "EXLD001", DisplayType.ARROW, null, null,null);
+        IExternalLinkDisplay actualUpdatedLink = managerToTest.updateLink("TestExternalNew", spaceId1, 20.0f, 40.0f, 0, "www.google.com", "TestExternalNew", "Description", "EXL001", "EXLD001", DisplayType.ARROW, null, null, null, null);
         Assert.assertEquals(externalLinkDisplay.getId(), actualUpdatedLink.getId());
         Assert.assertEquals(externalLinkDisplay.getName(), actualUpdatedLink.getName());
         Assert.assertEquals(new Double(externalLinkDisplay.getPositionX()), new Double(actualUpdatedLink.getPositionX()));
