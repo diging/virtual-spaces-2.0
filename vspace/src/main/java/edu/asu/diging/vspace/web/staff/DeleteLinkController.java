@@ -13,7 +13,7 @@ import edu.asu.diging.vspace.core.services.IModuleLinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceLinkManager;
 
 @Controller
-public class DeleteSpaceLinkController {
+public class DeleteLinkController {
 
     @Autowired
     private IModuleLinkManager moduleLinkManager;
