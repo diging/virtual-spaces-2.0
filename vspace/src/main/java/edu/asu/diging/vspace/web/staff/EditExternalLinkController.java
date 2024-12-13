@@ -55,13 +55,13 @@ public class EditExternalLinkController extends EditSpaceLinksController {
         }
         DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
         ExternalLinkDisplayMode externalLinkOpenMode = howToOpen.isEmpty() ? null
-				: ExternalLinkDisplayMode.valueOf(howToOpen);
+                : ExternalLinkDisplayMode.valueOf(howToOpen);
         IExternalLinkDisplay display = (IExternalLinkDisplay) externalLinkManager.updateLink(title, id, new Float(x),
-				new Float(y), 0, externalLink, title,desc, externalLinkIdValueEdit, externalLinkDisplayId, type, linkImage,
+                new Float(y), 0, externalLink, title,desc, externalLinkIdValueEdit, externalLinkDisplayId, type, linkImage,
 				filename, imageId);
         return success(display.getExternalLink().getId(), display.getId(), display.getPositionX(),
-				display.getPositionY(), display.getRotation(), display.getExternalLink().getExternalLink(), title,
-				displayType, null, null);
+                display.getPositionY(), display.getRotation(), display.getExternalLink().getExternalLink(), title,
+                displayType, null, null);
 
     }
 }
