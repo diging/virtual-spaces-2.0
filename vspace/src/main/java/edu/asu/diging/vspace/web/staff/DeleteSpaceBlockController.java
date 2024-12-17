@@ -16,22 +16,21 @@ import edu.asu.diging.vspace.core.exception.BlockDoesNotExistException;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
 
 @Controller
-public class DeleteTextBlockController {
-
+public class DeleteSpaceBlockController {
+    
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private IContentBlockManager contentBlockManager;
-
-    @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/text/{blockId}", method = RequestMethod.DELETE)
-    public ResponseEntity<String> deleteTextBlock(@PathVariable("id") String slideId,@PathVariable("blockId") String blockId) throws IOException {
-
+    
+    @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/space/{blockId}", method = RequestMethod.DELETE)
+    public ResponseEntity<String> deleteSpaceBlock(@PathVariable("id") String slideId,@PathVariable("blockId") String blockId) throws IOException {
         try {
-            contentBlockManager.deleteTextBlockById(blockId,slideId);
+            contentBlockManager.deleteSpaceBlockById(blockId,slideId);
 
         } catch (BlockDoesNotExistException e) {
-            logger.warn("Text Id does not exist, bad request.", e);
-            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+            logger.warn("Block Id does not exist, bad request.", e);
+            return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
         }
 
         return new ResponseEntity<String>(HttpStatus.OK);
