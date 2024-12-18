@@ -7,8 +7,6 @@
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
         <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 		<script th:src="@{/resources/jquery/jquery-ui.min_custom_sortable.js}"></script>
-		<script src="//use.fontawesome.com/releases/v5.8.1/js/all.js"
-    	data-auto-replace-svg="nest"></script>
         <style type="text/css">
             .hova {
             background-color: #f2f2f2;
@@ -36,17 +34,26 @@
 			color: var(--primary) !important;
 			background: transparent;
 			}
-			
-			
+            .tooltip {
+                z-index: 0;
+            }
         </style>
         <script th:inline="javascript">
-            //# sourceURL=click.js
+            $(function () {
+		        $('.close').on('click', function () {
+		        	$('.modal').hide();
+		        })
+            })
+
+            var currentSpaceName;
             var contentCount = [[${#lists.size(slideContents)}]];
             var markDown = null;
             var defaultValue;
-         var formDataCancel;
+	        var formDataCancel;
+            var currentSpaceId;
             var addVideoClk=0;
             var editVideoClk=0;
+            var currentBlockId;
             
             $(function () {
             	  $('[data-toggle="tooltip"]').tooltip()
@@ -145,45 +152,105 @@
             function onMouseLeave(e) {
                 $(this).removeClass("hova");
             }
+
+            function getSelectedSpace(blockId) {
+                $.ajax({
+                    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space/'})]" + blockId,
+                    type: 'GET',
+                    success: function(result) {
+                    	if (result != null && result.space != null){
+                            currentSpaceName = result.space.name;
+                            currentSpaceId = result.space.id;
+                            $("#selectedSpace").text(currentSpaceName);
+                            $("#editSpaceBlock").text(result.title);
+                            if ($("#editSpaceName").find("option[value='" + currentSpaceId + "']").length == 0) {
+                                var newOption = new Option(currentSpaceName, currentSpaceId, true, true);
+                                $("#editSpaceName").append(newOption).trigger('change');
+                            } else {
+                                $("#editSpaceName").val(currentSpaceId).trigger('change');
+                            }
+
+                            $("#editSpaceName").select2({
+                                ajax: {
+                                    url: [[@{|/staff/spaces/search|}]],
+                                    dataType: 'json',
+                                    processResults: function (data) {
+                                        
+                                        return {
+                                            results: $.map(data, function(item) {
+                                                return {
+                                                    id: item.id,
+                                                    text: item.name 
+                                                };
+                                            })
+                                        };
+                                    }
+                                },
+                                templateResult: function(data) {
+                                    if (!data.id) {
+                                        return data.text;
+                                    }
+                                    return $('<span>').text(data.text);
+                                },
+                                templateSelection: function(data) {
+                                    return $('<span>').text(data.text);
+                                }
+                            });
+                    	}
+
+                    },
+                    error: function(data) {
+                        var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        $('.error').append(alert);
+                        $(".error").delay(4000).slideUp(500, function() {
+                            $(".error").empty();
+                        });
+                    }
+                });
+            }
+
             
-            function onDoubleClick(e){
-                // get to the nearest divs class attribute
+            function textBlockDoubleClick(e){
+            	// get to the nearest divs class attribute
                 $(".EasyMDEContainer").remove();
                 var divName = $(e.target).closest('div').attr('class');
                 //if the div is a text content block 
-                if(divName.includes("textDivStaff")){
-                	$(e.target).closest('.textDivStaff').addClass("open");
-                    var description = $("div.open p:eq(0)").text();
-                	defaultValue = description;
-            
-                    $("#editTextAlert").show();
-                    markDown = new EasyMDE({element: $('#editTextBlock')[0]});
-                    markDown.value(description.trim());
-                    //remove card border
-                    $(".open").css('display', 'none');
-                    $(".open").css('overflow-y', 'scroll');
-                 $(".open").css('max-height', '200px');
-             } else if(divName.includes("biblioDivStaff")){
+                $(e.target).closest('.textDivStaff').addClass("open");
+                var description = $("div.open p:eq(0)").text();
+            	defaultValue = description;
+        
+                $("#editTextAlert").show();
+                markDown = new EasyMDE({element: $('#editTextBlock')[0]});
+                markDown.value(description.trim());
+                //remove card border
+                $(".open").css('display', 'none');
+                $(".open").css('overflow-y', 'scroll');
+                $(".open").css('height', '400px');
+            }
+
+            function biblioBlockDoubleClick(e){
          	   $(e.target).closest('.biblioDivStaff').addClass("open");
          	   var description = $("div.open p:eq(0)").text();
-             	   defaultValue = description;
-             	
-             	   var title = $("div.open p span:eq(0)").text();
-             	   var desc = $("div.open p span:eq(1)").text();  
-             	    //showing the edit bibliography form with all the respective values
-             	    $("#editBiblioAlert").show();
-             	
-             	    $("#editTitleBiblio").val(title);
-             	    $("#editDescBiblio").val(desc);
-             		
-             	    formDataCancel = new FormData();
-             	    formDataCancel.append('biblioTitle', title);
-             	    formDataCancel.append('description', desc);
-             	    //remove card border
-                   $(".open").css('display', 'none');
-                   $(".open").css('overflow-y', 'scroll');
-                   $(".open").css('max-height', '200px');	
-             } else if(divName.includes("referenceDivStaff")){
+           	   defaultValue = description;
+           	
+           	   var title = $("div.open p span:eq(0)").text();
+           	   var desc = $("div.open p span:eq(1)").text();  
+	      	    //showing the edit bibliography form with all the respective values
+      	       $("#editBiblioAlert").show();
+      	
+      	       $("#editTitleBiblio").val(title);
+      	       $("#editDescBiblio").val(desc);
+           		
+           	    formDataCancel = new FormData();
+           	    formDataCancel.append('biblioTitle', title);
+           	    formDataCancel.append('description', desc);
+            	    //remove card border
+                $(".open").css('display', 'none');
+                $(".open").css('overflow-y', 'scroll');
+                $(".open").css('max-height', '200px');	
+             } 
+             
+             function referenceBlockDoubleClick(e){
          	   $(e.target).closest('.referenceDivStaff').addClass("open");
          	   var description = $("div.open p:eq(0)").text();
              	   defaultValue = description;
@@ -236,16 +303,31 @@
                    $(".open").css('overflow-y', 'scroll');
                    $(".open").css('max-height', '200px');
              }
-             else {
-             	// store image ID selected by the user to replace, onDoubleClick
-             	var imgID = $(e.target).attr('id'); 
-             	if(imgID != ''){
-                 	$("#uploadImage").data('value', imgID); // sets image ID value
-                 	$("#addImgAlert").show();
-             	}
-             }
-         }
-         
+             
+            function spaceBlockDoubleClick(e) {
+                var divName = $(e.target).closest('div').attr('class');
+                let spaceId = e.target.closest('div').id;
+                $(e.target).closest('.SpaceDivStaff').addClass("open");
+                defaultValue = $("div.open p:eq(0)").text();
+                var blockId = $(this).closest("div").attr("id");
+                currentBlockId = blockId;
+                getSelectedSpace(blockId);
+                $("#editSpaceAlert").show();
+                // Remove card border
+                $(".open").css('display', 'none');
+                $(".open").css('overflow-y', 'scroll');
+                $(".open").css('height', '400px');
+            }
+            
+            function imageBlockDoubleClick(e){
+                var divName = $(e.target).closest('div').attr('class');
+                var imgBlockID = $(e.target).attr('id'); 
+            	if(imgBlockID != ''){
+                	$("#uploadImage").data('value', imgBlockID); // sets image ID value
+                	$("#addImgAlert").show();
+            	}
+            }
+                
             function uploadImage() {
             	var imgBlockID = $("#uploadImage").data('value') // gets image ID
             	var file = $('#file')[0].files[0];
@@ -263,7 +345,7 @@
             	}
             	var imageblock = "";
             	var oldImageBlock = "";
-            			    
+            	var token = [[${_csrf.token}]];
             	// Ashmi changes for Story VSPC-64
             			    
             	// checks if image ID is present to replace
@@ -271,7 +353,7 @@
             			oldImageBlock = $("#" + imgBlockID);
             			var imageBlockId = imgBlockID;
             			formData.append('imageBlockId',imageBlockId);
-            			var url = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image/'})]" + imageBlockId + '?[(${_csrf.parameterName})]=[(${_csrf.token})]';
+            			var url = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image/'})]" + imageBlockId;
             			if(!chooseFromExisting){
             				reader.onload = function (theFile)
             				{
@@ -281,7 +363,7 @@
             					{
             						imageblock = createImageBlock(reader, this.width);
             						$("#" + imageBlockId).replaceWith(imageblock);	
-            						$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+            						 $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(imageBlockDoubleClick);
             					};
             				}
             			}
@@ -291,13 +373,13 @@
             				formData.append('imageId',imageId);
             				imageblock = createImageBlockWithExistingImage($('#selectedImage').find('img').attr('src'),image.width);
             				$("#" + imageBlockId).replaceWith(imageblock);	
-            				$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+            				$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(imageBlockDoubleClick);
             			}
             			// Reset data-attribute to get current selected image ID
             			$("#uploadImage").data('value', '');
             	}
             	else {
-            		var url = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image/?'+${_csrf.parameterName}+'='+${_csrf.token}})]";
+            		var url = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image'})]";
             		if(!chooseFromExisting){
             			reader.onload = function (theFile) 
             			{        	
@@ -307,7 +389,7 @@
             			{
             				imageblock = createImageBlock(reader, this.width);  
             				$('#slideSpace').append(imageblock); 
-            				$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+            				$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(imageBlockDoubleClick);
             			};          
             			} 
             		}
@@ -318,7 +400,7 @@
             			formData.append('imageId',imageId);
             			imageblock = createImageBlockWithExistingImage($('#selectedImage').find('img').attr('src'),image.width);  
             			$('#slideSpace').append(imageblock); 
-            			$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+            			$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(imageBlockDoubleClick);
             		}
             	}
             	if (!chooseFromExisting)
@@ -333,6 +415,9 @@
             		cache       : false,
             		contentType : false,
             		processData : false,
+            		headers: {
+	                    'X-CSRF-TOKEN': token
+	                },
             		data: formData,    
             		success: function(data) {
             			$(".open").removeClass("open");
@@ -394,7 +479,7 @@
 				}
 				if (videoID) {
 					oldVideoBlock = $("#" + videoID);
-					ajaxUrl = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/video/'})]" + videoID + '?[(${_csrf.parameterName})]=[(${_csrf.token})]';
+					ajaxUrl = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/video/'})]" + videoID;
 					formData.append('videoBlockId', videoID);
 					if (url) {
 						$("#" + videoID).replaceWith(videoBlock);
@@ -416,16 +501,17 @@
 							$('#slideSpace').append(videoBlock);
 						}
 					}
-					ajaxUrl = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/video?'+${_csrf.parameterName}+'='+${_csrf.token}})]";
+					ajaxUrl = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/video'})]";
 				}
 				// Reset data-attribute to get current selected image ID
 				$("#videoFile").val('');
 				$("#videoLink").val('');
-				$(videoBlock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave);//.dblclick(onDoubleClick);
+				$(videoBlock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave);
 				if (vidFile) {
 					reader.readAsDataURL(vidFile);
 				}
 				formData.append('videoTitle', title);
+				var token = [[${_csrf.token}]];
 				$.ajax({
 					enctype: 'multipart/form-data',
 					// ------------- creating video content blocks ------------
@@ -435,6 +521,9 @@
 					contentType: false,
 					processData: false,
 					data: formData,
+					headers:{
+						'X-CSRF-Token':token
+						},
 					success: function (data) {
 					    if(videoBlock){
 							var videoBlk = "";
@@ -658,8 +747,8 @@
             
                 //-------- edit contentblock description --------
             
-                $("#submitDescription").hide()
-                $("#cancelEditDescription").hide()
+                $("#submitDescription").hide();
+                $("#cancelEditDescription").hide();
                 var description = $("#description").text()
                 $("#editDescription").click(function() {
                     $('<textarea id="newDescription" style="margin-top: 1%;" class="form-control" type="text">'+description+'</textarea>').insertBefore( "#description" );
@@ -672,13 +761,17 @@
             
                 $("#submitDescription").click(function() {
                     var formData = new FormData();
+                    var token = [[${_csrf.token}]];
                     formData.append('description', $("#newDescription").val());
                     $.ajax({ 
-            	        url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/edit/description?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+            	        url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/edit/description'})]",
             	        type: 'POST',
             	        cache       : false,
             	        contentType : false,
             	        processData : false,
+            	        headers:{
+	            			'X-CSRF-Token':token
+	            		},
             	        data: formData,
             	        enctype: 'multipart/form-data',
             	        success: function(data) {
@@ -723,14 +816,18 @@
                 });
                 
                 $("#submitTitle").click(function() {
+                    var token = [[${_csrf.token}]];
                     var formData = new FormData();
                     formData.append('title', $("#newTitle").val());
                     $.ajax({
-                        url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/edit/title?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+                        url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/edit/title'})]",
                         type: 'POST',
                         cache       : false,
                         contentType : false,
                         processData : false,
+                        headers:{
+	            			'X-CSRF-Token':token
+	            		},
                         data: formData,
                         enctype: 'multipart/form-data',
                         success: function(data) {
@@ -763,6 +860,33 @@
                     $("#addTextAlert").show();
                 });
                 
+	            $("#addSpace").click(function() {
+		            markDown = new EasyMDE({element: $('#spaceBlockText')[0]});
+		            $("#addSpaceAlert").show();
+	            });
+
+	            $("#spaceName").select2({
+		            ajax: {
+			            url: [[@{|/staff/spaces/search|}]],
+			            dataType: 'json',
+			            processResults: function (data) {
+				            return {
+				            	results: data,
+				            };
+			            },
+		            },
+		            templateResult: formatSpace,
+		            templateSelection: formatSpace
+	            });
+
+	            function formatSpace (space) {
+		            if (!space.id) {
+		            	return space.name;
+		            }
+		            var $space = $('<span>' + space.name + '</span>');
+		            return $space;
+	            }
+	
                 $("#addImage").click(function() {
                     $("#addImgAlert").show();
                 });
@@ -805,7 +929,14 @@
             		$(alert).attr( 'value', $(this).siblings('input').val());
             		$('.modal-footer').append(alert); 
               	});
-            	
+
+                $(document).on("click", ".deleteSpace", function(e) {
+            		$("#confirmDeleteSpaceAlert").show();
+            		var alert = $('<input type="hidden" id="deleteSpaceId">');
+            		$(alert).attr( 'value', $(this).siblings('input').val());
+            		$('.modal-footer').append(alert); 
+              	});
+
             	$(document).on("click", ".deleteImage", function(e) {
             		$("#confirmDeleteImageAlert").show();
             		var alert = $('<input type="hidden" id="deleteImageId">');
@@ -824,6 +955,7 @@
             		    $("#confirmDeleteVideoAlert").show();
             		  }, 3000);
               	});
+            	
             $("#addBibliography").click(function() {
                  $("#addBiblioAlert").show();
              });
@@ -863,6 +995,21 @@
                 $("#cancelSubmitText").click(function() {
             		$("#addTextAlert").hide();	
             	});
+
+                $("#cancelSpaceText").click(function() {
+            		removeAllSelectOptions("spaceName");
+            		$("#addSpaceAlert").hide();
+            	});
+
+                function removeAllSelectOptions(elementId){
+            		var element = document.getElementById(elementId);
+            		element.innerHTML="";
+            	}
+            	
+                function setSelectOption(elementId, option){
+            		var element = document.getElementById(elementId);
+            		element.innerHTML= option;
+            	}
             	
             	$("#cancelDeleteText").click(function() {
             		$("#confirmDeleteTextAlert").find('input').remove();
@@ -872,7 +1019,15 @@
             		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
             		$("#confirmDeleteTextAlert").hide();
             	});
-            	
+	
+            	$("#cancelDeleteSpace").click(function() {
+					$("#confirmDeleteSpaceAlert").find('input').remove();
+					$("#confirmDeleteTextAlert").find('input').remove();
+					$("#confirmDeleteImageAlert").find('input').remove();
+					$("#confirmDeleteChoiceBlockAlert").find('input').remove();
+					$("#confirmDeleteSpaceAlert").hide();
+            	});
+	            
             	$("#cancelDeleteImage").click(function() {
             		$("#confirmDeleteImageAlert").hide();
             	});
@@ -996,8 +1151,8 @@
          	});
                 	// ---------- Delete Text Block -------------
             	
-            		$("#deleteText").on("click", function(e) {
-            		e.preventDefault();
+            	$("#deleteText").on("click", function(e) {
+            	e.preventDefault();
          		$("#confirmDeleteBiblioAlert").find('input').remove();
          		$("#confirmDeleteRefAlert").find('input').remove();
                 $("#confirmDeleteVideoAlert").find('input').remove();
@@ -1024,15 +1179,48 @@
             			}
             		});
             	});
-            	
+
+	            // ---------- Delete Space Block ------------- //
+	
+	            $("#deleteSpace").on("click", function(e) {
+		            var token =  $('input[name="_csrf"]').attr('value');
+		            e.preventDefault();
+		            $("#confirmDeleteImageAlert").find('input').remove();
+		            $("#confirmDeleteChoiceBlockAlert").find('input').remove();
+		            $("#confirmDeleteTextAlert").find('input').remove();
+		            $("#confirmDeleteSpaceAlert").hide();
+		            var blockId = $('#deleteSpaceId').attr('value');
+		            $('#deleteSpaceId').remove()
+		
+		            // ------------- Delete space content blocks ------------ //
+		            $.ajax({
+			            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space/'})]"+blockId,
+			            type: 'DELETE',
+			            headers:{
+			            	'X-CSRF-Token':token
+			            },
+			            success: function(result) {
+			            	$('#' + blockId).remove();
+			            },
+			            error: function(data) {
+				            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+				            $('.error').append(alert);
+				            $(".error").delay(4000).slideUp(500, function(){
+				            	$(".error").empty();
+				            });
+			            }
+		            });
+	            });
+
             	// ---------- Delete Image Block -----------
             	
             	$("#deleteImage").on("click", function(e) {
             		e.preventDefault();
             		$("#confirmDeleteTextAlert").find('input').remove();
-                 		$("#confirmDeleteBiblioAlert").find('input').remove();
-                 		$("#confirmDeleteRefAlert").find('input').remove();
+                 	$("#confirmDeleteBiblioAlert").find('input').remove();
+                 	$("#confirmDeleteRefAlert").find('input').remove();
             		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
+            		$("#confirmDeleteSpaceAlert").find('input').remove();
             		$("#confirmDeleteImageAlert").hide();
             		var blockId = $('#deleteImageId').attr('value');
             		if(blockId == null || blockId == ''){
@@ -1098,49 +1286,82 @@
             	
             	// ---------- Delete Video Block -----------
             	
-				$("#deleteVideo").on("click", function(e) {
-            		e.preventDefault();
-            		$("#confirmDeleteTextAlert").find('input').remove();
-            		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
-            		$("#confirmDeleteVideoAlert").hide();
-            		var blockId = $('#videoIdToDelete').attr('value');
-            		$('#videoIdToDelete').val("");
-            		if(blockId == null || blockId == ''){
-            			var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-            			$('.error').append(alert); 
-            			$(".error").delay(4000).slideUp(500, function(){
-            			    $(".error").empty();
-            			});
-            		} else{
-            		    // ------------- delete video content blocks ------------
-            			$.ajax({
-            			    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/video/'})]"+blockId+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
-            			    type: 'DELETE',
-            			    success: function(result) {
-            			    	$('#' + blockId).remove();
-            			    },
-            				error: function(data) {
-            					var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-            					$('.error').append(alert); 
-            					$(".error").delay(4000).slideUp(500, function(){
-            					    $(".error").empty();
-            					});
-            				}
-            			});
-            		}
-            	});
-
+			$("#deleteVideo").on("click", function(e) {
+           		e.preventDefault();
+           		$("#confirmDeleteTextAlert").find('input').remove();
+           		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
+           		$("#confirmDeleteVideoAlert").hide();
+           		var blockId = $('#videoIdToDelete').attr('value');
+           		$('#videoIdToDelete').val("");
+           		if(blockId == null || blockId == ''){
+           			var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+           			$('.error').append(alert); 
+           			$(".error").delay(4000).slideUp(500, function(){
+           			    $(".error").empty();
+           			});
+           		} else{
+           		    // ------------- delete video content blocks ------------
+           			$.ajax({
+           			    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/video/'})]"+blockId+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
+           			    type: 'DELETE',
+           			    success: function(result) {
+           			    	$('#' + blockId).remove();
+           			    },
+           				error: function(data) {
+           					var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+           					$('.error').append(alert); 
+           					$(".error").delay(4000).slideUp(500, function(){
+           					    $(".error").empty();
+           					});
+           				}
+           			});
+           		}
+           	});
+            	
+           	$("#deleteChoiceBlock").on("click", function(e) {
+           	    e.preventDefault();
+           	    $("#confirmDeleteTextAlert").find('input').remove();
+           	    $("#confirmDeleteImageAlert").find('input').remove();
+           	    $("#confirmDeleteSpaceAlert").find('input').remove();
+           	    $("#confirmDeleteChoiceBlockAlert").hide();
+           		var blockId = $('#deleteChoiceBlockId').attr('value');
+           		if(blockId == null || blockId == ''){
+           			var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+           			$('.error').append(alert); 
+           			$(".error").delay(4000).slideUp(500, function(){
+           			    $(".error").empty();
+           			});
+           		} else{
+           			$('#deleteChoiceBlockId').remove()
+           			// ------------- delete choices content blocks ------------
+           			$.ajax({
+           			    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/choiceBlock/'})]"+blockId+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
+           			    type: 'DELETE',
+           			    success: function(result) {
+           			    	$('#' + blockId).remove();
+           			    },
+           				error: function(data) {
+           					var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+           					$('.error').append(alert); 
+           					$(".error").delay(4000).slideUp(500, function(){
+           					    $(".error").empty();
+           					});
+           				}
+           			});
+           		}
+           	});
+            	
          	$("#cancelSubmitChoice").click(function() {
                  $("#addChoiceAlert").hide();	
              });
             	
-                $("#cancelImageBtn").click(function() {
-                    $('#chooseFromLocal').trigger( "click" );
-                    // Initialize selected image ID to blank, on clicking cancel button
-                    $("#uploadImage").data('value', '');
-                    $("#addImgAlert").hide();
-                    $(".open").removeClass("open");
-                });
+            $("#cancelImageBtn").click(function() {
+                $('#chooseFromLocal').trigger( "click" );
+                // Initialize selected image ID to blank, on clicking cancel button
+                $("#uploadImage").data('value', '');
+                $("#addImgAlert").hide();
+                $(".open").removeClass("open");
+            });
                 
              $("#submitBiblio").on("click", function(e) {
              	console.log("submitBiblio");
@@ -1199,7 +1420,7 @@
                                 </div>\
                         </div> \
          ');
-                     	$(biblioblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+                     	$(biblioblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(biblioBlockDoubleClick);
                          $('#slideSpace').append(biblioblock); 
                      },
                      error: function(data) {
@@ -1283,7 +1504,7 @@
          						+ 'Note: <span>' + data.note + '</span>'
                          		+ '<input type="hidden" id="deleteReferenceId" value="'+ data.id +'" /><a class="btn deleteReference" href="javascript:;" style="position: absolute; right:0px;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a></p></div>');
          
-                     	$(referenceblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+                     	$(referenceblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(referenceBlockDoubleClick);
                      	var elem = $('#' + biblioBlockId).find('#referenceSpace');
                      	elem.append(referenceblock);
                      	$('#currentBiblioId').remove();
@@ -1331,21 +1552,25 @@
                     // ------------- creating text content blocks ------------
                     
                     var formData = new FormData();
+                    var token = [[${_csrf.token}]];
                     var text = markDown.value();
                     formData.append('content', text);
                     markDown.value('');
                     $.ajax({
-                        url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/textcontent?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+                        url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/textcontent'})]",
                         type: 'POST',
                         cache       : false,
                         contentType : false,
                         processData : false,
                         data: formData,
+                        headers:{
+	            			'X-CSRF-Token':token
+	            		},
                         enctype: 'multipart/form-data',
                         success: function(data) {
             
-                            var textblock = $('<div style="word-break:break-word;" id="'+ data +'" class="textDivStaff tab row"><p class="col-md-10">'+text+'</p>'+'<input type="hidden" id="deleteTextId" value="'+data+'" /><a class="btn deleteText col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a></div>');
-                            $(textblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+                            var textblock = $('<div style="word-break:break-word;" id="'+ data +'" class="textDivStaff tab row"><label>Text Description: </label><p class="col-md-10">'+text+'</p>'+'<input type="hidden" id="deleteTextId" value="'+data+'" /><a class="btn deleteText col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a></div>');
+                            $(textblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(textBlockDoubleClick);
                             $('#slideSpace').append(textblock);             
                         },
                         error: function(data) {
@@ -1360,6 +1585,52 @@
                     });
                 });
                 
+	            $("#submitSpace").on("click", function(e) {
+		            $("#addSpaceAlert").hide();
+		            e.preventDefault();
+		            // ------------- creating space content blocks ------------
+		
+		            var formData = new FormData();
+		            var title = document.getElementById('spaceTitle').value;
+		            var selectedSpace = document.getElementById('spaceName');
+		            var spaceName = $('#spaceName').select2('data')[0].name;
+		            var token = [[${_csrf.token}]];
+		            if (selectedSpace.selectedIndex != -1 && selectedSpace.value != ""){
+
+			            var spaceId = selectedSpace.options[selectedSpace.selectedIndex].value;
+			            formData.append('title', title);
+			            formData.append('spaceId', spaceId);
+			            $.ajax({
+				            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space'})]", 
+				            type: 'POST',
+				            cache       : false,
+				            contentType : false,
+				            processData : false,
+				            data: formData,
+				            headers:{
+		            			'X-CSRF-Token':token
+		            		},
+				            enctype: 'multipart/form-data',
+				            success: function(data) {
+					            var space = $('<div style="word-break:break-word;" id="'+ data +'" class="SpaceDivStaff tab row"><label>Title: </label><p class="col-md-10">'+title+'</p> <div style = "display:flex; flex-direction: row;width: 100%;"><label>Space: </label><p class="col-md-10">'+ spaceName +'</p></div>'+'<input type="hidden" id="deleteSpaceId" value="'+data+'" /><a class="btn deleteSpace col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a></div>');
+					
+					            $(space[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(spaceBlockDoubleClick);
+					            $('#slideSpace').append(space);
+					            $('#spaceTitle').val("");
+					            removeAllSelectOptions("spaceName");
+				            },
+				            error: function(data) {
+					            if (data.status == 403){
+					            	$("#loginAlert").show();
+					            } else {
+						            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+						            $('.error').append(alert);
+					            }
+				            }
+			            });
+		            }
+	            });
+
                 $('input:checkbox').click(function() {
                     if ($(this).is(':checked')) {
                     	$('#submitChoices').prop("disabled", false);
@@ -1374,6 +1645,7 @@
                     $("#addChoiceAlert").hide();
                     var selectedChoice = [];
                     var showsAll = false;
+                    var token = [[${_csrf.token}]];
                     $('#selectChoices :checked').each(function() {
                     	selectedChoice.push($(this).attr("id"));
                       });
@@ -1387,12 +1659,15 @@
                  formData.append('contentOrder', contentCount);
                     formData.append('showsAll', showsAll);
                     $.ajax({
-                        url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/choice/content?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+                        url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/choice/content'})]",
                         type: 'POST',
                         cache       : false,
                         contentType : false,
                         processData : false,
                         data: formData,
+                        headers:{
+	            			'X-CSRF-Token':token
+	            		},
                         enctype: 'multipart/form-data',
                         success: function(data) {
                             var choiceblock = $('<div id="'+ data['choiceBlock'].id +'" class="choiceDiv tab row" style="display:block;">');
@@ -1520,10 +1795,10 @@
                 function updateTextBox(blockId, text) {
                     // clear text box and buttons
                     $(".open").empty();
-                    $(".open").append('<p class="col-md-10">'+text+'</p><input type="hidden" id="deleteTextId" value="'+blockId+'" /><a class="btn deleteText col-md-1" href="javascript:;" style="position: absolute; right:0;"><span class="icon-trash error"></span></a>');
+                    $(".open").append('<label>Text Description: </label><p class="col-md-10">'+text+'</p><input type="hidden" id="deleteTextId" value="'+blockId+'" /><a class="btn deleteText col-md-1" href="javascript:;" style="position: absolute; right:0;"><span class="icon-trash error"></span></a>');
                     // reset border of the card
                     //rebind event handlers
-                    $('.textDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+                    $('.textDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(textBlockDoubleClick);
                     //resetting the height and overflow-y so that the TextBlock doesn't expand
                     $('.textDivStaff').css('height', 'auto');
                     $('.textDivStaff').css('overflow-y', 'visible');
@@ -1557,7 +1832,7 @@
          
                 	//reset border of the card
                  //rebind event handlers
-                 $('.biblioDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+                 $('.biblioDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(biblioBlockDoubleClick);
                  $(".open").css('display', 'flex');
                  // remove id from storage so its not there on refresh
                  $(".open").removeClass("open");
@@ -1583,7 +1858,7 @@
                  
                 	//reset border of the card
                  //rebind event handlers
-                 $('.referenceDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+                 $('.referenceDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(referenceBlockDoubleClick);
                  $(".open").css('display', 'flex');
                  // remove id from storage so its not there on refresh
                  $(".open").removeClass("open");
@@ -1597,14 +1872,50 @@
              	updateReferenceBox(refId, formDataCancel);
              });
          
-                $('.valueDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
-                $('.textDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
-             $('.biblioDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
-             $('.referenceDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
-                $('.vidDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave);//.dblclick(onDoubleClick);
+             $('.valueDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick((e)=>{$(".EasyMDEContainer").remove();});
+             $('.textDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(textBlockDoubleClick);
+             $('.vidDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave);
+             $('.SpaceDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(spaceBlockDoubleClick);
+             $('.biblioDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(biblioBlockDoubleClick);
+             $('.referenceDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(referenceBlockDoubleClick);
             
+	            $('#closeTextBlock').on('click',function(){
+		            $("#editTextAlert").hide();
+		            var blockId = $(this).closest(".open").attr("id");
+		            updateTextBox(blockId, defaultValue);
+	            });
+
+	            function updateSpaceBox(blockId, text, spaceName) {
+		            // clear text box and buttons
+		            $(".open").empty();
+		            $(".open").append('<label>Title: </label><p class="col-md-10">'+text+'</p></div><div style = "display:flex; flex-direction: row;width: 100%;"><label>Space: </label><p class="col-md-10"> '+spaceName+'</p></div><input type="hidden" id="deleteSpaceId" value="'+blockId+'" /><a class="btn deleteSpace col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a>');
+		            // reset border of the card
+		            //rebind event handlers
+		            $('.SpaceDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(spaceBlockDoubleClick);
+		            //resetting the height and overflow-y so that the TextBlock doesn't expand
+		            $('.SpaceDivStaff').css('height', 'auto');
+		            $('.SpaceDivStaff').css('overflow-y', 'visible');
+		            $(".open").css('display', 'flex');
+		            // remove id from storage so its not there on refresh
+		            $(".open").removeClass("open");
+	            }
+
+            	// must add the event to the document since the buttons are added dynamically
+	            $('#cancelSpaceBlock').on('click',function(){
+	            	removeAllSelectOptions("editSpaceName");
+		            $("#editSpaceAlert").hide();
+		            updateSpaceBox(currentBlockId, defaultValue, currentSpaceName);
+		            $(".open").removeClass("open");
+	            });
+
+	            $('#closeSpaceBlock').on('click',function(){
+		            $("#editSpaceAlert").hide();
+		            updateSpaceBox(currentBlockId, defaultValue, currentSpaceName);
+		            $(".open").removeClass("open");
+	            });
+
                 $("#submitTextBlock").on("click", function(e){
-                	e.preventDefault();
+                    e.preventDefault();
                     // ------------- editting text content blocks ------------
                     
                     var formData = new FormData();
@@ -1612,16 +1923,20 @@
                     markDown.value('');
                     var formData = new FormData();
                     var blockId = $(".open").attr("id");
+                    var token = [[${_csrf.token}]];
                     formData.append('textBlockDesc', text);
                     formData.append('textBlockId', blockId);
                 	$("#editTextAlert").hide();
                     $.ajax({
-                        url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/text/edit?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+                        url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/text/edit'})]",
                         type: 'POST',
                         cache       : false,
                         contentType : false,
                         processData : false,
                         data: formData,
+                        headers:{
+	            			'X-CSRF-Token':token
+	            		},
                         enctype: 'multipart/form-data',
                         success: function(data) {
                             // replace text box with new description
@@ -1751,12 +2066,56 @@
                        }
                    });
                 });    
+                
+	            $("#submitSpaceBlock").on("click", function(e){
+		            e.preventDefault();
+		            // ------------- editting text content blocks ------------
+		            if(document.getElementById('editSpaceName') != ""){
+			            var selectedSpace = document.getElementById('editSpaceName');
+			            var spaceId = selectedSpace.options[selectedSpace.selectedIndex].value;
+			            var spaceName = $('#editSpaceName').select2('data')[0].text;
+			            var formData = new FormData();
+			            var text = document.getElementById("editSpaceBlock").value;
+			            var formData = new FormData();
+			            var blockId = $(".open").attr("id");
+			            formData.append('spaceBlockId', blockId);
+			            formData.append('spaceBlockTitle', text);
+			            if(spaceId == "" || spaceId == null){
+			            	spaceId = currentSpaceId;
+			            }
+			            var token = [[${_csrf.token}]];
+			            formData.append('spaceId', spaceId);
+			            $("#editSpaceAlert").hide();
+			            $.ajax({
+				            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space/edit'})]",
+				            type: 'POST',
+				            cache       : false,
+				            contentType : false,
+				            processData : false,
+				            headers: {
+			                    'X-CSRF-TOKEN': token
+			                },
+				            data: formData,
+				            enctype: 'multipart/form-data',
+				            success: function(data) {
+				            	updateSpaceBox(blockId, text, spaceName)
+				            	$(".open").removeClass("open");
+				            },
+				            error: function(data) {
+					            if (data.status == 403) {
+					            	$("#loginAlert").show();
+					            } else {
+						            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+						            $('.error').append(alert);
+					            }
+				            }
+			            });
+		          }
+	            });
+	            
                 $("#imageId").select2({
             		ajax: {
-            		    url: function (params) {
-            		  		var imageURL = [[@{|/staff/images/search|}]];
-            		  		return imageURL;
-            		    },
+            		    url: [[@{|/staff/images/search|}]],
             		    dataType: 'json',
             		    processResults: function (data) {
             		        return {
@@ -1813,7 +2172,6 @@
             		}
             	}
             });
-            
             
 			// editing video block
             $(document).on("click", ".editVideo", function(e) {
@@ -1887,6 +2245,8 @@
             <div style="margin: 40px 0 20px; width: fit-content" class="content-btns">
                 <button type="button" id="addText" class="btn pill-btn" data-toggle="tooltip" title="Add Text Block" data-placement="top">
                 +&nbsp;<span class="icon-text"></span></button>&nbsp;
+                <button type="button" id="addSpace" class="btn pill-btn" data-toggle="tooltip" title="Add Space Block">
+                +&nbsp;<span class="icon-layers"></span></button>&nbsp;
                 <button type="button" id="addImage" class="btn pill-btn" data-toggle="tooltip" title="Add Image" data-placement="top">
                 +&nbsp;<span class="icon-image"></span></button>&nbsp;
             <button type="button" id="addBibliography" class="btn pill-btn" data-toggle="tooltip" title="Add Bibliography block" data-placement="top">
@@ -1967,6 +2327,26 @@
 	               </div>
 	            </div>
 	         </div>
+            <!-- Delete Space Modal -->
+            <div id="confirmDeleteSpaceAlert" class="modal" tabindex="-1" role="dialog" th:draggable="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Confirm Delete</h5>
+                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <h6>Are you sure you want to delete this Space Block?</h6>
+                        </div>
+                        <div class="modal-footer">
+                            <button id="cancelDeleteSpace" type="reset" class="btn light">Cancel</button>
+                            <button type="submit" id="deleteSpace" class="btn btn-primary">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!-- Delete Image Modal -->
             <div id="confirmDeleteImageAlert" class="modal" tabindex="-1"
                 role="dialog" th:draggable="true">
@@ -2073,15 +2453,46 @@
                     </div>
                 </div>
             </div>
-            <div id="editTextAlert" class="modal" tabindex="-1"
+            <div id="addSpaceAlert" class="modal" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document" th:draggable="true">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Add link to space</h5>
+                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form name="spaceForm" id="spaceUploadForm" enctype="multipart/form-data" method="post" th:object="${spaceContentBlockForm}">
+                            <div class="modal-body">
+                                <h6>
+                                    <small>Enter title : </small>
+                                </h6>
+                                <textarea class="form-control" id="spaceTitle" rows="3" style="border: 1px solid black;"></textarea>
+                            </div>
+                            <div class="modal-body">
+                                <h6>
+                                    <small>Choose a Space</small>
+                                </h6>
+                                <select id="spaceName" name="spacesNames" class="form-control-xs target" style="height: 50px; width: 200px;">
+                                    <option selected value="">Choose a Space</option>
+                                </select>
+                            </div>
+                            <div class="modal-footer">
+                                <button id="cancelSpaceText" type="reset" class="btn light">Cancel</button>
+                                <button type="submit" id="submitSpace" class="btn btn-primary">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div id="editTextAlert" class="modal" tabindex="-1" 
                 role="dialog" th:draggable="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Edit Text Block</h5>
-                            <button type="button" class="close"
-                                data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
+                            <button class = "close" type="button" id="closeTextBlock" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <form name="textForm" id="textEditUploadForm"
@@ -2098,6 +2509,34 @@
                                     class="btn light">Cancel</button>
                                 <button type="submit" id="submitTextBlock"
                                     class="btn btn-primary">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div id="editSpaceAlert" class="modal" tabindex="-1" role="dialog" th:draggable="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Edit Space Block</h5>
+                            <button type="button" class="close" id="closeSpaceBlock" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form name="spaceForm" id="SpaceEditUploadForm" enctype="multipart/form-data" method="post" style="padding:20px;">
+                            <div class="modal-body">
+                                <h6>
+                                    <small>Edit Title: </small>
+                                </h6>
+                                <textarea class="form-control" id="editSpaceBlock" rows="3"></textarea>
+                            </div>
+                            <select id="editSpaceName" name="editSpacesNames" class="form-control-xs target" style="height: 50px; width: 200px;">
+                                <option selected value=""></option>
+                            </select>
+                            <p>Current selected space is <span id="selectedSpace"></span></p>
+                            <div class="modal-footer">
+                                <button id="cancelSpaceBlock" type="reset" class="btn light">Cancel</button>
+                                <button type="submit" id="submitSpaceBlock" class="btn btn-primary">Submit</button>
                             </div>
                         </form>
                     </div>
@@ -2660,11 +3099,27 @@
                      </div>
                   </div>
                </div>
+                    <div th:attr="data-position=${contents.contentOrder}" style="word-break: break-word;" th:id="${contents.id}" class="SpaceDivStaff tab row" th:if="${#strings.equals(contents['class'].simpleName,'SpaceBlock')}">
+                        <div style="display: flex; flex-direction: column; width: 100%;">
+						<div style = "display:flex; flex-direction: row; width: 100%;">
+						<label>Title: </label>
+                        <p class="col-md-10">[[${contents.title}]]</p>
+						</div>
+						<div style = "display:flex; flex-direction: row;width: 100%;">
+						<label>Space: </label>
+                        <p class="col-md-10" th:if="${contents.space != null}">[[${contents.space.name}]]</p>
+						</div>
+                        </div>
+                        <input type="hidden" id="deleteSpaceId" th:value="${contents.id}" />
+                        <a class="btn deleteSpace col-md-1" href="javascript:;" style="position: absolute; right: 0px; bottom: 10px;"> 
+                        <span class="icon-trash error"></span> 
+                        </a>
+                    </div>
                     <div th:attr="data-position=${contents.contentOrder}" th:id="${contents.id}" class="choiceDiv tab row" th:if="${#strings.equals(contents['class'].simpleName,'ChoiceBlock')}" style="display:block;">
                         <a th:if="${contents.showsAll}" th:each="choice: ${choices}" style="display:block; color: var(--primary);"
-                            th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${choice.sequence.id}}">[[${choice.sequence.name}]]</a>
+                            th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${choice.sequence.id}}">[[${choice.sequence?.name}]]</a>
                         <a th:if="!${contents.showsAll}" th:each="choice: ${contents.choices}" style="display:block; color: var(--primary);"
-                            th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${choice.sequence.id}}">[[${choice.sequence.name}]]</a>
+                            th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${choice.sequence.id}}">[[${choice.sequence?.name}]]</a>
                         <input type="hidden" class="col-md-8" id="deleteChoiceBlockId" th:value="${contents.id}"> 
                         <a class="btn deleteChoiceBlock col-md-1" href="javascript:;" style="position:absolute; right:0; top: 0;">
                         <span class="icon-trash error"></span>

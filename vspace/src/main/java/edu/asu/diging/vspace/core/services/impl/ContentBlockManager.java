@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 import org.apache.tika.Tika;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,7 @@ import edu.asu.diging.vspace.core.data.ChoiceContentBlockRepository;
 import edu.asu.diging.vspace.core.data.ContentBlockRepository;
 import edu.asu.diging.vspace.core.data.ImageContentBlockRepository;
 import edu.asu.diging.vspace.core.data.ImageRepository;
+import edu.asu.diging.vspace.core.data.SpaceContentBlockRepository;
 import edu.asu.diging.vspace.core.data.TextContentBlockRepository;
 import edu.asu.diging.vspace.core.data.VideoContentBlockRepository;
 import edu.asu.diging.vspace.core.data.VideoRepository;
@@ -27,6 +29,7 @@ import edu.asu.diging.vspace.core.exception.VideoCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.factory.IChoiceBlockFactory;
 import edu.asu.diging.vspace.core.factory.IImageBlockFactory;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
+import edu.asu.diging.vspace.core.factory.ISpaceBlockFactory;
 import edu.asu.diging.vspace.core.factory.ITextBlockFactory;
 import edu.asu.diging.vspace.core.factory.IVideoBlockFactory;
 import edu.asu.diging.vspace.core.factory.IVideoFactory;
@@ -37,6 +40,8 @@ import edu.asu.diging.vspace.core.model.IChoiceBlock;
 import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.IImageBlock;
 import edu.asu.diging.vspace.core.model.ISlide;
+import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.ISpaceBlock;
 import edu.asu.diging.vspace.core.model.ITextBlock;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.impl.BiblioBlock;
@@ -45,6 +50,7 @@ import edu.asu.diging.vspace.core.model.IVideoBlock;
 import edu.asu.diging.vspace.core.model.impl.ChoiceBlock;
 import edu.asu.diging.vspace.core.model.impl.ContentBlock;
 import edu.asu.diging.vspace.core.model.impl.ImageBlock;
+import edu.asu.diging.vspace.core.model.impl.SpaceBlock;
 import edu.asu.diging.vspace.core.model.impl.TextBlock;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.model.impl.VSVideo;
@@ -71,6 +77,9 @@ public class ContentBlockManager implements IContentBlockManager {
     private ITextBlockFactory textBlockFactory;
     
     @Autowired
+    private ISpaceBlockFactory spaceBlockFactory;
+
+    @Autowired
     private IImageBlockFactory imageBlockFactory;
 
     @Autowired
@@ -90,6 +99,9 @@ public class ContentBlockManager implements IContentBlockManager {
     
     @Autowired
     private BiblioBlockRepository biblioBlockRepo;
+
+    @Autowired
+    private SpaceContentBlockRepository spaceBlockRepo;
 
     @Autowired
     private ImageContentBlockRepository imageBlockRepo;
@@ -132,6 +144,15 @@ public class ContentBlockManager implements IContentBlockManager {
         textBlock.setContentOrder(contentOrder);
         textBlock = textBlockRepo.save((TextBlock) textBlock);
         return textBlock;
+    }
+
+    @Override
+    public ISpaceBlock createSpaceBlock(String slideId, String title, Integer contentOrder, ISpace space) {
+        ISlide slide = slideManager.getSlide(slideId);
+        ISpaceBlock spaceBlock = spaceBlockFactory.createSpaceBlock(slide, title, space);
+        spaceBlock.setContentOrder(contentOrder);
+        spaceBlock = spaceBlockRepo.save((SpaceBlock) spaceBlock);
+        return spaceBlock;
     }
 
     private IVSImage saveImage(byte[] image, String filename) {
@@ -295,6 +316,37 @@ public class ContentBlockManager implements IContentBlockManager {
     }
 
     /**
+     * Delete a space block using an id and also decrease content order by 1 of all
+     * the slide's block which are after this block
+     * 
+     * @param blockId - id of resource to be deleted. If the id is null then the
+     *                functions returns nothing.
+     * @param slideId - id of the slide in which the text block with blockId is
+     *                present.
+     * 
+     */
+    @Override
+    public void deleteSpaceBlockById(String blockId, String slideId) throws BlockDoesNotExistException {
+        if (blockId == null) {
+            return;
+        }
+        Integer contentOrder = null;
+        Optional<ContentBlock> contentBlock = contentBlockRepository.findById(blockId);
+        if (contentBlock.isPresent()) {
+            contentOrder = contentBlock.get().getContentOrder();
+        } else {
+            throw new BlockDoesNotExistException("Block Id not present");
+        }
+        try {
+            spaceBlockRepo.deleteById(blockId);
+            updateContentOrder(slideId, contentOrder);
+        } catch (EmptyResultDataAccessException e) {
+            throw new BlockDoesNotExistException(e);
+        }
+
+    }
+
+    /**
      * Delete an image block using an id and also decrease content order by 1 of all
      * the slide's block which are after this block
      * 
@@ -391,6 +443,11 @@ public class ContentBlockManager implements IContentBlockManager {
     }
 
     @Override
+    public void saveSpaceBlock(ISpaceBlock spaceBlock) {
+        spaceBlockRepo.save((SpaceBlock) spaceBlock);
+    }
+
+    @Override
     public void updateImageBlock(IImageBlock imageBlock, byte[] image, String filename) throws ImageCouldNotBeStoredException {
         IVSImage slideContentImage = saveImage(image, filename);
         storeImageFile(image, slideContentImage, filename);
@@ -408,7 +465,6 @@ public class ContentBlockManager implements IContentBlockManager {
     public void updateVideoBlock(IVideoBlock videoBlock, byte[] video, Long fileSize, String url, String filename,
             String title) throws VideoCouldNotBeStoredException {
         IVSVideo slideContentVideo = storeVideo(video, fileSize, filename, url, title);
-
         videoBlock.setVideo(slideContentVideo);
         videoBlockRepo.save((VideoBlock) videoBlock);
     }
@@ -436,6 +492,15 @@ public class ContentBlockManager implements IContentBlockManager {
         Optional<TextBlock> textBlock = textBlockRepo.findById(textBlockId);
         if (textBlock.isPresent()) {
             return textBlock.get();
+        }
+        return null;
+    }
+
+    @Override
+    public ISpaceBlock getSpaceBlock(String spaceBlockId) {
+        Optional<SpaceBlock> spaceBlock = spaceBlockRepo.findById(spaceBlockId);
+        if (spaceBlock.isPresent()) {
+            return spaceBlock.get();
         }
         return null;
     }
@@ -563,9 +628,10 @@ public class ContentBlockManager implements IContentBlockManager {
             contentBlockRepository.saveAll(contentBlockList);
         }
     }
-    
+
     @Override
-    public void saveVideoBlock(IVideoBlock videoBlock){
+    public void saveVideoBlock(IVideoBlock videoBlock) {
         videoRepo.save((VSVideo) videoBlock.getVideo());
+
     }
 }

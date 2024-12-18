@@ -755,6 +755,12 @@
     text-align: justify;
 }
 
+.SpaceDivStaff {
+    position: relative;
+    top: 0px;
+    overflow: visible;
+    text-align: justify;
+}
 .choiceDiv {
     position: relative;
     top: 0px;
