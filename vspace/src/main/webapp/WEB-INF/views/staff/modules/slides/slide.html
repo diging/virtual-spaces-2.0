@@ -2034,11 +2034,14 @@
                formData.append('id', blockId);
                $("#editReferenceAlert").hide();
                var biblioBlockId = $('#currentBiblioId').attr('value');
-               
+               console.log("id:")
+               console.log(biblioBlockId);
                var object = {};
                formData.forEach((value, key) => object[key] = value);
+               console.log(object);
                var jsonData = JSON.stringify(object);
                var token =  $('input[name="_csrf"]').attr('value');
+               console.log(jsonData);
                
                $.ajax({
                    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/bibliography/'})]" + biblioBlockId + ['/reference/edit'],
@@ -2056,10 +2059,12 @@
                        $(".open").removeClass("open");
                        },
                        error: function(data) {
+                    	   console.log("1");
                     		if (data.status == 403) {
                        			$("#loginAlert").show();
                        		}
                        		else {
+                       			console.log("2");
                            		var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
                            		$('.error').append(alert);
                        		}
