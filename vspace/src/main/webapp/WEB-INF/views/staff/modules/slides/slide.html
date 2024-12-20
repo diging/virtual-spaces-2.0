@@ -268,10 +268,10 @@
                     var note = $("div.open p span:eq(10)").text(); 
              	
              	    //showing the edit bibliography form with all the respective values
-             	    $("#editReferenceAlert").show();
+/*              	    $("#editReferenceAlert").show();
              	    var alert = $('<input type="hidden" id="currentBiblioId">');
              		$(alert).attr( 'value', $(e.target).closest('.biblioDivStaff').attr("id"));
-             		$('.modal-footer').append(alert); 
+             		$('.modal-footer').append(alert);  */
              	
              	    $("#editTitleRef").val(title);
                      $("#editAuthorRef").val(author);
@@ -1364,7 +1364,6 @@
             });
                 
              $("#submitBiblio").on("click", function(e) {
-             	console.log("submitBiblio");
                  e.preventDefault();
                  // ------------- creating Bibliography content blocks ------------
                  
@@ -1377,7 +1376,6 @@
          		formData.append('description', description);
          		++contentCount;
          		formData.append('contentOrder', contentCount);     
-         		console.log(formData);
          		$("#titleBiblio").val('');
          		$("#descriptionBiblio").val('');
          		$("#addBiblioAlert").hide();
@@ -1393,7 +1391,6 @@
          		object['contentOrder'] = contentCount;
          		
          		var jsonData = JSON.stringify(object);
-         		console.log(jsonData);
          
                  var token =  $('input[name="_csrf"]').attr('value');
                  $.ajax({
@@ -1465,7 +1462,7 @@
                  formData.append('type', type);
                  formData.append('note', note);
                  var biblioBlockId = $('#currentBiblioId').attr('value');
-                 console.log(biblioBlockId);
+
                  $("#titleRef").val('');
                  $("#authorRef").val('');
                  $("#yearRef").val('');
@@ -2034,8 +2031,6 @@
                formData.append('id', blockId);
                $("#editReferenceAlert").hide();
                var biblioBlockId = $('#currentBiblioId').attr('value');
-               console.log("id:")
-               console.log(biblioBlockId);
                var object = {};
                formData.forEach((value, key) => object[key] = value);
                console.log(object);
@@ -2059,12 +2054,11 @@
                        $(".open").removeClass("open");
                        },
                        error: function(data) {
-                    	   console.log("1");
                     		if (data.status == 403) {
                        			$("#loginAlert").show();
                        		}
                        		else {
-                       			console.log("2");
+                       			console.log("else executed");
                            		var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
                            		$('.error').append(alert);
                        		}
