@@ -38,6 +38,17 @@ public interface ISpaceManager {
     Iterable<Space> addIncomingLinkInfoToSpaces(Iterable<Space> spaces);
     
     Page<ISpace> findByNameOrDescription(Pageable requestedPage,String searchText);
+    
+    List<ISpace> findByName(String name);
 
-    List<ISpace> findByName(String searchText);
+    /**
+     * Method to return the requested spaces
+     * 
+     * @param pageNo. if pageNo<1, 1st page is returned, if pageNo>total pages,last
+     *                page is returned
+     * @return list of images in the requested pageNo and requested order.
+     */
+    List<ISpace> getSpaces(int pageNo, String sortedBy, String order);
+    
+    List<ISpace> getSpaces(int pageNo);
 }
