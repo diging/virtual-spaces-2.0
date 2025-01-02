@@ -229,6 +229,7 @@
             }
 
             function biblioBlockDoubleClick(e){
+               $(".EasyMDEContainer").remove();
          	   $(e.target).closest('.biblioDivStaff').addClass("open");
          	   var description = $("div.open p:eq(0)").text();
            	   defaultValue = description;
@@ -251,11 +252,12 @@
              } 
              
              function referenceBlockDoubleClick(e){
-         	   $(e.target).closest('.referenceDivStaff').addClass("open");
-         	   var description = $("div.open p:eq(0)").text();
-             	   defaultValue = description;
+            	    $(".EasyMDEContainer").remove();
+	         	    $(e.target).closest('.referenceDivStaff').addClass("open");
+	         	    var description = $("div.open p:eq(0)").text();
+             	    defaultValue = description;
              	
-             	   var title = $("div.open p span:eq(0)").text();
+             	    var title = $("div.open p span:eq(0)").text();
                     var author = $("div.open p span:eq(1)").text();
                     var year = $("div.open p span:eq(2)").text();
                     var journal = $("div.open p span:eq(3)").text();
@@ -268,12 +270,13 @@
                     var note = $("div.open p span:eq(10)").text(); 
              	
              	    //showing the edit bibliography form with all the respective values
-/*              	    $("#editReferenceAlert").show();
-             	    var alert = $('<input type="hidden" id="currentBiblioId">');
-             		$(alert).attr( 'value', $(e.target).closest('.biblioDivStaff').attr("id"));
-             		$('.modal-footer').append(alert);  */
-             	
-             	    $("#editTitleRef").val(title);
+		    	    $("#editReferenceAlert").show();
+		    	    var alert = $('<input type="hidden" id="currentBiblioId">');
+		    		/* $(alert).attr( 'value', $(this).parent().parent().parent().attr("id"));*/
+		    		$(alert).attr( 'value', $(e.target).closest('.biblioDivStaff').attr("id"));
+		    		$('.modal-footer').append(alert); 
+		             	
+             	     $("#editTitleRef").val(title);
                      $("#editAuthorRef").val(author);
                      $("#editYearRef").val(year);
                      $("#editJournalRef").val(journal);
@@ -305,6 +308,7 @@
              }
              
             function spaceBlockDoubleClick(e) {
+            	$(".EasyMDEContainer").remove();
                 var divName = $(e.target).closest('div').attr('class');
                 let spaceId = e.target.closest('div').id;
                 $(e.target).closest('.SpaceDivStaff').addClass("open");
@@ -320,6 +324,7 @@
             }
             
             function imageBlockDoubleClick(e){
+            	$(".EasyMDEContainer").remove();
                 var divName = $(e.target).closest('div').attr('class');
                 var imgBlockID = $(e.target).attr('id'); 
             	if(imgBlockID != ''){
@@ -2033,7 +2038,6 @@
                var biblioBlockId = $('#currentBiblioId').attr('value');
                var object = {};
                formData.forEach((value, key) => object[key] = value);
-               console.log(object);
                var jsonData = JSON.stringify(object);
                var token =  $('input[name="_csrf"]').attr('value');
                console.log(jsonData);
