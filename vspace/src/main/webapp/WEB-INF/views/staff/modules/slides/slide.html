@@ -54,6 +54,7 @@
             var addVideoClk=0;
             var editVideoClk=0;
             var currentBlockId;
+            var currentRefId;
             
             $(function () {
             	  $('[data-toggle="tooltip"]').tooltip()
@@ -252,6 +253,7 @@
              } 
              
              function referenceBlockDoubleClick(e){
+            	 	currentRefId = $(this).find('#deleteReferenceId').val();
             	    $(".EasyMDEContainer").remove();
 	         	    $(e.target).closest('.referenceDivStaff').addClass("open");
 	         	    var description = $("div.open p:eq(0)").text();
@@ -2005,7 +2007,7 @@
              });
              
              $("#submitRefBlock").on("click", function(e){
-           	  e.preventDefault();
+           	   e.preventDefault();
                // ------------- editting Ref blocks ------------
                
                var formData = new FormData();
@@ -2033,7 +2035,7 @@
                formData.append('editors', editors);
                formData.append('type', type);
                formData.append('note', note);
-               formData.append('id', blockId);
+               formData.append('id', currentRefId);
                $("#editReferenceAlert").hide();
                var biblioBlockId = $('#currentBiblioId').attr('value');
                var object = {};
@@ -2054,8 +2056,9 @@
                    data: jsonData,
                    success: function(data) {
                        //replace Reference box with new values
-                       updateReferenceBox(blockId, formData)
+                       updateReferenceBox(blockId, formData);
                        $(".open").removeClass("open");
+                       window.location.reload();
                        },
                        error: function(data) {
                     		if (data.status == 403) {
