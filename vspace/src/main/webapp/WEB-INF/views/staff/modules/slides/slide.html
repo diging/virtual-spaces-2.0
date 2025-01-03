@@ -1860,7 +1860,7 @@
                 			+ '</span>, Note: <span>' + formData.get('note')
                 			+ '</span></p><input type="hidden" id="deleteReferenceId" value="'+blockId+'" /><a class="btn deleteReference col-md-1" href="javascript:;"> <span class="icon-trash error"></span></a>');
                  
-                	//reset border of the card
+                	//reset border of the card 
                  //rebind event handlers
                  $('.referenceDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(referenceBlockDoubleClick);
                  $(".open").css('display', 'flex');
@@ -2042,7 +2042,6 @@
                formData.forEach((value, key) => object[key] = value);
                var jsonData = JSON.stringify(object);
                var token =  $('input[name="_csrf"]').attr('value');
-               console.log(jsonData);
                
                $.ajax({
                    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/bibliography/'})]" + biblioBlockId + ['/reference/edit'],
@@ -2058,14 +2057,12 @@
                        //replace Reference box with new values
                        updateReferenceBox(blockId, formData);
                        $(".open").removeClass("open");
-                       window.location.reload();
                        },
                        error: function(data) {
                     		if (data.status == 403) {
                        			$("#loginAlert").show();
                        		}
                        		else {
-                       			console.log("else executed");
                            		var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
                            		$('.error').append(alert);
                        		}
