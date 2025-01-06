@@ -11,9 +11,12 @@ import org.apache.tika.Tika;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.ExhibitionRepository;
@@ -31,6 +34,7 @@ import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
+import edu.asu.diging.vspace.core.model.SortByField;
 import edu.asu.diging.vspace.core.model.display.ISpaceDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.SpaceDisplay;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
@@ -83,7 +87,7 @@ public class SpaceManager implements ISpaceManager {
 
     @Autowired
     private SpaceLinkDisplayRepository spaceLinkDisplayRepo;
-    
+
     @Autowired
     private IExhibitionSpaceOrderUtility exhibitionSpaceOrderUtility;
 
@@ -93,6 +97,8 @@ public class SpaceManager implements ISpaceManager {
     @Autowired
     private SpacesCustomOrderRepository spacesCustomOrderRepo;
 
+    @Value("${page_size}")
+    private int pageSize;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -341,4 +347,56 @@ public class SpaceManager implements ISpaceManager {
         return exhibitionSpaceOrderUtility.sortSpaces(spaces, exhibition.getSpaceOrderMode());
     }
 
+    @Override
+    public List<ISpace> findByName(String searchText){
+        String searchTerm = "%" + searchText + "%";
+        List<Space> spaces = spaceRepo.findByNameLike(searchTerm);
+        List<ISpace> spaceResults = new ArrayList<>();
+        spaces.forEach(r -> spaceResults.add(r));
+        return spaceResults;
+    }
+    
+    @Override
+    public List<ISpace> getSpaces(int pageNo) {
+        return getSpaces(pageNo, SortByField.CREATION_DATE.getValue(), Sort.Direction.DESC.toString());
+    }
+    /**
+     * Method to return the requested spaces
+     * 
+     * @param pageNo. if pageNo<1, 1st page is returned, if pageNo>total pages,last
+     *                page is returned
+     * @return list of images in the requested pageNo and requested order.
+     */
+    @Override
+    public List<ISpace> getSpaces(int pageNo, String sortedBy, String order) {
+        Sort sortingParameters = getSortingParameters(sortedBy, order);
+        if(pageNo < 1) {
+            pageNo = 1;
+        }
+        Pageable pagable = PageRequest.of(pageNo - 1, pageSize, sortingParameters);
+        Page<Space> spaces = spaceRepo.findAll(pagable);
+        if(spaces.getContent().size() == 0) {
+            pagable = PageRequest.of(spaces.getTotalPages() - 1, pageSize, sortingParameters);
+            spaces = spaceRepo.findAll(pagable);
+        }
+        List<ISpace> results = new ArrayList<>();
+        if(spaces != null) {
+            spaces.getContent().forEach(i -> results.add(i));
+        }
+        return results;
+    }
+    
+    private Sort getSortingParameters(String sortedBy, String order) {
+        Sort sortingParameters = Sort.by(SortByField.CREATION_DATE.getValue()).descending();
+        if(sortedBy!=null && SortByField.getAllValues().contains(sortedBy)) {
+            sortingParameters = Sort.by(sortedBy);
+        }
+        if(order!=null && order.equalsIgnoreCase(Sort.Direction.ASC.toString())) {
+            sortingParameters = sortingParameters.ascending();
+        } else {
+            sortingParameters = sortingParameters.descending();
+        }
+        return sortingParameters;
+    }
+    
 }
