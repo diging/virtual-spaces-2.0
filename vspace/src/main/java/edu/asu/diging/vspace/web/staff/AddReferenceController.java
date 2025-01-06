@@ -51,9 +51,6 @@ public class AddReferenceController {
         
         IBiblioBlock biblio = contentBlockManager.getBiblioBlock(biblioId);
         IReference ref = referenceManager.createReference(biblio, title, author,year,journal,url,volume,issue,pages,editor,type,note);
-        System.out.print("XXXXXX\n\n\n\n\n\n\nXXXXXX0000");
-        System.out.println(ref.getId());
-        System.out.print("ooooXXXXXX\n\n\n\n\n\n\nXXXXXX");
         return new ResponseEntity<>(mapper.writeValueAsString(ref), HttpStatus.OK);
     }
 

@@ -28,29 +28,9 @@ public class EditReferenceController {
     public ResponseEntity<String> editReference(@PathVariable("id") String slideId,
             @PathVariable("moduleId") String moduleId, @PathVariable("biblioId") String biblioId, 
             @RequestBody String ref) throws IOException {
-    	
-//    	System.out.print("XXXXXX\n\n\n\n\n\n\nXXXXXX");
-//    	System.out.print(ref.getId());
-//    	System.out.print("YYYYXXXXXX\n\n\n\n\n\n\nXXXXXX");
-//    	
-//    	IReference reference = referenceManager.getReference(ref.getId());
-//        reference.setTitle(ref.getTitle());
-//        reference.setAuthor(ref.getAuthor());
-//        reference.setYear(ref.getYear());
-//        reference.setJournal(ref.getJournal());
-//        reference.setUrl(ref.getUrl());
-//        reference.setVolume(ref.getVolume());
-//        reference.setIssue(ref.getIssue());
-//        reference.setPages(ref.getPages());
-//        reference.setEditors(ref.getEditors());
-//        reference.setType(ref.getType());
-//        reference.setNote(ref.getNote());
-//        referenceManager.updateReference((Reference) reference);
         
         ObjectMapper mapper = new ObjectMapper();
         JsonNode rootNode = mapper.readTree(ref);
-        
-        System.out.println(ref);
         
         String title = rootNode.get("title").asText();
         String author = rootNode.get("author").asText();
