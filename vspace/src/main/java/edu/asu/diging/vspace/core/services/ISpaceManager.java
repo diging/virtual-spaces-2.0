@@ -40,7 +40,7 @@ public interface ISpaceManager {
     Page<ISpace> findByNameOrDescription(Pageable requestedPage,String searchText);
     
     List<ISpace> findByName(String name);
-    
+
     List<ISpace> findByNamePaginated(String name, int page, int pageSize);
 
     /**

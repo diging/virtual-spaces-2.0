@@ -58,3 +58,4 @@ public class StaffSpacesSearchController {
         return new ResponseEntity<>(result.toString(), HttpStatus.OK);
     }
 }
+

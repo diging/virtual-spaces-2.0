@@ -315,6 +315,7 @@ public class SpaceManager implements ISpaceManager {
     }
     
     @Override
+<<<<<<< HEAD
     public List<ISpace> findByNamePaginated(String searchText, int page, int pageSize) {
         String searchTerm = "%" + searchText + "%";
         Pageable pageable = PageRequest.of(page - 1, pageSize);
@@ -336,6 +337,8 @@ public class SpaceManager implements ISpaceManager {
 
     
     @Override
+=======
+>>>>>>> develop
     public List<ISpace> getSpaces(int pageNo) {
         return getSpaces(pageNo, SortByField.CREATION_DATE.getValue(), Sort.Direction.DESC.toString());
     }
