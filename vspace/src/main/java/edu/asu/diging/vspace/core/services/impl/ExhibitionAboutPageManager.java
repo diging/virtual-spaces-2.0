@@ -3,7 +3,9 @@ package edu.asu.diging.vspace.core.services.impl;
 import java.util.ArrayList;
 
 import java.util.List;
+
 import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.util.StringUtils;
@@ -11,6 +13,7 @@ import org.thymeleaf.util.StringUtils;
 import edu.asu.diging.vspace.core.data.ExhibitionAboutPageRepository;
 import edu.asu.diging.vspace.core.data.ExhibitionLanguageRepository;
 import edu.asu.diging.vspace.core.data.LocalizedTextRepository;
+import edu.asu.diging.vspace.core.data.ExhibitionAboutPageRepository;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ILocalizedText;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;

@@ -4,13 +4,22 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+
 import javax.transaction.Transactional;
+
 import org.apache.tika.Tika;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
 import edu.asu.diging.vspace.core.data.ExhibitionRepository;
 import edu.asu.diging.vspace.core.data.ImageRepository;
 import edu.asu.diging.vspace.core.data.SpaceLinkRepository;
@@ -20,12 +29,11 @@ import edu.asu.diging.vspace.core.data.display.SpaceLinkDisplayRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
-import edu.asu.diging.vspace.core.factory.ILocalizedTextFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceDisplayFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
-import edu.asu.diging.vspace.core.model.ILocalizedText;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
+import edu.asu.diging.vspace.core.model.SortByField;
 import edu.asu.diging.vspace.core.model.display.ISpaceDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.SpaceDisplay;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
@@ -37,8 +45,6 @@ import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.impl.model.ImageData;
-import edu.asu.diging.vspace.web.staff.forms.LocalizedTextForm;
-import edu.asu.diging.vspace.web.staff.forms.SpaceForm;
 
 @Transactional
 @Service
@@ -55,6 +61,7 @@ public class SpaceManager implements ISpaceManager {
     private ImageRepository imageRepo;
 
     @Autowired
+    @Qualifier("storageEngineUploads")
     private IStorageEngine storage;
 
     @Autowired
@@ -77,10 +84,12 @@ public class SpaceManager implements ISpaceManager {
 
     @Autowired
     private SpaceLinkDisplayRepository spaceLinkDisplayRepo;
+    
+    @Value("${page_size}")
+    private int pageSize;
 
-    @Autowired
-    private ILocalizedTextFactory localizedTextFactory;
-   
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
     /*
      * (non-Javadoc)
      * 
@@ -298,31 +307,56 @@ public class SpaceManager implements ISpaceManager {
         return spaceRepo.findDistinctByNameContainingOrDescriptionContaining(requestedPage, searchText,searchText);
     }
     
-    /**
-     * Adds name to spaceNames List of the given space object.
-     * @param space The space to which the name will be added.
-     * @param name The localized text form containing the name to be added.
-     */
     @Override
-    public void addSpaceDetails(ISpace space, LocalizedTextForm name, List<ILocalizedText> localizedTextList) {
-        localizedTextFactory.createLocalizedText(space, name, localizedTextList);
+    public List<ISpace> findByName(String searchText){
+        String searchTerm = "%" + searchText + "%";
+        List<Space> spaces = spaceRepo.findByNameLike(searchTerm);
+        List<ISpace> spaceResults = new ArrayList<>();
+        spaces.forEach(r -> spaceResults.add(r));
+        return spaceResults;
     }
     
     @Override
-    public void updateNameAndDescription(ISpace space, SpaceForm spaceForm) {
-        space.setName(spaceForm.getDefaultName().getText());
-        space.setDescription(spaceForm.getDefaultDescription().getText());
-        List<ILocalizedText> names = space.getSpaceNames();
-        List<ILocalizedText> descriptions = space.getSpaceDescriptions();
-        
-        addSpaceDetails(space,spaceForm.getDefaultName(), names);
-        addSpaceDetails(space,spaceForm.getDefaultDescription(), descriptions);
-        for(LocalizedTextForm title:spaceForm.getNames()) {   
-            addSpaceDetails(space,title, names);
-        }
-        for(LocalizedTextForm text:spaceForm.getDescriptions()) {
-            addSpaceDetails(space,text, descriptions);
-        }
+    public List<ISpace> getSpaces(int pageNo) {
+        return getSpaces(pageNo, SortByField.CREATION_DATE.getValue(), Sort.Direction.DESC.toString());
     }
-   
+    /**
+     * Method to return the requested spaces
+     * 
+     * @param pageNo. if pageNo<1, 1st page is returned, if pageNo>total pages,last
+     *                page is returned
+     * @return list of images in the requested pageNo and requested order.
+     */
+    @Override
+    public List<ISpace> getSpaces(int pageNo, String sortedBy, String order) {
+        Sort sortingParameters = getSortingParameters(sortedBy, order);
+        if(pageNo < 1) {
+            pageNo = 1;
+        }
+        Pageable pagable = PageRequest.of(pageNo - 1, pageSize, sortingParameters);
+        Page<Space> spaces = spaceRepo.findAll(pagable);
+        if(spaces.getContent().size() == 0) {
+            pagable = PageRequest.of(spaces.getTotalPages() - 1, pageSize, sortingParameters);
+            spaces = spaceRepo.findAll(pagable);
+        }
+        List<ISpace> results = new ArrayList<>();
+        if(spaces != null) {
+            spaces.getContent().forEach(i -> results.add(i));
+        }
+        return results;
+    }
+    
+    private Sort getSortingParameters(String sortedBy, String order) {
+        Sort sortingParameters = Sort.by(SortByField.CREATION_DATE.getValue()).descending();
+        if(sortedBy!=null && SortByField.getAllValues().contains(sortedBy)) {
+            sortingParameters = Sort.by(sortedBy);
+        }
+        if(order!=null && order.equalsIgnoreCase(Sort.Direction.ASC.toString())) {
+            sortingParameters = sortingParameters.ascending();
+        } else {
+            sortingParameters = sortingParameters.descending();
+        }
+        return sortingParameters;
+    }
+    
 }
