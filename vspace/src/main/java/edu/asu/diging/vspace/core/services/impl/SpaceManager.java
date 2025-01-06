@@ -315,15 +315,6 @@ public class SpaceManager implements ISpaceManager {
     }
     
     @Override
-    public List<ISpace> findByName(String searchText){
-        String searchTerm = "%" + searchText + "%";
-        List<Space> spaces = spaceRepo.findByNameLike(searchTerm);
-        List<ISpace> spaceResults = new ArrayList<>();
-        spaces.forEach(r -> spaceResults.add(r));
-        return spaceResults;
-    }
-    
-    @Override
     public List<ISpace> getSpaces(int pageNo) {
         return getSpaces(pageNo, SortByField.CREATION_DATE.getValue(), Sort.Direction.DESC.toString());
     }
