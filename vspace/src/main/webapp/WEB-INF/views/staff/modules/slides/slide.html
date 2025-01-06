@@ -1990,7 +1990,7 @@
                      data: jsonData,
                      success: function(data) {
                          //replace Biblio box with new values
-                         updateBiblioBox(blockId, formData)
+                         updateBiblioBox(blockId, formData);
                          $(".open").removeClass("open");
                          location.reload();
                     },
@@ -2037,6 +2037,7 @@
                formData.append('note', note);
                formData.append('id', currentRefId);
                $("#editReferenceAlert").hide();
+               $("#editBiblioAlert").hide();
                var biblioBlockId = $('#currentBiblioId').attr('value');
                var object = {};
                formData.forEach((value, key) => object[key] = value);
@@ -2057,6 +2058,7 @@
                        //replace Reference box with new values
                        updateReferenceBox(blockId, formData);
                        $(".open").removeClass("open");
+                       location.reload();
                        },
                        error: function(data) {
                     		if (data.status == 403) {
