@@ -53,6 +53,6 @@ public interface ISpaceManager {
     List<ISpace> getSpaces(int pageNo, String sortedBy, String order);
     
     List<ISpace> getSpaces(int pageNo);
-
-	List<ISpace> getAllSpacesPaginated(int page, int pageSize);
+    
+    List<ISpace> getAllSpacesPaginated(int page, int pageSize);
 }
