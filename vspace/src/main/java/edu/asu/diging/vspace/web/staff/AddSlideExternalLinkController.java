@@ -15,7 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import edu.asu.diging.vspace.core.exception.SlideDoesNotExistException;
-import edu.asu.diging.vspace.core.model.IExternalLinkSlide;
+import edu.asu.diging.vspace.core.model.ISlideExternalLink;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.services.ISlideExternalLinkManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
@@ -40,14 +40,14 @@ public class AddSlideExternalLinkController {
             return new ResponseEntity<>("{'error': 'Slide could not be found.'}", HttpStatus.NOT_FOUND);
         }
 
-        IExternalLinkSlide externalLinkSlide = slideExternalLinkManager.createExternalLink(label, externalLink, slideId);
-        slide.getExternalLinks().add(externalLinkSlide);
+        ISlideExternalLink slideExternalLink = slideExternalLinkManager.createExternalLink(label, externalLink, slideId);
+        slide.getExternalLinks().add(slideExternalLink);
         slideManager.updateSlide(slide);
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode linkNode = mapper.createObjectNode();
-        linkNode.put("label", externalLinkSlide.getLabel());
+        linkNode.put("label", slideExternalLink.getLabel());
         linkNode.put("id", slide.getExternalLinks().get(slide.getExternalLinks().size() - 1).getId());
-        linkNode.put("url", externalLinkSlide.getExternalLink());
+        linkNode.put("url", slideExternalLink.getExternalLink());
  
         return new ResponseEntity<>(mapper.writeValueAsString(linkNode), HttpStatus.OK);
     }

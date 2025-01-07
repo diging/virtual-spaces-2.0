@@ -1,6 +1,6 @@
 package edu.asu.diging.vspace.core.model;
 
-public interface IExternalLinkSlide{
+public interface ISlideExternalLink{
     
     String getId();
     

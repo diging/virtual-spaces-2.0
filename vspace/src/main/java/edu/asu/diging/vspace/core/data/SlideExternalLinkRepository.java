@@ -6,12 +6,12 @@ import org.javers.spring.annotation.JaversSpringDataAuditable;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
-import edu.asu.diging.vspace.core.model.IExternalLinkSlide;
-import edu.asu.diging.vspace.core.model.impl.ExternalLinkSlide;
+import edu.asu.diging.vspace.core.model.ISlideExternalLink;
+import edu.asu.diging.vspace.core.model.impl.SlideExternalLink;
 
 @Repository
 @JaversSpringDataAuditable
-public interface SlideExternalLinkRepository extends PagingAndSortingRepository<ExternalLinkSlide, String> {
+public interface SlideExternalLinkRepository extends PagingAndSortingRepository<SlideExternalLink, String> {
 
-    public List<IExternalLinkSlide> findBySlide_Id(String slideId);
+    public List<ISlideExternalLink> findBySlide_Id(String slideId);
 }

@@ -9,11 +9,11 @@ import javax.persistence.ManyToOne;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
-import edu.asu.diging.vspace.core.model.IExternalLinkSlide;
+import edu.asu.diging.vspace.core.model.ISlideExternalLink;
 import edu.asu.diging.vspace.core.model.ISlide;
 
 @Entity
-public class ExternalLinkSlide extends VSpaceElement implements IExternalLinkSlide {
+public class SlideExternalLink extends VSpaceElement implements ISlideExternalLink {
     
     @Id 
     @GeneratedValue(generator = "extlinkslide_id_generator")

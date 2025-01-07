@@ -16,7 +16,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
 import edu.asu.diging.vspace.core.exception.SlideDoesNotExistException;
-import edu.asu.diging.vspace.core.model.IExternalLinkSlide;
+import edu.asu.diging.vspace.core.model.ISlideExternalLink;
 import edu.asu.diging.vspace.core.services.ISlideExternalLinkManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 
@@ -38,19 +38,15 @@ public class EditSlideExternalLinkController {
         if (slideManager.getSlide(slideId) == null) {
             return new ResponseEntity<>("{'error': 'Slide could not be found.'}", HttpStatus.NOT_FOUND);
         }
-        IExternalLinkSlide link = externalLinkManager.updateExternalLink(title, externalLink, id);
-        return success(link.getId(), link.getExternalLink(), title, null, null);
+        ISlideExternalLink link = externalLinkManager.updateExternalLink(title, externalLink, id);
+        return success(link.getId(), link.getExternalLink(), title);
     }
     
-    public ResponseEntity<String> success(String id, String url, String label, String linkedId, String linkedSlideStatus) throws IOException{
+    private ResponseEntity<String> success(String id, String url, String label) throws IOException{
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode linkNode = mapper.createObjectNode();
         linkNode.put("id", id);
         linkNode.put("label", label);
-        linkNode.put("linkedId", linkedId);
-        if(linkedSlideStatus!=null) {
-            linkNode.put("linkedSlideStatus", linkedSlideStatus);
-        }
         if(url!=null) {
             linkNode.put("url", url);
         }
