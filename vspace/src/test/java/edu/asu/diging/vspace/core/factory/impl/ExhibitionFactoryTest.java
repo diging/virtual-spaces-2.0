@@ -30,7 +30,7 @@ public class ExhibitionFactoryTest {
     }
 
     @Test
-    public void test_createExhibition_success() {
+    public void test_CreateExhibition_success() {
         IExhibition exhibition = factory.createExhibition();
         assertNotNull(exhibition);
         assertNotNull(exhibition.getPreviewId());
@@ -38,7 +38,7 @@ public class ExhibitionFactoryTest {
     }
 
     @Test
-    public void test_updatePreviewId_success() {
+    public void test_UpdatePreviewId_success() {
         ExhibitionFactory factory = new ExhibitionFactory();
         Exhibition exhibition = new Exhibition();
         factory.updatePreviewId(exhibition);
