@@ -2,6 +2,7 @@ package edu.asu.diging.vspace.web.staff;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -65,7 +66,14 @@ public class ExhibitionConfigurationController {
         }
         model.addAttribute("exhibitionModes", Arrays.asList(ExhibitionModes.values()));
         model.addAttribute("spacesList", spaceRepo.findAll());
-        model.addAttribute("languageList", exhibitionLanguageConfig.getExhibitionLanguageList());
+        List<Map<String, Object>> sortedLanguageList = exhibitionLanguageConfig.getExhibitionLanguageList().stream()
+                .sorted((lang1, lang2) -> {
+                    String label1 = (String) lang1.get("label");
+                    String label2 = (String) lang2.get("label");
+                    return label1.compareToIgnoreCase(label2);
+                })
+                .collect(Collectors.toList());
+        model.addAttribute("languageList", sortedLanguageList);
         model.addAttribute("exhibition", exhibition);
         return "staff/exhibit/config";
     }
