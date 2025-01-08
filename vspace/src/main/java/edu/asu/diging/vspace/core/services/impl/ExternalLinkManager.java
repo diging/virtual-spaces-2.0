@@ -115,7 +115,7 @@ public class ExternalLinkManager extends LinkManager<IExternalLink, ExternalLink
     public IExternalLinkDisplay createLink(String title, String id, float positionX, float positionY, int rotation,
             String linkedId, String linkLabel, String desc, DisplayType displayType, byte[] linkImage, String imageFilename,
             ExternalLinkDisplayMode howToOpen, String imageId )
-            throws SpaceDoesNotExistException, ImageCouldNotBeStoredException, SpaceDoesNotExistException, ImageDoesNotExistException {
+            throws SpaceDoesNotExistException, ImageCouldNotBeStoredException, SpaceDoesNotExistException, ImageDoesNotExistException, NullpointerException {
 
 
         /*
@@ -127,6 +127,9 @@ public class ExternalLinkManager extends LinkManager<IExternalLink, ExternalLink
          */
         IExternalLinkDisplay externalLinkDisplay = createLink(title, id, positionX, positionY, rotation, linkedId,
                 linkLabel, desc, displayType, linkImage, imageFilename, imageId);
+        if (externalLinkDisplay == null) {
+            throw new NullPointerException("ExternalLinkDisplay object is null");
+        }
         externalLinkDisplay.setHowToOpen(howToOpen);
         return externalLinkDisplay;
 
