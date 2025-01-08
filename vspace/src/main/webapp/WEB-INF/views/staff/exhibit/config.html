@@ -5,11 +5,6 @@
 
 <script th:inline="javascript">
 		$(document).ready(function() {
-
-		    $(function (){
-		    	$('[data-toggle="tooltip"]').tooltip()
-		    });
-		    
 		    var offlineMessage = $('#offlineMessage');
 		    if ('[(${exhibition})]' != null && '[(${exhibition.mode})]' == 'OFFLINE') {
 		        offlineMessage.show();
