@@ -63,8 +63,24 @@ public abstract class LinkManager<L extends ILink<T>, T extends IVSpaceElement, 
     @Override
     public U createLink(String title, String id, float positionX, float positionY, int rotation, String linkedId,
             String linkLabel, String linkDesc, DisplayType displayType, byte[] linkImage, String imageFilename, String existingImageId)
-            throws SpaceDoesNotExistException, ImageCouldNotBeStoredException, SpaceDoesNotExistException, ImageDoesNotExistException {
+            throws SpaceDoesNotExistException, ImageCouldNotBeStoredException, ImageDoesNotExistException {
 
+        if (title == null || title.trim().isEmpty()) {
+            throw new IllegalArgumentException("Title cannot be null or empty.");
+        }
+        if (id == null || id.trim().isEmpty()) {
+            throw new IllegalArgumentException("ID cannot be null or empty.");
+        }
+        if (linkedId == null || linkedId.trim().isEmpty()) {
+            throw new SpaceDoesNotExistException("Linked ID cannot be null or empty.");
+        }
+        if (displayType == null) {
+            throw new IllegalArgumentException("DisplayType cannot be null.");
+        }
+        if ((linkImage == null || linkImage.length == 0) && (existingImageId == null || existingImageId.trim().isEmpty())) {
+            throw new ImageDoesNotExistException("Either linkImage or existingImageId must be provided.");
+        }
+        
         L link = createLinkObject(title, id);
         T target = getTarget(linkedId);
         link.setName(linkLabel);
