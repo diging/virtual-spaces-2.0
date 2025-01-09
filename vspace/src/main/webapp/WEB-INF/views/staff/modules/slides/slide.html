@@ -1214,15 +1214,12 @@
                         url: [[@{|/staff/spaces/search|}]],
                         dataType: 'json',
                         success: function(result) {
-                        	console.log("results")
-                        	console.log(result)
                         	items = result['items']
                             let spaceName = null;
                             for (let i = 0; i < items.length; i++) {
                                 const space = items[i];
                                 if (space.id === spaceId) {
                                     spaceName = space.name;
-                                    console.log(spaceName)
                                     break;
                                 }
                             }

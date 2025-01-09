@@ -35,11 +35,17 @@ public class StaffSpacesSearchController {
         boolean hasMore;
 
         if (search != null && !search.trim().isEmpty()) {
-            spaces = spaceManager.findByNamePaginated(search, page, PAGE_SIZE);
-            hasMore = spaces.size() == PAGE_SIZE;
+            spaces = spaceManager.findByNamePaginated(search, page, PAGE_SIZE + 1);
+            hasMore = spaces.size() > PAGE_SIZE;
+            if (hasMore) {
+                spaces = spaces.subList(0, PAGE_SIZE);
+            }
         } else {
-            spaces = spaceManager.getAllSpacesPaginated(page, PAGE_SIZE);
-            hasMore = spaces.size() == PAGE_SIZE;
+            spaces = spaceManager.getAllSpacesPaginated(page, PAGE_SIZE + 1);
+            hasMore = spaces.size() > PAGE_SIZE;
+            if (hasMore) {
+                spaces = spaces.subList(0, PAGE_SIZE);
+            }
         }
 
         ObjectMapper mapper = new ObjectMapper();

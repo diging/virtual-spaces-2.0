@@ -211,6 +211,15 @@ public class SpaceManager implements ISpaceManager {
         spaceRepo.findAll().forEach(s -> spaces.add(s));
         return spaces;
     }
+    
+    @Override
+    public List<ISpace> getAllSpacesPaginated(int page, int pageSize) {
+        Pageable pageable = PageRequest.of(page - 1, pageSize);
+        Page<Space> spacePage = spaceRepo.findAll(pageable);
+        List<ISpace> spaceResults = new ArrayList<>();
+        spacePage.forEach(spaceResults::add);
+        return spaceResults;
+    }
 
     @Override
     public List<ISpace> getSpacesWithStatus(SpaceStatus status) {
@@ -323,17 +332,6 @@ public class SpaceManager implements ISpaceManager {
         spacePage.forEach(spaceResults::add);
         return spaceResults;
     }
-    
-    @Override
-    public List<ISpace> getAllSpacesPaginated(int page, int pageSize) {
-        Pageable pageable = PageRequest.of(page - 1, pageSize);
-        Page<Space> spacePage = spaceRepo.findAll(pageable);
-        List<ISpace> spaceResults = new ArrayList<>();
-        spacePage.forEach(spaceResults::add);
-        return spaceResults;
-    }
-
-
     
     @Override
     public List<ISpace> getSpaces(int pageNo) {
