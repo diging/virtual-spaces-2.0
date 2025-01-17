@@ -38,6 +38,9 @@
     visibility: visible;
 }
 
+ul{
+    list-style-type: none;
+}
 .tooltiptextForExitFullscreen {
     visibility: hidden;
     width: 120px;
@@ -52,6 +55,40 @@
     top: -15px;
     background: rgba(0, 0, 0, 0.6);
 }
+
+.biblioDiv {
+    border: 1px solid lightgray;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 16px 0;
+    background-color: #f9f9f9;
+}
+
+.biblioDiv h3 {
+    margin-top: 0;
+    font-family: 'Arial', sans-serif;
+}
+
+.biblioDiv p {
+    margin: 8px 0; 
+    font-size: 14px;
+}
+
+.biblioDiv ul {
+    list-style: none;
+    padding: 0;
+    margin: 16px 0 0 0;
+}
+
+.referenceDiv {
+    border: 1px solid lightgray;
+    border-radius: 8px;
+    padding: 8px;
+    background-color: white;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
 <script th:inline="javascript">       
@@ -185,11 +222,22 @@
 								<div th:id="${contentRef.id}" class="referenceDiv">
 									[(${contentRef.htmlRenderedReference()})]
 								</div>
-								<span class='Z3988' th:title='${contentRef.urlEncodedRefMetaData()}' > </span>
 							</li>
 						</div>
 					</ul>
                 </div>
+               <div th:if="${contents['class'].simpleName ==  'VideoBlock'}" th:id="${contents.id}" class="VideoDiv">
+                  <div>
+                     <h3><strong>[[${contents.video.title}]]</strong></h3>
+                     <br/>
+                     <iframe th:id="${contents.id}" width="800" height="530" th:src="${contents.video.url}" th:if="${contents.video.url}" frameborder="0"
+                        allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen ></iframe>
+                     <video th:id="${contents.id}" width="800" height="530" th:if="${contents.video.url == null}" controls >
+                        <source th:src="@{'/api/video/'+${contents.video.id}}" type="video/mp4"/>
+                     </video>
+                  </div>
+               </div>
                 <div th:if="${contents['class'].simpleName ==  'SpaceBlock'}" th:id="${contents.id}" class="textDiv">
                 <a th:href="@{'/exhibit/space/'+${contents.space?.id}}">[(${contents.title})]</a></div>
                 <div th:if="${contents['class'].simpleName == 'ChoiceBlock'}" th:id="${contents.id}" class="textDiv" style="margin: 1%;">

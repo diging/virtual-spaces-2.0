@@ -166,9 +166,9 @@ public class Reference extends VSpaceElement implements IReference {
 
     @Override
     public String toString() {
-        return "Reference title=" + title + ", author=" + author + ", year=" + year + ", journal=" + journal + ", url=" + url
-                + ", volume=" + volume + ", issue=" + issue + ", pages=" + pages + ", editors=" + editors + ", type="
-                + type + ", note=" + note;
+        return  title + ", " + author + ", " + year + ", " + journal + ", " + url
+                + ", " + volume + ", " + issue + ", " + pages + ", " + editors + ", "
+                + type + ", " + note;
     }
 
     public String htmlRenderedReference() {
