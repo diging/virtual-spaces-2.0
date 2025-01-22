@@ -1,6 +1,8 @@
 package edu.asu.diging.vspace.core.model.impl;
 
 import java.util.Objects;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -19,7 +21,7 @@ public class ExhibitionLanguage extends VSpaceElement implements IExhibitionLang
     
     private String label;
     
-    @ManyToOne(targetEntity = Exhibition.class)
+    @ManyToOne(targetEntity = Exhibition.class, cascade=CascadeType.ALL)
     private Exhibition exhibition;
     
     private String code;
