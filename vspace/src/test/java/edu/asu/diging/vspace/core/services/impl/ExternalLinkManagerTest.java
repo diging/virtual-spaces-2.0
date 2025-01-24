@@ -105,7 +105,7 @@ public class ExternalLinkManagerTest {
         Mockito.when(externalLinkRepo.save((ExternalLink) externalLink)).thenReturn((ExternalLink)externalLink);
         Mockito.when(externalLinkDisplayRepo.save((ExternalLinkDisplay)externalDisplayLink)).thenReturn((ExternalLinkDisplay)externalDisplayLink);
 
-        IExternalLinkDisplay savedExternalLinkDisplay1 = managerToTest.createLink("New External Link","EXL001", 10.0f, 30.0f, 40, "EXL001", "New External Link", "Description", DisplayType.ARROW, null, null, null, null);
+        IExternalLinkDisplay savedExternalLinkDisplay1 = managerToTest.createLink("New External Link","EXL001", 10.0f, 30.0f, 40, "EXL001", "New External Link", "Description", DisplayType.ARROW, null, null, null, "IMG000000001");
         Assert.assertEquals(externalDisplayLink.getId(), savedExternalLinkDisplay1.getId());
         Assert.assertEquals(externalDisplayLink.getName(), savedExternalLinkDisplay1.getName());
         Assert.assertEquals(new Double(externalDisplayLink.getPositionX()), new Double(savedExternalLinkDisplay1.getPositionX()));

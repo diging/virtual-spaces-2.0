@@ -128,7 +128,7 @@ public class SpaceLinkManagerTest {
         Mockito.when(spaceLinkRepo.save((SpaceLink) spaceLink)).thenReturn((SpaceLink)spaceLink);
         Mockito.when(spaceLinkDisplayRepo.save((SpaceLinkDisplay)spaceDisplayLink)).thenReturn((SpaceLinkDisplay)spaceDisplayLink);
 
-        ISpaceLinkDisplay savedSpaceLinkDisplay = managerToTest.createLink("New Space Link", spaceId1, 10, 30, 40, spaceId2, "New Space Link", "New Space Link Desc", DisplayType.ARROW, null, null, null);
+        ISpaceLinkDisplay savedSpaceLinkDisplay = managerToTest.createLink("New Space Link", spaceId1, 10, 30, 40, spaceId2, "New Space Link", "New Space Link Desc", DisplayType.ARROW, null, null, "IMG000000001");
         Assert.assertEquals(spaceDisplayLink.getId(), savedSpaceLinkDisplay.getId());
         Assert.assertEquals(spaceDisplayLink.getName(), savedSpaceLinkDisplay.getName());
         Assert.assertEquals(new Double(spaceDisplayLink.getPositionX()), new Double(savedSpaceLinkDisplay.getPositionX()));
