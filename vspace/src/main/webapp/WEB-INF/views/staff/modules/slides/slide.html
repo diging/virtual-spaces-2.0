@@ -1211,18 +1211,11 @@
                 
                 function getSpaceById(spaceId, callback) {
                     $.ajax({
-                        url: [[@{|/staff/spaces/search|}]],
+                        url: "[(@{'/staff/space/'})]"+spaceId,
                         dataType: 'json',
                         success: function(result) {
-                        	items = result['items']
                             let spaceName = null;
-                            for (let i = 0; i < items.length; i++) {
-                                const space = items[i];
-                                if (space.id === spaceId) {
-                                    spaceName = space.name;
-                                    break;
-                                }
-                            }
+                            spaceName = result.name;
                             callback(spaceName);
                         },
                         error: function(data) {
