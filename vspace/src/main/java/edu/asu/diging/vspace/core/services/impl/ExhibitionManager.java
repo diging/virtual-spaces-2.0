@@ -45,7 +45,7 @@ public class ExhibitionManager implements IExhibitionManager {
      * asu.diging.vspace.core.model.impl.Exhibition)
      */
     @Override
-    public IExhibition storeExhibition(Exhibition exhibition) {
+    public Exhibition storeExhibition(Exhibition exhibition) {
         return exhibitRepo.save(exhibition);
     }
 
@@ -123,11 +123,13 @@ public class ExhibitionManager implements IExhibitionManager {
             .forEach(languageMap -> {
                 IExhibitionLanguage exhibitionLanguage =  addExhibitionLanguage(exhibition , languageMap);  
                 exhibitionLanguage.setDefault(exhibitionLanguage.getCode().equalsIgnoreCase(defaultLanguage));
-            });  
+            });
 
-        // Removes exhibition langauge if unselected.
-        exhibition.getLanguages().removeAll(exhibition.getLanguages().stream()
-                .filter(language -> !codes.contains(language.getCode())).collect(Collectors.toList()));
+        // Removes exhibition language if unselected.
+        List<IExhibitionLanguage> languagesToBeRemoved = exhibition.getLanguages().stream()
+                .filter(language -> !codes.contains(language.getCode())).collect(Collectors.toList());
+        
+        exhibition.getLanguages().removeAll(languagesToBeRemoved);
 
     }
 

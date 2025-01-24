@@ -33,6 +33,7 @@ import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
+import edu.asu.diging.vspace.core.services.impl.ExhibitionManager;
 
 @Controller
 public class ExhibitionConfigurationController {
@@ -44,7 +45,7 @@ public class ExhibitionConfigurationController {
     private ISpaceManager spaceManager;
 
     @Autowired
-    private IExhibitionManager exhibitManager;
+    private ExhibitionManager exhibitManager;
 
     @Autowired
     private ExhibitionFactory exhibitFactory;
@@ -101,7 +102,6 @@ public class ExhibitionConfigurationController {
             RedirectAttributes attributes) throws IOException {
 
         ISpace startSpace = spaceManager.getSpace(spaceID);
-        
         Exhibition exhibition;
         
         if (exhibitID == null || exhibitID.isEmpty()) {
@@ -120,7 +120,7 @@ public class ExhibitionConfigurationController {
             exhibition.setCustomMessage(customMessage);
         }
 
-        exhibition = (Exhibition) exhibitManager.storeExhibition(exhibition);
+        exhibition = exhibitManager.storeExhibition(exhibition);
         attributes.addAttribute("exhibitId", exhibition.getId());
         attributes.addAttribute("alertType", "success");
         attributes.addAttribute("message", "Successfully Saved!");
