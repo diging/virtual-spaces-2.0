@@ -1,10 +1,12 @@
 package edu.asu.diging.vspace.web.staff.api;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -12,6 +14,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
+import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
@@ -20,27 +24,22 @@ public class SpaceSearchApiController {
     @Autowired
     private ISpaceManager spaceManager;
 
-    @RequestMapping("/staff/spaces/search/")
-    public ResponseEntity<String> searchSpace(@RequestParam(value = "term", required = false) String searchTerm) {
-        List<IVSImage> images = null;
-        if (searchTerm != null && !searchTerm.trim().isEmpty()) {
-            images = spaceManager.getSpace(searchTerm);
-        } else {
-            images = imageService.getImages(1);
+    @RequestMapping("/staff/spaces/search/{id}")
+    public ResponseEntity<String> searchSpace(@PathVariable("id") String id)
+    		throws NumberFormatException, SpaceDoesNotExistException, IOException {
+        ISpace space = spaceManager.getSpace(id);
+        
+        if (space == null) {
+            return new ResponseEntity<>("{'error': 'Space could not be found.'}", HttpStatus.NOT_FOUND);
         }
         
         ObjectMapper mapper = new ObjectMapper();
-        ArrayNode idArray = mapper.createArrayNode();
-        for (ISpace image : images) {
-            ObjectNode imageNode = mapper.createObjectNode();
-            imageNode.put("id", image.getId());
-            if (image.getName() != null && !image.getName().isEmpty()) {
-                imageNode.put("text", image.getName() + " (" + image.getFilename() + ")");
-            } else {
-                 imageNode.put("text", image.getFilename());
-            }
-            idArray.add(imageNode);
-        }
-        return new ResponseEntity<String>(idArray.toString(), HttpStatus.OK);
+        ArrayNode itemsArray = mapper.createArrayNode();
+        ObjectNode spaceNode = mapper.createObjectNode();
+        spaceNode.put("id", space.getId());
+        spaceNode.put("name", space.getName());
+        itemsArray.add(spaceNode);
+        
+        return new ResponseEntity<String>(itemsArray.toString(), HttpStatus.OK);
     }
 }

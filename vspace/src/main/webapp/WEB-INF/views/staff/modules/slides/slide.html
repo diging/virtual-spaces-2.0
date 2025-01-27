@@ -1211,12 +1211,13 @@
                 
                 function getSpaceById(spaceId, callback) {
                     $.ajax({
-                        url: "[(@{'/staff/space/'})]"+spaceId,
+                        url: "[(@{'/staff/space/search'})]"+spaceId,
                         dataType: 'json',
                         success: function(result) {
-                            let spaceName = null;
+                        	console.log(result);
+                            /* let spaceName = null;
                             spaceName = result.name;
-                            callback(spaceName);
+                            callback(spaceName); */
                         },
                         error: function(data) {
                             var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
