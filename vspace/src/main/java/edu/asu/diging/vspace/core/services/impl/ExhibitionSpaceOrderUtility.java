@@ -28,7 +28,9 @@ public class ExhibitionSpaceOrderUtility implements IExhibitionSpaceOrderUtility
     private  IExhibitionManager exhibitionManager;
     
     /**
-     * This method sorts the spaces in alphabetical order.
+     * This method sorts the list of spaces in alphabetical order in-place. 
+     * Note: The original list passed is modified and returned, since sorting is in-place
+     * 
      * @param list of {@link ISpace} objects to be sorted
      * @return list of {@link ISpace}
      */
@@ -43,7 +45,9 @@ public class ExhibitionSpaceOrderUtility implements IExhibitionSpaceOrderUtility
     }
 
     /**
-     * This method sorts the spaces based on the space creation date.
+     * This method sorts the spaces based on the space creation date in-place.
+     * Note: The original list passed is modified and returned, since sorting is in-place
+     * 
      * @param spaces list of {@link ISpace} objects to be sorted
      * @return list of {@link ISpace}
      */
