@@ -24,15 +24,17 @@ public class SpaceSearchApiController {
     @Autowired
     private ISpaceManager spaceManager;
 
-    @RequestMapping("/staff/spaces/search/{id}")
+    @RequestMapping("/staff/search/api/space/{id}")
     public ResponseEntity<String> searchSpace(@PathVariable("id") String id)
     		throws NumberFormatException, SpaceDoesNotExistException, IOException {
+    	System.out.println("\n\n\n\n\n\n stage11 \n\n\n\n\n");
+    	System.out.println(id);
         ISpace space = spaceManager.getSpace(id);
         
         if (space == null) {
             return new ResponseEntity<>("{'error': 'Space could not be found.'}", HttpStatus.NOT_FOUND);
         }
-        
+        System.out.println("stage1");
         ObjectMapper mapper = new ObjectMapper();
         ArrayNode itemsArray = mapper.createArrayNode();
         ObjectNode spaceNode = mapper.createObjectNode();

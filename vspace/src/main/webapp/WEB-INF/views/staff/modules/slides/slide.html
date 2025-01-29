@@ -1210,8 +1210,9 @@
                 });
                 
                 function getSpaceById(spaceId, callback) {
+                	console.log("prnit")
                     $.ajax({
-                        url: "[(@{'/staff/space/search'})]"+spaceId,
+                        url: "[(@{'/staff/search/api/space/'})]"+spaceId,
                         dataType: 'json',
                         success: function(result) {
                         	console.log(result);
