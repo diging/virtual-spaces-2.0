@@ -29,7 +29,7 @@ public class DefaultLinkImageController {
             "external", Exhibition::setExternalLinkDefaultImage);
     
     @Autowired
-    private IExhibitionManager exhibitManager;
+    private IExhibitionManager exhibitionManager;
     
     @Autowired
     private IImageService imageService;   
@@ -48,7 +48,7 @@ public class DefaultLinkImageController {
             @RequestParam(name = "image", required = false) MultipartFile image,
             @RequestParam(name="linkType") String linkType,
             RedirectAttributes attributes) throws IOException {
-        Exhibition exhibition = (Exhibition) exhibitManager.getStartExhibition();
+        Exhibition exhibition = (Exhibition) exhibitionManager.getStartExhibition();
         IVSImage defaultImage = imageService.storeImage(image.getBytes(), image.getOriginalFilename());
         
         BiConsumer<Exhibition, IVSImage> setter = imageSetterMap.get(linkType);
@@ -60,7 +60,7 @@ public class DefaultLinkImageController {
             return "redirect:/staff/exhibit/config";
         }
         setter.accept(exhibition, defaultImage);
-        exhibition = (Exhibition) exhibitManager.storeExhibition(exhibition);
+        exhibition = (Exhibition) exhibitionManager.storeExhibition(exhibition);
         attributes.addAttribute("exhibitId", exhibition.getId());
         attributes.addAttribute("alertType", "success");
         attributes.addAttribute("message", "Successfully Saved!");

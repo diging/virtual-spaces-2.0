@@ -45,8 +45,8 @@ public class ExhibitionManager implements IExhibitionManager {
      * asu.diging.vspace.core.model.impl.Exhibition)
      */
     @Override
-    public Exhibition storeExhibition(Exhibition exhibition) {
-        return exhibitRepo.save(exhibition);
+    public IExhibition storeExhibition(IExhibition exhibition) {
+        return exhibitRepo.save((Exhibition) exhibition);
     }
 
     /*
@@ -104,7 +104,7 @@ public class ExhibitionManager implements IExhibitionManager {
      * @throws LanguageListConfigurationNotFoundException 
      */
     @Override
-    public void updateExhibitionLanguages(Exhibition exhibition, List<String> codes, String defaultLanguage) {
+    public void updateExhibitionLanguages(IExhibition exhibition, List<String> codes, String defaultLanguage) {
         if(CollectionUtils.isEmpty(exhibitionLanguageConfig.getExhibitionLanguageList())) {
             throw new LanguageListConfigurationNotFoundException("Exhibition Language Configuration not found");
         }
@@ -121,7 +121,7 @@ public class ExhibitionManager implements IExhibitionManager {
         exhibitionLanguageConfig.getExhibitionLanguageList().stream()
             .filter(languageConfig -> codes.contains(languageConfig.get(ConfigConstants.CODE)))
             .forEach(languageMap -> {
-                IExhibitionLanguage exhibitionLanguage =  addExhibitionLanguage(exhibition , languageMap);  
+                IExhibitionLanguage exhibitionLanguage =  addExhibitionLanguage((Exhibition) exhibition , languageMap);  
                 exhibitionLanguage.setDefault(exhibitionLanguage.getCode().equalsIgnoreCase(defaultLanguage));
             });
 
@@ -142,7 +142,7 @@ public class ExhibitionManager implements IExhibitionManager {
      */
     private IExhibitionLanguage addExhibitionLanguage(Exhibition exhibition, Map languageMap) {
         IExhibitionLanguage exhibitionLanguage =   new ExhibitionLanguage((String) languageMap.get(ConfigConstants.LABEL),
-                (String) languageMap.get(ConfigConstants.CODE), exhibition);
+                (String) languageMap.get(ConfigConstants.CODE), (Exhibition)exhibition);
 
         int index =  exhibition.getLanguages().indexOf(exhibitionLanguage);
         if( index < 0 ) {

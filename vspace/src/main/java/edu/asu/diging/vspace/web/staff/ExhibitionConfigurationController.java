@@ -45,7 +45,7 @@ public class ExhibitionConfigurationController {
     private ISpaceManager spaceManager;
 
     @Autowired
-    private ExhibitionManager exhibitManager;
+    private IExhibitionManager exhibitionManager;
 
     @Autowired
     private ExhibitionFactory exhibitFactory;
@@ -62,7 +62,7 @@ public class ExhibitionConfigurationController {
     public String showExhibitions(Model model) {
         // for now we assume there is just one exhibition
 
-        IExhibition exhibition = exhibitManager.getStartExhibition();
+        IExhibition exhibition = exhibitionManager.getStartExhibition();
         if (exhibition==null) {
             exhibition = (Exhibition) exhibitFactory.createExhibition();
         }
@@ -102,25 +102,25 @@ public class ExhibitionConfigurationController {
             RedirectAttributes attributes) throws IOException {
 
         ISpace startSpace = spaceManager.getSpace(spaceID);
-        Exhibition exhibition;
+        IExhibition exhibition;
         
         if (exhibitID == null || exhibitID.isEmpty()) {
             exhibition = (Exhibition) exhibitFactory.createExhibition();
         } else {
-            exhibition = (Exhibition) exhibitManager.getExhibitionById(exhibitID);
+            exhibition = (Exhibition) exhibitionManager.getExhibitionById(exhibitID);
         }
         exhibition.setStartSpace(startSpace);
         exhibition.setTitle(title);
         exhibition.setMode(exhibitMode);
 
-        exhibitManager.updateExhibitionLanguages(exhibition, languages, defaultLanguage);
+        exhibitionManager.updateExhibitionLanguages(exhibition, languages, defaultLanguage);
 
         if (exhibitMode.equals(ExhibitionModes.OFFLINE) && !customMessage.equals(ExhibitionModes.OFFLINE.getValue())) {
 
             exhibition.setCustomMessage(customMessage);
         }
 
-        exhibition = exhibitManager.storeExhibition(exhibition);
+        exhibition = exhibitionManager.storeExhibition(exhibition);
         attributes.addAttribute("exhibitId", exhibition.getId());
         attributes.addAttribute("alertType", "success");
         attributes.addAttribute("message", "Successfully Saved!");

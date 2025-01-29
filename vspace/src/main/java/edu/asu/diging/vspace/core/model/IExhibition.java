@@ -50,4 +50,6 @@ public interface IExhibition extends IVSpaceElement {
     
     void setPreviewId(String previewId);
 
+    void setCustomMessage(String customMessage);
+
 }
