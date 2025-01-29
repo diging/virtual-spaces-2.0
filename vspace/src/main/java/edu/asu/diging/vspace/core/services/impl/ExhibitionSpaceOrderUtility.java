@@ -63,7 +63,9 @@ public class ExhibitionSpaceOrderUtility implements IExhibitionSpaceOrderUtility
     
 
     /**
-     * This method sorts the spaces based on user defined order.
+     * This method sorts the spaces alphabetically if spaces custom order is null 
+     * or returns the list of spaces if custom order is available.
+     * 
      * @param spaces
      * @return list of {@link ISpace}
      */
