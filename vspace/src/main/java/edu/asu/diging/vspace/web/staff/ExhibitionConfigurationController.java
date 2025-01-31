@@ -129,5 +129,4 @@ public class ExhibitionConfigurationController {
         return new RedirectView(request.getContextPath() + "/staff/exhibit/config");
     }
     
-    
 }
