@@ -60,13 +60,12 @@ public class BiblioBlock extends ContentBlock implements IBiblioBlock {
     
     @Override
     public String toString() {
-        return "**Bibliography title:** " + biblioTitle + "\n**description:** " + description ;
+        return "bibliography title: " + biblioTitle + " description: " + description ;
     }
     
     public String htmlRenderedBiblio() {
         Parser parser = Parser.builder().build();
-        String formattedText = toString().replace("\n", "<br>");
-        Node document = parser.parse(formattedText);
+        Node document = parser.parse(toString());
         HtmlRenderer renderer = HtmlRenderer.builder().build();
         return renderer.render(document);
     }
