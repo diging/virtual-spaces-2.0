@@ -1228,32 +1228,6 @@
                     });
                 }
                 
-                function getCurrentSpace(blockId) {
-                    $.ajax({
-                        url: [[@{|/staff/spaces/search|}]],
-                        dataType: 'json',
-                        success: function(result) {
-                            let spaceName = null;
-                            for (let i = 0; i < result.length; i++) {
-                                const space = result[i];
-                                if (space.id === spaceId) {
-                                    spaceName = space.name;
-                                    break;
-                                }
-                            }
-                            callback(spaceName);
-                        },
-                        error: function(data) {
-                            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                            $('.error').append(alert);
-                            $(".error").delay(4000).slideUp(500, function() {
-                                $(".error").empty();
-                            });
-                            callback(null);
-                        }
-                    });
-                }
-                
 	            $("#submitSpace").on("click", function(e) {
 		            $("#addSpaceAlert").hide();
 		            e.preventDefault();
