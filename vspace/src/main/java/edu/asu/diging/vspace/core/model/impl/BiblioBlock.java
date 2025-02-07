@@ -57,17 +57,5 @@ public class BiblioBlock extends ContentBlock implements IBiblioBlock {
     public List<Reference> getReferences() {
         return references;
     }
-    
-    @Override
-    public String toString() {
-        return "bibliography title: " + biblioTitle + " description: " + description ;
-    }
-    
-    public String htmlRenderedBiblio() {
-        Parser parser = Parser.builder().build();
-        Node document = parser.parse(toString());
-        HtmlRenderer renderer = HtmlRenderer.builder().build();
-        return renderer.render(document);
-    }
 
 }

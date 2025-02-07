@@ -215,12 +215,13 @@ ul{
                 <img th:if="${contents['class'].simpleName ==  'ImageBlock'}" th:id="${contents.id}" class="imgDiv" th:src="@{'/api/image/'+${contents.image.id}}" style="max-width:57%">
                 <div th:if="${contents['class'].simpleName ==  'TextBlock'}" th:id="${contents.id}" class="textDiv">[(${contents.htmlRenderedText()})]</div>
                 <div th:if="${contents['class'].simpleName ==  'BiblioBlock'}" th:id="${contents.id}" class="biblioDiv">
-                	[(${contents.htmlRenderedBiblio()})]
+                	<h4>Title: [(${contents.getBiblioTitle()})]</h4>
+                	<p>description: [(${contents.getDescription()})]</p>
                 	<ul>
 	                	<div th:each="contentRef: ${contents.references}">
 							<li>
 								<div th:id="${contentRef.id}" class="referenceDiv">
-									[(${contentRef.htmlRenderedReference()})]
+									<p th:text="|${contentRef.getTitle()}, ${contentRef.getAuthor()}, ${contentRef.getYear()}, ${contentRef.getJournal()}, ${contentRef.getUrl()}, ${contentRef.getVolume()}, ${contentRef.getIssue()}, ${contentRef.getPages()}, ${contentRef.getEditors()}, ${contentRef.getType()}, ${contentRef.getNote()}|">
 								</div>
 							</li>
 						</div>
