@@ -165,20 +165,6 @@ public class Reference extends VSpaceElement implements IReference {
     }
 
     @Override
-    public String toString() {
-        return  title + ", " + author + ", " + year + ", " + journal + ", " + url
-                + ", " + volume + ", " + issue + ", " + pages + ", " + editors + ", "
-                + type + ", " + note;
-    }
-
-    public String htmlRenderedReference() {
-        Parser parser = Parser.builder().build();
-        Node document = parser.parse(toString());
-        HtmlRenderer renderer = HtmlRenderer.builder().build();
-        return renderer.render(document);
-    }
-
-    @Override
     public void setId(String id) {
         this.id = id;
     }
