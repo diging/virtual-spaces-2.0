@@ -105,9 +105,9 @@ public class ExhibitionConfigurationController {
         IExhibition exhibition;
         
         if (exhibitID == null || exhibitID.isEmpty()) {
-            exhibition = (Exhibition) exhibitFactory.createExhibition();
+            exhibition = exhibitFactory.createExhibition();
         } else {
-            exhibition = (Exhibition) exhibitionManager.getExhibitionById(exhibitID);
+            exhibition = exhibitionManager.getExhibitionById(exhibitID);
         }
         exhibition.setStartSpace(startSpace);
         exhibition.setTitle(title);

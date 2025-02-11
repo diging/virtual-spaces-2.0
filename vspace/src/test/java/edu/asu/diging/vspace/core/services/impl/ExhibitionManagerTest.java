@@ -86,7 +86,7 @@ public class ExhibitionManagerTest {
         
         Exhibition exhibition = new Exhibition();
         exhibition.setId(ID);
-        Optional<Exhibition> exhibitionOptional = Optional.of(exhibition);
+        Optional<IExhibition> exhibitionOptional = Optional.of(exhibition);
         when(exhibitRepo.findById(ID)).thenReturn(exhibitionOptional);
         IExhibition exhibitionTest = serviceToTest.getExhibitionById(ID);
         assertEquals(exhibitionTest, exhibition);
@@ -98,7 +98,7 @@ public class ExhibitionManagerTest {
         
         Exhibition exhibition = new Exhibition();
         exhibition.setId(ID);
-        List<Exhibition> list = new ArrayList();
+        List<IExhibition> list = new ArrayList();
         list.add(exhibition);
         
         when(exhibitRepo.findAll()).thenReturn(list);
@@ -115,7 +115,7 @@ public class ExhibitionManagerTest {
         
         Exhibition exhibition = new Exhibition();
         exhibition.setId(ID);
-        List<Exhibition> list = new ArrayList();
+        List<IExhibition> list = new ArrayList();
         list.add(exhibition);
         Mockito.when(exhibitRepo.findAllByOrderByIdAsc()).thenReturn(list);
         IExhibition exhibitionTest = serviceToTest.getStartExhibition();
