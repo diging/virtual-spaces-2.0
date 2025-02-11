@@ -11,8 +11,8 @@ import edu.asu.diging.vspace.core.model.impl.Exhibition;
 
 @Repository
 @JaversSpringDataAuditable
-public interface ExhibitionRepository extends PagingAndSortingRepository<IExhibition, String> {
+public interface ExhibitionRepository extends PagingAndSortingRepository<Exhibition, String> {
 
-    public List<IExhibition> findAllByOrderByIdAsc();
+    public List<Exhibition> findAllByOrderByIdAsc();
 
 }

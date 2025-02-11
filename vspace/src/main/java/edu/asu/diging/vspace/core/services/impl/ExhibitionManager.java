@@ -58,7 +58,7 @@ public class ExhibitionManager implements IExhibitionManager {
      */
     @Override
     public IExhibition getExhibitionById(String id) {
-        Optional<IExhibition> exhibition = exhibitRepo.findById(id);
+        Optional<Exhibition> exhibition = exhibitRepo.findById(id);
         if (exhibition.isPresent()) {
             return exhibition.get();
         }
@@ -67,9 +67,9 @@ public class ExhibitionManager implements IExhibitionManager {
 
     @Override
     public List<IExhibition> findAll() {
-        Iterable<IExhibition> exhibitions = exhibitRepo.findAll();
+        Iterable<Exhibition> exhibitions = exhibitRepo.findAll();
         List<IExhibition> results = new ArrayList<>();
-        exhibitions.forEach(e -> results.add((IExhibition) e));
+        exhibitions.forEach(e -> results.add(e));
         return results;
     }
 
@@ -79,7 +79,7 @@ public class ExhibitionManager implements IExhibitionManager {
     @Override
     public IExhibition getStartExhibition() {
         // for now we just take the first one created, there shouldn't be more than one
-        List<IExhibition> exhibitions = exhibitRepo.findAllByOrderByIdAsc();
+        List<Exhibition> exhibitions = exhibitRepo.findAllByOrderByIdAsc();
         IExhibition exhibition;
         if (exhibitions.size() > 0) {
             exhibition = exhibitions.get(0);
