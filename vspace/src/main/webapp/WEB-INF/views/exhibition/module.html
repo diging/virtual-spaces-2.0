@@ -133,6 +133,31 @@ ul{
         function closeModal(){
         	$("#moduleOverviewModal").hide();
         }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+          const sortSelect = document.getElementById('referenceSort');
+          const refList = document.getElementById('referenceList');
+
+          sortSelect.addEventListener('change', function() {
+            const sortBy = this.value;
+            
+            let items = Array.from(refList.getElementsByTagName('li'));
+
+            items.sort((a, b) => {
+              const aValue = a.querySelector('.referenceDiv').getAttribute('data-' + sortBy);
+              const bValue = b.querySelector('.referenceDiv').getAttribute('data-' + sortBy);
+              
+              if (sortBy === 'year') {
+                return parseInt(aValue) - parseInt(bValue);
+              } else {
+                return aValue.localeCompare(bValue);
+              }
+            });
+            
+            refList.innerHTML = '';
+            items.forEach(item => refList.appendChild(item));
+          });
+        });
 </script>
 </head>
 <body>
@@ -214,19 +239,43 @@ ul{
             <div th:id="blocks" class="Group_8_Class" th:each="contents: ${currentSlideCon.contents}">
                 <img th:if="${contents['class'].simpleName ==  'ImageBlock'}" th:id="${contents.id}" class="imgDiv" th:src="@{'/api/image/'+${contents.image.id}}" style="max-width:57%">
                 <div th:if="${contents['class'].simpleName ==  'TextBlock'}" th:id="${contents.id}" class="textDiv">[(${contents.htmlRenderedText()})]</div>
-                <div th:if="${contents['class'].simpleName ==  'BiblioBlock'}" th:id="${contents.id}" class="biblioDiv">
-                	<h4>Title: [(${contents.getBiblioTitle()})]</h4>
-                	<p>description: [(${contents.getDescription()})]</p>
-                	<ul>
-	                	<div th:each="contentRef: ${contents.references}">
-							<li>
-								<div th:id="${contentRef.id}" class="referenceDiv">
-									<p th:text="|${contentRef.getTitle()}, ${contentRef.getAuthor()}, ${contentRef.getYear()}, ${contentRef.getJournal()}, ${contentRef.getUrl()}, ${contentRef.getVolume()}, ${contentRef.getIssue()}, ${contentRef.getPages()}, ${contentRef.getEditors()}, ${contentRef.getType()}, ${contentRef.getNote()}|">
-								</div>
-							</li>
-						</div>
-					</ul>
-                </div>
+				<div th:if="${contents['class'].simpleName ==  'BiblioBlock'}" th:id="${contents.id}" class="biblioDiv">
+				  <h4>Title: [(${contents.getBiblioTitle()})]</h4>
+				  <p>Description: [(${contents.getDescription()})]</p>
+				
+				  <!-- Sorting control -->
+				  <label for="referenceSort">Sort References By:</label>
+				  <select id="referenceSort">
+				    <option value="author">Author</option>
+				    <option value="title">Title</option>
+				    <option value="year">Year</option>
+				    <option value="journal">Journal</option>
+				    <!-- Add more options as needed -->
+				  </select>
+				
+				  <!-- Reference list container -->
+				  <ul id="referenceList">
+				    <div th:each="contentRef: ${contents.references}">
+				      <li>
+				        <div th:id="${contentRef.id}" class="referenceDiv"
+				             data-title="[[${contentRef.getTitle()}]]"
+				             data-author="[[${contentRef.getAuthor()}]]"
+				             data-year="[[${contentRef.getYear()}]]"
+				             data-journal="[[${contentRef.getJournal()}]]"
+				             data-url="[[${contentRef.getUrl()}]]"
+				             data-volume="[[${contentRef.getVolume()}]]"
+				             data-issue="[[${contentRef.getIssue()}]]"
+				             data-pages="[[${contentRef.getPages()}]]"
+				             data-editors="[[${contentRef.getEditors()}]]"
+				             data-type="[[${contentRef.getType()}]]"
+				             data-note="[[${contentRef.getNote()}]]">
+				          <p th:text="|${contentRef.getTitle()}, ${contentRef.getAuthor()}, ${contentRef.getYear()}, ${contentRef.getJournal()}, ${contentRef.getUrl()}, ${contentRef.getVolume()}, ${contentRef.getIssue()}, ${contentRef.getPages()}, ${contentRef.getEditors()}, ${contentRef.getType()}, ${contentRef.getNote()}|">
+				          </p>
+				        </div>
+				      </li>
+				    </div>
+				  </ul>
+				</div>
                <div th:if="${contents['class'].simpleName ==  'VideoBlock'}" th:id="${contents.id}" class="VideoDiv">
                   <div>
                      <h3><strong>[[${contents.video.title}]]</strong></h3>
