@@ -140,7 +140,6 @@ ul{
 
           sortSelect.addEventListener('change', function() {
             const sortBy = this.value;
-            
             let items = Array.from(refList.getElementsByTagName('li'));
 
             items.sort((a, b) => {
@@ -239,7 +238,7 @@ ul{
             <div th:id="blocks" class="Group_8_Class" th:each="contents: ${currentSlideCon.contents}">
                 <img th:if="${contents['class'].simpleName ==  'ImageBlock'}" th:id="${contents.id}" class="imgDiv" th:src="@{'/api/image/'+${contents.image.id}}" style="max-width:57%">
                 <div th:if="${contents['class'].simpleName ==  'TextBlock'}" th:id="${contents.id}" class="textDiv">[(${contents.htmlRenderedText()})]</div>
-				<div th:if="${contents['class'].simpleName ==  'BiblioBlock'}" th:id="${contents.id}" class="biblioDiv">
+				<div th:if="${contents['class'].simpleName == 'BiblioBlock'}" th:id="${contents.id}" class="biblioDiv">
 				  <h4>Title: [(${contents.getBiblioTitle()})]</h4>
 				  <p>Description: [(${contents.getDescription()})]</p>
 				
@@ -250,6 +249,12 @@ ul{
 				    <option value="title">Title</option>
 				    <option value="year">Year</option>
 				    <option value="journal">Journal</option>
+				    <option value="volume">volume</option>
+				    <option value="pages">pages</option>
+				    <option value="issue">issue</option>
+				    <option value="editors">editors</option>
+				    <option value="type">type</option>
+				    <option value="note">note</option>
 				    <!-- Add more options as needed -->
 				  </select>
 				
@@ -258,17 +263,17 @@ ul{
 				    <div th:each="contentRef: ${contents.references}">
 				      <li>
 				        <div th:id="${contentRef.id}" class="referenceDiv"
-				             data-title="[[${contentRef.getTitle()}]]"
-				             data-author="[[${contentRef.getAuthor()}]]"
-				             data-year="[[${contentRef.getYear()}]]"
-				             data-journal="[[${contentRef.getJournal()}]]"
-				             data-url="[[${contentRef.getUrl()}]]"
-				             data-volume="[[${contentRef.getVolume()}]]"
-				             data-issue="[[${contentRef.getIssue()}]]"
-				             data-pages="[[${contentRef.getPages()}]]"
-				             data-editors="[[${contentRef.getEditors()}]]"
-				             data-type="[[${contentRef.getType()}]]"
-				             data-note="[[${contentRef.getNote()}]]">
+				             th:attr="data-title=${contentRef.getTitle()},
+				                      data-author=${contentRef.getAuthor()},
+				                      data-year=${contentRef.getYear()},
+				                      data-journal=${contentRef.getJournal()},
+				                      data-url=${contentRef.getUrl()},
+				                      data-volume=${contentRef.getVolume()},
+				                      data-issue=${contentRef.getIssue()},
+				                      data-pages=${contentRef.getPages()},
+				                      data-editors=${contentRef.getEditors()},
+				                      data-type=${contentRef.getType()},
+				                      data-note=${contentRef.getNote()}">
 				          <p th:text="|${contentRef.getTitle()}, ${contentRef.getAuthor()}, ${contentRef.getYear()}, ${contentRef.getJournal()}, ${contentRef.getUrl()}, ${contentRef.getVolume()}, ${contentRef.getIssue()}, ${contentRef.getPages()}, ${contentRef.getEditors()}, ${contentRef.getType()}, ${contentRef.getNote()}|">
 				          </p>
 				        </div>

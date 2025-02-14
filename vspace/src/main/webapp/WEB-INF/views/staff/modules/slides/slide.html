@@ -2675,146 +2675,161 @@
 	               </div>
 	            </div>
 	         </div>
-	         <div id="addReferenceAlert" class="modal" tabindex="-1" role="dialog" style="overflow-y: scroll;">
-	            <div class="modal-dialog" role="document" th:draggable="true">
-	               <div class="modal-content">
-	                  <div class="modal-header">
-	                     <h5 class="modal-title">Add new Reference</h5>
-	                     <button type="button" class="close" data-dismiss="modal"
-	                        aria-label="Close">
-	                     <span aria-hidden="true">&times;</span>
-	                     </button>
-	                  </div>
-	                  <form name="sendReferenceForm" id="sendReferenceForm">
-	                     <div class="modal-body">
-	                        <div class="form-group">
-	                           <table>
-	                              <tr>
-	                                 <td><label for="name" class="col-form-label">Title:</label>
-	                                 </td>
-	                                 <td><input type="text" class="form-control"
-	                                    id="titleRef" name="titleRef" /></td>
-	                              </tr>
-	                           </table>
-	                        </div>
-	                        <div class="form-group">
-	                           <table>
-	                              <tr>
-	                                 <td><label for="name" class="col-form-label">Author:</label>
-	                                 </td>
-	                                 <td><input type="text" class="form-control"
-	                                    id="authorRef" name="authorRef" /></td>
-	                              </tr>
-	                           </table>
-	                        </div>
-	                        <div class="form-group">
-	                           <table>
-	                              <tr>
-	                                 <td><label for="name" class="col-form-label">Year:</label>
-	                                 </td>
-	                                 <td><input type="text" class="form-control"
-	                                    id="yearRef" name="yearRef" /></td>
-	                              </tr>
-	                           </table>
-	                        </div>
-	                        <div class="form-group">
-	                           <table>
-	                              <tr>
-	                                 <td><label for="name" class="col-form-label">Journal:</label>
-	                                 </td>
-	                                 <td><input type="text" class="form-control"
-	                                    id="journalRef" name="journalRef" /></td>
-	                              </tr>
-	                           </table>
-	                        </div>
-	                        <div class="form-group">
-	                           <table>
-	                              <tr>
-	                                 <td><label for="name" class="col-form-label">Url:</label>
-	                                 </td>
-	                                 <td><input type="text" class="form-control"
-	                                    id="urlRef" name="urlRef" /></td>
-	                              </tr>
-	                           </table>
-	                        </div>
-	                        <div class="form-group">
-	                           <table>
-	                              <tr>
-	                                 <td><label for="name" class="col-form-label">Volume:</label>
-	                                 </td>
-	                                 <td><input type="text" class="form-control"
-	                                    id="volumeRef" name="volumeRef" /></td>
-	                              </tr>
-	                           </table>
-	                        </div>
-	                        <div class="form-group">
-	                           <table>
-	                              <tr>
-	                                 <td><label for="name" class="col-form-label">Issue:</label>
-	                                 </td>
-	                                 <td><input type="text" class="form-control"
-	                                    id="issueRef" name="issueRef" /></td>
-	                              </tr>
-	                           </table>
-	                        </div>
-	                        <div class="form-group">
-	                           <table>
-	                              <tr>
-	                                 <td><label for="name" class="col-form-label">Pages:</label>
-	                                 </td>
-	                                 <td><input type="text" class="form-control"
-	                                    id="pagesRef" name="pagesRef" /></td>
-	                              </tr>
-	                           </table>
-	                        </div>
-	                        <div class="form-group">
-	                           <table>
-	                              <tr>
-	                                 <td><label for="name" class="col-form-label">Editors:</label>
-	                                 </td>
-	                                 <td><input type="text" class="form-control"
-	                                    id="editorsRef" name="editorsRef" /></td>
-	                              </tr>
-	                           </table>
-	                        </div>
-	                        <div class="form-group">
-	                           <table>
-	                              <tr>
-	                                 <td><label for="name" class="col-form-label">Type:</label>
-	                                 </td>
-	                                 <td>                           <select class="form-control" id="typeRef" name="typeRef">
-                              <option value="" disabled selected>Select a type</option>
-                              <option value="Book">Book</option>
-                              <option value="Journal Article">Journal Article</option>
-                              <option value="Conference Paper">Conference Paper</option>
-                              <option value="Thesis">Thesis</option>
-                              <option value="Report">Report</option>
-                              <option value="Website">Website</option>
-                              <option value="Patent">Patent</option>
-                              <option value="Other">Other</option>
-                           </select></td>
-	                              </tr>
-	                           </table>
-	                        </div>
-	                        <div class="form-group">
-	                           <table>
-	                              <tr>
-	                                 <td><label for="name" class="col-form-label">Note:</label>
-	                                 </td>
-	                                 <td><input type="text" class="form-control"
-	                                    id="noteRef" name="noteRef" /></td>
-	                              </tr>
-	                           </table>
-	                        </div>
-	                     </div>
-	                     <div class="modal-footer">
-	                        <button id="cancelSubmitReference" type="reset" class="btn light">Cancel</button>
-	                        <button type="submit" id="submitReference" class="btn btn-primary">Submit</button>
-	                     </div>
-	                  </form>
-	               </div>
-	            </div>
-	         </div>
+			<div id="addReferenceAlert" class="modal" tabindex="-1" role="dialog" style="overflow-y: scroll;">
+			   <div class="modal-dialog" role="document" th:draggable="true">
+			      <div class="modal-content">
+			         <div class="modal-header">
+			            <h5 class="modal-title">Add new Reference</h5>
+			            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			               <span aria-hidden="true">&times;</span>
+			            </button>
+			         </div>
+			         <form name="sendReferenceForm" id="sendReferenceForm">
+			            <div class="modal-body">
+			               <!-- Title Field -->
+			               <div class="form-group">
+			                  <table>
+			                     <tr>
+			                        <td><label for="titleRef" class="col-form-label">Title:</label></td>
+			                        <td><input type="text" class="form-control" id="titleRef" name="titleRef" /></td>
+			                     </tr>
+			                  </table>
+			               </div>
+			               <!-- Author Field -->
+			               <div class="form-group">
+			                  <table>
+			                     <tr>
+			                        <td><label for="authorRef" class="col-form-label">Author:</label></td>
+			                        <td><input type="text" class="form-control" id="authorRef" name="authorRef" /></td>
+			                     </tr>
+			                  </table>
+			               </div>
+			               <!-- Year Field as Drop-Down -->
+			               <div class="form-group">
+			                  <table>
+			                     <tr>
+			                        <td><label for="yearRef" class="col-form-label">Year:</label></td>
+			                        <td>
+			                           <select class="form-control" id="yearRef" name="yearRef">
+			                              <option value="" disabled selected>Select Year</option>
+			                              <th:block th:with="currentYear=${T(java.time.Year).now().value}">
+			                                 <th:block th:each="year : ${#numbers.sequence(1900, currentYear)}">
+			                                    <option th:value="${year}" th:text="${year}"></option>
+			                                 </th:block>
+			                              </th:block>
+			                           </select>
+			                        </td>
+			                     </tr>
+			                  </table>
+			               </div>
+			               <!-- Journal Field -->
+			               <div class="form-group">
+			                  <table>
+			                     <tr>
+			                        <td><label for="journalRef" class="col-form-label">Journal:</label></td>
+			                        <td><input type="text" class="form-control" id="journalRef" name="journalRef" /></td>
+			                     </tr>
+			                  </table>
+			               </div>
+			               <!-- Url Field -->
+			               <div class="form-group">
+			                  <table>
+			                     <tr>
+			                        <td><label for="urlRef" class="col-form-label">Url:</label></td>
+			                        <td><input type="text" class="form-control" id="urlRef" name="urlRef" /></td>
+			                     </tr>
+			                  </table>
+			               </div>
+			               <!-- Volume Field -->
+			               <div class="form-group">
+			                  <table>
+			                     <tr>
+			                        <td><label for="volumeRef" class="col-form-label">Volume:</label></td>
+			                        <td><input type="text" class="form-control" id="volumeRef" name="volumeRef" /></td>
+			                     </tr>
+			                  </table>
+			               </div>
+			               <!-- Issue Field -->
+			               <div class="form-group">
+			                  <table>
+			                     <tr>
+			                        <td><label for="issueRef" class="col-form-label">Issue:</label></td>
+			                        <td><input type="text" class="form-control" id="issueRef" name="issueRef" /></td>
+			                     </tr>
+			                  </table>
+			               </div>
+			               <!-- Pages Field -->
+			               <div class="form-group">
+			                  <table>
+			                     <tr>
+			                        <td><label for="pagesRef" class="col-form-label">Pages:</label></td>
+			                        <td><input type="text" class="form-control" id="pagesRef" name="pagesRef" /></td>
+			                     </tr>
+			                  </table>
+			               </div>
+			               <!-- Editors Field -->
+			               <div class="form-group">
+			                  <table>
+			                     <tr>
+			                        <td><label for="editorsRef" class="col-form-label">Editors:</label></td>
+			                        <td><input type="text" class="form-control" id="editorsRef" name="editorsRef" /></td>
+			                     </tr>
+			                  </table>
+			               </div>
+			               <!-- Type Field -->
+			               <div class="form-group">
+			                  <table>
+			                     <tr>
+			                        <td><label for="typeRef" class="col-form-label">Type:</label></td>
+			                        <td>
+			                           <select class="form-control" id="typeRef" name="typeRef">
+			                              <option value="" disabled selected>Select a type</option>
+			                              <option value="Book">Book</option>
+			                              <option value="Journal Article">Journal Article</option>
+			                              <option value="Conference Paper">Conference Paper</option>
+			                              <option value="Thesis">Thesis</option>
+			                              <option value="Report">Report</option>
+			                              <option value="Website">Website</option>
+			                              <option value="Patent">Patent</option>
+			                              <option value="Other">Other</option>
+			                           </select>
+			                        </td>
+			                     </tr>
+			                  </table>
+			               </div>
+			               <!-- Note Field -->
+			               <div class="form-group">
+			                  <table>
+			                     <tr>
+			                        <td><label for="noteRef" class="col-form-label">Note:</label></td>
+			                        <td><input type="text" class="form-control" id="noteRef" name="noteRef" /></td>
+			                     </tr>
+			                  </table>
+			               </div>
+			               <!-- Visibility Field -->
+			               <div class="form-group">
+			                  <table>
+			                     <tr>
+			                        <td><label for="visibilityRef" class="col-form-label">Visibility:</label></td>
+			                        <td>
+			                           <select class="form-control" id="visibilityRef" name="visibilityRef">
+			                              <option value="" disabled selected>Select Visibility</option>
+			                              <option value="private">Private</option>
+			                              <option value="public">Public</option>
+			                           </select>
+			                        </td>
+			                     </tr>
+			                  </table>
+			               </div>
+			            </div>
+			            <div class="modal-footer">
+			               <button id="cancelSubmitReference" type="reset" class="btn light">Cancel</button>
+			               <button type="submit" id="submitReference" class="btn btn-primary">Submit</button>
+			            </div>
+			         </form>
+			      </div>
+			   </div>
+			</div>
 	         <div id="editBiblioAlert" class="modal" tabindex="-1" role="dialog" style="overflow-y: scroll;">
 	            <div class="modal-dialog" role="document" th:draggable="true">
 	               <div class="modal-content">

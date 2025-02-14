@@ -53,6 +53,8 @@ public class Reference extends VSpaceElement implements IReference {
     private String type;
 
     private String note;
+    
+    private boolean visibility;
 
     @Override
     public String getTitle() {
@@ -180,6 +182,16 @@ public class Reference extends VSpaceElement implements IReference {
 
     public void setBiblios(List<BiblioBlock> biblios) {
         this.biblios = biblios;
+    }
+    
+    @Override
+    public void setVisibility(boolean visibility) {
+        this.visibility = visibility;
+    }
+
+    @Override
+    public boolean getVisibility() {
+        return visibility;
     }
     
 }

@@ -57,5 +57,9 @@ public interface IReference extends IVSpaceElement {
     void setId(String id);
 
     String getId();
+    
+    void setVisibility(boolean visible);
+
+    boolean getVisibility();
 
 }
