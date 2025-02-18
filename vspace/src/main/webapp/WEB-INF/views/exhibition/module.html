@@ -503,18 +503,18 @@
                         function openSlide (d){
                             window.open([[@{/exhibit/}]]+spaceId+'/module/'+moduleId+'/sequence/'+d.sequenceId+'/slide/'+d.slideId, "_self");
                         }
-
-             </script>
-             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="External_Links_Class"> External Resources:
-	     		<div th:if="${slideExternalLinkList}" th:each="link: ${slideExternalLinkList}"> -
-	      			<a style="text-decoration: underline; color:blue;" th:href="@{${link.getExternalLink()}}">[[${link.getLabel()}]]</a>
-	     		</div>
+             		</script>
+             		</div>
+                	</div>
+             	</div>
+          	</div>
+       	</div>
+     	</div>
+   		</div>
+        <div class="External_Links_Class"> External Resources:
+     		<div th:if="${slideExternalLinkList}" th:each="link: ${slideExternalLinkList}"> -
+      			<a style="text-decoration: underline; color:blue;" th:href="@{${link.getExternalLink()}}">[[${link.getLabel()}]]</a>
      		</div>
-        </div>
+    	</div>
 </body>
 </html>

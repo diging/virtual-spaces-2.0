@@ -1553,7 +1553,9 @@
                    return $image;
                }
            
-            $(window).on('load', function () {	
+            $(window).on('load', function () {
+            	hideLinkInfoTabs();
+                $("#space").css("display", "none");
             	var divWindow = $(".valueDiv");
             	$(".deleteText").css('position', 'absolute');
             	$(".deleteText").css('right', '0');
@@ -1666,7 +1668,7 @@
                 +&nbsp;<span class="icon-image"></span></button>&nbsp;
                 <button type="button" id="addVideo" class="btn pill-btn" data-toggle="tooltip" title="Add Video" data-placement="top">
                 +&nbsp;<span class="icon-video"></span></button>&nbsp;
-                <button type="button" id="addExternalLinkButton" class="btn pill-btn" data-toggle="tooltip" title="Add Link to External" data-placement="top">
+                <button type="button" id="addExternalLinkButton" class="btn pill-btn" data-toggle="tooltip" title="Add External Link" data-placement="top">
                 +&nbsp;<span class="fa fa-external-link-alt"></span></button>&nbsp;
                 <button type="button" id="addChoice" style="display: none;" class="btn pill-btn" data-toggle="tooltip" title="Add Sequence Choice" data-placement="top">
                 +&nbsp;<span class="icon-checkmark"></span></button>
@@ -2109,7 +2111,7 @@
 			                    </div>
 				            	<div class="row">	
 				            		<div class="col">
-				            			<h5 class="alert-heading">Create new External Link</h5>
+				            			<h5 class="alert-heading">Create New External Link</h5>
 						                <p>Please fill out each field and then click
 						                   "Create External Link".</p>
 				            		</div>
