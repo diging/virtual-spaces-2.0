@@ -25,7 +25,7 @@ public class ReferenceManager implements IReferenceManager {
     private ReferenceRepository referenceRepo;
 
     @Override
-    public IReference createReference(IBiblioBlock biblio, String title, String author,String year,String journal, String url, String volume,String issue, String pages,String editor, String type, String note) {
+    public IReference createReference(IBiblioBlock biblio, String title, String author,String year,String journal, String url, String volume,String issue, String pages,String editor, String type, String note, String visibility) {
         IReference reference = new Reference();
         reference.setAuthor(author);
         reference.setTitle(title);
@@ -38,6 +38,13 @@ public class ReferenceManager implements IReferenceManager {
         reference.setEditors(editor);
         reference.setType(type);
         reference.setNote(note);
+        if(visibility == "Private") {
+        	reference.setVisibility(false);
+        }
+        else {
+        	reference.setVisibility(true);
+        }
+        	
         reference.getBiblios().add((BiblioBlock) biblio);
         return referenceRepo.save((Reference) reference);
     }

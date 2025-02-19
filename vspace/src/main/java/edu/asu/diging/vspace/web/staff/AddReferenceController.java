@@ -48,9 +48,10 @@ public class AddReferenceController {
         String editor = rootNode.get("editors").asText();
         String type = rootNode.get("type").asText();
         String note = rootNode.get("note").asText();
+        String visibility = rootNode.get("visibility").asText();
         
         IBiblioBlock biblio = contentBlockManager.getBiblioBlock(biblioId);
-        IReference ref = referenceManager.createReference(biblio, title, author,year,journal,url,volume,issue,pages,editor,type,note);
+        IReference ref = referenceManager.createReference(biblio, title, author,year,journal,url,volume,issue,pages,editor,type,note,visibility);
         return new ResponseEntity<>(mapper.writeValueAsString(ref), HttpStatus.OK);
     }
 

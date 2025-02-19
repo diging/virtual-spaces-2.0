@@ -260,7 +260,8 @@ ul{
 				
 				  <!-- Reference list container -->
 				  <ul id="referenceList">
-				    <div th:each="contentRef: ${contents.references}">
+				    <!-- Iterate over references and only render those with visibility true -->
+				    <div th:each="contentRef : ${contents.references}" th:if="${contentRef.getVisibility()}">
 				      <li>
 				        <div th:id="${contentRef.id}" class="referenceDiv"
 				             th:attr="data-title=${contentRef.getTitle()},

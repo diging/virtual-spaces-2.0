@@ -10,7 +10,7 @@ public interface IReferenceManager {
 
     IReference getReference(String referenceId);
     
-    IReference createReference(IBiblioBlock biblio, String title, String author,String year,String journal, String url, String volume,String issue, String pages,String editor, String type, String note);
+    IReference createReference(IBiblioBlock biblio, String title, String author,String year,String journal, String url, String volume,String issue, String pages,String editor, String type, String note, String visibility);
 
     void updateReference(Reference reference);
 
