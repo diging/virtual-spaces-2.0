@@ -14,6 +14,7 @@ import edu.asu.diging.vspace.core.model.IBiblioBlock;
 import edu.asu.diging.vspace.core.model.IReference;
 import edu.asu.diging.vspace.core.model.impl.BiblioBlock;
 import edu.asu.diging.vspace.core.model.impl.Reference;
+import edu.asu.diging.vspace.core.services.IContentBlockManager;
 import edu.asu.diging.vspace.core.services.IReferenceManager;
 
 @Service
@@ -23,10 +24,14 @@ public class ReferenceManager implements IReferenceManager {
     
     @Autowired
     private ReferenceRepository referenceRepo;
+    
+    @Autowired
+    private IContentBlockManager contentBlockManager;
 
     @Override
-    public IReference createReference(IBiblioBlock biblio, String title, String author,String year,String journal, String url, String volume,String issue, String pages,String editor, String type, String note) {
-        IReference reference = new Reference();
+    public IReference createReference(String biblioId, String title, String author,String year,String journal, String url, String volume,String issue, String pages,String editor, String type, String note) {
+    	IReference reference = new Reference();
+        IBiblioBlock biblio = contentBlockManager.getBiblioBlock(biblioId);
         reference.setAuthor(author);
         reference.setTitle(title);
         reference.setYear(year);

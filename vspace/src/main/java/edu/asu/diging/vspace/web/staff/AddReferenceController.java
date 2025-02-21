@@ -24,12 +24,9 @@ import edu.asu.diging.vspace.core.services.IReferenceManager;
 public class AddReferenceController {
 
     @Autowired
-    private IReferenceManager referenceManager;
-    
-    @Autowired
-    private IContentBlockManager contentBlockManager;
+    private IReferenceManager referenceManager; 
 
-    @RequestMapping(value = "/staff/module/{id}/slide/{slideId}/bibliography/{biblioId}/references", method = RequestMethod.POST)
+    @RequestMapping(value = "/staff/module/{id}/slide/{slideId}/bibliography/{biblioId}/reference/add", method = RequestMethod.POST)
     public ResponseEntity<String> addReference(@PathVariable("id") String moduleId, @PathVariable("slideId") String slideId, 
             @PathVariable("biblioId") String biblioId, 
             @RequestBody String reference, Model model) throws JsonProcessingException {
@@ -48,9 +45,8 @@ public class AddReferenceController {
         String editor = rootNode.get("editors").asText();
         String type = rootNode.get("type").asText();
         String note = rootNode.get("note").asText();
-        
-        IBiblioBlock biblio = contentBlockManager.getBiblioBlock(biblioId);
-        IReference ref = referenceManager.createReference(biblio, title, author,year,journal,url,volume,issue,pages,editor,type,note);
+                
+        IReference ref = referenceManager.createReference(biblioId, title, author,year,journal,url,volume,issue,pages,editor,type,note);
         return new ResponseEntity<>(mapper.writeValueAsString(ref), HttpStatus.OK);
     }
 

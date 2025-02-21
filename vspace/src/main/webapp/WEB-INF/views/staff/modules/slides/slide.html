@@ -49,7 +49,7 @@
             var contentCount = [[${#lists.size(slideContents)}]];
             var markDown = null;
             var defaultValue;
-	        var formDataCancel;
+            var formDataCancel;
             var currentSpaceId;
             var addVideoClk=0;
             var editVideoClk=0;
@@ -255,8 +255,8 @@
              function referenceBlockDoubleClick(e){
             	 	currentRefId = $(this).find('#deleteReferenceId').val();
             	    $(".EasyMDEContainer").remove();
-	         	    $(e.target).closest('.referenceDivStaff').addClass("open");
-	         	    var description = $("div.open p:eq(0)").text();
+            	    $(e.target).closest('.referenceDivStaff').addClass("open");
+            	    var description = $("div.open p:eq(0)").text();
              	    defaultValue = description;
              	
              	    var title = $("div.open p span:eq(0)").text();
@@ -271,12 +271,14 @@
                     var type = $("div.open p span:eq(9)").text();
                     var note = $("div.open p span:eq(10)").text(); 
              	
-             	    //showing the edit bibliography form with all the respective values
+		    	    //showing the edit bibliography form with all the respective values
 		    	    $("#editReferenceAlert").show();
 		    	    var alert = $('<input type="hidden" id="currentBiblioId">');
-		    		/* $(alert).attr( 'value', $(this).parent().parent().parent().attr("id"));*/
-		    		$(alert).attr( 'value', $(e.target).closest('.biblioDivStaff').attr("id"));
-		    		$('.modal-footer').append(alert); 
+		    	    var biblioId = $(this).data("biblio-id");
+		    	    $("#currentBiblioId").val(biblioId);
+/* 
+		    	    $(alert).attr( 'value', $(e.target).closest('.biblioDivStaff').attr("id"));
+		    	    $('.modal-footer').append(alert);  */
 		             	
              	     $("#editTitleRef").val(title);
                      $("#editAuthorRef").val(author);
@@ -1139,7 +1141,7 @@
          		
          		// ------------- delete Reference ------------
          		$.ajax({
-         		    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/bibliography/'})]" + biblioBlockId + ['/reference/'] + refId,
+         		    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/bibliography/'})]" + biblioBlockId + ['/reference/delete'] + refId,
          		    type: 'DELETE',
          		    headers: {
                          'X-CSRF-Token': token 
@@ -1489,7 +1491,7 @@
                  var token =  $('input[name="_csrf"]').attr('value');
                  
                  $.ajax({
-                     url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/bibliography/'})]" + biblioBlockId + ['/references'],
+                     url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/bibliography/'})]" + biblioBlockId + ['/reference/add'],
                      type: 'POST',
                      cache       : false,
                      contentType : 'application/json; charset=utf-8',
@@ -3096,7 +3098,7 @@
                   <a class="btn addReference primary-btn btn-sm" style="padding-top: 8px;">+ New Reference</a>
                   <div id="referenceSpace" class="col-md-10">
                      <div th:each="contentRef: ${contents.references}">
-                        <div th:id="${contentRef.id}" class="referenceDivStaff tab row">
+                        <div th:id="${contentRef.id}" class="referenceDivStaff tab row" data-biblio-id="">
                            <p class="col-md-10">
                               Reference Title: <span>[[${contentRef.title}]]</span>, Author: <span>[[${contentRef.author}]]</span>,
                               Year: <span>[[${contentRef.year}]]</span>, Journal: <span>[[${contentRef.journal}]]</span>,

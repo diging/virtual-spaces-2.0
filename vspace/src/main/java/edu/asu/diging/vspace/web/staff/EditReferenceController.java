@@ -1,7 +1,8 @@
 package edu.asu.diging.vspace.web.staff;
 
 import java.io.IOException;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,8 @@ import edu.asu.diging.vspace.core.services.IReferenceManager;
 
 @Controller
 public class EditReferenceController {
+	
+    private static final Logger logger = LoggerFactory.getLogger(EditReferenceController.class);
 
     @Autowired
     private IReferenceManager referenceManager;
@@ -47,6 +50,7 @@ public class EditReferenceController {
         
         IReference reference = referenceManager.getReference(id);
         if (reference == null) {
+        	logger.warn("Reference with ID '{}' not found, returning NOT_FOUND.", id);
             return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
         }
         
