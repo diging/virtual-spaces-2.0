@@ -2096,7 +2096,7 @@
             </div>
             
             
-           	<div id="space" style="max-width: 861px; display: -webkit-box;"  class="link-modal flex-spacing">
+           	<div id="space" style="max-width: 861px;" class="link-modal flex-spacing">
 	           	<div id="Ext_Links_Module_Slide1"> External Resources:
 		     		<div th:if="${externalLinks}" th:each="link: ${externalLinks}" th:id="${link.getId()}+'form'"> -
 		      			<a style="text-decoration: underline; color:blue;" th:href="@{${link.getExternalLink()}}">[[${link.getLabel()}]]</a>
