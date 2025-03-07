@@ -65,7 +65,7 @@ public class EditReferenceController {
         reference.setEditors(editor);
         reference.setType(type);
         reference.setNote(note);
-        referenceManager.updateReference((Reference) reference);
+        referenceManager.updateReference(reference);
 
         return new ResponseEntity<String>(HttpStatus.OK);
     }

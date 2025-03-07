@@ -57,7 +57,7 @@ public class ReferenceManager implements IReferenceManager {
     }
 
     @Override
-    public void updateReference(Reference reference) {
+    public void updateReference(IReference reference) {
         referenceRepo.save((Reference) reference);
     }
 

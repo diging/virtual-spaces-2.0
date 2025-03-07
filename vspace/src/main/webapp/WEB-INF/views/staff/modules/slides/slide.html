@@ -254,77 +254,72 @@
              
              function referenceBlockDoubleClick(e){
             	 	currentRefId = $(this).find('#deleteReferenceId').val();
-            	    $(".EasyMDEContainer").remove();
-            	    $(e.target).closest('.referenceDivStaff').addClass("open");
-            	    var description = $("div.open p:eq(0)").text();
-             	    defaultValue = description;
+            	 	$(".EasyMDEContainer").remove();
+            	 	$(e.target).closest('.referenceDivStaff').addClass("open");
+            	 	var description = $("div.open p:eq(0)").text();
+            	 	defaultValue = description;
              	
-             	    var title = $("div.open p span:eq(0)").text();
-                    var author = $("div.open p span:eq(1)").text();
-                    var year = $("div.open p span:eq(2)").text();
-                    var journal = $("div.open p span:eq(3)").text();
-                    var url = $("div.open p span:eq(4)").text();
-                    var volume = $("div.open p span:eq(5)").text();
-                    var issue = $("div.open p span:eq(6)").text();
-                    var pages = $("div.open p span:eq(7)").text();
-                    var editors = $("div.open p span:eq(8)").text();
-                    var type = $("div.open p span:eq(9)").text();
-                    var note = $("div.open p span:eq(10)").text(); 
+            	 	var title = $("div.open p span:eq(0)").text();
+            	 	var author = $("div.open p span:eq(1)").text();
+            	 	var year = $("div.open p span:eq(2)").text();
+            	 	var journal = $("div.open p span:eq(3)").text();
+            	 	var url = $("div.open p span:eq(4)").text();
+            	 	var volume = $("div.open p span:eq(5)").text();
+            	 	var issue = $("div.open p span:eq(6)").text();
+            	 	var pages = $("div.open p span:eq(7)").text();
+            	 	var editors = $("div.open p span:eq(8)").text();
+            	 	var type = $("div.open p span:eq(9)").text();
+            	 	var note = $("div.open p span:eq(10)").text(); 
              	
-		    	    //showing the edit bibliography form with all the respective values
+            	 	//showing the edit bibliography form with all the respective values
 		    	    $("#editReferenceAlert").show();
 		    	    var alert = $('<input type="hidden" id="currentBiblioId">');
-		    	    var biblioId = $(this).data("biblio-id");
-		    	    $("#currentBiblioId").val(biblioId);
-/* 
-		    	    $(alert).attr( 'value', $(e.target).closest('.biblioDivStaff').attr("id"));
-		    	    $('.modal-footer').append(alert);  */
-		             	
-             	     $("#editTitleRef").val(title);
-                     $("#editAuthorRef").val(author);
-                     $("#editYearRef").val(year);
-                     $("#editJournalRef").val(journal);
-                     $("#editUrlRef").val(url);
-                     $("#editVolumeRef").val(volume);
-                     $("#editIssueRef").val(issue);
-                     $("#editPagesRef").val(pages);
-                     $("#editEditorsRef").val(editors);
-                     $("#editTypeRef").val(type);
-                     $("#editNoteRef").val(note);
+            	 	var biblioId = $(this).data("biblio-id");
+            	 	$("#currentBiblioId").val(biblioId);
+            	 	$("#editTitleRef").val(title);
+            	 	$("#editAuthorRef").val(author);
+            	 	$("#editYearRef").val(year);
+            	 	$("#editJournalRef").val(journal);
+            	 	$("#editUrlRef").val(url);
+            	 	$("#editVolumeRef").val(volume);
+            	 	$("#editIssueRef").val(issue);
+            	 	$("#editPagesRef").val(pages);
+            	 	$("#editEditorsRef").val(editors);
+            	 	$("#editTypeRef").val(type);
+            	 	$("#editNoteRef").val(note);
                      
-                     formDataCancel = new FormData();
-                     formDataCancel.append('title', title);
-                     formDataCancel.append('author', author);
-                     formDataCancel.append('year', year);
-                     formDataCancel.append('journal', journal);
-                     formDataCancel.append('url', url);
-                     formDataCancel.append('volume', volume);
-                     formDataCancel.append('issue', issue);
-                     formDataCancel.append('pages', pages);
-                     formDataCancel.append('editors', editors);
-                     formDataCancel.append('type', type);
-                     formDataCancel.append('note', note);
+            	 	formDataCancel = new FormData();
+            	 	formDataCancel.append('title', title);
+            	 	formDataCancel.append('author', author);
+            	 	formDataCancel.append('year', year);
+            	 	formDataCancel.append('journal', journal);
+            	 	formDataCancel.append('url', url);
+            	 	formDataCancel.append('volume', volume);
+            	 	formDataCancel.append('issue', issue);
+            	 	formDataCancel.append('pages', pages);
+            	 	formDataCancel.append('editors', editors);
+            	 	formDataCancel.append('type', type);
+            	 	formDataCancel.append('note', note);
              	
              	    //remove card border
-                   $(".open").css('display', 'none');
-                   $(".open").css('overflow-y', 'scroll');
-                   $(".open").css('max-height', '200px');
+            	 	$(".open").css('display', 'none');
+            	 	$(".open").css('overflow-y', 'scroll');
+            	 	$(".open").css('max-height', '200px');
              }
              
             function spaceBlockDoubleClick(e) {
-            	$(".EasyMDEContainer").remove();
-                var divName = $(e.target).closest('div').attr('class');
-                let spaceId = e.target.closest('div').id;
-                $(e.target).closest('.SpaceDivStaff').addClass("open");
-                defaultValue = $("div.open p:eq(0)").text();
-                var blockId = $(this).closest("div").attr("id");
-                currentBlockId = blockId;
-                getSelectedSpace(blockId);
-                $("#editSpaceAlert").show();
-                // Remove card border
-                $(".open").css('display', 'none');
-                $(".open").css('overflow-y', 'scroll');
-                $(".open").css('height', '400px');
+        	 	$(".EasyMDEContainer").remove();
+        	 	var divName = $(e.target).closest('div').attr('class');
+        	 	let spaceId = e.target.closest('div').id;
+        	 	$(e.target).closest('.SpaceDivStaff').addClass("open");
+        	 	defaultValue = $("div.open p:eq(0)").text();
+        	 	var blockId = $(this).closest("div").attr("id");
+        	 	currentBlockId = blockId;
+        	 	getSelectedSpace(blockId);
+        	 	$("#editSpaceAlert").show();
+        	 	$(".open").css('display', 'none');
+        	 	$(".open").css('overflow-y', 'scroll');
+        	 	$(".open").css('height', '400px');
             }
             
             function imageBlockDoubleClick(e){
@@ -332,13 +327,13 @@
                 var divName = $(e.target).closest('div').attr('class');
                 var imgBlockID = $(e.target).attr('id'); 
             	if(imgBlockID != ''){
-                	$("#uploadImage").data('value', imgBlockID); // sets image ID value
+                	$("#uploadImage").data('value', imgBlockID);
                 	$("#addImgAlert").show();
             	}
             }
                 
             function uploadImage() {
-            	var imgBlockID = $("#uploadImage").data('value') // gets image ID
+            	var imgBlockID = $("#uploadImage").data('value')
             	var file = $('#file')[0].files[0];
             	var reader  = new FileReader();
             	var formData = new FormData();
@@ -1658,8 +1653,8 @@
                     }
                     var formData = new FormData();
                     formData.append('selectedChoices', selectedChoice);
-                 ++contentCount;
-                 formData.append('contentOrder', contentCount);
+                    ++contentCount;
+                    formData.append('contentOrder', contentCount);
                     formData.append('showsAll', showsAll);
                     $.ajax({
                         url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/choice/content'})]",
