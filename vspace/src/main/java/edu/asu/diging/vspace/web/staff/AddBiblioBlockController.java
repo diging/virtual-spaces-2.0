@@ -39,7 +39,9 @@ public class AddBiblioBlockController {
         // Extract biblioTitle and description from the JSON
         String biblioTitle = rootNode.get("biblioTitle").asText();
         String description = rootNode.get("description").asText();
-        int contentOrder = rootNode.get("contentOrder").asInt();
+        Integer contentOrder = contentBlockManager.findMaxContentOrder(slideId);
+        contentOrder = contentOrder == null ? 0 : contentOrder + 1;
+        System.out.println("/n/n/n/n"+contentOrder + "/n/n/n/n/n");
         
         IBiblioBlock biblioBlock = contentBlockManager.createBiblioBlock(slideId, biblioTitle, description, contentOrder);
       
