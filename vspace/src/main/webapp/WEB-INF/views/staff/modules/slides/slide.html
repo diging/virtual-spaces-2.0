@@ -1367,161 +1367,153 @@
                 $(".open").removeClass("open");
             });
                 
-            $("#submitBiblio").on("click", function(e) {
+            $("#submitBiblio").on("click", function (e) {
                 e.preventDefault();
-                // ------------- creating Bibliography content blocks ------------
-                
-                var formData = new FormData();
-        		var biblioTitle = $("#titleBiblio").val();
-        		var description = $("#descriptionBiblio").val();
-        		
-        		formData.append('biblioTitle', biblioTitle);
-        		formData.append('description', description);    
-        		$("#titleBiblio").val('');
-        		$("#descriptionBiblio").val('');
-        		$("#addBiblioAlert").hide();
-        		
-        		var object = {};
-        
-        		formData.forEach((value, key) => {
-        		    if (key !== 'contentOrder') {
-        		        object[key] = value;
-        		    }
-        		});
+                const formDataObj = {
+                    biblioTitle: $("#titleBiblio").val(),
+                    description: $("#descriptionBiblio").val()
+                };
+                $("#titleBiblio, #descriptionBiblio").val("");
+                $("#addBiblioAlert").hide();
 
-        		
-        		var jsonData = JSON.stringify(object);
-        
-                var token =  $('input[name="_csrf"]').attr('value');
+                // Retrieve the CSRF token.
+                const token = $('input[name="_csrf"]').attr("value");
+
                 $.ajax({
                     url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/bibliography'})]",
-                    type: 'POST',
-                    cache       : false,
-                    contentType : 'application/json',
-                    processData : false,
-                    headers: {
-                        'X-CSRF-Token': token 
-                   	},
-                    data: jsonData,
-                    success: function(data) {
-                    	data = JSON.parse(data);
-                    	var biblioblock = $('<div id="' + data.id + '" class="biblioDivStaff tab row"> \
-                               <p class="col-md-10">\
-                               Bibliography Title: <span>' + data.biblioTitle + '</span>,\
-                               Description: <span>' + data.description + '</span>\
-                               </p> \
-                               <input type="hidden" id="deleteBiblioId" value="' + data.id + '" />\
-                               <a class="btn deleteBiblio col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a>\
-                               <a class="btn addReference primary-btn btn-sm" style="padding-top: 8px;">+ New Reference</a>\
-                               <div id="referenceSpace" class="col-md-10">\
-                               </div>\
-                       </div> \
-        ');
-                    	$(biblioblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(biblioBlockDoubleClick);
-                        $('#slideSpace').append(biblioblock); 
+                    type: "POST",
+                    cache: false,
+                    contentType: "application/json",
+                    processData: false,
+                    headers: { "X-CSRF-Token": token },
+                    data: JSON.stringify(formDataObj),
+                    success: function (response) {
+                        const data = typeof response === "string" ? JSON.parse(response) : response;
+
+                        const biblioblock = $(`
+                            <div id="${data.id}" class="biblioDivStaff tab row">
+                                <p class="col-md-10">
+                                    Bibliography Title: <span>${data.biblioTitle}</span>,
+                                    Description: <span>${data.description}</span>
+                                </p>
+                                <input type="hidden" id="deleteBiblioId" value="${data.id}" />
+                                <a class="btn deleteBiblio col-md-1" href="javascript:;" style="position: absolute; right: 0px;">
+                                    <span class="icon-trash error"></span>
+                                </a>
+                                <a class="btn addReference primary-btn btn-sm" style="padding-top: 8px;">+ New Reference</a>
+                                <div id="referenceSpace" class="col-md-10"></div>
+                            </div>
+                        `);
+
+                        biblioblock
+                            .mouseenter(onMouseEnter)
+                            .mouseleave(onMouseLeave)
+                            .dblclick(biblioBlockDoubleClick);
+
+                        $("#slideSpace").append(biblioblock);
                     },
-                    error: function(data) {
-                    	if (data.status == 403){
-                    		$("#loginAlert").show();
-                    	}
-                    	else {
-                        	var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                        	$('.error').append(alert);
-                    	}
+                    error: function (xhr) {
+                        if (xhr.status === 403) {
+                            $("#loginAlert").show();
+                        } else {
+                            const alert = $(`
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <p>We are sorry but something went wrong. Please try again later.</p>
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            `);
+                            $(".error").append(alert);
+                        }
                     }
-                    
                 });
             });
 
-             
-             $("#submitReference").on("click", function(e) {
-                 e.preventDefault();
-                 // ------------- creating reference ------------
-                 
-                 var formData = new FormData();
-                 var title = $("#titleRef").val();
-                 var author = $("#authorRef").val();
-                 var year = $("#yearRef").val();
-                 var journal = $("#journalRef").val();
-                 var url = $("#urlRef").val();
-                 var volume = $("#volumeRef").val();
-                 var issue = $("#issueRef").val();
-                 var pages = $("#pagesRef").val();
-                 var editors = $("#editorsRef").val();
-                 var type = $("#typeRef").val();
-                 var note = $("#noteRef").val();
-                 var visibility = $("#visibilityRef").val();
-                 
-                 formData.append('title', title);
-                 formData.append('author', author);
-                 formData.append('year', year);
-                 formData.append('journal', journal);
-                 formData.append('url', url);
-                 formData.append('volume', volume);
-                 formData.append('issue', issue);
-                 formData.append('pages', pages);
-                 formData.append('editors', editors);
-                 formData.append('type', type);
-                 formData.append('note', note);
-                 formData.append("visibility", visibility);
-                 var biblioBlockId = $('#currentBiblioId').attr('value');
 
-                 $("#titleRef").val('');
-                 $("#authorRef").val('');
-                 $("#yearRef").val('');
-                 $("#journalRef").val('');
-                 $("#urlRef").val('');
-                 $("#volumeRef").val('');
-                 $("#issueRef").val('');
-                 $("#pagesRef").val('');
-                 $("#editorsRef").val('');
-                 $("#typeRef").val('');
-                 $("#noteRef").val('');
-                 $("#visibilityRef").val('');
-                 $("#addReferenceAlert").hide();
-                 
-                 var object = {};
-                 formData.forEach((value, key) => object[key] = value);
-                 var jsonData = JSON.stringify(object);
-                 var token =  $('input[name="_csrf"]').attr('value');
-                 
-                 $.ajax({
-                     url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/bibliography/'})]" + biblioBlockId + ['/reference/add'],
-                     type: 'POST',
-                     cache       : false,
-                     contentType : 'application/json; charset=utf-8',
-                     processData : false,
-                     headers: {
-                         'X-CSRF-Token': token 
-                    	},
-                     data: jsonData,
-                     success: function(data) {
-                     	data = JSON.parse(data);
-                     	var referenceblock = $('<div id="'+ data.id +'" class="referenceDivStaff tab row"><p class="col-md-10" > Reference Title: <span>' + data.title + '</span>, Author: <span>' + data.author + '</span>, Year:' 
-                         		+ '<span>' + data.year + '</span>, Journal: <span>' + data.journal + '</span>, '
-                         		+ 'Url: <span>' + data.url + '</span>, Volume: <span>' + data.volume + '</span>, '
-         						+ 'Issue: <span>' + data.issue + '</span>, Pages: <span>' + data.pages + '</span>, '
-         						+ 'Editors: <span>' + data.editors + '</span>, Type: <span>' + data.type + '</span>, '
-         						+ 'Note: <span>' + data.note + '</span>'
-                         		+ '<input type="hidden" id="deleteReferenceId" value="'+ data.id +'" /><a class="btn deleteReference" href="javascript:;" style="position: absolute; right:0px;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a></p></div>');
-         
-                     	$(referenceblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(referenceBlockDoubleClick);
-                     	var elem = $('#' + biblioBlockId).find('#referenceSpace');
-                     	elem.append(referenceblock);
-                     	$('#currentBiblioId').remove();
-                     },
-                     error: function(data) {
-                     	if (data.status == 403){
-                     		$("#loginAlert").show();
-                     	}
-                     	else {
-                         	var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                         	$('.error').append(alert);
-                     	}
-                     }
-                     
-                 });
-             });
+             
+            $("#submitReference").on("click", function (e) {
+                e.preventDefault();
+                const fields = [
+                    "titleRef", "authorRef", "yearRef", "journalRef",
+                    "urlRef", "volumeRef", "issueRef", "pagesRef",
+                    "editorsRef", "typeRef", "noteRef", "visibilityRef"
+                ];
+
+                const formDataObj = {};
+                fields.forEach(id => {
+                    const key = id.replace("Ref", "");
+                    formDataObj[key] = $("#" + id).val();
+                });
+
+                const biblioBlockId = $("#currentBiblioId").attr("value");
+
+                fields.forEach(id => $("#" + id).val(""));
+                $("#addReferenceAlert").hide();
+
+                const token = $('input[name="_csrf"]').attr("value");
+
+                $.ajax({
+                    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/bibliography/'})]" +
+                        biblioBlockId + "/reference/add",
+                    type: "POST",
+                    cache: false,
+                    contentType: "application/json; charset=utf-8",
+                    processData: false,
+                    headers: { "X-CSRF-Token": token },
+                    data: JSON.stringify(formDataObj),
+                    success: function (response) {
+                        const data = typeof response === "string" ? JSON.parse(response) : response;
+
+                        const referenceBlock = $(`
+                            <div id="${data.id}" class="referenceDivStaff tab row">
+                                <p class="col-md-10">
+                                    Reference Title: <span>${data.title}</span>, 
+                                    Author: <span>${data.author}</span>, 
+                                    Year: <span>${data.year}</span>, 
+                                    Journal: <span>${data.journal}</span>, 
+                                    Url: <span>${data.url}</span>, 
+                                    Volume: <span>${data.volume}</span>, 
+                                    Issue: <span>${data.issue}</span>, 
+                                    Pages: <span>${data.pages}</span>, 
+                                    Editors: <span>${data.editors}</span>, 
+                                    Type: <span>${data.type}</span>, 
+                                    Note: <span>${data.note}</span>
+                                    <input type="hidden" id="deleteReferenceId" value="${data.id}" />
+                                    <a class="btn deleteReference" href="javascript:;" style="position: absolute; right:0px;">
+                                        <i style="color: var(--error);" class="fas fa-trash-alt"></i>
+                                    </a>
+                                </p>
+                            </div>
+                        `);
+
+                        // Bind event handlers.
+                        referenceBlock
+                            .mouseenter(onMouseEnter)
+                            .mouseleave(onMouseLeave)
+                            .dblclick(referenceBlockDoubleClick);
+
+                        $("#" + biblioBlockId).find("#referenceSpace").append(referenceBlock);
+                        $("#currentBiblioId").remove();
+                    },
+                    error: function (xhr) {
+                        if (xhr.status === 403) {
+                            $("#loginAlert").show();
+                        } else {
+                            const alert = $(`
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <p>We are sorry but something went wrong. Please try again later.</p>
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            `);
+                            $(".error").append(alert);
+                        }
+                    }
+                });
+            });
+
                 $("#cancelVideoBtn").click(function() {
                     // Initialize selected video ID to blank, on clicking cancel button
                     $("#videoTitle").val('');
