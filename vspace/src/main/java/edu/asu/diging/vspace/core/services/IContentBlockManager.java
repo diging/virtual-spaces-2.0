@@ -55,7 +55,7 @@ public interface IContentBlockManager {
 
     ITextBlock getTextBlock(String textBlockId);
     
-    IBiblioBlock getBiblioBlock(String biblioBlockId);
+    BiblioBlock getBiblioBlock(String biblioBlockId);
 
     IChoiceBlock getChoiceBlock(String choiceBlockId);
 

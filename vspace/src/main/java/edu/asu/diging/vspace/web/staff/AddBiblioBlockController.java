@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.asu.diging.vspace.core.model.IBiblioBlock;
 import edu.asu.diging.vspace.core.model.impl.BiblioBlock;
+import edu.asu.diging.vspace.core.model.impl.BiblioBlockData;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
 
 
@@ -29,23 +30,16 @@ public class AddBiblioBlockController {
     private IContentBlockManager contentBlockManager;
 
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/bibliography", method = RequestMethod.POST)
-    public ResponseEntity<String> addBiblioBlock(@PathVariable("id") String slideId,
-            @PathVariable("moduleId") String moduleId, @RequestBody String biblioBlockData) throws JsonProcessingException {
+    public ResponseEntity<BiblioBlock> addBiblioBlock(@PathVariable("id") String slideId,
+            @PathVariable("moduleId") String moduleId, @RequestBody BiblioBlockData biblioBlockData) throws JsonProcessingException {
         
-        // Parse the JSON string using ObjectMapper
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode rootNode = mapper.readTree(biblioBlockData);
-
-        // Extract biblioTitle and description from the JSON
-        String biblioTitle = rootNode.get("biblioTitle").asText();
-        String description = rootNode.get("description").asText();
+        String biblioTitle = biblioBlockData.getBiblioTitle();
+        String description = biblioBlockData.getDescription();
         Integer contentOrder = contentBlockManager.findMaxContentOrder(slideId);
         contentOrder = contentOrder == null ? 0 : contentOrder + 1;
-        System.out.println("/n/n/n/n"+contentOrder + "/n/n/n/n/n");
-        
+
         IBiblioBlock biblioBlock = contentBlockManager.createBiblioBlock(slideId, biblioTitle, description, contentOrder);
-      
-        return new ResponseEntity<String>(mapper.writeValueAsString(biblioBlock), HttpStatus.OK);
+        return new ResponseEntity<>((BiblioBlock) biblioBlock, HttpStatus.OK);
     }
 
 }

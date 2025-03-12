@@ -31,7 +31,6 @@ public class ReferenceManager implements IReferenceManager {
     @Override
     public IReference createReference(String biblioId, String title, String author,String year,String journal, String url, String volume,String issue, String pages,String editor, String type, String note) {
     	IReference reference = new Reference();
-        IBiblioBlock biblio = contentBlockManager.getBiblioBlock(biblioId);
         reference.setAuthor(author);
         reference.setTitle(title);
         reference.setYear(year);
@@ -43,7 +42,8 @@ public class ReferenceManager implements IReferenceManager {
         reference.setEditors(editor);
         reference.setType(type);
         reference.setNote(note);
-        reference.getBiblios().add((BiblioBlock) biblio);
+        BiblioBlock biblio = contentBlockManager.getBiblioBlock(biblioId);
+        reference.getBiblios().add(biblio);
         return referenceRepo.save((Reference) reference);
     }
 

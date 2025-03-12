@@ -565,10 +565,10 @@ public class ContentBlockManager implements IContentBlockManager {
     }
 
     @Override
-    public IBiblioBlock getBiblioBlock(String biblioBlockId) {
+    public BiblioBlock getBiblioBlock(String biblioBlockId) {
         Optional<BiblioBlock> biblioBlock = biblioBlockRepo.findById(biblioBlockId);
         if (biblioBlock.isPresent()) {
-            return biblioBlock.get();
+            return (BiblioBlock) biblioBlock.get();
         }
         return null;
     }
