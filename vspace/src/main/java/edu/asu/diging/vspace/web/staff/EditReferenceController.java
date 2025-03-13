@@ -51,7 +51,8 @@ public class EditReferenceController {
         IReference reference = referenceManager.getReference(id);
         if (reference == null) {
         	logger.warn("Reference with ID '{}' not found, returning NOT_FOUND.", id);
-            return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+        	return ResponseEntity.notFound().build();
+
         }
         
         reference.setTitle(title);
