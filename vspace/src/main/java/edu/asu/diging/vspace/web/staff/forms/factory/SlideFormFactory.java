@@ -22,9 +22,16 @@ public class SlideFormFactory implements ISlideFormFactory{
     
     /**
      * 
-     * Creates new slide form object
-     * @param slide
-     * @return
+     * Creates new slide form object based on the slide and the exhibition
+     * 
+     * This method initializes a {@code SlideForm} object and populates it with the name and 
+     * description of the given slide. It then processes the exhibition's supported languages, setting 
+     * the default name and description for the default language, and adds localized names and 
+     * descriptions for other languages.
+     * 
+     * @param slide The {@code ISlide} containing the slide details.
+     * @param startExhibition The {@code IExhibition} from which the language settings are derived.
+     * @return A {@code SlideForm} containing localized slide information.
      */
     @Override
     public SlideForm createNewSlideForm(ISlide slide, IExhibition startExhibition) {
