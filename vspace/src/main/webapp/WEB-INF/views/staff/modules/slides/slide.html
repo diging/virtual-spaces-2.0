@@ -229,233 +229,101 @@
                 $(".open").css('height', '400px');
             }
 
-            function biblioBlockDoubleClick(e){
-               $(".EasyMDEContainer").remove();
-         	   $(e.target).closest('.biblioDivStaff').addClass("open");
-         	   var description = $("div.open p:eq(0)").text();
-           	   defaultValue = description;
-           	
-           	   var title = $("div.open p span:eq(0)").text();
-           	   var desc = $("div.open p span:eq(1)").text();  
-	      	    //showing the edit bibliography form with all the respective values
-      	       $("#editBiblioAlert").show();
-      	
-      	       $("#editTitleBiblio").val(title);
-      	       $("#editDescBiblio").val(desc);
-           		
-           	    formDataCancel = new FormData();
-           	    formDataCancel.append('biblioTitle', title);
-           	    formDataCancel.append('description', desc);
-            	    //remove card border
-                $(".open").css('display', 'none');
-                $(".open").css('overflow-y', 'scroll');
-                $(".open").css('max-height', '200px');	
-             } 
-             
-             function referenceBlockDoubleClick(e){
-            	 	currentRefId = $(this).find('.deleteReferenceId').val();
-            	 	$(".EasyMDEContainer").remove();
-            	 	$(e.target).closest('.referenceDivStaff').addClass("open");
-            	 	var description = $("div.open p:eq(0)").text();
-            	 	defaultValue = description;
-             	
-            	 	var title = $("div.open p span:eq(0)").text();
-            	 	var author = $("div.open p span:eq(1)").text();
-            	 	var year = $("div.open p span:eq(2)").text();
-            	 	var journal = $("div.open p span:eq(3)").text();
-            	 	var url = $("div.open p span:eq(4)").text();
-            	 	var volume = $("div.open p span:eq(5)").text();
-            	 	var issue = $("div.open p span:eq(6)").text();
-            	 	var pages = $("div.open p span:eq(7)").text();
-            	 	var editors = $("div.open p span:eq(8)").text();
-            	 	var type = $("div.open p span:eq(9)").text();
-            	 	var note = $("div.open p span:eq(10)").text(); 
-             	
-            	 	//showing the edit bibliography form with all the respective values
-		    	    $("#editReferenceAlert").show();
-		    	    var alert = $('<input type="hidden" id="currentBiblioId">');
-            	 	var biblioId = $(this).data("biblio-id");
-            	 	$("#currentBiblioId").val(biblioId);
-            	 	$("#editTitleRef").val(title);
-            	 	$("#editAuthorRef").val(author);
-            	 	$("#editYearRef").val(year);
-            	 	$("#editJournalRef").val(journal);
-            	 	$("#editUrlRef").val(url);
-            	 	$("#editVolumeRef").val(volume);
-            	 	$("#editIssueRef").val(issue);
-            	 	$("#editPagesRef").val(pages);
-            	 	$("#editEditorsRef").val(editors);
-            	 	$("#editTypeRef").val(type);
-            	 	$("#editNoteRef").val(note);
-                     
-            	 	formDataCancel = new FormData();
-            	 	formDataCancel.append('title', title);
-            	 	formDataCancel.append('author', author);
-            	 	formDataCancel.append('year', year);
-            	 	formDataCancel.append('journal', journal);
-            	 	formDataCancel.append('url', url);
-            	 	formDataCancel.append('volume', volume);
-            	 	formDataCancel.append('issue', issue);
-            	 	formDataCancel.append('pages', pages);
-            	 	formDataCancel.append('editors', editors);
-            	 	formDataCancel.append('type', type);
-            	 	formDataCancel.append('note', note);
-             	
-             	    //remove card border
-            	 	$(".open").css('display', 'none');
-            	 	$(".open").css('overflow-y', 'scroll');
-            	 	$(".open").css('max-height', '200px');
-             }
-             
+            function removeEasyMDEContainer() {
+                $(".EasyMDEContainer").remove();
+            }
+
+            function openAndExtractValues(target, containerClass, spanSelectors) {
+                $(target).closest(containerClass).addClass("open");
+                const openDiv = $("div.open");
+
+                return spanSelectors.map(selector => openDiv.find(selector).text());
+            }
+
+            function styleOpenDiv(height = '200px') {
+                $(".open").css({
+                    'display': 'none',
+                    'overflow-y': 'scroll',
+                    'max-height': height
+                });
+            }
+
+            // Handlers
+            function biblioBlockDoubleClick(e) {
+                removeEasyMDEContainer();
+
+                const [title, desc] = openAndExtractValues(e.target, '.biblioDivStaff', ["p span:eq(0)", "p span:eq(1)"]);
+
+                $("#editBiblioAlert").show();
+                $("#editTitleBiblio").val(title);
+                $("#editDescBiblio").val(desc);
+
+                formDataCancel = new FormData();
+                formDataCancel.append('biblioTitle', title);
+                formDataCancel.append('description', desc);
+
+                styleOpenDiv();
+            }
+
+            function referenceBlockDoubleClick(e) {
+                removeEasyMDEContainer();
+
+                const spanSelectors = [
+                    "p span:eq(0)", "p span:eq(1)", "p span:eq(2)", "p span:eq(3)", "p span:eq(4)",
+                    "p span:eq(5)", "p span:eq(6)", "p span:eq(7)", "p span:eq(8)", "p span:eq(9)", "p span:eq(10)"
+                ];
+
+                const [title, author, year, journal, url, volume, issue, pages, editors, type, note] = openAndExtractValues(e.target, '.referenceDivStaff', spanSelectors);
+
+                currentRefId = $(this).find('.deleteReferenceId').val();
+
+                $("#editReferenceAlert").show();
+                $("#currentBiblioId").val($(this).data("biblio-id"));
+
+                $("#editTitleRef").val(title);
+                $("#editAuthorRef").val(author);
+                $("#editYearRef").val(year);
+                $("#editJournalRef").val(journal);
+                $("#editUrlRef").val(url);
+                $("#editVolumeRef").val(volume);
+                $("#editIssueRef").val(issue);
+                $("#editPagesRef").val(pages);
+                $("#editEditorsRef").val(editors);
+                $("#editTypeRef").val(type);
+                $("#editNoteRef").val(note);
+
+                formDataCancel = new FormData();
+                [
+                    ['title', title], ['author', author], ['year', year], ['journal', journal],
+                    ['url', url], ['volume', volume], ['issue', issue], ['pages', pages],
+                    ['editors', editors], ['type', type], ['note', note]
+                ].forEach(([key, value]) => formDataCancel.append(key, value));
+
+                styleOpenDiv();
+            }
+
             function spaceBlockDoubleClick(e) {
-        	 	$(".EasyMDEContainer").remove();
-        	 	var divName = $(e.target).closest('div').attr('class');
-        	 	let spaceId = e.target.closest('div').id;
-        	 	$(e.target).closest('.SpaceDivStaff').addClass("open");
-        	 	defaultValue = $("div.open p:eq(0)").text();
-        	 	var blockId = $(this).closest("div").attr("id");
-        	 	currentBlockId = blockId;
-        	 	getSelectedSpace(blockId);
-        	 	$("#editSpaceAlert").show();
-        	 	$(".open").css('display', 'none');
-        	 	$(".open").css('overflow-y', 'scroll');
-        	 	$(".open").css('height', '400px');
+                removeEasyMDEContainer();
+
+                $(e.target).closest('.SpaceDivStaff').addClass("open");
+
+                currentBlockId = $(e.target).closest("div").attr("id");
+                getSelectedSpace(currentBlockId);
+
+                defaultValue = $("div.open p:eq(0)").text();
+
+                $("#editSpaceAlert").show();
+                styleOpenDiv('400px');
             }
-            
-            function imageBlockDoubleClick(e){
-            	$(".EasyMDEContainer").remove();
-                var divName = $(e.target).closest('div').attr('class');
-                var imgBlockID = $(e.target).attr('id'); 
-            	if(imgBlockID != ''){
-                	$("#uploadImage").data('value', imgBlockID);
-                	$("#addImgAlert").show();
-            	}
-            }
-                
-            function uploadImage() {
-            	var imgBlockID = $("#uploadImage").data('value')
-            	var file = $('#file')[0].files[0];
-            	var reader  = new FileReader();
-            	var formData = new FormData();
-            	var chooseFromExisting = true;
-            	if (typeof(file) != "undefined"){
-            		chooseFromExisting = false;
-            		formData.append('file', file);
-            	}
-            	var imageSource = $('#selectedImage').find('img').attr('src');
-            	var imageId = "";
-            	if(typeof(imageSource) != "undefined"){
-            		imageId = imageSource.split("/").pop().split(".")[0];
-            	}
-            	var imageblock = "";
-            	var oldImageBlock = "";
-            	var token = [[${_csrf.token}]];
-            	// Ashmi changes for Story VSPC-64
-            			    
-            	// checks if image ID is present to replace
-            	if (imgBlockID != '') {
-            			oldImageBlock = $("#" + imgBlockID);
-            			var imageBlockId = imgBlockID;
-            			formData.append('imageBlockId',imageBlockId);
-            			var url = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image/'})]" + imageBlockId;
-            			if(!chooseFromExisting){
-            				reader.onload = function (theFile)
-            				{
-            					var image = new Image();
-            					image.src = theFile.target.result;
-            					image.onload = function ()
-            					{
-            						imageblock = createImageBlock(reader, this.width);
-            						$("#" + imageBlockId).replaceWith(imageblock);	
-            						 $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(imageBlockDoubleClick);
-            					};
-            				}
-            			}
-            			else{
-            				var image = new Image();
-            				image.src = $('#selectedImage').find('img').attr('src');
-            				formData.append('imageId',imageId);
-            				imageblock = createImageBlockWithExistingImage($('#selectedImage').find('img').attr('src'),image.width);
-            				$("#" + imageBlockId).replaceWith(imageblock);	
-            				$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(imageBlockDoubleClick);
-            			}
-            			// Reset data-attribute to get current selected image ID
-            			$("#uploadImage").data('value', '');
-            	}
-            	else {
-            		var url = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image'})]";
-            		if(!chooseFromExisting){
-            			reader.onload = function (theFile) 
-            			{        	
-            			var image = new Image();
-            			image.src = theFile.target.result;
-            			image.onload = function() 
-            			{
-            				imageblock = createImageBlock(reader, this.width);  
-            				$('#slideSpace').append(imageblock); 
-            				$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(imageBlockDoubleClick);
-            			};          
-            			} 
-            		}
-            		else
-            		{
-            			var image = new Image();
-            			image.src = $('#selectedImage').find('img').attr('src');
-            			formData.append('imageId',imageId);
-            			imageblock = createImageBlockWithExistingImage($('#selectedImage').find('img').attr('src'),image.width);  
-            			$('#slideSpace').append(imageblock); 
-            			$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(imageBlockDoubleClick);
-            		}
-            	}
-            	if (!chooseFromExisting)
-            	{
-            		reader.readAsDataURL(file)
-            	}
-            	$.ajax({
-            		enctype: 'multipart/form-data',
-            		// ------------- creating image content blocks ------------
-            		url: url,
-            		type: 'POST',
-            		cache       : false,
-            		contentType : false,
-            		processData : false,
-            		headers: {
-	                    'X-CSRF-TOKEN': token
-	                },
-            		data: formData,    
-            		success: function(data) {
-            			$(".open").removeClass("open");
-            			var img = imageblock.find('img');
-            			if(data != ''){
-            				img.attr('id', data);
-            				$("#current").find('#deleteImageId').val(data);
-            				$("#current").attr('id', data);
-            			}
-            			else{
-            				img.attr('id', imgBlockID);
-            				$("#current").find('#deleteImageId').val(imgBlockID);
-            				$("#current").attr('id', imgBlockID);
-            			}
-            		},
-            		error: function(data) {
-            		if (imgBlockID == '') {
-            			$("#current").remove();
-            		}
-            		else {
-            			$("#current").replaceWith(oldImageBlock);
-            		}
-            		if (data.status == 403) {
-            			$("#loginAlert").show();
-            		}
-            		}
-            	});
-            	// Reset the image file name 
-            	$('#file').val('');
-            	if(chooseFromExisting)
-            	{
-            		$("#selectedImage").empty();
-            		$('#imageId').prop('selectedIndex',0).trigger( "change" );
-            	}
+
+            function imageBlockDoubleClick(e) {
+                removeEasyMDEContainer();
+
+                const imgBlockID = $(e.target).attr('id');
+                if (imgBlockID) {
+                    $("#uploadImage").data('value', imgBlockID);
+                    $("#addImgAlert").show();
+                }
             }
             
             function embedVideo() {
