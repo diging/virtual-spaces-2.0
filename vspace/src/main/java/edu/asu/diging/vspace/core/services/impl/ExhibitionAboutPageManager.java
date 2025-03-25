@@ -69,7 +69,8 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
 
         ExhibitionAboutPage exhibitionAboutPage = getExhibitionAboutPage();       
         exhibitionAboutPage.setTitle(aboutPageForm.getDefaultTitle().getText());
-        exhibitionAboutPage.setAboutPageText(aboutPageForm.getDefaultAboutPageText().getText());
+        exhibitionAboutPage.setAboutPageText(aboutPageForm.getDefaultAboutPageText().getText());        
+        
         setLocalizedText(aboutPageForm.getDefaultTitle(), exhibitionAboutPage.getExhibitionTitles());
         setLocalizedText(aboutPageForm.getDefaultAboutPageText(), exhibitionAboutPage.getExhibitionTextDescriptions());
         
@@ -96,8 +97,15 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
     }
 
     private void setLocalizedText(LocalizedTextForm textForm, List<ILocalizedText> localizedTextList) {
-        if (textForm!=null && !StringUtils.isEmpty(textForm.getText())) {
+        if (textForm!=null) {
             LocalizedText localizedText = localizedTextRepo.findById(textForm.getLocalizedTextId()).orElse(null);
+            if(StringUtils.isEmpty(textForm.getText())){
+                //then delete the localized text if it has no text
+                if(localizedText!=null) {
+                    localizedTextRepo.delete(localizedText);
+                }                
+                return;
+            }
             if (localizedText != null) {
                 localizedText.setText(textForm.getText());
             } else {
