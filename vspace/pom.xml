@@ -27,6 +27,7 @@
         <db.password>vspace</db.password>
         <uploaded.files.path></uploaded.files.path>
         <downloaded.files.path></downloaded.files.path>
+        <resources.path></resources.path>
         <email.user></email.user>
         <email.password></email.password>
         <email.host></email.host>

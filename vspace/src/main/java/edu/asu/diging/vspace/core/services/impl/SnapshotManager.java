@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,6 +40,7 @@ import edu.asu.diging.vspace.core.services.IRenderingManager;
 import edu.asu.diging.vspace.core.services.ISnapshotManager;
 
 @Service
+@EnableAsync
 @PropertySource("classpath:app.properties")
 public class SnapshotManager  implements  ISnapshotManager {
 
@@ -125,9 +127,9 @@ public class SnapshotManager  implements  ISnapshotManager {
      * @throws InterruptedException - if the snapshot creation process is interrupted
      * @throws FileStorageException - if an error occurs while storing the snapshot
      * @throws ImageCouldNotBeStoredException 
-     */    
-    @Async
+     */   
     @Override
+    @Async
     @Transactional
     public SnapshotTask createSnapshot(String resourcesPath, String exhibitionFolderName,SequenceHistory sequenceHistory, ExhibitionSnapshot exhibitionSnapshot) 
             throws IOException, InterruptedException, FileStorageException {
