@@ -253,7 +253,7 @@
              } 
              
              function referenceBlockDoubleClick(e){
-            	 	currentRefId = $(this).find('.deleteReferenceId').val();
+            	 	currentRefId = $(this).find('.deleteReferenceField').val();
             	 	$(".EasyMDEContainer").remove();
             	 	$(e.target).closest('.referenceDivStaff').addClass("open");
             	 	var description = $("div.open p:eq(0)").text();
@@ -980,7 +980,7 @@
              
              $(document).on("click", ".deleteReference", function(e) {
          		$("#confirmDeleteRefAlert").show();
-         		var alert = $('<input type="hidden" class="deleteReferenceId">');
+         		var alert = $('<input type="hidden" class="deleteReferenceField">');
          		$(alert).attr( 'value', $(this).siblings('input').val());
          		$('.modal-footer').append(alert); 
          		
@@ -1127,8 +1127,8 @@
          		$("#confirmDeleteBiblioAlert").find('input').remove();
          		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
          		$("#confirmDeleteRefAlert").hide();
-         		var refId = $('.deleteReferenceId').attr('value');
-         		$('.deleteReferenceId').remove();
+         		var refId = $('.deleteReferenceField').attr('value');
+         		/* $('.deleteReferenceField').remove(); */
          		var biblioBlockId = $('#currentBiblioId').attr('value');
          		$('#currentBiblioId').remove();
          		
@@ -1500,7 +1500,7 @@
          						+ 'Issue: <span>' + data.issue + '</span>, Pages: <span>' + data.pages + '</span>, '
          						+ 'Editors: <span>' + data.editors + '</span>, Type: <span>' + data.type + '</span>, '
          						+ 'Note: <span>' + data.note + '</span>'
-                         		+ '<input type="hidden" class="deleteReferenceId" value="'+ data.id +'" /><a class="btn deleteReference" href="javascript:;" style="position: absolute; right:0px;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a></p></div>');
+                         		+ '<input type="hidden" class="deleteReferenceField" value="'+ data.id +'" /><a class="btn deleteReference" href="javascript:;" style="position: absolute; right:0px;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a></p></div>');
          
                      	$(referenceblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(referenceBlockDoubleClick);
                      	var elem = $('#' + biblioBlockId).find('#referenceSpace');
@@ -1852,7 +1852,7 @@
                 			+ '</span>, Url: <span>' + formData.get('url') + '</span>, Volume: <span>' + formData.get('volume') + '</span>, Issue: <span>' + formData.get('issue') 
                 			+ '</span>, Pages: <span>' + formData.get('pages') + '</span>, Editors: <span>' + formData.get('editors') + '</span>, Type: <span>' + formData.get('type')
                 			+ '</span>, Note: <span>' + formData.get('note')
-                			+ '</span></p><input type="hidden" class="deleteReferenceId" value="'+blockId+'" /><a class="btn deleteReference col-md-1" href="javascript:;"> <span class="icon-trash error"></span></a>');
+                			+ '</span></p><input type="hidden" class="deleteReferenceField" value="'+blockId+'" /><a class="btn deleteReference col-md-1" href="javascript:;"> <span class="icon-trash error"></span></a>');
                  
                 	//reset border of the card 
                  //rebind event handlers
@@ -3099,7 +3099,7 @@
                               Editors: <span>[[${contentRef.editors}]]</span>, Type: <span>[[${contentRef.type}]]</span>,
                               Note: <span>[[${contentRef.note}]]</span>
                            </p>
-                           <input type="hidden" class="deleteReferenceId" th:value="${contentRef.id}" />
+                           <input type="hidden" class="deleteReferenceField" th:value="${contentRef.id}" />
                            <a class="btn deleteReference col-md-1" href="javascript:;"> 
                         <span class="icon-trash error"></span>
                         </a>
