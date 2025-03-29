@@ -1120,39 +1120,61 @@
          		
          // ---------- Delete Reference -------------
          		
-         		$("#deleteReference").on("click", function(e) {
-         		e.preventDefault();
-         		$("#confirmDeleteTextAlert").find('input').remove();
-         		$("#confirmDeleteImageAlert").find('input').remove();
-         		$("#confirmDeleteBiblioAlert").find('input').remove();
-         		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
-         		$("#confirmDeleteRefAlert").hide();
-         		var refId = $('.deleteReferenceField').attr('value');
-         		/* $('.deleteReferenceField').remove(); */
-         		var biblioBlockId = $('#currentBiblioId').attr('value');
-         		$('#currentBiblioId').remove();
-         		
-         		var token =  $('input[name="_csrf"]').attr('value');
-         		
-         		// ------------- delete Reference ------------
-         		$.ajax({
-         		    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/bibliography/'})]" + biblioBlockId + ['/reference/delete/'] + refId,
-         		    type: 'DELETE',
-         		    headers: {
-                         'X-CSRF-Token': token 
-                    	},
-         		    success: function(result) {
-         		        $('#' + refId).remove();
-         		    },
-         			error: function(data) {
-         				var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-         				$('.error').append(alert); 
-         				$(".error").delay(4000).slideUp(500, function(){
-         				    $(".error").empty();
-         				});
-         			}
-         		});
-         	});
+			$("#deleteReference").on("click", function(e) {
+			  e.preventDefault();
+			
+			  // Remove input fields from all confirmation alerts
+			  const alertSelectors = [
+			    "#confirmDeleteTextAlert",
+			    "#confirmDeleteImageAlert",
+			    "#confirmDeleteBiblioAlert",
+			    "#confirmDeleteChoiceBlockAlert"
+			  ];
+			  alertSelectors.forEach(selector => {
+			    $(selector).find('input').remove();
+			  });
+			
+			  // Hide the delete confirmation alert
+			  $("#confirmDeleteRefAlert").hide();
+			
+			  // Retrieve necessary values
+			  const refId = $('.deleteReferenceField').attr('value');
+			  const biblioBlockId = $('#currentBiblioId').attr('value');
+			  $('#currentBiblioId').remove(); // Remove the current bibliography ID element
+			
+			  const csrfToken = $('input[name="_csrf"]').attr('value');
+			
+			  // Build the URL for deletion request
+			  const baseUrl = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/bibliography/'})]";
+			  const deleteUrl = baseUrl + biblioBlockId + "/reference/delete/" + refId;
+			
+			  // AJAX call to delete the reference
+			  $.ajax({
+			    url: deleteUrl,
+			    type: 'DELETE',
+			    headers: { 'X-CSRF-Token': csrfToken },
+			    success: function() {
+			      // Remove the reference element from the DOM on success
+			      $('#' + refId).remove();
+			    },
+			    error: function() {
+			      // Create and display an error alert if deletion fails
+			      const errorAlert = $(`
+			        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+			          <p>We are sorry but something went wrong. Please try to delete again later.</p>
+			          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			            <span aria-hidden="true">&times;</span>
+			          </button>
+			        </div>
+			      `);
+			      $('.error').append(errorAlert);
+			      $(".error").delay(4000).slideUp(500, function() {
+			        $(this).empty().show();
+			      });
+			    }
+			  });
+			});
+
                 	// ---------- Delete Text Block -------------
             	
             	$("#deleteText").on("click", function(e) {
