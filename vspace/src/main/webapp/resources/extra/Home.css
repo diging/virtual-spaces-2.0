@@ -659,13 +659,11 @@
 
 .link-modal {
 	display: none;
-	position: fixed;
 	top: 2.5%;
 	right: 2.5%;
 	left: 2.5%;
 	bottom: 0;
 	z-index: 9999;
-	overflow-y: scroll;
 	background: white;
 	padding: 25px;
 	border-radius: 10px;
