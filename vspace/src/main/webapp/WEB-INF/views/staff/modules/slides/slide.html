@@ -697,7 +697,7 @@
                	}
             	
             	function showExternalLinks(externalLink) {
-           		   var externalLinkMainDiv = $('<div id="'+ externalLink["id"] +'" style="margin-top: 15px;"><div class="link_headers">Name: '+ externalLink["label"] +'</div><div>Link:</br><a style="text-decoration: underline; color:blue; overflow: hidden;text-overflow: ellipsis;display:inline-block;" href="'+ externalLink["url"] +'">'+ externalLink["url"]+ '</a></div><a class="btn deleteExternalLink col-md-1" style="text-align: left; padding-left: 0;" href="javascript:;"><span class="icon-trash error" style="text-align: left;"></span></a><a class="btn editExternalLink col-md-1" style="text-align: left; padding-left: 0;" href="javascript:;"><span class="icon-edit" style="text-align: left;"></span></a></div>');
+           		   var externalLinkMainDiv = $('<div id="'+ externalLink["id"] +'" style="margin-top: 15px;"><div class="link_headers">Name: '+ externalLink["label"] +'</div><div>URL:</br><a style="text-decoration: underline; color:blue; overflow: hidden;text-overflow: ellipsis;display:inline-block;" href="'+ externalLink["url"] +'">'+ externalLink["url"]+ '</a></div><a class="btn deleteExternalLink col-md-1" style="text-align: left; padding-left: 0;" href="javascript:;"><span class="icon-trash error" style="text-align: left;"></span></a><a class="btn editExternalLink col-md-1" style="text-align: left; padding-left: 0;" href="javascript:;"><span class="icon-edit" style="text-align: left;"></span></a></div>');
                 	   var externalLinkFormDiv = $('<div id="'+ externalLink["id"] +'form"> - <a style="text-decoration: underline; color:blue;" href="'+ externalLink["url"] +'">'+ externalLink["label"] +'</a></div>');
                     externalLinkMainDiv.find('.deleteExternalLink').attr("data-link-id", externalLink["id"]);
                     externalLinkMainDiv.find('.editExternalLink').attr("data-link-id", externalLink["id"]);
@@ -2150,23 +2150,16 @@
 				        </form>
 					</div>
 		        
-			        <div id="editExternalLinkInfo" class="custom_form_style" style="z-index: 1;">
+			        <div id="editExternalLinkInfo" style="z-index: 1;">
 			            <div class="divider"></div>
 			            <form id="editExternalLinkForm" style="z-index: 1;">
-			                <div role="alert" style="margin-top: 30px;">
+			                <div role="alert" style="display: block;">
 			                    <div class = "saveLoader" style="font-size: 30px; display: none; text-align: center;">
 			                        <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
 			                    </div>
-			                    <div class="row">
-			                        <div class="col">
-			                            <h6 class="alert-heading">
-			                                <span style="color: var(--dark-grey)">Modify External
-			                                    Link: </span><span
-			                                    id="externalLinkInfoLabelEdit"></span>
-			                            </h6>
-			                            <p>Please fill out each field and then click "Save External Link".</p>
-			                        </div>
-			                    </div>
+		                            <h5 class="alert-heading" id="externalLinkInfoLabelEdit"> Modify External Link:
+		                            </h5>
+		                            <span>Please fill out each field and then click "Save External Link".</span>
 			                    <input hidden name="externalLinkIdEdit"
 			                        class="externalLinkIdEdit"/>
 			                        
@@ -2198,10 +2191,10 @@
 	                </div>
                 </div>
 		        <div th:if="${externalLinks}" id="Ext_Links_Module_Slide2">
-		        	<h5>External Resources:</h5>
+		        	<h5>External Resources</h5>
 		     		<div th:each="link: ${externalLinks}" th:id="${link.getId()}" style="margin-top: 15px;">
 		      			<div class="link_headers">Name: [[${link.getLabel()}]]</div>
-		      			<div>Link:</br><a style="text-decoration: underline; color:blue; overflow: hidden;text-overflow: ellipsis;display:inline-block;" th:href="@{${link.getExternalLink()}}">[[${link.getExternalLink()}]]</a></div>
+		      			<div>URL:</br><a style="text-decoration: underline; color:blue; overflow: hidden;text-overflow: ellipsis;display:inline-block;" th:href="@{${link.getExternalLink()}}">[[${link.getExternalLink()}]]</a></div>
                         <a class="btn deleteExternalLink col-md-1" th:attr="data-link-id=${link.getId()}" style="text-align: left; padding-left: 0;" href="javascript:;"> 
                         <span class="icon-trash error" style="text-align: left;"></span>
                         </a>
