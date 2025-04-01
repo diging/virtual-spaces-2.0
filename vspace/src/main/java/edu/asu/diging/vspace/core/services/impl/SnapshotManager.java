@@ -171,15 +171,15 @@ public class SnapshotManager  implements  ISnapshotManager {
     public byte[] getExhibitionSnapshot(String id) throws ExhibitionSnapshotNotFoundException, IOException {
         Optional<ExhibitionSnapshot> exhibitionSnapshot = exhibitionSnapshotRepository.findById(id);
 
-        if(exhibitionSnapshot.isPresent()) {           
-            try {
-                return storageEngineDownloads.getMediaContent("",exhibitionSnapshot.get().getFolderName()+ZIP_FILE_EXTENSION);                
-            }catch(FileSystemNotFoundException e) {
-                throw new ExhibitionSnapshotNotFoundException(e.getMessage(), e);
-            }
-              
+        if(!exhibitionSnapshot.isPresent()) {           
+            throw new ExhibitionSnapshotNotFoundException("Exhibition Snapshot not found");             
         }
-        return null;
+        try {
+            return storageEngineDownloads.getMediaContent("",exhibitionSnapshot.get().getFolderName()+ZIP_FILE_EXTENSION);                
+        }catch(Exception e) {
+            throw new ExhibitionSnapshotNotFoundException(e.getMessage(), e);
+        }
+        
     }
 
     /**
