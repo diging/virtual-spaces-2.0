@@ -975,7 +975,7 @@
          		$("#confirmDeleteBiblioAlert").show();
          		var alert = $('<input type="hidden" id="deleteBiblioId">');
          		$(alert).attr( 'value', $(this).siblings('input').val());
-         		$('.modal-footer').append(alert); 
+         		$("#confirmDeleteBiblioAlert").data("deleteBiblioId", blockId).show(); 
            	});
              
              $(document).on("click", ".deleteReference", function(e) {
