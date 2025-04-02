@@ -1,7 +1,5 @@
 package edu.asu.diging.vspace.core.services.impl;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,9 +13,6 @@ import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.IStaffSearchManager;
-import edu.asu.diging.vspace.core.services.impl.model.SearchModuleResults;
-import edu.asu.diging.vspace.core.services.impl.model.SearchSlideResults;
-import edu.asu.diging.vspace.core.services.impl.model.SearchSlideTextBlockResults;
 
 /**
  * This class has all the methods with the business logics for searching a word

@@ -14,5 +14,4 @@ public interface ISequenceManager {
     void updateSequence(ISequence sequence);
 
     List<ISequence> getAllSequencesForModules();
-    
 }
