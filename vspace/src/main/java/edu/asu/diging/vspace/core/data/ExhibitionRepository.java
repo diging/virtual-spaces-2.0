@@ -6,7 +6,6 @@ import org.javers.spring.annotation.JaversSpringDataAuditable;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
-import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 
 @Repository
@@ -14,5 +13,4 @@ import edu.asu.diging.vspace.core.model.impl.Exhibition;
 public interface ExhibitionRepository extends PagingAndSortingRepository<Exhibition, String> {
 
     public List<Exhibition> findAllByOrderByIdAsc();
-
 }
