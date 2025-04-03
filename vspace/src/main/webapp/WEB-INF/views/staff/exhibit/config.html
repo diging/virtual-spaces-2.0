@@ -1,28 +1,87 @@
-
 <html layout:decorate="~{layouts/main_staff}">
 <head>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <script th:inline="javascript">
-		$(document).ready(function() {
-		    var offlineMessage = $('#offlineMessage');
-		    if ('[(${exhibition})]' != null && '[(${exhibition.mode})]' == 'OFFLINE') {
-		        offlineMessage.show();
-		    }
-		    else {
-		        offlineMessage.hide();
-		    }		    
-		});
+
+	$(document).ready(function() {
+		var offlineMessage = $('#offlineMessage');			
+		var spaceParamExihibit = $('#spaceParamExihibit');
+		var defaultImages = $('#defaultImages');
 		
-		function modeChange(modeChosen) {
-		    var offlineMessage = $('#offlineMessage');
-		    if (modeChosen == 'OFFLINE') {
-		        offlineMessage.show();
+		if ('[(${exhibition})]' != null && '[(${exhibition.mode})]' == 'OFFLINE') {
+		    offlineMessage.show();
+		} else {
+		    offlineMessage.hide();
+		}
+		$("#changeBgImgAlert").show();
+
+		$("#cancelSpaceImgBtn").click(function() {
+		    document.getElementById('spaceLinkImage').value = null;
+		    $('#cancelSpaceImgBtn').attr('disabled', true);
+		});
+
+		$("#cancelModuleImgBtn").click(function() {
+		    document.getElementById('moduleLinkImage').value = null;
+		    $('#cancelModuleImgBtn').attr('disabled', true);
+		});
+
+		$("#cancelExternalImgBtn").click(function() {
+		    document.getElementById('externalLinkImage').value = null;
+		    $('#cancelExternalImgBtn').attr('disabled', true);
+		});
+
+		//when input's value changes
+		$("#spaceLinkImage").change(function() {
+		    if ($(this).val()) {
+		        $("#cancelSpaceImgBtn").prop("disabled", false);
+		    } else {
+		    	$("#cancelSpaceImgBtn").prop("disabled", true);
 		    }
-		    else {
-		        offlineMessage.hide();
+		});
+
+		$("#moduleLinkImage").change(function() {
+		    if ($(this).val()) {
+		    	$("#cancelModuleImgBtn").prop("disabled", false);
+		    } else {
+		    	$("#cancelModuleImgBtn").prop("disabled", true);
 		    }
-	
+		});
+
+		$("#externalLinkImage").change(function() {
+		    if ($(this).val()) {
+		    	$("#cancelExternalImgBtn").prop("disabled", false);
+		    } else {
+		    	$("#cancelExternalImgBtn").prop("disabled", true);
+		    }
+		});
+	});
+
+	function modeChange(modeChosen) {
+	    var offlineMessage = $('#offlineMessage');
+	    
+	    if (modeChosen == 'OFFLINE') {			
+	        offlineMessage.show();
+	    } else {
+	    	offlineMessage.hide();
+	    }
+	}
+
+	function defaultLinkImages() {
+	    var defaultImages = $('#defaultImages');
+	    defaultImages.show();
+	}
+
+	function defaultLinkModuleImages() {
+	    $("#uploadModuleLinkImage").css('display', 'block');
+	}
+
+	function defaultLinkExternalImages() {
+	    $("#uploadExternalLinkImage").css('display', 'block');
+	}
+
+	function openUploadSpaceLinkDefaultImgBlock() {
+	    $("#uploadSpaceLinkImage").css('display', 'block');
 	}
 </script>
 <style>
@@ -56,9 +115,9 @@
 	     <a style="color:blue;" th:href="@{|/preview/${exhibition.previewId}|}"> [[${#strings.defaultString(@environment.getProperty('baseUrl'),'')}]][[@{|/preview/${exhibition.previewId}|}]]</a></p>
 	    </div>
 		<div style="padding: 30px 0;">
-		    <form th:action="@{/staff/exhibit/config}" method="POST" name="f" modelAttribute="${exhibitionConfigurationForm}">
+		    <form th:action="@{|/staff/exhibit/config?${_csrf.parameterName}=${_csrf.token}|}" method="POST" name="f" enctype="multipart/form-data" modelAttribute="${exhibitionConfigurationForm}>
 		        <input type="hidden"  th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-		        <input type="hidden" th:value="${exhibition?.id}" name="exhibitionParam"/>
+		        <input type="hidden" th:value="${exhibition?.id}" name="exhibitionParam" id="exhibitionParam"/>
 		        <label for="space">Select the start space of the exhibition:</label>
 		        <select class="form-control" name="spaceParam">
 		             <option th:id="${space.id}" th:each="space: ${spacesList}" th:value="${space.id}"
@@ -97,10 +156,89 @@
 		            <input type="text" class="form-control" name="customMessage"
 		                th:value="${exhibition.customMessage}" placeholder ="This exhibition is currently offline. Please check back later."/>
 		        </div>
-		        <p style="padding-top: 20px;">
-		            <input class="btn primary-btn" type="submit" value="Submit" />
-		        </p>	
-		    </form>
+                <p style="padding-top: 20px;">
+                    <input class="btn primary-btn" type="submit" value="Submit" />
+                </p>
+            </form>
+            <div style="padding-top: 20px;">
+                <label for="spaceLinkImage">Default Space Link Image: </label>
+                <div id="existingDefaultImgSec" th:if="${defaultSpaceLinkImage != null}" class="alert alert-secondary" style="background: white; " >                   
+                    <span th:text="${defaultSpaceLinkImage!=null ? defaultSpaceLinkImage.getFilename():''}" style="margin-right: 10px;"></span>
+                    <button id="changeSpaceLinkbtn" type="reset" 
+                        onClick="openUploadSpaceLinkDefaultImgBlock()" class="btn primary-btn btn-sm">
+                        Change Default Space Link Image</button>
+                <br>      
+                </div>                   
+                <div id="uploadSpaceLinkImage" th:style="${defaultSpaceLinkImage != null ? 'display: none;' : '' }" >                       
+                    <form id="uploadSpaceLinkImage" th:action="@{|/staff/exhibit/config/link/defaultImage?${_csrf.parameterName}=${_csrf.token}|}" method="POST" enctype="multipart/form-data">
+                        <input type="hidden"  th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                        <div id="spaceLinkImageBlock" class="alert alert-secondary" 
+                            style="background: white; display: block;" >                                
+                            <input type="file" rows="5" cols="500" name="image"
+                                id="image" class="form-control-file" />
+                            <input type="hidden" name="linkType" value="space" />
+                            <p class="form-control mb-0 text-right">
+                                <button id="cancelSpaceImgBtn" type="button"
+                                    class="btn light btn-sm btn-sm">Cancel</button>
+                                <button id="uploadSpaceLinkImgBtn" type="submit" class="btn primary-btn btn-sm btn-sm">Save</button>
+                            </p>
+                        </div>
+                    </form>
+                    </div>
+            </div>
+            
+            <div style="padding-top: 20px;">
+                <label for="moduleLinkImage">Default Module Link Image: </label>
+                <div id="moduleLinkImageBlock" th:if="${defaultModuleLinkImage != null}" class="alert alert-secondary" style="background: white; " >                   
+                    <span th:text="${defaultModuleLinkImage!=null ? defaultModuleLinkImage.getFilename():''}" style="margin-right: 10px;"></span>
+                    <button id="moduleLinkbtn" type="button"
+                        onClick="defaultLinkModuleImages()" class="btn primary-btn btn-sm">Change Default Module Link Image</button>
+                <br>      
+                </div>                   
+                <div id="uploadModuleLinkImage" th:style="${defaultModuleLinkImage != null ? 'display: none;' : '' }" >                       
+                    <form id="uploadModuleLinkImage" th:action="@{|/staff/exhibit/config/link/defaultImage?${_csrf.parameterName}=${_csrf.token}|}" method="POST" enctype="multipart/form-data">
+                        <input type="hidden"  th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                        <div id="moduleLinkImageBlock" class="alert alert-secondary"
+                            style="background: white; display: block;" >                                
+                            <input type="file" rows="5" cols="500" name="image"
+                                id="image" class="form-control-file" />
+                            <input type="hidden" name="linkType" value="module" />
+                            <p class="form-control mb-0 text-right">
+                                <button id="cancelModuleImgBtn" type="button"
+                                    class="btn light btn-sm btn-sm">Cancel</button>
+                                <button id="uploadModuleLinkImgBtn" type="submit" class="btn primary-btn btn-sm btn-sm">Save</button>
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div style="padding-top: 20px;">
+                <label for="externalLinkImage">Default External Link Image: </label>
+                <div id="externalLinkImageBlock" th:if="${defaultExternalLinkImage != null}" class="alert alert-secondary" style="background: white; " >                   
+                <span th:text="${defaultExternalLinkImage!=null ? defaultExternalLinkImage.getFilename():''}" style="margin-right: 10px;"></span>
+                <button id="externalLinkbtn" type="button"
+                    onClick="defaultLinkExternalImages()" class="btn primary-btn btn-sm">Change Default
+                        External Link Image</button>
+                <br>      
+            </div>                   
+            <div id="uploadExternalLinkImage" th:style="${defaultExternalLinkImage != null ? 'display: none;' : '' }" >                       
+                <form id="uploadModuleLinkImage" th:action="@{|/staff/exhibit/config/link/defaultImage?${_csrf.parameterName}=${_csrf.token}|}" method="POST" enctype="multipart/form-data">
+                    <input type="hidden"  th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>                    
+                    <div id="externalLinkImageBlock" class="alert alert-secondary"
+                        style="background: white; display: block;" >                                
+                            <input type="file" rows="5" cols="500" name="image"
+                                id="image" class="form-control-file" />
+                            <input type="hidden" name="linkType" value="external" />
+                            <p class="form-control mb-0 text-right">
+                                <button id="cancelExternalImgBtn" type="button"
+                                    class="btn light btn-sm btn-sm">Cancel</button>
+                                <button id="uploadExternalLinkImgBtn" type="submit" class="btn primary-btn btn-sm btn-sm">Save</button>
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </div>
 		</div>
 	</div>
 </body>
