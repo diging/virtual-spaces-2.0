@@ -310,6 +310,11 @@ public class SpaceManager implements ISpaceManager {
     }
     
     @Override
+    public Page<ISpace> findByNameOrDescription(Pageable requestedPage, String searchText) {
+        return spaceRepo.findDistinctByNameLikeOrDescriptionLike(requestedPage, searchText,searchText);
+    }
+    
+    @Override
     public List<ISpace> findByName(String searchText){
         String searchTerm = "%" + searchText + "%";
         List<Space> spaces = spaceRepo.findByNameLike(searchTerm);
@@ -360,5 +365,5 @@ public class SpaceManager implements ISpaceManager {
         }
         return sortingParameters;
     }
-    
+
 }
