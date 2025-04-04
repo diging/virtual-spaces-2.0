@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import edu.asu.diging.vspace.core.model.ISlide;
-import edu.asu.diging.vspace.core.model.impl.Slide;
 
 public class SearchSlideTextBlockResults {
     

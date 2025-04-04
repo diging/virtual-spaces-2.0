@@ -8,6 +8,7 @@ import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.display.IModuleLinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.ModuleLink;
 
+
 public interface IModuleLinkManager extends ILinkManager<IModuleLink, IModule, IModuleLinkDisplay> {
     
     /**

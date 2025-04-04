@@ -4,8 +4,8 @@
 <script th:inline="javascript">
 //# sourceURL=js.js
 function removeTag(event) {
-    var imageId = $(event.target).data("image-id");
-    var category = $(event.target).data("category");
+    var imageId = $(event.currentTarget).data().imageId;
+    var category = $(event.currentTarget).data().category;
     $.ajax({
           url: "[(@{'/staff/images/'})]" + imageId + '/tag?' + [[${_csrf.parameterName}]]+'='+[[${_csrf.token}]]+'&tag=' + category,
           method: "DELETE",
