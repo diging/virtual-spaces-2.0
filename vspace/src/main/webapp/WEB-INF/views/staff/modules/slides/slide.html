@@ -971,11 +971,9 @@
          		$('.modal-footer').append(alert); 
              });
              
-             $(document).on("click", ".deleteBiblio", function(e) {
-         		$("#confirmDeleteBiblioAlert").show();
-         		var alert = $('<input type="hidden" id="deleteBiblioId">');
-         		$(alert).attr( 'value', $(this).siblings('input').val());
-         		$("#confirmDeleteBiblioAlert").data("deleteBiblioId", blockId).show(); 
+           	$(document).on("click", ".deleteBiblio", function(e) {
+           	    var blockId = $(this).siblings('input').val();
+           	    $("#confirmDeleteBiblioAlert").data("deleteBiblioId", blockId).show();
            	});
              
              $(document).on("click", ".deleteReference", function(e) {
@@ -1087,8 +1085,9 @@
             	
          		// ---------- Delete Bibliography Block -------------
          		
-         		$("#deleteBiblio").on("click", function(e) {
-         		e.preventDefault();
+			$("#deleteBiblio").on("click", function(e) {
+			    e.preventDefault();
+			    var blockId = $("#confirmDeleteBiblioAlert").data("deleteBiblioId");
          		$("#confirmDeleteTextAlert").find('input').remove();
          		$("#confirmDeleteImageAlert").find('input').remove();
          		$("#confirmDeleteRefAlert").find('input').remove();
@@ -2283,49 +2282,45 @@
                 </div>
             </div>
 	         <!-- Delete Bibliography Modal -->
-	         <div id="confirmDeleteBiblioAlert" class="modal" tabindex="-1"
-	            role="dialog" th:draggable="true">
-	            <div class="modal-dialog" role="document">
-	               <div class="modal-content">
-	                  <div class="modal-header">
-	                     <h5 class="modal-title">Confirm Delete</h5>
-	                     <button type="button" class="close" data-dismiss="modal"
-	                        aria-label="Close">
-	                     <span aria-hidden="true">&times;</span>
-	                     </button>
-	                  </div>
-	                  <div class="modal-body">
-	                     <h6>Are you sure you want to delete this bibliography block?</h6>
-	                  </div>
-	                  <div class="modal-footer">
-	                     <button id="cancelDeleteBiblio" type="reset" class="btn light">Cancel</button>
-	                     <button type="submit" id="deleteBiblio" class="btn btn-primary">Submit</button>
-	                  </div>
-	               </div>
-	            </div>
-	         </div>
+			<div id="confirmDeleteBiblioAlert" class="modal" tabindex="-1" role="dialog" th:draggable="true">
+			  <div class="modal-dialog" role="document">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <h5 class="modal-title">Confirm Delete</h5>
+			        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			          <span aria-hidden="true">&times;</span>
+			        </button>
+			      </div>
+			      <div class="modal-body">
+			        <h6>Are you sure you want to delete this bibliography block?</h6>
+			      </div>
+			      <div class="modal-footer">
+			        <button id="cancelDeleteBiblio" type="reset" class="btn light">Cancel</button>
+			        <button type="submit" id="deleteBiblio" class="btn btn-primary">Submit</button>
+			      </div>
+			    </div>
+			  </div>
+			</div>
 	         <!-- Delete Reference Modal -->
-	         <div id="confirmDeleteRefAlert" class="modal" tabindex="-1"
-	            role="dialog" th:draggable="true">
-	            <div class="modal-dialog" role="document">
-	               <div class="modal-content">
-	                  <div class="modal-header">
-	                     <h5 class="modal-title">Confirm Delete</h5>
-	                     <button type="button" class="close" data-dismiss="modal"
-	                        aria-label="Close">
-	                     <span aria-hidden="true">&times;</span>
-	                     </button>
-	                  </div>
-	                  <div class="modal-body">
-	                     <h6>Are you sure you want to delete this reference?</h6>
-	                  </div>
-	                  <div class="modal-footer">
-	                     <button id="cancelDeleteReference" type="reset" class="btn light">Cancel</button>
-	                     <button type="submit" id="deleteReference" class="btn btn-primary">Submit</button>
-	                  </div>
-	               </div>
-	            </div>
-	         </div>
+			<div id="confirmDeleteRefAlert" class="modal" tabindex="-1" role="dialog" th:draggable="true">
+			  <div class="modal-dialog" role="document">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <h5 class="modal-title">Confirm Delete</h5>
+			        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			          <span aria-hidden="true">&times;</span>
+			        </button>
+			      </div>
+			      <div class="modal-body">
+			        <h6>Are you sure you want to delete this reference?</h6>
+			      </div>
+			      <div class="modal-footer">
+			        <button id="cancelDeleteReference" type="reset" class="btn light">Cancel</button>
+			        <button type="submit" id="deleteReference" class="btn btn-primary">Submit</button>
+			      </div>
+			    </div>
+			  </div>
+			</div>
             <!-- Delete Space Modal -->
             <div id="confirmDeleteSpaceAlert" class="modal" tabindex="-1" role="dialog" th:draggable="true">
                 <div class="modal-dialog" role="document">
