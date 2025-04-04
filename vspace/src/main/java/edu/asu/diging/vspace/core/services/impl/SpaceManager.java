@@ -50,8 +50,6 @@ import edu.asu.diging.vspace.core.services.impl.model.ImageData;
 @PropertySource("classpath:/config.properties")
 public class SpaceManager implements ISpaceManager {
     
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
     @Autowired
     private SpaceRepository spaceRepo;
 

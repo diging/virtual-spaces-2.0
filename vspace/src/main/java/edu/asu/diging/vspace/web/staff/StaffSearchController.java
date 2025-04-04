@@ -66,7 +66,7 @@ public class StaffSearchController extends SearchController {
 
     protected Page<IModule> searchInModules(String modulePagenum, Model model, String searchTerm) {   
         Page<IModule> modulePage = staffSearchManager.searchModulesAndPaginate(searchTerm, Integer.parseInt(modulePagenum));
-        updateModelWithModuleSearchResult(modulePagenum, model, modulePage, modulePage.getContent() );
+        updateModelWithModuleSearchResult(modulePagenum, model, modulePage, modulePage.getContent());
         return modulePage;
 
     }
@@ -81,7 +81,6 @@ public class StaffSearchController extends SearchController {
      * @param model        This the object of Model attribute in spring MVC.
      * @param searchTerm   This is the search string which is being searched.
      */
-
     protected Page<ISlide>  searchInSlides(String slidePagenum, Model model, String searchTerm) {       
         Page<ISlide> slidePage  =  staffSearchManager.searchSlidesAndPaginate(searchTerm, Integer.parseInt(slidePagenum)) ;
         
@@ -102,7 +101,6 @@ public class StaffSearchController extends SearchController {
      * 
      * @param searchTerm       This is the search string which is being searched.
      */
-
     protected Page<ISlide>  searchInSlideTexts(String slideTextPagenum, Model model, String searchTerm) {  
      
         Page<ISlide> slideTextPage = staffSearchManager.searchSlideTextsAndPaginate(searchTerm,  Integer.parseInt(slideTextPagenum));
