@@ -144,6 +144,10 @@ public class Exhibition extends VSpaceElement implements IExhibition {
         this.spaceLinkDefaultImage = spaceLinkDefaultImage;
     }
     @Override
+    public void deleteSpaceLinkDefaultImage() {
+        this.spaceLinkDefaultImage = null;
+    }
+    @Override
     public IVSImage getModuleLinkDefaultImage() {
         return moduleLinkDefaultImage;
     }
@@ -152,12 +156,20 @@ public class Exhibition extends VSpaceElement implements IExhibition {
         this.moduleLinkDefaultImage = moduleLinkDefaultImage;
     }
     @Override
+    public void deleteModuleLinkDefaultImage() {
+        this.moduleLinkDefaultImage = null;
+    }
+    @Override
     public IVSImage getExternalLinkDefaultImage() {
         return externalLinkDefaultImage;
     }
     @Override
     public void setExternalLinkDefaultImage(IVSImage externalLinkDefaultImage) {
         this.externalLinkDefaultImage = externalLinkDefaultImage;
+    }
+    @Override
+    public void deleteExternalLinkDefaultImage() {
+        this.externalLinkDefaultImage = null;
     }
     @Override
     public boolean isAboutPageConfigured() {

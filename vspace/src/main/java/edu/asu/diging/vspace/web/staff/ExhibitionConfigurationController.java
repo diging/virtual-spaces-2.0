@@ -76,9 +76,9 @@ public class ExhibitionConfigurationController {
         model.addAttribute("spacesList", spaceRepo.findAll());
         model.addAttribute("languageList", exhibitionLanguageConfig.getExhibitionLanguageList());
         model.addAttribute("exhibition", exhibition);
-        model.addAttribute("defaultSpaceLinkImage",exhibition.getSpaceLinkDefaultImage());
-        model.addAttribute("defaultModuleLinkImage",exhibition.getModuleLinkDefaultImage());
-        model.addAttribute("defaultExternalLinkImage",exhibition.getExternalLinkDefaultImage());
+        model.addAttribute("defaultSpaceLinkImage", exhibition.getSpaceLinkDefaultImage());
+        model.addAttribute("defaultModuleLinkImage", exhibition.getModuleLinkDefaultImage());
+        model.addAttribute("defaultExternalLinkImage", exhibition.getExternalLinkDefaultImage());
         return "staff/exhibit/config";
     }
 

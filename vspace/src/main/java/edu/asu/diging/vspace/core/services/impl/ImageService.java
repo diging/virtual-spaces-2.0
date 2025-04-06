@@ -306,6 +306,18 @@ public class ImageService implements IImageService {
     }
 
     /**
+     * Method to delete an image in the file 
+     * 
+     *@param imageId - The id of the image to be removed
+     *@return EmptyResultDataAccessException if no image exists with the provided id 
+     */
+    @Override
+    public void removeImage(String imageId) {
+        
+        imageRepo.deleteById(imageId);
+    }
+    
+    /**
      *Method to return content of the image
      *
      *@param image - {@link IVSImage} instance of the image to be retrieved

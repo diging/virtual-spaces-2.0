@@ -13,23 +13,38 @@
 		}
 		$("#changeBgImgAlert").show();
 
-		$("#cancelSpaceImgBtn").click(function() {
-		    document.getElementById('spaceLinkImage').value = null;
+		$("#cancelUploadSpaceImgBtn").click(function() {
+		    document.getElementById('spaceLinkImageBlock').value = null;
+		    closeUploadSpaceLinkImage();
 		    $('#cancelSpaceImgBtn').attr('disabled', true);
 		});
-
-		$("#cancelModuleImgBtn").click(function() {
-		    document.getElementById('moduleLinkImage').value = null;
-		    $('#cancelModuleImgBtn').attr('disabled', true);
+		
+		$("#changeSpaceLinkImageBtn").click(function() {
+			openUploadSpaceLinkImage();
 		});
 
-		$("#cancelExternalImgBtn").click(function() {
-		    document.getElementById('externalLinkImage').value = null;
+		$("#cancelUploadModuleImgBtn").click(function() {
+		    document.getElementById('moduleLinkImageBlock').value = null;
+		    closeUploadModuleLinkImage();
+		    $('#cancelModuleImgBtn').attr('disabled', true);
+		});
+		
+		$("#changeModuleLinkImageBtn").click(function() {
+			openUploadModuleLinkImage();
+		});
+
+		$("#cancelUploadExternalImgBtn").click(function() {
+		    document.getElementById('externalLinkImageBlock').value = null;
+		    closeUploadExternalLinkImage();
 		    $('#cancelExternalImgBtn').attr('disabled', true);
+		});
+		
+		$("#changeExternalLinkImageBtn").click(function() {
+			openUploadExternalLinkImage();
 		});
 
 		//when input's value changes
-		$("#spaceLinkImage").change(function() {
+		$("#spaceLinkImageBlock").change(function() {
 		    if ($(this).val()) {
 		        $("#cancelSpaceImgBtn").prop("disabled", false);
 		    } else {
@@ -37,7 +52,7 @@
 		    }
 		});
 
-		$("#moduleLinkImage").change(function() {
+		$("#moduleLinkImageBlock").change(function() {
 		    if ($(this).val()) {
 		    	$("#cancelModuleImgBtn").prop("disabled", false);
 		    } else {
@@ -45,12 +60,30 @@
 		    }
 		});
 
-		$("#externalLinkImage").change(function() {
+		$("#externalLinkImageBlock").change(function() {
 		    if ($(this).val()) {
 		    	$("#cancelExternalImgBtn").prop("disabled", false);
 		    } else {
 		    	$("#cancelExternalImgBtn").prop("disabled", true);
 		    }
+		});
+		
+		$(".deleteDefaultLinkImage").click(function() {
+			var linkType = $(this).attr('link-type');
+			var token = [[${_csrf.token}]];
+			$.ajax({
+		        url: "[(@{/staff/exhibit/config/link/defaultImage/})]"+linkType,
+		        type: 'DELETE',
+		        headers:{
+					'X-CSRF-Token':token
+				},
+		        success: function(result) {
+		        	console.log('SUCCESS!!!!!!');
+		        },
+		        error: function(data) {
+					console.log('FAILURE!!!!!');
+		        }
+		    });
 		});
 	});
 
@@ -68,36 +101,66 @@
 	    var defaultImages = $('#defaultImages');
 	    defaultImages.show();
 	}
+	
 
-	function defaultLinkModuleImages() {
+	function openUploadSpaceLinkImage() {
+	    $("#uploadSpaceLinkImage").css('display', 'block');
+	}
+
+	function closeUploadSpaceLinkImage() {
+	    $("#uploadSpaceLinkImage").css('display', 'none');
+	}
+
+	function openUploadModuleLinkImage() {
 	    $("#uploadModuleLinkImage").css('display', 'block');
 	}
 
-	function defaultLinkExternalImages() {
+	
+	function closeUploadModuleLinkImage() {
+	    $("#uploadModuleLinkImage").css('display', 'none');
+	}
+	
+	function openUploadExternalLinkImage() {
 	    $("#uploadExternalLinkImage").css('display', 'block');
 	}
+	
 
-	function openUploadSpaceLinkDefaultImgBlock() {
-	    $("#uploadSpaceLinkImage").css('display', 'block');
+	function closeUploadExternalLinkImage() {
+	    $("#uploadExternalLinkImage").css('display', 'none');
 	}
+
 </script>
 <style>
 .tooltiptext {
-	visibility: hidden;
-	width: 120px;
-	color: white;
-	text-align: center;
-	font-size: 12px;
-	padding: 3px 0;
-	border-radius: 6px;
-	position: absolute;
-	z-index: 1;
-	left: 238px;
-	top: 146px;
-	background: rgba(0, 0, 0, 0.6);
+	width: 140px;
+	color: #fff;
+	font-size: 13px;
+	padding: 5px 0;
+	background: black;
+	top: -5px;
+  	left: 105%;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+  opacity: 1;
 }
 
 .previewExhb:hover .tooltiptext {
+	visibility: visible;
+}
+
+#changeSpaceLinkImageBtn:hover .tooltiptext {
+	visibility: visible;
+}
+
+#changeModuleLinkImageBtn:hover .tooltiptext {
+	visibility: visible;
+}
+
+#changeExternalLinkImageBtn:hover .tooltiptext {
 	visibility: visible;
 }
 </style>
@@ -157,12 +220,15 @@
                 </p>
             </form>
             <div style="padding-top: 20px;">
-                <label for="spaceLinkImage">Default Space Link Image: </label>
-                <div id="existingDefaultImgSec" th:if="${defaultSpaceLinkImage != null}" class="alert alert-secondary" style="background: white; " >                   
+                <label>Default Space Link Image: </label>
+                <div id="spaceLinkImageBlock" th:if="${defaultSpaceLinkImage != null}" class="alert alert-secondary" style="background: white; " >                   
                     <span th:text="${defaultSpaceLinkImage!=null ? defaultSpaceLinkImage.getFilename():''}" style="margin-right: 10px;"></span>
-                    <button id="changeSpaceLinkbtn" type="reset" 
-                        onClick="openUploadSpaceLinkDefaultImgBlock()" class="btn primary-btn btn-sm">
-                        Change Default Space Link Image</button>
+                    <button id="changeSpaceLinkImageBtn" type="reset" class="btn primary-btn btn-sm icon-edit tooltip">
+                        <span class="tooltiptext">Change Default Space Link Image</span>
+                    </button>
+                    <button class="deleteDefaultLinkImage btn btn-sm" th:attr="link-type=space">
+                        <span class="icon-trash error"></span>
+                    </button>
                 <br>      
                 </div>                   
                 <div id="uploadSpaceLinkImage" th:style="${defaultSpaceLinkImage != null ? 'display: none;' : '' }" >                       
@@ -174,7 +240,7 @@
                                 id="image" class="form-control-file" />
                             <input type="hidden" name="linkType" value="space" />
                             <p class="form-control mb-0 text-right">
-                                <button id="cancelSpaceImgBtn" type="button"
+                                <button id="cancelUploadSpaceImgBtn" type="button"
                                     class="btn light btn-sm btn-sm">Cancel</button>
                                 <button id="uploadSpaceLinkImgBtn" type="submit" class="btn primary-btn btn-sm btn-sm">Save</button>
                             </p>
@@ -184,11 +250,16 @@
             </div>
             
             <div style="padding-top: 20px;">
-                <label for="moduleLinkImage">Default Module Link Image: </label>
+                <label>Default Module Link Image: </label>
                 <div id="moduleLinkImageBlock" th:if="${defaultModuleLinkImage != null}" class="alert alert-secondary" style="background: white; " >                   
                     <span th:text="${defaultModuleLinkImage!=null ? defaultModuleLinkImage.getFilename():''}" style="margin-right: 10px;"></span>
-                    <button id="moduleLinkbtn" type="button"
-                        onClick="defaultLinkModuleImages()" class="btn primary-btn btn-sm">Change Default Module Link Image</button>
+                    <button id="changeModuleLinkImageBtn" type="button"
+                        onClick="openUploadModuleLinkImage()" class="btn primary-btn btn-sm icon-edit tooltip">
+                    	<span class="tooltiptext">Change Default Module Link Image</span>
+                    </button>
+                    <button class="deleteDefaultLinkImage btn btn-sm" th:attr="link-type=module">
+                        <span class="icon-trash error"></span>
+                    </button>
                 <br>      
                 </div>                   
                 <div id="uploadModuleLinkImage" th:style="${defaultModuleLinkImage != null ? 'display: none;' : '' }" >                       
@@ -200,7 +271,7 @@
                                 id="image" class="form-control-file" />
                             <input type="hidden" name="linkType" value="module" />
                             <p class="form-control mb-0 text-right">
-                                <button id="cancelModuleImgBtn" type="button"
+                                <button id="cancelUploadModuleImgBtn" type="button"
                                     class="btn light btn-sm btn-sm">Cancel</button>
                                 <button id="uploadModuleLinkImgBtn" type="submit" class="btn primary-btn btn-sm btn-sm">Save</button>
                             </p>
@@ -210,12 +281,16 @@
             </div>
             
             <div style="padding-top: 20px;">
-                <label for="externalLinkImage">Default External Link Image: </label>
+                <label>Default External Link Image: </label>
                 <div id="externalLinkImageBlock" th:if="${defaultExternalLinkImage != null}" class="alert alert-secondary" style="background: white; " >                   
-                <span th:text="${defaultExternalLinkImage!=null ? defaultExternalLinkImage.getFilename():''}" style="margin-right: 10px;"></span>
-                <button id="externalLinkbtn" type="button"
-                    onClick="defaultLinkExternalImages()" class="btn primary-btn btn-sm">Change Default
-                        External Link Image</button>
+	                <span th:text="${defaultExternalLinkImage!=null ? defaultExternalLinkImage.getFilename():''}" style="margin-right: 10px;"></span>
+	                <button id="changeExternalLinkImageBtn" type="button"
+	                    onClick="openUploadExternalLinkImage()" class="btn primary-btn btn-sm icon-edit tooltip">
+	                	<span class="tooltiptext">Change Default Module Link Image</span>
+	                </button>
+	                <button class="deleteDefaultLinkImage btn btn-sm" th:attr="link-type=external">
+                        <span class="icon-trash error"></span>
+                    </button>
                 <br>      
             </div>                   
             <div id="uploadExternalLinkImage" th:style="${defaultExternalLinkImage != null ? 'display: none;' : '' }" >                       
@@ -227,7 +302,7 @@
                                 id="image" class="form-control-file" />
                             <input type="hidden" name="linkType" value="external" />
                             <p class="form-control mb-0 text-right">
-                                <button id="cancelExternalImgBtn" type="button"
+                                <button id="cancelUploadExternalImgBtn" type="button"
                                     class="btn light btn-sm btn-sm">Cancel</button>
                                 <button id="uploadExternalLinkImgBtn" type="submit" class="btn primary-btn btn-sm btn-sm">Save</button>
                             </p>
