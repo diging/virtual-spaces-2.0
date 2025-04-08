@@ -107,12 +107,10 @@ public class ExhibitionConfigurationController {
             attributes.addAttribute("message", result.getFieldError().getDefaultMessage());
             return new RedirectView(request.getContextPath() + "/staff/exhibit/config");
         }
-        String title = exhibitionConfigForm.getTitle();
         ExhibitionModes exhibitMode = exhibitionConfigForm.getExhibitionMode();
         List<String> languages = exhibitionConfigForm.getExhibitLanguage();
         String defaultLanguage = exhibitionConfigForm.getDefaultExhibitLanguage();
         String customMessage = exhibitionConfigForm.getCustomMessage();
-        ISpace startSpace = spaceManager.getSpace(spaceID);       
         IExhibition exhibition;
 
         if (exhibitID == null || exhibitID.isEmpty()) {
@@ -120,8 +118,8 @@ public class ExhibitionConfigurationController {
         } else {
             exhibition = exhibitionManager.getExhibitionById(exhibitID);
         }
-        exhibition.setStartSpace(startSpace);
-        exhibition.setTitle(title);
+        exhibition.setStartSpace(spaceManager.getSpace(spaceID));
+        exhibition.setTitle(exhibitionConfigForm.getTitle());
         exhibition.setMode(exhibitMode);
 
         exhibitionManager.updateExhibitionLanguages(exhibition, languages, defaultLanguage);
