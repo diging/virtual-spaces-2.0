@@ -18,7 +18,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,7 +29,6 @@ import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.exception.SnapshotCouldNotBeCreatedException;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
-import edu.asu.diging.vspace.core.model.ISnapshotTask;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionSnapshot;
 import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
 import edu.asu.diging.vspace.core.model.impl.SnapshotTask;
@@ -40,7 +38,6 @@ import edu.asu.diging.vspace.core.services.IRenderingManager;
 import edu.asu.diging.vspace.core.services.ISnapshotManager;
 
 @Service
-@EnableAsync
 @PropertySource("classpath:app.properties")
 public class SnapshotManager  implements  ISnapshotManager {
 
@@ -58,7 +55,8 @@ public class SnapshotManager  implements  ISnapshotManager {
 
     @Autowired
     private IRenderingManager renderingManager;
-
+    
+    @Autowired
     private SequenceHistory sequenceHistory;
 
     @Autowired
@@ -85,6 +83,7 @@ public class SnapshotManager  implements  ISnapshotManager {
      */
     @Override
     @Transactional
+    @Async
     public ExhibitionSnapshot triggerExhibitionSnapshotCreation() throws IOException, InterruptedException, SnapshotCouldNotBeCreatedException {
         String exhibitionFolderName = getExhibitionFolderName();
         ExhibitionSnapshot exhibitionSnapshot = new ExhibitionSnapshot();
@@ -197,14 +196,13 @@ public class SnapshotManager  implements  ISnapshotManager {
 
     @Override
     public Page<ExhibitionSnapshot> getAllExhibitionSnapshots(int filesPagenum) {
-
         if (filesPagenum < 1) {
             filesPagenum = 1;
         }
         Pageable requestedPageForFiles = PageRequest.of(filesPagenum - 1, pageSize);
 
         Page<ExhibitionSnapshot> page =   exhibitionSnapshotRepository.findAllByOrderByCreationDateDesc(requestedPageForFiles);
-        return page.map(exhibitionSnapshot-> { return (ExhibitionSnapshot) exhibitionSnapshot; } );
+        return page.map(exhibitionSnapshot-> {return (ExhibitionSnapshot) exhibitionSnapshot;});
     }
     
     @Override
