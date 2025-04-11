@@ -48,15 +48,15 @@ public class Exhibition extends VSpaceElement implements IExhibition {
 
     private String customMessage;
     
-    @OneToOne(targetEntity = VSImage.class)
+    @OneToOne(targetEntity = VSImage.class, cascade = CascadeType.ALL, orphanRemoval=true)
     @NotFound(action = NotFoundAction.IGNORE)
     private IVSImage spaceLinkDefaultImage;
     
-    @OneToOne(targetEntity = VSImage.class)
+    @OneToOne(targetEntity = VSImage.class, cascade = CascadeType.ALL, orphanRemoval=true)
     @NotFound(action = NotFoundAction.IGNORE)
     private IVSImage moduleLinkDefaultImage;
     
-    @OneToOne(targetEntity = VSImage.class)
+    @OneToOne(targetEntity = VSImage.class, cascade = CascadeType.ALL, orphanRemoval=true)
     @NotFound(action = NotFoundAction.IGNORE)
     private IVSImage externalLinkDefaultImage;
     

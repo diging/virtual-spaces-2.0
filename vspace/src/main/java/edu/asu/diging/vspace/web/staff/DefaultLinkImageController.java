@@ -83,13 +83,55 @@ public class DefaultLinkImageController {
         
         IVSImage image = imageGetterMap.get(linkType).get();
         if (image == null) {
-            System.out.println("HERE1");
             attributes.addAttribute("exhibitId", exhibition.getId());
             attributes.addAttribute("alertType", "danger");
             attributes.addAttribute("message", "Could not delete the default image");
             attributes.addAttribute("showAlert", "true");
         } else {
-            System.out.println("HERE2");
+            imageService.removeImage(image.getId());
+        }
+
+        Map<String, Runnable> imageDeleterMap = Map.of(
+            "space", exhibition::deleteSpaceLinkDefaultImage,
+            "module", exhibition::deleteModuleLinkDefaultImage,
+            "external", exhibition::deleteExternalLinkDefaultImage
+        );
+        
+        Runnable deleteDefautImageMethod = imageDeleterMap.get(linkType);
+        if (deleteDefautImageMethod == null) {
+            attributes.addAttribute("exhibitId", exhibition.getId());
+            attributes.addAttribute("alertType", "danger");
+            attributes.addAttribute("message", "Could not delete the default image");
+            attributes.addAttribute("showAlert", "true");
+        } else {
+            deleteDefautImageMethod.run();
+            exhibition = (Exhibition) exhibitionManager.storeExhibition(exhibition);
+            attributes.addAttribute("exhibitId", exhibition.getId());
+            attributes.addAttribute("alertType", "success");
+            attributes.addAttribute("message", "Successfully deleted the default image!");
+            attributes.addAttribute("showAlert", "true");
+        }
+        
+        return "redirect:/staff/exhibit/config";
+    }
+    
+    @RequestMapping(value = "/staff/exhibit/config/link/defaultImage/{linkType}", method = RequestMethod.PUT)
+    public String disableLinkImage(@PathVariable("linkType") String linkType, RedirectAttributes attributes) throws IOException {
+        Exhibition exhibition = (Exhibition) exhibitionManager.getStartExhibition();        
+        
+        Map<String, Supplier<IVSImage>> imageGetterMap = Map.of(
+                "space", exhibition::getSpaceLinkDefaultImage,
+                "module", exhibition::getModuleLinkDefaultImage,
+                "external", exhibition::getExternalLinkDefaultImage
+        );
+        
+        IVSImage image = imageGetterMap.get(linkType).get();
+        if (image == null) {
+            attributes.addAttribute("exhibitId", exhibition.getId());
+            attributes.addAttribute("alertType", "danger");
+            attributes.addAttribute("message", "Could not delete the default image");
+            attributes.addAttribute("showAlert", "true");
+        } else {
             imageService.removeImage(image.getId());
         }
 

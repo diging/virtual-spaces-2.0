@@ -8,7 +8,6 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Inheritance;
 import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 
@@ -34,6 +33,8 @@ public class VSImage extends VSMedia implements IVSImage {
 
     private int height;
     private int width;
+    
+    private Boolean disableFlag = false;
 
     @OneToMany(targetEntity = Tag.class)
     private List<ITag> tags;
@@ -107,6 +108,16 @@ public class VSImage extends VSMedia implements IVSImage {
     }
 
     @Override
+    public boolean getDisableFlag() {
+        return disableFlag;
+    }
+    
+    @Override
+    public void toggleDisableFlag() {
+        disableFlag = !disableFlag;
+    }
+    
+    @Override
     public List<ITag> getTags() {
         return tags;
     }
@@ -126,4 +137,10 @@ public class VSImage extends VSMedia implements IVSImage {
         this.categories = categories;
     }
   
+    @Override
+    public String toString() {
+        return "VSImage{" +
+                "disableFlag='" + disableFlag +
+                '}';
+    }
 }

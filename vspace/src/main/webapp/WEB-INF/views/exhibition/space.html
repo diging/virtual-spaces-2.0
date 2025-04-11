@@ -226,7 +226,11 @@
 		});
 		var defaultSpaceImageFlag;
 		var defaultModuleImageFlag;
-		var defaultExternalLinkImageFlag;		
+		var defaultExternalLinkImageFlag;
+		
+		var defaultSpaceImageDisableFlag;
+		var defaultModuleImageDisableFlag;
+		var defaultExternalImageDisableFlag;
 			
 		function toggleImgSize(isClicked){
 			var maxImgWidth = $(window).width();
@@ -387,6 +391,22 @@
 		        		defaultSpaceImageFlag = JSON.parse(data).defaultSpaceImageFlag; 
 		        		defaultModuleImageFlag = JSON.parse(data).defaultModuleImageFlag
 		        		defaultExternalLinkImageFlag = JSON.parse(data).defaultExternalLinkImageFlag;
+		        	}
+		        }
+			});
+		}
+		
+		function checkDefaultImageDisabled() {
+			$.ajax({
+				url: "[(@{'/api/exhibition/default/link/image/disableStatus/'})]",
+				type: 'GET',
+		        cache : false,
+		        contentType : false,
+		        success: function(data) {
+		        	if(data.length > 0){
+		        		defaultSpaceImageDisableFlag = JSON.parse(data).defaultSpaceImageDisableFlag; 
+		        		defaultModuleImageDisableFlag = JSON.parse(data).defaultModuleImageDisableFlag
+		        		defaultExternalImageDisableFlag = JSON.parse(data).defaultExternalImageDisableFlag;
 		        	}
 		        }
 			});
