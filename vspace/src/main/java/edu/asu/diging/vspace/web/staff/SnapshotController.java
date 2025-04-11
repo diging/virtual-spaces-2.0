@@ -1,6 +1,7 @@
 package edu.asu.diging.vspace.web.staff;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -35,7 +36,7 @@ public class SnapshotController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value = "/staff/snapshot/create", method = RequestMethod.POST) 
-    public ResponseEntity<ExhibitionSnapshot> createExhibitionSnapshot(HttpServletRequest request, HttpServletResponse response,  Model model) {
+    public ResponseEntity<ExhibitionSnapshot> createExhibitionSnapshot(HttpServletRequest request, HttpServletResponse response,  Model model) throws ExecutionException {
         ExhibitionSnapshot exhibitionSnapshot = null;
         try {      
             exhibitionSnapshot = snapshotManager.triggerExhibitionSnapshotCreation();

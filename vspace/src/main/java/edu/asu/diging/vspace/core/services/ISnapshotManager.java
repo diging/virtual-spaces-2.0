@@ -1,6 +1,7 @@
 package edu.asu.diging.vspace.core.services;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 import org.springframework.data.domain.Page;
 
@@ -13,7 +14,7 @@ import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
 import edu.asu.diging.vspace.core.model.impl.SnapshotTask;
 
 public interface ISnapshotManager {
-    ExhibitionSnapshot triggerExhibitionSnapshotCreation() throws IOException, InterruptedException, SnapshotCouldNotBeCreatedException;
+    ExhibitionSnapshot triggerExhibitionSnapshotCreation() throws IOException, InterruptedException, SnapshotCouldNotBeCreatedException, ExecutionException;
  
     byte[] getExhibitionSnapshot(String id) throws ExhibitionSnapshotNotFoundException, IOException, FileStorageException;
 
@@ -26,6 +27,6 @@ public interface ISnapshotManager {
     ISnapshotTask getSnapshotTask(String id) throws ExhibitionSnapshotNotFoundException;
         
     ISnapshotTask createSnapshot(String resourcesPath, String exhibitionFolderName, SequenceHistory sequenceHistory, ExhibitionSnapshot exhibitionSnapshot) 
-            throws IOException, InterruptedException, FileStorageException ;
+            throws IOException, InterruptedException, FileStorageException, ExecutionException ;
 
 }

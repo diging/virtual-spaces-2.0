@@ -1,12 +1,11 @@
 package edu.asu.diging.vspace.core.services.impl;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileSystemNotFoundException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +16,6 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,8 +30,6 @@ import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionSnapshot;
 import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
 import edu.asu.diging.vspace.core.model.impl.SnapshotTask;
-import edu.asu.diging.vspace.core.model.impl.Space;
-import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.IRenderingManager;
 import edu.asu.diging.vspace.core.services.ISnapshotManager;
 
@@ -52,9 +48,6 @@ public class SnapshotManager  implements  ISnapshotManager {
     @Autowired
     @Qualifier("storageEngineDownloads")
     private IStorageEngine storageEngineDownloads;
-
-    @Autowired
-    private IRenderingManager renderingManager;
     
     @Autowired
     private SequenceHistory sequenceHistory;
@@ -66,9 +59,8 @@ public class SnapshotManager  implements  ISnapshotManager {
     private SnapshotTaskRepository snapshotTaskRepository;
     
     @Autowired
-    private SpaceRepository spaceRepository;
+    private AsyncSnapshotCreator asyncSnapshotCreator;
     
-    private final String RESOURCES_FOLDER_NAME = "resources";
     private final String ZIP_FILE_EXTENSION = ".zip";
 
     /**
@@ -80,11 +72,11 @@ public class SnapshotManager  implements  ISnapshotManager {
      * @throws IOException                          if an I/O error occurs during the snapshot creation process
      * @throws InterruptedException                 if the snapshot creation process is interrupted
      * @throws SnapshotCouldNotBeCreatedException   if the snapshot could not be created due to any other errors
+     * @throws ExecutionException 
      */
     @Override
     @Transactional
-    @Async
-    public ExhibitionSnapshot triggerExhibitionSnapshotCreation() throws IOException, InterruptedException, SnapshotCouldNotBeCreatedException {
+    public ExhibitionSnapshot triggerExhibitionSnapshotCreation() throws IOException, InterruptedException, SnapshotCouldNotBeCreatedException, ExecutionException {
         String exhibitionFolderName = getExhibitionFolderName();
         ExhibitionSnapshot exhibitionSnapshot = new ExhibitionSnapshot();
         createSnapshotFolder(exhibitionSnapshot, exhibitionFolderName);       
@@ -94,8 +86,7 @@ public class SnapshotManager  implements  ISnapshotManager {
 
         try {
             snapshotTask = createSnapshot(resourcesPath, exhibitionFolderName, sequenceHistory, exhibitionSnapshot);
-            storageEngineDownloads.generateZip(exhibitionFolderName);           
-            snapshotTask.setTaskComplete(true);
+            storageEngineDownloads.generateZip(exhibitionFolderName);
         } catch (IOException | InterruptedException | FileStorageException e) {
             throw new SnapshotCouldNotBeCreatedException(e.getMessage(), e);
         }
@@ -125,21 +116,15 @@ public class SnapshotManager  implements  ISnapshotManager {
      * @throws IOException - if an I/O error occurs during the snapshot creation
      * @throws InterruptedException - if the snapshot creation process is interrupted
      * @throws FileStorageException - if an error occurs while storing the snapshot
+     * @throws ExecutionException 
      * @throws ImageCouldNotBeStoredException 
      */   
     @Override
-    @Async
     @Transactional
     public SnapshotTask createSnapshot(String resourcesPath, String exhibitionFolderName,SequenceHistory sequenceHistory, ExhibitionSnapshot exhibitionSnapshot) 
-            throws IOException, InterruptedException, FileStorageException {
-        storageEngineDownloads.copyToFolder(exhibitionFolderName + File.separator + RESOURCES_FOLDER_NAME, resourcesPath);
-        List<Space> spaces= spaceRepository.findAllBySpaceStatus(SpaceStatus.PUBLISHED);
-
-        for(Space space : spaces) {
-            renderingManager.createSpaceSnapshot(space, exhibitionFolderName, sequenceHistory);                
-        }
-        SnapshotTask snapshotTask = exhibitionSnapshot.getSnapshotTask();
-        return snapshotTaskRepository.save(snapshotTask);   
+            throws IOException, InterruptedException, FileStorageException, ExecutionException {
+        Future<SnapshotTask> futureTask =  asyncSnapshotCreator.createSnapshot(resourcesPath, exhibitionFolderName, sequenceHistory, exhibitionSnapshot);
+        return futureTask.get();
     }
 
     /**
