@@ -12,7 +12,9 @@ import static org.mockito.Mockito.when;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -32,6 +34,7 @@ import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.SnapshotCouldNotBeCreatedException;
 import edu.asu.diging.vspace.core.file.impl.StorageEngine;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionSnapshot;
+import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
 import edu.asu.diging.vspace.core.model.impl.SnapshotTask;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.IRenderingManager;
@@ -58,6 +61,12 @@ public class SnapshotManagerTest {
     @Mock
     SpaceRepository spaceRepository;
     
+    @Mock
+    AsyncSnapshotCreator asyncSnapshotCreator;
+    
+    @Mock 
+    SnapshotManager snapshotManagerTest;
+    
     private String exhibitionId, snapshotTaskId, snapshotId;
     
     @Before
@@ -80,10 +89,16 @@ public class SnapshotManagerTest {
         exhibitionSnapshot.setSnapshotTask(exhibitionSnapshotTask);
         
         String fileContent = "fileContent";
+        Future<SnapshotTask> future = CompletableFuture.completedFuture(exhibitionSnapshotTask);
+        //new AsyncResult<SnapshotTask>
         
         when(exhibitionSnapshotRepo.save(any(ExhibitionSnapshot.class))).thenReturn(exhibitionSnapshot);
         when(snapshotTaskRepo.save(any(SnapshotTask.class))).thenReturn(exhibitionSnapshotTask);
         when(storageEngine.generateZip(Mockito.anyString())).thenReturn(fileContent.getBytes());
+        when(asyncSnapshotCreator.createSnapshot(Mockito.anyString(), Mockito.anyString(), 
+                any(SequenceHistory.class), any(ExhibitionSnapshot.class))).thenReturn(future);
+        when(snapshotManagerTest.createSnapshot(Mockito.anyString(), Mockito.anyString(), 
+                any(SequenceHistory.class), any(ExhibitionSnapshot.class))).thenReturn(future.get());
         serviceToTest.triggerExhibitionSnapshotCreation();
         
         assertNotNull(exhibitionSnapshot);
@@ -106,7 +121,7 @@ public class SnapshotManagerTest {
     }
     
     @Test
-    public void test_createSnapshot_Failure() throws IOException {
+    public void test_createSnapshot_Failure() throws IOException, InterruptedException, FileStorageException {
         String resourcesPath = "/Resources";
         ExhibitionSnapshot exhibitionSnapshot = new ExhibitionSnapshot();
         exhibitionSnapshot.setId(snapshotId);
@@ -115,6 +130,8 @@ public class SnapshotManagerTest {
         exhibitionSnapshot.setSnapshotTask(snapshotTask);
 
         when(spaceRepository.findAllBySpaceStatus(SpaceStatus.PUBLISHED)).thenReturn(new ArrayList());
+        when(asyncSnapshotCreator.createSnapshot(Mockito.anyString(), Mockito.anyString(), 
+                any(SequenceHistory.class), any(ExhibitionSnapshot.class))).thenThrow(new IOException());
         doThrow(new IOException()).when(storageEngine).copyToFolder(Mockito.anyString(), Mockito.anyString() );        
         assertThrows(IOException.class, ()-> serviceToTest.createSnapshot(resourcesPath, exhibitionId, null, exhibitionSnapshot));
     }
