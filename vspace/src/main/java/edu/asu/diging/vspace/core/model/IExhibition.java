@@ -58,4 +58,10 @@ public interface IExhibition extends IVSpaceElement {
 
     void setCustomMessage(String customMessage);
 
+    void disableSpaceLinkDefaultImage();
+    
+    void disableModuleLinkDefaultImage();
+    
+    void disableExternalLinkDefaultImage();
+
 }

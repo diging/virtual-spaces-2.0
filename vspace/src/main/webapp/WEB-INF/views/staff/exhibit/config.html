@@ -5,23 +5,37 @@
 		var offlineMessage = $('#offlineMessage');			
 		var spaceParamExihibit = $('#spaceParamExihibit');
 		var defaultImages = $('#defaultImages');
-		var defaultSpaceLinkImage = [[${defaultSpaceLinkImage}]];
-		var defaultModuleLinkImage = [[${defaultModuleLinkImage}]];
-		var defaultExternalLinkImage = [[${defaultExternalLinkImage}]];
-		/* onsole.log('DEFAULT SPACE DISBLAE FLAG 1: ', [[${defaultSpaceLinkImage.getDisableFlag()}]]);
-		[[${defaultSpaceLinkImage.toggleDisableFlag()}]];
-		console.log('DEFAULT SPACE DISBLAE FLAG 2: ', [[${defaultSpaceLinkImage.getDisableFlag()}]]); */
+		
+		// Disable the cancel button if there is nothing to cancel, set intial position for disable slider
 		if ([[${defaultSpaceLinkImage}]]==null) {
 			$('#cancelUploadSpaceImgBtn').attr('disabled', true);
+		} else {
+			if ([[${defaultSpaceLinkImage?.getDisableFlag()}]]) {
+				$('#disableSpaceLinkImage').prop('checked', false);
+			} else {
+				$('#disableSpaceLinkImage').prop('checked', true);
+			}
 		}
 		
 		if ([[${defaultModuleLinkImage}]]==null) {
 			$('#cancelUploadModuleImgBtn').attr('disabled', true);
+		} else {
+			if ([[${defaultModuleLinkImage?.getDisableFlag()}]]) {
+				$('#disableModuleLinkImage').prop('checked', false);
+			} else {
+				$('#disableModuleLinkImage').prop('checked', true);
+			}	
 		}
 		
 		if ([[${defaultExternalLinkImage}]]==null) {
 			$('#cancelUploadExternalImgBtn').attr('disabled', true);
-		}
+		} else {
+			if ([[${defaultExternalLinkImage?.getDisableFlag()}]]) {
+				$('#disableExternalLinkImage').prop('checked', false);
+			} else {
+				$('#disableExternalLinkImage').prop('checked', true);
+			}
+		}		
 		
 		if ('[(${exhibition})]' != null && '[(${exhibition.mode})]' == 'OFFLINE') {
 		    offlineMessage.show();
@@ -39,14 +53,6 @@
 		$("#changeSpaceLinkImageBtn").click(function() {
 			openUploadSpaceLinkImage();
 		});
-		
-		$("#disableSpaceImage").change(function() {
-			if ($(this).val()) {
-				console.log('SPACE DISABLE FLAG 1: ', [[${defaultSpaceLinkImage.getDisableFlag()}]]);
-				[[${defaultSpaceLinkImage.toggleDisableFlag()}]];
-				console.log('SPACE DISABLE FLAG 2: ', [[${defaultSpaceLinkImage.getDisableFlag()}]]);
-			}
-		});
 
 		$("#cancelUploadModuleImgBtn").click(function() {
 		    document.getElementById('moduleLinkImageBlock').value = null;
@@ -57,13 +63,6 @@
 		$("#changeModuleLinkImageBtn").click(function() {
 			openUploadModuleLinkImage();
 		});
-		
-		$("#disableModuleImage").click(function() {
-			if ($(this).val()) {
-				defaultModuleLinkImage.toggleDisableFlag();
-				console.log('MOD DISABLE FLAG: ', defaultModuleLinkImage.getDisableFlag());
-			}
-		});
 
 		$("#cancelUploadExternalImgBtn").click(function() {
 		    document.getElementById('externalLinkImageBlock').value = null;
@@ -73,13 +72,6 @@
 		
 		$("#changeExternalLinkImageBtn").click(function() {
 			openUploadExternalLinkImage();
-		});
-		
-		$("#disableExternalImage").change(function() {
-			if ($(this).val()) {
-				defaultExternalLinkImage.toggleDisableFlag();
-				console.log('EXT DISABLE FLAG: ', defaultExternalLinkImage.getDisableFlag());
-			}
 		});
 
 		//when input's value changes
@@ -118,12 +110,27 @@
 				},
 		        success: function(result) {
 		        	$("#" + linkType + "LinkImageBlock").css('display', 'none');
-		        	$("#" + linkType + "UploadLinkImage").css('display', 'block');
-		        	
-		        	console.log('SUCCESS!!!!!!');
+		        	$("#" + linkType + "UploadLinkImage").css('display', 'block');		        	
 		        },
 		        error: function(data) {
-					console.log('FAILURE!!!!!');
+		        }
+		    });
+		});
+		
+		$(".disableDefaultLinkImage").click(function() {
+			var linkType = $(this).attr('link-type');
+			var token = [[${_csrf.token}]];
+			$.ajax({
+				dataType: 'json',
+		        url: "[(@{/staff/exhibit/config/link/defaultImage/})]"+linkType,
+		        type: 'PUT',
+		        headers:{
+					'X-CSRF-Token':token
+				},
+		        success: function(result) {
+		        	console.log('DISABLE FLAG: ', result['defaultImageDisableFlag']);
+		        },
+		        error: function(data) {
 		        }
 		    });
 		});
@@ -179,21 +186,23 @@
 	display: block;
 }
 
-.tooltiptext {
+.changeBtn {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+  opacity: 1;
+}
+
+.changeBtn .tooltiptext {
 	width: 140px;
 	color: #fff;
 	font-size: 13px;
 	padding: 5px 0;
 	background: black;
-	top: -5px;
-  	right: 105%;
-}
-
-.tooltip {
-  position: relative;
-  display: inline-block;
-  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
-  opacity: 1;
+	bottom: 100%;
+  	left: 50%;
+  	margin-left: -70px;
+  	top: initial;
 }
 
 .previewExhb:hover .tooltiptext {
@@ -339,14 +348,14 @@ input:checked + .slider:before {
 	                    <span th:text="${defaultSpaceLinkImage!=null ? defaultSpaceLinkImage.getFilename():''}" style="margin-right: 10px;"></span>
 	                    	<div style="float: right;">
 		                    	<label class="switch">
-									<input id="disableSpaceImage" type="checkbox" checked>
+									<input id="disableSpaceLinkImage" class="disableDefaultLinkImage" type="checkbox" th:attr="link-type=space">
 									<span class="slider round"></span>
 								</label>
-			                    <button id="changeSpaceLinkImageBtn" type="reset" class="btn primary-btn btn-sm icon-edit tooltip">
+			                    <button id="changeSpaceLinkImageBtn" type="reset" class="changeBtn btn primary-btn btn-sm icon-edit tooltip">
 			                        <span class="tooltiptext">Change Default Space Link Image</span>
 			                    </button>
-			                    <button class="deleteDefaultLinkImage btn btn-sm" th:attr="link-type=space">
-			                        <span class="icon-trash error"></span>
+			                    <button class="deleteDefaultLinkImage btn primary-btn btn-sm" th:attr="link-type=space">
+			                        <span class="icon-trash"></span>
 			                    </button>
 		                    </div>
                     </div>
@@ -378,14 +387,14 @@ input:checked + .slider:before {
                     	<span th:text="${defaultModuleLinkImage!=null ? defaultModuleLinkImage.getFilename():''}" style="margin-right: 10px;"></span>
 	                    	<div style="float: right;">
 	                    		<label class="switch">
-									<input id="disableModuleImage" type="checkbox" checked>
+									<input id="disableModuleLinkImage" class="disableDefaultLinkImage" type="checkbox" th:attr="link-type=module">
 									<span class="slider round"></span>
 								</label>
-			                    <button id="changeModuleLinkImageBtn" type="reset" class="btn primary-btn btn-sm icon-edit tooltip">
+			                    <button id="changeModuleLinkImageBtn" type="reset" class="changeBtn btn primary-btn btn-sm icon-edit tooltip">
 			                        <span class="tooltiptext">Change Default Module Link Image</span>
 			                    </button>
-			                    <button class="deleteDefaultLinkImage btn btn-sm" th:attr="link-type=module">
-			                        <span class="icon-trash error"></span>
+			                    <button class="deleteDefaultLinkImage btn primary-btn btn-sm" th:attr="link-type=module">
+			                        <span class="icon-trash"></span>
 			                    </button>
 		                    </div>
                     </div>
@@ -417,14 +426,14 @@ input:checked + .slider:before {
 	                		<span th:text="${defaultExternalLinkImage!=null ? defaultExternalLinkImage.getFilename():''}" style="margin-right: 10px;"></span>
 		                    	<div style="float: right;">
 		                    		<label class="switch">
-										<input id="disableExternalImage" type="checkbox" checked>
+										<input id="disableExternalLinkImage" class="disableDefaultLinkImage" type="checkbox" th:attr="link-type=external">
 										<span class="slider round"></span>
 									</label>
-				                    <button id="changeExternalLinkImageBtn" type="reset" class="btn primary-btn btn-sm icon-edit tooltip">
+				                    <button id="changeExternalLinkImageBtn" type="reset" class="changeBtn btn primary-btn btn-sm icon-edit tooltip">
 				                        <span class="tooltiptext">Change Default External Link Image</span>
 				                    </button>
-				                    <button class="deleteDefaultLinkImage btn btn-sm" th:attr="link-type=external">
-				                        <span class="icon-trash error"></span>
+				                    <button class="deleteDefaultLinkImage btn primary-btn btn-sm" th:attr="link-type=external">
+				                        <span class="icon-trash"></span>
 				                    </button>
 			                    </div>
 	                    </div>

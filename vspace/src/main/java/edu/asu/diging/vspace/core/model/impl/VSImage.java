@@ -34,7 +34,7 @@ public class VSImage extends VSMedia implements IVSImage {
     private int height;
     private int width;
     
-    private Boolean disableFlag = false;
+    private Boolean disableFlag;
 
     @OneToMany(targetEntity = Tag.class)
     private List<ITag> tags;
@@ -108,7 +108,7 @@ public class VSImage extends VSMedia implements IVSImage {
     }
 
     @Override
-    public boolean getDisableFlag() {
+    public Boolean getDisableFlag() {
         return disableFlag;
     }
     

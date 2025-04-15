@@ -8,13 +8,18 @@ import java.util.function.Supplier;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.google.gson.JsonObject;
 
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
@@ -85,7 +90,7 @@ public class DefaultLinkImageController {
         if (image == null) {
             attributes.addAttribute("exhibitId", exhibition.getId());
             attributes.addAttribute("alertType", "danger");
-            attributes.addAttribute("message", "Could not delete the default image");
+            attributes.addAttribute("message", "Could not retrieve the default image prior to deleting");
             attributes.addAttribute("showAlert", "true");
         } else {
             imageService.removeImage(image.getId());
@@ -116,8 +121,9 @@ public class DefaultLinkImageController {
     }
     
     @RequestMapping(value = "/staff/exhibit/config/link/defaultImage/{linkType}", method = RequestMethod.PUT)
-    public String disableLinkImage(@PathVariable("linkType") String linkType, RedirectAttributes attributes) throws IOException {
-        Exhibition exhibition = (Exhibition) exhibitionManager.getStartExhibition();        
+    public ResponseEntity<String> disableLinkImage(@PathVariable("linkType") String linkType, RedirectAttributes attributes) throws IOException {
+        Exhibition exhibition = (Exhibition) exhibitionManager.getStartExhibition();
+        JsonObject jsonObj = new JsonObject();
         
         Map<String, Supplier<IVSImage>> imageGetterMap = Map.of(
                 "space", exhibition::getSpaceLinkDefaultImage,
@@ -127,35 +133,28 @@ public class DefaultLinkImageController {
         
         IVSImage image = imageGetterMap.get(linkType).get();
         if (image == null) {
-            attributes.addAttribute("exhibitId", exhibition.getId());
-            attributes.addAttribute("alertType", "danger");
-            attributes.addAttribute("message", "Could not delete the default image");
-            attributes.addAttribute("showAlert", "true");
-        } else {
-            imageService.removeImage(image.getId());
+            String errorMessage = "Could not retrieve the default image prior to disabling";
+            return ResponseEntity.badRequest().body(errorMessage);
         }
-
-        Map<String, Runnable> imageDeleterMap = Map.of(
-            "space", exhibition::deleteSpaceLinkDefaultImage,
-            "module", exhibition::deleteModuleLinkDefaultImage,
-            "external", exhibition::deleteExternalLinkDefaultImage
+        
+        Map<String, Runnable> imageDisablerMap = Map.of(
+            "space", exhibition::disableSpaceLinkDefaultImage,
+            "module", exhibition::disableModuleLinkDefaultImage,
+            "external", exhibition::disableExternalLinkDefaultImage
         );
         
-        Runnable deleteDefautImageMethod = imageDeleterMap.get(linkType);
-        if (deleteDefautImageMethod == null) {
-            attributes.addAttribute("exhibitId", exhibition.getId());
-            attributes.addAttribute("alertType", "danger");
-            attributes.addAttribute("message", "Could not delete the default image");
-            attributes.addAttribute("showAlert", "true");
+        Runnable disableDefautImageMethod = imageDisablerMap.get(linkType);
+        if (disableDefautImageMethod == null) {
+            String errorMessage = "Could not disable the default image";
+            return ResponseEntity.badRequest().body(errorMessage);
         } else {
-            deleteDefautImageMethod.run();
+            disableDefautImageMethod.run();
             exhibition = (Exhibition) exhibitionManager.storeExhibition(exhibition);
-            attributes.addAttribute("exhibitId", exhibition.getId());
-            attributes.addAttribute("alertType", "success");
-            attributes.addAttribute("message", "Successfully deleted the default image!");
-            attributes.addAttribute("showAlert", "true");
+            
+            jsonObj.addProperty("defaultImageDisableFlag", image.getDisableFlag());
         }
-        
-        return "redirect:/staff/exhibit/config";
+
+        return new ResponseEntity<>(jsonObj.toString(), HttpStatus.OK);
+
     }
 }

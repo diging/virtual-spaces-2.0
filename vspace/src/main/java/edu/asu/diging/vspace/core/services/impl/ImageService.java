@@ -271,11 +271,13 @@ public class ImageService implements IImageService {
      */
     @Override
     public IVSImage storeImage(byte[] image, String filename) {
-
         IVSImage storedImage = null;
         if (image != null && image.length > 0) {
+            System.out.println("HERE1");
             Tika tika = new Tika();
+            System.out.println("HERE2");
             String contentType = tika.detect(image);
+            System.out.println("CONTENT TYPE: " + contentType); 
             storedImage = imageFactory.createImage(filename, contentType);
             storedImage = imageRepo.save((VSImage) storedImage);
         }
