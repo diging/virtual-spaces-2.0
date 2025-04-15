@@ -160,7 +160,8 @@ public class SnapshotManager  implements  ISnapshotManager {
         }
         try {
             return storageEngineDownloads.getMediaContent("",exhibitionSnapshot.get().getFolderName()+ZIP_FILE_EXTENSION);                
-        }catch(Exception e) {
+        }
+        catch(IOException e) {
             throw new ExhibitionSnapshotNotFoundException(e.getMessage(), e);
         }
         
@@ -184,9 +185,9 @@ public class SnapshotManager  implements  ISnapshotManager {
         if (filesPagenum < 1) {
             filesPagenum = 1;
         }
+        
         Pageable requestedPageForFiles = PageRequest.of(filesPagenum - 1, pageSize);
-
-        Page<ExhibitionSnapshot> page =   exhibitionSnapshotRepository.findAllByOrderByCreationDateDesc(requestedPageForFiles);
+        Page<ExhibitionSnapshot> page = exhibitionSnapshotRepository.findAllByOrderByCreationDateDesc(requestedPageForFiles);
         return page.map(exhibitionSnapshot-> {return (ExhibitionSnapshot) exhibitionSnapshot;});
     }
     
@@ -196,7 +197,7 @@ public class SnapshotManager  implements  ISnapshotManager {
     }
     
     @Override
-    public SnapshotTask getSnapshotTask(String snapshotId) throws ExhibitionSnapshotNotFoundException{
+    public SnapshotTask getSnapshotTask(String snapshotId) throws ExhibitionSnapshotNotFoundException {
         Optional<SnapshotTask> snapshotTask = snapshotTaskRepository.findByExhibitionSnapshotId(snapshotId);
         if(snapshotTask.isPresent()) {
             return snapshotTask.get();

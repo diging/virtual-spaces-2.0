@@ -32,7 +32,7 @@ public class SnapshotTaskController {
     public ResponseEntity<SnapshotTask> getSnapshotTaskStatus(HttpServletRequest request,
             @PathVariable(required = false, name = "id") String snapshotId, HttpServletResponse response, Model model)
             throws ExhibitionSnapshotNotFoundException {
-        SnapshotTask snapshotTask = (snapshotId == null && snapshotId == "")
+        SnapshotTask snapshotTask = (snapshotId == null)
                 ? (SnapshotTask) snapshotManager.getLatestSnapshotTask()
                 : (SnapshotTask) snapshotManager.getSnapshotTask(snapshotId);
         if (snapshotTask == null) {

@@ -80,7 +80,6 @@ public class ModuleLinkManagerTest {
 
     private String spaceId1, imageId, imageFileName, modDisplayLinkId;
 
-
     @Before
     public void init() {
         MockitoAnnotations.initMocks(this);
