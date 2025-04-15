@@ -1,12 +1,16 @@
 package edu.asu.diging.vspace.core.model.impl;
 
 import java.util.Objects;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+
+import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
 
 @Entity
@@ -19,8 +23,8 @@ public class ExhibitionLanguage extends VSpaceElement implements IExhibitionLang
     
     private String label;
     
-    @ManyToOne(targetEntity = Exhibition.class)
-    private Exhibition exhibition;
+    @ManyToOne(targetEntity = Exhibition.class, cascade=CascadeType.ALL)
+    private IExhibition exhibition;
     
     private String code;
     
@@ -30,7 +34,7 @@ public class ExhibitionLanguage extends VSpaceElement implements IExhibitionLang
         super();
     }
     
-    public ExhibitionLanguage(String label, String code, Exhibition exhibition) {
+    public ExhibitionLanguage(String label, String code, IExhibition exhibition) {
         this.label=label;
         this.code=code;
         this.exhibition=exhibition;
@@ -54,7 +58,7 @@ public class ExhibitionLanguage extends VSpaceElement implements IExhibitionLang
         this.label = label;
     }
     
-    public Exhibition getExhibition() {
+    public IExhibition getExhibition() {
         return exhibition;
     }
 

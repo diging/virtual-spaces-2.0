@@ -42,4 +42,8 @@ public interface IImageService {
 
     Page<VSImage> getPaginatedImagesBySearchTerm(int pageNo, ImageCategory category, 
             String searchTerm, String sortedBy, String order);
+
+    IVSImage storeImage(byte[] image, String filename);
+
+    byte[] getImageContent(IVSImage image);
 }

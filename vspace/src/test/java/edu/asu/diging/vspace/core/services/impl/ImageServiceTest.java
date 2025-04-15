@@ -26,7 +26,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import edu.asu.diging.vspace.core.data.ImageRepository;
+import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.ImageDoesNotExistException;
+import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.SortByField;
@@ -42,7 +44,10 @@ public class ImageServiceTest {
     @Mock
     @Qualifier("storageEngineUploads")
     private IStorageEngine storage;
-    
+
+    @Mock
+    private IImageFactory imageFactory;
+
     @InjectMocks
     private ImageService serviceToTest;
 
@@ -52,11 +57,14 @@ public class ImageServiceTest {
     private IVSImage image2;
     private final String IMG_ID = "id";
     private final String IMG_FILENAME = "img";
-    private final String IMG_CONTENT_TYPE = "content/type";
     private final String IMG_ID1 = "id2";
     private final String IMG_FILENAME1 = "img2";
     private final String NEW_IMG_FILENAME = "newImg";
     private final String DESCRIPTION = "description";
+    private final String IMG_CONTENT_TYPE = "image/png";
+    private final String FILENAME = "IMAGE_FILE";
+    private final String ID = "IMAGE_ID";
+    private final String STORE_PATH = "PATH";
 
     @Before
     public void setUp() {
@@ -70,8 +78,8 @@ public class ImageServiceTest {
         image2.setFilename(IMG_FILENAME1);
         image2.setFileType("content/type");
         images = new ArrayList<>();
-        images.add((VSImage)image2);
-        images.add((VSImage)image);
+        images.add((VSImage) image2);
+        images.add((VSImage) image);
         imageForm = new ImageForm();
         imageForm.setFileName(NEW_IMG_FILENAME);
         imageForm.setDescription(DESCRIPTION);
@@ -266,5 +274,57 @@ public class ImageServiceTest {
             }
         }
         return true;
+    }
+
+    @Test
+    public void test_storeImage_success() throws FileStorageException, IOException {
+        InputStream fis = getClass().getResourceAsStream("/files/testImage.png");
+        byte[] imageBytes = IOUtils.toByteArray(fis);
+
+        ImageData data = new ImageData();
+        data.setHeight(200);
+        data.setWidth(400);
+
+        IVSImage defaultImage = new VSImage();
+        defaultImage.setFilename(FILENAME);
+        defaultImage.setHeight(500);
+        defaultImage.setWidth(500);
+        defaultImage.setFileType(IMG_CONTENT_TYPE);
+        Mockito.when(imageFactory.createImage(FILENAME, IMG_CONTENT_TYPE)).thenReturn(defaultImage);
+        Mockito.when(imageRepo.save((VSImage) defaultImage)).thenReturn((VSImage) defaultImage);
+        ImageService imageService = Mockito.spy(serviceToTest);
+        Mockito.when(imageService.getImageData(imageBytes)).thenReturn(data);
+        Mockito.when(storage.storeFile(imageBytes, FILENAME, ID)).thenReturn(STORE_PATH);
+        IVSImage returnVal = serviceToTest.storeImage(imageBytes, FILENAME);
+        Assert.assertEquals(FILENAME, returnVal.getFilename());
+        Assert.assertEquals(IMG_CONTENT_TYPE, returnVal.getFileType());
+
+    }
+
+    @Test
+    public void test_storeDefaultImage_error() throws FileStorageException, IOException {
+        InputStream fis = getClass().getResourceAsStream("/files/testImage.png");
+        byte[] imageBytes = IOUtils.toByteArray(fis);
+
+        ImageData data = new ImageData();
+        data.setHeight(200);
+        data.setWidth(400);
+
+        IVSImage defaultImage = new VSImage();
+        defaultImage.setId(ID);
+        defaultImage.setFilename(FILENAME);
+        defaultImage.setHeight(200);
+        defaultImage.setWidth(400);
+        defaultImage.setFileType(IMG_CONTENT_TYPE);
+
+        Mockito.when(imageFactory.createImage(FILENAME, IMG_CONTENT_TYPE)).thenReturn(defaultImage);
+        Mockito.when(imageRepo.save((VSImage) defaultImage)).thenReturn((VSImage) defaultImage);
+        Mockito.when(storage.storeFile(imageBytes, FILENAME, ID)).thenThrow(FileStorageException.class);
+        ImageService imageService = Mockito.spy(serviceToTest);
+        Mockito.when(imageService.getImageData(imageBytes)).thenReturn(data);
+        IVSImage returnVal = serviceToTest.storeImage(imageBytes, FILENAME);
+
+        Assert.assertNotNull(returnVal);
+
     }
 }
