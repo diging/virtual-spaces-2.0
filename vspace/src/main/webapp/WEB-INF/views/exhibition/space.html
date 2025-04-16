@@ -17,6 +17,10 @@
     background: rgba(0, 0, 0, 0.6);
 }
 
+.Info_cz_Class:hover {
+    z-index: 999;
+}
+
 .Info_cz_Class:hover .tooltiptext {
     visibility: visible;
 }
@@ -117,8 +121,6 @@
     background: rgba(0, 0, 0, 0.6);
 }
 
-
-
 .tooltiptextForExitFullscreen {
     visibility: hidden;
     width: 120px;
@@ -178,7 +180,6 @@
     /* top layer */
     z-index: 9999;
     transition: all 0.5s;
-
 }
 
 #sidebar.active {
@@ -208,24 +209,25 @@
 }
 </style>
 
-<script th:inline="javascript">
-$(document).ready(function() {
-	const textBlock = document.getElementByClassName("textBlock");
-	const color = textBlock.style.borderColor;
-	console.log("color" + color);
-	textBlock.addEventListener('focus-visible', function(e) {
-		e.target.style.outline = "2px solid blue";
-	});
 
-}
-
-</script>
 </head>
 
 <body>
     <div id="mainDivContent" layout:fragment="content">
         <script th:inline="javascript">
-		//# sourceURL=click.js
+               //# sourceURL=click.js
+		$(function () {
+			$('[data-toggle="tooltip"]').tooltip()
+			checkDefaultImage();
+			const textBlock = document.getElementsByClassName("textBlock");
+			const color = textBlock.style.borderColor;
+			textBlock.addEventListener('focus-visible', function(e) {
+				e.target.style.outline = "2px solid blue";
+			});
+		});
+		var defaultSpaceImageFlag;
+		var defaultModuleImageFlag;
+		var defaultExternalLinkImageFlag;		
 			
 		function toggleImgSize(isClicked){
 			var maxImgWidth = $(window).width();
@@ -368,10 +370,28 @@ $(document).ready(function() {
 					$("#space a").remove();
 					$(".Info_cz_Class").remove();
 			    	drawLinks();
+			    	checkDefaultImage();
 		    	});
 		    	drawLinks();
+		    	checkDefaultImage();
 		    	toggleImgSize(false);
 		});
+		
+		function checkDefaultImage() {
+			$.ajax({
+				url: "[(@{'/api/exhibition/default/link/image/status/'})]",
+				type: 'GET',
+		        cache       : false,
+		        contentType : false,
+		        success: function(data) {
+		        	if(data.length > 0){
+		        		defaultSpaceImageFlag = JSON.parse(data).defaultSpaceImageFlag; 
+		        		defaultModuleImageFlag = JSON.parse(data).defaultModuleImageFlag
+		        		defaultExternalLinkImageFlag = JSON.parse(data).defaultExternalLinkImageFlag;
+		        	}
+		        }
+			});
+		}
 		
 		function drawLinks() {
 			var spaceLinks = [[${spaceLinks}]];
@@ -393,8 +413,7 @@ $(document).ready(function() {
     		        else{
     		        	spaceLink.attr("href", link.link.targetSpace.id);
     		        }
-    		        
-    		        var linkDisplay;
+    		        var linkDisplay = $('<div class="InfoSpace_'+index+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-move Icon_awesome_info_c"></span><span class="tooltiptext">'+link.link.name+'</span></div>');
     		        if(link.type=="ALERT"){
     		            linkDisplay = $('<div class="InfoSpace_'+index+' alert alert-primary" role="alert"><span class="tooltiptextalert">'+link.link.name+'</span></div>');
     		        }
@@ -402,8 +421,9 @@ $(document).ready(function() {
                         var spaceImageURL = [[@{/api/image/}]]+link.image.id;
                         linkDisplay = $('<img class="InfoSpace_'+index+'" src="'+spaceImageURL+'" />');
     		        }
-    		        else{
-                        linkDisplay = $('<div class="InfoSpace_'+index+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-move Icon_awesome_info_c"></span><span class="tooltiptext">'+link.link.name+'</span></div>');
+    		        else if(defaultSpaceImageFlag === true) {
+    		        	var defaultSpaceLinkImageURL = [[@{/api/image/default/link/space/}]];
+    		        	linkDisplay = $('<div class="InfoSpace_'+index+' Info_cz_Class"><img class="InfoSpace_'+index+'" src="'+defaultSpaceLinkImageURL+'" width="30" height="30" border-radius = "50%"/><span class="tooltiptext">'+link.link.name+'</span></div>');
     		        }
     		        linkDisplay.css('position', 'absolute');
     		        linkDisplay.css('transform', 'rotate('+link.rotation+'deg)');
@@ -437,12 +457,13 @@ $(document).ready(function() {
     		        	 moduleLinkURL = [[@{|/exhibit/${space?.id}/module/|}]]+link.link.module.id;
     		        }
     		        moduleLink.attr("href", moduleLinkURL);
-    		        var linkDisplay;
+    		        var linkDisplay = $('<div class="InfoModule_'+index+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_m"></span><span class="tooltiptext">'+link.link.name+'</span></div>');
     		        if(link.type=="IMAGE" && link.image != null){
                         var moduleImageURL = [[@{/api/image/}]]+link.image.id;
                         linkDisplay = $('<img class="InfoModule_'+index+'" src="'+moduleImageURL+'" />');
-    		        } else {
-    		        	linkDisplay = $('<div class="InfoModule_'+index+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_m"></span><span class="tooltiptext">'+link.link.name+'</span></div>');
+    		        } else if(defaultModuleImageFlag === true){
+    		        	var defaultModuleURL = [[@{/api/image/default/link/module/}]];
+    		        	linkDisplay = $('<div class="InfoModule_'+index+' Info_cz_Class"><img class="InfoModule_'+index+'" src="'+defaultModuleURL+'" width="30" height="30" border-radius = "100%""/><span class="tooltiptext">'+link.link.name+'</span></div>');
                 	}
     		        linkDisplay.css('position', 'absolute');
     		        linkDisplay.css('transform', 'rotate('+link.rotation+'deg)');
@@ -469,6 +490,7 @@ $(document).ready(function() {
                     var posY = $("#space").position().top;
                     var externalLink = $('<a></a>');
                     externalLink.attr('href', link.externalLink.externalLink);
+                    var linkDisplay = $('<div class="InfoExt_'+index+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-ext-link Icon_awesome_info_e"></span><span class="tooltiptext">'+link.externalLink.name+'</span></div>');
                     if(link.howToOpen == null || link.howToOpen == "NEWWINDOW" ){
     		        	externalLink.attr('target', "_blank");
     		        } else {
@@ -481,8 +503,9 @@ $(document).ready(function() {
     		        	var extImageURL = [[@{/api/image/}]]+link.image.id;
     		        	linkDisplay = $('<img class="InfoExt_'+index+'" src="'+extImageURL+'" />');
                 	}
-                    else{
-    		        	var linkDisplay = $('<div class="InfoExt_'+index+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-ext-link Icon_awesome_info_e"></span><span class="tooltiptext">'+link.externalLink.name+'</span></div>');
+                    else if(defaultExternalLinkImageFlag === true){
+                   		var defaultExternalLinkURL = [[@{/api/image/default/link/external/}]];
+                   		linkDisplay = $('<div class="InfoExt_'+index+' Info_cz_Class"><img class="InfoExt_'+index+'" src="'+defaultExternalLinkURL+'" width="30" height="30" border-radius = "50%""/><span class="tooltiptext">'+link.externalLink.name+'</span></div>');
                 	}
                     linkDisplay.css('position', 'absolute');
                     linkDisplay.css('transform', 'rotate('+link.rotation+'deg)');
