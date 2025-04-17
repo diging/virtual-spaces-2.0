@@ -180,6 +180,7 @@ public class SlideManager implements ISlideManager {
     public void updateNameAndDescription(ISlide slide, SlideForm slideForm) {
         slide.setName(slideForm.getDefaultName().getText());
         slide.setDescription(slideForm.getDefaultDescription().getText());
+        
         List<ILocalizedText> localizedTextNames = slide.getSlideNames();
         List<ILocalizedText> localizedTextDescriptions = slide.getSlideDescriptions();
         addSlideLocalizedText(slide,slideForm.getDefaultName(), localizedTextNames);
@@ -195,6 +196,6 @@ public class SlideManager implements ISlideManager {
 
     @Override
     public void addSlideLocalizedText(ISlide slide, LocalizedTextForm localizedTextFormData, List<ILocalizedText> localizedTextList) {
-        localizedTextFactory.createLocalizedText(slide, localizedTextFormData, localizedTextList);
+        localizedTextFactory.createOrUpdateLocalizedText(slide, localizedTextFormData, localizedTextList);
     }
 }

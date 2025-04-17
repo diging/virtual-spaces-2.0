@@ -17,11 +17,7 @@ public class SlideFormFactory implements ISlideFormFactory{
     @Autowired
     private LocalizedTextFormFactory localizedTextFormCreation;
     
-    @Autowired
-    private IExhibitionManager exhibitionManager;
-    
     /**
-     * 
      * Creates new slide form object based on the slide and the exhibition
      * 
      * This method initializes a {@code SlideForm} object and populates it with the name and 
@@ -38,7 +34,6 @@ public class SlideFormFactory implements ISlideFormFactory{
         SlideForm slideForm = new SlideForm();
         slideForm.setName(slide.getName());
         slideForm.setDescription(slide.getDescription());
-        IExhibitionLanguage defaultLanguage = exhibitionManager.getDefaultLanguage(startExhibition);
         
         startExhibition.getLanguages().forEach(language -> {
             if(language.isDefault()) {

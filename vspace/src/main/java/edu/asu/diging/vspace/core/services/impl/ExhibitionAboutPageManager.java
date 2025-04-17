@@ -99,10 +99,12 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
     private void setLocalizedText(LocalizedTextForm textForm, List<ILocalizedText> localizedTextList) {
         if (textForm!=null) {
             LocalizedText localizedText = localizedTextRepo.findById(textForm.getLocalizedTextId()).orElse(null);
+            
             if(StringUtils.isEmpty(textForm.getText())){
                 //then delete the localized text if it has no text
                 if(localizedText!=null) {
                     localizedTextRepo.delete(localizedText);
+                    localizedTextList.remove(localizedText);
                 }                
                 return;
             }

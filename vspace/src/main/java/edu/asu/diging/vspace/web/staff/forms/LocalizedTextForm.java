@@ -17,11 +17,11 @@ public class LocalizedTextForm {
         super();
     }
 
-    public LocalizedTextForm(String text, String localisedTextId, String exhibitionLanguageId,
+    public LocalizedTextForm(String text, String localizedTextId, String exhibitionLanguageId,
             String exhibitionLanguageLabel) {
         super();
         this.text = text;
-        this.localizedTextId = localisedTextId;
+        this.localizedTextId = localizedTextId;
         this.exhibitionLanguageId = exhibitionLanguageId;
         this.exhibitionLanguageLabel = exhibitionLanguageLabel;
     }

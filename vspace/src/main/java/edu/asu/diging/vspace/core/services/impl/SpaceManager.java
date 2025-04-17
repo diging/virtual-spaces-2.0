@@ -388,7 +388,7 @@ public class SpaceManager implements ISpaceManager {
      */
     @Override
     public void addSpaceDetails(ISpace space, LocalizedTextForm name, List<ILocalizedText> localizedTextList) {
-        localizedTextFactory.createLocalizedText(space, name, localizedTextList);        
+        localizedTextFactory.createOrUpdateLocalizedText(space, name, localizedTextList);
     }
     
 }
