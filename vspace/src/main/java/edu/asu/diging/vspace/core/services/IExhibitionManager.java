@@ -22,7 +22,7 @@ public interface IExhibitionManager {
      * @see edu.asu.diging.vspace.core.services.IExhibitionManager#storeExhibition(edu.
      * asu.diging.vspace.core.model.impl.Exhibition)
      */
-    IExhibition storeExhibition(Exhibition exhibit);
+    IExhibition storeExhibition(IExhibition exhibition);
 
     /*
      * (non-Javadoc)

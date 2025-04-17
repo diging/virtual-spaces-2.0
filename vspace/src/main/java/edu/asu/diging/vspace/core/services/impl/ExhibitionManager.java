@@ -57,8 +57,8 @@ public class ExhibitionManager implements IExhibitionManager {
      * asu.diging.vspace.core.model.impl.Exhibition)
      */
     @Override
-    public IExhibition storeExhibition(Exhibition exhibition) {
-        return exhibitRepo.save(exhibition);
+    public IExhibition storeExhibition(IExhibition exhibition) {
+        return exhibitRepo.save((Exhibition) exhibition);
     }
 
     /*
@@ -81,7 +81,7 @@ public class ExhibitionManager implements IExhibitionManager {
     public List<IExhibition> findAll() {
         Iterable<Exhibition> exhibitions = exhibitRepo.findAll();
         List<IExhibition> results = new ArrayList<>();
-        exhibitions.forEach(e -> results.add((IExhibition) e));
+        exhibitions.forEach(e -> results.add(e));
         return results;
     }
 
@@ -92,7 +92,7 @@ public class ExhibitionManager implements IExhibitionManager {
     public IExhibition getStartExhibition() {
         // for now we just take the first one created, there shouldn't be more than one
         List<Exhibition> exhibitions = exhibitRepo.findAllByOrderByIdAsc();
-        Exhibition exhibition;
+        IExhibition exhibition;
         if (exhibitions.size() > 0) {
             exhibition = exhibitions.get(0);
             String previewId = exhibition.getPreviewId();
@@ -135,11 +135,13 @@ public class ExhibitionManager implements IExhibitionManager {
             .forEach(languageMap -> {
                 IExhibitionLanguage exhibitionLanguage =  addExhibitionLanguage(exhibition , languageMap);  
                 exhibitionLanguage.setDefault(exhibitionLanguage.getCode().equalsIgnoreCase(defaultLanguage));
-            });  
+            });
 
-        // Finds exhibition language if unselected (to be deleted).
+        // Removes exhibition language if unselected.
         List<IExhibitionLanguage> exhibitionLanguageToBeRemoved = exhibition.getLanguages().stream()
                 .filter(language -> !codes.contains(language.getCode())).collect(Collectors.toList());
+        
+        exhibition.getLanguages().removeAll(exhibitionLanguageToBeRemoved);
 
         for (IExhibitionLanguage language  : exhibitionLanguageToBeRemoved ) {
             if(checkIfLocalizedTextsExists(language))  {
@@ -181,7 +183,7 @@ public class ExhibitionManager implements IExhibitionManager {
      * @param languageMap
      * @return
      */
-    private IExhibitionLanguage addExhibitionLanguage(Exhibition exhibition, Map languageMap) {
+    private IExhibitionLanguage addExhibitionLanguage(IExhibition exhibition, Map languageMap) {
         IExhibitionLanguage exhibitionLanguage =   new ExhibitionLanguage((String) languageMap.get(ConfigConstants.LABEL),
                 (String) languageMap.get(ConfigConstants.CODE), exhibition);
 
