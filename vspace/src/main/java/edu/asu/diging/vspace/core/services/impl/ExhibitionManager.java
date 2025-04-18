@@ -1,7 +1,6 @@
 package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.ArrayList;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -140,27 +139,22 @@ public class ExhibitionManager implements IExhibitionManager {
         // Removes exhibition language if unselected.
         List<IExhibitionLanguage> exhibitionLanguageToBeRemoved = exhibition.getLanguages().stream()
                 .filter(language -> !codes.contains(language.getCode())).collect(Collectors.toList());
-        
-        exhibition.getLanguages().removeAll(exhibitionLanguageToBeRemoved);
 
         for (IExhibitionLanguage language  : exhibitionLanguageToBeRemoved ) {
-            if(checkIfLocalizedTextsExists(language))  {
+            if(!getLocalizedTexts(language).isEmpty()) {
                 throw new ExhibitionLanguageDeletionException("Exhibition cannot be deleted as it is not empty") ;
             }
-
         }       
         exhibition.getLanguages().removeAll(exhibitionLanguageToBeRemoved);
     }
     
     /**
-     * Return true if given exhibition language has non empty localized texts linked to it
-     * 
+     * Return list localized texts linked to the given exhibition language
+     * @param exhibitionLanguage
      */
     @Override
-    public boolean checkIfLocalizedTextsExists(IExhibitionLanguage language)  {               
-
-        //This returns true if non empty localized texts exist
-        return !localizedTextRepo.findByExhibitionLanguage(language).isEmpty();
+    public List<LocalizedText> getLocalizedTexts(IExhibitionLanguage language)  {
+        return localizedTextRepo.findByExhibitionLanguage(language);
     }
     
     /**

@@ -10,11 +10,13 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.hibernate.query.criteria.internal.predicate.IsEmptyPredicate;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,6 +26,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.mysql.cj.x.protobuf.MysqlxCrud.Collection;
 
 import edu.asu.diging.vspace.config.ExhibitionLanguageConfig;
 import edu.asu.diging.vspace.core.data.ExhibitionRepository;
@@ -308,6 +313,7 @@ public class ExhibitionManagerTest {
 
         languages.remove("en");
         exhibitionLanguages.remove(languageObj);
+        when(localizedTextRepo.findByExhibitionLanguage(languageObj)).thenReturn(Collections.emptyList());
         
         serviceToTest.updateExhibitionLanguages(exhibition, languages, "aa");
         assertEquals(exhibition.getLanguages().size(),1);   
@@ -344,7 +350,6 @@ public class ExhibitionManagerTest {
         List<IExhibitionLanguage> exhibitionLanguages= new ArrayList<IExhibitionLanguage>();
         exhibitionLanguages.add(languageObj);
         exhibitionLanguages.add(languageObj2);
-        exhibition.setLanguages(exhibitionLanguages);
         
         LocalizedText localizedText = new LocalizedText();
         localizedText.setExhibitionLanguage(languageObj);
@@ -358,8 +363,7 @@ public class ExhibitionManagerTest {
         assertEquals(exhibition.getLanguages().size(), 2);
         
         languages.remove("en");
-        when(localizedTextRepo.findByExhibitionLanguage(languageObj)).thenReturn(localizedTextList);
-        
+        when(localizedTextRepo.findByExhibitionLanguage(Mockito.any(ExhibitionLanguage.class))).thenReturn(localizedTextList);
         Assert.assertThrows(ExhibitionLanguageDeletionException.class,
                 () -> serviceToTest.updateExhibitionLanguages(exhibition, languages, "aa"));        
     }   

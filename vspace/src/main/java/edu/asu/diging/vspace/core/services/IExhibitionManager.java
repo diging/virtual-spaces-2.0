@@ -7,6 +7,7 @@ import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.ILocalizedText;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
+import edu.asu.diging.vspace.core.model.impl.LocalizedText;
 /*
  * (non-Javadoc)
  * 
@@ -38,10 +39,10 @@ public interface IExhibitionManager {
 
     void updateExhibitionLanguages(Exhibition exhibition, List<String> languages, String defaultLanguage) throws ExhibitionLanguageDeletionException;
     
-    boolean checkIfLocalizedTextsExists(IExhibitionLanguage language);
-
     void deleteLocalizedTexts(List<ILocalizedText> emptyLocalizedTexts);
     
     IExhibitionLanguage getDefaultLanguage(IExhibition exhibition);
+
+    List<LocalizedText> getLocalizedTexts(IExhibitionLanguage language);
     
 }
