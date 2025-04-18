@@ -30,6 +30,18 @@ public interface IExhibition extends IVSpaceElement {
 
     void setAboutPageConfigured(boolean aboutPageConfigured);
 
+    IVSImage getSpaceLinkDefaultImage();
+
+    void setSpaceLinkDefaultImage(IVSImage spaceLinkDefaultImage);
+
+    IVSImage getModuleLinkDefaultImage();
+
+    void setModuleLinkDefaultImage(IVSImage moduleLinkDefaultImage);
+
+    IVSImage getExternalLinkDefaultImage();
+
+    void setExternalLinkDefaultImage(IVSImage externalLinkDefaultImage);
+
     List<IExhibitionLanguage> getLanguages();
     
     ExhibitionModes getMode();
@@ -47,5 +59,7 @@ public interface IExhibition extends IVSpaceElement {
     void setSpaceOrderMode(ExhibitionSpaceOrderMode spaceOrderMode);
 
     ExhibitionSpaceOrderMode getSpaceOrderMode();
+
+    void setCustomMessage(String customMessage);
 
 }

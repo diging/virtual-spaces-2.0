@@ -13,6 +13,6 @@ public interface IExhibitionFactory {
      * @param exhibitionObj
      * @return
      */
-    void updatePreviewId(Exhibition exhibitionObj);
+    void updatePreviewId(IExhibition exhibitionObj);
 
 }
