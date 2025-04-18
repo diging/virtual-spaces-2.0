@@ -51,7 +51,7 @@
 		        	<button id="selectCustomOrder" type="submit" class="btn primary-btn btn-sm">Submit</button>
 				</form>
 	    	</div>
-	        <div class="tab sequences" style="margin-top: 0;">    
+	        <div th:if="${customSpaceOrders.size()>0}" class="tab sequences" style="margin-top: 0;">    
 			    <div style="display: flex; justify-content: space-between">
 					<h4>Custom Orders</h4>			
 				</div>

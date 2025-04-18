@@ -83,7 +83,7 @@
 		spaceDivs=[];
 		spaceDivs = spaceIds;
 		$("#spaceOrder").val(spaceDivs);
-		if([[${customSpaceOrder.description}]] == "") {
+		if("[[${customSpaceOrder.description}]]" == "") {
 			$("#description").hide();
 		}
 	 
@@ -158,8 +158,7 @@
                             <div class="modal-body">
                                 <div class="flexContainer">
                                     <span style="flex: 1;">Title: </span>
-                                    <input style="flex: 5; border: 1px solid;" id="editSpaceCustomOrderTitle" name="name" class="form-control" type="text" th:value="${customSpaceOrder.customOrderName}">
-                                    
+                                    <input style="flex: 5; border: 1px solid;" id="editSpaceCustomOrderTitle" name="name" class="form-control" type="text" th:value="${customSpaceOrder.customOrderName}">                                    
                                 </div>
                                 <div class="flexContainer">
                                     <span style="flex: 1;">Description: </span>
