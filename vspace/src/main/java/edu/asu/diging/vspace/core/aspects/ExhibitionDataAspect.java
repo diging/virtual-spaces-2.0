@@ -68,7 +68,6 @@ public class ExhibitionDataAspect {
                          * (non-Javadoc) Added to show spaces with null status and accommodate existing
                          * spaces with null space status
                          */
-                        //publishedSpaces.addAll(spaceManager.getSpacesWithStatus(null));
                         publishedSpaces = spaceManager.sortPublishedSpacesByGivenOrder(publishedSpaces);
                         ((Model) obj).addAttribute("publishedSpaces", publishedSpaces);
                     }

@@ -76,9 +76,7 @@ public class SpaceManagerTest {
     private ExhibitionManager exhibitionManager;
     
     @Mock
-    private ISpacesCustomOrderManager spacesCustomOrderManager;
-    
-
+    private ISpacesCustomOrderManager spacesCustomOrderManager;   
 
     @InjectMocks
     private SpaceManager managerToTest;
@@ -96,8 +94,7 @@ public class SpaceManagerTest {
         MockitoAnnotations.initMocks(this);
         spaceId1 = "SPA000000001";
         spaceId2 = "SPA000000001";
-        spaceLinkId1 = "SPL000000001";
-        
+        spaceLinkId1 = "SPL000000001";       
 
     }
 
@@ -308,7 +305,6 @@ public class SpaceManagerTest {
     @Test
     public void test_getSpacesWithImageId_ImageIdIsNull(){
         Assert.assertNull(managerToTest.getSpacesWithImageId(null));
-    }
-    
+    }   
 
 }

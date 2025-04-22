@@ -37,7 +37,5 @@ public class SpacesCustomOrderForm {
     public void setOrderedSpaces(List<String> orderedSpaces) {
         this.orderedSpaces = orderedSpaces;
     }
-    
-    
 
 }

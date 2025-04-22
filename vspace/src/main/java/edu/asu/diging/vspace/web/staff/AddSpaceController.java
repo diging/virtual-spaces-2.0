@@ -80,7 +80,7 @@ public class AddSpaceController {
         }else {
             creationValue = spaceManager.storeSpace(space, bgImage, filename);
         }
-        
+
         if (creationValue != null) {
             return "redirect:/staff/space/" + creationValue.getElement().getId();
         }
