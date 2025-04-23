@@ -28,15 +28,12 @@ public class SpaceSearchApiController {
 
     @GetMapping("/{id}")
     public ResponseEntity<String> searchSpace(@PathVariable("id") String id) {
-        logger.info("Received search request for space ID: {}", id);
 
         ISpace space = spaceManager.getSpace(id);
 
         if (space == null) {
             return new ResponseEntity<>("{\"error\": \"Space could not be found.\"}", HttpStatus.NOT_FOUND);
         }
-
-        logger.info("Space found: {}", space.getName());
 
         return new ResponseEntity<>("\"" + space.getName() + "\"", HttpStatus.OK);
     }
