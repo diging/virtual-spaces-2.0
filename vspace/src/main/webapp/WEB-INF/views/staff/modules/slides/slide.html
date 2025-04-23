@@ -273,8 +273,8 @@
              	
             	 	//showing the edit bibliography form with all the respective values
 		    	    $("#editReferenceAlert").show();
-					var alert = $('<input type="hidden" class="biblio-reference" data-biblio-id="'+biblioId+'">');
-            	 	var biblioId = $('#confirmDeleteBiblioAlert .biblio-reference').data('biblio-id');
+		    	    var alert = $('<input type="hidden" id="currentBiblioId">');
+            	 	var biblioId = $(this).data("biblio-id");
             	 	$("#currentBiblioId").val(biblioId);
             	 	$("#editTitleRef").val(title);
             	 	$("#editAuthorRef").val(author);
@@ -928,6 +928,7 @@
                 });
                 
                 $(document).on("click", ".deleteText", function(e) {
+                	$("#confirmDeleteTextAlert .modal-footer input[type='hidden']").remove();
             		$("#confirmDeleteTextAlert").show();
             		var alert = $('<input type="hidden" id="deleteTextId">');
             		$(alert).attr( 'value', $(this).siblings('input').val());
@@ -935,6 +936,7 @@
               	});
 
                 $(document).on("click", ".deleteSpace", function(e) {
+                	$("#confirmDeleteSpaceAlert .modal-footer input[type='hidden']").remove();
             		$("#confirmDeleteSpaceAlert").show();
             		var alert = $('<input type="hidden" id="deleteSpaceId">');
             		$(alert).attr( 'value', $(this).siblings('input').val());
@@ -942,6 +944,7 @@
               	});
 
             	$(document).on("click", ".deleteImage", function(e) {
+            		$("#confirmDeleteImageAlert .modal-footer input[type='hidden']").remove();
             		$("#confirmDeleteImageAlert").show();
             		var alert = $('<input type="hidden" id="deleteImageId">');
             		$(alert).attr( 'value', $(this).siblings('input').val());
@@ -949,6 +952,7 @@
               	});
             	
             	$(document).on("click", ".deleteVideo", function(e) {
+            		$("#confirmDeleteVideoAlert .modal-footer input[type='hidden']").remove();
             		$("#videoIdToDelete").attr( 'value', $(this).attr('data-video-id'));
             		$(".load").remove();
             		$("#"+$(this).attr('data-video-id')).append($('<div class="load" style="font-size: 30px;display: none; text-align: center;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></div>'));
@@ -966,27 +970,31 @@
            	
            	$(document).on("click", ".addReference", function(e) {
                  $("#addReferenceAlert").show();
-                 var alert = $('<input type="hidden" class="biblio-reference" data-biblio-id="'+biblioId+'">');
+                 var alert = $('<input type="hidden" id="currentBiblioId">');
          		$(alert).attr( 'value', $(this).closest("div").attr("id"));
          		$('#addReferenceAlert .modal-footer').append(alert); 
              });
              
              $(document).on("click", ".deleteBiblio", function(e) {
+            	$("#confirmDeleteBiblioAlert .modal-footer input[type='hidden']").remove();
          		$("#confirmDeleteBiblioAlert").show();
          		var alert = $('<input type="hidden" id="deleteBiblioId">');
          		$(alert).attr( 'value', $(this).siblings('input').val());
-         		$("#confirmDeleteBiblioAlert").data("deleteBiblioId", blockId).show(); 
+         		$('#confirmDeleteBiblioAlert .modal-footer').append(alert); 
            	});
              
              $(document).on("click", ".deleteReference", function(e) {
+            	$("#confirmDeleteRefAlert .modal-footer input[type='hidden']").remove();
          		$("#confirmDeleteRefAlert").show();
-         		var alert = $('<input type="hidden" class="deleteReferenceField">');
-         		$(alert).attr( 'value', $(this).siblings('input').val());
-         		$('#confirmDeleteRefAlert .modal-footer').append(alert); 
          		
-         		var alert2 = $('<input type="hidden" id="currentBiblioId">');
-         		$(alert2).attr( 'value', $(e.target).closest('.biblioDivStaff').attr("id"));
-         		$('.modal-footer').append(alert2); 
+         	    var refInput = $('<input type="hidden" class="deleteReferenceField">');
+         	    refInput.val($(this).siblings('input').val());
+         	    $("#confirmDeleteRefAlert .modal-footer").append(refInput);
+         	    
+         	    // Create second hidden input with the bibliography block ID
+         	    var biblioInput = $('<input type="hidden" class="currentBiblioId">');
+         	    biblioInput.val($(e.target).closest('.biblioDivStaff').attr("id"));
+         	    $("#confirmDeleteRefAlert .modal-footer").append(biblioInput);
            	});
             	
             	$(document).on("click", ".deleteChoiceBlock", function(e) {
@@ -1050,22 +1058,38 @@
          	});
          	
          	$("#cancelDeleteBiblio").click(function() {
-         	    $("#confirmDeleteBiblioAlert .modal-footer input[type='hidden']").remove();
+         		$("#confirmDeleteTextAlert").find('input').remove();
+         		$("#confirmDeleteBiblioAlert").find('input').remove();
+         		$("#confirmDeleteRefAlert").find('input').remove();
+         		$("#confirmDeleteImageAlert").find('input').remove();
+         		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
          		$("#confirmDeleteBiblioAlert").hide();
          	});
          	
          	$("#cancelDeleteReference").click(function() {
-         	    $("#confirmDeleteRefAlert .modal-footer input[type='hidden']").remove();
+         		$("#confirmDeleteTextAlert").find('input').remove();
+         		$("#confirmDeleteBiblioAlert").find('input').remove();
+         		$("#confirmDeleteRefAlert").find('input').remove();
+         		$("#confirmDeleteImageAlert").find('input').remove();
+         		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
          		$("#confirmDeleteRefAlert").hide();
          	});
          	
             	$("#cancelDeleteChoiceBlock").click(function() {
-            	    $("#confirmDeleteChoiceBlockAlert .modal-footer input[type='hidden']").remove();
+            	    $("#confirmDeleteChoiceBlockAlert").find('input').remove();
+            	    $("#confirmDeleteTextAlert").find('input').remove();
+         	    $("#confirmDeleteBiblioAlert").find('input').remove();
+         	    $("#confirmDeleteRefAlert").find('input').remove();
+            		$("#confirmDeleteImageAlert").find('input').remove();
             		$("#confirmDeleteChoiceBlockAlert").hide();
             	});
             	
             	$("#cancelDelete").click(function() {
-            	    $("#confirmDeleteImageAlert .modal-footer input[type='hidden']").remove();
+            		$("#confirmDeleteTextAlert").find('input').remove();
+         		$("#confirmDeleteBiblioAlert").find('input').remove();
+         		$("#confirmDeleteRefAlert").find('input').remove();
+            		$("#confirmDeleteImageAlert").find('input').remove();
+            		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
             		$("#confirmDeleteImageAlert").hide();	
             	});
             	
