@@ -376,4 +376,16 @@ public class SpaceManager implements ISpaceManager {
         return sortingParameters;
     }
     
+    @Override
+    public int getTotalSpaceCount(String searchTerm) {
+        if (searchTerm != null && !searchTerm.trim().isEmpty()) {
+            // Count spaces matching the search term
+            String formattedSearchTerm = "%" + searchTerm + "%";
+            return (int) spaceRepo.countByNameLike(formattedSearchTerm);
+        } else {
+            // Count all spaces
+            return (int) spaceRepo.count();
+        }
+    }
+    
 }

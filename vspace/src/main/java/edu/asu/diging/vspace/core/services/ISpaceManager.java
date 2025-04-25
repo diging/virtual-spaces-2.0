@@ -55,4 +55,6 @@ public interface ISpaceManager {
     List<ISpace> getSpaces(int pageNo);
     
     List<ISpace> getAllSpacesPaginated(int page, int pageSize);
+    
+    int getTotalSpaceCount(String searchTerm);
 }
