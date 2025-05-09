@@ -763,93 +763,163 @@
                     
                 });
             
-                $("#submitDescription").click(function() {
-                    var formData = new FormData();
-                    var token = [[${_csrf.token}]];
-                    formData.append('description', $("#newDescription").val());
-                    $.ajax({ 
-            	        url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/edit/description'})]",
-            	        type: 'POST',
-            	        cache       : false,
-            	        contentType : false,
-            	        processData : false,
-            	        headers:{
-	            			'X-CSRF-Token':token
-	            		},
-            	        data: formData,
-            	        enctype: 'multipart/form-data',
-            	        success: function(data) {
-            	            // replace text box with new description
-            	            $("#submitDescription").hide()
-            	            $("#cancelEditDescription").hide()
-            	            $("#editDescription").show()
-            	            var val = $("#newDescription").val();
-            	            $('<p id="description"style="margin-top: .5rem; margin-bottom: .5rem;"></p>').insertBefore( "#newDescription" );
-            	            $("#newDescription").remove();
-            	            $("#description").text(val)
-            	        },
-            	        error: function(data) {
-            	            $(".open").removeClass("open");
-            	                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-            	                $('.error').append(alert);
-            	        }
-                     });       
-                  });
-                
-                $("#cancelEditDescription").click(function(){
-                    $("#submitDescription").hide()
-                    $("#editDescription").show()
-                    $("#cancelEditDescription").hide()
-                    $('<p id="description" style="margin-top: .5rem; margin-bottom: .5rem;"></p>').insertBefore( "#newDescription" );
-                    $("#newDescription").remove()
-                    $("#description").text(description)
-                    
-                });
-                
-                //------- edit title --------
-                $("#submitTitle").hide();
-                $("#cancelEditTitle").hide();
-                var getTitleText = $("#title").text().split(": ")[1]
-                $("#editTitle").click(function() {
-                    $('<div class="col-4"><input id="newTitle" class="form-control" type="text"></div>').insertAfter( "#title" );
-                    $('#title').text('Slide: ')
-                    $("#newTitle").val(getTitleText)
-                    $("#editTitle").hide()
-                    $("#submitTitle").show()
-                    $("#cancelEditTitle").show()       
-                });
-                
-                $("#submitTitle").click(function() {
-                    var token = [[${_csrf.token}]];
-                    var formData = new FormData();
-                    formData.append('title', $("#newTitle").val());
-                    $.ajax({
-                        url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/edit/title'})]",
-                        type: 'POST',
-                        cache       : false,
-                        contentType : false,
-                        processData : false,
-                        headers:{
-	            			'X-CSRF-Token':token
-	            		},
-                        data: formData,
-                        enctype: 'multipart/form-data',
-                        success: function(data) {
-                            // replace text box with new description
-                            $("#submitTitle").hide()
-                            $("#cancelEditTitle").hide();
-                            $("#editTitle").show()
-                            var val = $("#newTitle").val();
-                            $("#newTitle").closest('div').remove();
-                            $("#title").text("Silde: " + val)
-                            
+             // Immediately-invoked Function Expression (IIFE) to avoid polluting global namespace
+                (function() {
+                    // Store common elements and values
+                    const csrfToken = [[${_csrf.token}]];
+                    const moduleId = ${module.id};
+                    const slideId = ${slide.id};
+                    const baseUrl = `/staff/module/${moduleId}/slide/${slideId}/edit`;
+                    let originalDescription = $("#description").text();
+                    let originalTitleText = $("#title").text().split(": ")[1];
+
+                    // Helper functions
+                    function showError() {
+                        const alert = $(`
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <p>We are sorry but something went wrong. Please try again later.</p>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        `);
+                        $('.error').append(alert);
+                    }
+
+                    function makeAjaxRequest(endpoint, formData, onSuccess) {
+                        $.ajax({
+                            url: baseUrl + endpoint,
+                            type: 'POST',
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            headers: {
+                                'X-CSRF-Token': csrfToken
+                            },
+                            data: formData,
+                            enctype: 'multipart/form-data',
+                            success: onSuccess,
+                            error: showError
+                        });
+                    }
+
+                    // Description Editor
+                    const descriptionEditor = {
+                        init: function() {
+                            // Save original description
+                            originalDescription = $("#description").text();
+
+                            // Set up event handlers
+                            $("#editDescription").click(this.startEditing);
+                            $("#submitDescription").click(this.save);
+                            $("#cancelEditDescription").click(this.cancel);
+
+                            // Initial state
+                            $("#submitDescription").hide();
+                            $("#cancelEditDescription").hide();
                         },
-                        error: function(data) {
-                            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                            $('.error').append(alert);
+
+                        startEditing: function() {
+                            $('<textarea id="newDescription" class="form-control"></textarea>').insertAfter("#description");
+                            $("#newDescription").val(originalDescription);
+                            $("#description").remove();
+                            $("#editDescription").hide();
+                            $("#submitDescription").show();
+                            $("#cancelEditDescription").show();
+                        },
+
+                        save: function() {
+                            const newDescription = $("#newDescription").val();
+                            const formData = new FormData();
+                            formData.append('description', newDescription);
+
+                            makeAjaxRequest('/description', formData, function() {
+                                $("#submitDescription").hide();
+                                $("#cancelEditDescription").hide();
+                                $("#editDescription").show();
+                                
+                                $('<p id="description" style="margin-top: .5rem; margin-bottom: .5rem;"></p>')
+                                    .insertBefore("#newDescription")
+                                    .text(newDescription);
+                                
+                                $("#newDescription").remove();
+                                originalDescription = newDescription;
+                            });
+                        },
+
+                        cancel: function() {
+                            $("#submitDescription").hide();
+                            $("#editDescription").show();
+                            $("#cancelEditDescription").hide();
+                            
+                            $('<p id="description" style="margin-top: .5rem; margin-bottom: .5rem;"></p>')
+                                .insertBefore("#newDescription")
+                                .text(originalDescription);
+                            
+                            $("#newDescription").remove();
                         }
+                    };
+
+                    // Title Editor
+                    const titleEditor = {
+                        init: function() {
+                            // Save original title
+                            originalTitleText = $("#title").text().split(": ")[1];
+
+                            // Set up event handlers
+                            $("#editTitle").click(this.startEditing);
+                            $("#submitTitle").click(this.save);
+                            $("#cancelEditTitle").click(this.cancel);
+
+                            // Initial state
+                            $("#submitTitle").hide();
+                            $("#cancelEditTitle").hide();
+                        },
+
+                        startEditing: function() {
+                            $('<div class="col-4"><input id="newTitle" class="form-control" type="text"></div>')
+                                .insertAfter("#title");
+                            
+                            $('#title').text('Slide: ');
+                            $("#newTitle").val(originalTitleText);
+                            $("#editTitle").hide();
+                            $("#submitTitle").show();
+                            $("#cancelEditTitle").show();
+                        },
+
+                        save: function() {
+                            const newTitle = $("#newTitle").val();
+                            const formData = new FormData();
+                            formData.append('title', newTitle);
+
+                            makeAjaxRequest('/title', formData, function() {
+                                $("#submitTitle").hide();
+                                $("#cancelEditTitle").hide();
+                                $("#editTitle").show();
+                                
+                                $("#newTitle").closest('div').remove();
+                                $("#title").text("Slide: " + newTitle);
+                                originalTitleText = newTitle;
+                            });
+                        },
+
+                        cancel: function() {
+                            $("#submitTitle").hide();
+                            $("#cancelEditTitle").hide();
+                            $("#editTitle").show();
+                            
+                            $("#newTitle").closest('div').remove();
+                            $("#title").text("Slide: " + originalTitleText);
+                        }
+                    };
+
+                    // Initialize editors when document is ready
+                    $(document).ready(function() {
+                        descriptionEditor.init();
+                        titleEditor.init();
                     });
-                  });
+                })();
+                
                $("#cancelEditTitle").click(function(){
                     $("#submitTitle").hide()
                     $("#editTitle").show()
@@ -1125,333 +1195,177 @@
          			}
          		});
          	});
-         		/**
-         		 * Module content management functions
-         		 * Handles deletion of different content blocks (references, text, space)
-         		 */
-         		$(document).ready(function() {
-         		    // Common variables and functions
-         		    const getToken = () => $('input[name="_csrf"]').attr('value');
-         		    const moduleId = '${module.id}';
-         		    const slideId = '${slide.id}';
-         		    
-         		    // Show error message helper function
-         		    const showErrorMessage = () => {
-         		        const errorAlert = $(
-         		            '<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
-         		            '<p>We are sorry but something went wrong. Please try to delete again later.</p>' +
-         		            '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
-         		            '<span aria-hidden="true">&times;</span></button></div>'
-         		        );
-         		        
-         		        $('.error').append(errorAlert)
-         		            .delay(4000)
-         		            .slideUp(500, function() {
-         		                $(this).empty();
-         		            });
-         		    };
-         		    
-         		    /**
-         		     * Delete reference handler
-         		     */
-         		    $("#deleteReference").on("click", function(e) {
-         		        e.preventDefault();
-         		        
-         		        // Clear inputs from other alerts
-         		        $("#confirmDeleteTextAlert, #confirmDeleteImageAlert, #confirmDeleteBiblioAlert, #confirmDeleteChoiceBlockAlert")
-         		            .find('input')
-         		            .remove();
-         		            
-         		        // Hide alert
-         		        $("#confirmDeleteRefAlert").hide();
-         		        
-         		        // Get IDs
-         		        const refId = $('.deleteReferenceField').attr('value');
-         		        const biblioBlockId = $('#currentBiblioId').attr('value');
-         		        $('#currentBiblioId').remove();
-         		        
-         		        // Make AJAX request
-         		        $.ajax({
-         		            url: `/staff/module/${moduleId}/slide/${slideId}/bibliography/${biblioBlockId}/reference/delete/${refId}`,
-         		            type: 'DELETE',
-         		            headers: {
-         		                'X-CSRF-Token': getToken()
-         		            },
-         		            success: function() {
-         		                $('#' + refId).remove();
-         		            },
-         		            error: showErrorMessage
-         		        });
-         		    });
-         		    
-         		    /**
-         		     * Delete text block handler
-         		     */
-         		    $("#deleteText").on("click", function(e) {
-         		        e.preventDefault();
-         		        
-         		        // Clear inputs from other alerts
-         		        $("#confirmDeleteBiblioAlert, #confirmDeleteRefAlert, #confirmDeleteVideoAlert, #confirmDeleteImageAlert, #confirmDeleteChoiceBlockAlert")
-         		            .find('input')
-         		            .remove();
-         		            
-         		        // Hide alert
-         		        $("#confirmDeleteTextAlert").hide();
-         		        
-         		        // Get ID
-         		        const blockId = $('#deleteTextId').attr('value');
-         		        $('#deleteTextId').remove();
-         		        
-         		        // Make AJAX request
-         		        $.ajax({
-         		            url: `/staff/module/${moduleId}/slide/${slideId}/text/${blockId}`,
-         		            type: 'DELETE',
-         		            data: {
-         		                [${_csrf.parameterName}]: ${_csrf.token}
-         		            },
-         		            success: function() {
-         		                $('#' + blockId).remove();
-         		            },
-         		            error: showErrorMessage
-         		        });
-         		    });
-         		    
-         		    /**
-         		     * Delete space block handler
-         		     */
-         		    $("#deleteSpace").on("click", function(e) {
-         		        e.preventDefault();
-         		        
-         		        // Clear inputs from other alerts
-         		        $("#confirmDeleteImageAlert, #confirmDeleteChoiceBlockAlert, #confirmDeleteTextAlert")
-         		            .find('input')
-         		            .remove();
-         		            
-         		        // Hide alert
-         		        $("#confirmDeleteSpaceAlert").hide();
-         		        
-         		        // Get ID
-         		        const blockId = $('#deleteSpaceId').attr('value');
-         		        $('#deleteSpaceId').remove();
-         		        
-         		        // Make AJAX request
-         		        $.ajax({
-         		            url: `/staff/module/${moduleId}/slide/${slideId}/space/${blockId}`,
-         		            type: 'DELETE',
-         		            headers: {
-         		                'X-CSRF-Token': getToken()
-         		            },
-         		            success: function() {
-         		                $('#' + blockId).remove();
-         		            },
-         		            error: showErrorMessage
-         		        });
-         		    });
+         		
+         // ---------- Delete Reference -------------
+         		
+         		$("#deleteReference").on("click", function(e) {
+         		e.preventDefault();
+         		$("#confirmDeleteTextAlert").find('input').remove();
+         		$("#confirmDeleteImageAlert").find('input').remove();
+         		$("#confirmDeleteBiblioAlert").find('input').remove();
+         		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
+         		$("#confirmDeleteRefAlert").hide();
+         		var refId = $('.deleteReferenceField').attr('value');
+         		/* $('.deleteReferenceField').remove(); */
+         		var biblioBlockId = $('#currentBiblioId').attr('value');
+         		$('#currentBiblioId').remove();
+         		
+         		var token =  $('input[name="_csrf"]').attr('value');
+         		
+         		// ------------- delete Reference ------------
+         		$.ajax({
+         		    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/bibliography/'})]" + biblioBlockId + ['/reference/delete/'] + refId,
+         		    type: 'DELETE',
+         		    headers: {
+                         'X-CSRF-Token': token 
+                    	},
+         		    success: function(result) {
+         		        $('#' + refId).remove();
+         		    },
+         			error: function(data) {
+         				var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+         				$('.error').append(alert); 
+         				$(".error").delay(4000).slideUp(500, function(){
+         				    $(".error").empty();
+         				});
+         			}
          		});
+         	});
+                	// ---------- Delete Text Block -------------
+            	
+            	$("#deleteText").on("click", function(e) {
+            	e.preventDefault();
+         		$("#confirmDeleteBiblioAlert").find('input').remove();
+         		$("#confirmDeleteRefAlert").find('input').remove();
+                $("#confirmDeleteVideoAlert").find('input').remove();
+            		$("#confirmDeleteImageAlert").find('input').remove();
+            		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
+            		$("#confirmDeleteTextAlert").hide();
+            		var blockId = $('#deleteTextId').attr('value');
+            		$('#deleteTextId').remove()
+            		
+            		// ------------- delete text content blocks ------------
+            		$.ajax({
+            		    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/text/'})]"+blockId+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
+            		    type: 'DELETE',
+            		    success: function(result) {
+            		        $('#' + blockId).remove();
+            		        
+            		    },
+            			error: function(data) {
+            				var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+            				$('.error').append(alert); 
+            				$(".error").delay(4000).slideUp(500, function(){
+            				    $(".error").empty();
+            				});
+            			}
+            		});
+            	});
 
-         		/**
-         		 * Module content management functions
-         		 * Handles deletion of different content blocks (references, text, space, image, choice blocks)
-         		 */
-         		$(document).ready(function() {
-         		    // Common variables and functions
-         		    const getToken = () => $('input[name="_csrf"]').attr('value');
-         		    const moduleId = '${module.id}';
-         		    const slideId = '${slide.id}';
-         		    
-         		    // Show error message helper function
-         		    const showErrorMessage = () => {
-         		        const errorAlert = $(
-         		            '<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
-         		            '<p>We are sorry but something went wrong. Please try to delete again later.</p>' +
-         		            '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
-         		            '<span aria-hidden="true">&times;</span></button></div>'
-         		        );
-         		        
-         		        $('.error').append(errorAlert)
-         		            .delay(4000)
-         		            .slideUp(500, function() {
-         		                $(this).empty();
-         		            });
-         		    };
-         		    
-         		    // Clear all modal inputs helper function
-         		    const clearModalInputs = () => {
-         		        $("#confirmDeleteTextAlert, #confirmDeleteImageAlert, #confirmDeleteBiblioAlert, " +
-         		         "#confirmDeleteChoiceBlockAlert, #confirmDeleteRefAlert, #confirmDeleteVideoAlert, " +
-         		         "#confirmDeleteSpaceAlert")
-         		            .find('input')
-         		            .remove();
-         		    };
-         		    
-         		    // Validate block ID helper function
-         		    const validateBlockId = (blockId) => {
-         		        if (blockId == null || blockId === '') {
-         		            showErrorMessage();
-         		            return false;
-         		        }
-         		        return true;
-         		    };
-         		    
-         		    /**
-         		     * Delete reference handler
-         		     */
-         		    $("#deleteReference").on("click", function(e) {
-         		        e.preventDefault();
-         		        
-         		        // Clear inputs from other alerts
-         		        clearModalInputs();
-         		            
-         		        // Hide alert
-         		        $("#confirmDeleteRefAlert").hide();
-         		        
-         		        // Get IDs
-         		        const refId = $('.deleteReferenceField').attr('value');
-         		        const biblioBlockId = $('#currentBiblioId').attr('value');
-         		        $('#currentBiblioId').remove();
-         		        
-         		        // Make AJAX request
-         		        $.ajax({
-         		            url: `/staff/module/${moduleId}/slide/${slideId}/bibliography/${biblioBlockId}/reference/delete/${refId}`,
-         		            type: 'DELETE',
-         		            headers: {
-         		                'X-CSRF-Token': getToken()
-         		            },
-         		            success: function() {
-         		                $('#' + refId).remove();
-         		            },
-         		            error: showErrorMessage
-         		        });
-         		    });
-         		    
-         		    /**
-         		     * Delete text block handler
-         		     */
-         		    $("#deleteText").on("click", function(e) {
-         		        e.preventDefault();
-         		        
-         		        // Clear inputs from other alerts
-         		        clearModalInputs();
-         		            
-         		        // Hide alert
-         		        $("#confirmDeleteTextAlert").hide();
-         		        
-         		        // Get ID
-         		        const blockId = $('#deleteTextId').attr('value');
-         		        $('#deleteTextId').remove();
-         		        
-         		        // Make AJAX request
-         		        $.ajax({
-         		            url: `/staff/module/${moduleId}/slide/${slideId}/text/${blockId}`,
-         		            type: 'DELETE',
-         		            data: {
-         		                [${_csrf.parameterName}]: ${_csrf.token}
-         		            },
-         		            success: function() {
-         		                $('#' + blockId).remove();
-         		            },
-         		            error: showErrorMessage
-         		        });
-         		    });
-         		    
-         		    /**
-         		     * Delete space block handler
-         		     */
-         		    $("#deleteSpace").on("click", function(e) {
-         		        e.preventDefault();
-         		        
-         		        // Clear inputs from other alerts
-         		        clearModalInputs();
-         		            
-         		        // Hide alert
-         		        $("#confirmDeleteSpaceAlert").hide();
-         		        
-         		        // Get ID
-         		        const blockId = $('#deleteSpaceId').attr('value');
-         		        $('#deleteSpaceId').remove();
-         		        
-         		        // Make AJAX request
-         		        $.ajax({
-         		            url: `/staff/module/${moduleId}/slide/${slideId}/space/${blockId}`,
-         		            type: 'DELETE',
-         		            headers: {
-         		                'X-CSRF-Token': getToken()
-         		            },
-         		            success: function() {
-         		                $('#' + blockId).remove();
-         		            },
-         		            error: showErrorMessage
-         		        });
-         		    });
-         		    
-         		    /**
-         		     * Delete image block handler
-         		     */
-         		    $("#deleteImage").on("click", function(e) {
-         		        e.preventDefault();
-         		        
-         		        // Clear inputs from other alerts
-         		        clearModalInputs();
-         		            
-         		        // Hide alert
-         		        $("#confirmDeleteImageAlert").hide();
-         		        
-         		        // Get ID
-         		        const blockId = $('#deleteImageId').attr('value');
-         		        
-         		        // Validate block ID
-         		        if (!validateBlockId(blockId)) return;
-         		        
-         		        $('#deleteImageId').remove();
-         		        
-         		        // Make AJAX request
-         		        $.ajax({
-         		            url: `/staff/module/${moduleId}/slide/${slideId}/image/${blockId}`,
-         		            type: 'DELETE',
-         		            data: {
-         		                [${_csrf.parameterName}]: ${_csrf.token}
-         		            },
-         		            success: function() {
-         		                $('#' + blockId).remove();
-         		            },
-         		            error: showErrorMessage
-         		        });
-         		    });
-         		    
-         		    /**
-         		     * Delete choice block handler
-         		     */
-         		    $("#deleteChoiceBlock").on("click", function(e) {
-         		        e.preventDefault();
-         		        
-         		        // Clear inputs from other alerts
-         		        clearModalInputs();
-         		            
-         		        // Hide alert
-         		        $("#confirmDeleteChoiceBlockAlert").hide();
-         		        
-         		        // Get ID
-         		        const blockId = $('#deleteChoiceBlockId').attr('value');
-         		        
-         		        // Validate block ID
-         		        if (!validateBlockId(blockId)) return;
-         		        
-         		        $('#deleteChoiceBlockId').remove();
-         		        
-         		        // Make AJAX request
-         		        $.ajax({
-         		            url: `/staff/module/${moduleId}/slide/${slideId}/choiceBlock/${blockId}`,
-         		            type: 'DELETE',
-         		            data: {
-         		                [${_csrf.parameterName}]: ${_csrf.token}
-         		            },
-         		            success: function() {
-         		                $('#' + blockId).remove();
-         		            },
-         		            error: showErrorMessage
-         		        });
-         		    });
-         		});
+	            // ---------- Delete Space Block ------------- //
+	
+	            $("#deleteSpace").on("click", function(e) {
+		            var token =  $('input[name="_csrf"]').attr('value');
+		            e.preventDefault();
+		            $("#confirmDeleteImageAlert").find('input').remove();
+		            $("#confirmDeleteChoiceBlockAlert").find('input').remove();
+		            $("#confirmDeleteTextAlert").find('input').remove();
+		            $("#confirmDeleteSpaceAlert").hide();
+		            var blockId = $('#deleteSpaceId').attr('value');
+		            $('#deleteSpaceId').remove()
+		
+		            // ------------- Delete space content blocks ------------ //
+		            $.ajax({
+			            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space/'})]"+blockId,
+			            type: 'DELETE',
+			            headers:{
+			            	'X-CSRF-Token':token
+			            },
+			            success: function(result) {
+			            	$('#' + blockId).remove();
+			            },
+			            error: function(data) {
+				            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+				            $('.error').append(alert);
+				            $(".error").delay(4000).slideUp(500, function(){
+				            	$(".error").empty();
+				            });
+			            }
+		            });
+	            });
+
+            	// ---------- Delete Image Block -----------
+            	
+            	$("#deleteImage").on("click", function(e) {
+            		e.preventDefault();
+            		$("#confirmDeleteTextAlert").find('input').remove();
+                 	$("#confirmDeleteBiblioAlert").find('input').remove();
+                 	$("#confirmDeleteRefAlert").find('input').remove();
+            		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
+            		$("#confirmDeleteSpaceAlert").find('input').remove();
+            		$("#confirmDeleteImageAlert").hide();
+            		var blockId = $('#deleteImageId').attr('value');
+            		if(blockId == null || blockId == ''){
+            			var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+            			$('.error').append(alert); 
+            			$(".error").delay(4000).slideUp(500, function(){
+            			    $(".error").empty();
+            			});
+            		} else{
+            			$('#deleteImageId').remove()
+            			// ------------- delete image content blocks ------------
+            			$.ajax({
+            			    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image/'})]"+blockId+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
+            			    type: 'DELETE',
+            			    success: function(result) {
+            			    	$('#' + blockId).remove();
+            			    },
+            				error: function(data) {
+            					var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+            					$('.error').append(alert); 
+            					$(".error").delay(4000).slideUp(500, function(){
+            					    $(".error").empty();
+            					});
+            				}
+            			});
+            		}
+            	});
+         	
+         	$("#deleteChoiceBlock").on("click", function(e) {
+         	    e.preventDefault();
+         	    $("#confirmDeleteTextAlert").find('input').remove();
+         	    $("#confirmDeleteBiblioAlert").find('input').remove();
+         	    $("#confirmDeleteRefAlert").find('input').remove();
+         	    $("#confirmDeleteImageAlert").find('input').remove();
+         	    $("#confirmDeleteVideoAlert").find('input').remove();
+         		$("#confirmDeleteChoiceBlockAlert").hide();
+         		var blockId = $('#deleteChoiceBlockId').attr('value');
+         		if(blockId == null || blockId == ''){
+         			var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+         			$('.error').append(alert); 
+         			$(".error").delay(4000).slideUp(500, function(){
+         			    $(".error").empty();
+         			});
+         		} else{
+         			$('#deleteChoiceBlockId').remove()
+         			// ------------- delete choices content blocks ------------
+         			$.ajax({
+         			    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/choiceBlock/'})]"+blockId+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
+         			    type: 'DELETE',
+         			    success: function(result) {
+         			    	$('#' + blockId).remove();
+         			    },
+         				error: function(data) {
+         					var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+            					$('.error').append(alert); 
+            					$(".error").delay(4000).slideUp(500, function(){
+            					    $(".error").empty();
+            					});
+            				}
+            			});
+            		}
+            	});
+            	
             	// ---------- Delete Video Block -----------
             	
 			$("#deleteVideo").on("click", function(e) {
@@ -2616,141 +2530,143 @@
                     </div>
                 </div>
             </div>
-            <div id="addSpaceAlert" class="modal" tabindex="-1" role="dialog">
-                <div class="modal-dialog" role="document" th:draggable="true">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Add link to space</h5>
-                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <form name="spaceForm" id="spaceUploadForm" enctype="multipart/form-data" method="post" th:object="${spaceContentBlockForm}">
-                            <div class="modal-body">
-                                <h6>
-                                    <small>Enter title : </small>
-                                </h6>
-                                <textarea class="form-control" id="spaceTitle" rows="3" style="border: 1px solid black;"></textarea>
-                            </div>
-                            <div class="modal-body">
-                                <h6>
-                                    <small>Choose a Space</small>
-                                </h6>
-                                <select id="spaceName" name="spacesNames" class="form-control-xs target" style="height: 50px; width: 200px;">
-                                    <option selected value="">Choose a Space</option>
-                                </select>
-                            </div>
-                            <div class="modal-footer">
-                                <button id="cancelSpaceText" type="reset" class="btn light">Cancel</button>
-                                <button type="submit" id="submitSpace" class="btn btn-primary">Submit</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <div id="editTextAlert" class="modal" tabindex="-1" 
-                role="dialog" th:draggable="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Edit Text Block</h5>
-                            <button class = "close" type="button" id="closeTextBlock" data-bs-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <form name="textForm" id="textEditUploadForm"
-                            enctype="multipart/form-data" method="post">
-                            <div class="modal-body">
-                                <h6>
-                                    <small>Edit Text: </small>
-                                </h6>
-                                <textarea class="form-control"
-                                    id="editTextBlock" rows="3"></textarea>
-                            </div>
-                            <div class="modal-footer">
-                                <button id="cancelTextBlock" type="reset"
-                                    class="btn light">Cancel</button>
-                                <button type="submit" id="submitTextBlock"
-                                    class="btn btn-primary">Submit</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <div id="editSpaceAlert" class="modal" tabindex="-1" role="dialog" th:draggable="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Edit Space Block</h5>
-                            <button type="button" class="close" id="closeSpaceBlock" data-bs-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <form name="spaceForm" id="SpaceEditUploadForm" enctype="multipart/form-data" method="post" style="padding:20px;">
-                            <div class="modal-body">
-                                <h6>
-                                    <small>Edit Title: </small>
-                                </h6>
-                                <textarea class="form-control" id="editSpaceBlock" rows="3"></textarea>
-                            </div>
-                            <select id="editSpaceName" name="editSpacesNames" class="form-control-xs target" style="height: 50px; width: 200px;">
-                                <option selected value=""></option>
-                            </select>
-                            <p>Current selected space is <span id="selectedSpace"></span></p>
-                            <div class="modal-footer">
-                                <button id="cancelSpaceBlock" type="reset" class="btn light">Cancel</button>
-                                <button type="submit" id="submitSpaceBlock" class="btn btn-primary">Submit</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <div id="addImgAlert" class="modal" tabindex="-1" role="dialog">
-                <div class="modal-dialog" role="document" th:draggable="true">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Add new Image Block</h5>
-                            <button type="button" class="close"
-                                data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <form name="photoForm" id="imageUploadForm"
-                            enctype="multipart/form-data" method="post">
-                            <div class="modal-body">
-                                <input type="radio" id="chooseFromLocal" name ="uploadRadioBtn" checked/>
-                                <h6>
-                                    <small>Upload Image: </small>
-                                </h6>
-                                <input class="form-control" type="file"
-                                    name="file" rows="5" cols="500"
-                                    id="file" />
-                                <input type="radio" id="chooseFromExisting" name ="uploadRadioBtn" />       
-                                <div>
-                                    <h6>
-                                        <small>Or choose an existing image: </small>
-                                    </h6>
-                                    <select id="imageId" name="imageId"
-                                        class="form-control-xs target"
-                                        style="height: 50px; width: 200px;">
-                                        <option selected value="">Choose from existing</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <span id="selectedImage" width="200px"></span>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button id="cancelImageBtn" type="reset"
-                                    class="btn light">Cancel</button>
-                                <button type="submit" id="uploadImage"
-                                    class="btn btn-primary" data-value="">Upload
-                                Image</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
+			<!-- Space Link Modal -->
+			<div id="addSpaceAlert" class="modal" tabindex="-1" role="dialog">
+			    <div class="modal-dialog" role="document" th:draggable="true">
+			        <div class="modal-content">
+			            <div class="modal-header">
+			                <h5 class="modal-title">Add link to space</h5>
+			                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+			                    <span aria-hidden="true">&times;</span>
+			                </button>
+			            </div>
+			            <form id="spaceUploadForm" enctype="multipart/form-data" method="post" th:object="${spaceContentBlockForm}">
+			                <div class="modal-body">
+			                    <div class="form-group mb-3">
+			                        <label for="spaceTitle" class="form-label">Enter title:</label>
+			                        <textarea class="form-control" id="spaceTitle" rows="3"></textarea>
+			                    </div>
+			                    
+			                    <div class="form-group">
+			                        <label for="spaceName" class="form-label">Choose a Space:</label>
+			                        <select id="spaceName" name="spacesNames" class="form-select">
+			                            <option selected value="">Choose a Space</option>
+			                        </select>
+			                    </div>
+			                </div>
+			                <div class="modal-footer">
+			                    <button id="cancelSpaceText" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+			                    <button type="submit" id="submitSpace" class="btn btn-primary">Submit</button>
+			                </div>
+			            </form>
+			        </div>
+			    </div>
+			</div>
+			
+			<!-- Text Block Modal -->
+			<div id="editTextAlert" class="modal" tabindex="-1" role="dialog" th:draggable="true">
+			    <div class="modal-dialog" role="document">
+			        <div class="modal-content">
+			            <div class="modal-header">
+			                <h5 class="modal-title">Edit Text Block</h5>
+			                <button type="button" class="close" id="closeTextBlock" data-bs-dismiss="modal" aria-label="Close">
+			                    <span aria-hidden="true">&times;</span>
+			                </button>
+			            </div>
+			            <form id="textEditUploadForm" enctype="multipart/form-data" method="post">
+			                <div class="modal-body">
+			                    <div class="form-group">
+			                        <label for="editTextBlock" class="form-label">Edit Text:</label>
+			                        <textarea class="form-control" id="editTextBlock" rows="3"></textarea>
+			                    </div>
+			                </div>
+			                <div class="modal-footer">
+			                    <button id="cancelTextBlock" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+			                    <button type="submit" id="submitTextBlock" class="btn btn-primary">Submit</button>
+			                </div>
+			            </form>
+			        </div>
+			    </div>
+			</div>
+			
+			<!-- Space Block Modal -->
+			<div id="editSpaceAlert" class="modal" tabindex="-1" role="dialog" th:draggable="true">
+			    <div class="modal-dialog" role="document">
+			        <div class="modal-content">
+			            <div class="modal-header">
+			                <h5 class="modal-title">Edit Space Block</h5>
+			                <button type="button" class="close" id="closeSpaceBlock" data-bs-dismiss="modal" aria-label="Close">
+			                    <span aria-hidden="true">&times;</span>
+			                </button>
+			            </div>
+			            <form id="SpaceEditUploadForm" enctype="multipart/form-data" method="post">
+			                <div class="modal-body">
+			                    <div class="form-group mb-3">
+			                        <label for="editSpaceBlock" class="form-label">Edit Title:</label>
+			                        <textarea class="form-control" id="editSpaceBlock" rows="3"></textarea>
+			                    </div>
+			                    
+			                    <div class="form-group mb-3">
+			                        <label for="editSpaceName" class="form-label">Choose a Space:</label>
+			                        <select id="editSpaceName" name="editSpacesNames" class="form-select">
+			                            <option selected value=""></option>
+			                        </select>
+			                        <div class="form-text mt-2">Current selected space: <span id="selectedSpace"></span></div>
+			                    </div>
+			                </div>
+			                <div class="modal-footer">
+			                    <button id="cancelSpaceBlock" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+			                    <button type="submit" id="submitSpaceBlock" class="btn btn-primary">Submit</button>
+			                </div>
+			            </form>
+			        </div>
+			    </div>
+			</div>
+			
+			<!-- Image Block Modal -->
+			<div id="addImgAlert" class="modal" tabindex="-1" role="dialog">
+			    <div class="modal-dialog" role="document" th:draggable="true">
+			        <div class="modal-content">
+			            <div class="modal-header">
+			                <h5 class="modal-title">Add new Image Block</h5>
+			                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+			                    <span aria-hidden="true">&times;</span>
+			                </button>
+			            </div>
+			            <form id="imageUploadForm" enctype="multipart/form-data" method="post">
+			                <div class="modal-body">
+			                    <div class="form-check mb-3">
+			                        <input type="radio" id="chooseFromLocal" name="uploadRadioBtn" class="form-check-input" checked />
+			                        <label class="form-check-label" for="chooseFromLocal">Upload Image</label>
+			                    </div>
+			                    
+			                    <div class="mb-4">
+			                        <input class="form-control" type="file" name="file" id="file" />
+			                    </div>
+			                    
+			                    <div class="form-check mb-3">
+			                        <input type="radio" id="chooseFromExisting" name="uploadRadioBtn" class="form-check-input" />
+			                        <label class="form-check-label" for="chooseFromExisting">Choose an existing image</label>
+			                    </div>
+			                    
+			                    <div class="mb-3">
+			                        <select id="imageId" name="imageId" class="form-select">
+			                            <option selected value="">Choose from existing</option>
+			                        </select>
+			                    </div>
+			                    
+			                    <div class="mt-3">
+			                        <div id="selectedImage" class="img-preview"></div>
+			                    </div>
+			                </div>
+			                <div class="modal-footer">
+			                    <button id="cancelImageBtn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+			                    <button type="submit" id="uploadImage" class="btn btn-primary">Upload Image</button>
+			                </div>
+			            </form>
+			        </div>
+			    </div>
+			</div>
             <div id="addVideoAlert" class="modal" tabindex="-1" role="dialog" aria-hidden="true">
 				<div class="modal-dialog" role="document" draggable="true">
 					<div class="modal-content">
