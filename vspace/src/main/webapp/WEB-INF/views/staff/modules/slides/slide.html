@@ -83,57 +83,68 @@
                 return imageblock;
             }
             
-            function createVideoBlock(reader, videoSrc, title,isUrlProvided) {
+            function createVideoBlock(reader, videoSrc, title, isUrlProvided, videoId) {
                 var videoBlock = $("<div></div>");
-                videoBlock.attr('id',"currentVideo");
-                videoBlock.attr('class',"tab vidDiv row");
-                videoBlock.css('border','1px solid rgba(0, 0, 0, 0.125)');
+                videoBlock.attr('id', videoId || "currentVideo");
+                videoBlock.attr('class', "tab vidDiv row");
+                videoBlock.attr('data-video-block', '');
+                videoBlock.css('border', '1px solid rgba(0, 0, 0, 0.125)');
+                
                 var innerDiv1 = $("<div></div>");
                 var heading = $("<h3></h3>");
                 heading.append($("<strong></strong>"));
                 innerDiv1.append(heading);
+                
                 if (isUrlProvided) {
-                	var iframe = $("<iframe></iframe>");
-                	iframe.attr('width',"800");
-                	iframe.attr('height',"530");
-                	iframe.attr('src',videoSrc);
-                	iframe.attr('frameborder',"0");
-                	iframe.attr('allow',"accelerometer; clipboard-write; encrypted-media;gyroscope; picture-in-picture");
-                	iframe.attr('allowFullScreen', '');
-                	innerDiv1.append(iframe);
-                }else{
-                	var video = $("<video></video>");
-                	video.attr('width',"800");
-                	video.attr('height',"530");
-                	video.attr('controls', true);
-                	var source = $("<source></source>");
-                	source.attr('src', videoSrc);
-                	source.attr('type',"video/mp4");
-                	video.append(source);
-                	innerDiv1.append(video);
+                    var iframe = $("<iframe></iframe>");
+                    iframe.attr('width', "800");
+                    iframe.attr('height', "530");
+                    iframe.attr('src', videoSrc);
+                    iframe.attr('frameborder', "0");
+                    iframe.attr('allow', "accelerometer; clipboard-write; encrypted-media;gyroscope; picture-in-picture");
+                    iframe.attr('allowFullScreen', '');
+                    innerDiv1.append(iframe);
+                } else {
+                    var video = $("<video></video>");
+                    video.attr('width', "800");
+                    video.attr('height', "530");
+                    video.attr('controls', true);
+                    var source = $("<source></source>");
+                    source.attr('src', videoSrc);
+                    source.attr('type', "video/mp4");
+                    video.append(source);
+                    innerDiv1.append(video);
                 }
+                
                 videoBlock.append(innerDiv1);
+                
+                // Delete button with data attributes
                 var anchor1 = $("<a></a>");
-                anchor1.attr('href',"javascript:;");
-                anchor1.attr('class',"btn deleteVideo col-md-1");
-                anchor1.attr('data-video-id',"");
-                anchor1.css('position','absolute');
-                anchor1.css('right','25px');
+                anchor1.attr('href', "javascript:;");
+                anchor1.attr('class', "btn col-md-1");
+                anchor1.attr('data-action', "delete-video");
+                anchor1.attr('data-video-id', videoId || "");
+                anchor1.css('position', 'absolute');
+                anchor1.css('right', '25px');
                 var span1 = $("<span></span>");
-                span1.attr('class',"icon-trash error");
+                span1.attr('class', "icon-trash error");
                 anchor1.append(span1);
                 videoBlock.append(anchor1);
+                
+                // Edit button with data attributes
                 var anchor2 = $("<a></a>");
-                anchor2.attr('href',"javascript:;");
-                anchor2.attr('class',"btn editVideo col-md-1");
-                anchor2.attr('data-editvideo-id',"");
-                anchor2.css('position','absolute');
-                anchor2.css('top','60px');
-                anchor2.css('right','25px');
+                anchor2.attr('href', "javascript:;");
+                anchor2.attr('class', "btn col-md-1");
+                anchor2.attr('data-action', "edit-video");
+                anchor2.attr('data-editvideo-id', videoId || "");
+                anchor2.css('position', 'absolute');
+                anchor2.css('top', '60px');
+                anchor2.css('right', '25px');
                 var span2 = $("<span></span>");
-                span2.attr('class',"icon-edit");
+                span2.attr('class', "icon-edit");
                 anchor2.append(span2);
                 videoBlock.append(anchor2);
+                
                 videoBlock.find('h3 strong').html(title);
                 return videoBlock;
             }
@@ -331,257 +342,338 @@
         	 	$(".open").css('height', '400px');
             }
             
-            function imageBlockDoubleClick(e){
-            	$(".EasyMDEContainer").remove();
+            function imageBlockDoubleClick(e) {
+                $(".EasyMDEContainer").remove();
                 var divName = $(e.target).closest('div').attr('class');
-                var imgBlockID = $(e.target).attr('id'); 
-            	if(imgBlockID != ''){
-                	$("#uploadImage").data('value', imgBlockID);
-                	$("#addImgAlert").show();
-            	}
+                var imgBlockID = $(e.target).closest('[data-image-block]').attr('id'); 
+                
+                if(imgBlockID != ''){
+                    $("#uploadImage").data('value', imgBlockID);
+                    $("#addImgAlert").show();
+                }
             }
                 
             function uploadImage() {
-            	var imgBlockID = $("#uploadImage").data('value')
-            	var file = $('#file')[0].files[0];
-            	var reader  = new FileReader();
-            	var formData = new FormData();
-            	var chooseFromExisting = true;
-            	if (typeof(file) != "undefined"){
-            		chooseFromExisting = false;
-            		formData.append('file', file);
-            	}
-            	var imageSource = $('#selectedImage').find('img').attr('src');
-            	var imageId = "";
-            	if(typeof(imageSource) != "undefined"){
-            		imageId = imageSource.split("/").pop().split(".")[0];
-            	}
-            	var imageblock = "";
-            	var oldImageBlock = "";
-            	var token = [[${_csrf.token}]];
-            	// Ashmi changes for Story VSPC-64
-            			    
-            	// checks if image ID is present to replace
-            	if (imgBlockID != '') {
-            			oldImageBlock = $("#" + imgBlockID);
-            			var imageBlockId = imgBlockID;
-            			formData.append('imageBlockId',imageBlockId);
-            			var url = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image/'})]" + imageBlockId;
-            			if(!chooseFromExisting){
-            				reader.onload = function (theFile)
-            				{
-            					var image = new Image();
-            					image.src = theFile.target.result;
-            					image.onload = function ()
-            					{
-            						imageblock = createImageBlock(reader, this.width);
-            						$("#" + imageBlockId).replaceWith(imageblock);	
-            						 $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(imageBlockDoubleClick);
-            					};
-            				}
-            			}
-            			else{
-            				var image = new Image();
-            				image.src = $('#selectedImage').find('img').attr('src');
-            				formData.append('imageId',imageId);
-            				imageblock = createImageBlockWithExistingImage($('#selectedImage').find('img').attr('src'),image.width);
-            				$("#" + imageBlockId).replaceWith(imageblock);	
-            				$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(imageBlockDoubleClick);
-            			}
-            			// Reset data-attribute to get current selected image ID
-            			$("#uploadImage").data('value', '');
-            	}
-            	else {
-            		var url = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image'})]";
-            		if(!chooseFromExisting){
-            			reader.onload = function (theFile) 
-            			{        	
-            			var image = new Image();
-            			image.src = theFile.target.result;
-            			image.onload = function() 
-            			{
-            				imageblock = createImageBlock(reader, this.width);  
-            				$('#slideSpace').append(imageblock); 
-            				$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(imageBlockDoubleClick);
-            			};          
-            			} 
-            		}
-            		else
-            		{
-            			var image = new Image();
-            			image.src = $('#selectedImage').find('img').attr('src');
-            			formData.append('imageId',imageId);
-            			imageblock = createImageBlockWithExistingImage($('#selectedImage').find('img').attr('src'),image.width);  
-            			$('#slideSpace').append(imageblock); 
-            			$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(imageBlockDoubleClick);
-            		}
-            	}
-            	if (!chooseFromExisting)
-            	{
-            		reader.readAsDataURL(file)
-            	}
-            	$.ajax({
-            		enctype: 'multipart/form-data',
-            		// ------------- creating image content blocks ------------
-            		url: url,
-            		type: 'POST',
-            		cache       : false,
-            		contentType : false,
-            		processData : false,
-            		headers: {
-	                    'X-CSRF-TOKEN': token
-	                },
-            		data: formData,    
-            		success: function(data) {
-            			$(".open").removeClass("open");
-            			var img = imageblock.find('img');
-            			if(data != ''){
-            				img.attr('id', data);
-            				$("#current").find('#deleteImageId').val(data);
-            				$("#current").attr('id', data);
-            			}
-            			else{
-            				img.attr('id', imgBlockID);
-            				$("#current").find('#deleteImageId').val(imgBlockID);
-            				$("#current").attr('id', imgBlockID);
-            			}
-            		},
-            		error: function(data) {
-            		if (imgBlockID == '') {
-            			$("#current").remove();
-            		}
-            		else {
-            			$("#current").replaceWith(oldImageBlock);
-            		}
-            		if (data.status == 403) {
-            			$("#loginAlert").show();
-            		}
-            		}
-            	});
-            	// Reset the image file name 
-            	$('#file').val('');
-            	if(chooseFromExisting)
-            	{
-            		$("#selectedImage").empty();
-            		$('#imageId').prop('selectedIndex',0).trigger( "change" );
-            	}
+                var imgBlockID = $("#uploadImage").data('value');
+                var file = $('#file')[0].files[0];
+                var reader = new FileReader();
+                var formData = new FormData();
+                var chooseFromExisting = true;
+                
+                if (typeof(file) != "undefined"){
+                    chooseFromExisting = false;
+                    formData.append('file', file);
+                }
+                
+                var imageSource = $('#selectedImage').find('img').attr('src');
+                var imageId = "";
+                if(typeof(imageSource) != "undefined"){
+                    imageId = imageSource.split("/").pop().split(".")[0];
+                }
+                
+                var imageblock = "";
+                var oldImageBlock = "";
+                var token = [[${_csrf.token}]];
+                
+                // Checks if image ID is present to replace
+                if (imgBlockID != '') {
+                    oldImageBlock = $("#" + imgBlockID);
+                    var imageBlockId = imgBlockID;
+                    formData.append('imageBlockId', imageBlockId);
+                    var url = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image/'})]" + imageBlockId;
+                    
+                    if(!chooseFromExisting){
+                        reader.onload = function (theFile) {
+                            var image = new Image();
+                            image.src = theFile.target.result;
+                            image.onload = function () {
+                                imageblock = createImageBlockWithDataAttributes(reader, this.width, imageBlockId);
+                                $("#" + imageBlockId).replaceWith(imageblock);	
+                                $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(imageBlockDoubleClick);
+                            };
+                        }
+                    }
+                    else{
+                        var image = new Image();
+                        image.src = $('#selectedImage').find('img').attr('src');
+                        formData.append('imageId', imageId);
+                        imageblock = createImageBlockWithDataAttributesExisting($('#selectedImage').find('img').attr('src'), image.width, imageBlockId);
+                        $("#" + imageBlockId).replaceWith(imageblock);	
+                        $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(imageBlockDoubleClick);
+                    }
+                    // Reset data-attribute to get current selected image ID
+                    $("#uploadImage").data('value', '');
+                }
+                else {
+                    var url = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image'})]";
+                    if(!chooseFromExisting){
+                        reader.onload = function (theFile) {        	
+                            var image = new Image();
+                            image.src = theFile.target.result;
+                            image.onload = function() {
+                                imageblock = createImageBlockWithDataAttributes(reader, this.width, null);  
+                                $('#slideSpace').append(imageblock); 
+                                $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(imageBlockDoubleClick);
+                            };          
+                        } 
+                    }
+                    else {
+                        var image = new Image();
+                        image.src = $('#selectedImage').find('img').attr('src');
+                        formData.append('imageId', imageId);
+                        imageblock = createImageBlockWithDataAttributesExisting($('#selectedImage').find('img').attr('src'), image.width, null);  
+                        $('#slideSpace').append(imageblock); 
+                        $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(imageBlockDoubleClick);
+                    }
+                }
+                
+                if (!chooseFromExisting) {
+                    reader.readAsDataURL(file);
+                }
+                
+                $.ajax({
+                    enctype: 'multipart/form-data',
+                    url: url,
+                    type: 'POST',
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    headers: {
+                        'X-CSRF-TOKEN': token
+                    },
+                    data: formData,    
+                    success: function(data) {
+                        $(".open").removeClass("open");
+                        var img = imageblock.find('img');
+                        if(data != ''){
+                            img.attr('id', data);
+                            $("#current").find('input[data-image-id]').val(data);
+                            $("#current").attr('id', data);
+                        }
+                        else{
+                            img.attr('id', imgBlockID);
+                            $("#current").find('input[data-image-id]').val(imgBlockID);
+                            $("#current").attr('id', imgBlockID);
+                        }
+                    },
+                    error: function(data) {
+                        if (imgBlockID == '') {
+                            $("#current").remove();
+                        }
+                        else {
+                            $("#current").replaceWith(oldImageBlock);
+                        }
+                        if (data.status == 403) {
+                            $("#loginAlert").show();
+                        }
+                    }
+                });
+                
+                // Reset the image file name 
+                $('#file').val('');
+                if(chooseFromExisting) {
+                    $("#selectedImage").empty();
+                    $('#imageId').prop('selectedIndex',0).trigger("change");
+                }
+            }
+            
+            function createImageBlockWithDataAttributes(reader, width, blockId) {
+                var imageblock = $(
+                    '<div id="current" class="valueDiv tab row" data-image-block>' + 
+                    '<img src="#" style="imgDiv tab row"/>' + 
+                    '<input type="hidden" data-image-id="' + (blockId || '') + '" />' + 
+                    '<a class="btn col-md-1" data-action="delete-image" href="javascript:;" style="position: absolute; right:64px;">' + 
+                    '<i style="color: var(--error);" class="fas fa-trash-alt"></i></a>' + 
+                    '</div>'
+                );
+                imageblock.find('img').attr('src', reader.result);
+                if(width > 800)
+                    imageblock.find('img').attr('width', '800px');
+                return imageblock;
+            }
+
+            function createImageBlockWithDataAttributesExisting(src, width, blockId) {
+                var imageblock = $(
+                    '<div id="current" class="valueDiv tab row" data-image-block>' + 
+                    '<img src="#" style="imgDiv tab row"/>' + 
+                    '<input type="hidden" data-image-id="' + (blockId || '') + '" />' + 
+                    '<a class="btn col-md-1" data-action="delete-image" href="javascript:;" style="position:absolute; right:25px;">' + 
+                    '<span class="icon-trash error"></span></a>' + 
+                    '</div>'
+                );
+                imageblock.find('img').attr('src', src);
+                if(width > 800)
+                    imageblock.find('img').attr('width', '800px');
+                return imageblock;
             }
             
             function embedVideo() {
-				var videoID = $("#saveVideo").data('value'); // gets video ID
-				var oldUrl = $("#saveVideo").data('url');
-				var url = $("#videoLink").val();
-				var title = $("#videoTitle").val();
-				var vidFile = $("#videoFile")[0].files[0];
-				var reader = new FileReader();
-				var videoBlock = "";
-				var ajaxUrl = '';
-				var oldVideoBlock = '';
-				var formData = new FormData();
-				if (url) {
-					if(url.startsWith("https://www.youtube.com/watch?v="))
-					{
-						videoId = url.substring(url.indexOf("v=")+2);
-						url = "https://www.youtube.com/embed/"+videoId;
-					}
-					formData.append('url', url);
-					videoBlock = createVideoBlock(reader, url, title,true);
-				}
-				if (vidFile) {
-					formData.append('videoFile', vidFile);
-				}
-				if (videoID) {
-					oldVideoBlock = $("#" + videoID);
-					ajaxUrl = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/video/'})]" + videoID;
-					formData.append('videoBlockId', videoID);
-					if (url) {
-						$("#" + videoID).replaceWith(videoBlock);
-					}
-					if (vidFile) {
-						reader.onload = function (theFile) {
-							videoBlock = createVideoBlock(reader, theFile.target.result,title,false);
-							$("#" + videoID).replaceWith(videoBlock);
-						};
-					}
-				}
-				else {
-					if (url) {
-						$('#slideSpace').append(videoBlock);
-					}
-					if (vidFile) {
-						reader.onload = function (theFile) {
-							videoBlock = createVideoBlock(reader, theFile.target.result,title,false);
-							$('#slideSpace').append(videoBlock);
-						}
-					}
-					ajaxUrl = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/video'})]";
-				}
-				// Reset data-attribute to get current selected image ID
-				$("#videoFile").val('');
-				$("#videoLink").val('');
-				$(videoBlock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave);
-				if (vidFile) {
-					reader.readAsDataURL(vidFile);
-				}
-				formData.append('videoTitle', title);
-				var token = [[${_csrf.token}]];
-				$.ajax({
-					enctype: 'multipart/form-data',
-					// ------------- creating video content blocks ------------
-					url: ajaxUrl,
-					type: 'POST',
-					cache: false,
-					contentType: false,
-					processData: false,
-					data: formData,
-					headers:{
-						'X-CSRF-Token':token
-						},
-					success: function (data) {
-					    if(videoBlock){
-							var videoBlk = "";
-							if(url){
-								videoBlk = videoBlock.find('iframe');
-							}
-							else{
-								videoBlk = videoBlock.find('video');
-							}
-							if (data != '') {
-								videoBlk.attr('id', data);
-								$("#currentVideo >.deleteVideo").attr('data-video-id', data);
-								$("#currentVideo >.editVideo").attr('data-editvideo-id', data);
-								$("#currentVideo").attr('id', data);
-							}
-							else {
-								videoBlk.attr('id', videoID);
-								$("#currentVideo >.deleteVideo").find('a:first').attr('data-video-id', videoID);
-								$("#currentVideo >.editVideo").attr('data-editvideo-id', videoID);
-								$("#currentVideo").attr('id', videoID);
-							}
-					    }
-					    else{
-					        if(videoID){
-					        	$("#" + videoID).find('h3 strong').html(title);
-					        }
-					    }
-					},
-					error: function (data) {
-						if (videoID == '') {
-							$("#current").remove();
-						}
-						else {
-							$("#current").replaceWith(oldVideoBlock);
-						}
-						if (data.status == 403) {
-							$("#loginAlert").show();
-						}
-						else{
-							var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>Please try again.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-							$('.error').append(alert);
-						}
-					}
-				});
-			}
+                var videoID = $("#saveVideo").data('value'); // gets video ID
+                var oldUrl = $("#saveVideo").data('url');
+                var url = $("#videoLink").val();
+                var title = $("#videoTitle").val();
+                var vidFile = $("#videoFile")[0].files[0];
+                var reader = new FileReader();
+                var videoBlock = "";
+                var ajaxUrl = '';
+                var oldVideoBlock = '';
+                var formData = new FormData();
+                
+                if (url) {
+                    if(url.startsWith("https://www.youtube.com/watch?v=")) {
+                        videoId = url.substring(url.indexOf("v=")+2);
+                        url = "https://www.youtube.com/embed/"+videoId;
+                    }
+                    formData.append('url', url);
+                    videoBlock = createVideoBlock(reader, url, title, true, videoID);
+                }
+                
+                if (vidFile) {
+                    formData.append('videoFile', vidFile);
+                }
+                
+                if (videoID) {
+                    oldVideoBlock = $("#" + videoID);
+                    ajaxUrl = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/video/'})]" + videoID;
+                    formData.append('videoBlockId', videoID);
+                    
+                    if (url) {
+                        $("#" + videoID).replaceWith(videoBlock);
+                    }
+                    if (vidFile) {
+                        reader.onload = function (theFile) {
+                            videoBlock = createVideoBlock(reader, theFile.target.result, title, false, videoID);
+                            $("#" + videoID).replaceWith(videoBlock);
+                        };
+                    }
+                } else {
+                    if (url) {
+                        $('#slideSpace').append(videoBlock);
+                    }
+                    if (vidFile) {
+                        reader.onload = function (theFile) {
+                            videoBlock = createVideoBlock(reader, theFile.target.result, title, false, "currentVideo");
+                            $('#slideSpace').append(videoBlock);
+                        }
+                    }
+                    ajaxUrl = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/video'})]";
+                }
+                
+                // Reset data-attribute to get current selected video ID
+                $("#videoFile").val('');
+                $("#videoLink").val('');
+                
+                $(videoBlock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave);
+                
+                if (vidFile) {
+                    reader.readAsDataURL(vidFile);
+                }
+                
+                formData.append('videoTitle', title);
+                var token = [[${_csrf.token}]];
+                
+                $.ajax({
+                    enctype: 'multipart/form-data',
+                    url: ajaxUrl,
+                    type: 'POST',
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    data: formData,
+                    headers: {
+                        'X-CSRF-Token': token
+                    },
+                    success: function (data) {
+                        if(videoBlock) {
+                            var videoBlk = "";
+                            if(url) {
+                                videoBlk = videoBlock.find('iframe');
+                            } else {
+                                videoBlk = videoBlock.find('video');
+                            }
+                            
+                            if (data != '') {
+                                videoBlk.attr('id', data);
+                                $("#currentVideo [data-action='delete-video']").attr('data-video-id', data);
+                                $("#currentVideo [data-action='edit-video']").attr('data-editvideo-id', data);
+                                $("#currentVideo").attr('id', data);
+                            } else {
+                                videoBlk.attr('id', videoID);
+                                $("#currentVideo [data-action='delete-video']").attr('data-video-id', videoID);
+                                $("#currentVideo [data-action='edit-video']").attr('data-editvideo-id', videoID);
+                                $("#currentVideo").attr('id', videoID);
+                            }
+                        } else {
+                            if(videoID) {
+                                $("#" + videoID).find('h3 strong').html(title);
+                            }
+                        }
+                    },
+                    error: function (data) {
+                        if (videoID == '') {
+                            $("#current").remove();
+                        } else {
+                            $("#current").replaceWith(oldVideoBlock);
+                        }
+                        if (data.status == 403) {
+                            $("#loginAlert").show();
+                        } else {
+                            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>Please try again.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                            $('.error').append(alert);
+                        }
+                    }
+                });
+            }
+            
+            $(document).on("click", "[data-action='edit-video']", function(e) {
+                addVideoClk = 0;
+                editVideoClk = 1;
+                $("#saveVideo").html("Update Video");
+                $("#saveVideo").prop('disabled', false);
+                
+                var id = $(this).attr('data-editvideo-id');
+                var vidId = $('div#' + id).attr('id');
+                var title = $('div#' + id).find('h3 strong').html();
+                
+                if (vidId != '') {
+                    var url = "";
+                    if($('div#' + id).find('iframe').length > 0 && 
+                       $('div#' + id).find('iframe').attr('src') != null && 
+                       typeof($('div#' + id).find('iframe').attr('src')) != "undefined") {
+                        url = $('div#' + id).find('iframe').attr('src');
+                    }
+                    
+                    if (url.length > 0) {
+                        $("#saveVideo").data('url', url);
+                        $("#videoLink").val(url);
+                        $("#urlTab").addClass("active");
+                        $("#urlLink").addClass("active show");
+                        $("#uploadTab").removeClass("active show");
+                        $("#uploadLink").removeClass("active show");
+                        $("#urlLink>a").addClass("active show");
+                        $("#uploadLink").removeClass("active show");
+                        $("#uploadLink>a").removeClass("active show");
+                    } 
+                    
+                    $("#videoTitle").val(title);
+                    $("#saveVideo").data('value', vidId);
+                    $("#addVideoAlert").show();
+                }
+            });
+            
+            $(document).on("click", "[data-action='delete-video']", function(e) {
+                $("#confirmDeleteVideoAlert .modal-footer input[type='hidden']").remove();
+                $("#videoIdToDelete").val($(this).attr('data-video-id'));
+                
+                $(".load").remove();
+                $("#" + $(this).attr('data-video-id')).append($('<div class="load" style="font-size: 30px;display: none; text-align: center;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></div>'));
+                $(".load").show();
+                
+                setTimeout(function() {
+                    $(".load").hide();
+                    $("#confirmDeleteVideoAlert").show();
+                }, 3000);
+            });
             
             function guidedTour() {
             	const tour = new Shepherd.Tour({
@@ -1345,40 +1437,40 @@
          		});
             	
          	// ---------- Delete Video Block -----------
-         		$("#deleteVideo").on("click", function(e) {
-         		    e.preventDefault();
-         		    // Clean up other modals
-         		    $("#confirmDeleteTextAlert").find('input').remove();
-         		    $("#confirmDeleteChoiceBlockAlert").find('input').remove();
-         		    $("#confirmDeleteVideoAlert").hide();
-         		    
-         		    var blockId = $('#videoIdToDelete').val();
-         		    $('#videoIdToDelete').val("");
-         		    
-         		    if(blockId == null || blockId == ''){
-         		        var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-         		        $('.error').append(alert); 
-         		        $(".error").delay(4000).slideUp(500, function(){
-         		            $(".error").empty();
-         		        });
-         		    } else{
-         		        // ------------- delete video content blocks ------------
-         		        $.ajax({
-         		            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/video/'})]"+blockId+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
-         		            type: 'DELETE',
-         		            success: function(result) {
-         		                $('#' + blockId).remove();
-         		            },
-         		            error: function(data) {
-         		                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-         		                $('.error').append(alert); 
-         		                $(".error").delay(4000).slideUp(500, function(){
-         		                    $(".error").empty();
-         		                });
-         		            }
-         		        });
-         		    }
-         		});
+			$("#deleteVideo").on("click", function(e) {
+			    e.preventDefault();
+			    // Clean up other modals
+			    $("#confirmDeleteTextAlert").find('input').remove();
+			    $("#confirmDeleteChoiceBlockAlert").find('input').remove();
+			    $("#confirmDeleteVideoAlert").hide();
+			    
+			    var blockId = $('#videoIdToDelete').val();
+			    $('#videoIdToDelete').val("");
+			    
+			    if(blockId == null || blockId == ''){
+			        var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+			        $('.error').append(alert); 
+			        $(".error").delay(4000).slideUp(500, function(){
+			            $(".error").empty();
+			        });
+			    } else{
+			        // ------------- delete video content blocks ------------
+			        $.ajax({
+			            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/video/'})]"+blockId+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
+			            type: 'DELETE',
+			            success: function(result) {
+			                $('#' + blockId).remove();
+			            },
+			            error: function(data) {
+			                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+			                $('.error').append(alert); 
+			                $(".error").delay(4000).slideUp(500, function(){
+			                    $(".error").empty();
+			                });
+			            }
+			        });
+			    }
+			});
             	
            	$("#deleteChoiceBlock").on("click", function(e) {
            	    e.preventDefault();
