@@ -156,7 +156,7 @@
                     url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space/'})]" + blockId,
                     type: 'GET',
                     success: function(result) {
-                    	if (result != null && result.space != null){
+                        if (result != null && result.space != null){
                             currentSpaceName = result.space.name;
                             currentSpaceId = result.space.id;
                             $("#selectedSpace").text(currentSpaceName);
@@ -167,22 +167,34 @@
                             } else {
                                 $("#editSpaceName").val(currentSpaceId).trigger('change');
                             }
-
+            
                             $("#editSpaceName").select2({
                                 ajax: {
                                     url: [[@{|/staff/spaces/search|}]],
                                     dataType: 'json',
-                                    processResults: function (data) {
+                                    delay: 1000,
+                                    data: function (params) {
+                                        return {
+                                            term: params.term, 
+                                            page: params.page || 1 
+                                        };
+                                    },
+                                    processResults: function (data, params) {
+                                        params.page = params.page || 1;
                                         
                                         return {
-                                            results: $.map(data, function(item) {
+                                            results: data.items ? data.items.map(function(item) {
                                                 return {
                                                     id: item.id,
                                                     text: item.name 
                                                 };
-                                            })
+                                            }) : [],
+                                            pagination: {
+                                                more: data.hasMore
+                                            }
                                         };
-                                    }
+                                    },
+                                    cache: false
                                 },
                                 templateResult: function(data) {
                                     if (!data.id) {
@@ -192,10 +204,14 @@
                                 },
                                 templateSelection: function(data) {
                                     return $('<span>').text(data.text);
+                                },
+                                dropdownAutoWidth: true,
+                                width: '100%',
+                                escapeMarkup: function (markup) {
+                                    return markup;
                                 }
                             });
-                    	}
-
+                        }
                     },
                     error: function(data) {
                         var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
@@ -209,10 +225,8 @@
 
             
             function textBlockDoubleClick(e){
-            	// get to the nearest divs class attribute
                 $(".EasyMDEContainer").remove();
                 var divName = $(e.target).closest('div').attr('class');
-                //if the div is a text content block 
                 $(e.target).closest('.textDivStaff').addClass("open");
                 var description = $("div.open p:eq(0)").text();
             	defaultValue = description;
@@ -220,7 +234,6 @@
                 $("#editTextAlert").show();
                 markDown = new EasyMDE({element: $('#editTextBlock')[0]});
                 markDown.value(description.trim());
-                //remove card border
                 $(".open").css('display', 'none');
                 $(".open").css('overflow-y', 'scroll');
                 $(".open").css('height', '400px');
@@ -788,26 +801,43 @@
 	            });
 
 	            $("#spaceName").select2({
-		            ajax: {
-			            url: [[@{|/staff/spaces/search|}]],
-			            dataType: 'json',
-			            processResults: function (data) {
-				            return {
-				            	results: data,
-				            };
-			            },
-		            },
-		            templateResult: formatSpace,
-		            templateSelection: formatSpace
+	                ajax: {
+	                    url: [[@{|/staff/spaces/search|}]], 
+	                    dataType: 'json',
+	                    delay:1000,
+	                    data: function (params) {
+	                        return {
+	                            term: params.term, 
+	                            page: params.page || 1 
+	                        };
+	                    },
+	                    processResults: function (data, params) {
+
+	                        params.page = params.page || 1;
+	                        return {
+	                            results: data.items,
+	                            pagination: {
+	                                more: data.hasMore
+	                            }
+	                        };
+	                    },
+	                    cache: false
+	                },
+	                templateResult: formatSpace,
+	                templateSelection: formatSpace,
+	                dropdownAutoWidth: true,
+	                width: '100%',
+	                escapeMarkup: function (markup) { return markup; }
 	            });
 
-	            function formatSpace (space) {
-		            if (!space.id) {
-		            	return space.name;
-		            }
-		            var $space = $('<span>' + space.name + '</span>');
-		            return $space;
+	            function formatSpace(space) {
+	                if (!space.id) {
+	                    return space.name;
+	                }
+	                var $space = $('<span>' + space.name + '</span>');
+	                return $space;
 	            }
+
 	
                 $("#addImage").click(function() {
                     $("#addImgAlert").show();
@@ -1179,6 +1209,25 @@
                     });
                 });
                 
+                function getSpaceById(spaceId, callback) {
+                    $.ajax({
+                        url: "[(@{'/staff/search/api/space/'})]"+spaceId,
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function(result) {
+                            callback(result);
+                        },
+                        error: function(data) {
+                            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                            $('.error').append(alert);
+                            $(".error").delay(4000).slideUp(500, function() {
+                                $(".error").empty();
+                            });
+                            callback(null);
+                        }
+                    });
+                }
+                
 	            $("#submitSpace").on("click", function(e) {
 		            $("#addSpaceAlert").hide();
 		            e.preventDefault();
@@ -1484,25 +1533,25 @@
                        }
                    });
                 });    
-                
 	            $("#submitSpaceBlock").on("click", function(e){
 		            e.preventDefault();
 		            // ------------- editting text content blocks ------------
 		            if(document.getElementById('editSpaceName') != ""){
-			            var selectedSpace = document.getElementById('editSpaceName');
-			            var spaceId = selectedSpace.options[selectedSpace.selectedIndex].value;
-			            var spaceName = $('#editSpaceName').select2('data')[0].text;
-			            var formData = new FormData();
-			            var text = document.getElementById("editSpaceBlock").value;
-			            var formData = new FormData();
-			            var blockId = $(".open").attr("id");
-			            formData.append('spaceBlockId', blockId);
-			            formData.append('spaceBlockTitle', text);
-			            if(spaceId == "" || spaceId == null){
-			            	spaceId = currentSpaceId;
-			            }
-			            var token = [[${_csrf.token}]];
-			            formData.append('spaceId', spaceId);
+		            var selectedSpace = document.getElementById('editSpaceName');
+		            var spaceId = selectedSpace.options[selectedSpace.selectedIndex].value;
+		            var formData = new FormData();
+		            var text = document.getElementById("editSpaceBlock").value;
+		            var formData = new FormData();
+		            var blockId = $(".open").attr("id");
+		            formData.append('spaceBlockId', blockId);
+		            formData.append('spaceBlockTitle', text);
+		            if(spaceId == "" || spaceId == null){
+		            	spaceId = currentSpaceId;
+		            }
+		            var token = [[${_csrf.token}]];
+		            formData.append('spaceId', spaceId);
+		            getSpaceById(spaceId, function(spaceName){
+		            
 			            $("#editSpaceAlert").hide();
 			            $.ajax({
 				            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space/edit'})]",
@@ -1528,6 +1577,7 @@
 					            }
 				            }
 			            });
+		            });
 		          }
 	            });
 	            
