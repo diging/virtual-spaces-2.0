@@ -222,18 +222,29 @@
             }
 
             
-            function textBlockDoubleClick(e){
-            	// get to the nearest divs class attribute
+            var originalTextHtml = {};
+
+            function textBlockDoubleClick(e) {
+                // get to the nearest divs class attribute
                 $(".EasyMDEContainer").remove();
                 var divName = $(e.target).closest('div').attr('class');
+                
                 //if the div is a text content block 
-                $(e.target).closest('.textDivStaff').addClass("open");
+                var textBlock = $(e.target).closest('.textDivStaff');
+                textBlock.addClass("open");
+                
+                var blockId = textBlock.attr("id");
+                
+                // Store original HTML before editing
+                originalTextHtml[blockId] = textBlock.html();
+                
                 var description = $("div.open p:eq(0)").text();
-            	defaultValue = description;
-        
+                defaultValue = description;
+
                 $("#editTextAlert").show();
                 markDown = new EasyMDE({element: $('#editTextBlock')[0]});
                 markDown.value(description.trim());
+                
                 //remove card border
                 $(".open").css('display', 'none');
                 $(".open").css('overflow-y', 'scroll');
@@ -1031,15 +1042,15 @@
                 });
                 
              	// Delete Text Click Handler
-                $(document).on("click", "[data-action='delete-text']", function(e) {
-                    $("#confirmDeleteTextAlert .modal-footer input[type='hidden']").remove();
-                    $("#confirmDeleteTextAlert").show();
-                    
-                    var textId = $(this).siblings("input[data-text-id]").val();
-                    var textInput = $('<input type="hidden" id="deleteTextId">');
-                    textInput.val(textId);
-                    $('#confirmDeleteTextAlert .modal-footer').append(textInput);
-                });
+				$(document).on("click", "[data-action='delete-text']", function(e) {
+				    $("#confirmDeleteTextAlert .modal-footer input[type='hidden']").remove();
+				    $("#confirmDeleteTextAlert").show();
+				    
+				    var textId = $(this).siblings("input[data-text-id]").val();
+				    var textInput = $('<input type="hidden" id="deleteTextId">');
+				    textInput.val(textId);
+				    $('#confirmDeleteTextAlert .modal-footer').append(textInput);
+				});
 
              	// Delete Space Click Handler
                 $(document).on("click", "[data-action='delete-space']", function(e) {
@@ -2000,11 +2011,25 @@
  				}
                 
                 // must add the event to the document since the buttons are added dynamically
-                $('#cancelTextBlock').on('click',function(){
-                	$("#editTextAlert").hide();
-                	var blockId = $(this).closest(".open").attr("id");
-                	updateTextBox(blockId, defaultValue);
-                });
+				$('#cancelTextBlock').on('click', function() {
+				    $("#editTextAlert").hide();
+				    var blockId = $(".open").attr("id");
+				    
+				    // Restore original HTML
+				    if (originalTextHtml[blockId]) {
+				        $(".open").html(originalTextHtml[blockId]);
+				        delete originalTextHtml[blockId];
+				    } else {
+				        // Fallback to rebuilding with data attributes
+				        updateTextBox(blockId, defaultValue);
+				    }
+				    
+				    // Reset styles and classes
+				    $(".open").css('display', 'flex');
+				    $(".open").css('height', 'auto');
+				    $(".open").css('overflow-y', 'visible');
+				    $(".open").removeClass("open");
+				});
             
                 function updateBiblioBox(blockId, formData) {
                     // Clear biblio box and buttons
@@ -2099,11 +2124,30 @@
              $('.biblioDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(biblioBlockDoubleClick);
              $('.referenceDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(referenceBlockDoubleClick);
             
-	            $('#closeTextBlock').on('click',function(){
-		            $("#editTextAlert").hide();
-		            var blockId = $(this).closest(".open").attr("id");
-		            updateTextBox(blockId, defaultValue);
-	            });
+             $('#closeTextBlock').on('click', function() {
+            	    $("#editTextAlert").hide();
+            	    var blockId = $(".open").attr("id");
+            	    
+            	    // Restore original HTML
+            	    if (originalTextHtml[blockId]) {
+            	        $(".open").html(originalTextHtml[blockId]);
+            	        delete originalTextHtml[blockId];
+            	    } else {
+            	        // Fallback to rebuilding with data attributes
+            	        updateTextBox(blockId, defaultValue);
+            	    }
+            	    
+            	    // Reset styles and classes
+            	    $(".open").css('display', 'flex');
+            	    $(".open").css('height', 'auto');
+            	    $(".open").css('overflow-y', 'visible');
+            	    $(".open").removeClass("open");
+            	});
+             
+          	// Using event delegation instead of direct binding
+             $(document).on('mouseenter', '.textDivStaff', onMouseEnter);
+             $(document).on('mouseleave', '.textDivStaff', onMouseLeave);
+             $(document).on('dblclick', '.textDivStaff', textBlockDoubleClick);
 
 	            function updateSpaceBox(blockId, text, spaceName) {
 	                // clear text box and buttons
