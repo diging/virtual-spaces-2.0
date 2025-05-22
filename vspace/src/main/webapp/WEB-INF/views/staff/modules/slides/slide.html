@@ -240,28 +240,30 @@
                 $(".open").css('height', '400px');
             }
 
-            function biblioBlockDoubleClick(e){
-               $(".EasyMDEContainer").remove();
-         	   $(e.target).closest('.biblioDivStaff').addClass("open");
-         	   var description = $("div.open p:eq(0)").text();
-           	   defaultValue = description;
-           	
-           	   var title = $("div.open p span:eq(0)").text();
-           	   var desc = $("div.open p span:eq(1)").text();  
-	      	    //showing the edit bibliography form with all the respective values
-      	       $("#editBiblioAlert").show();
-      	
-      	       $("#editTitleBiblio").val(title);
-      	       $("#editDescBiblio").val(desc);
-           		
-           	    formDataCancel = new FormData();
-           	    formDataCancel.append('biblioTitle', title);
-           	    formDataCancel.append('description', desc);
-            	    //remove card border
+            function biblioBlockDoubleClick(e) {
+                $(".EasyMDEContainer").remove();
+                $(e.target).closest('.biblioDivStaff').addClass("open");
+                var description = $("div.open p:eq(0)").text();
+                defaultValue = description;
+                
+                var title = $("div.open p span:eq(0)").text();
+                var desc = $("div.open p span:eq(1)").text();  
+                
+                // Showing the edit bibliography form with all the respective values
+                $("#editBiblioAlert").show();
+                
+                $("#editTitleBiblio").val(title);
+                $("#editDescBiblio").val(desc);
+                
+                formDataCancel = new FormData();
+                formDataCancel.append('biblioTitle', title);
+                formDataCancel.append('description', desc);
+                
+                // Remove card border
                 $(".open").css('display', 'none');
                 $(".open").css('overflow-y', 'scroll');
-                $(".open").css('max-height', '200px');	
-             } 
+                $(".open").css('max-height', '200px');
+            }
              
             function referenceBlockDoubleClick(e) {
                 currentRefId = $(this).find('input[data-reference-id]').val();
@@ -2004,37 +2006,50 @@
                 	updateTextBox(blockId, defaultValue);
                 });
             
-             function updateBiblioBox(blockId, formData) {
-                 // clear biblio box and buttons
-                 $(".open").empty();
-                	$(".open").append('<p class="col-md-10"> \
-                		    Bibliography Title: <span>' + formData.get('biblioTitle')+ '</span>, \
-                		    Description: <span>' + formData.get('description') + '</span> \
-                		</p> \
-                		<input type="hidden" id="deleteBiblioId" value="' + blockId + '" /> \
-                			<a class="btn deleteBiblio" href="javascript:;" style="position: absolute; right: 0px;">\
-                         <i style="color: var(--error);" class="fas fa-trash-alt"></i>\
-                     </a> \
-                     <a id="addReference" class="btn primary-btn btn-sm" style="padding-top: 8px;">\
-                         + New Reference \
-                     </a> \
-         ');
-         
-                	//reset border of the card
-                 //rebind event handlers
-                 $('.biblioDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(biblioBlockDoubleClick);
-                 $(".open").css('display', 'flex');
-                 // remove id from storage so its not there on refresh
-                 $(".open").removeClass("open");
-             }
+                function updateBiblioBox(blockId, formData) {
+                    // Clear biblio box and buttons
+                    $(".open").empty();
+                    
+                    // Rebuild with proper structure and data attributes
+                    $(".open").append(
+                        '<p class="col-md-10">' +
+                        'Bibliography Title: <span>' + formData.get('biblioTitle') + '</span>, ' +
+                        'Description: <span>' + formData.get('description') + '</span>' +
+                        '</p>' +
+                        '<input type="hidden" data-biblio-id="' + blockId + '" value="' + blockId + '" />' +
+                        '<a class="btn col-md-1" data-action="delete-biblio" href="javascript:;" style="position: absolute; right: 0px;">' +
+                        '<span class="icon-trash error"></span>' +
+                        '</a>' +
+                        '<a class="btn primary-btn btn-sm" data-action="add-reference" style="padding-top: 8px;">+ New Reference</a>' +
+                        '<div id="referenceSpace" class="col-md-10">' +
+                        // Add existing references back
+                        '</div>'
+                    );
+
+                    // Reset border of the card
+                    // Rebind event handlers
+                    $('.biblioDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(biblioBlockDoubleClick);
+                    $(".open").css('display', 'flex');
+                    
+                    // Remove id from storage so it's not there on refresh
+                    $(".open").removeClass("open");
+                }
              
           	// must add the event to the document since the buttons are added dynamically
-             $('#cancelBiblioBlock').on('click',function(){
-             	$('#currentBiblioId').remove();
-             	$("#editBiblioAlert").hide();
-             	var blockId = $(".open").attr("id");
-             	updateBiblioBox(blockId, formDataCancel);
-             });
+			$('#cancelBiblioBlock').on('click', function() {
+			    $("#editBiblioAlert").hide();
+			    var blockId = $(".open").attr("id");
+			    
+			    // Get the existing references before updating
+			    var existingReferences = $("#" + blockId + " #referenceSpace").html();
+			    
+			    updateBiblioBox(blockId, formDataCancel);
+			    
+			    // Restore existing references
+			    $(".open #referenceSpace").html(existingReferences);
+			    
+			    $(".open").removeClass("open");
+			});
           	
              function updateReferenceBox(blockId, formData) {
             	    // Clear biblio box and buttons
