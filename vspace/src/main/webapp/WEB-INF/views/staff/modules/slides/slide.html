@@ -276,10 +276,20 @@
                 $(".open").css('max-height', '200px');
             }
              
+            var originalReferenceHtml = {};
+
             function referenceBlockDoubleClick(e) {
-                currentRefId = $(this).find('input[data-reference-id]').val();
+                var referenceBlock = $(e.target).closest('.referenceDivStaff');
+                currentRefId = referenceBlock.find('input[data-reference-id]').val();
+                
                 $(".EasyMDEContainer").remove();
-                $(e.target).closest('.referenceDivStaff').addClass("open");
+                referenceBlock.addClass("open");
+                
+                var blockId = referenceBlock.attr("id");
+                
+                // Store original HTML before editing
+                originalReferenceHtml[blockId] = referenceBlock.html();
+                
                 var description = $("div.open p:eq(0)").text();
                 defaultValue = description;
                 
@@ -302,9 +312,9 @@
                 $("#editReferenceAlert .modal-footer input[type='hidden']").remove();
                 
                 // Get bibliography ID from the parent element 
-                var biblioId = $(this).closest("[data-biblio-block]").attr("id");
+                var biblioId = referenceBlock.closest("[data-biblio-block]").attr("id");
                 
-                // Create a hidden input with a better ID
+                // Create a hidden input with bibliography ID
                 var biblioInput = $('<input type="hidden" id="editRefBiblioId">');
                 biblioInput.val(biblioId);
                 $("#editReferenceAlert .modal-footer").append(biblioInput);
@@ -321,6 +331,7 @@
                 $("#editTypeRef").val(type);
                 $("#editNoteRef").val(note);
                 
+                // Store original values for cancel functionality
                 formDataCancel = new FormData();
                 formDataCancel.append('title', title);
                 formDataCancel.append('author', author);
@@ -2076,46 +2087,71 @@
 			    $(".open").removeClass("open");
 			});
           	
-             function updateReferenceBox(blockId, formData) {
-            	    // Clear biblio box and buttons
-            	    $(".open").empty();
-            	    
-            	    // Updated to use data attributes
-            	    $(".open").append(
-            	        '<p class="col-md-10">Reference Title: <span>' + formData.get('title') + 
-            	        '</span>, Author: <span>' + formData.get('author') + 
-            	        '</span>, Year: <span>' + formData.get('year') + 
-            	        '</span>, Journal: <span>' + formData.get('journal') + 
-            	        '</span>, Url: <span>' + formData.get('url') + 
-            	        '</span>, Volume: <span>' + formData.get('volume') + 
-            	        '</span>, Issue: <span>' + formData.get('issue') + 
-            	        '</span>, Pages: <span>' + formData.get('pages') + 
-            	        '</span>, Editors: <span>' + formData.get('editors') + 
-            	        '</span>, Type: <span>' + formData.get('type') + 
-            	        '</span>, Note: <span>' + formData.get('note') + 
-            	        '</span></p>' + 
-            	        '<input type="hidden" data-reference-id="' + blockId + '" value="' + blockId + '" />' + 
-            	        '<a class="btn col-md-1" data-action="delete-reference" href="javascript:;">' + 
-            	        '<span class="icon-trash error"></span></a>'
-            	    );
-            	    
-            	    // Reset border of the card
-            	    // Rebind event handlers
-            	    $('.referenceDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(referenceBlockDoubleClick);
-            	    $(".open").css('display', 'flex');
-            	    
-            	    // Remove id from storage so it's not there on refresh
-            	    $(".open").removeClass("open");
-            	}
+			function updateReferenceBox(blockId, formData) {
+			    // Clear reference box and buttons
+			    $(".open").empty();
+			    
+			    // Use proper FormData.get() method and handle null values
+			    var title = formData.get('title') || '';
+			    var author = formData.get('author') || '';
+			    var year = formData.get('year') || '';
+			    var journal = formData.get('journal') || '';
+			    var url = formData.get('url') || '';
+			    var volume = formData.get('volume') || '';
+			    var issue = formData.get('issue') || '';
+			    var pages = formData.get('pages') || '';
+			    var editors = formData.get('editors') || '';
+			    var type = formData.get('type') || '';
+			    var note = formData.get('note') || '';
+			    
+			    $(".open").append(
+			        '<p class="col-md-10">Reference Title: <span>' + title + 
+			        '</span>, Author: <span>' + author + 
+			        '</span>, Year: <span>' + year + 
+			        '</span>, Journal: <span>' + journal + 
+			        '</span>, Url: <span>' + url + 
+			        '</span>, Volume: <span>' + volume + 
+			        '</span>, Issue: <span>' + issue + 
+			        '</span>, Pages: <span>' + pages + 
+			        '</span>, Editors: <span>' + editors + 
+			        '</span>, Type: <span>' + type + 
+			        '</span>, Note: <span>' + note + 
+			        '</span></p>' +
+			        '<input type="hidden" data-reference-id="' + blockId + '" value="' + blockId + '" />' +
+			        '<a class="btn col-md-1" data-action="delete-reference" href="javascript:;">' +
+			        '<span class="icon-trash error"></span></a>'
+			    );
+			    
+			    // Reset border of the card 
+			    // Rebind event handlers
+			    $('.referenceDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(referenceBlockDoubleClick);
+			    $(".open").css('display', 'flex');
+			    
+			    // Remove id from storage so it's not there on refresh
+			    $(".open").removeClass("open");
+			}
           	
          	// must add the event to the document since the buttons are added dynamically
-			$('#cancelRefBlock').on('click', function() {
-			    $('#editRefBiblioId').remove();
-			    $("#editReferenceAlert").hide();
-			    var refId = $(".open").attr("id");
-			    updateReferenceBox(refId, formDataCancel);
-			    $(".open").removeClass("open");
-			});
+				$('#cancelRefBlock').on('click', function() {
+				    $("#editReferenceAlert").hide();
+				    var blockId = $(".open").attr("id");
+				    
+				    // Restore original HTML
+				    if (originalReferenceHtml[blockId]) {
+				        $(".open").html(originalReferenceHtml[blockId]);
+				        delete originalReferenceHtml[blockId];
+				    }
+				    
+				    // Reset styles and classes
+				    $(".open").css('display', 'flex');
+				    $(".open").css('height', 'auto');
+				    $(".open").css('overflow-y', 'visible');
+				    $(".open").css('max-height', 'none');
+				    $(".open").removeClass("open");
+				    
+				    // Clean up modal inputs
+				    $('#editRefBiblioId').remove();
+				});
          
              $('.valueDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick((e)=>{$(".EasyMDEContainer").remove();});
              $('.textDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(textBlockDoubleClick);
@@ -2315,8 +2351,7 @@
             	    $("#editReferenceAlert").hide();
             	    $("#editBiblioAlert").hide();
             	    
-            	    // Change this to use a better ID
-            	    var biblioBlockId = $('#editRefBiblioId').val() || $('#currentBiblioId').val();
+            	    var biblioBlockId = $('#editRefBiblioId').val();
             	    
             	    var object = {};
             	    formData.forEach((value, key) => object[key] = value);
@@ -2336,20 +2371,32 @@
             	        success: function(data) {
             	            // Replace Reference box with new values
             	            updateReferenceBox(blockId, formData);
-            	            $(".open").removeClass("open");
+            	            
+            	            // Clean up stored HTML since edit was successful
+            	            if (originalReferenceHtml[blockId]) {
+            	                delete originalReferenceHtml[blockId];
+            	            }
+            	            
+            	            // Clean up modal inputs
+            	            $('#editRefBiblioId').remove();
+            	            
             	            location.reload();
             	        },
             	        error: function(data) {
             	            if (data.status == 403) {
             	                $("#loginAlert").show();
-            	            }
-            	            else {
+            	            } else {
             	                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
             	                $('.error').append(alert);
             	            }
             	        }
             	    });
-            	});    
+            	});
+             
+          // Use event delegation for reference blocks
+             $(document).on('mouseenter', '.referenceDivStaff', onMouseEnter);
+             $(document).on('mouseleave', '.referenceDivStaff', onMouseLeave);
+             $(document).on('dblclick', '.referenceDivStaff', referenceBlockDoubleClick);
                 
 	            $("#submitSpaceBlock").on("click", function(e){
 		            e.preventDefault();
