@@ -116,8 +116,11 @@
 					      .style("cursor", "default");
 					})
 	            	.on('click', function(event, d) {
+	            		//Reset highlighting
 	            		d3.selectAll("circle")
 							.style("fill", function(d) { return d.depth === 1 ? "#fff" : "#000"; });
+	            		
+	            		//Update card for node clicked
 	            		if (d.data.img) {
 		            		document.getElementById("space-overview-card-img").src = d.data.img;
 	            		} else {
@@ -136,16 +139,14 @@
 	                  	}).style("fill", "red");
 	            	});
 	           	
-	           	text.style("fill", function(d) { console.log('DEPTH: ', d.depth); return d.depth === 1 ? "#000" : "#fff"; })
-	           	
-	           	// Hide root node links
-	           	link.style("opacity", function(d) { return d.source.depth === 0 ? 0 : 1; })
-	           		.style("pointer-events", function(d) { return d.source.depth === 0 ? "none" : "all"; });
+	           	text.style("fill", function(d) { console.log('DEPTH: ', d.depth); return d.depth === 1 ? "#000" : "#fff"; });
 	           	
            	 	d3.selectAll("line").filter(function(d) {
                 	return d.source.depth === 0;
-              	}).style("visibility", "hidden");
-           	
+              	}).style("visibility", "hidden")
+              	  .style("opacity", 0)
+           	 	  .style("pointer-events", "none");
+           	 	  
 	            simulation.on("tick", () => {
 	              link
 	                  .attr("x1", d => d.source.x)
@@ -165,7 +166,7 @@
                 function structureData(nodeArrays) {
                 	var map = {};
                 	map.children = [];
-               
+
                 	function createHierarchy(spaces, modules) {
                 		spaces.forEach(function (space) {
                 			if (space.edges.length > 0) {
@@ -180,8 +181,7 @@
                 		});
                 	}
                 	                	
-                	createHierarchy(nodeArrays.spaces, nodeArrays.modules);
-                	                	
+                	createHierarchy(nodeArrays.spaces, nodeArrays.modules);         	
                 	return d3.hierarchy(map);
                 }
                 
@@ -197,7 +197,6 @@
                 			modules.push(node);
                 		}
                 	});
-            		
             		return {"spaces": spaces, "modules": modules};
             	}
                 
