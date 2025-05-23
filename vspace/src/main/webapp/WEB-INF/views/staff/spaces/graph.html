@@ -1,227 +1,223 @@
 <html layout:decorate="~{layouts/main_staff}">
     <head>
         <script th:inline="javascript">
-            var jsonMap = [[${jsonFormatMap}]];
+            const jsonMap = [[${jsonFormatMap}]];
         </script>
-        <script src="https://d3js.org/d3.v4.js"></script>
+        <script src="https://d3js.org/d3.v7.min.js"></script>
         <style>
-            .links line {
-            stroke: #999;
-            stroke-width: 2px;
-            }
-            text {
-            font-family: sans-serif;
-            font-size: 15px;
-            }
-            image { 
-            filter: drop-shadow(1px 1px 7px  #e39e44);
-            }
-            svg
-            {
-            width: 100%;
-            }
-            .container
-             {  
-             display: flex;  
-             justify-content: center;
-             margin: 0;
-             padding: 0;
-             max-width: 100%;
-             }
-             .nav-bar {
-             	margin-bottom: 0 !important; 
-             }
+        	#space-overview-card-body {
+        		display: block !important;
+        		padding: 1.25rem !important;
+        		text-align: center;
+        	}
         </style>
     </head>
     <body>
         <div layout:fragment="content">
         <div class="container">
-            <div id="graph" style="width: 100%;height: 100%;"></div>
+            <div id="graph" style="width: 100%;height: 100%; background-color: #909090"></div>
+            <div class="card" style="width: 18rem;">
+			  <img src="/vspace/resources/maintenance/img/logo-11.png" class="card-img-top" id="space-overview-card-img" alt="...">
+			  <div class="card-body" id="space-overview-card-body">
+			    <h5 class="card-title" id="space-overview-card-title">Space Overview Map</h5>
+			    <p class="card-text" id="space-overview-card-text">This is a map of all spaces and modules and their links with one another. Feel free to click or drag nodes to interact with them.</p>
+			    <a href="#" class="btn btn-primary" id="space-overview-btn">Click a space or module node...</a>
+			  </div>
+			</div>
             <script>
-                var nodeJson = JSON.parse(jsonMap['nodesJson']);
-                // Some constants controlling the graph appearance
-                const PADDING_BUBBLE = 15 // distance between edge end and bubble
-                const PADDING_LABEL = 30 // distance between edge end and engineer id
-                
-                var diameter = 700,
-                    radius = diameter / 2,
-                    innerRadius = radius - 170; // between center and edge end
-                
-                var cluster = d3.cluster()
-                    .size([360, innerRadius]);
-                
-                var line = d3.radialLine()
-                    .curve(d3.curveBundle.beta(0.85))
-                    .radius(function (d) { return d.y; })
-                    .angle(function (d) { return d.x / 180 * Math.PI; });
-                
-                var svg = d3.select("#graph").append("svg")
-                    .attr("width", "100%")
-                    .attr("height", diameter)
-                    .append("g")
-                    .attr("style", "transform: translate(" + "50%" + "," + "48%" + ")");
-                
-                var link = svg.append("g").selectAll(".link"),
-                    label = svg.append("g").selectAll(".label"),
-                    bubble = svg.append("g").selectAll(".bubble");
-                
-                 var root = packageHierarchy(nodeJson);
-                
-                    // Build an object that gives feature of each leaves
-                    cluster(root);
-                    leaves = root.leaves()
-                
-                    // Leaves is an array of Objects. 1 item = one leaf. Provides x and y for leaf position in the svg. Also gives details about its parent.
-                    link = link
-                        .data(getEdges(leaves))
-                        .enter().append("path")
-                        .each(function (d) { d.source = d[0], d.target = d[d.length - 1]; })
-                        .attr("class", "link")
-                        .attr("d", line)
-                        .attr("fill", "none")
-                        .attr("stroke", "black")
-                
-                    label = label
-                        .data(leaves)
-                        .enter().append("text")
-                        .attr("class", "label")
-                        .attr("dy", "0.31em")
-                        .attr("transform", function (d) { return "rotate(" + (d.x - 90) + ")translate(" + (d.y + PADDING_LABEL) + ",0)" + (d.x < 180 ? "" : "rotate(180)"); })
-                        .attr("text-anchor", function (d) { return d.x < 180 ? "start" : "end"; })
-                        .text(function (d) { return d.data.name; });
-                
-                    bubble = bubble
-                        .data(leaves)
-                        .enter().append("g")
-                        .attr("class", "bubble")
-                        .attr("transform", function (d) { return "rotate(" + (d.x - 90) + ")translate(" + (d.y + PADDING_BUBBLE) + ",0)" })
-                       
-                        
-                  var modules = bubble.filter(function(d,i){
-                	  return d.data.module;
-                	}).append("svg:foreignObject")
-                        .attr("x", function(d) { return -10;})
-                        .attr("y", function(d) { return -10;})
-                        .attr("height", 22)
-                        .attr("width", 22) 
-                        .html('<span class="icon-2x2-grid secondary"></span>');
-                        
-                  var images =  bubble.filter(function(d,i){
-                	  return !d.data.module;
-                	}).append("svg:image")
-                          .attr("xlink:href",  function(d) {  return d.data.img;})
-                          .attr("x", function(d) { return -25;})
-                          .attr("y", function(d) { return -25;}) 
-                          .attr("height", 35)
-                          .attr("width", 35);
-                  
-                  bubble.filter(function(d,i){
-                 	  return !d.data.module && d.data.unpublished;
-                 	}).append("svg:foreignObject")
-                     .attr("x", function(d) { return -25;})
-                     .attr("y", function(d) { return -5;})
-                     .attr("height", 24)
-                     .attr("width", 24) 
-                     .html('<span class="icon-warning secondary" aria-hidden="true" data-toggle="tooltip" data-html="true" data-placement="top" title="This space is currently unpublished."></span>');
-                  
-                  bubble.filter(function(d,i){
-                 return !d.data.module && d.data.hideIncomingLinks;
-                }).append("svg:foreignObject")
-                  .attr("x", function(d) { return 1;})
-                  .attr("y", function(d) { return 5;})
-                  .attr("height", 24)
-                  .attr("width", 24) 
-                  .html('<span class="icon-close-alt hiddenLinks secondary" aria-hidden="true" data-toggle="tooltip" data-html="true" data-placement="top" title="This space has hidden links"></span>');
-                  
-                  var setEvents = modules
-                  .on( 'dblclick', function (d) {
-                      location.href = d.data.link;
-                   })
-                 .on('mouseover', function(d){
-                	 link.style('stroke', a=>  a.source.data.id === d.data.id || a.target.data.id === d.data.id ? '#F2A950' : "black")
-                	 .style('stroke-width', a=>  a.source.data.id === d.data.id || a.target.data.id === d.data.id  ? 2 : 1)
-                  })
-                 .on('mouseout', function(event,d){
-                	link.style('stroke', 'black')
-                	.style('stroke-width', '1')
-                  }); 
-                  
-                   var setEvents = images
-                	    .on( 'dblclick', function (d) {
-                	        location.href = d.data.link;
-                	     })
-                .on('mouseover', function(d){
-                	 link.style('stroke', a=>  a.source.data.id === d.data.id || a.target.data.id === d.data.id ? '#F2A950': "black")
-                	 .style('stroke-width', a=>  a.source.data.id === d.data.id || a.target.data.id === d.data.id  ? 2 : 1);
-                  })
-                 .on('mouseout', function(event,d){
-                	link.style('stroke', 'black')
-                	.style('stroke-width', '1')
-                  })
-                 .on( 'mouseenter', function() {
-				// select element in current context
-				d3.select( this )
-				.transition()
-				.attr("x", function(d) { return -60;})
-				.attr("y", function(d) { return -60;})
-				.attr("height", 300)
-				.attr("width", 300);
-				})
-				// set back
-				.on( 'mouseleave', function() {
-				d3.select( this )
-				.transition()
-				.attr("x", function(d) { return -25;})
-				.attr("y", function(d) { return -25;})
-				.attr("height", 35)
-				.attr("width", 35);
-				});
-                d3.selectAll("g").on("mouseover", function() {
-                	d3.select(this).raise();
+                var nodeJson = JSON.parse(jsonMap['nodesJson']);                
+                const width = 928;
+                const height = 600;
+
+                const nodeArrays = categorizeNodes(nodeJson);
+                const root = structureData(nodeArrays);            	
+                const spaceLinks = getSpaceLinks(root.children);
+                const links = root.links();
+                spaceLinks.forEach(function (link) {
+                	links.push(link);
                 });
-                        
-                // Lazily construct the package hierarchy from class ids.
-                function packageHierarchy(classes) {
-                    var map = {};
+                const nodes = root.descendants();
                 
-                    function find(id, data) {
-                        var node = map[id], i;
-                        if (!node) {
-                            node = map[id] = data || { id: id, children: [] };
-                            if (id.length) {
-                                node.parent = find(id.substring(0, i = id.lastIndexOf(".")));
-                                node.parent.children.push(node);
-                                node.key = id.substring(i + 1);
-                            }
-                        }
-                        return node;
-                    }
+                const simulation = d3.forceSimulation(nodes)
+	                .force("link", d3.forceLink(links).id(d => d.data.id).distance(100).strength(1))
+	                .force("charge", d3.forceManyBody().strength(-500))
+	                .force("x", d3.forceX())
+	                .force("y", d3.forceY());
                 
-                    classes.forEach(function (d) {
-                        find(d.id, d);
-                    });
+                const svg = d3.select("#graph").append("svg")
+                    .attr("width", width)
+                    .attr("height", height)
+                    .attr("viewBox", [-width / 2, -height / 2, width, height])
+      				.attr("style", "max-width: 100%; height: auto;");                    
                 
-                    return d3.hierarchy(map[""]);
+                const link = svg.append("g")
+                    .attr("stroke", "white")
+                    .attr("stroke-opacity", 0.6)
+                  .selectAll("line")
+                  .data(links)
+                  .join("line");
+                
+                drag = simulation => {
+  	          	  
+  	          	  function dragstarted(event, d) {
+  	          	    if (!event.active) simulation.alphaTarget(0.3).restart();
+  	          	    d.fx = d.x;
+  	          	    d.fy = d.y;
+  	          	  }
+  	          	  
+  	          	  function dragged(event, d) {
+  	          	    d.fx = event.x;
+  	          	    d.fy = event.y;
+  	          	  }
+  	          	  
+  	          	  function dragended(event, d) {
+  	          	    if (!event.active) simulation.alphaTarget(0);
+  	          	    d.fx = null;
+  	          	    d.fy = null;
+  	          	  }
+  	          	  
+  	          	  return d3.drag()
+  	          	      .on("start", dragstarted)
+  	          	      .on("drag", dragged)
+  	          	      .on("end", dragended);
+  	         	}
+                
+                const node = svg.append("g")
+				    .attr("stroke-width", 1.5)
+                  .selectAll("circle")
+			      .data(nodes)
+			      .join("circle")
+				    .call(drag(simulation))
+	             		
+           	    const text = svg.append("g")
+                  .selectAll("text")
+                  .data(nodes)
+                  .enter().append("text")
+                  .text(d => d.data.name)
+                  .attr("x", d => d.x)
+                  .attr("y", d => d.y)
+                  .attr("text-anchor", "middle")
+                  .style("font-size", "12px")
+                  .style("font-weight", 900);
+           	    
+	           	// Hide root node
+	           	node.style("opacity", function(d) { return d.depth === 0 ? 0 : 1; })
+	           		.style("pointer-events", function(d) { return d.depth === 0 ? "none" : "all"; })
+	           	// Make module nodes smaller
+	           		.style("r", function(d) { return d.depth === 2 ? 18 : d.depth === 1 ? 27 : 0; })
+	           		.style("fill", function(d) { return d.depth === 1 ? "#fff" : "#000"; })
+	           		
+		           	.on("mouseover", function(event, d) {
+					    d3.select(this)
+					      .style("cursor", "pointer");
+					})
+					.on("mouseout", function(event, d) {
+					    d3.select(this)
+					      .style("cursor", "default");
+					})
+	            	.on('click', function(event, d) {
+	            		d3.selectAll("circle")
+							.style("fill", function(d) { return d.depth === 1 ? "#fff" : "#000"; });
+	            		if (d.data.img) {
+		            		document.getElementById("space-overview-card-img").src = d.data.img;
+	            		} else {
+	            			document.getElementById("space-overview-card-img").src = "/vspace/resources/maintenance/img/logo-11.png";
+	            		}
+	           			if (d.data.link) {
+	           				document.getElementById("space-overview-btn").href = d.data.link;
+	            		} else {
+	            			alert("The selected node has no link.");
+	            		}
+	           			document.getElementById("space-overview-btn").innerHTML = "Go to " + d.data.name;
+	           			document.getElementById("space-overview-card-title").innerHTML = d.data.name;
+	           			document.getElementById("space-overview-card-text").innerHTML = d.data.description;
+	           			d3.selectAll("circle").filter(function(n) {
+	                    	return n.data.id == d.data.id;
+	                  	}).style("fill", "red");
+	            	});
+	           	
+	           	text.style("fill", function(d) { console.log('DEPTH: ', d.depth); return d.depth === 1 ? "#000" : "#fff"; })
+	           	
+	           	// Hide root node links
+	           	link.style("opacity", function(d) { return d.source.depth === 0 ? 0 : 1; })
+	           		.style("pointer-events", function(d) { return d.source.depth === 0 ? "none" : "all"; });
+	           	
+           	 	d3.selectAll("line").filter(function(d) {
+                	return d.source.depth === 0;
+              	}).style("visibility", "hidden");
+           	
+	            simulation.on("tick", () => {
+	              link
+	                  .attr("x1", d => d.source.x)
+	                  .attr("y1", d => d.source.y)
+	                  .attr("x2", d => d.target.x)
+	                  .attr("y2", d => d.target.y);
+	
+	              node
+	                  .attr("cx", d => d.x)
+	                  .attr("cy", d => d.y);
+	              
+	              text
+		              .attr("x", d => d.x)
+		              .attr("y", d => d.y);
+	            });
+             
+                function structureData(nodeArrays) {
+                	var map = {};
+                	map.children = [];
+               
+                	function createHierarchy(spaces, modules) {
+                		spaces.forEach(function (space) {
+                			if (space.edges.length > 0) {
+                				space.edges.forEach(function (edge) {
+                    				childModule = modules.find(item => item.id === edge);
+                    				if (childModule) {
+                    					space.children.push(childModule);
+                    				}
+                    			});	
+                			}
+                			map.children.push(space);
+                		});
+                	}
+                	                	
+                	createHierarchy(nodeArrays.spaces, nodeArrays.modules);
+                	                	
+                	return d3.hierarchy(map);
                 }
                 
-                // Return a list of edges for the given array of nodes.
-                function getEdges(nodes) {
-                    var map = {},
-                        edges = [];
+                function categorizeNodes(nodes) {
+            		spaces = [];
+            		modules = [];
+            		nodes.forEach(function (node) {
+                		if (!node.module) {
+                			// Only spaces have children
+                			node.children = [];
+                			spaces.push(node);
+                		} else {
+                			modules.push(node);
+                		}
+                	});
+            		
+            		return {"spaces": spaces, "modules": modules};
+            	}
                 
-                    // Compute a map from id to node.
-                    nodes.forEach(function (d) {
-                        map[d.data.id] = d;
-                    });
-                
-                    // For each import, construct a link from the source to target node.
-                    nodes.forEach(function (d) {
-                        if (d.data.edges) d.data.edges.forEach(function (i) {
-                            edges.push(map[d.data.id].path(map[i]));
-                        });
-                    });
-                
-                    return edges;
+                // Links between spaces need to be created manually because tree hierarchy only generates links with children
+                function getSpaceLinks(spaces) {
+                	spaceLinkList = [];
+                	spaces.forEach(function (space) {
+            			if (space.data.edges.length > 0) {
+            				space.data.edges.forEach(function (edge) {
+                				spaceTarget = spaces.find(item => item.data.id === edge);
+                				if (spaceTarget) {
+                					spaceLinkList.push({
+                						source: space,
+                						target: spaceTarget
+                					});
+                				}
+                			});	
+            			}
+            		});
+                	return spaceLinkList;
                 }
             </script>
         </div>
