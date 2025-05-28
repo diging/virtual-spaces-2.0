@@ -251,9 +251,18 @@
                 $(".open").css('height', '400px');
             }
 
+            var originalBiblioHtml = {};
+
             function biblioBlockDoubleClick(e) {
                 $(".EasyMDEContainer").remove();
-                $(e.target).closest('.biblioDivStaff').addClass("open");
+                var biblioBlock = $(e.target).closest('.biblioDivStaff');
+                biblioBlock.addClass("open");
+                
+                var blockId = biblioBlock.attr("id");
+                
+                // Store the COMPLETE original HTML including all references
+                originalBiblioHtml[blockId] = biblioBlock.html();
+                
                 var description = $("div.open p:eq(0)").text();
                 defaultValue = description;
                 
@@ -266,6 +275,7 @@
                 $("#editTitleBiblio").val(title);
                 $("#editDescBiblio").val(desc);
                 
+                // Store values for potential cancel operation
                 formDataCancel = new FormData();
                 formDataCancel.append('biblioTitle', title);
                 formDataCancel.append('description', desc);
@@ -2042,50 +2052,101 @@
 				    $(".open").removeClass("open");
 				});
             
-                function updateBiblioBox(blockId, formData) {
-                    // Clear biblio box and buttons
-                    $(".open").empty();
-                    
-                    // Rebuild with proper structure and data attributes
-                    $(".open").append(
-                        '<p class="col-md-10">' +
-                        'Bibliography Title: <span>' + formData.get('biblioTitle') + '</span>, ' +
-                        'Description: <span>' + formData.get('description') + '</span>' +
-                        '</p>' +
-                        '<input type="hidden" data-biblio-id="' + blockId + '" value="' + blockId + '" />' +
-                        '<a class="btn col-md-1" data-action="delete-biblio" href="javascript:;" style="position: absolute; right: 0px;">' +
-                        '<span class="icon-trash error"></span>' +
-                        '</a>' +
-                        '<a class="btn primary-btn btn-sm" data-action="add-reference" style="padding-top: 8px;">+ New Reference</a>' +
-                        '<div id="referenceSpace" class="col-md-10">' +
-                        // Add existing references back
-                        '</div>'
-                    );
-
-                    // Reset border of the card
-                    // Rebind event handlers
-                    $('.biblioDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(biblioBlockDoubleClick);
-                    $(".open").css('display', 'flex');
-                    
-                    // Remove id from storage so it's not there on refresh
-                    $(".open").removeClass("open");
-                }
+				function updateBiblioBox(blockId, formData) {
+				    // Get ALL reference blocks before clearing
+				    var allReferences = $(".open .referenceDivStaff").clone(true, true);
+				    
+				    // Clear biblio box and buttons
+				    $(".open").empty();
+				    
+				    // Rebuild bibliography header structure
+				    var biblioHtml = 
+				        '<p class="col-md-10">' +
+				        'Bibliography Title: <span>' + formData.get('biblioTitle') + '</span>, ' +
+				        'Description: <span>' + formData.get('description') + '</span>' +
+				        '</p>' +
+				        '<input type="hidden" data-biblio-id="' + blockId + '" value="' + blockId + '" />' +
+				        '<a class="btn col-md-1" data-action="delete-biblio" href="javascript:;" style="position: absolute; right: 0px;">' +
+				        '<span class="icon-trash error"></span>' +
+				        '</a>' +
+				        '<a class="btn primary-btn btn-sm" data-action="add-reference" style="padding-top: 8px;">+ New Reference</a>' +
+				        '<div id="referenceSpace" class="col-md-10"></div>';
+				    
+				    $(".open").append(biblioHtml);
+				    
+				    // Restore ALL reference blocks with their complete HTML and event handlers
+				    if (allReferences.length > 0) {
+				        allReferences.each(function() {
+				            $("#referenceSpace").append($(this));
+				        });
+				    }
+				    
+				    // Rebind event handlers for bibliography
+				    $('.biblioDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(biblioBlockDoubleClick);
+				    
+				    // Rebind event handlers for all restored references
+				    $('.referenceDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(referenceBlockDoubleClick);
+				    
+				    $(".open").css('display', 'flex');
+				    $(".open").removeClass("open");
+				}
              
           	// must add the event to the document since the buttons are added dynamically
 			$('#cancelBiblioBlock').on('click', function() {
 			    $("#editBiblioAlert").hide();
 			    var blockId = $(".open").attr("id");
 			    
-			    // Get the existing references before updating
-			    var existingReferences = $("#" + blockId + " #referenceSpace").html();
+			    // Restore the COMPLETE original HTML with all references
+			    if (originalBiblioHtml[blockId]) {
+			        $(".open").html(originalBiblioHtml[blockId]);
+			        delete originalBiblioHtml[blockId];
+			    }
 			    
-			    updateBiblioBox(blockId, formDataCancel);
-			    
-			    // Restore existing references
-			    $(".open #referenceSpace").html(existingReferences);
-			    
+			    // Reset styles and classes
+			    $(".open").css('display', 'flex');
+			    $(".open").css('height', 'auto');
+			    $(".open").css('overflow-y', 'visible');
+			    $(".open").css('max-height', 'none');
 			    $(".open").removeClass("open");
+			    
+			    // Rebind all event handlers for the restored content
+			    rebindBiblioEventHandlers();
 			});
+          	
+			$('#closeBiblioBlock').on('click', function() {
+			    $("#editBiblioAlert").hide();
+			    var blockId = $(".open").attr("id");
+			    
+			    // Restore the COMPLETE original HTML with all references
+			    if (originalBiblioHtml[blockId]) {
+			        $(".open").html(originalBiblioHtml[blockId]);
+			        delete originalBiblioHtml[blockId];
+			    }
+			    
+			    // Reset styles and classes
+			    $(".open").css('display', 'flex');
+			    $(".open").css('height', 'auto');
+			    $(".open").css('overflow-y', 'visible');
+			    $(".open").css('max-height', 'none');
+			    $(".open").removeClass("open");
+			    
+			    // Rebind all event handlers for the restored content
+			    rebindBiblioEventHandlers();
+			});
+			
+			function rebindBiblioEventHandlers() {
+			    // Rebind bibliography block event handlers
+			    $('.biblioDivStaff').off('mouseenter mouseleave dblclick')
+			        .mouseenter(onMouseEnter)
+			        .mouseleave(onMouseLeave)
+			        .dblclick(biblioBlockDoubleClick);
+			    
+			    // Rebind reference block event handlers
+			    $('.referenceDivStaff').off('mouseenter mouseleave dblclick')
+			        .mouseenter(onMouseEnter)
+			        .mouseleave(onMouseLeave)
+			        .dblclick(referenceBlockDoubleClick);
+			}
           	
 			function updateReferenceBox(blockId, formData) {
 			    // Clear reference box and buttons
@@ -2270,52 +2331,52 @@
                 });
              });   
              
-             $("#submitBiblioBlock").on("click", function(e){
-             	  e.preventDefault();
-                 // ------------- editting Bibliography content blocks ------------
-                 
-                 var formData = new FormData();
-                 var title = $("#editTitleBiblio").val();
-                 var desc = $("#editDescBiblio").val();
-                 var blockId = $(".open").attr("id");
-                 
-                 formData.append('biblioTitle', title);
-                 formData.append('description', desc);
-                 formData.append('id', blockId);
-                 $("#editBiblioAlert").hide();
-                 
-                 var object = {};
-                 formData.forEach((value, key) => object[key] = value);
-                 var jsonData = JSON.stringify(object);
-                 var token =  $('input[name="_csrf"]').attr('value');
-                 
-                 $.ajax({
-                     url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/bibliography/edit'})]",
-                     type: 'POST',
-                     cache       : false,
-                     contentType : 'application/json; charset=utf-8',
-                     processData : false,
-                     headers: {
-                         'X-CSRF-Token': token 
-                    	},
-                     data: jsonData,
-                     success: function(data) {
-                         //replace Biblio box with new values
-                         updateBiblioBox(blockId, formData);
-                         $(".open").removeClass("open");
-                         location.reload();
-                    },
-                    error: function(data) {
-         	       if (data.status == 403) {
-         	           $("#loginAlert").show();
-         	       }
-         	       else {
-         	           var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-         	           $('.error').append(alert);
-         	       }
-                    }
+                $("#submitBiblioBlock").on("click", function(e) {
+                    e.preventDefault();
+                    // ------------- editing bibliography blocks ------------
+                    
+                    var formData = new FormData();
+                    var title = $("#editTitleBiblio").val();
+                    var desc = $("#editDescBiblio").val();
+                    var blockId = $(".open").attr("id");
+                    var token = [[${_csrf.token}]];
+                    
+                    formData.append('biblioTitle', title);
+                    formData.append('description', desc);
+                    formData.append('biblioBlockId', blockId);
+                    
+                    $("#editBiblioAlert").hide();
+                    
+                    $.ajax({
+                        url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/bibliography/edit'})]",
+                        type: 'POST',
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        data: formData,
+                        headers: {
+                            'X-CSRF-Token': token
+                        },
+                        enctype: 'multipart/form-data',
+                        success: function(data) {
+                            // Replace bibliography box with new values
+                            updateBiblioBox(blockId, formData);
+                            
+                            // Clean up stored HTML since edit was successful
+                            if (originalBiblioHtml[blockId]) {
+                                delete originalBiblioHtml[blockId];
+                            }
+                        },
+                        error: function(data) {
+                            if (data.status == 403) {
+                                $("#loginAlert").show();
+                            } else {
+                                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                                $('.error').append(alert);
+                            }
+                        }
+                    });
                 });
-             });
              
              $("#submitRefBlock").on("click", function(e) {
             	    e.preventDefault();
