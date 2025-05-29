@@ -3169,17 +3169,19 @@
 	                              <tr>
 	                                 <td><label for="name" class="col-form-label">Type:</label>
 	                                 </td>
-	                                 <td>                           <select class="form-control" id="typeRef" name="typeRef">
-                              <option value="" disabled selected>Select a type</option>
-                              <option value="Book">Book</option>
-                              <option value="Journal Article">Journal Article</option>
-                              <option value="Conference Paper">Conference Paper</option>
-                              <option value="Thesis">Thesis</option>
-                              <option value="Report">Report</option>
-                              <option value="Website">Website</option>
-                              <option value="Patent">Patent</option>
-                              <option value="Other">Other</option>
-                           </select></td>
+	                                 <td>                           
+	                                 <select class="form-control" id="typeRef" name="typeRef">
+		                              <option value="" disabled selected>Select a type</option>
+		                              <option value="Book">Book</option>
+		                              <option value="Journal Article">Journal Article</option>
+		                              <option value="Conference Paper">Conference Paper</option>
+		                              <option value="Thesis">Thesis</option>
+		                              <option value="Report">Report</option>
+		                              <option value="Website">Website</option>
+		                              <option value="Patent">Patent</option>
+		                              <option value="Other">Other</option>
+                          			 </select>
+                           			</td>
 	                              </tr>
 	                           </table>
 	                        </div>
@@ -3349,10 +3351,20 @@
 	                        <div class="form-group">
 	                           <table>
 	                              <tr>
-	                                 <td><label for="name" class="col-form-label">Type:</label>
+	                                 <td><label for="name" class="col-form-label">Type:</label></td>
+	                                 <td>
+	                                  <select class="form-control" id="editTypeRef" name="editTypeRef">
+		                              <option value="" disabled selected>Select a type</option>
+		                              <option value="Book">Book</option>
+		                              <option value="Journal Article">Journal Article</option>
+		                              <option value="Conference Paper">Conference Paper</option>
+		                              <option value="Thesis">Thesis</option>
+		                              <option value="Report">Report</option>
+		                              <option value="Website">Website</option>
+		                              <option value="Patent">Patent</option>
+		                              <option value="Other">Other</option>
+                          			 </select>
 	                                 </td>
-	                                 <td><input type="text" class="form-control"
-	                                    id="editTypeRef" name="editTypeRef" /></td>
 	                              </tr>
 	                           </table>
 	                        </div>
@@ -3540,14 +3552,14 @@
 				           data-biblio-id="${contents.id}" 
 				           th:attr="data-biblio-id=${contents.id}"
 				           th:value="${contents.id}" />
+				    <a class="btn primary-btn btn-sm" 
+				       data-action="add-reference" 
+				       style="padding-top: 8px;">+ New Reference</a>
 				    <a class="btn col-md-1" 
 				       data-action="delete-biblio" 
 				       href="javascript:;">
 				        <span class="icon-trash error"></span>
 				    </a>
-				    <a class="btn primary-btn btn-sm" 
-				       data-action="add-reference" 
-				       style="padding-top: 8px;">+ New Reference</a>
 				    <div id="referenceSpace" class="col-md-10">
 				        <div th:each="contentRef: ${contents.references}">
 				        
