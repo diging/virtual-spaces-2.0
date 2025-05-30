@@ -21,27 +21,45 @@ import edu.asu.diging.vspace.core.services.ISpaceManager;
 @Controller
 public class StaffSpacesSearchController {
 
+    private static final int PAGE_SIZE = 5;
+
     @Autowired
     private ISpaceManager spaceManager;
 
     @RequestMapping("/staff/spaces/search")
-    public ResponseEntity <String> search(@RequestParam(value = "term", required = false) String search) {
-        List <ISpace> spaces = null;
+    public ResponseEntity<String> search(
+            @RequestParam(value = "term", required = false) String search,
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
+        List<ISpace> spaces;
+        int totalCount;
+        
         if (search != null && !search.trim().isEmpty()) {
-            spaces = spaceManager.findByName(search);
+            spaces = spaceManager.findByNamePaginated(search, page, PAGE_SIZE);
+            totalCount = spaceManager.getTotalSpaceCount(search);
         } else {
-            spaces = spaceManager.getAllSpaces();
+            spaces = spaceManager.getAllSpacesPaginated(page, PAGE_SIZE);
+            totalCount = spaceManager.getTotalSpaceCount(null);
         }
-
+        
+        // Calculate total pages
+        int totalPages = (int) Math.ceil((double) totalCount / PAGE_SIZE);
+        boolean hasMore = page < totalPages;
+        
         ObjectMapper mapper = new ObjectMapper();
-        ArrayNode idArray = mapper.createArrayNode();
-        for (ISpace space: spaces) {
+        ArrayNode itemsArray = mapper.createArrayNode();
+        for (ISpace space : spaces) {
             ObjectNode spaceNode = mapper.createObjectNode();
             spaceNode.put("id", space.getId());
             spaceNode.put("name", space.getName());
-            idArray.add(spaceNode);
+            itemsArray.add(spaceNode);
         }
-        return new ResponseEntity <String> (idArray.toString(), HttpStatus.OK);
+        
+        ObjectNode result = mapper.createObjectNode();
+        result.set("items", itemsArray);
+        result.put("hasMore", hasMore);
+        result.put("totalPages", totalPages); // Optional: add total pages info
+        
+        return new ResponseEntity<>(result.toString(), HttpStatus.OK);
     }
-
 }
+

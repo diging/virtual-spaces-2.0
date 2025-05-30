@@ -245,35 +245,110 @@
             function onMouseLeave(e) {
                 $(this).removeClass("hova");
             }
+
+            function getSelectedSpace(blockId) {
+                $.ajax({
+                    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space/'})]" + blockId,
+                    type: 'GET',
+                    success: function(result) {
+                        if (result != null && result.space != null){
+                            currentSpaceName = result.space.name;
+                            currentSpaceId = result.space.id;
+                            $("#selectedSpace").text(currentSpaceName);
+                            $("#editSpaceBlock").text(result.title);
+                            if ($("#editSpaceName").find("option[value='" + currentSpaceId + "']").length == 0) {
+                                var newOption = new Option(currentSpaceName, currentSpaceId, true, true);
+                                $("#editSpaceName").append(newOption).trigger('change');
+                            } else {
+                                $("#editSpaceName").val(currentSpaceId).trigger('change');
+                            }
             
-            function onDoubleClick(e){
-                // get to the nearest divs class attribute
+                            $("#editSpaceName").select2({
+                                ajax: {
+                                    url: [[@{|/staff/spaces/search|}]],
+                                    dataType: 'json',
+                                    delay: 1000,
+                                    data: function (params) {
+                                        return {
+                                            term: params.term, 
+                                            page: params.page || 1 
+                                        };
+                                    },
+                                    processResults: function (data, params) {
+                                        params.page = params.page || 1;
+                                        
+                                        return {
+                                            results: data.items ? data.items.map(function(item) {
+                                                return {
+                                                    id: item.id,
+                                                    text: item.name 
+                                                };
+                                            }) : [],
+                                            pagination: {
+                                                more: data.hasMore
+                                            }
+                                        };
+                                    },
+                                    cache: false
+                                },
+                                templateResult: function(data) {
+                                    if (!data.id) {
+                                        return data.text;
+                                    }
+                                    return $('<span>').text(data.text);
+                                },
+                                templateSelection: function(data) {
+                                    return $('<span>').text(data.text);
+                                },
+                                dropdownAutoWidth: true,
+                                width: '100%',
+                                escapeMarkup: function (markup) {
+                                    return markup;
+                                }
+                            });
+                        }
+                    },
+                    error: function(data) {
+                        var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        $('.error').append(alert);
+                        $(".error").delay(4000).slideUp(500, function() {
+                            $(".error").empty();
+                        });
+                    }
+                });
+            }
+            
+            function textBlockDoubleClick(e){
                 $(".EasyMDEContainer").remove();
                 var divName = $(e.target).closest('div').attr('class');
-                //if the div is a text content block 
-                if(divName.includes("textDivStaff")){
-                	$(e.target).closest('.textDivStaff').addClass("open");
-                    var description = $("div.open p:eq(0)").text();
-                	defaultValue = description;
+                $(e.target).closest('.textDivStaff').addClass("open");
+                var description = $("div.open p:eq(0)").text();
+            	defaultValue = description;
+        
+                $("#editTextAlert").show();
+                markDown = new EasyMDE({element: $('#editTextBlock')[0]});
+                markDown.value(description.trim());
+                $(".open").css('display', 'none');
+                $(".open").css('overflow-y', 'scroll');
+                $(".open").css('height', '400px');
+            }
             
-                    $("#editTextAlert").show();
-                    markDown = new EasyMDE({element: $('#editTextBlock')[0]});
-                    markDown.value(description.trim());
-                    //remove card border
-                    $(".open").css('display', 'none');
-                    $(".open").css('overflow-y', 'scroll');
-                    $(".open").css('height', '400px');
-                } else {
-                	// store image ID selected by the user to replace, onDoubleClick
-                	var imgBlockID = $(e.target).attr('id');
-                	if(imgBlockID != ''){
-                    	$("#uploadImage").data('value', imgBlockID); // sets image ID value
-                    	$("#addImgAlert").show();
-                	}
-                }
+            function spaceBlockDoubleClick(e) {
+                var divName = $(e.target).closest('div').attr('class');
+                let spaceId = e.target.closest('div').id;
+                $(e.target).closest('.SpaceDivStaff').addClass("open");
+                defaultValue = $("div.open p:eq(0)").text();
+                var blockId = $(this).closest("div").attr("id");
+                currentBlockId = blockId;
+                getSelectedSpace(blockId);
+                $("#editSpaceAlert").show();
+                // Remove card border
+                $(".open").css('display', 'none');
+                $(".open").css('overflow-y', 'scroll');
+                $(".open").css('height', '400px');
             }
                 
-                        function uploadImage() {
+           function uploadImage() {
             	var imgBlockID = $("#uploadImage").data('value') // gets image ID
             	var file = $('#file')[0].files[0];
             	var reader  = new FileReader();
@@ -695,8 +770,8 @@
                	    $("#createModuleLinkAlert").hide();
                	    $("#errorMsg").text("");
                	}
-            	
-            	function showExternalLinks(externalLink) {
+              
+              function showExternalLinks(externalLink) {
            		   var externalLinkMainDiv = $('<div id="'+ externalLink["id"] +'" style="margin-top: 15px;"><div class="link_headers">Name: '+ externalLink["label"] +'</div><div>URL:</br><a style="text-decoration: underline; color:blue; overflow: hidden;text-overflow: ellipsis;display:inline-block;" href="'+ externalLink["url"] +'">'+ externalLink["url"]+ '</a></div><a class="btn deleteExternalLink col-md-1" style="text-align: left; padding-left: 0;" href="javascript:;"><span class="icon-trash error" style="text-align: left;"></span></a><a class="btn editExternalLink col-md-1" style="text-align: left; padding-left: 0;" href="javascript:;"><span class="icon-edit" style="text-align: left;"></span></a></div>');
                 	   var externalLinkFormDiv = $('<div id="'+ externalLink["id"] +'form"> - <a style="text-decoration: underline; color:blue;" href="'+ externalLink["url"] +'">'+ externalLink["label"] +'</a></div>');
                     externalLinkMainDiv.find('.deleteExternalLink').attr("data-link-id", externalLink["id"]);
@@ -707,7 +782,8 @@
                     $('#Ext_Links_Module_Slide2').append(externalLinkMainDiv);
                     $('#Ext_Links_Module_Slide1').append(externalLinkFormDiv);
                 }
-               	
+              
+              
                	function displayForms(formToShow){
                	    $("#space").css("display", "-webkit-box");
                	    $(formToShow).css("display", "flex");
@@ -728,13 +804,13 @@
                	}
                	
                 function getTextArea(x,y) {
-					var posX = $("#bgImage").position().left;
-					var posY = $("#bgImage").position().top;
-					var text = $('<span id="text"><textarea id="textB" name="textBlock" type="textarea" class="textBlock" style="resize:both; background: rgba(0, 0, 0, 0.4);"></textarea></span>');
-					text.css('position', 'absolute');
-					text.css('left', x + posX);
-					text.css('top', y);
-					$("#space").append(text);
+                  var posX = $("#bgImage").position().left;
+                  var posY = $("#bgImage").position().top;
+                  var text = $('<span id="text"><textarea id="textB" name="textBlock" type="textarea" class="textBlock" style="resize:both; background: rgba(0, 0, 0, 0.4);"></textarea></span>');
+                  text.css('position', 'absolute');
+                  text.css('left', x + posX);
+                  text.css('top', y);
+                  $("#space").append(text);
 		       	    
 		       	    var textB = $('#textB')[0],
 		       	    tHeight = textB.clientHeight,
@@ -762,125 +838,176 @@
 		       	    $("#textBoxHeightID").val(percentileHeight);
 		       	    $("#textContentID").val(textB.value);
 			    }
-           
-               //-------- edit contentblock description --------
-           
-               $("#submitDescription").hide()
-               $("#cancelEditDescription").hide()
-               var description = $("#description").text()
-               $("#editDescription").click(function() {
-                   $('<textarea id="newDescription" style="margin-top: 1%;" class="form-control" type="text">'+description+'</textarea>').insertBefore( "#description" );
-                   $("#description").remove()
-                   $("#editDescription").hide()
-                   $("#submitDescription").show()
-                   $("#cancelEditDescription").show()
-                   
+                //-------- edit contentblock description --------
+            
+                $("#submitDescription").hide();
+                $("#cancelEditDescription").hide();
+                var description = $("#description").text()
+                $("#editDescription").click(function() {
+                    $('<textarea id="newDescription" style="margin-top: 1%;" class="form-control" type="text">'+description+'</textarea>').insertBefore( "#description" );
+                    $("#description").remove()
+                    $("#editDescription").hide()
+                    $("#submitDescription").show()
+                    $("#cancelEditDescription").show()
+                    
+                });
+            
+                $("#submitDescription").click(function() {
+                    var formData = new FormData();
+                    var token = [[${_csrf.token}]];
+                    formData.append('description', $("#newDescription").val());
+                    $.ajax({ 
+            	        url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/edit/description'})]",
+            	        type: 'POST',
+            	        cache       : false,
+            	        contentType : false,
+            	        processData : false,
+            	        headers:{
+	            			'X-CSRF-Token':token
+	            		},
+            	        data: formData,
+            	        enctype: 'multipart/form-data',
+            	        success: function(data) {
+            	            // replace text box with new description
+            	            $("#submitDescription").hide()
+            	            $("#cancelEditDescription").hide()
+            	            $("#editDescription").show()
+            	            var val = $("#newDescription").val();
+            	            $('<p id="description"style="margin-top: .5rem; margin-bottom: .5rem;"></p>').insertBefore( "#newDescription" );
+            	            $("#newDescription").remove();
+            	            $("#description").text(val)
+            	        },
+            	        error: function(data) {
+            	            $(".open").removeClass("open");
+            	                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+            	                $('.error').append(alert);
+            	        }
+                     });       
+                  });
+                
+                $("#cancelEditDescription").click(function(){
+                    $("#submitDescription").hide()
+                    $("#editDescription").show()
+                    $("#cancelEditDescription").hide()
+                    $('<p id="description" style="margin-top: .5rem; margin-bottom: .5rem;"></p>').insertBefore( "#newDescription" );
+                    $("#newDescription").remove()
+                    $("#description").text(description)
+                    
+                });
+                
+                //------- edit title --------
+                $("#submitTitle").hide();
+                $("#cancelEditTitle").hide();
+                var getTitleText = $("#title").text().split(": ")[1]
+                $("#editTitle").click(function() {
+                    $('<div class="col-4"><input id="newTitle" class="form-control" type="text"></div>').insertAfter( "#title" );
+                    $('#title').text('Slide: ')
+                    $("#newTitle").val(getTitleText)
+                    $("#editTitle").hide()
+                    $("#submitTitle").show()
+                    $("#cancelEditTitle").show()       
+                });
+                
+                $("#submitTitle").click(function() {
+                    var token = [[${_csrf.token}]];
+                    var formData = new FormData();
+                    formData.append('title', $("#newTitle").val());
+                    $.ajax({
+                        url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/edit/title'})]",
+                        type: 'POST',
+                        cache       : false,
+                        contentType : false,
+                        processData : false,
+                        headers:{
+	            			'X-CSRF-Token':token
+	            		},
+                        data: formData,
+                        enctype: 'multipart/form-data',
+                        success: function(data) {
+                            // replace text box with new description
+                            $("#submitTitle").hide()
+                            $("#cancelEditTitle").hide();
+                            $("#editTitle").show()
+                            var val = $("#newTitle").val();
+                            $("#newTitle").closest('div').remove();
+                            $("#title").text("Silde: " + val)
+                            
+                        },
+                        error: function(data) {
+                            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                            $('.error').append(alert);
+                        }
+                    });
+                  });
+               $("#cancelEditTitle").click(function(){
+                    $("#submitTitle").hide()
+                    $("#editTitle").show()
+                    $("#cancelEditTitle").hide()
+                    $("#newTitle").closest('div').remove();
+                    $("#title").text("Silde: " + getTitleText);
                });
-           
-               $("#submitDescription").click(function() {
-                   var formData = new FormData();
-                   formData.append('description', $("#newDescription").val());
-                   $.ajax({ 
-           	        url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/edit/description?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
-           	        type: 'POST',
-           	        cache       : false,
-           	        contentType : false,
-           	        processData : false,
-           	        data: formData,
-           	        enctype: 'multipart/form-data',
-           	        success: function(data) {
-           	            // replace text box with new description
-           	            $("#submitDescription").hide()
-           	            $("#cancelEditDescription").hide()
-           	            $("#editDescription").show()
-           	            var val = $("#newDescription").val();
-           	            $('<p id="description"style="margin-top: .5rem; margin-bottom: .5rem;"></p>').insertBefore( "#newDescription" );
-           	            $("#newDescription").remove();
-           	            $("#description").text(val)
-           	        },
-           	        error: function(data) {
-           	            $(".open").removeClass("open");
-           	                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-           	                $('.error').append(alert);
-           	        }
-                    });       
-                 });
                
-               $("#cancelEditDescription").click(function(){
-                   $("#submitDescription").hide()
-                   $("#editDescription").show()
-                   $("#cancelEditDescription").hide()
-                   $('<p id="description" style="margin-top: .5rem; margin-bottom: .5rem;"></p>').insertBefore( "#newDescription" );
-                   $("#newDescription").remove()
-                   $("#description").text(description)
-                   
-               });
-               
-               //------- edit title --------
-               $("#submitTitle").hide();
-               $("#cancelEditTitle").hide();
-               var getTitleText = $("#title").text().split(": ")[1]
-               $("#editTitle").click(function() {
-                   $('<div class="col-4"><input id="newTitle" class="form-control" type="text"></div>').insertAfter( "#title" );
-                   $('#title').text('Slide: ')
-                   $("#newTitle").val(getTitleText)
-                   $("#editTitle").hide()
-                   $("#submitTitle").show()
-                   $("#cancelEditTitle").show()       
-               });
-               
-               $("#submitTitle").click(function() {
-                   var formData = new FormData();
-                   formData.append('title', $("#newTitle").val());
-                   $.ajax({
-                       url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/edit/title?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
-                       type: 'POST',
-                       cache       : false,
-                       contentType : false,
-                       processData : false,
-                       data: formData,
-                       enctype: 'multipart/form-data',
-                       success: function(data) {
-                           // replace text box with new description
-                           $("#submitTitle").hide()
-                           $("#cancelEditTitle").hide();
-                           $("#editTitle").show()
-                           var val = $("#newTitle").val();
-                           $("#newTitle").closest('div').remove();
-                           $("#title").text("Silde: " + val)
-                           
-                       },
-                       error: function(data) {
-                           var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                           $('.error').append(alert);
-                       }
-                   });
-                 });
-              $("#cancelEditTitle").click(function(){
-                   $("#submitTitle").hide()
-                   $("#editTitle").show()
-                   $("#cancelEditTitle").hide()
-                   $("#newTitle").closest('div').remove();
-                   $("#title").text("Silde: " + getTitleText);
-              });
+                $("#addText").click(function() {
+                    $(".EasyMDEContainer").remove();
+                	markDown = new EasyMDE({element: $('#textBlockText')[0]});
+                    $("#addTextAlert").show();
+                });
+                
+	            $("#addSpace").click(function() {
+		            markDown = new EasyMDE({element: $('#spaceBlockText')[0]});
+		            $("#addSpaceAlert").show();
+	            });
+
+	            $("#spaceName").select2({
+	                ajax: {
+	                    url: [[@{|/staff/spaces/search|}]], 
+	                    dataType: 'json',
+	                    delay:1000,
+	                    data: function (params) {
+	                        return {
+	                            term: params.term, 
+	                            page: params.page || 1 
+	                        };
+	                    },
+	                    processResults: function (data, params) {
+
+	                        params.page = params.page || 1;
+	                        return {
+	                            results: data.items,
+	                            pagination: {
+	                                more: data.hasMore
+	                            }
+	                        };
+	                    },
+	                    cache: false
+	                },
+	                templateResult: formatSpace,
+	                templateSelection: formatSpace,
+	                dropdownAutoWidth: true,
+	                width: '100%',
+	                escapeMarkup: function (markup) { return markup; }
+	            });
+
+	            function formatSpace(space) {
+	                if (!space.id) {
+	                    return space.name;
+	                }
+	                var $space = $('<span>' + space.name + '</span>');
+	                return $space;
+	            }
+
+	
+                $("#addImage").click(function() {
+                    $("#addImgAlert").show();
+                });
+                
+                $("#addVideo").click(function() {
+                    $("#videoTitle").value = "";
+                    $("#addVideoAlert").show();
+                    addVideoClk =1;
+                    editVideoClk=0;
+                });
               
-              $("#addText").click(function() {
-                  $(".EasyMDEContainer").remove();
-              	markDown = new EasyMDE({element: $('#textBlockText')[0]});
-                  $("#addTextAlert").show();
-              });
-              
-              $("#addImage").click(function() {
-                  $("#addImgAlert").show();
-              });
-              
-              $("#addVideo").click(function() {
-                  $("#videoTitle").value = "";
-                  $("#addVideoAlert").show();
-                  addVideoClk =1;
-                  editVideoClk=0;
-              });
-               
               $("#addExternalLinkButton").click(function(e) {
            	   $('#errorAlert')[0].style.display = "none";
                   hideLinkInfoTabs();
@@ -941,7 +1068,7 @@
                 	   $("#errorAlert")[0].appendChild(closeButton);
                        $("#space").scrollTop($('#space')[0].scrollHeight);
                        return;
-                   }0
+                   }
                    if (externalLink == undefined || externalLink == "") {
                 	   $("#errorAlert")[0].style.display = "block";
                 	   $("#errorAlert")[0].textContent = "Please provide the link to the external link.";
@@ -1019,64 +1146,136 @@
                    $("#createExternalLinkAlert").hide();
                    $("#editExternalLinkInfo").hide();
                });
-               
-               $("#uploadImage").click(function(e) {
-                   e.preventDefault();
-                   $("#addImgAlert").hide();
-                   uploadImage();
-                   $('#chooseFromLocal').trigger( "click" );
-               });
-               
-               $("#saveVideo").click(function(e) {
-                   e.preventDefault();
-                   $("#addVideoAlert").hide();
-                   embedVideo();
-                   $("#saveVideo").data('value', '');
-                   $("#saveVideo").data('url', '');
-                   $("#uploadTab").addClass("active");
-                   $("#urlTab").removeClass("active");
-                   $("#urlLink").removeClass("active show");
-                   $("#urlLink>a").removeClass("active show");
-                   $("#uploadLink").addClass("active show");
-                   $("#uploadLink>a").addClass("active show");
-               });
-               
-               $("#addChoice").click(function() {
-                   $("#addChoiceAlert").show();
-               });
-               
-            $(document).on("click", ".deleteText", function(e) {
-           		$("#confirmDeleteTextAlert").show();
-           		var alert = $('<input type="hidden" id="deleteTextId">');
-           		$(alert).attr( 'value', $(this).siblings('input').val());
-           		$('.modal-footer').append(alert); 
-             	});
-           	
-           	$(document).on("click", ".deleteImage", function(e) {
-           		$("#confirmDeleteImageAlert").show();
-           		var alert = $('<input type="hidden" id="deleteImageId">');
-           		$(alert).attr( 'value', $(this).siblings('input').val());
-           		$('.modal-footer').append(alert); 
-             	});
-           	
-           	$(document).on("click", ".deleteVideo", function(e) {
-           		$("#videoIdToDelete").attr( 'value', $(this).attr('data-video-id'));
-           		$(".load").remove();
-           		$("#"+$(this).attr('data-video-id')).append($('<div class="load" style="font-size: 30px;display: none; text-align: center;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></div>'));
-           		$(".load").show();
-           		setTimeout(function() {
-           		    //code to be executed after 3 second
-           		    $(".load").hide();
-           		    $("#confirmDeleteVideoAlert").show();
-           		  }, 3000);
-             	});
-           	
-           	$(document).on("click", ".deleteChoiceBlock", function(e) {
-           		$("#confirmDeleteChoiceBlockAlert").show();
-           		var alert = $('<input type="hidden" id="deleteChoiceBlockId">');
-           		$(alert).attr( 'value', $(this).siblings('input').val());
-           		$('.modal-footer').append(alert); 
-          	});
+                
+                $("#uploadImage").click(function(e) {
+                    e.preventDefault();
+                    $("#addImgAlert").hide();
+                    uploadImage();
+                    $('#chooseFromLocal').trigger( "click" );
+                });
+                
+                $("#saveVideo").click(function(e) {
+                    e.preventDefault();
+                    $("#addVideoAlert").hide();
+                    embedVideo();
+                    $("#saveVideo").data('value', '');
+                    $("#saveVideo").data('url', '');
+                    $("#uploadTab").addClass("active");
+                    $("#urlTab").removeClass("active");
+                    $("#urlLink").removeClass("active show");
+                    $("#urlLink>a").removeClass("active show");
+                    $("#uploadLink").addClass("active show");
+                    $("#uploadLink>a").addClass("active show");
+                });
+                
+                $("#addChoice").click(function() {
+                    $("#addChoiceAlert").show();
+                });
+                
+                $(document).on("click", ".deleteText", function(e) {
+            		$("#confirmDeleteTextAlert").show();
+            		var alert = $('<input type="hidden" id="deleteTextId">');
+            		$(alert).attr( 'value', $(this).siblings('input').val());
+            		$('.modal-footer').append(alert); 
+              	});
+
+                $(document).on("click", ".deleteSpace", function(e) {
+            		$("#confirmDeleteSpaceAlert").show();
+            		var alert = $('<input type="hidden" id="deleteSpaceId">');
+            		$(alert).attr( 'value', $(this).siblings('input').val());
+            		$('.modal-footer').append(alert); 
+              	});
+
+            	$(document).on("click", ".deleteImage", function(e) {
+            		$("#confirmDeleteImageAlert").show();
+            		var alert = $('<input type="hidden" id="deleteImageId">');
+            		$(alert).attr( 'value', $(this).siblings('input').val());
+            		$('.modal-footer').append(alert); 
+              	});
+            	
+            	$(document).on("click", ".deleteVideo", function(e) {
+            		$("#videoIdToDelete").attr( 'value', $(this).attr('data-video-id'));
+            		$(".load").remove();
+            		$("#"+$(this).attr('data-video-id')).append($('<div class="load" style="font-size: 30px;display: none; text-align: center;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></div>'));
+            		$(".load").show();
+            		setTimeout(function() {
+            		    //code to be executed after 3 second
+            		    $(".load").hide();
+            		    $("#confirmDeleteVideoAlert").show();
+            		  }, 3000);
+              	});
+                         	
+              $(document).on("click", ".deleteChoiceBlock", function(e) {
+                $("#confirmDeleteChoiceBlockAlert").show();
+                var alert = $('<input type="hidden" id="deleteChoiceBlockId">');
+                $(alert).attr( 'value', $(this).siblings('input').val());
+                $('.modal-footer').append(alert); 
+              });
+    
+              function getSpaceById(spaceId, callback) {
+                  $.ajax({
+                      url: "[(@{'/staff/search/api/space/'})]"+spaceId,
+                      type: 'GET',
+                      dataType: 'json',
+                      success: function(result) {
+                          callback(result);
+                      },
+                      error: function(data) {
+                          var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                          $('.error').append(alert);
+                          $(".error").delay(4000).slideUp(500, function() {
+                              $(".error").empty();
+                          });
+                          callback(null);
+                      }
+                  });
+              }
+                
+	            $("#submitSpace").on("click", function(e) {057
+		            $("#addSpaceAlert").hide();
+		            e.preventDefault();
+		            // ------------- creating space content blocks ------------
+		
+		            var formData = new FormData();
+		            var title = document.getElementById('spaceTitle').value;
+		            var selectedSpace = document.getElementById('spaceName');
+		            var spaceName = $('#spaceName').select2('data')[0].name;
+		            var token = [[${_csrf.token}]];
+		            if (selectedSpace.selectedIndex != -1 && selectedSpace.value != ""){
+
+			            var spaceId = selectedSpace.options[selectedSpace.selectedIndex].value;
+			            formData.append('title', title);
+			            formData.append('spaceId', spaceId);
+			            $.ajax({
+				            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space'})]", 
+				            type: 'POST',
+				            cache       : false,
+				            contentType : false,
+				            processData : false,
+				            data: formData,
+				            headers:{
+		            			'X-CSRF-Token':token
+		            		},
+				            enctype: 'multipart/form-data',
+				            success: function(data) {
+					            var space = $('<div style="word-break:break-word;" id="'+ data +'" class="SpaceDivStaff tab row"><label>Title: </label><p class="col-md-10">'+title+'</p> <div style = "display:flex; flex-direction: row;width: 100%;"><label>Space: </label><p class="col-md-10">'+ spaceName +'</p></div>'+'<input type="hidden" id="deleteSpaceId" value="'+data+'" /><a class="btn deleteSpace col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a></div>');
+					
+					            $(space[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(spaceBlockDoubleClick);
+					            $('#slideSpace').append(space);
+					            $('#spaceTitle').val("");
+					            removeAllSelectOptions("spaceName");
+				            },
+				            error: function(data) {
+					            if (data.status == 403){
+					            	$("#loginAlert").show();
+					            } else {
+						            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+						            $('.error').append(alert);
+					            }
+				            }
+			            });
+		            }
+	            });
                
             $("#cancelSubmitText").click(function() {
            		$("#addTextAlert").hide();	
@@ -1246,6 +1445,7 @@
            			});
            		}
            	});
+          
            	$("#cancelSubmitChoice").click(function() {
                    $("#addChoiceAlert").hide();	
                });
@@ -1381,22 +1581,22 @@
                    $('#choiceForm')[0].reset();
                });
            
-               $("#urlLink").on("click", function (e) {
+          $("#urlLink").on("click", function (e) {
 				    if ($("#videoFile").val()) {
-						$("#videoTitle").prop('disabled', true);
-						$("#videoLink").prop('disabled', true);
-						$("#saveVideo").prop('disabled', true);
+              $("#videoTitle").prop('disabled', true);
+              $("#videoLink").prop('disabled', true);
+              $("#saveVideo").prop('disabled', true);
 					}
-					if (!$("#videoFile").val()) {
-						$("#videoTitle").prop('disabled', false);
-						$("#videoLink").prop('disabled', false);
-						$("#saveVideo").prop('disabled', false);
+            if (!$("#videoFile").val()) {
+              $("#videoTitle").prop('disabled', false);
+              $("#videoLink").prop('disabled', false);
+              $("#saveVideo").prop('disabled', false);
 					}
-					if (!$("#videoTitle").val() && !$("#videoLink").val()) {
-						$("#saveVideo").prop('disabled', true);
+            if (!$("#videoTitle").val() && !$("#videoLink").val()) {
+              $("#saveVideo").prop('disabled', true);
 					}
-					if (!$("#videoTitle").val() && $("#videoLink").val()) {
-						$("#saveVideo").prop('disabled', true);
+            if (!$("#videoTitle").val() && $("#videoLink").val()) {
+              $("#saveVideo").prop('disabled', true);
 					}
 					$("#urlLink").addClass("active show");
 					$("#uploadLink").removeClass("active show");
@@ -1416,7 +1616,7 @@
     					}
                    }
 				});
-
+          
 				$("#uploadLink").on("click", function (e) {
 				    if ($("#videoLink").val()) {
 						$("#videoTitle").prop('disabled', true);
@@ -1498,82 +1698,142 @@
                $('.textDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
                $('.vidDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave);//.dblclick(onDoubleClick);
            
-               $("#submitTextBlock").on("click", function(e){
-               	e.preventDefault();
-                   // ------------- editting text content blocks ------------
-                   
-                   var formData = new FormData();
-                   var text = markDown.value();
-                   markDown.value('');
-                   var formData = new FormData();
-                   var blockId = $(".open").attr("id");
-                   formData.append('textBlockDesc', text);
-                   formData.append('textBlockId', blockId);
-               	$("#editTextAlert").hide();
-                   $.ajax({
-                       url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/text/edit?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
-                       type: 'POST',
-                       cache       : false,
-                       contentType : false,
-                       processData : false,
-                       data: formData,
-                       enctype: 'multipart/form-data',
-                       success: function(data) {
-                           // replace text box with new description
-                          updateTextBox(blockId, text)
-                          $(".open").removeClass("open");
-                      },
-                      error: function(data) {
-                   		if (data.status == 403) {
-                      			$("#loginAlert").show();
-                      		}
-                      		else {
-                          		var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                          		$('.error').append(alert);
-                      		}
-                      }
-                  });
-               });    
-               $("#imageId").select2({
-           		ajax: {
-           		    url: function (params) {
-           		  		var imageURL = [[@{|/staff/images/search|}]];
-           		  		return imageURL;
-           		    },
-           		    dataType: 'json',
-           		    processResults: function (data) {
-           		        return {
-           		          results: data,
-           		        };
-           		      },
-           		},
-           		templateResult: formatImage,
-           		templateSelection: formatSelection
-               });
-               
-               function formatImage (image) {
-               	if (!image.id) {
-               		return image.text;
-               	}
-               	var tbaseUrl = [[@{|/api/image/|}]];
-               	var $image = $(
-               			'<span><img src="' + tbaseUrl + image.id + '" class="img-thumbnail" /> ' + image.text + '</span>'
-               	);
-               	return $image;
-               };
-               
-               function formatSelection(image) {
-               	if (!image.id) {
-                       return image.text;
-                   }
-               	var tbaseUrl = [[@{|/api/image/|}]];
-                   var $image = $(
-                           '<span>' + image.text + '</span>'
-                   );
-                   $("#selectedImage").empty();
-                   $("#selectedImage").append('<img width="200px" src="' + tbaseUrl + image.id + '" class="img-thumbnail" />');
-                   return $image;
-               }
+              $('#closeSpaceBlock').on('click',function(){
+		            $("#editSpaceAlert").hide();
+		            updateSpaceBox(currentBlockId, defaultValue, currentSpaceName);
+		            $(".open").removeClass("open");
+	            });
+                $('.valueDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick((e)=>{$(".EasyMDEContainer").remove();});
+                $('.textDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(textBlockDoubleClick);
+                $('.vidDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave);
+                $('.SpaceDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(spaceBlockDoubleClick);
+                $("#submitTextBlock").on("click", function(e){
+                    e.preventDefault();
+                    // ------------- editting text content blocks ------------
+                    
+                    var formData = new FormData();
+                    var text = markDown.value();
+                    markDown.value('');
+                    var formData = new FormData();
+                    var blockId = $(".open").attr("id");
+                    var token = [[${_csrf.token}]];
+                    formData.append('textBlockDesc', text);
+                    formData.append('textBlockId', blockId);
+                	$("#editTextAlert").hide();
+                    $.ajax({
+                        url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/text/edit'})]",
+                        type: 'POST',
+                        cache       : false,
+                        contentType : false,
+                        processData : false,
+                        data: formData,
+                        headers:{
+	            			'X-CSRF-Token':token
+	            		},
+                        enctype: 'multipart/form-data',
+                        success: function(data) {
+                            // replace text box with new description
+                           updateTextBox(blockId, text)
+                           $(".open").removeClass("open");
+                       },
+                       error: function(data) {
+                    		if (data.status == 403) {
+                       			$("#loginAlert").show();
+                       		}
+                       		else {
+                           		var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                           		$('.error').append(alert);
+                       		}
+                       }
+                   });
+                });
+          
+	            $("#submitSpaceBlock").on("click", function(e){
+		            e.preventDefault();
+		            // ------------- editting text content blocks ------------
+		            if(document.getElementById('editSpaceName') != ""){
+		            var selectedSpace = document.getElementById('editSpaceName');
+		            var spaceId = selectedSpace.options[selectedSpace.selectedIndex].value;
+		            var formData = new FormData();
+		            var text = document.getElementById("editSpaceBlock").value;
+		            var formData = new FormData();
+		            var blockId = $(".open").attr("id");
+		            formData.append('spaceBlockId', blockId);
+		            formData.append('spaceBlockTitle', text);
+		            if(spaceId == "" || spaceId == null){
+		            	spaceId = currentSpaceId;
+		            }
+		            var token = [[${_csrf.token}]];
+		            formData.append('spaceId', spaceId);
+		            getSpaceById(spaceId, function(spaceName){
+		            
+			            $("#editSpaceAlert").hide();
+			            $.ajax({
+				            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space/edit'})]",
+				            type: 'POST',
+				            cache       : false,
+				            contentType : false,
+				            processData : false,
+				            headers: {
+			                    'X-CSRF-TOKEN': token
+			                },
+				            data: formData,
+				            enctype: 'multipart/form-data',
+				            success: function(data) {
+				            	updateSpaceBox(blockId, text, spaceName)
+				            	$(".open").removeClass("open");
+				            },
+				            error: function(data) {
+					            if (data.status == 403) {
+					            	$("#loginAlert").show();
+					            } else {
+						            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+						            $('.error').append(alert);
+					            }
+				            }
+			            });
+		            });
+		          }
+	            });
+	            
+                $("#imageId").select2({
+            		ajax: {
+            		    url: [[@{|/staff/images/search|}]],
+            		    dataType: 'json',
+            		    processResults: function (data) {
+            		        return {
+            		          results: data,
+            		        };
+            		      },
+            		},
+            		templateResult: formatImage,
+            		templateSelection: formatSelection
+                });
+                
+                function formatImage (image) {
+                	if (!image.id) {
+                		return image.text;
+                	}
+                	var tbaseUrl = [[@{|/api/image/|}]];
+                	var $image = $(
+                			'<span><img src="' + tbaseUrl + image.id + '" class="img-thumbnail" /> ' + image.text + '</span>'
+                	);
+                	return $image;
+                };
+                
+                function formatSelection(image) {
+                	if (!image.id) {
+                        return image.text;
+                    }
+                	var tbaseUrl = [[@{|/api/image/|}]];
+                    var $image = $(
+                            '<span>' + image.text + '</span>'
+                    );
+                    $("#selectedImage").empty();
+                    $("#selectedImage").append('<img width="200px" src="' + tbaseUrl + image.id + '" class="img-thumbnail" />');
+                    return $image;
+                }
+            });
            
             $(window).on('load', function () {
             	hideLinkInfoTabs();
