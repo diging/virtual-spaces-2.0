@@ -3539,28 +3539,29 @@
                
                <!-- Biblio Block -->
                
-				<div th:attr="data-position=${contents.contentOrder}" 
-				     class="biblioDivStaff tab row" 
-				     th:id="${contents.id}"
-				     data-biblio-block
-				     th:if="${#strings.equals(contents['class'].simpleName,'BiblioBlock')}">
-				    <p class="col-md-10">
-				        Bibliography Title: <span>[[${contents.biblioTitle}]]</span>, 
-				        Description: <span>[[${contents.description}]]</span>
-				    </p>
-				    <input type="hidden" 
-				           data-biblio-id="${contents.id}" 
-				           th:attr="data-biblio-id=${contents.id}"
-				           th:value="${contents.id}" />
-				    <a class="btn primary-btn btn-sm" 
-				       data-action="add-reference" 
-				       style="padding-top: 8px;">+ New Reference</a>
-				    <a class="btn col-md-1" 
-				       data-action="delete-biblio" 
-				       href="javascript:;">
-				        <span class="icon-trash error"></span>
-				    </a>
-				    <div id="referenceSpace" class="col-md-10">
+					<div th:attr="data-position=${contents.contentOrder}" 
+					     class="biblioDivStaff tab row" 
+					     th:id="${contents.id}"
+					     data-biblio-block
+					     th:if="${#strings.equals(contents['class'].simpleName,'BiblioBlock')}">
+					    <p class="col-md-10">
+					        Bibliography Title: <span>[[${contents.biblioTitle}]]</span>, 
+					        Description: <span>[[${contents.description}]]</span>
+					    </p>
+					    <input type="hidden" 
+					           data-biblio-id="${contents.id}" 
+					           th:attr="data-biblio-id=${contents.id}"
+					           th:value="${contents.id}" />
+					    <a class="btn col-md-1" 
+					       data-action="delete-biblio" 
+					       href="javascript:;" 
+					       style="position: absolute; right: 0px;">
+					        <span class="icon-trash error"></span>
+					    </a>
+					    <a class="btn primary-btn btn-sm" 
+					       data-action="add-reference" 
+					       style="padding-top: 8px;">+ New Reference</a>
+					    <div id="referenceSpace" class="col-md-10">
 				        <div th:each="contentRef: ${contents.references}">
 				        
 				        <!-- Reference Block -->
@@ -3625,7 +3626,7 @@
 				    <a class="btn col-md-1" 
 				       data-action="delete-space" 
 				       href="javascript:;" 
-				       style="position: absolute; right: 0px; bottom: 10px;">
+				       style="position: absolute; right: 0px;">
 				        <span class="icon-trash error"></span>
 				    </a>
 				</div>
