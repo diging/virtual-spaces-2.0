@@ -16,6 +16,8 @@ import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/staff/search/api/space")
