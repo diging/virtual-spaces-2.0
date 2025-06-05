@@ -347,6 +347,15 @@
                 $(".open").css('overflow-y', 'scroll');
                 $(".open").css('height', '400px');
             }
+            
+            function imageBlockDoubleClick(e){
+                var divName = $(e.target).closest('div').attr('class');
+                var imgBlockID = $(e.target).attr('id'); 
+            	if(imgBlockID != ''){
+                	$("#uploadImage").data('value', imgBlockID); // sets image ID value
+                	$("#addImgAlert").show();
+            	}
+            }
                 
            function uploadImage() {
             	var imgBlockID = $("#uploadImage").data('value') // gets image ID
@@ -381,7 +390,7 @@
            					{
            						imageblock = createImageBlock(reader, this.width);
            						$("#" + imageBlockId).replaceWith(imageblock);	
-           						$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+           						$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(imageBlockDoubleClick);
            					};
            				}
            			}
@@ -391,7 +400,7 @@
            				formData.append('imageId',imageId);
            				imageblock = createImageBlockWithExistingImage($('#selectedImage').find('img').attr('src'),image.width);
            				$("#" + imageBlockId).replaceWith(imageblock);	
-           				$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+           				$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(imageBlockDoubleClick);
            			}
            			// Reset data-attribute to get current selected image ID
            			$("#uploadImage").data('value', '');
@@ -407,7 +416,7 @@
             			{
             				imageblock = createImageBlock(reader, this.width);  
             				$('#slideSpace').append(imageblock); 
-            				$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+            				$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(imageBlockDoubleClick);
             			};          
             			} 
             		}
@@ -418,7 +427,7 @@
             			formData.append('imageId',imageId);
             			imageblock = createImageBlockWithExistingImage($('#selectedImage').find('img').attr('src'),image.width);  
             			$('#slideSpace').append(imageblock); 
-            			$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+            			$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(imageBlockDoubleClick);
             		}
             	}
             	if (!chooseFromExisting)
@@ -1231,7 +1240,7 @@
                   });
               }
                 
-	            $("#submitSpace").on("click", function(e) {057
+	            $("#submitSpace").on("click", function(e) {
 		            $("#addSpaceAlert").hide();
 		            e.preventDefault();
 		            // ------------- creating space content blocks ------------
@@ -1503,7 +1512,7 @@
                        success: function(data) {
            
                            var textblock = $('<div style="word-break:break-word;" id="'+ data +'" class="textDivStaff tab row"><p class="col-md-10">'+text+'</p>'+'<input type="hidden" id="deleteTextId" value="'+data+'" /><a class="btn deleteText col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a></div>');
-                           $(textblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+                           $(textblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(textBlockDoubleClick);
                            $('#slideSpace').append(textblock);             
                        },
                        error: function(data) {
@@ -1678,7 +1687,7 @@
                    $(".open").append('<p class="col-md-10">'+text+'</p><input type="hidden" id="deleteTextId" value="'+blockId+'" /><a class="btn deleteText col-md-1" href="javascript:;" style="position: absolute; right:0;"><span class="icon-trash error"></span></a>');
                    // reset border of the card
                    //rebind event handlers
-                   $('.textDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+                   $('.textDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(textBlockDoubleClick);
                    //resetting the height and overflow-y so that the TextBlock doesn't expand
                    $('.textDivStaff').css('height', 'auto');
                    $('.textDivStaff').css('overflow-y', 'visible');
@@ -1694,8 +1703,8 @@
                	updateTextBox(blockId, defaultValue);
                });
            
-               $('.valueDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
-               $('.textDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+               $('.valueDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(textBlockDoubleClick);
+               $('.textDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(textBlockDoubleClick);
                $('.vidDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave);//.dblclick(onDoubleClick);
            
               $('#closeSpaceBlock').on('click',function(){
@@ -1832,8 +1841,7 @@
                     $("#selectedImage").empty();
                     $("#selectedImage").append('<img width="200px" src="' + tbaseUrl + image.id + '" class="img-thumbnail" />');
                     return $image;
-                }
-            });
+                };
            
             $(window).on('load', function () {
             	hideLinkInfoTabs();
@@ -2450,19 +2458,6 @@
 	                    </div>
 	                </div>
                 </div>
-		        <div th:if="${externalLinks}" id="Ext_Links_Module_Slide2">
-		        	<h5>External Resources</h5>
-		     		<div th:each="link: ${externalLinks}" th:id="${link.getId()}" style="margin-top: 15px;">
-		      			<div class="link_headers">Name: [[${link.getLabel()}]]</div>
-		      			<div>URL:</br><a style="text-decoration: underline; color:blue; overflow: hidden;text-overflow: ellipsis;display:inline-block;" th:href="@{${link.getExternalLink()}}">[[${link.getExternalLink()}]]</a></div>
-                        <a class="btn deleteExternalLink col-md-1" th:attr="data-link-id=${link.getId()}" style="text-align: left; padding-left: 0;" href="javascript:;"> 
-                        <span class="icon-trash error" style="text-align: left;"></span>
-                        </a>
-                        <a class="btn editExternalLink col-md-1" th:attr="data-link-id=${link.getId()}, data-label=${link.getLabel()}, data-url=${link.getExternalLink()}" style="text-align: left; padding-left: 0;" href="javascript:;"> 
-                        <span class="icon-edit" style="text-align: left;"></span>
-                        </a>
-		     		</div>
-	     		</div>  
 		        <div id="slideSpace">
 	                <div th:each="contents: ${slideContents}">
 	                     <div th:attr="data-position=${contents.contentOrder}" class="tab vidDiv row" th:id="${contents.id}" th:if="${#strings.equals(contents['class'].simpleName,'VideoBlock')}">
@@ -2512,7 +2507,20 @@
 	                        </a>
 	                    </div>
 	                </div>
-            	</div>  
+            	</div>
+            	<div th:if="${externalLinks}" id="Ext_Links_Module_Slide2">
+		        	<h5>External Resources</h5>
+		     		<div th:each="link: ${externalLinks}" th:id="${link.getId()}" style="margin-top: 15px;">
+		      			<div class="link_headers">Name: [[${link.getLabel()}]]</div>
+		      			<div>URL:</br><a style="text-decoration: underline; color:blue; overflow: hidden;text-overflow: ellipsis;display:inline-block;" th:href="@{${link.getExternalLink()}}">[[${link.getExternalLink()}]]</a></div>
+                        <a class="btn deleteExternalLink col-md-1" th:attr="data-link-id=${link.getId()}" style="text-align: left; padding-left: 0;" href="javascript:;"> 
+                        <span class="icon-trash error" style="text-align: left;"></span>
+                        </a>
+                        <a class="btn editExternalLink col-md-1" th:attr="data-link-id=${link.getId()}, data-label=${link.getLabel()}, data-url=${link.getExternalLink()}" style="text-align: left; padding-left: 0;" href="javascript:;"> 
+                        <span class="icon-edit" style="text-align: left;"></span>
+                        </a>
+		     		</div>
+	     		</div>    
 		</div>
     </body>
 </html>

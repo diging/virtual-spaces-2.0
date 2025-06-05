@@ -56,12 +56,6 @@
     display: block;
 }
 
-.External_Links_Class {
-	position: absolute;
-	text-align: left;
-	margin-left: 15px;
-}
-
 .slide_container {
 	display: grid;
 	align-items:center;
@@ -191,7 +185,7 @@
             <h3 style="text-align:center;">[[${currentSlideCon.name}]]</h3>
             <div class="slide_container"> 
             <div id="blocks" class="Group_8_Class" th:each="contents: ${currentSlideCon.contents}">
-                <img th:if="${contents['class'].simpleName ==  'ImageBlock'}" id="${contents.id}" class="imgDiv" th:src="@{'/api/image/'+${contents.image.id}}" style="max-width:57%">
+                <img th:if="${contents['class'].simpleName ==  'ImageBlock'}" id="${contents.id}" class="imgDiv" th:src="@{'/api/image/'+${contents.image.id}}" style="max-width:57%; max-height: 650px;">
                 <div th:if="${contents['class'].simpleName ==  'TextBlock'}" id="${contents.id}" class="textDiv">[(${contents.htmlRenderedText()})]</div>
                 <div th:if="${contents['class'].simpleName ==  'SpaceBlock'}" id="${contents.id}" class="textDiv">
                 <a th:href="@{'/exhibit/space/'+${contents.space?.id}}">[(${contents.title})]</a></div>
@@ -511,10 +505,11 @@
        	</div>
      	</div>
    		</div>
-        <div class="External_Links_Class"> External Resources:
-     		<div th:if="${slideExternalLinkList}" th:each="link: ${slideExternalLinkList}"> -
-      			<a style="text-decoration: underline; color:blue;" th:href="@{${link.getExternalLink()}}">[[${link.getLabel()}]]</a>
-     		</div>
-    	</div>
+   				<div style="margin:auto; width: 57%; padding-top: 30px;">
+   					<h5>External Resources:</h5>
+	     			<div th:if="${slideExternalLinkList}" th:each="link: ${slideExternalLinkList}"> -
+	      				<a style="text-decoration: underline; color:blue;" th:href="@{${link.getExternalLink()}}">[[${link.getLabel()}]]</a>
+	     			</div>
+    			</div>
 </body>
 </html>
