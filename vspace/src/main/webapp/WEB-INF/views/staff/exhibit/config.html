@@ -1,6 +1,9 @@
 <html layout:decorate="~{layouts/main_staff}">
 <head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 <script th:inline="javascript">
+
 	$(document).ready(function() {
 		var offlineMessage = $('#offlineMessage');			
 		var spaceParamExihibit = $('#spaceParamExihibit');
@@ -121,7 +124,7 @@
 	     <a style="color:blue;" th:href="@{|/preview/${exhibition.previewId}|}"> [[${#strings.defaultString(@environment.getProperty('baseUrl'),'')}]][[@{|/preview/${exhibition.previewId}|}]]</a></p>
 	    </div>
 		<div style="padding: 30px 0;">
-		    <form th:action="@{|/staff/exhibit/config?${_csrf.parameterName}=${_csrf.token}|}" method="POST" name="f" enctype="multipart/form-data">
+		    <form th:action="@{|/staff/exhibit/config?${_csrf.parameterName}=${_csrf.token}|}" method="POST" name="f" enctype="multipart/form-data" modelAttribute="${exhibitionConfigurationForm}">
 		        <input type="hidden"  th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 		        <input type="hidden" th:value="${exhibition?.id}" name="exhibitionParam" id="exhibitionParam"/>
 		        <label for="space">Select the start space of the exhibition:</label>
@@ -138,13 +141,14 @@
 		        </div>
 		        <div style="padding-top: 20px;">
 		            <label for="title">Exhibition Mode:</label>
-		            <select class="form-control" name="exhibitMode" onChange="modeChange(exhibitMode.value)">
+		            <select class="form-control" name="exhibitionMode" onChange="modeChange(exhibitMode.value)">
 		                <option th:each="mode: ${exhibitionModes}" th:id=${mode} th:value=${mode} th:selected="${#strings.equals(mode,exhibition.mode)}">[[${mode}]]</option>
 		            </select>
 		        </div>
 		         <div style="padding-top: 20px;">
-		            <label for="title">Exhibition Languages:</label>
-		            <select class="form-control" name="exhibitLanguage" multiple="multiple" >
+		            <label for="title">Exhibition Languages: <span class="fa fa-question-circle secondary" aria-hidden="true" data-toggle="tooltip" data-html="true" data-placement="right" title="To select multiple languages, hold down the shift key when selecting."></span>
+                           </label>
+		            <select class="form-control" name="exhibitLanguage" multiple="multiple" required>
 		                <option th:each="language: ${languageList}" th:id=${language.code} th:value=${language.code} th:selected="${savedExhibitionLanguages!=null && savedExhibitionLanguages.contains(language.label)}">[[${language.label}]]</option>
 		            </select>
 		        </div>

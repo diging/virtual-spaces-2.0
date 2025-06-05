@@ -43,6 +43,8 @@ public interface ISpaceManager {
 
     List<ISpace> findByName(String name);
 
+    List<ISpace> findByNamePaginated(String name, int page, int pageSize);
+
     /**
      * Method to return the requested spaces
      * 
@@ -53,4 +55,8 @@ public interface ISpaceManager {
     List<ISpace> getSpaces(int pageNo, String sortedBy, String order);
     
     List<ISpace> getSpaces(int pageNo);
+    
+    List<ISpace> getAllSpacesPaginated(int page, int pageSize);
+    
+    int getTotalSpaceCount(String searchTerm);
 }

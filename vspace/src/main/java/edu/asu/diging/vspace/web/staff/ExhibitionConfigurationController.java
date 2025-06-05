@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.javers.common.collections.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,6 +39,7 @@ import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.ISpacesCustomOrderManager;
 import edu.asu.diging.vspace.core.services.impl.SpacesCustomOrderManager;
+import edu.asu.diging.vspace.web.staff.forms.ExhibitionConfigurationForm;
 import edu.asu.diging.vspace.core.services.impl.ExhibitionManager;
 
 @Controller
@@ -98,28 +102,33 @@ public class ExhibitionConfigurationController {
      * @param spaceParam
      * @param attributes
      * @return
-     */
+     */    
     @RequestMapping(value = "/staff/exhibit/config", method = RequestMethod.POST)
     public RedirectView createOrUpdateExhibition(HttpServletRequest request,
             @RequestParam(required = false, name = "exhibitionParam") String exhibitID,
-            @RequestParam("spaceParam") String spaceID, @RequestParam("title") String title,
-            @RequestParam("exhibitMode") ExhibitionModes exhibitMode,
-            @RequestParam(value = "customMessage", required = false, defaultValue = "") String customMessage,
-            @RequestParam("exhibitLanguage") List<String> languages,
-            @RequestParam("defaultExhibitLanguage") String defaultLanguage,
-
+            @RequestParam("spaceParam") String spaceID,
+            @Valid @ModelAttribute("exhibitionConfigurationForm") ExhibitionConfigurationForm exhibitionConfigForm,
+            BindingResult result,           
             RedirectAttributes attributes) throws IOException {
-
-        ISpace startSpace = spaceManager.getSpace(spaceID);
+        if(result.hasErrors()) {
+            attributes.addAttribute("showAlert", true);
+            attributes.addAttribute("alertType", "danger");
+            attributes.addAttribute("message", result.getFieldError().getDefaultMessage());
+            return new RedirectView(request.getContextPath() + "/staff/exhibit/config");
+        }
+        ExhibitionModes exhibitMode = exhibitionConfigForm.getExhibitionMode();
+        List<String> languages = exhibitionConfigForm.getExhibitLanguage();
+        String defaultLanguage = exhibitionConfigForm.getDefaultExhibitLanguage();
+        String customMessage = exhibitionConfigForm.getCustomMessage();
         IExhibition exhibition;
-        
+
         if (exhibitID == null || exhibitID.isEmpty()) {
             exhibition = exhibitFactory.createExhibition();
         } else {
             exhibition = exhibitionManager.getExhibitionById(exhibitID);
         }
-        exhibition.setStartSpace(startSpace);
-        exhibition.setTitle(title);
+        exhibition.setStartSpace(spaceManager.getSpace(spaceID));
+        exhibition.setTitle(exhibitionConfigForm.getTitle());
         exhibition.setMode(exhibitMode);
 
         exhibitionManager.updateExhibitionLanguages(exhibition, languages, defaultLanguage);
