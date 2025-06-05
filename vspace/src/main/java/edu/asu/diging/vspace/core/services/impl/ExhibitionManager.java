@@ -84,7 +84,7 @@ public class ExhibitionManager implements IExhibitionManager {
         if (exhibitions.size() > 0) {
             exhibition = exhibitions.get(0);
             String previewId = exhibition.getPreviewId();
-            if(previewId==null || previewId.isEmpty()) {
+            if (previewId == null || previewId.isEmpty()) {
                 exhibitFactory.updatePreviewId(exhibition);
             }
         }
