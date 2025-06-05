@@ -110,6 +110,7 @@ public class ExhibitionManager implements IExhibitionManager {
         }
 
         if(CollectionUtils.isEmpty(codes) ) {
+        	exhibition.getLanguages().clear();
             return;
         }
 
