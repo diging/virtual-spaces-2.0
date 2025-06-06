@@ -291,18 +291,18 @@
             function referenceBlockDoubleClick(e) {
                 var referenceBlock = $(e.target).closest('.referenceDivStaff');
                 currentRefId = referenceBlock.find('input[data-reference-id]').val();
-                
+
                 $(".EasyMDEContainer").remove();
                 referenceBlock.addClass("open");
-                
+
                 var blockId = referenceBlock.attr("id");
-                
+
                 // Store original HTML before editing
                 originalReferenceHtml[blockId] = referenceBlock.html();
-                
+
                 var description = $("div.open p:eq(0)").text();
                 defaultValue = description;
-                
+
                 var title = $("div.open p span:eq(0)").text();
                 var author = $("div.open p span:eq(1)").text();
                 var year = $("div.open p span:eq(2)").text();
@@ -313,22 +313,51 @@
                 var pages = $("div.open p span:eq(7)").text();
                 var editors = $("div.open p span:eq(8)").text();
                 var type = $("div.open p span:eq(9)").text();
-                var note = $("div.open p span:eq(10)").text(); 
+                var note = $("div.open p span:eq(10)").text();
                 
+                // Debug: Log all extracted values to see what we're getting
+                console.log("Extracted values:");
+                console.log("Title:", title);
+                console.log("Author:", author);
+                console.log("Year:", year);
+                console.log("Journal:", journal);
+                console.log("URL:", url);
+                console.log("Volume:", volume);
+                console.log("Issue:", issue);
+                console.log("Pages:", pages);
+                console.log("Editors:", editors);
+                console.log("Type:", type);
+                console.log("Note:", note);
+                
+                // Alternative extraction methods for type if the span method fails
+                if (!type || type.trim() === '') {
+                    // Try to find type in a different way
+                    type = $("div.open").find('span').filter(function() {
+                        return $(this).prev().text().toLowerCase().includes('type');
+                    }).text();
+                    
+                    // If still empty, try to get it from data attributes or other methods
+                    if (!type || type.trim() === '') {
+                        type = referenceBlock.data('type') || referenceBlock.attr('data-type') || '';
+                    }
+                    
+                    console.log("Alternative type extraction:", type);
+                }
+
                 // Showing the edit reference form with all the respective values
                 $("#editReferenceAlert").show();
-                
+
                 // Clear existing hidden inputs
                 $("#editReferenceAlert .modal-footer input[type='hidden']").remove();
-                
-                // Get bibliography ID from the parent element 
+
+                // Get bibliography ID from the parent element
                 var biblioId = referenceBlock.closest("[data-biblio-block]").attr("id");
-                
+
                 // Create a hidden input with bibliography ID
                 var biblioInput = $('<input type="hidden" id="editRefBiblioId">');
                 biblioInput.val(biblioId);
                 $("#editReferenceAlert .modal-footer").append(biblioInput);
-                
+
                 $("#editTitleRef").val(title);
                 $("#editAuthorRef").val(author);
                 $("#editYearRef").val(year);
@@ -338,9 +367,50 @@
                 $("#editIssueRef").val(issue);
                 $("#editPagesRef").val(pages);
                 $("#editEditorsRef").val(editors);
-                $("#editTypeRef").val(type);
-                $("#editNoteRef").val(note);
                 
+                // Enhanced type selection logic
+                var trimmedType = type ? type.trim() : '';
+                console.log("Setting type field with value:", trimmedType);
+                
+                // First, reset the select to default
+                $("#editTypeRef").prop('selectedIndex', 0);
+                
+                if (trimmedType) {
+                    // Try exact match first
+                    var exactMatch = $("#editTypeRef option[value='" + trimmedType + "']");
+                    if (exactMatch.length > 0) {
+                        $("#editTypeRef").val(trimmedType);
+                        console.log("Exact match found for type:", trimmedType);
+                    } else {
+                        // Try case-insensitive match
+                        var foundOption = false;
+                        $("#editTypeRef option").each(function() {
+                            var optionValue = $(this).val();
+                            var optionText = $(this).text();
+                            
+                            if (optionValue.toLowerCase() === trimmedType.toLowerCase() || 
+                                optionText.toLowerCase() === trimmedType.toLowerCase()) {
+                                $("#editTypeRef").val(optionValue);
+                                foundOption = true;
+                                console.log("Case-insensitive match found. Set to:", optionValue);
+                                return false; // break
+                            }
+                        });
+                        
+                        if (!foundOption) {
+                            console.log("No match found for type:", trimmedType);
+                            console.log("Available options:");
+                            $("#editTypeRef option").each(function() {
+                                console.log("- Value:", $(this).val(), "Text:", $(this).text());
+                            });
+                        }
+                    }
+                } else {
+                    console.log("Type is empty, leaving as default");
+                }
+                
+                $("#editNoteRef").val(note);
+
                 // Store original values for cancel functionality
                 formDataCancel = new FormData();
                 formDataCancel.append('title', title);
@@ -352,9 +422,9 @@
                 formDataCancel.append('issue', issue);
                 formDataCancel.append('pages', pages);
                 formDataCancel.append('editors', editors);
-                formDataCancel.append('type', type);
+                formDataCancel.append('type', trimmedType);
                 formDataCancel.append('note', note);
-                
+
                 // Remove card border
                 $(".open").css('display', 'none');
                 $(".open").css('overflow-y', 'scroll');
