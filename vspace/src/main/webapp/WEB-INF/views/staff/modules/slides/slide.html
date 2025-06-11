@@ -1755,20 +1755,26 @@
                     data: jsonData,
                     success: function(data) {
                         // Updated with data attributes
-                        var referenceblock = $(
-                            '<div id="'+ data.id +'" class="referenceDivStaff tab row" data-reference-block data-biblio-id="' + biblioBlockId + '">' +
-                            '<p class="col-md-10">Reference Title: <span>' + data.title + '</span>, Author: <span>' + data.author + '</span>, Year:' +
-                            '<span>' + data.year + '</span>, Journal: <span>' + data.journal + '</span>, ' +
-                            'Url: <span>' + data.url + '</span>, Volume: <span>' + data.volume + '</span>, ' +
-                            'Issue: <span>' + data.issue + '</span>, Pages: <span>' + data.pages + '</span>, ' +
-                            'Editors: <span>' + data.editors + '</span>, Type: <span>' + data.type + '</span>, ' +
-                            'Note: <span>' + data.note + '</span>' +
-                            '</p>' +
-                            '<input type="hidden" data-reference-id="' + data.id + '" value="' + data.id + '" />' +
-                            '<a class="btn col-md-1" data-action="delete-reference" href="javascript:;" style="position: absolute; right:0px;">' +
-                            '<i style="color: var(--error);" class="fas fa-trash-alt"></i></a>' +
-                            '</div>'
-                        );
+						var referenceblock = $(
+						    '<div id="'+ data.id +'" class="referenceDivStaff tab row" data-reference-block data-biblio-id="' + biblioBlockId + '">' +
+						    '<p class="col-md-10">' +
+						    'Reference Title: <span>' + data.title + '</span>, ' +
+						    'Author: <span>' + data.author + '</span>, ' +
+						    'Year: <span>' + data.year + '</span>, ' +
+						    'Journal: <span>' + data.journal + '</span>, ' +
+						    'Url: <span>' + data.url + '</span>, ' +
+						    'Volume: <span>' + data.volume + '</span>, ' +
+						    'Issue: <span>' + data.issue + '</span>, ' +
+						    'Pages: <span>' + data.pages + '</span>, ' +
+						    'Editors: <span>' + data.editors + '</span>, ' +
+						    'Type: <span>' + data.type + '</span>, ' +
+						    'Note: <span>' + data.note + '</span>' +
+						    '</p>' +
+						    '<input type="hidden" data-reference-id="' + data.id + '" value="' + data.id + '" />' +
+						    '<a class="btn col-md-1" data-action="delete-reference" href="javascript:;" style="position: absolute; right:0px;">' +
+						    '<span class="icon-trash error"></span></a>' +
+						    '</div>'
+						);
 
                         $(referenceblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(referenceBlockDoubleClick);
                         var elem = $('#' + biblioBlockId).find('#referenceSpace');
@@ -2236,18 +2242,19 @@
 			    var note = formData.get('note') || '';
 			    
 			    $(".open").append(
-			        '<p class="col-md-10">Reference Title: <span>' + title + 
-			        '</span>, Author: <span>' + author + 
-			        '</span>, Year: <span>' + year + 
-			        '</span>, Journal: <span>' + journal + 
-			        '</span>, Url: <span>' + url + 
-			        '</span>, Volume: <span>' + volume + 
-			        '</span>, Issue: <span>' + issue + 
-			        '</span>, Pages: <span>' + pages + 
-			        '</span>, Editors: <span>' + editors + 
-			        '</span>, Type: <span>' + type + 
-			        '</span>, Note: <span>' + note + 
-			        '</span></p>' +
+			        '<p class="col-md-10">' +
+			        'Reference Title: <span>' + title + '</span>, ' +
+			        'Author: <span>' + author + '</span>, ' +
+			        'Year: <span>' + year + '</span>, ' +
+			        'Journal: <span>' + journal + '</span>, ' +
+			        'Url: <span>' + url + '</span>, ' +
+			        'Volume: <span>' + volume + '</span>, ' +
+			        'Issue: <span>' + issue + '</span>, ' +
+			        'Pages: <span>' + pages + '</span>, ' +
+			        'Editors: <span>' + editors + '</span>, ' +
+			        'Type: <span>' + type + '</span>, ' +
+			        'Note: <span>' + note + '</span>' +
+			        '</p>' +
 			        '<input type="hidden" data-reference-id="' + blockId + '" value="' + blockId + '" />' +
 			        '<a class="btn col-md-1" data-action="delete-reference" href="javascript:;">' +
 			        '<span class="icon-trash error"></span></a>'
@@ -3132,148 +3139,148 @@
 	               </div>
 	            </div>
 	         </div>
-	         <div id="addReferenceAlert" class="modal" tabindex="-1" role="dialog" style="overflow-y: scroll;">
-	            <div class="modal-dialog" role="document" th:draggable="true">
-	               <div class="modal-content">
-	                  <div class="modal-header">
-	                     <h5 class="modal-title">Add new Reference</h5>
-	                     <button type="button" class="close" data-dismiss="modal"
-	                        aria-label="Close">
-	                     <span aria-hidden="true">&times;</span>
-	                     </button>
-	                  </div>
-	                  <form name="sendReferenceForm" id="sendReferenceForm">
-	                     <div class="modal-body">
-	                        <div class="form-group">
-	                           <table>
-	                              <tr>
-	                                 <td><label for="name" class="col-form-label">Title:</label>
-	                                 </td>
-	                                 <td><input type="text" class="form-control"
-	                                    id="titleRef" name="titleRef" /></td>
-	                              </tr>
-	                           </table>
-	                        </div>
-	                        <div class="form-group">
-	                           <table>
-	                              <tr>
-	                                 <td><label for="name" class="col-form-label">Author:</label>
-	                                 </td>
-	                                 <td><input type="text" class="form-control"
-	                                    id="authorRef" name="authorRef" /></td>
-	                              </tr>
-	                           </table>
-	                        </div>
-	                        <div class="form-group">
-	                           <table>
-	                              <tr>
-	                                 <td><label for="name" class="col-form-label">Year:</label>
-	                                 </td>
-	                                 <td><input type="text" class="form-control"
-	                                    id="yearRef" name="yearRef" /></td>
-	                              </tr>
-	                           </table>
-	                        </div>
-	                        <div class="form-group">
-	                           <table>
-	                              <tr>
-	                                 <td><label for="name" class="col-form-label">Journal:</label>
-	                                 </td>
-	                                 <td><input type="text" class="form-control"
-	                                    id="journalRef" name="journalRef" /></td>
-	                              </tr>
-	                           </table>
-	                        </div>
-	                        <div class="form-group">
-	                           <table>
-	                              <tr>
-	                                 <td><label for="name" class="col-form-label">Url:</label>
-	                                 </td>
-	                                 <td><input type="text" class="form-control"
-	                                    id="urlRef" name="urlRef" /></td>
-	                              </tr>
-	                           </table>
-	                        </div>
-	                        <div class="form-group">
-	                           <table>
-	                              <tr>
-	                                 <td><label for="name" class="col-form-label">Volume:</label>
-	                                 </td>
-	                                 <td><input type="text" class="form-control"
-	                                    id="volumeRef" name="volumeRef" /></td>
-	                              </tr>
-	                           </table>
-	                        </div>
-	                        <div class="form-group">
-	                           <table>
-	                              <tr>
-	                                 <td><label for="name" class="col-form-label">Issue:</label>
-	                                 </td>
-	                                 <td><input type="text" class="form-control"
-	                                    id="issueRef" name="issueRef" /></td>
-	                              </tr>
-	                           </table>
-	                        </div>
-	                        <div class="form-group">
-	                           <table>
-	                              <tr>
-	                                 <td><label for="name" class="col-form-label">Pages:</label>
-	                                 </td>
-	                                 <td><input type="text" class="form-control"
-	                                    id="pagesRef" name="pagesRef" /></td>
-	                              </tr>
-	                           </table>
-	                        </div>
-	                        <div class="form-group">
-	                           <table>
-	                              <tr>
-	                                 <td><label for="name" class="col-form-label">Editors:</label>
-	                                 </td>
-	                                 <td><input type="text" class="form-control"
-	                                    id="editorsRef" name="editorsRef" /></td>
-	                              </tr>
-	                           </table>
-	                        </div>
-	                        <div class="form-group">
-	                           <table>
-	                              <tr>
-	                                 <td><label for="name" class="col-form-label">Type:</label>
-	                                 </td>
-	                                 <td>                           
-	                                 <select class="form-control" id="typeRef" name="typeRef">
-		                              <option value="" disabled selected>Select a type</option>
-		                              <option value="Book">Book</option>
-		                              <option value="Journal Article">Journal Article</option>
-		                              <option value="Conference Paper">Conference Paper</option>
-		                              <option value="Thesis">Thesis</option>
-		                              <option value="Report">Report</option>
-		                              <option value="Website">Website</option>
-		                              <option value="Patent">Patent</option>
-		                              <option value="Other">Other</option>
-                          			 </select>
-                           			</td>
-	                              </tr>
-	                           </table>
-	                        </div>
-	                        <div class="form-group">
-	                           <table>
-	                              <tr>
-	                                 <td><label for="name" class="col-form-label">Note:</label>
-	                                 </td>
-	                                 <td><input type="text" class="form-control"
-	                                    id="noteRef" name="noteRef" /></td>
-	                              </tr>
-	                           </table>
-	                        </div>
-	                     </div>
-	                     <div class="modal-footer">
-	                        <button id="cancelSubmitReference" type="reset" class="btn light">Cancel</button>
-	                        <button type="submit" id="submitReference" class="btn btn-primary">Submit</button>
-	                     </div>
-	                  </form>
-	               </div>
-	            </div>
-	         </div>
+			<div id="addReferenceAlert" class="modal" tabindex="-1" role="dialog" style="overflow-y: scroll;">
+			   <div class="modal-dialog" role="document" th:draggable="true">
+			      <div class="modal-content">
+			         <div class="modal-header">
+			            <h5 class="modal-title">Add new Reference</h5>
+			            <button type="button" class="close" data-dismiss="modal"
+			               aria-label="Close">
+			            <span aria-hidden="true">&times;</span>
+			            </button>
+			         </div>
+			         <form name="sendReferenceForm" id="sendReferenceForm">
+			            <div class="modal-body">
+			               <!-- TYPE FIELD - NOW FIRST AND REQUIRED -->
+			               <div class="form-group">
+			                  <table>
+			                     <tr>
+			                        <td><label for="typeRef" class="col-form-label">Type: <span style="color: red;">*</span></label></td>
+			                        <td>                           
+			                           <select class="form-control" id="typeRef" name="typeRef" required>
+			                              <option value="" disabled selected>Select a type *</option>
+			                              <option value="Book">Book</option>
+			                              <option value="Journal Article">Journal Article</option>
+			                              <option value="Conference Paper">Conference Paper</option>
+			                              <option value="Thesis">Thesis</option>
+			                              <option value="Report">Report</option>
+			                              <option value="Website">Website</option>
+			                              <option value="Patent">Patent</option>
+			                              <option value="Other">Other</option>
+			                           </select>
+			                        </td>
+			                     </tr>
+			                  </table>
+			               </div>
+			               
+			               <!-- TITLE FIELD -->
+			               <div class="form-group">
+			                  <table>
+			                     <tr>
+			                        <td><label for="titleRef" class="col-form-label">Title:</label></td>
+			                        <td><input type="text" class="form-control" id="titleRef" name="titleRef" /></td>
+			                     </tr>
+			                  </table>
+			               </div>
+			               
+			               <!-- AUTHOR FIELD -->
+			               <div class="form-group">
+			                  <table>
+			                     <tr>
+			                        <td><label for="authorRef" class="col-form-label">Author:</label></td>
+			                        <td><input type="text" class="form-control" id="authorRef" name="authorRef" /></td>
+			                     </tr>
+			                  </table>
+			               </div>
+			               
+			               <!-- YEAR FIELD -->
+			               <div class="form-group">
+			                  <table>
+			                     <tr>
+			                        <td><label for="yearRef" class="col-form-label">Year:</label></td>
+			                        <td><input type="text" class="form-control" id="yearRef" name="yearRef" /></td>
+			                     </tr>
+			                  </table>
+			               </div>
+			               
+			               <!-- JOURNAL FIELD -->
+			               <div class="form-group">
+			                  <table>
+			                     <tr>
+			                        <td><label for="journalRef" class="col-form-label">Journal:</label></td>
+			                        <td><input type="text" class="form-control" id="journalRef" name="journalRef" /></td>
+			                     </tr>
+			                  </table>
+			               </div>
+			               
+			               <!-- URL FIELD -->
+			               <div class="form-group">
+			                  <table>
+			                     <tr>
+			                        <td><label for="urlRef" class="col-form-label">Url:</label></td>
+			                        <td><input type="text" class="form-control" id="urlRef" name="urlRef" /></td>
+			                     </tr>
+			                  </table>
+			               </div>
+			               
+			               <!-- VOLUME FIELD -->
+			               <div class="form-group">
+			                  <table>
+			                     <tr>
+			                        <td><label for="volumeRef" class="col-form-label">Volume:</label></td>
+			                        <td><input type="text" class="form-control" id="volumeRef" name="volumeRef" /></td>
+			                     </tr>
+			                  </table>
+			               </div>
+			               
+			               <!-- ISSUE FIELD -->
+			               <div class="form-group">
+			                  <table>
+			                     <tr>
+			                        <td><label for="issueRef" class="col-form-label">Issue:</label></td>
+			                        <td><input type="text" class="form-control" id="issueRef" name="issueRef" /></td>
+			                     </tr>
+			                  </table>
+			               </div>
+			               
+			               <!-- PAGES FIELD -->
+			               <div class="form-group">
+			                  <table>
+			                     <tr>
+			                        <td><label for="pagesRef" class="col-form-label">Pages:</label></td>
+			                        <td><input type="text" class="form-control" id="pagesRef" name="pagesRef" /></td>
+			                     </tr>
+			                  </table>
+			               </div>
+			               
+			               <!-- EDITORS FIELD -->
+			               <div class="form-group">
+			                  <table>
+			                     <tr>
+			                        <td><label for="editorsRef" class="col-form-label">Editors:</label></td>
+			                        <td><input type="text" class="form-control" id="editorsRef" name="editorsRef" /></td>
+			                     </tr>
+			                  </table>
+			               </div>
+			               
+			               <!-- NOTE FIELD -->
+			               <div class="form-group">
+			                  <table>
+			                     <tr>
+			                        <td><label for="noteRef" class="col-form-label">Note:</label></td>
+			                        <td><input type="text" class="form-control" id="noteRef" name="noteRef" /></td>
+			                     </tr>
+			                  </table>
+			               </div>
+			            </div>
+			            <div class="modal-footer">
+			               <button id="cancelSubmitReference" type="reset" class="btn light">Cancel</button>
+			               <button type="submit" id="submitReference" class="btn btn-primary">Submit</button>
+			            </div>
+			         </form>
+			      </div>
+			   </div>
+			</div>
 	         <div id="editBiblioAlert" class="modal" tabindex="-1" role="dialog" style="overflow-y: scroll;">
 	            <div class="modal-dialog" role="document" th:draggable="true">
 	               <div class="modal-content">
@@ -3632,41 +3639,39 @@
 					       data-action="add-reference" 
 					       style="padding-top: 8px;">+ New Reference</a>
 					    <div id="referenceSpace" class="col-md-10">
-				        <div th:each="contentRef: ${contents.references}">
-				        
-				        <!-- Reference Block -->
-				        
-					    <div th:id="${contentRef.id}" 
-					         class="referenceDivStaff tab row" 
-					         data-reference-block
-					         th:attr="data-biblio-id=${contents.id}">
-					        <p class="col-md-10">
-					            Reference Title: <span>[[${contentRef.title}]]</span>, 
-					            Author: <span>[[${contentRef.author}]]</span>,
-					            Year: <span>[[${contentRef.year}]]</span>, 
-					            Journal: <span>[[${contentRef.journal}]]</span>,
-					            Url: <span>[[${contentRef.url}]]</span>, 
-					            Volume: <span>[[${contentRef.volume}]]</span>,
-					            Issue: <span>[[${contentRef.issue}]]</span>, 
-					            Pages: <span>[[${contentRef.pages}]]</span>,
-					            Editors: <span>[[${contentRef.editors}]]</span>, 
-					            Type: <span>[[${contentRef.type}]]</span>,
-					            Note: <span>[[${contentRef.note}]]</span>
-					        </p>
-					        <input type="hidden" 
-					               class="deleteReferenceField" 
-					               data-reference-id="${contentRef.id}"
-					               th:attr="data-reference-id=${contentRef.id}"
-					               th:value="${contentRef.id}" />
-					        <a class="btn col-md-1" 
-					           data-action="delete-reference" 
-					           data-reference-id="${contentRef.id}"
-					           th:attr="data-reference-id=${contentRef.id}"
-					           href="javascript:;">
-					            <span class="icon-trash error"></span>
-					        </a>
-					    </div>
-					</div>
+						<div th:each="contentRef: ${contents.references}">
+						    <!-- Reference Block with TYPE FIRST -->
+						    <div th:id="${contentRef.id}" 
+						         class="referenceDivStaff tab row" 
+						         data-reference-block
+						         th:attr="data-biblio-id=${contents.id}">
+						        <p class="col-md-10">
+						            Type: <span>[[${contentRef.type}]]</span>,
+						            Reference Title: <span>[[${contentRef.title}]]</span>, 
+						            Author: <span>[[${contentRef.author}]]</span>,
+						            Year: <span>[[${contentRef.year}]]</span>, 
+						            Journal: <span>[[${contentRef.journal}]]</span>,
+						            Url: <span>[[${contentRef.url}]]</span>, 
+						            Volume: <span>[[${contentRef.volume}]]</span>,
+						            Issue: <span>[[${contentRef.issue}]]</span>, 
+						            Pages: <span>[[${contentRef.pages}]]</span>,
+						            Editors: <span>[[${contentRef.editors}]]</span>, 
+						            Note: <span>[[${contentRef.note}]]</span>
+						        </p>
+						        <input type="hidden" 
+						               class="deleteReferenceField" 
+						               data-reference-id="${contentRef.id}"
+						               th:attr="data-reference-id=${contentRef.id}"
+						               th:value="${contentRef.id}" />
+						        <a class="btn col-md-1" 
+						           data-action="delete-reference" 
+						           data-reference-id="${contentRef.id}"
+						           th:attr="data-reference-id=${contentRef.id}"
+						           href="javascript:;">
+						            <span class="icon-trash error"></span>
+						        </a>
+						    </div>
+						</div>
 				
 				    </div>
 				</div>
