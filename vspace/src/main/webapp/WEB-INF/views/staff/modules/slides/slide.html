@@ -3323,149 +3323,149 @@
 		               </div>
 		            </div>
 		         </div>
-	<div id="editReferenceAlert" class="modal" tabindex="-1" role="dialog" style="overflow-y: scroll;">
-	   <div class="modal-dialog" role="document" th:draggable="true">
-	      <div class="modal-content">
-	         <div class="modal-header">
-	            <h5 class="modal-title">Edit Reference</h5>
-	            <button type="button" class="close" data-dismiss="modal"
-	               aria-label="Close">
-	            <span aria-hidden="true">&times;</span>
-	            </button>
-	         </div>
-	         <form name="sendReferenceForm" id="sendEditReferenceForm">
-	            <div class="modal-body">
-	               <!-- TYPE FIELD - NOW FIRST AND REQUIRED -->
-	               <div class="form-group">
-	                  <table>
-	                     <tr>
-	                        <td><label for="editTypeRef" class="col-form-label">Type: <span style="color: red;">*</span></label></td>
-	                        <td>
-	                           <select class="form-control" id="editTypeRef" name="editTypeRef" required>
-	                              <option value="" disabled>Select a type *</option>
-	                              <option value="Book">Book</option>
-	                              <option value="Journal Article">Journal Article</option>
-	                              <option value="Conference Paper">Conference Paper</option>
-	                              <option value="Thesis">Thesis</option>
-	                              <option value="Report">Report</option>
-	                              <option value="Website">Website</option>
-	                              <option value="Patent">Patent</option>
-	                              <option value="Other">Other</option>
-	                           </select>
-	                        </td>
-	                     </tr>
-	                  </table>
-	               </div>
-	               
-	               <!-- TITLE FIELD -->
-	               <div class="form-group">
-	                  <table>
-	                     <tr>
-	                        <td><label for="editTitleRef" class="col-form-label">Title:</label></td>
-	                        <td><input type="text" class="form-control" id="editTitleRef" name="editTitleRef" /></td>
-	                     </tr>
-	                  </table>
-	               </div>
-	               
-	               <!-- AUTHOR FIELD -->
-	               <div class="form-group">
-	                  <table>
-	                     <tr>
-	                        <td><label for="editAuthorRef" class="col-form-label">Author:</label></td>
-	                        <td><input type="text" class="form-control" id="editAuthorRef" name="editAuthorRef" /></td>
-	                     </tr>
-	                  </table>
-	               </div>
-	               
-	               <!-- YEAR FIELD -->
-	               <div class="form-group">
-	                  <table>
-	                     <tr>
-	                        <td><label for="editYearRef" class="col-form-label">Year:</label></td>
-	                        <td><input type="text" class="form-control" id="editYearRef" name="editYearRef" /></td>
-	                     </tr>
-	                  </table>
-	               </div>
-	               
-	               <!-- JOURNAL FIELD -->
-	               <div class="form-group">
-	                  <table>
-	                     <tr>
-	                        <td><label for="editJournalRef" class="col-form-label">Journal:</label></td>
-	                        <td><input type="text" class="form-control" id="editJournalRef" name="editJournalRef" /></td>
-	                     </tr>
-	                  </table>
-	               </div>
-	               
-	               <!-- URL FIELD -->
-	               <div class="form-group">
-	                  <table>
-	                     <tr>
-	                        <td><label for="editUrlRef" class="col-form-label">Url:</label></td>
-	                        <td><input type="text" class="form-control" id="editUrlRef" name="editUrlRef" /></td>
-	                     </tr>
-	                  </table>
-	               </div>
-	               
-	               <!-- VOLUME FIELD -->
-	               <div class="form-group">
-	                  <table>
-	                     <tr>
-	                        <td><label for="editVolumeRef" class="col-form-label">Volume:</label></td>
-	                        <td><input type="text" class="form-control" id="editVolumeRef" name="editVolumeRef" /></td>
-	                     </tr>
-	                  </table>
-	               </div>
-	               
-	               <!-- ISSUE FIELD -->
-	               <div class="form-group">
-	                  <table>
-	                     <tr>
-	                        <td><label for="editIssueRef" class="col-form-label">Issue:</label></td>
-	                        <td><input type="text" class="form-control" id="editIssueRef" name="editIssueRef" /></td>
-	                     </tr>
-	                  </table>
-	               </div>
-	               
-	               <!-- PAGES FIELD -->
-	               <div class="form-group">
-	                  <table>
-	                     <tr>
-	                        <td><label for="editPagesRef" class="col-form-label">Pages:</label></td>
-	                        <td><input type="text" class="form-control" id="editPagesRef" name="editPagesRef" /></td>
-	                     </tr>
-	                  </table>
-	               </div>
-	               
-	               <!-- EDITORS FIELD -->
-	               <div class="form-group">
-	                  <table>
-	                     <tr>
-	                        <td><label for="editEditorsRef" class="col-form-label">Editors:</label></td>
-	                        <td><input type="text" class="form-control" id="editEditorsRef" name="editEditorsRef" /></td>
-	                     </tr>
-	                  </table>
-	               </div>
-	               
-	               <!-- NOTE FIELD -->
-	               <div class="form-group">
-	                  <table>
-	                     <tr>
-	                        <td><label for="editNoteRef" class="col-form-label">Note:</label></td>
-	                        <td><input type="text" class="form-control" id="editNoteRef" name="editNoteRef" /></td>
-	                     </tr>
-	                  </table>
-	               </div>
-	            </div>
-	            <div class="modal-footer">
-	               <button id="cancelRefBlock" type="reset" class="btn light">Cancel</button>
-	               <button type="submit" id="submitRefBlock"
-	                  class="btn btn-primary">Submit</button>
-	            </div>
-	         </form>
-	      </div>
-	   </div>
-	</div>
+				<div id="editReferenceAlert" class="modal" tabindex="-1" role="dialog" style="overflow-y: scroll;">
+				   <div class="modal-dialog" role="document" th:draggable="true">
+				      <div class="modal-content">
+				         <div class="modal-header">
+				            <h5 class="modal-title">Edit Reference</h5>
+				            <button type="button" class="close" data-dismiss="modal"
+				               aria-label="Close">
+				            <span aria-hidden="true">&times;</span>
+				            </button>
+				         </div>
+				         <form name="sendReferenceForm" id="sendEditReferenceForm">
+				            <div class="modal-body">
+				               <!-- TYPE FIELD - NOW FIRST AND REQUIRED -->
+				               <div class="form-group">
+				                  <table>
+				                     <tr>
+				                        <td><label for="editTypeRef" class="col-form-label">Type: <span style="color: red;">*</span></label></td>
+				                        <td>
+				                           <select class="form-control" id="editTypeRef" name="editTypeRef" required>
+				                              <option value="" disabled>Select a type *</option>
+				                              <option value="Book">Book</option>
+				                              <option value="Journal Article">Journal Article</option>
+				                              <option value="Conference Paper">Conference Paper</option>
+				                              <option value="Thesis">Thesis</option>
+				                              <option value="Report">Report</option>
+				                              <option value="Website">Website</option>
+				                              <option value="Patent">Patent</option>
+				                              <option value="Other">Other</option>
+				                           </select>
+				                        </td>
+				                     </tr>
+				                  </table>
+				               </div>
+				               
+				               <!-- TITLE FIELD -->
+				               <div class="form-group">
+				                  <table>
+				                     <tr>
+				                        <td><label for="editTitleRef" class="col-form-label">Title:</label></td>
+				                        <td><input type="text" class="form-control" id="editTitleRef" name="editTitleRef" /></td>
+				                     </tr>
+				                  </table>
+				               </div>
+				               
+				               <!-- AUTHOR FIELD -->
+				               <div class="form-group">
+				                  <table>
+				                     <tr>
+				                        <td><label for="editAuthorRef" class="col-form-label">Author:</label></td>
+				                        <td><input type="text" class="form-control" id="editAuthorRef" name="editAuthorRef" /></td>
+				                     </tr>
+				                  </table>
+				               </div>
+				               
+				               <!-- YEAR FIELD -->
+				               <div class="form-group">
+				                  <table>
+				                     <tr>
+				                        <td><label for="editYearRef" class="col-form-label">Year:</label></td>
+				                        <td><input type="text" class="form-control" id="editYearRef" name="editYearRef" /></td>
+				                     </tr>
+				                  </table>
+				               </div>
+				               
+				               <!-- JOURNAL FIELD -->
+				               <div class="form-group">
+				                  <table>
+				                     <tr>
+				                        <td><label for="editJournalRef" class="col-form-label">Journal:</label></td>
+				                        <td><input type="text" class="form-control" id="editJournalRef" name="editJournalRef" /></td>
+				                     </tr>
+				                  </table>
+				               </div>
+				               
+				               <!-- URL FIELD -->
+				               <div class="form-group">
+				                  <table>
+				                     <tr>
+				                        <td><label for="editUrlRef" class="col-form-label">Url:</label></td>
+				                        <td><input type="text" class="form-control" id="editUrlRef" name="editUrlRef" /></td>
+				                     </tr>
+				                  </table>
+				               </div>
+				               
+				               <!-- VOLUME FIELD -->
+				               <div class="form-group">
+				                  <table>
+				                     <tr>
+				                        <td><label for="editVolumeRef" class="col-form-label">Volume:</label></td>
+				                        <td><input type="text" class="form-control" id="editVolumeRef" name="editVolumeRef" /></td>
+				                     </tr>
+				                  </table>
+				               </div>
+				               
+				               <!-- ISSUE FIELD -->
+				               <div class="form-group">
+				                  <table>
+				                     <tr>
+				                        <td><label for="editIssueRef" class="col-form-label">Issue:</label></td>
+				                        <td><input type="text" class="form-control" id="editIssueRef" name="editIssueRef" /></td>
+				                     </tr>
+				                  </table>
+				               </div>
+				               
+				               <!-- PAGES FIELD -->
+				               <div class="form-group">
+				                  <table>
+				                     <tr>
+				                        <td><label for="editPagesRef" class="col-form-label">Pages:</label></td>
+				                        <td><input type="text" class="form-control" id="editPagesRef" name="editPagesRef" /></td>
+				                     </tr>
+				                  </table>
+				               </div>
+				               
+				               <!-- EDITORS FIELD -->
+				               <div class="form-group">
+				                  <table>
+				                     <tr>
+				                        <td><label for="editEditorsRef" class="col-form-label">Editors:</label></td>
+				                        <td><input type="text" class="form-control" id="editEditorsRef" name="editEditorsRef" /></td>
+				                     </tr>
+				                  </table>
+				               </div>
+				               
+				               <!-- NOTE FIELD -->
+				               <div class="form-group">
+				                  <table>
+				                     <tr>
+				                        <td><label for="editNoteRef" class="col-form-label">Note:</label></td>
+				                        <td><input type="text" class="form-control" id="editNoteRef" name="editNoteRef" /></td>
+				                     </tr>
+				                  </table>
+				               </div>
+				            </div>
+				            <div class="modal-footer">
+				               <button id="cancelRefBlock" type="reset" class="btn light">Cancel</button>
+				               <button type="submit" id="submitRefBlock"
+				                  class="btn btn-primary">Submit</button>
+				            </div>
+				         </form>
+				      </div>
+				   </div>
+				</div>
             <div id="loginAlert" class="modal" tabindex="-1" role="dialog"
                 backdrop="static"
                 style="display: none; background-color: rgba(0, 0, 0, 0.5);">
