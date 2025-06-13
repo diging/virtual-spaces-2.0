@@ -297,57 +297,51 @@
 
                 var blockId = referenceBlock.attr("id");
 
-                // Store original HTML before editing
                 originalReferenceHtml[blockId] = referenceBlock.html();
 
                 var description = $("div.open p:eq(0)").text();
                 defaultValue = description;
 
-                var title = $("div.open p span:eq(0)").text();
-                var author = $("div.open p span:eq(1)").text();
-                var year = $("div.open p span:eq(2)").text();
-                var journal = $("div.open p span:eq(3)").text();
-                var url = $("div.open p span:eq(4)").text();
-                var volume = $("div.open p span:eq(5)").text();
-                var issue = $("div.open p span:eq(6)").text();
-                var pages = $("div.open p span:eq(7)").text();
-                var editors = $("div.open p span:eq(8)").text();
-                var type = $("div.open p span:eq(9)").text();
-                var note = $("div.open p span:eq(10)").text();
+                // Extract values - if Type is first in display, adjust indices accordingly
+                // Check if the current display has Type first or not
+                var fullText = $("div.open p:eq(0)").text();
+                console.log("Full reference text:", fullText);
                 
-                // Debug: Log all extracted values to see what we're getting
-                console.log("Extracted values:");
-                console.log("Title:", title);
-                console.log("Author:", author);
-                console.log("Year:", year);
-                console.log("Journal:", journal);
-                console.log("URL:", url);
-                console.log("Volume:", volume);
-                console.log("Issue:", issue);
-                console.log("Pages:", pages);
-                console.log("Editors:", editors);
-                console.log("Type:", type);
-                console.log("Note:", note);
+                var type, title, author, year, journal, url, volume, issue, pages, editors, note;
                 
-                // Alternative extraction methods for type if the span method fails
-                if (!type || type.trim() === '') {
-                    // Try to find type in a different way
-                    type = $("div.open").find('span').filter(function() {
-                        return $(this).prev().text().toLowerCase().includes('type');
-                    }).text();
-                    
-                    // If still empty, try to get it from data attributes or other methods
-                    if (!type || type.trim() === '') {
-                        type = referenceBlock.data('type') || referenceBlock.attr('data-type') || '';
-                    }
-                    
-                    console.log("Alternative type extraction:", type);
+                // Check if the text starts with "Type:" (new format) or "Reference Title:" (old format)
+                if (fullText.includes("Type:")) {
+                    // New format: Type is first
+                    type = $("div.open p span:eq(0)").text();
+                    title = $("div.open p span:eq(1)").text();
+                    author = $("div.open p span:eq(2)").text();
+                    year = $("div.open p span:eq(3)").text();
+                    journal = $("div.open p span:eq(4)").text();
+                    url = $("div.open p span:eq(5)").text();
+                    volume = $("div.open p span:eq(6)").text();
+                    issue = $("div.open p span:eq(7)").text();
+                    pages = $("div.open p span:eq(8)").text();
+                    editors = $("div.open p span:eq(9)").text();
+                    note = $("div.open p span:eq(10)").text();
+                } else {
+                    // Old format: Reference Title is first, Type is later
+                    title = $("div.open p span:eq(0)").text();
+                    author = $("div.open p span:eq(1)").text();
+                    year = $("div.open p span:eq(2)").text();
+                    journal = $("div.open p span:eq(3)").text();
+                    url = $("div.open p span:eq(4)").text();
+                    volume = $("div.open p span:eq(5)").text();
+                    issue = $("div.open p span:eq(6)").text();
+                    pages = $("div.open p span:eq(7)").text();
+                    editors = $("div.open p span:eq(8)").text();
+                    type = $("div.open p span:eq(9)").text();
+                    note = $("div.open p span:eq(10)").text();
                 }
-
-                // Showing the edit reference form with all the respective values
+                
+                // Show the edit reference form
                 $("#editReferenceAlert").show();
 
-                // Clear existing hidden inputs
+                // Clear any existing hidden inputs first
                 $("#editReferenceAlert .modal-footer input[type='hidden']").remove();
 
                 // Get bibliography ID from the parent element
@@ -358,15 +352,17 @@
                 biblioInput.val(biblioId);
                 $("#editReferenceAlert .modal-footer").append(biblioInput);
 
-                $("#editTitleRef").val(title);
-                $("#editAuthorRef").val(author);
-                $("#editYearRef").val(year);
-                $("#editJournalRef").val(journal);
-                $("#editUrlRef").val(url);
-                $("#editVolumeRef").val(volume);
-                $("#editIssueRef").val(issue);
-                $("#editPagesRef").val(pages);
-                $("#editEditorsRef").val(editors);
+                // Set all the form values
+                $("#editTitleRef").val(title || '');
+                $("#editAuthorRef").val(author || '');
+                $("#editYearRef").val(year || '');
+                $("#editJournalRef").val(journal || '');
+                $("#editUrlRef").val(url || '');
+                $("#editVolumeRef").val(volume || '');
+                $("#editIssueRef").val(issue || '');
+                $("#editPagesRef").val(pages || '');
+                $("#editEditorsRef").val(editors || '');
+                $("#editNoteRef").val(note || '');
                 
                 // Enhanced type selection logic
                 var trimmedType = type ? type.trim() : '';
@@ -408,22 +404,20 @@
                 } else {
                     console.log("Type is empty, leaving as default");
                 }
-                
-                $("#editNoteRef").val(note);
 
                 // Store original values for cancel functionality
                 formDataCancel = new FormData();
-                formDataCancel.append('title', title);
-                formDataCancel.append('author', author);
-                formDataCancel.append('year', year);
-                formDataCancel.append('journal', journal);
-                formDataCancel.append('url', url);
-                formDataCancel.append('volume', volume);
-                formDataCancel.append('issue', issue);
-                formDataCancel.append('pages', pages);
-                formDataCancel.append('editors', editors);
                 formDataCancel.append('type', trimmedType);
-                formDataCancel.append('note', note);
+                formDataCancel.append('title', title || '');
+                formDataCancel.append('author', author || '');
+                formDataCancel.append('year', year || '');
+                formDataCancel.append('journal', journal || '');
+                formDataCancel.append('url', url || '');
+                formDataCancel.append('volume', volume || '');
+                formDataCancel.append('issue', issue || '');
+                formDataCancel.append('pages', pages || '');
+                formDataCancel.append('editors', editors || '');
+                formDataCancel.append('note', note || '');
 
                 // Remove card border
                 $(".open").css('display', 'none');
