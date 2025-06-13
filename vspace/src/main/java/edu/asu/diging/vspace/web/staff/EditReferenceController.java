@@ -21,12 +21,12 @@ import edu.asu.diging.vspace.core.services.IReferenceManager;
 
 @Controller
 public class EditReferenceController {
-	
+    
     private static final Logger logger = LoggerFactory.getLogger(EditReferenceController.class);
-
+    
     @Autowired
     private IReferenceManager referenceManager;
-
+    
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/bibliography/{biblioId}/reference/edit", method = RequestMethod.POST)
     public ResponseEntity<String> editReference(@PathVariable("id") String slideId,
             @PathVariable("moduleId") String moduleId, @PathVariable("biblioId") String biblioId, 
@@ -50,9 +50,8 @@ public class EditReferenceController {
         
         IReference reference = referenceManager.getReference(id);
         if (reference == null) {
-        	logger.warn("Reference with ID '{}' not found, returning NOT_FOUND.", id);
-        	return ResponseEntity.notFound().build();
-
+            logger.warn("Reference with ID '{}' not found, returning NOT_FOUND.", id);
+            return ResponseEntity.notFound().build();
         }
         
         reference.setTitle(title);
@@ -66,9 +65,8 @@ public class EditReferenceController {
         reference.setEditors(editor);
         reference.setType(type);
         reference.setNote(note);
+        
         referenceManager.updateReference(reference);
-
         return new ResponseEntity<String>(HttpStatus.OK);
     }
-
 }
