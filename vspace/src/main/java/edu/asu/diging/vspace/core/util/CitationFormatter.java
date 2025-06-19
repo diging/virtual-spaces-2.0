@@ -194,17 +194,4 @@ public class CitationFormatter {
                lowerText.contains("report") ||
                (lowerText.contains("20") && lowerText.matches(".*\\b\\d{4}\\b.*"));
     }
-    
-    /**
-     * Citation format guidance for users
-     */
-    public static String getCitationHelp() {
-        return "**Citation Format Guide:**\n\n" +
-               "**In-text citations:** Use [@author year] or [@author year, pages]\n" +
-               "Example: [@Smith 2020] or [@Jones 2019, pp. 15-20]\n\n" +
-               "**Full references:** Use {author, year, title, journal, pages}\n" +
-               "Example: {Smith, J., 2020, Research Methods, Journal of Science, pp. 1-10}\n\n" +
-               "**Multiple authors:** Use 'et al.' for more than 2 authors\n" +
-               "Example: [@Smith et al. 2020]";
-    }
 } 

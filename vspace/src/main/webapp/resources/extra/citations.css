@@ -1,0 +1,171 @@
+/* Citation Styling for Virtual Spaces */
+
+/* In-text citation styling */
+.citation.in-text-citation {
+    color: #0066cc;
+    font-weight: 500;
+    background-color: rgba(0, 102, 204, 0.05);
+    padding: 1px 3px;
+    border-radius: 3px;
+    border-left: 2px solid #0066cc;
+    margin: 0 1px;
+    display: inline;
+}
+
+/* Reference citation styling */
+.citation.reference-citation {
+    margin: 8px 0;
+    padding: 8px 12px;
+    background-color: #f8f9fa;
+    border-left: 4px solid #6c757d;
+    border-radius: 0 4px 4px 0;
+    font-size: 0.95em;
+    line-height: 1.4;
+    color: #495057;
+}
+
+/* Citation help panel styling */
+.citation-help {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 15px;
+    margin-top: 10px;
+}
+
+.citation-help h6 {
+    color: #495057;
+    margin-bottom: 10px;
+}
+
+.citation-examples code {
+    background-color: #e9ecef;
+    color: #495057;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 0.85em;
+    border: 1px solid #ced4da;
+    display: inline-block;
+    margin: 2px 0;
+}
+
+.citation-examples p {
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #343a40;
+}
+
+/* Styling for citation validation feedback */
+.citation-valid {
+    border-left-color: #28a745 !important;
+}
+
+.citation-invalid {
+    border-left-color: #dc3545 !important;
+}
+
+/* Text editor enhancement for citations */
+.EasyMDEContainer .citation-marker {
+    background-color: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 2px;
+    padding: 0 2px;
+}
+
+/* Slide view citation styling */
+.textDiv .citation.in-text-citation {
+    font-size: inherit;
+    font-family: inherit;
+}
+
+.textDiv .citation.reference-citation {
+    margin: 12px 0;
+    font-size: 0.9em;
+}
+
+/* Citation guidance tooltip */
+.citation-tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: help;
+}
+
+.citation-tooltip:hover::after {
+    content: "Click for citation format help";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 1000;
+}
+
+/* Modal enhancements for citation guidance */
+.modal-lg .citation-help {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+/* Responsive citation styling */
+@media (max-width: 768px) {
+    .citation.reference-citation {
+        margin: 6px 0;
+        padding: 6px 8px;
+        font-size: 0.85em;
+    }
+    
+    .citation-help {
+        padding: 10px;
+    }
+    
+    .citation-examples code {
+        font-size: 0.8em;
+        padding: 1px 4px;
+    }
+}
+
+/* Print styles for citations */
+@media print {
+    .citation.in-text-citation {
+        background-color: transparent;
+        border: none;
+        color: #000;
+        padding: 0;
+    }
+    
+    .citation.reference-citation {
+        background-color: transparent;
+        border: none;
+        margin: 4px 0;
+        padding: 0;
+        color: #000;
+    }
+}
+
+/* Exhibition module specific citation styling */
+.Group_8_Class .citation.in-text-citation {
+    font-size: inherit;
+    line-height: inherit;
+}
+
+.Group_8_Class .citation.reference-citation {
+    margin: 10px 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Citation formatting animation */
+.citation-format-animation {
+    animation: citationHighlight 0.5s ease-in-out;
+}
+
+@keyframes citationHighlight {
+    0% { background-color: #fff3cd; }
+    50% { background-color: #ffeaa7; }
+    100% { background-color: rgba(0, 102, 204, 0.05); }
+} 
