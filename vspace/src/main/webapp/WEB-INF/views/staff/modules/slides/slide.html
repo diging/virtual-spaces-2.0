@@ -1869,9 +1869,29 @@
                         <form name="textForm" id="textUploadForm"
                             enctype="multipart/form-data" method="post">
                             <div class="modal-body">
-                                <h6>
-                                    <small>Enter Text: </small>
-                                </h6>
+                                <div class="d-flex align-items-center mb-2">
+                                    <h6 class="mb-0">
+                                        <small>Enter Text: </small>
+                                    </h6>
+                                    <div class="citation-help-trigger ml-2">
+                                        <i class="icon-info-circle text-muted" style="cursor: help; font-size: 16px;"></i>
+                                        <div class="citation-help-tooltip">
+                                            <div class="citation-help-content">
+                                                <h6><strong>Citation Format:</strong></h6>
+                                                <p><strong>In-text citations:</strong><br>
+                                                <code>[@Smith 2020]</code> → (Smith, 2020)<br>
+                                                <code>[@Jones 2019, pp. 15-20]</code> → (Jones, 2019, pp. 15-20)</p>
+                                                
+                                                <p><strong>Full references:</strong><br>
+                                                <code>{Author, Year, Title, Journal, Pages}</code><br>
+                                                Example: <code>{Smith, J., 2020, Research Methods, Journal of Science, pp. 1-10}</code></p>
+                                                
+                                                <p><strong>Multiple authors:</strong><br>
+                                                <code>[@Smith et al. 2020]</code> → (Smith et al., 2020)</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <textarea class="form-control"
                                     id="textBlockText" rows="3"></textarea>
                             </div>
@@ -1930,9 +1950,29 @@
                         <form name="textForm" id="textEditUploadForm"
                             enctype="multipart/form-data" method="post">
                             <div class="modal-body">
-                                <h6>
-                                    <small>Edit Text: </small>
-                                </h6>
+                                <div class="d-flex align-items-center mb-2">
+                                    <h6 class="mb-0">
+                                        <small>Edit Text: </small>
+                                    </h6>
+                                    <div class="citation-help-trigger ml-2">
+                                        <i class="icon-info-circle text-muted" style="cursor: help; font-size: 16px;"></i>
+                                        <div class="citation-help-tooltip">
+                                            <div class="citation-help-content">
+                                                <h6><strong>Citation Format:</strong></h6>
+                                                <p><strong>In-text citations:</strong><br>
+                                                <code>[@Smith 2020]</code> → (Smith, 2020)<br>
+                                                <code>[@Jones 2019, pp. 15-20]</code> → (Jones, 2019, pp. 15-20)</p>
+                                                
+                                                <p><strong>Full references:</strong><br>
+                                                <code>{Author, Year, Title, Journal, Pages}</code><br>
+                                                Example: <code>{Smith, J., 2020, Research Methods, Journal of Science, pp. 1-10}</code></p>
+                                                
+                                                <p><strong>Multiple authors:</strong><br>
+                                                <code>[@Smith et al. 2020]</code> → (Smith et al., 2020)</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <textarea class="form-control"
                                     id="editTextBlock" rows="3"></textarea>
                             </div>
