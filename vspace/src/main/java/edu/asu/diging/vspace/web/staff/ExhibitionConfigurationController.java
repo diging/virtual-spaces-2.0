@@ -79,7 +79,6 @@ public class ExhibitionConfigurationController {
         model.addAttribute("exhibitionModes", Arrays.asList(ExhibitionModes.values()));
         model.addAttribute("spacesList", spaceRepo.findAll());
         
-        // FIX: Handle raw Map types by casting them first
         @SuppressWarnings("unchecked")
         List<Map<String, Object>> sortedLanguageList = exhibitionLanguageConfig.getExhibitionLanguageList().stream()
                 .map(rawMap -> (Map<String, Object>) rawMap)  // Cast raw Map to Map<String, Object>
