@@ -84,7 +84,7 @@ public class ExhibitionManager implements IExhibitionManager {
         if (exhibitions.size() > 0) {
             exhibition = exhibitions.get(0);
             String previewId = exhibition.getPreviewId();
-            if(previewId==null || previewId.isEmpty()) {
+            if (previewId == null || previewId.isEmpty()) {
                 exhibitFactory.updatePreviewId(exhibition);
             }
         }
@@ -109,7 +109,8 @@ public class ExhibitionManager implements IExhibitionManager {
             throw new LanguageListConfigurationNotFoundException("Exhibition Language Configuration not found");
         }
 
-        if(CollectionUtils.isEmpty(codes) ) {
+        if(CollectionUtils.isEmpty(codes)) {
+            exhibition.getLanguages().clear();
             return;
         }
 

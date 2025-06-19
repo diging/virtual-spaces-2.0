@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import org.javers.common.collections.Arrays;
+import java.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -78,7 +78,18 @@ public class ExhibitionConfigurationController {
         }
         model.addAttribute("exhibitionModes", Arrays.asList(ExhibitionModes.values()));
         model.addAttribute("spacesList", spaceRepo.findAll());
-        model.addAttribute("languageList", exhibitionLanguageConfig.getExhibitionLanguageList());
+        
+        @SuppressWarnings("unchecked")
+        List<Map<String, Object>> sortedLanguageList = exhibitionLanguageConfig.getExhibitionLanguageList().stream()
+                .map(rawMap -> (Map<String, Object>) rawMap)  // Cast raw Map to Map<String, Object>
+                .sorted((lang1, lang2) -> {
+                    String label1 = (String) lang1.get("label");
+                    String label2 = (String) lang2.get("label");
+                    return label1.compareToIgnoreCase(label2);
+                })
+                .collect(Collectors.toList());
+                
+        model.addAttribute("languageList", sortedLanguageList);
         model.addAttribute("exhibition", exhibition);
         model.addAttribute("defaultSpaceLinkImage",exhibition.getSpaceLinkDefaultImage());
         model.addAttribute("defaultModuleLinkImage",exhibition.getModuleLinkDefaultImage());
