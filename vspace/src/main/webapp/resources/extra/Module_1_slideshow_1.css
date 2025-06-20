@@ -168,12 +168,7 @@ a, a:hover, a:focus {
 }
 
 .imgDiv {
-    position: relative;
-    max-width: 57%;
-    top: 0px;
     overflow: visible;
-    margin: 1%;
-    display: block;
 }
 
 .textDiv {
@@ -212,7 +207,7 @@ a, a:hover, a:focus {
 }
 
 .Mask_Group_9_Class {
-    position: realtive;
+    position: relative;
     width: 34px;
     height: 34px;
     left: 0px;
