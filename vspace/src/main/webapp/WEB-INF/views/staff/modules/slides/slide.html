@@ -1656,15 +1656,17 @@
                         // Updated biblioblock creation with data attributes
                         var biblioblock = $(
                             '<div id="' + data.id + '" class="biblioDivStaff tab row" data-biblio-block>' +
-                            '<p class="col-md-10">' +
-                            'Bibliography Title: <span>' + data.biblioTitle + '</span>,' +
-                            'Description: <span>' + data.description + '</span>' +
-                            '</p>' +
+                            '<div class="col-md-10">' +
+                            '<h4><strong>' + data.biblioTitle + '</strong></h4>' +
+                            '<p>' + data.description + '</p>' +
+                            '</div>' +
                             '<input type="hidden" data-biblio-id="' + data.id + '" value="' + data.id + '" />' +
                             '<a class="btn col-md-1" data-action="delete-biblio" href="javascript:;" style="position: absolute; right: 0px;">' +
                             '<span class="icon-trash error"></span>' +
                             '</a>' +
-                            '<a class="btn primary-btn btn-sm" data-action="add-reference" style="padding-top: 8px;">+ New Reference</a>' +
+                            '<a class="btn primary-btn btn-sm" data-action="add-reference" style="padding: 8px; display: flex; align-items: center;">' +
+                            '<span class="icon-circle-add"></span>' +
+                            '</a>' +
                             '<div id="referenceSpace" class="col-md-10">' +
                             '</div>' +
                             '</div>'
@@ -2131,15 +2133,17 @@
 				    
 				    // Rebuild bibliography header structure
 				    var biblioHtml = 
-				        '<p class="col-md-10">' +
-				        'Bibliography Title: <span>' + formData.get('biblioTitle') + '</span>, ' +
-				        'Description: <span>' + formData.get('description') + '</span>' +
-				        '</p>' +
+				        '<div class="col-md-10">' +
+				        '<h4><strong>' + formData.get('biblioTitle') + '</strong></h4>' +
+				        '<p>' + formData.get('description') + '</p>' +
+				        '</div>' +
 				        '<input type="hidden" data-biblio-id="' + blockId + '" value="' + blockId + '" />' +
 				        '<a class="btn col-md-1" data-action="delete-biblio" href="javascript:;" style="position: absolute; right: 0px;">' +
 				        '<span class="icon-trash error"></span>' +
 				        '</a>' +
-				        '<a class="btn primary-btn btn-sm" data-action="add-reference" style="padding-top: 8px;">+ New Reference</a>' +
+				        '<a class="btn primary-btn btn-sm" data-action="add-reference" style="padding: 8px; display: flex; align-items: center;">' +
+				        '<span class="icon-circle-add"></span>' +
+				        '</a>' +
 				        '<div id="referenceSpace" class="col-md-10"></div>';
 				    
 				    $(".open").append(biblioHtml);
@@ -3616,10 +3620,10 @@
 					     th:id="${contents.id}"
 					     data-biblio-block
 					     th:if="${#strings.equals(contents['class'].simpleName,'BiblioBlock')}">
-					    <p class="col-md-10">
-					        Bibliography Title: <span>[[${contents.biblioTitle}]]</span>, 
-					        Description: <span>[[${contents.description}]]</span>
-					    </p>
+					    <div class="col-md-10">
+					        <h4><strong>[[${contents.biblioTitle}]]</strong></h4>
+					        <p>[[${contents.description}]]</p>
+					    </div>
 					    <input type="hidden" 
 					           data-biblio-id="${contents.id}" 
 					           th:attr="data-biblio-id=${contents.id}"
@@ -3632,7 +3636,9 @@
 					    </a>
 					    <a class="btn primary-btn btn-sm" 
 					       data-action="add-reference" 
-					       style="padding-top: 8px;">+ New Reference</a>
+					       style="padding: 8px; display: flex; align-items: center;">
+					        <span class="icon-circle-add"></span>
+					    </a>
 					    <div id="referenceSpace" class="col-md-10">
 						<div th:each="contentRef: ${contents.references}">
 						    <!-- Reference Block with TYPE FIRST -->
