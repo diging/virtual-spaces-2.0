@@ -220,6 +220,15 @@ public class SpaceManager implements ISpaceManager {
         spaceRepo.findAll().forEach(s -> spaces.add(s));
         return spaces;
     }
+    
+    @Override
+    public List<ISpace> getAllSpacesPaginated(int page, int pageSize) {
+        Pageable pageable = PageRequest.of(page - 1, pageSize);
+        Page<Space> spacePage = spaceRepo.findAll(pageable);
+        List<ISpace> spaceResults = new ArrayList<>();
+        spacePage.forEach(spaceResults::add);
+        return spaceResults;
+    }
 
     @Override
     public List<ISpace> getSpacesWithStatus(SpaceStatus status) {
@@ -315,6 +324,28 @@ public class SpaceManager implements ISpaceManager {
     }
     
     @Override
+<<<<<<< HEAD
+=======
+    public List<ISpace> findByName(String searchText){
+        String searchTerm = "%" + searchText + "%";
+        List<Space> spaces = spaceRepo.findByNameLike(searchTerm);
+        List<ISpace> spaceResults = new ArrayList<>();
+        spaces.forEach(r -> spaceResults.add(r));
+        return spaceResults;
+    }
+    
+    @Override
+    public List<ISpace> findByNamePaginated(String searchText, int page, int pageSize) {
+        String searchTerm = "%" + searchText + "%";
+        Pageable pageable = PageRequest.of(page - 1, pageSize);
+        Page<Space> spacePage = spaceRepo.findByNameLike(searchTerm, pageable);
+        List<ISpace> spaceResults = new ArrayList<>();
+        spacePage.forEach(spaceResults::add);
+        return spaceResults;
+    }
+    
+    @Override
+>>>>>>> origin
     public List<ISpace> getSpaces(int pageNo) {
         return getSpaces(pageNo, SortByField.CREATION_DATE.getValue(), Sort.Direction.DESC.toString());
     }
@@ -355,6 +386,18 @@ public class SpaceManager implements ISpaceManager {
             sortingParameters = sortingParameters.descending();
         }
         return sortingParameters;
+    }
+    
+    @Override
+    public int getTotalSpaceCount(String searchTerm) {
+        if (searchTerm != null && !searchTerm.trim().isEmpty()) {
+            // Count spaces matching the search term
+            String formattedSearchTerm = "%" + searchTerm + "%";
+            return (int) spaceRepo.countByNameLike(formattedSearchTerm);
+        } else {
+            // Count all spaces
+            return (int) spaceRepo.count();
+        }
     }
     
 }
