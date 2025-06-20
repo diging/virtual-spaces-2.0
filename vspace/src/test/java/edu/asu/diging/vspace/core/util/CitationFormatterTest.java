@@ -95,8 +95,6 @@ public class CitationFormatterTest {
         assertTrue("Should validate empty as valid", CitationFormatter.hasValidCitations(""));
     }
 
-
-
     @Test
     public void testComplexReference() {
         String input = "{Chen, Alyssa, 2025, Exploring Code Comprehension in Scientific Programming: Preliminary Insights from Research Scientists, arXiv, http://arxiv.org/abs/2501.10037}";

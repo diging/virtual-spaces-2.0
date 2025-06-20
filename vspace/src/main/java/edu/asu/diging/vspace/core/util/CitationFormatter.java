@@ -104,9 +104,25 @@ public class CitationFormatter {
             return citationData; // Return as-is if not enough parts
         }
         
-        String author = parts[0].trim();
-        String year = parts[1].trim();
-        String title = parts[2].trim();
+        String author;
+        String year;
+        String title;
+        int titleIndex;
+        
+        // Check if the first part looks like "LastName, FirstName" format
+        if (parts.length >= 4 && parts[1].trim().matches("^[A-Z][a-z]*\\.?$|^[A-Z][a-z]+$")) {
+            // Author is "LastName, FirstName" format (first two parts)
+            author = parts[0].trim() + ", " + parts[1].trim();
+            year = parts[2].trim();
+            title = parts[3].trim();
+            titleIndex = 4;
+        } else {
+            // Author is just the first part
+            author = parts[0].trim();
+            year = parts[1].trim();
+            title = parts[2].trim();
+            titleIndex = 3;
+        }
         
         // Basic APA format: Author, A. (Year). Title. 
         StringBuilder reference = new StringBuilder();
@@ -114,13 +130,13 @@ public class CitationFormatter {
         reference.append(" (").append(year).append("). ");
         reference.append("*").append(title).append("*");
         
-        if (parts.length > 3) {
-            String journal = parts[3].trim();
+        if (parts.length > titleIndex) {
+            String journal = parts[titleIndex].trim();
             reference.append(". ").append(journal);
         }
         
-        if (parts.length > 4) {
-            String pages = parts[4].trim();
+        if (parts.length > titleIndex + 1) {
+            String pages = parts[titleIndex + 1].trim();
             reference.append(", ").append(pages);
         }
         
@@ -137,6 +153,11 @@ public class CitationFormatter {
             return author;
         }
         
+        // Handle "et al." case - preserve it as is
+        if (author.toLowerCase().contains("et al")) {
+            return author; // Keep original formatting for et al.
+        }
+        
         // Handle "lastname, firstname" format
         if (author.contains(",")) {
             String[] nameParts = author.split(",");
@@ -144,7 +165,7 @@ public class CitationFormatter {
                 String lastName = nameParts[0].trim();
                 String firstName = nameParts[1].trim();
                 return capitalizeFirstLetter(lastName) + ", " + 
-                       (firstName.length() > 0 ? firstName.charAt(0) + "." : "");
+                       (firstName.length() > 0 ? Character.toUpperCase(firstName.charAt(0)) + "." : "");
             }
         }
         
@@ -154,7 +175,7 @@ public class CitationFormatter {
             String firstName = words[0];
             String lastName = words[words.length - 1];
             return capitalizeFirstLetter(lastName) + ", " + 
-                   (firstName.length() > 0 ? firstName.charAt(0) + "." : "");
+                   (firstName.length() > 0 ? Character.toUpperCase(firstName.charAt(0)) + "." : "");
         }
         
         return capitalizeFirstLetter(author);
