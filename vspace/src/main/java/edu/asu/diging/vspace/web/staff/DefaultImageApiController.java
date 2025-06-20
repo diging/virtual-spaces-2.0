@@ -24,6 +24,7 @@ public class DefaultImageApiController {
     public static final String API_DEFAULT_MODULE_IMAGE_PATH = "/api/image/default/link/module/";
     public static final String API_DEFAULT_EXTERNAL_IMAGE_PATH = "/api/image/default/link/external/";
     public static final String API_DEFAULT_SPACE_IMAGE_STATUS = "/api/exhibition/default/link/image/status/";
+    public static final String API_DEFAULT_IMAGE_DISABLE_STATUS = "/api/exhibition/default/link/image/disableStatus/";
 
     @Autowired
     private IImageService imageService;
@@ -67,6 +68,21 @@ public class DefaultImageApiController {
         jsonObj.addProperty("defaultExternalLinkImageFlag", exhibition.getExternalLinkDefaultImage() != null? true : false);
         return new ResponseEntity<>(jsonObj.toString(), HttpStatus.OK);
     }
+    
+    /**
+     * Retrieves the status of default images for exhibition links
+     * @return A JSON response containing flags indicating the availability of default images.
+     */
+    @RequestMapping(value = API_DEFAULT_IMAGE_DISABLE_STATUS, method = RequestMethod.GET)
+    public ResponseEntity<String> getDefaultImageDisableStatus() {
+        IExhibition exhibition = exhibitManager.getStartExhibition();
+
+        JsonObject jsonObj = new JsonObject();
+        jsonObj.addProperty("defaultSpaceImageDisableFlag", exhibition.getSpaceLinkDefaultImage().getDisableFlag());
+        jsonObj.addProperty("defaultModuleImageDisableFlag", exhibition.getModuleLinkDefaultImage().getDisableFlag());
+        jsonObj.addProperty("defaultExternalImageDisableFlag", exhibition.getExternalLinkDefaultImage().getDisableFlag());
+        return new ResponseEntity<>(jsonObj.toString(), HttpStatus.OK);
+    }
 
     private ResponseEntity<byte[]> getResponseWithDefaultHeaders(IVSImage image) {
         if(image == null) {
@@ -79,4 +95,5 @@ public class DefaultImageApiController {
         return new ResponseEntity<>(imageContent, headers, HttpStatus.OK);
     }
 
+    
 }

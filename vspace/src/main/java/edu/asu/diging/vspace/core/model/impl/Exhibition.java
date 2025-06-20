@@ -48,15 +48,15 @@ public class Exhibition extends VSpaceElement implements IExhibition {
 
     private String customMessage;
     
-    @OneToOne(targetEntity = VSImage.class)
+    @OneToOne(targetEntity = VSImage.class, cascade = CascadeType.ALL, orphanRemoval=true)
     @NotFound(action = NotFoundAction.IGNORE)
     private IVSImage spaceLinkDefaultImage;
     
-    @OneToOne(targetEntity = VSImage.class)
+    @OneToOne(targetEntity = VSImage.class, cascade = CascadeType.ALL, orphanRemoval=true)
     @NotFound(action = NotFoundAction.IGNORE)
     private IVSImage moduleLinkDefaultImage;
     
-    @OneToOne(targetEntity = VSImage.class)
+    @OneToOne(targetEntity = VSImage.class, cascade = CascadeType.ALL, orphanRemoval=true)
     @NotFound(action = NotFoundAction.IGNORE)
     private IVSImage externalLinkDefaultImage;
     
@@ -139,30 +139,67 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     public IVSImage getSpaceLinkDefaultImage() {
         return spaceLinkDefaultImage;
     }
+    
     @Override
     public void setSpaceLinkDefaultImage(IVSImage spaceLinkDefaultImage) {
         this.spaceLinkDefaultImage = spaceLinkDefaultImage;
     }
+    
+    @Override
+    public void deleteSpaceLinkDefaultImage() {
+        this.spaceLinkDefaultImage = null;
+    }
+    
+    @Override
+    public void disableSpaceLinkDefaultImage() {
+        this.spaceLinkDefaultImage.toggleDisableFlag();
+    }
+    
     @Override
     public IVSImage getModuleLinkDefaultImage() {
         return moduleLinkDefaultImage;
     }
+    
     @Override
     public void setModuleLinkDefaultImage(IVSImage moduleLinkDefaultImage) {
         this.moduleLinkDefaultImage = moduleLinkDefaultImage;
     }
+    
+    @Override
+    public void deleteModuleLinkDefaultImage() {
+        this.moduleLinkDefaultImage = null;
+    }
+    
+    @Override
+    public void disableModuleLinkDefaultImage() {
+        this.moduleLinkDefaultImage.toggleDisableFlag();
+    }
+    
     @Override
     public IVSImage getExternalLinkDefaultImage() {
         return externalLinkDefaultImage;
     }
+    
     @Override
     public void setExternalLinkDefaultImage(IVSImage externalLinkDefaultImage) {
         this.externalLinkDefaultImage = externalLinkDefaultImage;
     }
+    
+    @Override
+    public void deleteExternalLinkDefaultImage() {
+        this.externalLinkDefaultImage = null;
+    }
+    
+    @Override
+    public void disableExternalLinkDefaultImage() {
+        this.externalLinkDefaultImage.toggleDisableFlag();
+    }
+    
     @Override
     public boolean isAboutPageConfigured() {
         return aboutPageConfigured;
     }
+    
     @Override
     public void setAboutPageConfigured(boolean aboutPageConfigured) {
         this.aboutPageConfigured = aboutPageConfigured;
