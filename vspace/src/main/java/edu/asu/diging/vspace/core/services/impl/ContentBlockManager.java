@@ -6,9 +6,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.tika.Tika;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+
+import edu.asu.diging.vspace.core.data.BiblioBlockRepository;
 import org.springframework.transaction.annotation.Transactional;
 import edu.asu.diging.vspace.core.data.ChoiceContentBlockRepository;
 import edu.asu.diging.vspace.core.data.ContentBlockRepository;
@@ -30,6 +34,7 @@ import edu.asu.diging.vspace.core.factory.ITextBlockFactory;
 import edu.asu.diging.vspace.core.factory.IVideoBlockFactory;
 import edu.asu.diging.vspace.core.factory.IVideoFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
+import edu.asu.diging.vspace.core.model.IBiblioBlock;
 import edu.asu.diging.vspace.core.model.IChoice;
 import edu.asu.diging.vspace.core.model.IChoiceBlock;
 import edu.asu.diging.vspace.core.model.IContentBlock;
@@ -39,6 +44,7 @@ import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.ISpaceBlock;
 import edu.asu.diging.vspace.core.model.ITextBlock;
 import edu.asu.diging.vspace.core.model.IVSImage;
+import edu.asu.diging.vspace.core.model.impl.BiblioBlock;
 import edu.asu.diging.vspace.core.model.IVSVideo;
 import edu.asu.diging.vspace.core.model.IVideoBlock;
 import edu.asu.diging.vspace.core.model.impl.ChoiceBlock;
@@ -55,10 +61,12 @@ import edu.asu.diging.vspace.core.services.ISlideManager;
 @Transactional(rollbackFor = { Exception.class })
 @Service
 public class ContentBlockManager implements IContentBlockManager {
+    
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private ISlideManager slideManager;
-
+    
     @Autowired
     private IImageFactory imageFactory;
 
@@ -67,7 +75,7 @@ public class ContentBlockManager implements IContentBlockManager {
 
     @Autowired
     private ITextBlockFactory textBlockFactory;
-
+    
     @Autowired
     private ISpaceBlockFactory spaceBlockFactory;
 
@@ -88,6 +96,9 @@ public class ContentBlockManager implements IContentBlockManager {
 
     @Autowired
     private TextContentBlockRepository textBlockRepo;
+    
+    @Autowired
+    private BiblioBlockRepository biblioBlockRepo;
 
     @Autowired
     private SpaceContentBlockRepository spaceBlockRepo;
@@ -173,8 +184,7 @@ public class ContentBlockManager implements IContentBlockManager {
         return null;
     }
 
-    private void storeImageFile(byte[] image, IVSImage slideContentImage, String filename)
-            throws ImageCouldNotBeStoredException {
+    private void storeImageFile(byte[] image, IVSImage slideContentImage, String filename) throws ImageCouldNotBeStoredException {
         if (slideContentImage != null) {
             String relativePath = null;
             try {
@@ -187,8 +197,7 @@ public class ContentBlockManager implements IContentBlockManager {
         }
     }
 
-    private void storeVideoFile(byte[] video, IVSVideo slideContentVideo, String filename)
-            throws VideoCouldNotBeStoredException {
+    private void storeVideoFile(byte[] video, IVSVideo slideContentVideo, String filename) throws VideoCouldNotBeStoredException {
         if (slideContentVideo != null) {
             String relativePath = null;
             try {
@@ -208,8 +217,7 @@ public class ContentBlockManager implements IContentBlockManager {
      * createImageBlock(java.lang.String, java.util.Arrays, java.lang.String)
      */
     @Override
-    public CreationReturnValue createImageBlock(String slideId, byte[] image, String filename, Integer contentOrder)
-            throws ImageCouldNotBeStoredException {
+    public CreationReturnValue createImageBlock(String slideId, byte[] image, String filename, Integer contentOrder) throws ImageCouldNotBeStoredException {
         ISlide slide = slideManager.getSlide(slideId);
         IVSImage slideContentImage = saveImage(image, filename);
         CreationReturnValue returnValue = new CreationReturnValue();
@@ -232,7 +240,6 @@ public class ContentBlockManager implements IContentBlockManager {
      */
     @Override
     public CreationReturnValue createImageBlock(String slideId, IVSImage image, Integer contentOrder) {
-
         CreationReturnValue returnValue = new CreationReturnValue();
         returnValue.setErrorMsgs(new ArrayList<>());
         ISlide slide = slideManager.getSlide(slideId);
@@ -441,8 +448,7 @@ public class ContentBlockManager implements IContentBlockManager {
     }
 
     @Override
-    public void updateImageBlock(IImageBlock imageBlock, byte[] image, String filename)
-            throws ImageCouldNotBeStoredException {
+    public void updateImageBlock(IImageBlock imageBlock, byte[] image, String filename) throws ImageCouldNotBeStoredException {
         IVSImage slideContentImage = saveImage(image, filename);
         storeImageFile(image, slideContentImage, filename);
         imageBlock.setImage(slideContentImage);
@@ -528,6 +534,45 @@ public class ContentBlockManager implements IContentBlockManager {
         return choiceBlockRepo.save((ChoiceBlock) choiceBlock);
     }
 
+    @Override
+    public IBiblioBlock createBiblioBlock(String slideId, String title, String description, Integer contentOrder) {
+        ISlide slide = slideManager.getSlide(slideId);
+        IBiblioBlock bilioBlock = new BiblioBlock();
+        bilioBlock.setDescription(description);
+        bilioBlock.setBiblioTitle(title);
+        bilioBlock.setSlide(slide);
+        bilioBlock.setContentOrder(contentOrder);
+        return biblioBlockRepo.save((BiblioBlock) bilioBlock);
+    }
+
+    @Override
+    public void deleteBiblioBlockById(String id) throws BlockDoesNotExistException {
+        if (id == null) {
+            logger.warn("Attempted to delete biblio block with null id.");
+            return;
+        }
+
+        try {
+            biblioBlockRepo.deleteById(id);
+        } catch (IllegalArgumentException e) {
+            throw new BlockDoesNotExistException("Biblio block with id " + id + " does not exist.", e);
+        }
+    }
+
+    @Override
+    public void updateBiblioBlock(BiblioBlock biblioBlock) {
+        biblioBlockRepo.save((BiblioBlock) biblioBlock);
+    }
+
+    @Override
+    public BiblioBlock getBiblioBlock(String biblioBlockId) {
+        Optional<BiblioBlock> biblioBlock = biblioBlockRepo.findById(biblioBlockId);
+        if (biblioBlock.isPresent()) {
+            return (BiblioBlock) biblioBlock.get();
+        }
+        return null;
+    }
+    
     /**
      * Retrieving the maximum content order for a slide
      */
@@ -545,7 +590,6 @@ public class ContentBlockManager implements IContentBlockManager {
      */
     @Override
     public void updateContentOrder(List<ContentBlock> contentBlockList) throws BlockDoesNotExistException {
-
         if (contentBlockList == null) {
             return;
         }
@@ -575,7 +619,6 @@ public class ContentBlockManager implements IContentBlockManager {
      *                     contentOrder will be updated
      */
     private void updateContentOrder(String slideId, Integer contentOrder) {
-
         List<ContentBlock> contentBlockList = contentBlockRepository.findBySlide_IdAndContentOrderGreaterThan(slideId,
                 contentOrder);
         if (contentBlockList != null) {
