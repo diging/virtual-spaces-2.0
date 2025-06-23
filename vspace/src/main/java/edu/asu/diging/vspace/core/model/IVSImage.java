@@ -4,25 +4,29 @@ import java.util.List;
 
 public interface IVSImage extends IVSMedia {
 
-	String getFilename();
+    String getFilename();
 
-	void setFilename(String filename);
+    void setFilename(String filename);
 
-	String getParentPath();
+    String getParentPath();
 
-	void setParentPath(String parentPath);
+    void setParentPath(String parentPath);
 
-	void setFileType(String fileType);
+    void setFileType(String fileType);
 
-	String getFileType();
+    String getFileType();
 
-	void setWidth(int width);
+    void setWidth(int width);
 
-	int getWidth();
+    int getWidth();
 
-	void setHeight(int height);
+    void setHeight(int height);
 
-	int getHeight();
+    int getHeight();
+
+    boolean getDisableFlag();
+
+    void toggleDisableFlag();
 
     void setCategories(List<ImageCategory> categories);
 
