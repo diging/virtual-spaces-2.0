@@ -11,7 +11,7 @@
 		
 		// Disable the cancel button if there is nothing to cancel, set intial position for disable slider
 		if ([[${defaultSpaceLinkImage}]]==null) {
-			$('#cancelUploadSpaceImgBtn').attr('disabled', true);
+			$('#spaceCancelBtn').attr('disabled', true);
 		} else {
 			if ([[${defaultSpaceLinkImage?.getDisableFlag()}]]) {
 				$('#disableSpaceLinkImage').prop('checked', false);
@@ -21,7 +21,7 @@
 		}
 		
 		if ([[${defaultModuleLinkImage}]]==null) {
-			$('#cancelUploadModuleImgBtn').attr('disabled', true);
+			$('#moduleCancelBtn').attr('disabled', true);
 		} else {
 			if ([[${defaultModuleLinkImage?.getDisableFlag()}]]) {
 				$('#disableModuleLinkImage').prop('checked', false);
@@ -31,7 +31,7 @@
 		}
 		
 		if ([[${defaultExternalLinkImage}]]==null) {
-			$('#cancelUploadExternalImgBtn').attr('disabled', true);
+			$('#externalCancelBtn').attr('disabled', true);
 		} else {
 			if ([[${defaultExternalLinkImage?.getDisableFlag()}]]) {
 				$('#disableExternalLinkImage').prop('checked', false);
@@ -47,30 +47,30 @@
 		}
 		$("#changeBgImgAlert").show();
 
-		$("#cancelUploadSpaceImgBtn").click(function() {
+		$("#spaceCancelBtn").click(function() {
 		    document.getElementById('spaceLinkImageBlock').value = null;
 		    closeUploadSpaceLinkImage();
-		    $('#cancelUploadSpaceImgBtn').attr('disabled', true);
+		    $('#spaceCancelBtn').attr('disabled', true);
 		});
 		
 		$("#changeSpaceLinkImageBtn").click(function() {
 			openUploadSpaceLinkImage();
 		});
 
-		$("#cancelUploadModuleImgBtn").click(function() {
+		$("#moduleCancelBtn").click(function() {
 		    document.getElementById('moduleLinkImageBlock').value = null;
 		    closeUploadModuleLinkImage();
-		    $('#cancelUploadModuleImgBtn').attr('disabled', true);
+		    $('#moduleCancelBtn').attr('disabled', true);
 		});
 		
 		$("#changeModuleLinkImageBtn").click(function() {
 			openUploadModuleLinkImage();
 		});
 
-		$("#cancelUploadExternalImgBtn").click(function() {
+		$("#externalCancelBtn").click(function() {
 		    document.getElementById('externalLinkImageBlock').value = null;
 		    closeUploadExternalLinkImage();
-		    $('#cancelUploadExternalImgBtn').attr('disabled', true);
+		    $('#externalCancelBtn').attr('disabled', true);
 		});
 		
 		$("#changeExternalLinkImageBtn").click(function() {
@@ -80,25 +80,25 @@
 		//when input's value changes
 		$("#spaceLinkImageBlock").change(function() {
 		    if ($(this).val()) {
-		        $("#cancelUploadSpaceImgBtn").attr("disabled", false);
+		        $("#spaceCancelBtn").attr("disabled", false);
 		    } else {
-		    	$("#cancelUploadSpaceImgBtn").attr("disabled", true);
+		    	$("#spaceCancelBtn").attr("disabled", true);
 		    }
 		});
 
 		$("#moduleLinkImageBlock").change(function() {
 		    if ($(this).val()) {
-		    	$("#cancelUploadModuleImgBtn").attr("disabled", false);
+		    	$("#moduleCancelBtn").attr("disabled", false);
 		    } else {
-		    	$("#cancelUploadModuleImgBtn").attr("disabled", true);
+		    	$("#moduleCancelBtn").attr("disabled", true);
 		    }
 		});
 
 		$("#externalLinkImageBlock").change(function() {
 		    if ($(this).val()) {
-		    	$("#cancelUploadExternalImgBtn").attr("disabled", false);
+		    	$("#externalCancelBtn").attr("disabled", false);
 		    } else {
-		    	$("#cancelUploadExternalImgBtn").attr("disabled", true);
+		    	$("#externalCancelBtn").attr("disabled", true);
 		    }
 		});
 		
@@ -113,7 +113,8 @@
 				},
 		        success: function(result) {
 		        	$("#" + linkType + "LinkImageBlock").css('display', 'none');
-		        	$("#" + linkType + "UploadLinkImage").css('display', 'block');		        	
+		        	$("#" + linkType + "UploadLinkImage").css('display', 'block');
+		        	$("#" + linkType + "CancelBtn").attr("disabled", true);
 		        },
 		        error: function(data) {
 		        }
@@ -131,7 +132,6 @@
 					'X-CSRF-Token':token
 				},
 		        success: function(result) {
-		        	console.log('DISABLE FLAG: ', result['defaultImageDisableFlag']);
 		        },
 		        error: function(data) {
 		        }
@@ -375,7 +375,7 @@ input:checked + .slider:before {
                                 id="image" accept=".png, .jpg, .jpeg, .gif, .svg" style="display: inline-block;" />
                             <input type="hidden" name="linkType" value="space" />
                             <p class="mb-0 text-right" style="float: right;">
-                                <button id="cancelUploadSpaceImgBtn" type="button"
+                                <button id="spaceCancelBtn" type="button"
                                     class="btn light btn-sm btn-sm cancelBtn">Cancel</button>
                                 <button id="uploadSpaceLinkImgBtn" type="submit" class="btn primary-btn btn-sm btn-sm">Save</button>
                             </p>
@@ -414,7 +414,7 @@ input:checked + .slider:before {
                                 id="image" accept=".png, .jpg, .jpeg, .gif, .svg" style="display: inline-block;"/>
                             <input type="hidden" name="linkType" value="module" />
                             <p class="mb-0 text-right" style="float: right;">
-                                <button id="cancelUploadModuleImgBtn" type="button"
+                                <button id="moduleCancelBtn" type="button"
                                     class="btn light btn-sm btn-sm">Cancel</button>
                                 <button id="uploadModuleLinkImgBtn" type="submit" class="btn primary-btn btn-sm btn-sm">Save</button>
                             </p>
@@ -453,7 +453,7 @@ input:checked + .slider:before {
                                 id="image" accept=".png, .jpg, .jpeg, .gif, .svg" style="display: inline-block;"/>
                             <input type="hidden" name="linkType" value="external" />
                             <p class="mb-0 text-right" style="float: right;">
-                                <button id="cancelUploadExternalImgBtn" type="button"
+                                <button id="externalCancelBtn" type="button"
                                     class="btn light btn-sm btn-sm cancelBtn">Cancel</button>
                                 <button id="uploadExternalLinkImgBtn" type="submit" class="btn primary-btn btn-sm btn-sm">Save</button>
                             </p>

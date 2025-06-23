@@ -2,6 +2,7 @@ package edu.asu.diging.vspace.core.model.impl;
 
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -34,7 +35,8 @@ public class VSImage extends VSMedia implements IVSImage {
     private int height;
     private int width;
     
-    private Boolean disableFlag;
+    @Column(name = "disableFlag", nullable = false)
+    private boolean disableFlag = false;
 
     @OneToMany(targetEntity = Tag.class)
     private List<ITag> tags;
@@ -108,7 +110,7 @@ public class VSImage extends VSMedia implements IVSImage {
     }
 
     @Override
-    public Boolean getDisableFlag() {
+    public boolean getDisableFlag() {
         return disableFlag;
     }
     

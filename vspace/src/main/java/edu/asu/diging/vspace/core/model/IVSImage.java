@@ -24,7 +24,7 @@ public interface IVSImage extends IVSMedia {
 
     int getHeight();
 
-    Boolean getDisableFlag();
+    boolean getDisableFlag();
 
     void toggleDisableFlag();
 
