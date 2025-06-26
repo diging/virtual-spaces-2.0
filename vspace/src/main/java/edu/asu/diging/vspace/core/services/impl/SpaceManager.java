@@ -323,16 +323,14 @@ public class SpaceManager implements ISpaceManager {
         return spaceRepo.findDistinctByNameContainingOrDescriptionContaining(requestedPage, searchText,searchText);
     }
     
-    @Override
-<<<<<<< HEAD
-=======
-    public List<ISpace> findByName(String searchText){
-        String searchTerm = "%" + searchText + "%";
-        List<Space> spaces = spaceRepo.findByNameLike(searchTerm);
-        List<ISpace> spaceResults = new ArrayList<>();
-        spaces.forEach(r -> spaceResults.add(r));
-        return spaceResults;
-    }
+//    @Override
+//    public List<ISpace> findByName(String searchText){
+//        String searchTerm = "%" + searchText + "%";
+//        List<Space> spaces = spaceRepo.findByNameLike(searchTerm);
+//        List<ISpace> spaceResults = new ArrayList<>();
+//        spaces.forEach(r -> spaceResults.add(r));
+//        return spaceResults;
+//    }
     
     @Override
     public List<ISpace> findByNamePaginated(String searchText, int page, int pageSize) {
@@ -345,7 +343,6 @@ public class SpaceManager implements ISpaceManager {
     }
     
     @Override
->>>>>>> origin
     public List<ISpace> getSpaces(int pageNo) {
         return getSpaces(pageNo, SortByField.CREATION_DATE.getValue(), Sort.Direction.DESC.toString());
     }

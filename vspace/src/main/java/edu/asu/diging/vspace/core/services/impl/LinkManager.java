@@ -160,7 +160,6 @@ public abstract class LinkManager<L extends ILink<T>, T extends IVSpaceElement, 
             linkDisplay.setImage(image);
         }
     }
-<<<<<<< HEAD
     
     protected void setDisplayProperties(ILinkDisplay linkDisplay, float positionX, float positionY, int rotation, 
             DisplayType displayType, String existingImageId) throws ImageCouldNotBeStoredException, ImageDoesNotExistException {
@@ -173,6 +172,3 @@ public abstract class LinkManager<L extends ILink<T>, T extends IVSpaceElement, 
     }
 
 }
-=======
-}
->>>>>>> origin
