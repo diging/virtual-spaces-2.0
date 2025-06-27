@@ -62,4 +62,5 @@ public interface IReference extends IVSpaceElement {
 
     boolean getVisibility();
 
+
 }

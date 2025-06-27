@@ -83,57 +83,68 @@
                 return imageblock;
             }
             
-            function createVideoBlock(reader, videoSrc, title,isUrlProvided) {
+            function createVideoBlock(reader, videoSrc, title, isUrlProvided, videoId) {
                 var videoBlock = $("<div></div>");
-                videoBlock.attr('id',"currentVideo");
-                videoBlock.attr('class',"tab vidDiv row");
-                videoBlock.css('border','1px solid rgba(0, 0, 0, 0.125)');
+                videoBlock.attr('id', videoId || "currentVideo");
+                videoBlock.attr('class', "tab vidDiv row");
+                videoBlock.attr('data-video-block', '');
+                videoBlock.css('border', '1px solid rgba(0, 0, 0, 0.125)');
+                
                 var innerDiv1 = $("<div></div>");
                 var heading = $("<h3></h3>");
                 heading.append($("<strong></strong>"));
                 innerDiv1.append(heading);
+                
                 if (isUrlProvided) {
-                	var iframe = $("<iframe></iframe>");
-                	iframe.attr('width',"800");
-                	iframe.attr('height',"530");
-                	iframe.attr('src',videoSrc);
-                	iframe.attr('frameborder',"0");
-                	iframe.attr('allow',"accelerometer; clipboard-write; encrypted-media;gyroscope; picture-in-picture");
-                	iframe.attr('allowFullScreen', '');
-                	innerDiv1.append(iframe);
-                }else{
-                	var video = $("<video></video>");
-                	video.attr('width',"800");
-                	video.attr('height',"530");
-                	video.attr('controls', true);
-                	var source = $("<source></source>");
-                	source.attr('src', videoSrc);
-                	source.attr('type',"video/mp4");
-                	video.append(source);
-                	innerDiv1.append(video);
+                    var iframe = $("<iframe></iframe>");
+                    iframe.attr('width', "800");
+                    iframe.attr('height', "530");
+                    iframe.attr('src', videoSrc);
+                    iframe.attr('frameborder', "0");
+                    iframe.attr('allow', "accelerometer; clipboard-write; encrypted-media;gyroscope; picture-in-picture");
+                    iframe.attr('allowFullScreen', '');
+                    innerDiv1.append(iframe);
+                } else {
+                    var video = $("<video></video>");
+                    video.attr('width', "800");
+                    video.attr('height', "530");
+                    video.attr('controls', true);
+                    var source = $("<source></source>");
+                    source.attr('src', videoSrc);
+                    source.attr('type', "video/mp4");
+                    video.append(source);
+                    innerDiv1.append(video);
                 }
+                
                 videoBlock.append(innerDiv1);
+                
+                // Delete button with data attributes
                 var anchor1 = $("<a></a>");
-                anchor1.attr('href',"javascript:;");
-                anchor1.attr('class',"btn deleteVideo col-md-1");
-                anchor1.attr('data-video-id',"");
-                anchor1.css('position','absolute');
-                anchor1.css('right','25px');
+                anchor1.attr('href', "javascript:;");
+                anchor1.attr('class', "btn col-md-1");
+                anchor1.attr('data-action', "delete-video");
+                anchor1.attr('data-video-id', videoId || "");
+                anchor1.css('position', 'absolute');
+                anchor1.css('right', '25px');
                 var span1 = $("<span></span>");
-                span1.attr('class',"icon-trash error");
+                span1.attr('class', "icon-trash error");
                 anchor1.append(span1);
                 videoBlock.append(anchor1);
+                
+                // Edit button with data attributes
                 var anchor2 = $("<a></a>");
-                anchor2.attr('href',"javascript:;");
-                anchor2.attr('class',"btn editVideo col-md-1");
-                anchor2.attr('data-editvideo-id',"");
-                anchor2.css('position','absolute');
-                anchor2.css('top','60px');
-                anchor2.css('right','25px');
+                anchor2.attr('href', "javascript:;");
+                anchor2.attr('class', "btn col-md-1");
+                anchor2.attr('data-action', "edit-video");
+                anchor2.attr('data-editvideo-id', videoId || "");
+                anchor2.css('position', 'absolute');
+                anchor2.css('top', '60px');
+                anchor2.css('right', '25px');
                 var span2 = $("<span></span>");
-                span2.attr('class',"icon-edit");
+                span2.attr('class', "icon-edit");
                 anchor2.append(span2);
                 videoBlock.append(anchor2);
+                
                 videoBlock.find('h3 strong').html(title);
                 return videoBlock;
             }
@@ -211,101 +222,208 @@
             }
 
             
-            function textBlockDoubleClick(e){
-            	// get to the nearest divs class attribute
+            var originalTextHtml = {};
+
+            function textBlockDoubleClick(e) {
+                // get to the nearest divs class attribute
                 $(".EasyMDEContainer").remove();
                 var divName = $(e.target).closest('div').attr('class');
+                
                 //if the div is a text content block 
-                $(e.target).closest('.textDivStaff').addClass("open");
+                var textBlock = $(e.target).closest('.textDivStaff');
+                textBlock.addClass("open");
+                
+                var blockId = textBlock.attr("id");
+                
+                // Store original HTML before editing
+                originalTextHtml[blockId] = textBlock.html();
+                
                 var description = $("div.open p:eq(0)").text();
-            	defaultValue = description;
-        
+                defaultValue = description;
+
                 $("#editTextAlert").show();
                 markDown = new EasyMDE({element: $('#editTextBlock')[0]});
                 markDown.value(description.trim());
+                
                 //remove card border
                 $(".open").css('display', 'none');
                 $(".open").css('overflow-y', 'scroll');
                 $(".open").css('height', '400px');
             }
 
-            function biblioBlockDoubleClick(e){
-               $(".EasyMDEContainer").remove();
-         	   $(e.target).closest('.biblioDivStaff').addClass("open");
-         	   var description = $("div.open p:eq(0)").text();
-           	   defaultValue = description;
-           	
-           	   var title = $("div.open p span:eq(0)").text();
-           	   var desc = $("div.open p span:eq(1)").text();  
-	      	    //showing the edit bibliography form with all the respective values
-      	       $("#editBiblioAlert").show();
-      	
-      	       $("#editTitleBiblio").val(title);
-      	       $("#editDescBiblio").val(desc);
-           		
-           	    formDataCancel = new FormData();
-           	    formDataCancel.append('biblioTitle', title);
-           	    formDataCancel.append('description', desc);
-            	    //remove card border
+            var originalBiblioHtml = {};
+
+            function biblioBlockDoubleClick(e) {
+                $(".EasyMDEContainer").remove();
+                var biblioBlock = $(e.target).closest('.biblioDivStaff');
+                biblioBlock.addClass("open");
+                
+                var blockId = biblioBlock.attr("id");
+                
+                // Store the COMPLETE original HTML including all references
+                originalBiblioHtml[blockId] = biblioBlock.html();
+                
+                var description = $("div.open p:eq(0)").text();
+                defaultValue = description;
+                
+                var title = $("div.open p span:eq(0)").text();
+                var desc = $("div.open p span:eq(1)").text();  
+                
+                // Showing the edit bibliography form with all the respective values
+                $("#editBiblioAlert").show();
+                
+                $("#editTitleBiblio").val(title);
+                $("#editDescBiblio").val(desc);
+                
+                // Store values for potential cancel operation
+                formDataCancel = new FormData();
+                formDataCancel.append('biblioTitle', title);
+                formDataCancel.append('description', desc);
+                
+                // Remove card border
                 $(".open").css('display', 'none');
                 $(".open").css('overflow-y', 'scroll');
-                $(".open").css('max-height', '200px');	
-             } 
+                $(".open").css('max-height', '200px');
+            }
              
-             function referenceBlockDoubleClick(e){
-            	 	currentRefId = $(this).find('.deleteReferenceId').val();
-            	 	$(".EasyMDEContainer").remove();
-            	 	$(e.target).closest('.referenceDivStaff').addClass("open");
-            	 	var description = $("div.open p:eq(0)").text();
-            	 	defaultValue = description;
-             	
-            	 	var title = $("div.open p span:eq(0)").text();
-            	 	var author = $("div.open p span:eq(1)").text();
-            	 	var year = $("div.open p span:eq(2)").text();
-            	 	var journal = $("div.open p span:eq(3)").text();
-            	 	var url = $("div.open p span:eq(4)").text();
-            	 	var volume = $("div.open p span:eq(5)").text();
-            	 	var issue = $("div.open p span:eq(6)").text();
-            	 	var pages = $("div.open p span:eq(7)").text();
-            	 	var editors = $("div.open p span:eq(8)").text();
-            	 	var type = $("div.open p span:eq(9)").text();
-            	 	var note = $("div.open p span:eq(10)").text(); 
-             	
-            	 	//showing the edit bibliography form with all the respective values
-		    	    $("#editReferenceAlert").show();
-		    	    var alert = $('<input type="hidden" id="currentBiblioId">');
-            	 	var biblioId = $(this).data("biblio-id");
-            	 	$("#currentBiblioId").val(biblioId);
-            	 	$("#editTitleRef").val(title);
-            	 	$("#editAuthorRef").val(author);
-            	 	$("#editYearRef").val(year);
-            	 	$("#editJournalRef").val(journal);
-            	 	$("#editUrlRef").val(url);
-            	 	$("#editVolumeRef").val(volume);
-            	 	$("#editIssueRef").val(issue);
-            	 	$("#editPagesRef").val(pages);
-            	 	$("#editEditorsRef").val(editors);
-            	 	$("#editTypeRef").val(type);
-            	 	$("#editNoteRef").val(note);
-                     
-            	 	formDataCancel = new FormData();
-            	 	formDataCancel.append('title', title);
-            	 	formDataCancel.append('author', author);
-            	 	formDataCancel.append('year', year);
-            	 	formDataCancel.append('journal', journal);
-            	 	formDataCancel.append('url', url);
-            	 	formDataCancel.append('volume', volume);
-            	 	formDataCancel.append('issue', issue);
-            	 	formDataCancel.append('pages', pages);
-            	 	formDataCancel.append('editors', editors);
-            	 	formDataCancel.append('type', type);
-            	 	formDataCancel.append('note', note);
-             	
-             	    //remove card border
-            	 	$(".open").css('display', 'none');
-            	 	$(".open").css('overflow-y', 'scroll');
-            	 	$(".open").css('max-height', '200px');
-             }
+            var originalReferenceHtml = {};
+
+            function referenceBlockDoubleClick(e) {
+                var referenceBlock = $(e.target).closest('.referenceDivStaff');
+                currentRefId = referenceBlock.find('input[data-reference-id]').val();
+
+                $(".EasyMDEContainer").remove();
+                referenceBlock.addClass("open");
+
+                var blockId = referenceBlock.attr("id");
+
+                originalReferenceHtml[blockId] = referenceBlock.html();
+
+                var description = $("div.open p:eq(0)").text();
+                defaultValue = description;
+
+                // Extract values - if Type is first in display, adjust indices accordingly
+                // Check if the current display has Type first or not
+                var fullText = $("div.open p:eq(0)").text();
+                console.log("Full reference text:", fullText);
+                
+                var type, title, author, year, journal, url, volume, issue, pages, editors, note;
+                
+                // Check if the text starts with "Type:" (new format) or "Reference Title:" (old format)
+                if (fullText.includes("Type:")) {
+                    // New format: Type is first
+                    type = $("div.open p span:eq(0)").text();
+                    title = $("div.open p span:eq(1)").text();
+                    author = $("div.open p span:eq(2)").text();
+                    year = $("div.open p span:eq(3)").text();
+                    journal = $("div.open p span:eq(4)").text();
+                    url = $("div.open p span:eq(5)").text();
+                    volume = $("div.open p span:eq(6)").text();
+                    issue = $("div.open p span:eq(7)").text();
+                    pages = $("div.open p span:eq(8)").text();
+                    editors = $("div.open p span:eq(9)").text();
+                    note = $("div.open p span:eq(10)").text();
+                } else {
+                    // Old format: Reference Title is first, Type is later
+                    title = $("div.open p span:eq(0)").text();
+                    author = $("div.open p span:eq(1)").text();
+                    year = $("div.open p span:eq(2)").text();
+                    journal = $("div.open p span:eq(3)").text();
+                    url = $("div.open p span:eq(4)").text();
+                    volume = $("div.open p span:eq(5)").text();
+                    issue = $("div.open p span:eq(6)").text();
+                    pages = $("div.open p span:eq(7)").text();
+                    editors = $("div.open p span:eq(8)").text();
+                    type = $("div.open p span:eq(9)").text();
+                    note = $("div.open p span:eq(10)").text();
+                }
+                
+                // Show the edit reference form
+                $("#editReferenceAlert").show();
+
+                // Clear any existing hidden inputs first
+                $("#editReferenceAlert .modal-footer input[type='hidden']").remove();
+
+                // Get bibliography ID from the parent element
+                var biblioId = referenceBlock.closest("[data-biblio-block]").attr("id");
+
+                // Create a hidden input with bibliography ID
+                var biblioInput = $('<input type="hidden" id="editRefBiblioId">');
+                biblioInput.val(biblioId);
+                $("#editReferenceAlert .modal-footer").append(biblioInput);
+
+                // Set all the form values
+                $("#editTitleRef").val(title || '');
+                $("#editAuthorRef").val(author || '');
+                $("#editYearRef").val(year || '');
+                $("#editJournalRef").val(journal || '');
+                $("#editUrlRef").val(url || '');
+                $("#editVolumeRef").val(volume || '');
+                $("#editIssueRef").val(issue || '');
+                $("#editPagesRef").val(pages || '');
+                $("#editEditorsRef").val(editors || '');
+                $("#editNoteRef").val(note || '');
+                
+                // Enhanced type selection logic
+                var trimmedType = type ? type.trim() : '';
+                console.log("Setting type field with value:", trimmedType);
+                
+                // First, reset the select to default
+                $("#editTypeRef").prop('selectedIndex', 0);
+                
+                if (trimmedType) {
+                    // Try exact match first
+                    var exactMatch = $("#editTypeRef option[value='" + trimmedType + "']");
+                    if (exactMatch.length > 0) {
+                        $("#editTypeRef").val(trimmedType);
+                        console.log("Exact match found for type:", trimmedType);
+                    } else {
+                        // Try case-insensitive match
+                        var foundOption = false;
+                        $("#editTypeRef option").each(function() {
+                            var optionValue = $(this).val();
+                            var optionText = $(this).text();
+                            
+                            if (optionValue.toLowerCase() === trimmedType.toLowerCase() || 
+                                optionText.toLowerCase() === trimmedType.toLowerCase()) {
+                                $("#editTypeRef").val(optionValue);
+                                foundOption = true;
+                                console.log("Case-insensitive match found. Set to:", optionValue);
+                                return false; // break
+                            }
+                        });
+                        
+                        if (!foundOption) {
+                            console.log("No match found for type:", trimmedType);
+                            console.log("Available options:");
+                            $("#editTypeRef option").each(function() {
+                                console.log("- Value:", $(this).val(), "Text:", $(this).text());
+                            });
+                        }
+                    }
+                } else {
+                    console.log("Type is empty, leaving as default");
+                }
+
+                // Store original values for cancel functionality
+                formDataCancel = new FormData();
+                formDataCancel.append('type', trimmedType);
+                formDataCancel.append('title', title || '');
+                formDataCancel.append('author', author || '');
+                formDataCancel.append('year', year || '');
+                formDataCancel.append('journal', journal || '');
+                formDataCancel.append('url', url || '');
+                formDataCancel.append('volume', volume || '');
+                formDataCancel.append('issue', issue || '');
+                formDataCancel.append('pages', pages || '');
+                formDataCancel.append('editors', editors || '');
+                formDataCancel.append('note', note || '');
+
+                // Remove card border
+                $(".open").css('display', 'none');
+                $(".open").css('overflow-y', 'scroll');
+                $(".open").css('max-height', '200px');
+            }
              
             function spaceBlockDoubleClick(e) {
         	 	$(".EasyMDEContainer").remove();
@@ -322,257 +440,338 @@
         	 	$(".open").css('height', '400px');
             }
             
-            function imageBlockDoubleClick(e){
-            	$(".EasyMDEContainer").remove();
+            function imageBlockDoubleClick(e) {
+                $(".EasyMDEContainer").remove();
                 var divName = $(e.target).closest('div').attr('class');
-                var imgBlockID = $(e.target).attr('id'); 
-            	if(imgBlockID != ''){
-                	$("#uploadImage").data('value', imgBlockID);
-                	$("#addImgAlert").show();
-            	}
+                var imgBlockID = $(e.target).closest('[data-image-block]').attr('id'); 
+                
+                if(imgBlockID != ''){
+                    $("#uploadImage").data('value', imgBlockID);
+                    $("#addImgAlert").show();
+                }
             }
                 
             function uploadImage() {
-            	var imgBlockID = $("#uploadImage").data('value')
-            	var file = $('#file')[0].files[0];
-            	var reader  = new FileReader();
-            	var formData = new FormData();
-            	var chooseFromExisting = true;
-            	if (typeof(file) != "undefined"){
-            		chooseFromExisting = false;
-            		formData.append('file', file);
-            	}
-            	var imageSource = $('#selectedImage').find('img').attr('src');
-            	var imageId = "";
-            	if(typeof(imageSource) != "undefined"){
-            		imageId = imageSource.split("/").pop().split(".")[0];
-            	}
-            	var imageblock = "";
-            	var oldImageBlock = "";
-            	var token = [[${_csrf.token}]];
-            	// Ashmi changes for Story VSPC-64
-            			    
-            	// checks if image ID is present to replace
-            	if (imgBlockID != '') {
-            			oldImageBlock = $("#" + imgBlockID);
-            			var imageBlockId = imgBlockID;
-            			formData.append('imageBlockId',imageBlockId);
-            			var url = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image/'})]" + imageBlockId;
-            			if(!chooseFromExisting){
-            				reader.onload = function (theFile)
-            				{
-            					var image = new Image();
-            					image.src = theFile.target.result;
-            					image.onload = function ()
-            					{
-            						imageblock = createImageBlock(reader, this.width);
-            						$("#" + imageBlockId).replaceWith(imageblock);	
-            						 $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(imageBlockDoubleClick);
-            					};
-            				}
-            			}
-            			else{
-            				var image = new Image();
-            				image.src = $('#selectedImage').find('img').attr('src');
-            				formData.append('imageId',imageId);
-            				imageblock = createImageBlockWithExistingImage($('#selectedImage').find('img').attr('src'),image.width);
-            				$("#" + imageBlockId).replaceWith(imageblock);	
-            				$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(imageBlockDoubleClick);
-            			}
-            			// Reset data-attribute to get current selected image ID
-            			$("#uploadImage").data('value', '');
-            	}
-            	else {
-            		var url = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image'})]";
-            		if(!chooseFromExisting){
-            			reader.onload = function (theFile) 
-            			{        	
-            			var image = new Image();
-            			image.src = theFile.target.result;
-            			image.onload = function() 
-            			{
-            				imageblock = createImageBlock(reader, this.width);  
-            				$('#slideSpace').append(imageblock); 
-            				$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(imageBlockDoubleClick);
-            			};          
-            			} 
-            		}
-            		else
-            		{
-            			var image = new Image();
-            			image.src = $('#selectedImage').find('img').attr('src');
-            			formData.append('imageId',imageId);
-            			imageblock = createImageBlockWithExistingImage($('#selectedImage').find('img').attr('src'),image.width);  
-            			$('#slideSpace').append(imageblock); 
-            			$(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(imageBlockDoubleClick);
-            		}
-            	}
-            	if (!chooseFromExisting)
-            	{
-            		reader.readAsDataURL(file)
-            	}
-            	$.ajax({
-            		enctype: 'multipart/form-data',
-            		// ------------- creating image content blocks ------------
-            		url: url,
-            		type: 'POST',
-            		cache       : false,
-            		contentType : false,
-            		processData : false,
-            		headers: {
-	                    'X-CSRF-TOKEN': token
-	                },
-            		data: formData,    
-            		success: function(data) {
-            			$(".open").removeClass("open");
-            			var img = imageblock.find('img');
-            			if(data != ''){
-            				img.attr('id', data);
-            				$("#current").find('#deleteImageId').val(data);
-            				$("#current").attr('id', data);
-            			}
-            			else{
-            				img.attr('id', imgBlockID);
-            				$("#current").find('#deleteImageId').val(imgBlockID);
-            				$("#current").attr('id', imgBlockID);
-            			}
-            		},
-            		error: function(data) {
-            		if (imgBlockID == '') {
-            			$("#current").remove();
-            		}
-            		else {
-            			$("#current").replaceWith(oldImageBlock);
-            		}
-            		if (data.status == 403) {
-            			$("#loginAlert").show();
-            		}
-            		}
-            	});
-            	// Reset the image file name 
-            	$('#file').val('');
-            	if(chooseFromExisting)
-            	{
-            		$("#selectedImage").empty();
-            		$('#imageId').prop('selectedIndex',0).trigger( "change" );
-            	}
+                var imgBlockID = $("#uploadImage").data('value');
+                var file = $('#file')[0].files[0];
+                var reader = new FileReader();
+                var formData = new FormData();
+                var chooseFromExisting = true;
+                
+                if (typeof(file) != "undefined"){
+                    chooseFromExisting = false;
+                    formData.append('file', file);
+                }
+                
+                var imageSource = $('#selectedImage').find('img').attr('src');
+                var imageId = "";
+                if(typeof(imageSource) != "undefined"){
+                    imageId = imageSource.split("/").pop().split(".")[0];
+                }
+                
+                var imageblock = "";
+                var oldImageBlock = "";
+                var token = [[${_csrf.token}]];
+                
+                // Checks if image ID is present to replace
+                if (imgBlockID != '') {
+                    oldImageBlock = $("#" + imgBlockID);
+                    var imageBlockId = imgBlockID;
+                    formData.append('imageBlockId', imageBlockId);
+                    var url = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image/'})]" + imageBlockId;
+                    
+                    if(!chooseFromExisting){
+                        reader.onload = function (theFile) {
+                            var image = new Image();
+                            image.src = theFile.target.result;
+                            image.onload = function () {
+                                imageblock = createImageBlockWithDataAttributes(reader, this.width, imageBlockId);
+                                $("#" + imageBlockId).replaceWith(imageblock);	
+                                $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(imageBlockDoubleClick);
+                            };
+                        }
+                    }
+                    else{
+                        var image = new Image();
+                        image.src = $('#selectedImage').find('img').attr('src');
+                        formData.append('imageId', imageId);
+                        imageblock = createImageBlockWithDataAttributesExisting($('#selectedImage').find('img').attr('src'), image.width, imageBlockId);
+                        $("#" + imageBlockId).replaceWith(imageblock);	
+                        $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(imageBlockDoubleClick);
+                    }
+                    // Reset data-attribute to get current selected image ID
+                    $("#uploadImage").data('value', '');
+                }
+                else {
+                    var url = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image'})]";
+                    if(!chooseFromExisting){
+                        reader.onload = function (theFile) {        	
+                            var image = new Image();
+                            image.src = theFile.target.result;
+                            image.onload = function() {
+                                imageblock = createImageBlockWithDataAttributes(reader, this.width, null);  
+                                $('#slideSpace').append(imageblock); 
+                                $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(imageBlockDoubleClick);
+                            };          
+                        } 
+                    }
+                    else {
+                        var image = new Image();
+                        image.src = $('#selectedImage').find('img').attr('src');
+                        formData.append('imageId', imageId);
+                        imageblock = createImageBlockWithDataAttributesExisting($('#selectedImage').find('img').attr('src'), image.width, null);  
+                        $('#slideSpace').append(imageblock); 
+                        $(imageblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(imageBlockDoubleClick);
+                    }
+                }
+                
+                if (!chooseFromExisting) {
+                    reader.readAsDataURL(file);
+                }
+                
+                $.ajax({
+                    enctype: 'multipart/form-data',
+                    url: url,
+                    type: 'POST',
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    headers: {
+                        'X-CSRF-TOKEN': token
+                    },
+                    data: formData,    
+                    success: function(data) {
+                        $(".open").removeClass("open");
+                        var img = imageblock.find('img');
+                        if(data != ''){
+                            img.attr('id', data);
+                            $("#current").find('input[data-image-id]').val(data);
+                            $("#current").attr('id', data);
+                        }
+                        else{
+                            img.attr('id', imgBlockID);
+                            $("#current").find('input[data-image-id]').val(imgBlockID);
+                            $("#current").attr('id', imgBlockID);
+                        }
+                    },
+                    error: function(data) {
+                        if (imgBlockID == '') {
+                            $("#current").remove();
+                        }
+                        else {
+                            $("#current").replaceWith(oldImageBlock);
+                        }
+                        if (data.status == 403) {
+                            $("#loginAlert").show();
+                        }
+                    }
+                });
+                
+                // Reset the image file name 
+                $('#file').val('');
+                if(chooseFromExisting) {
+                    $("#selectedImage").empty();
+                    $('#imageId').prop('selectedIndex',0).trigger("change");
+                }
+            }
+            
+            function createImageBlockWithDataAttributes(reader, width, blockId) {
+                var imageblock = $(
+                    '<div id="current" class="valueDiv tab row" data-image-block>' + 
+                    '<img src="#" style="imgDiv tab row"/>' + 
+                    '<input type="hidden" data-image-id="' + (blockId || '') + '" />' + 
+                    '<a class="btn col-md-1" data-action="delete-image" href="javascript:;" style="position: absolute; right:64px;">' + 
+                    '<i style="color: var(--error);" class="fas fa-trash-alt"></i></a>' + 
+                    '</div>'
+                );
+                imageblock.find('img').attr('src', reader.result);
+                if(width > 800)
+                    imageblock.find('img').attr('width', '800px');
+                return imageblock;
+            }
+
+            function createImageBlockWithDataAttributesExisting(src, width, blockId) {
+                var imageblock = $(
+                    '<div id="current" class="valueDiv tab row" data-image-block>' + 
+                    '<img src="#" style="imgDiv tab row"/>' + 
+                    '<input type="hidden" data-image-id="' + (blockId || '') + '" />' + 
+                    '<a class="btn col-md-1" data-action="delete-image" href="javascript:;" style="position:absolute; right:25px;">' + 
+                    '<span class="icon-trash error"></span></a>' + 
+                    '</div>'
+                );
+                imageblock.find('img').attr('src', src);
+                if(width > 800)
+                    imageblock.find('img').attr('width', '800px');
+                return imageblock;
             }
             
             function embedVideo() {
-				var videoID = $("#saveVideo").data('value'); // gets video ID
-				var oldUrl = $("#saveVideo").data('url');
-				var url = $("#videoLink").val();
-				var title = $("#videoTitle").val();
-				var vidFile = $("#videoFile")[0].files[0];
-				var reader = new FileReader();
-				var videoBlock = "";
-				var ajaxUrl = '';
-				var oldVideoBlock = '';
-				var formData = new FormData();
-				if (url) {
-					if(url.startsWith("https://www.youtube.com/watch?v="))
-					{
-						videoId = url.substring(url.indexOf("v=")+2);
-						url = "https://www.youtube.com/embed/"+videoId;
-					}
-					formData.append('url', url);
-					videoBlock = createVideoBlock(reader, url, title,true);
-				}
-				if (vidFile) {
-					formData.append('videoFile', vidFile);
-				}
-				if (videoID) {
-					oldVideoBlock = $("#" + videoID);
-					ajaxUrl = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/video/'})]" + videoID;
-					formData.append('videoBlockId', videoID);
-					if (url) {
-						$("#" + videoID).replaceWith(videoBlock);
-					}
-					if (vidFile) {
-						reader.onload = function (theFile) {
-							videoBlock = createVideoBlock(reader, theFile.target.result,title,false);
-							$("#" + videoID).replaceWith(videoBlock);
-						};
-					}
-				}
-				else {
-					if (url) {
-						$('#slideSpace').append(videoBlock);
-					}
-					if (vidFile) {
-						reader.onload = function (theFile) {
-							videoBlock = createVideoBlock(reader, theFile.target.result,title,false);
-							$('#slideSpace').append(videoBlock);
-						}
-					}
-					ajaxUrl = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/video'})]";
-				}
-				// Reset data-attribute to get current selected image ID
-				$("#videoFile").val('');
-				$("#videoLink").val('');
-				$(videoBlock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave);
-				if (vidFile) {
-					reader.readAsDataURL(vidFile);
-				}
-				formData.append('videoTitle', title);
-				var token = [[${_csrf.token}]];
-				$.ajax({
-					enctype: 'multipart/form-data',
-					// ------------- creating video content blocks ------------
-					url: ajaxUrl,
-					type: 'POST',
-					cache: false,
-					contentType: false,
-					processData: false,
-					data: formData,
-					headers:{
-						'X-CSRF-Token':token
-						},
-					success: function (data) {
-					    if(videoBlock){
-							var videoBlk = "";
-							if(url){
-								videoBlk = videoBlock.find('iframe');
-							}
-							else{
-								videoBlk = videoBlock.find('video');
-							}
-							if (data != '') {
-								videoBlk.attr('id', data);
-								$("#currentVideo >.deleteVideo").attr('data-video-id', data);
-								$("#currentVideo >.editVideo").attr('data-editvideo-id', data);
-								$("#currentVideo").attr('id', data);
-							}
-							else {
-								videoBlk.attr('id', videoID);
-								$("#currentVideo >.deleteVideo").find('a:first').attr('data-video-id', videoID);
-								$("#currentVideo >.editVideo").attr('data-editvideo-id', videoID);
-								$("#currentVideo").attr('id', videoID);
-							}
-					    }
-					    else{
-					        if(videoID){
-					        	$("#" + videoID).find('h3 strong').html(title);
-					        }
-					    }
-					},
-					error: function (data) {
-						if (videoID == '') {
-							$("#current").remove();
-						}
-						else {
-							$("#current").replaceWith(oldVideoBlock);
-						}
-						if (data.status == 403) {
-							$("#loginAlert").show();
-						}
-						else{
-							var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>Please try again.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-							$('.error').append(alert);
-						}
-					}
-				});
-			}
+                var videoID = $("#saveVideo").data('value'); // gets video ID
+                var oldUrl = $("#saveVideo").data('url');
+                var url = $("#videoLink").val();
+                var title = $("#videoTitle").val();
+                var vidFile = $("#videoFile")[0].files[0];
+                var reader = new FileReader();
+                var videoBlock = "";
+                var ajaxUrl = '';
+                var oldVideoBlock = '';
+                var formData = new FormData();
+                
+                if (url) {
+                    if(url.startsWith("https://www.youtube.com/watch?v=")) {
+                        videoId = url.substring(url.indexOf("v=")+2);
+                        url = "https://www.youtube.com/embed/"+videoId;
+                    }
+                    formData.append('url', url);
+                    videoBlock = createVideoBlock(reader, url, title, true, videoID);
+                }
+                
+                if (vidFile) {
+                    formData.append('videoFile', vidFile);
+                }
+                
+                if (videoID) {
+                    oldVideoBlock = $("#" + videoID);
+                    ajaxUrl = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/video/'})]" + videoID;
+                    formData.append('videoBlockId', videoID);
+                    
+                    if (url) {
+                        $("#" + videoID).replaceWith(videoBlock);
+                    }
+                    if (vidFile) {
+                        reader.onload = function (theFile) {
+                            videoBlock = createVideoBlock(reader, theFile.target.result, title, false, videoID);
+                            $("#" + videoID).replaceWith(videoBlock);
+                        };
+                    }
+                } else {
+                    if (url) {
+                        $('#slideSpace').append(videoBlock);
+                    }
+                    if (vidFile) {
+                        reader.onload = function (theFile) {
+                            videoBlock = createVideoBlock(reader, theFile.target.result, title, false, "currentVideo");
+                            $('#slideSpace').append(videoBlock);
+                        }
+                    }
+                    ajaxUrl = "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/video'})]";
+                }
+                
+                // Reset data-attribute to get current selected video ID
+                $("#videoFile").val('');
+                $("#videoLink").val('');
+                
+                $(videoBlock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave);
+                
+                if (vidFile) {
+                    reader.readAsDataURL(vidFile);
+                }
+                
+                formData.append('videoTitle', title);
+                var token = [[${_csrf.token}]];
+                
+                $.ajax({
+                    enctype: 'multipart/form-data',
+                    url: ajaxUrl,
+                    type: 'POST',
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    data: formData,
+                    headers: {
+                        'X-CSRF-Token': token
+                    },
+                    success: function (data) {
+                        if(videoBlock) {
+                            var videoBlk = "";
+                            if(url) {
+                                videoBlk = videoBlock.find('iframe');
+                            } else {
+                                videoBlk = videoBlock.find('video');
+                            }
+                            
+                            if (data != '') {
+                                videoBlk.attr('id', data);
+                                $("#currentVideo [data-action='delete-video']").attr('data-video-id', data);
+                                $("#currentVideo [data-action='edit-video']").attr('data-editvideo-id', data);
+                                $("#currentVideo").attr('id', data);
+                            } else {
+                                videoBlk.attr('id', videoID);
+                                $("#currentVideo [data-action='delete-video']").attr('data-video-id', videoID);
+                                $("#currentVideo [data-action='edit-video']").attr('data-editvideo-id', videoID);
+                                $("#currentVideo").attr('id', videoID);
+                            }
+                        } else {
+                            if(videoID) {
+                                $("#" + videoID).find('h3 strong').html(title);
+                            }
+                        }
+                    },
+                    error: function (data) {
+                        if (videoID == '') {
+                            $("#current").remove();
+                        } else {
+                            $("#current").replaceWith(oldVideoBlock);
+                        }
+                        if (data.status == 403) {
+                            $("#loginAlert").show();
+                        } else {
+                            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>Please try again.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                            $('.error').append(alert);
+                        }
+                    }
+                });
+            }
+            
+            $(document).on("click", "[data-action='edit-video']", function(e) {
+                addVideoClk = 0;
+                editVideoClk = 1;
+                $("#saveVideo").html("Update Video");
+                $("#saveVideo").prop('disabled', false);
+                
+                var id = $(this).attr('data-editvideo-id');
+                var vidId = $('div#' + id).attr('id');
+                var title = $('div#' + id).find('h3 strong').html();
+                
+                if (vidId != '') {
+                    var url = "";
+                    if($('div#' + id).find('iframe').length > 0 && 
+                       $('div#' + id).find('iframe').attr('src') != null && 
+                       typeof($('div#' + id).find('iframe').attr('src')) != "undefined") {
+                        url = $('div#' + id).find('iframe').attr('src');
+                    }
+                    
+                    if (url.length > 0) {
+                        $("#saveVideo").data('url', url);
+                        $("#videoLink").val(url);
+                        $("#urlTab").addClass("active");
+                        $("#urlLink").addClass("active show");
+                        $("#uploadTab").removeClass("active show");
+                        $("#uploadLink").removeClass("active show");
+                        $("#urlLink>a").addClass("active show");
+                        $("#uploadLink").removeClass("active show");
+                        $("#uploadLink>a").removeClass("active show");
+                    } 
+                    
+                    $("#videoTitle").val(title);
+                    $("#saveVideo").data('value', vidId);
+                    $("#addVideoAlert").show();
+                }
+            });
+            
+            $(document).on("click", "[data-action='delete-video']", function(e) {
+                $("#confirmDeleteVideoAlert .modal-footer input[type='hidden']").remove();
+                $("#videoIdToDelete").val($(this).attr('data-video-id'));
+                
+                $(".load").remove();
+                $("#" + $(this).attr('data-video-id')).append($('<div class="load" style="font-size: 30px;display: none; text-align: center;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></div>'));
+                $(".load").show();
+                
+                setTimeout(function() {
+                    $(".load").hide();
+                    $("#confirmDeleteVideoAlert").show();
+                }, 3000);
+            });
             
             function guidedTour() {
             	const tour = new Shepherd.Tour({
@@ -927,74 +1126,110 @@
                     $("#addChoiceAlert").show();
                 });
                 
-                $(document).on("click", ".deleteText", function(e) {
-            		$("#confirmDeleteTextAlert").show();
-            		var alert = $('<input type="hidden" id="deleteTextId">');
-            		$(alert).attr( 'value', $(this).siblings('input').val());
-            		$('.modal-footer').append(alert); 
-              	});
+             	// Delete Text Click Handler
+				$(document).on("click", "[data-action='delete-text']", function(e) {
+				    $("#confirmDeleteTextAlert .modal-footer input[type='hidden']").remove();
+				    $("#confirmDeleteTextAlert").show();
+				    
+				    var textId = $(this).siblings("input[data-text-id]").val();
+				    var textInput = $('<input type="hidden" id="deleteTextId">');
+				    textInput.val(textId);
+				    $('#confirmDeleteTextAlert .modal-footer').append(textInput);
+				});
 
-                $(document).on("click", ".deleteSpace", function(e) {
-            		$("#confirmDeleteSpaceAlert").show();
-            		var alert = $('<input type="hidden" id="deleteSpaceId">');
-            		$(alert).attr( 'value', $(this).siblings('input').val());
-            		$('.modal-footer').append(alert); 
-              	});
+             	// Delete Space Click Handler
+                $(document).on("click", "[data-action='delete-space']", function(e) {
+                    $("#confirmDeleteSpaceAlert .modal-footer input[type='hidden']").remove();
+                    $("#confirmDeleteSpaceAlert").show();
+                    
+                    var spaceId = $(this).siblings("input[data-space-id]").val();
+                    var spaceInput = $('<input type="hidden" id="deleteSpaceId">');
+                    spaceInput.val(spaceId);
+                    $('#confirmDeleteSpaceAlert .modal-footer').append(spaceInput);
+                });
 
-            	$(document).on("click", ".deleteImage", function(e) {
-            		$("#confirmDeleteImageAlert").show();
-            		var alert = $('<input type="hidden" id="deleteImageId">');
-            		$(alert).attr( 'value', $(this).siblings('input').val());
-            		$('.modal-footer').append(alert); 
-              	});
+             	// Delete Image Click Handler
+                $(document).on("click", "[data-action='delete-image']", function(e) {
+                    $("#confirmDeleteImageAlert .modal-footer input[type='hidden']").remove();
+                    $("#confirmDeleteImageAlert").show();
+                    
+                    var imageId = $(this).siblings("input[data-image-id]").val();
+                    var imageInput = $('<input type="hidden" id="deleteImageId">');
+                    imageInput.val(imageId);
+                    $('#confirmDeleteImageAlert .modal-footer').append(imageInput);
+                });
             	
-            	$(document).on("click", ".deleteVideo", function(e) {
-            		$("#videoIdToDelete").attr( 'value', $(this).attr('data-video-id'));
-            		$(".load").remove();
-            		$("#"+$(this).attr('data-video-id')).append($('<div class="load" style="font-size: 30px;display: none; text-align: center;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></div>'));
-            		$(".load").show();
-            		setTimeout(function() {
-            		    //code to be executed after 3 second
-            		    $(".load").hide();
-            		    $("#confirmDeleteVideoAlert").show();
-            		  }, 3000);
-              	});
+             	// Delete Video Click Handler
+                $(document).on("click", "[data-action='delete-video']", function(e) {
+                    $("#confirmDeleteVideoAlert .modal-footer input[type='hidden']").remove();
+                    
+                    var videoId = $(this).attr('data-video-id');
+                    $("#videoIdToDelete").val(videoId);
+                    
+                    $(".load").remove();
+                    $("#" + videoId).append($('<div class="load" style="font-size: 30px;display: none; text-align: center;"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></div>'));
+                    $(".load").show();
+                    
+                    setTimeout(function() {
+                        $(".load").hide();
+                        $("#confirmDeleteVideoAlert").show();
+                    }, 3000);
+                });
             	
             $("#addBibliography").click(function() {
                  $("#addBiblioAlert").show();
              });
            	
-           	$(document).on("click", ".addReference", function(e) {
-                 $("#addReferenceAlert").show();
-                 var alert = $('<input type="hidden" id="currentBiblioId">');
-         		$(alert).attr( 'value', $(this).closest("div").attr("id"));
-         		$('.modal-footer').append(alert); 
-             });
+         	// Add Reference Click Handler
+            $(document).on("click", "[data-action='add-reference']", function(e) {
+                $("#addReferenceAlert").show();
+                // Clear any existing hidden inputs first
+                $("#addReferenceAlert .modal-footer input[type='hidden']").remove();
+                
+                var biblioId = $(this).closest("[data-biblio-block]").attr("id");
+                var biblioInput = $('<input type="hidden" id="addReferenceTarget">');
+                biblioInput.val(biblioId);
+                $('#addReferenceAlert .modal-footer').append(biblioInput);
+            });
              
-             $(document).on("click", ".deleteBiblio", function(e) {
-         		$("#confirmDeleteBiblioAlert").show();
-         		var alert = $('<input type="hidden" id="deleteBiblioId">');
-         		$(alert).attr( 'value', $(this).siblings('input').val());
-         		$('.modal-footer').append(alert); 
-           	});
+         	// Delete Bibliography Click Handler
+            $(document).on("click", "[data-action='delete-biblio']", function(e) {
+                // Clear any existing hidden inputs
+                $("#confirmDeleteBiblioAlert .modal-footer input[type='hidden']").remove();
+                $("#confirmDeleteBiblioAlert").show();
+                
+                var biblioId = $(this).siblings("input[data-biblio-id]").val();
+                var biblioInput = $('<input type="hidden" id="deleteBiblioId">');
+                biblioInput.val(biblioId);
+                $('#confirmDeleteBiblioAlert .modal-footer').append(biblioInput);
+            });
              
-             $(document).on("click", ".deleteReference", function(e) {
-         		$("#confirmDeleteRefAlert").show();
-         		var alert = $('<input type="hidden" class="deleteReferenceId">');
-         		$(alert).attr( 'value', $(this).siblings('input').val());
-         		$('.modal-footer').append(alert); 
-         		
-         		var alert2 = $('<input type="hidden" id="currentBiblioId">');
-         		$(alert2).attr( 'value', $(e.target).closest('.biblioDivStaff').attr("id"));
-         		$('.modal-footer').append(alert2); 
-           	});
+            $(document).on("click", "[data-action='delete-reference']", function(e) {
+                $("#confirmDeleteRefAlert .modal-footer input[type='hidden']").remove();
+                $("#confirmDeleteRefAlert").show();
+                
+                // Create reference ID input
+                var refInput = $('<input type="hidden" id="deleteReferenceId">');
+                refInput.val($(this).siblings("input[data-reference-id]").val());
+                $("#confirmDeleteRefAlert .modal-footer").append(refInput);
+                
+                // Create bibliography parent ID input
+                var biblioInput = $('<input type="hidden" id="referenceBlockBiblioId">');
+                biblioInput.val($(this).closest("[data-biblio-block]").attr("id"));
+                $("#confirmDeleteRefAlert .modal-footer").append(biblioInput);
+            });
             	
-            	$(document).on("click", ".deleteChoiceBlock", function(e) {
-            		$("#confirmDeleteChoiceBlockAlert").show();
-            		var alert = $('<input type="hidden" id="deleteChoiceBlockId">');
-            		$(alert).attr( 'value', $(this).siblings('input').val());
-            		$('.modal-footer').append(alert); 
-              	});
+          	// Delete Choice Block Click Handler
+             $(document).on("click", "[data-action='delete-choice']", function(e) {
+                 // Clear any existing hidden inputs
+                 $("#confirmDeleteChoiceBlockAlert .modal-footer input[type='hidden']").remove();
+                 $("#confirmDeleteChoiceBlockAlert").show();
+                 
+                 var choiceId = $(this).siblings("input[data-choice-id]").val();
+                 var choiceInput = $('<input type="hidden" id="deleteChoiceBlockId">');
+                 choiceInput.val(choiceId);
+                 $('#confirmDeleteChoiceBlockAlert .modal-footer').append(choiceInput);
+             });
                 
                 $("#cancelSubmitText").click(function() {
             		$("#addTextAlert").hide();	
@@ -1118,209 +1353,222 @@
          		});
          	});
          		
-         // ---------- Delete Reference -------------
-         		
+         	// ---------- Delete Reference -------------
          		$("#deleteReference").on("click", function(e) {
-         		e.preventDefault();
-         		$("#confirmDeleteTextAlert").find('input').remove();
-         		$("#confirmDeleteImageAlert").find('input').remove();
-         		$("#confirmDeleteBiblioAlert").find('input').remove();
-         		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
-         		$("#confirmDeleteRefAlert").hide();
-         		var refId = $('.deleteReferenceId').attr('value');
-         		$('.deleteReferenceId').remove();
-         		var biblioBlockId = $('#currentBiblioId').attr('value');
-         		$('#currentBiblioId').remove();
-         		
-         		var token =  $('input[name="_csrf"]').attr('value');
-         		
-         		// ------------- delete Reference ------------
-         		$.ajax({
-         		    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/bibliography/'})]" + biblioBlockId + ['/reference/delete/'] + refId,
-         		    type: 'DELETE',
-         		    headers: {
-                         'X-CSRF-Token': token 
-                    	},
-         		    success: function(result) {
-         		        $('#' + refId).remove();
-         		    },
-         			error: function(data) {
-         				var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-         				$('.error').append(alert); 
-         				$(".error").delay(4000).slideUp(500, function(){
-         				    $(".error").empty();
-         				});
-         			}
+         		    e.preventDefault();
+         		    
+         		    // Clear all inputs from other modal dialogs
+         		    $("#confirmDeleteTextAlert").find('input').remove();
+         		    $("#confirmDeleteImageAlert").find('input').remove();
+         		    $("#confirmDeleteBiblioAlert").find('input').remove();
+         		    $("#confirmDeleteChoiceBlockAlert").find('input').remove();
+         		    $("#confirmDeleteRefAlert").hide();
+         		    
+         		    // Get values using the new data attributes and ids
+         		    var refId = $('#deleteReferenceId').val();
+         		    var biblioBlockId = $('#referenceBlockBiblioId').val();
+         		    
+         		    // Clean up the inputs
+         		    $('#deleteReferenceId').remove();
+         		    $('#referenceBlockBiblioId').remove();
+         		    
+         		    var token = $('input[name="_csrf"]').attr('value');
+         		    
+         		    // ------------- delete Reference ------------
+         		    $.ajax({
+         		        url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/bibliography/'})]" + biblioBlockId + ['/reference/delete/'] + refId,
+         		        type: 'DELETE',
+         		        headers: {
+         		            'X-CSRF-Token': token 
+         		        },
+         		        success: function(result) {
+         		            $('#' + refId).remove();
+         		        },
+         		        error: function(data) {
+         		            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+         		            $('.error').append(alert); 
+         		            $(".error").delay(4000).slideUp(500, function(){
+         		                $(".error").empty();
+         		            });
+         		        }
+         		    });
          		});
-         	});
-                	// ---------- Delete Text Block -------------
-            	
-            	$("#deleteText").on("click", function(e) {
-            	e.preventDefault();
-         		$("#confirmDeleteBiblioAlert").find('input').remove();
-         		$("#confirmDeleteRefAlert").find('input').remove();
-                $("#confirmDeleteVideoAlert").find('input').remove();
-            		$("#confirmDeleteImageAlert").find('input').remove();
-            		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
-            		$("#confirmDeleteTextAlert").hide();
-            		var blockId = $('#deleteTextId').attr('value');
-            		$('#deleteTextId').remove()
-            		
-            		// ------------- delete text content blocks ------------
-            		$.ajax({
-            		    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/text/'})]"+blockId+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
-            		    type: 'DELETE',
-            		    success: function(result) {
-            		        $('#' + blockId).remove();
-            		        
-            		    },
-            			error: function(data) {
-            				var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-            				$('.error').append(alert); 
-            				$(".error").delay(4000).slideUp(500, function(){
-            				    $(".error").empty();
-            				});
-            			}
-            		});
-            	});
+         	
+         	// ---------- Delete Text Block -------------
+         		$("#deleteText").on("click", function(e) {
+         		    e.preventDefault();
+         		    // Clean up other modals
+         		    $("#confirmDeleteBiblioAlert").find('input').remove();
+         		    $("#confirmDeleteRefAlert").find('input').remove();
+         		    $("#confirmDeleteVideoAlert").find('input').remove();
+         		    $("#confirmDeleteImageAlert").find('input').remove();
+         		    $("#confirmDeleteChoiceBlockAlert").find('input').remove();
+         		    $("#confirmDeleteTextAlert").hide();
+         		    
+         		    var blockId = $('#deleteTextId').val();
+         		    $('#deleteTextId').remove();
+         		    
+         		    // ------------- delete text content blocks ------------
+         		    $.ajax({
+         		        url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/text/'})]"+blockId+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
+         		        type: 'DELETE',
+         		        success: function(result) {
+         		            $('#' + blockId).remove();
+         		        },
+         		        error: function(data) {
+         		            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+         		            $('.error').append(alert); 
+         		            $(".error").delay(4000).slideUp(500, function(){
+         		                $(".error").empty();
+         		            });
+         		        }
+         		    });
+         		});
 
-	            // ---------- Delete Space Block ------------- //
-	
-	            $("#deleteSpace").on("click", function(e) {
-		            var token =  $('input[name="_csrf"]').attr('value');
-		            e.preventDefault();
-		            $("#confirmDeleteImageAlert").find('input').remove();
-		            $("#confirmDeleteChoiceBlockAlert").find('input').remove();
-		            $("#confirmDeleteTextAlert").find('input').remove();
-		            $("#confirmDeleteSpaceAlert").hide();
-		            var blockId = $('#deleteSpaceId').attr('value');
-		            $('#deleteSpaceId').remove()
-		
-		            // ------------- Delete space content blocks ------------ //
-		            $.ajax({
-			            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space/'})]"+blockId,
+         	// ---------- Delete Space Block ------------- //
+         		$("#deleteSpace").on("click", function(e) {
+         		    e.preventDefault();
+         		    var token = $('input[name="_csrf"]').attr('value');
+         		    // Clean up other modals
+         		    $("#confirmDeleteImageAlert").find('input').remove();
+         		    $("#confirmDeleteChoiceBlockAlert").find('input').remove();
+         		    $("#confirmDeleteTextAlert").find('input').remove();
+         		    $("#confirmDeleteSpaceAlert").hide();
+         		    
+         		    var blockId = $('#deleteSpaceId').val();
+         		    $('#deleteSpaceId').remove();
+
+         		    // ------------- Delete space content blocks ------------ //
+         		    $.ajax({
+         		        url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space/'})]"+blockId,
+         		        type: 'DELETE',
+         		        headers:{
+         		            'X-CSRF-Token':token
+         		        },
+         		        success: function(result) {
+         		            $('#' + blockId).remove();
+         		        },
+         		        error: function(data) {
+         		            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+         		            $('.error').append(alert);
+         		            $(".error").delay(4000).slideUp(500, function(){
+         		                $(".error").empty();
+         		            });
+         		        }
+         		    });
+         		});
+
+         	// ---------- Delete Image Block -----------
+         		$("#deleteImage").on("click", function(e) {
+         		    e.preventDefault();
+         		    // Clean up other modals
+         		    $("#confirmDeleteTextAlert").find('input').remove();
+         		    $("#confirmDeleteBiblioAlert").find('input').remove();
+         		    $("#confirmDeleteRefAlert").find('input').remove();
+         		    $("#confirmDeleteChoiceBlockAlert").find('input').remove();
+         		    $("#confirmDeleteSpaceAlert").find('input').remove();
+         		    $("#confirmDeleteImageAlert").hide();
+         		    
+         		    var blockId = $('#deleteImageId').val();
+         		    if(blockId == null || blockId == ''){
+         		        var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+         		        $('.error').append(alert); 
+         		        $(".error").delay(4000).slideUp(500, function(){
+         		            $(".error").empty();
+         		        });
+         		    } else{
+         		        $('#deleteImageId').remove();
+         		        // ------------- delete image content blocks ------------
+         		        $.ajax({
+         		            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image/'})]"+blockId+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
+         		            type: 'DELETE',
+         		            success: function(result) {
+         		                $('#' + blockId).remove();
+         		            },
+         		            error: function(data) {
+         		                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+         		                $('.error').append(alert); 
+         		                $(".error").delay(4000).slideUp(500, function(){
+         		                    $(".error").empty();
+         		                });
+         		            }
+         		        });
+         		    }
+         		});
+         	
+         	// ---------- Delete Choice Block -----------
+         		$("#deleteChoiceBlock").on("click", function(e) {
+         		    e.preventDefault();
+         		    // Clean up other modals
+         		    $("#confirmDeleteTextAlert").find('input').remove();
+         		    $("#confirmDeleteBiblioAlert").find('input').remove();
+         		    $("#confirmDeleteRefAlert").find('input').remove();
+         		    $("#confirmDeleteImageAlert").find('input').remove();
+         		    $("#confirmDeleteVideoAlert").find('input').remove();
+         		    $("#confirmDeleteChoiceBlockAlert").hide();
+         		    
+         		    var blockId = $('#deleteChoiceBlockId').val();
+         		    if(blockId == null || blockId == ''){
+         		        var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+         		        $('.error').append(alert); 
+         		        $(".error").delay(4000).slideUp(500, function(){
+         		            $(".error").empty();
+         		        });
+         		    } else{
+         		        $('#deleteChoiceBlockId').remove();
+         		        // ------------- delete choices content blocks ------------
+         		        $.ajax({
+         		            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/choiceBlock/'})]"+blockId+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
+         		            type: 'DELETE',
+         		            success: function(result) {
+         		                $('#' + blockId).remove();
+         		            },
+         		            error: function(data) {
+         		                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+         		                $('.error').append(alert); 
+         		                $(".error").delay(4000).slideUp(500, function(){
+         		                    $(".error").empty();
+         		                });
+         		            }
+         		        });
+         		    }
+         		});
+            	
+         	// ---------- Delete Video Block -----------
+			$("#deleteVideo").on("click", function(e) {
+			    e.preventDefault();
+			    // Clean up other modals
+			    $("#confirmDeleteTextAlert").find('input').remove();
+			    $("#confirmDeleteChoiceBlockAlert").find('input').remove();
+			    $("#confirmDeleteVideoAlert").hide();
+			    
+			    var blockId = $('#videoIdToDelete').val();
+			    $('#videoIdToDelete').val("");
+			    
+			    if(blockId == null || blockId == ''){
+			        var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+			        $('.error').append(alert); 
+			        $(".error").delay(4000).slideUp(500, function(){
+			            $(".error").empty();
+			        });
+			    } else{
+			        // ------------- delete video content blocks ------------
+			        $.ajax({
+			            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/video/'})]"+blockId+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
 			            type: 'DELETE',
-			            headers:{
-			            	'X-CSRF-Token':token
-			            },
 			            success: function(result) {
-			            	$('#' + blockId).remove();
+			                $('#' + blockId).remove();
 			            },
 			            error: function(data) {
-				            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-				            $('.error').append(alert);
-				            $(".error").delay(4000).slideUp(500, function(){
-				            	$(".error").empty();
-				            });
+			                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+			                $('.error').append(alert); 
+			                $(".error").delay(4000).slideUp(500, function(){
+			                    $(".error").empty();
+			                });
 			            }
-		            });
-	            });
-
-            	// ---------- Delete Image Block -----------
-            	
-            	$("#deleteImage").on("click", function(e) {
-            		e.preventDefault();
-            		$("#confirmDeleteTextAlert").find('input').remove();
-                 	$("#confirmDeleteBiblioAlert").find('input').remove();
-                 	$("#confirmDeleteRefAlert").find('input').remove();
-            		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
-            		$("#confirmDeleteSpaceAlert").find('input').remove();
-            		$("#confirmDeleteImageAlert").hide();
-            		var blockId = $('#deleteImageId').attr('value');
-            		if(blockId == null || blockId == ''){
-            			var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-            			$('.error').append(alert); 
-            			$(".error").delay(4000).slideUp(500, function(){
-            			    $(".error").empty();
-            			});
-            		} else{
-            			$('#deleteImageId').remove()
-            			// ------------- delete image content blocks ------------
-            			$.ajax({
-            			    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/image/'})]"+blockId+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
-            			    type: 'DELETE',
-            			    success: function(result) {
-            			    	$('#' + blockId).remove();
-            			    },
-            				error: function(data) {
-            					var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-            					$('.error').append(alert); 
-            					$(".error").delay(4000).slideUp(500, function(){
-            					    $(".error").empty();
-            					});
-            				}
-            			});
-            		}
-            	});
-         	
-         	$("#deleteChoiceBlock").on("click", function(e) {
-         	    e.preventDefault();
-         	    $("#confirmDeleteTextAlert").find('input').remove();
-         	    $("#confirmDeleteBiblioAlert").find('input').remove();
-         	    $("#confirmDeleteRefAlert").find('input').remove();
-         	    $("#confirmDeleteImageAlert").find('input').remove();
-         	    $("#confirmDeleteVideoAlert").find('input').remove();
-         		$("#confirmDeleteChoiceBlockAlert").hide();
-         		var blockId = $('#deleteChoiceBlockId').attr('value');
-         		if(blockId == null || blockId == ''){
-         			var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-         			$('.error').append(alert); 
-         			$(".error").delay(4000).slideUp(500, function(){
-         			    $(".error").empty();
-         			});
-         		} else{
-         			$('#deleteChoiceBlockId').remove()
-         			// ------------- delete choices content blocks ------------
-         			$.ajax({
-         			    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/choiceBlock/'})]"+blockId+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
-         			    type: 'DELETE',
-         			    success: function(result) {
-         			    	$('#' + blockId).remove();
-         			    },
-         				error: function(data) {
-         					var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-            					$('.error').append(alert); 
-            					$(".error").delay(4000).slideUp(500, function(){
-            					    $(".error").empty();
-            					});
-            				}
-            			});
-            		}
-            	});
-            	
-            	// ---------- Delete Video Block -----------
-            	
-			$("#deleteVideo").on("click", function(e) {
-           		e.preventDefault();
-           		$("#confirmDeleteTextAlert").find('input').remove();
-           		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
-           		$("#confirmDeleteVideoAlert").hide();
-           		var blockId = $('#videoIdToDelete').attr('value');
-           		$('#videoIdToDelete').val("");
-           		if(blockId == null || blockId == ''){
-           			var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-           			$('.error').append(alert); 
-           			$(".error").delay(4000).slideUp(500, function(){
-           			    $(".error").empty();
-           			});
-           		} else{
-           		    // ------------- delete video content blocks ------------
-           			$.ajax({
-           			    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/video/'})]"+blockId+'?'+[[${_csrf.parameterName}]]+'='+[[${_csrf.token}]],
-           			    type: 'DELETE',
-           			    success: function(result) {
-           			    	$('#' + blockId).remove();
-           			    },
-           				error: function(data) {
-           					var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-           					$('.error').append(alert); 
-           					$(".error").delay(4000).slideUp(500, function(){
-           					    $(".error").empty();
-           					});
-           				}
-           			});
-           		}
-           	});
+			        });
+			    }
+			});
             	
            	$("#deleteChoiceBlock").on("click", function(e) {
            	    e.preventDefault();
@@ -1372,156 +1620,174 @@
                 // ------------- creating Bibliography content blocks ------------
                 
                 var formData = new FormData();
-        		var biblioTitle = $("#titleBiblio").val();
-        		var description = $("#descriptionBiblio").val();
-        		
-        		formData.append('biblioTitle', biblioTitle);
-        		formData.append('description', description);    
-        		$("#titleBiblio").val('');
-        		$("#descriptionBiblio").val('');
-        		$("#addBiblioAlert").hide();
-        		
-        		var object = {};
-        
-        		formData.forEach((value, key) => {
-        		    if (key !== 'contentOrder') {
-        		        object[key] = value;
-        		    }
-        		});
-
-        		
-        		var jsonData = JSON.stringify(object);
-        
-                var token =  $('input[name="_csrf"]').attr('value');
+                var biblioTitle = $("#titleBiblio").val();
+                var description = $("#descriptionBiblio").val();
+                
+                formData.append('biblioTitle', biblioTitle);
+                formData.append('description', description);    
+                $("#titleBiblio").val('');
+                $("#descriptionBiblio").val('');
+                $("#addBiblioAlert").hide();
+                
+                var object = {};
+                
+                formData.forEach((value, key) => {
+                    if (key !== 'contentOrder') {
+                        object[key] = value;
+                    }
+                });
+                
+                var jsonData = JSON.stringify(object);
+                
+                var token = $('input[name="_csrf"]').attr('value');
                 $.ajax({
                     url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/bibliography'})]",
                     type: 'POST',
-                    cache       : false,
-                    contentType : 'application/json',
-                    processData : false,
+                    cache: false,
+                    contentType: 'application/json',
+                    processData: false,
                     headers: {
                         'X-CSRF-Token': token 
-                   	},
+                    },
                     data: jsonData,
                     success: function(data) {
-                    	console.log(data);
-                    	
-                    	var biblioblock = $('<div id="' + data.id + '" class="biblioDivStaff tab row"> \
-                               <p class="col-md-10">\
-                               Bibliography Title: <span>' + data.biblioTitle + '</span>,\
-                               Description: <span>' + data.description + '</span>\
-                               </p> \
-                               <input type="hidden" id="deleteBiblioId" value="' + data.id + '" />\
-                               <a class="btn deleteBiblio col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a>\
-                               <a class="btn addReference primary-btn btn-sm" style="padding-top: 8px;">+ New Reference</a>\
-                               <div id="referenceSpace" class="col-md-10">\
-                               </div>\
-                       </div> \
-        ');
-                    	$(biblioblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(biblioBlockDoubleClick);
+                        console.log(data);
+                        
+                        // Updated biblioblock creation with data attributes
+                        var biblioblock = $(
+                            '<div id="' + data.id + '" class="biblioDivStaff tab row" data-biblio-block>' +
+                            '<p class="col-md-10">' +
+                            'Bibliography Title: <span>' + data.biblioTitle + '</span>,' +
+                            'Description: <span>' + data.description + '</span>' +
+                            '</p>' +
+                            '<input type="hidden" data-biblio-id="' + data.id + '" value="' + data.id + '" />' +
+                            '<a class="btn col-md-1" data-action="delete-biblio" href="javascript:;" style="position: absolute; right: 0px;">' +
+                            '<span class="icon-trash error"></span>' +
+                            '</a>' +
+                            '<a class="btn primary-btn btn-sm" data-action="add-reference" style="padding-top: 8px;">+ New Reference</a>' +
+                            '<div id="referenceSpace" class="col-md-10">' +
+                            '</div>' +
+                            '</div>'
+                        );
+                        
+                        $(biblioblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(biblioBlockDoubleClick);
                         $('#slideSpace').append(biblioblock); 
                     },
                     error: function(data) {
-                    	if (data.status == 403){
-                    		$("#loginAlert").show();
-                    	}
-                    	else {
-                        	var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                        	$('.error').append(alert);
-                    	}
+                        if (data.status == 403){
+                            $("#loginAlert").show();
+                        }
+                        else {
+                            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                            $('.error').append(alert);
+                        }
                     }
-                    
                 });
             });
 
              
-             $("#submitReference").on("click", function(e) {
-                 e.preventDefault();
-                 // ------------- creating reference ------------
-                 
-                 var formData = new FormData();
-                 var title = $("#titleRef").val();
-                 var author = $("#authorRef").val();
-                 var year = $("#yearRef").val();
-                 var journal = $("#journalRef").val();
-                 var url = $("#urlRef").val();
-                 var volume = $("#volumeRef").val();
-                 var issue = $("#issueRef").val();
-                 var pages = $("#pagesRef").val();
-                 var editors = $("#editorsRef").val();
-                 var type = $("#typeRef").val();
-                 var note = $("#noteRef").val();
-                 var visibility = $("#visibilityRef").val();
-                 
-                 formData.append('title', title);
-                 formData.append('author', author);
-                 formData.append('year', year);
-                 formData.append('journal', journal);
-                 formData.append('url', url);
-                 formData.append('volume', volume);
-                 formData.append('issue', issue);
-                 formData.append('pages', pages);
-                 formData.append('editors', editors);
-                 formData.append('type', type);
-                 formData.append('note', note);
-                 formData.append("visibility", visibility);
-                 var biblioBlockId = $('#currentBiblioId').attr('value');
+            $("#submitReference").on("click", function(e) {
+                e.preventDefault();
+                // ------------- creating reference ------------
+                
+                var formData = new FormData();
+                var title = $("#titleRef").val();
+                var author = $("#authorRef").val();
+                var year = $("#yearRef").val();
+                var journal = $("#journalRef").val();
+                var url = $("#urlRef").val();
+                var volume = $("#volumeRef").val();
+                var issue = $("#issueRef").val();
+                var pages = $("#pagesRef").val();
+                var editors = $("#editorsRef").val();
+                var type = $("#typeRef").val();
+                var note = $("#noteRef").val();
+                
+                formData.append('title', title);
+                formData.append('author', author);
+                formData.append('year', year);
+                formData.append('journal', journal);
+                formData.append('url', url);
+                formData.append('volume', volume);
+                formData.append('issue', issue);
+                formData.append('pages', pages);
+                formData.append('editors', editors);
+                formData.append('type', type);
+                formData.append('note', note);
+                
+                // Change this to use addReferenceTarget or a similar ID
+                var biblioBlockId = $('#addReferenceTarget').attr('value');
 
-                 $("#titleRef").val('');
-                 $("#authorRef").val('');
-                 $("#yearRef").val('');
-                 $("#journalRef").val('');
-                 $("#urlRef").val('');
-                 $("#volumeRef").val('');
-                 $("#issueRef").val('');
-                 $("#pagesRef").val('');
-                 $("#editorsRef").val('');
-                 $("#typeRef").val('');
-                 $("#noteRef").val('');
-                 $("#visibilityRef").val('');
-                 $("#addReferenceAlert").hide();
-                 
-                 var object = {};
-                 formData.forEach((value, key) => object[key] = value);
-                 var jsonData = JSON.stringify(object);
-                 var token =  $('input[name="_csrf"]').attr('value');
-                 
-                 $.ajax({
-                     url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/bibliography/'})]" + biblioBlockId + ['/reference/add'],
-                     type: 'POST',
-                     cache       : false,
-                     contentType : 'application/json; charset=utf-8',
-                     processData : false,
-                     headers: {
-                         'X-CSRF-Token': token 
-                    	},
-                     data: jsonData,
-                     success: function(data) {
-                     	var referenceblock = $('<div id="'+ data.id +'" class="referenceDivStaff tab row"><p class="col-md-10" > Reference Title: <span>' + data.title + '</span>, Author: <span>' + data.author + '</span>, Year:' 
-                         		+ '<span>' + data.year + '</span>, Journal: <span>' + data.journal + '</span>, '
-                         		+ 'Url: <span>' + data.url + '</span>, Volume: <span>' + data.volume + '</span>, '
-         						+ 'Issue: <span>' + data.issue + '</span>, Pages: <span>' + data.pages + '</span>, '
-         						+ 'Editors: <span>' + data.editors + '</span>, Type: <span>' + data.type + '</span>, '
-         						+ 'Note: <span>' + data.note + '</span>'
-                         		+ '<input type="hidden" class="deleteReferenceId" value="'+ data.id +'" /><a class="btn deleteReference" href="javascript:;" style="position: absolute; right:0px;"><i style="color: var(--error);" class="fas fa-trash-alt"></i></a></p></div>');
-         
-                     	$(referenceblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(referenceBlockDoubleClick);
-                     	var elem = $('#' + biblioBlockId).find('#referenceSpace');
-                     	elem.append(referenceblock);
-                     	$('#currentBiblioId').remove();
-                     },
-                     error: function(data) {
-                     	if (data.status == 403){
-                     		$("#loginAlert").show();
-                     	}
-                     	else {
-                         	var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                         	$('.error').append(alert);
-                     	}
-                     }
-                     
-                 });
-             });
+                // Clear the input fields
+                $("#titleRef").val('');
+                $("#authorRef").val('');
+                $("#yearRef").val('');
+                $("#journalRef").val('');
+                $("#urlRef").val('');
+                $("#volumeRef").val('');
+                $("#issueRef").val('');
+                $("#pagesRef").val('');
+                $("#editorsRef").val('');
+                $("#typeRef").val('');
+                $("#noteRef").val('');
+                $("#addReferenceAlert").hide();
+                
+                var object = {};
+                formData.forEach((value, key) => object[key] = value);
+                var jsonData = JSON.stringify(object);
+                var token = $('input[name="_csrf"]').attr('value');
+                
+                $.ajax({
+                    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/bibliography/'})]" + biblioBlockId + ['/reference/add'],
+                    type: 'POST',
+                    cache: false,
+                    contentType: 'application/json; charset=utf-8',
+                    processData: false,
+                    headers: {
+                        'X-CSRF-Token': token 
+                    },
+                    data: jsonData,
+                    success: function(data) {
+                        // Updated with data attributes
+						var referenceblock = $(
+						    '<div id="'+ data.id +'" class="referenceDivStaff tab row" data-reference-block data-biblio-id="' + biblioBlockId + '">' +
+						    '<p class="col-md-10">' +
+						    'Reference Title: <span>' + data.title + '</span>, ' +
+						    'Author: <span>' + data.author + '</span>, ' +
+						    'Year: <span>' + data.year + '</span>, ' +
+						    'Journal: <span>' + data.journal + '</span>, ' +
+						    'Url: <span>' + data.url + '</span>, ' +
+						    'Volume: <span>' + data.volume + '</span>, ' +
+						    'Issue: <span>' + data.issue + '</span>, ' +
+						    'Pages: <span>' + data.pages + '</span>, ' +
+						    'Editors: <span>' + data.editors + '</span>, ' +
+						    'Type: <span>' + data.type + '</span>, ' +
+						    'Note: <span>' + data.note + '</span>' +
+						    '</p>' +
+						    '<input type="hidden" data-reference-id="' + data.id + '" value="' + data.id + '" />' +
+						    '<a class="btn col-md-1" data-action="delete-reference" href="javascript:;" style="position: absolute; right:0px;">' +
+						    '<span class="icon-trash error"></span></a>' +
+						    '</div>'
+						);
+
+                        $(referenceblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(referenceBlockDoubleClick);
+                        var elem = $('#' + biblioBlockId).find('#referenceSpace');
+                        elem.append(referenceblock);
+                        
+                        // Remove the reference target ID input
+                        $('#addReferenceTarget').remove();
+                    },
+                    error: function(data) {
+                        if (data.status == 403){
+                            $("#loginAlert").show();
+                        }
+                        else {
+                            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                            $('.error').append(alert);
+                        }
+                    }
+                });
+            });
                 $("#cancelVideoBtn").click(function() {
                     // Initialize selected video ID to blank, on clicking cancel button
                     $("#videoTitle").val('');
@@ -1570,8 +1836,13 @@
                         enctype: 'multipart/form-data',
                         success: function(data) {
             
-                            var textblock = $('<div style="word-break:break-word;" id="'+ data +'" class="textDivStaff tab row"><label>Text Description: </label><p class="col-md-10">'+text+'</p>'+'<input type="hidden" id="deleteTextId" value="'+data+'" /><a class="btn deleteText col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a></div>');
-                            $(textblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(textBlockDoubleClick);
+                        	// Example update for text block creation
+                        	var textblock = $('<div style="word-break:break-word;" id="'+ data +'" class="textDivStaff tab row">' + 
+                        	                  '<label>Text Description: </label><p class="col-md-10">'+text+'</p>' +
+                        	                  '<input type="hidden" data-text-id="'+data+'" value="'+data+'" />' + 
+                        	                  '<a class="btn col-md-1" data-action="delete-text" href="javascript:;">' + 
+                        	                  '<span class="icon-trash error"></span></a></div>');
+                        	$(textblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(textBlockDoubleClick);
                             $('#slideSpace').append(textblock);             
                         },
                         error: function(data) {
@@ -1586,51 +1857,62 @@
                     });
                 });
                 
-	            $("#submitSpace").on("click", function(e) {
-		            $("#addSpaceAlert").hide();
-		            e.preventDefault();
-		            // ------------- creating space content blocks ------------
-		
-		            var formData = new FormData();
-		            var title = document.getElementById('spaceTitle').value;
-		            var selectedSpace = document.getElementById('spaceName');
-		            var spaceName = $('#spaceName').select2('data')[0].name;
-		            var token = [[${_csrf.token}]];
-		            if (selectedSpace.selectedIndex != -1 && selectedSpace.value != ""){
+                $("#submitSpace").on("click", function(e) {
+                    $("#addSpaceAlert").hide();
+                    e.preventDefault();
+                    // ------------- creating space content blocks ------------
 
-			            var spaceId = selectedSpace.options[selectedSpace.selectedIndex].value;
-			            formData.append('title', title);
-			            formData.append('spaceId', spaceId);
-			            $.ajax({
-				            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space'})]", 
-				            type: 'POST',
-				            cache       : false,
-				            contentType : false,
-				            processData : false,
-				            data: formData,
-				            headers:{
-		            			'X-CSRF-Token':token
-		            		},
-				            enctype: 'multipart/form-data',
-				            success: function(data) {
-					            var space = $('<div style="word-break:break-word;" id="'+ data +'" class="SpaceDivStaff tab row"><label>Title: </label><p class="col-md-10">'+title+'</p> <div style = "display:flex; flex-direction: row;width: 100%;"><label>Space: </label><p class="col-md-10">'+ spaceName +'</p></div>'+'<input type="hidden" id="deleteSpaceId" value="'+data+'" /><a class="btn deleteSpace col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a></div>');
-					
-					            $(space[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(spaceBlockDoubleClick);
-					            $('#slideSpace').append(space);
-					            $('#spaceTitle').val("");
-					            removeAllSelectOptions("spaceName");
-				            },
-				            error: function(data) {
-					            if (data.status == 403){
-					            	$("#loginAlert").show();
-					            } else {
-						            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-						            $('.error').append(alert);
-					            }
-				            }
-			            });
-		            }
-	            });
+                    var formData = new FormData();
+                    var title = document.getElementById('spaceTitle').value;
+                    var selectedSpace = document.getElementById('spaceName');
+                    var spaceName = $('#spaceName').select2('data')[0].name;
+                    var token = [[${_csrf.token}]];
+                    
+                    if (selectedSpace.selectedIndex != -1 && selectedSpace.value != "") {
+                        var spaceId = selectedSpace.options[selectedSpace.selectedIndex].value;
+                        formData.append('title', title);
+                        formData.append('spaceId', spaceId);
+                        
+                        $.ajax({
+                            url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/space'})]",
+                            type: 'POST',
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            data: formData,
+                            headers: {
+                                'X-CSRF-Token': token
+                            },
+                            enctype: 'multipart/form-data',
+                            success: function(data) {
+                                // Updated space creation with data attributes
+                                var space = $(
+                                    '<div style="word-break:break-word;" id="' + data + '" class="SpaceDivStaff tab row" data-space-block>' + 
+                                    '<div style="display: flex; flex-direction: column; width: 100%;">' +
+                                    '<div style = "display:flex; flex-direction: row; width: 100%;"><label>Title: </label><p class="col-md-10">' + title + '</p></div>' + 
+                                    '<div style = "display:flex; flex-direction: row;width: 100%;"><label>Space: </label><p class="col-md-10">' + spaceName + '</p></div>' +
+                                    '</div>' +
+                                    '<input type="hidden" data-space-id="' + data + '" value="' + data + '" />' + 
+                                    '<a class="btn col-md-1" data-action="delete-space" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a>' +
+                                    '</div>'
+                                );
+
+                                $(space[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(spaceBlockDoubleClick);
+                                $('#slideSpace').append(space);
+                                $('#spaceTitle').val("");
+                                removeAllSelectOptions("spaceName");
+                            },
+                            error: function(data) {
+                                if (data.status == 403) {
+                                    $("#loginAlert").show();
+                                } else {
+                                    var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                                    $('.error').append(alert);
+                                }
+                            }
+                        });
+                    }
+                });
 
                 $('input:checkbox').click(function() {
                     if ($(this).is(':checked')) {
@@ -1793,85 +2075,215 @@
  					}
  				}); 
                 
-                function updateTextBox(blockId, text) {
-                    // clear text box and buttons
-                    $(".open").empty();
-                    $(".open").append('<label>Text Description: </label><p class="col-md-10">'+text+'</p><input type="hidden" id="deleteTextId" value="'+blockId+'" /><a class="btn deleteText col-md-1" href="javascript:;" style="position: absolute; right:0;"><span class="icon-trash error"></span></a>');
-                    // reset border of the card
-                    //rebind event handlers
-                    $('.textDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(textBlockDoubleClick);
-                    //resetting the height and overflow-y so that the TextBlock doesn't expand
-                    $('.textDivStaff').css('height', 'auto');
-                    $('.textDivStaff').css('overflow-y', 'visible');
-                    $(".open").css('display', 'flex');
-                    // remove id from storage so its not there on refresh
-                    $(".open").removeClass("open");
-                }
+ 				function updateTextBox(blockId, text) {
+ 				    // clear text box and buttons
+ 				    $(".open").empty();
+ 				    
+ 				    // Updated to include data-text-id and data-action attributes
+ 				    $(".open").append(
+ 				        '<label>Text Description: </label>' +
+ 				        '<p class="col-md-10">' + text + '</p>' +
+ 				        '<input type="hidden" data-text-id="' + blockId + '" value="' + blockId + '" />' +
+ 				        '<a class="btn col-md-1" data-action="delete-text" href="javascript:;" style="position: absolute; right:0;">' +
+ 				        '<span class="icon-trash error"></span></a>'
+ 				    );
+ 				    
+ 				    // reset border of the card
+ 				    //rebind event handlers
+ 				    $('.textDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(textBlockDoubleClick);
+ 				    
+ 				    //resetting the height and overflow-y so that the TextBlock doesn't expand
+ 				    $('.textDivStaff').css('height', 'auto');
+ 				    $('.textDivStaff').css('overflow-y', 'visible');
+ 				    $(".open").css('display', 'flex');
+ 				    
+ 				    // remove id from storage so its not there on refresh
+ 				    $(".open").removeClass("open");
+ 				}
                 
                 // must add the event to the document since the buttons are added dynamically
-                $('#cancelTextBlock').on('click',function(){
-                	$("#editTextAlert").hide();
-                	var blockId = $(this).closest(".open").attr("id");
-                	updateTextBox(blockId, defaultValue);
-                });
+				$('#cancelTextBlock').on('click', function() {
+				    $("#editTextAlert").hide();
+				    var blockId = $(".open").attr("id");
+				    
+				    // Restore original HTML
+				    if (originalTextHtml[blockId]) {
+				        $(".open").html(originalTextHtml[blockId]);
+				        delete originalTextHtml[blockId];
+				    } else {
+				        // Fallback to rebuilding with data attributes
+				        updateTextBox(blockId, defaultValue);
+				    }
+				    
+				    // Reset styles and classes
+				    $(".open").css('display', 'flex');
+				    $(".open").css('height', 'auto');
+				    $(".open").css('overflow-y', 'visible');
+				    $(".open").removeClass("open");
+				});
             
-             function updateBiblioBox(blockId, formData) {
-                 // clear biblio box and buttons
-                 $(".open").empty();
-                	$(".open").append('<p class="col-md-10"> \
-                		    Bibliography Title: <span>' + formData.get('biblioTitle')+ '</span>, \
-                		    Description: <span>' + formData.get('description') + '</span> \
-                		</p> \
-                		<input type="hidden" id="deleteBiblioId" value="' + blockId + '" /> \
-                			<a class="btn deleteBiblio" href="javascript:;" style="position: absolute; right: 0px;">\
-                         <i style="color: var(--error);" class="fas fa-trash-alt"></i>\
-                     </a> \
-                     <a id="addReference" class="btn primary-btn btn-sm" style="padding-top: 8px;">\
-                         + New Reference \
-                     </a> \
-         ');
-         
-                	//reset border of the card
-                 //rebind event handlers
-                 $('.biblioDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(biblioBlockDoubleClick);
-                 $(".open").css('display', 'flex');
-                 // remove id from storage so its not there on refresh
-                 $(".open").removeClass("open");
-             }
+				function updateBiblioBox(blockId, formData) {
+				    // Get ALL reference blocks before clearing
+				    var allReferences = $(".open .referenceDivStaff").clone(true, true);
+				    
+				    // Clear biblio box and buttons
+				    $(".open").empty();
+				    
+				    // Rebuild bibliography header structure
+				    var biblioHtml = 
+				        '<p class="col-md-10">' +
+				        'Bibliography Title: <span>' + formData.get('biblioTitle') + '</span>, ' +
+				        'Description: <span>' + formData.get('description') + '</span>' +
+				        '</p>' +
+				        '<input type="hidden" data-biblio-id="' + blockId + '" value="' + blockId + '" />' +
+				        '<a class="btn col-md-1" data-action="delete-biblio" href="javascript:;" style="position: absolute; right: 0px;">' +
+				        '<span class="icon-trash error"></span>' +
+				        '</a>' +
+				        '<a class="btn primary-btn btn-sm" data-action="add-reference" style="padding-top: 8px;">+ New Reference</a>' +
+				        '<div id="referenceSpace" class="col-md-10"></div>';
+				    
+				    $(".open").append(biblioHtml);
+				    
+				    // Restore ALL reference blocks with their complete HTML and event handlers
+				    if (allReferences.length > 0) {
+				        allReferences.each(function() {
+				            $("#referenceSpace").append($(this));
+				        });
+				    }
+				    
+				    // Rebind event handlers for bibliography
+				    $('.biblioDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(biblioBlockDoubleClick);
+				    
+				    // Rebind event handlers for all restored references
+				    $('.referenceDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(referenceBlockDoubleClick);
+				    
+				    $(".open").css('display', 'flex');
+				    $(".open").removeClass("open");
+				}
              
           	// must add the event to the document since the buttons are added dynamically
-             $('#cancelBiblioBlock').on('click',function(){
-             	$('#currentBiblioId').remove();
-             	$("#editBiblioAlert").hide();
-             	var blockId = $(".open").attr("id");
-             	updateBiblioBox(blockId, formDataCancel);
-             });
+			$('#cancelBiblioBlock').on('click', function() {
+			    $("#editBiblioAlert").hide();
+			    var blockId = $(".open").attr("id");
+			    
+			    // Restore the COMPLETE original HTML with all references
+			    if (originalBiblioHtml[blockId]) {
+			        $(".open").html(originalBiblioHtml[blockId]);
+			        delete originalBiblioHtml[blockId];
+			    }
+			    
+			    // Reset styles and classes
+			    $(".open").css('display', 'flex');
+			    $(".open").css('height', 'auto');
+			    $(".open").css('overflow-y', 'visible');
+			    $(".open").css('max-height', 'none');
+			    $(".open").removeClass("open");
+			    
+			    // Rebind all event handlers for the restored content
+			    rebindBiblioEventHandlers();
+			});
           	
-             function updateReferenceBox(blockId, formData) {
-                 // clear biblio box and buttons
-                 $(".open").empty();
-                	$(".open").append('<p class="col-md-10">Reference Title: <span>' + formData.get('title')
-                			+ '</span>, Author: <span>' + formData.get('author') + '</span>, Year: <span>' + formData.get('year') + '</span>, Journal: <span>' + formData.get('journal') 
-                			+ '</span>, Url: <span>' + formData.get('url') + '</span>, Volume: <span>' + formData.get('volume') + '</span>, Issue: <span>' + formData.get('issue') 
-                			+ '</span>, Pages: <span>' + formData.get('pages') + '</span>, Editors: <span>' + formData.get('editors') + '</span>, Type: <span>' + formData.get('type')
-                			+ '</span>, Note: <span>' + formData.get('note')
-                			+ '</span></p><input type="hidden" class="deleteReferenceId" value="'+blockId+'" /><a class="btn deleteReference col-md-1" href="javascript:;"> <span class="icon-trash error"></span></a>');
-                 
-                	//reset border of the card 
-                 //rebind event handlers
-                 $('.referenceDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(referenceBlockDoubleClick);
-                 $(".open").css('display', 'flex');
-                 // remove id from storage so its not there on refresh
-                 $(".open").removeClass("open");
-             }
+			$('#closeBiblioBlock').on('click', function() {
+			    $("#editBiblioAlert").hide();
+			    var blockId = $(".open").attr("id");
+			    
+			    // Restore the COMPLETE original HTML with all references
+			    if (originalBiblioHtml[blockId]) {
+			        $(".open").html(originalBiblioHtml[blockId]);
+			        delete originalBiblioHtml[blockId];
+			    }
+			    
+			    // Reset styles and classes
+			    $(".open").css('display', 'flex');
+			    $(".open").css('height', 'auto');
+			    $(".open").css('overflow-y', 'visible');
+			    $(".open").css('max-height', 'none');
+			    $(".open").removeClass("open");
+			    
+			    // Rebind all event handlers for the restored content
+			    rebindBiblioEventHandlers();
+			});
+			
+			function rebindBiblioEventHandlers() {
+			    // Rebind bibliography block event handlers
+			    $('.biblioDivStaff').off('mouseenter mouseleave dblclick')
+			        .mouseenter(onMouseEnter)
+			        .mouseleave(onMouseLeave)
+			        .dblclick(biblioBlockDoubleClick);
+			    
+			    // Rebind reference block event handlers
+			    $('.referenceDivStaff').off('mouseenter mouseleave dblclick')
+			        .mouseenter(onMouseEnter)
+			        .mouseleave(onMouseLeave)
+			        .dblclick(referenceBlockDoubleClick);
+			}
           	
-          // must add the event to the document since the buttons are added dynamically
-             $('#cancelRefBlock').on('click',function(){
-             	$('#currentBiblioId').remove();
-             	$("#editReferenceAlert").hide();
-             	var refId = $(".open").attr("id");
-             	updateReferenceBox(refId, formDataCancel);
-             });
+			function updateReferenceBox(blockId, formData) {
+			    // Clear reference box and buttons
+			    $(".open").empty();
+			    
+			    // Use proper FormData.get() method and handle null values
+			    var title = formData.get('title') || '';
+			    var author = formData.get('author') || '';
+			    var year = formData.get('year') || '';
+			    var journal = formData.get('journal') || '';
+			    var url = formData.get('url') || '';
+			    var volume = formData.get('volume') || '';
+			    var issue = formData.get('issue') || '';
+			    var pages = formData.get('pages') || '';
+			    var editors = formData.get('editors') || '';
+			    var type = formData.get('type') || '';
+			    var note = formData.get('note') || '';
+			    
+			    $(".open").append(
+			        '<p class="col-md-10">' +
+			        'Reference Title: <span>' + title + '</span>, ' +
+			        'Author: <span>' + author + '</span>, ' +
+			        'Year: <span>' + year + '</span>, ' +
+			        'Journal: <span>' + journal + '</span>, ' +
+			        'Url: <span>' + url + '</span>, ' +
+			        'Volume: <span>' + volume + '</span>, ' +
+			        'Issue: <span>' + issue + '</span>, ' +
+			        'Pages: <span>' + pages + '</span>, ' +
+			        'Editors: <span>' + editors + '</span>, ' +
+			        'Type: <span>' + type + '</span>, ' +
+			        'Note: <span>' + note + '</span>' +
+			        '</p>' +
+			        '<input type="hidden" data-reference-id="' + blockId + '" value="' + blockId + '" />' +
+			        '<a class="btn col-md-1" data-action="delete-reference" href="javascript:;">' +
+			        '<span class="icon-trash error"></span></a>'
+			    );
+			    
+			    // Reset border of the card 
+			    // Rebind event handlers
+			    $('.referenceDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(referenceBlockDoubleClick);
+			    $(".open").css('display', 'flex');
+			    
+			    // Remove id from storage so it's not there on refresh
+			    $(".open").removeClass("open");
+			}
+          	
+         	// must add the event to the document since the buttons are added dynamically
+				$('#cancelRefBlock').on('click', function() {
+				    $("#editReferenceAlert").hide();
+				    var blockId = $(".open").attr("id");
+				    
+				    // Restore original HTML
+				    if (originalReferenceHtml[blockId]) {
+				        $(".open").html(originalReferenceHtml[blockId]);
+				        delete originalReferenceHtml[blockId];
+				    }
+				    
+				    // Reset styles and classes
+				    $(".open").css('display', 'flex');
+				    $(".open").css('height', 'auto');
+				    $(".open").css('overflow-y', 'visible');
+				    $(".open").css('max-height', 'none');
+				    $(".open").removeClass("open");
+				    
+				    // Clean up modal inputs
+				    $('#editRefBiblioId').remove();
+				});
          
              $('.valueDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick((e)=>{$(".EasyMDEContainer").remove();});
              $('.textDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(textBlockDoubleClick);
@@ -1880,25 +2292,59 @@
              $('.biblioDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(biblioBlockDoubleClick);
              $('.referenceDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(referenceBlockDoubleClick);
             
-	            $('#closeTextBlock').on('click',function(){
-		            $("#editTextAlert").hide();
-		            var blockId = $(this).closest(".open").attr("id");
-		            updateTextBox(blockId, defaultValue);
-	            });
+             $('#closeTextBlock').on('click', function() {
+            	    $("#editTextAlert").hide();
+            	    var blockId = $(".open").attr("id");
+            	    
+            	    // Restore original HTML
+            	    if (originalTextHtml[blockId]) {
+            	        $(".open").html(originalTextHtml[blockId]);
+            	        delete originalTextHtml[blockId];
+            	    } else {
+            	        // Fallback to rebuilding with data attributes
+            	        updateTextBox(blockId, defaultValue);
+            	    }
+            	    
+            	    // Reset styles and classes
+            	    $(".open").css('display', 'flex');
+            	    $(".open").css('height', 'auto');
+            	    $(".open").css('overflow-y', 'visible');
+            	    $(".open").removeClass("open");
+            	});
+             
+          	// Using event delegation instead of direct binding
+             $(document).on('mouseenter', '.textDivStaff', onMouseEnter);
+             $(document).on('mouseleave', '.textDivStaff', onMouseLeave);
+             $(document).on('dblclick', '.textDivStaff', textBlockDoubleClick);
 
 	            function updateSpaceBox(blockId, text, spaceName) {
-		            // clear text box and buttons
-		            $(".open").empty();
-		            $(".open").append('<label>Title: </label><p class="col-md-10">'+text+'</p></div><div style = "display:flex; flex-direction: row;width: 100%;"><label>Space: </label><p class="col-md-10"> '+spaceName+'</p></div><input type="hidden" id="deleteSpaceId" value="'+blockId+'" /><a class="btn deleteSpace col-md-1" href="javascript:;" style="position: absolute; right: 0px;"><span class="icon-trash error"></span></a>');
-		            // reset border of the card
-		            //rebind event handlers
-		            $('.SpaceDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(spaceBlockDoubleClick);
-		            //resetting the height and overflow-y so that the TextBlock doesn't expand
-		            $('.SpaceDivStaff').css('height', 'auto');
-		            $('.SpaceDivStaff').css('overflow-y', 'visible');
-		            $(".open").css('display', 'flex');
-		            // remove id from storage so its not there on refresh
-		            $(".open").removeClass("open");
+	                // clear text box and buttons
+	                $(".open").empty();
+	                $(".open").append(
+	                    '<div style="display: flex; flex-direction: column; width: 100%;">' +
+	                    '<div style="display:flex; flex-direction: row; width: 100%;">' +
+	                    '<label>Title: </label><p class="col-md-10">' + text + '</p>' +
+	                    '</div>' +
+	                    '<div style="display:flex; flex-direction: row;width: 100%;">' +
+	                    '<label>Space: </label><p class="col-md-10"> ' + spaceName + '</p>' +
+	                    '</div>' +
+	                    '</div>' +
+	                    '<input type="hidden" data-space-id="' + blockId + '" value="' + blockId + '" />' +
+	                    '<a class="btn col-md-1" data-action="delete-space" href="javascript:;" style="position: absolute; right: 0px;">' +
+	                    '<span class="icon-trash error"></span></a>'
+	                );
+	                
+	                // reset border of the card
+	                // rebind event handlers
+	                $('.SpaceDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(spaceBlockDoubleClick);
+	                
+	                // resetting the height and overflow-y so that the TextBlock doesn't expand
+	                $('.SpaceDivStaff').css('height', 'auto');
+	                $('.SpaceDivStaff').css('overflow-y', 'visible');
+	                $(".open").css('display', 'flex');
+	                
+	                // remove id from storage so its not there on refresh
+	                $(".open").removeClass("open");
 	            }
 
             	// must add the event to the document since the buttons are added dynamically
@@ -1956,118 +2402,133 @@
                 });
              });   
              
-             $("#submitBiblioBlock").on("click", function(e){
-             	  e.preventDefault();
-                 // ------------- editting Bibliography content blocks ------------
-                 
-                 var formData = new FormData();
-                 var title = $("#editTitleBiblio").val();
-                 var desc = $("#editDescBiblio").val();
-                 var blockId = $(".open").attr("id");
-                 
-                 formData.append('biblioTitle', title);
-                 formData.append('description', desc);
-                 formData.append('id', blockId);
-                 $("#editBiblioAlert").hide();
-                 
-                 var object = {};
-                 formData.forEach((value, key) => object[key] = value);
-                 var jsonData = JSON.stringify(object);
-                 var token =  $('input[name="_csrf"]').attr('value');
-                 
-                 $.ajax({
-                     url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/bibliography/edit'})]",
-                     type: 'POST',
-                     cache       : false,
-                     contentType : 'application/json; charset=utf-8',
-                     processData : false,
-                     headers: {
-                         'X-CSRF-Token': token 
-                    	},
-                     data: jsonData,
-                     success: function(data) {
-                         //replace Biblio box with new values
-                         updateBiblioBox(blockId, formData);
-                         $(".open").removeClass("open");
-                         location.reload();
-                    },
-                    error: function(data) {
-         	       if (data.status == 403) {
-         	           $("#loginAlert").show();
-         	       }
-         	       else {
-         	           var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-         	           $('.error').append(alert);
-         	       }
-                    }
+                $("#submitBiblioBlock").on("click", function(e) {
+                    e.preventDefault();
+                    // ------------- editing bibliography blocks ------------
+                    
+                    var formData = new FormData();
+                    var title = $("#editTitleBiblio").val();
+                    var desc = $("#editDescBiblio").val();
+                    var blockId = $(".open").attr("id");
+                    var token = [[${_csrf.token}]];
+                    
+                    formData.append('biblioTitle', title);
+                    formData.append('description', desc);
+                    formData.append('biblioBlockId', blockId);
+                    
+                    $("#editBiblioAlert").hide();
+                    
+                    $.ajax({
+                        url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/bibliography/edit'})]",
+                        type: 'POST',
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        data: formData,
+                        headers: {
+                            'X-CSRF-Token': token
+                        },
+                        enctype: 'multipart/form-data',
+                        success: function(data) {
+                            // Replace bibliography box with new values
+                            updateBiblioBox(blockId, formData);
+                            
+                            // Clean up stored HTML since edit was successful
+                            if (originalBiblioHtml[blockId]) {
+                                delete originalBiblioHtml[blockId];
+                            }
+                        },
+                        error: function(data) {
+                            if (data.status == 403) {
+                                $("#loginAlert").show();
+                            } else {
+                                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                                $('.error').append(alert);
+                            }
+                        }
+                    });
                 });
-             });
              
-             $("#submitRefBlock").on("click", function(e){
-           	   e.preventDefault();
-               // ------------- editting Ref blocks ------------
-               
-               var formData = new FormData();
-               var title = $("#editTitleRef").val();
-               var author = $("#editAuthorRef").val();
-               var year = $("#editYearRef").val();
-               var journal = $("#editJournalRef").val();
-               var url = $("#editUrlRef").val();
-               var volume = $("#editVolumeRef").val();
-               var issue = $("#editIssueRef").val();
-               var pages = $("#editPagesRef").val();
-               var editors = $("#editEditorsRef").val();
-               var type = $("#editTypeRef").val();
-               var note = $("#editNoteRef").val();
-               var blockId = $(".open").attr("id");
-               
-               formData.append('title', title);
-               formData.append('author', author);
-               formData.append('year', year);
-               formData.append('journal', journal);
-               formData.append('url', url);
-               formData.append('volume', volume);
-               formData.append('issue', issue);
-               formData.append('pages', pages);
-               formData.append('editors', editors);
-               formData.append('type', type);
-               formData.append('note', note);
-               formData.append('id', currentRefId);
-               $("#editReferenceAlert").hide();
-               $("#editBiblioAlert").hide();
-               var biblioBlockId = $('#currentBiblioId').attr('value');
-               var object = {};
-               formData.forEach((value, key) => object[key] = value);
-               var jsonData = JSON.stringify(object);
-               var token =  $('input[name="_csrf"]').attr('value');
-               
-               $.ajax({
-                   url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/bibliography/'})]" + biblioBlockId + ['/reference/edit'],
-                   type: 'POST',
-                   cache       : false,
-                   contentType : 'application/json; charset=utf-8',
-                   processData : false,
-                   headers: {
-                       'X-CSRF-Token': token 
-                  	},
-                   data: jsonData,
-                   success: function(data) {
-                       //replace Reference box with new values
-                       updateReferenceBox(blockId, formData);
-                       $(".open").removeClass("open");
-                       location.reload();
-                       },
-                       error: function(data) {
-                    		if (data.status == 403) {
-                       			$("#loginAlert").show();
-                       		}
-                       		else {
-                           		var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                           		$('.error').append(alert);
-                       		}
-                       }
-                   });
-                });    
+             $("#submitRefBlock").on("click", function(e) {
+            	    e.preventDefault();
+            	    // ------------- editing Ref blocks ------------
+            	    
+            	    var formData = new FormData();
+            	    var title = $("#editTitleRef").val();
+            	    var author = $("#editAuthorRef").val();
+            	    var year = $("#editYearRef").val();
+            	    var journal = $("#editJournalRef").val();
+            	    var url = $("#editUrlRef").val();
+            	    var volume = $("#editVolumeRef").val();
+            	    var issue = $("#editIssueRef").val();
+            	    var pages = $("#editPagesRef").val();
+            	    var editors = $("#editEditorsRef").val();
+            	    var type = $("#editTypeRef").val();
+            	    var note = $("#editNoteRef").val();
+            	    var blockId = $(".open").attr("id");
+            	    
+            	    formData.append('title', title);
+            	    formData.append('author', author);
+            	    formData.append('year', year);
+            	    formData.append('journal', journal);
+            	    formData.append('url', url);
+            	    formData.append('volume', volume);
+            	    formData.append('issue', issue);
+            	    formData.append('pages', pages);
+            	    formData.append('editors', editors);
+            	    formData.append('type', type);
+            	    formData.append('note', note);
+            	    formData.append('id', currentRefId);
+            	    
+            	    $("#editReferenceAlert").hide();
+            	    $("#editBiblioAlert").hide();
+            	    
+            	    var biblioBlockId = $('#editRefBiblioId').val();
+            	    
+            	    var object = {};
+            	    formData.forEach((value, key) => object[key] = value);
+            	    var jsonData = JSON.stringify(object);
+            	    var token = $('input[name="_csrf"]').attr('value');
+            	    
+            	    $.ajax({
+            	        url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/bibliography/'})]" + biblioBlockId + ['/reference/edit'],
+            	        type: 'POST',
+            	        cache: false,
+            	        contentType: 'application/json; charset=utf-8',
+            	        processData: false,
+            	        headers: {
+            	            'X-CSRF-Token': token
+            	        },
+            	        data: jsonData,
+            	        success: function(data) {
+            	            // Replace Reference box with new values
+            	            updateReferenceBox(blockId, formData);
+            	            
+            	            // Clean up stored HTML since edit was successful
+            	            if (originalReferenceHtml[blockId]) {
+            	                delete originalReferenceHtml[blockId];
+            	            }
+            	            
+            	            // Clean up modal inputs
+            	            $('#editRefBiblioId').remove();
+            	            
+            	            location.reload();
+            	        },
+            	        error: function(data) {
+            	            if (data.status == 403) {
+            	                $("#loginAlert").show();
+            	            } else {
+            	                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+            	                $('.error').append(alert);
+            	            }
+            	        }
+            	    });
+            	});
+             
+          // Use event delegation for reference blocks
+             $(document).on('mouseenter', '.referenceDivStaff', onMouseEnter);
+             $(document).on('mouseleave', '.referenceDivStaff', onMouseLeave);
+             $(document).on('dblclick', '.referenceDivStaff', referenceBlockDoubleClick);
                 
 	            $("#submitSpaceBlock").on("click", function(e){
 		            e.preventDefault();
@@ -2156,8 +2617,8 @@
             
             $(window).on('load', function () {	
             	var divWindow = $(".valueDiv");
-            	$(".deleteText").css('position', 'absolute');
-            	$(".deleteText").css('right', '0');
+            	$('[data-action="delete-text"]').css('position', 'absolute');
+            	$('[data-action="delete-text"]').css('right', '0');
              	$(".deleteBiblio").css('position', 'absolute');
              	$(".deleteBiblio").css('right', '0px');
             	var images = $(".imgDiv");
@@ -2677,110 +3138,21 @@
 			      <div class="modal-content">
 			         <div class="modal-header">
 			            <h5 class="modal-title">Add new Reference</h5>
-			            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-			               <span aria-hidden="true">&times;</span>
+			            <button type="button" class="close" data-dismiss="modal"
+			               aria-label="Close">
+			            <span aria-hidden="true">&times;</span>
 			            </button>
 			         </div>
 			         <form name="sendReferenceForm" id="sendReferenceForm">
 			            <div class="modal-body">
-			               <!-- Title Field -->
+			               <!-- TYPE FIELD - NOW FIRST AND REQUIRED -->
 			               <div class="form-group">
 			                  <table>
 			                     <tr>
-			                        <td><label for="titleRef" class="col-form-label">Title:</label></td>
-			                        <td><input type="text" class="form-control" id="titleRef" name="titleRef" /></td>
-			                     </tr>
-			                  </table>
-			               </div>
-			               <!-- Author Field -->
-			               <div class="form-group">
-			                  <table>
-			                     <tr>
-			                        <td><label for="authorRef" class="col-form-label">Author:</label></td>
-			                        <td><input type="text" class="form-control" id="authorRef" name="authorRef" /></td>
-			                     </tr>
-			                  </table>
-			               </div>
-			               <!-- Year Field as Drop-Down -->
-			               <div class="form-group">
-			                  <table>
-			                     <tr>
-			                        <td><label for="yearRef" class="col-form-label">Year:</label></td>
-			                        <td>
-			                           <select class="form-control" id="yearRef" name="yearRef">
-			                              <option value="" disabled selected>Select Year</option>
-			                              <th:block th:with="currentYear=${T(java.time.Year).now().value}">
-			                                 <th:block th:each="year : ${#numbers.sequence(1900, currentYear)}">
-			                                    <option th:value="${year}" th:text="${year}"></option>
-			                                 </th:block>
-			                              </th:block>
-			                           </select>
-			                        </td>
-			                     </tr>
-			                  </table>
-			               </div>
-			               <!-- Journal Field -->
-			               <div class="form-group">
-			                  <table>
-			                     <tr>
-			                        <td><label for="journalRef" class="col-form-label">Journal:</label></td>
-			                        <td><input type="text" class="form-control" id="journalRef" name="journalRef" /></td>
-			                     </tr>
-			                  </table>
-			               </div>
-			               <!-- Url Field -->
-			               <div class="form-group">
-			                  <table>
-			                     <tr>
-			                        <td><label for="urlRef" class="col-form-label">Url:</label></td>
-			                        <td><input type="text" class="form-control" id="urlRef" name="urlRef" /></td>
-			                     </tr>
-			                  </table>
-			               </div>
-			               <!-- Volume Field -->
-			               <div class="form-group">
-			                  <table>
-			                     <tr>
-			                        <td><label for="volumeRef" class="col-form-label">Volume:</label></td>
-			                        <td><input type="text" class="form-control" id="volumeRef" name="volumeRef" /></td>
-			                     </tr>
-			                  </table>
-			               </div>
-			               <!-- Issue Field -->
-			               <div class="form-group">
-			                  <table>
-			                     <tr>
-			                        <td><label for="issueRef" class="col-form-label">Issue:</label></td>
-			                        <td><input type="text" class="form-control" id="issueRef" name="issueRef" /></td>
-			                     </tr>
-			                  </table>
-			               </div>
-			               <!-- Pages Field -->
-			               <div class="form-group">
-			                  <table>
-			                     <tr>
-			                        <td><label for="pagesRef" class="col-form-label">Pages:</label></td>
-			                        <td><input type="text" class="form-control" id="pagesRef" name="pagesRef" /></td>
-			                     </tr>
-			                  </table>
-			               </div>
-			               <!-- Editors Field -->
-			               <div class="form-group">
-			                  <table>
-			                     <tr>
-			                        <td><label for="editorsRef" class="col-form-label">Editors:</label></td>
-			                        <td><input type="text" class="form-control" id="editorsRef" name="editorsRef" /></td>
-			                     </tr>
-			                  </table>
-			               </div>
-			               <!-- Type Field -->
-			               <div class="form-group">
-			                  <table>
-			                     <tr>
-			                        <td><label for="typeRef" class="col-form-label">Type:</label></td>
-			                        <td>
-			                           <select class="form-control" id="typeRef" name="typeRef">
-			                              <option value="" disabled selected>Select a type</option>
+			                        <td><label for="typeRef" class="col-form-label">Type: <span style="color: red;">*</span></label></td>
+			                        <td>                           
+			                           <select class="form-control" id="typeRef" name="typeRef" required>
+			                              <option value="" disabled selected>Select a type *</option>
 			                              <option value="Book">Book</option>
 			                              <option value="Journal Article">Journal Article</option>
 			                              <option value="Conference Paper">Conference Paper</option>
@@ -2794,27 +3166,103 @@
 			                     </tr>
 			                  </table>
 			               </div>
-			               <!-- Note Field -->
+			               
+			               <!-- TITLE FIELD -->
+			               <div class="form-group">
+			                  <table>
+			                     <tr>
+			                        <td><label for="titleRef" class="col-form-label">Title:</label></td>
+			                        <td><input type="text" class="form-control" id="titleRef" name="titleRef" /></td>
+			                     </tr>
+			                  </table>
+			               </div>
+			               
+			               <!-- AUTHOR FIELD -->
+			               <div class="form-group">
+			                  <table>
+			                     <tr>
+			                        <td><label for="authorRef" class="col-form-label">Author:</label></td>
+			                        <td><input type="text" class="form-control" id="authorRef" name="authorRef" /></td>
+			                     </tr>
+			                  </table>
+			               </div>
+			               
+			               <!-- YEAR FIELD -->
+			               <div class="form-group">
+			                  <table>
+			                     <tr>
+			                        <td><label for="yearRef" class="col-form-label">Year:</label></td>
+			                        <td><input type="text" class="form-control" id="yearRef" name="yearRef" /></td>
+			                     </tr>
+			                  </table>
+			               </div>
+			               
+			               <!-- JOURNAL FIELD -->
+			               <div class="form-group">
+			                  <table>
+			                     <tr>
+			                        <td><label for="journalRef" class="col-form-label">Journal:</label></td>
+			                        <td><input type="text" class="form-control" id="journalRef" name="journalRef" /></td>
+			                     </tr>
+			                  </table>
+			               </div>
+			               
+			               <!-- URL FIELD -->
+			               <div class="form-group">
+			                  <table>
+			                     <tr>
+			                        <td><label for="urlRef" class="col-form-label">Url:</label></td>
+			                        <td><input type="text" class="form-control" id="urlRef" name="urlRef" /></td>
+			                     </tr>
+			                  </table>
+			               </div>
+			               
+			               <!-- VOLUME FIELD -->
+			               <div class="form-group">
+			                  <table>
+			                     <tr>
+			                        <td><label for="volumeRef" class="col-form-label">Volume:</label></td>
+			                        <td><input type="text" class="form-control" id="volumeRef" name="volumeRef" /></td>
+			                     </tr>
+			                  </table>
+			               </div>
+			               
+			               <!-- ISSUE FIELD -->
+			               <div class="form-group">
+			                  <table>
+			                     <tr>
+			                        <td><label for="issueRef" class="col-form-label">Issue:</label></td>
+			                        <td><input type="text" class="form-control" id="issueRef" name="issueRef" /></td>
+			                     </tr>
+			                  </table>
+			               </div>
+			               
+			               <!-- PAGES FIELD -->
+			               <div class="form-group">
+			                  <table>
+			                     <tr>
+			                        <td><label for="pagesRef" class="col-form-label">Pages:</label></td>
+			                        <td><input type="text" class="form-control" id="pagesRef" name="pagesRef" /></td>
+			                     </tr>
+			                  </table>
+			               </div>
+			               
+			               <!-- EDITORS FIELD -->
+			               <div class="form-group">
+			                  <table>
+			                     <tr>
+			                        <td><label for="editorsRef" class="col-form-label">Editors:</label></td>
+			                        <td><input type="text" class="form-control" id="editorsRef" name="editorsRef" /></td>
+			                     </tr>
+			                  </table>
+			               </div>
+			               
+			               <!-- NOTE FIELD -->
 			               <div class="form-group">
 			                  <table>
 			                     <tr>
 			                        <td><label for="noteRef" class="col-form-label">Note:</label></td>
 			                        <td><input type="text" class="form-control" id="noteRef" name="noteRef" /></td>
-			                     </tr>
-			                  </table>
-			               </div>
-			               <!-- Visibility Field -->
-			               <div class="form-group">
-			                  <table>
-			                     <tr>
-			                        <td><label for="visibilityRef" class="col-form-label">Visibility:</label></td>
-			                        <td>
-			                           <select class="form-control" id="visibilityRef" name="visibilityRef">
-			                              <option value="" disabled selected>Select Visibility</option>
-			                              <option value="private">Private</option>
-			                              <option value="public">Public</option>
-			                           </select>
-			                        </td>
 			                     </tr>
 			                  </table>
 			               </div>
@@ -2827,223 +3275,191 @@
 			      </div>
 			   </div>
 			</div>
-	         <div id="editBiblioAlert" class="modal" tabindex="-1" role="dialog" style="overflow-y: scroll;">
-	            <div class="modal-dialog" role="document" th:draggable="true">
-	               <div class="modal-content">
-	                  <div class="modal-header">
-	                     <h5 class="modal-title">Edit Bibliography Block</h5>
-	                     <button type="button" class="close" data-dismiss="modal"
-	                        aria-label="Close">
-	                     <span aria-hidden="true">&times;</span>
-	                     </button>
-	                  </div>
-	                  <form name="sendBiblioForm" id="sendEditBiblioForm">
-	                     <div class="modal-body">
-	                        <div class="form-group">
-	                           <table>
-	                              <tr>
-	                                 <td><label for="name" class="col-form-label">Title:</label>
-	                                 </td>
-	                                 <td><input type="text" class="form-control"
-	                                    id="editTitleBiblio" name="editTitleBiblio" /></td>
-	                              </tr>
-	                           </table>
-	                        </div>
-	                        <div class="form-group">
-	                           <table>
-	                              <tr>
-	                                 <td><label for="name" class="col-form-label">Description:</label>
-	                                 </td>
-	                                 <td><input type="text" class="form-control"
-	                                    id="editDescBiblio" name="editDescBiblio" /></td>
-	                              </tr>
-	                           </table>
-	                        </div>
-	                     </div>
-	                     <div class="modal-footer">
-	                        <button id="cancelBiblioBlock" type="reset" class="btn light">Cancel</button>
-	                        <button type="submit" id="submitBiblioBlock"
-	                           class="btn btn-primary">Submit</button>
-	                     </div>
-	                  </form>
-	               </div>
-	            </div>
-	         </div>
-			<div id="editReferenceAlert" class="modal" tabindex="-1" role="dialog" style="overflow-y: scroll;">
-			   <div class="modal-dialog" role="document" th:draggable="true">
-			      <div class="modal-content">
-			         <div class="modal-header">
-			            <h5 class="modal-title">Edit Reference</h5>
-			            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-			               <span aria-hidden="true">&times;</span>
-			            </button>
-			         </div>
-			         <form name="sendReferenceForm" id="sendEditReferenceForm">
-			            <div class="modal-body">
-			               <!-- Title Field -->
-			               <div class="form-group">
-			                  <table>
-			                     <tr>
-			                        <td><label for="editTitleRef" class="col-form-label">Title:</label></td>
-			                        <td>
-			                           <input type="text" class="form-control" id="editTitleRef" name="editTitleRef" />
-			                        </td>
-			                     </tr>
-			                  </table>
-			               </div>
-			               <!-- Author Field -->
-			               <div class="form-group">
-			                  <table>
-			                     <tr>
-			                        <td><label for="editAuthorRef" class="col-form-label">Author:</label></td>
-			                        <td>
-			                           <input type="text" class="form-control" id="editAuthorRef" name="editAuthorRef" />
-			                        </td>
-			                     </tr>
-			                  </table>
-			               </div>
-			               <!-- Year Field as Drop-Down -->
-			               <div class="form-group">
-			                  <table>
-			                     <tr>
-			                        <td>
-			                           <label for="editYearRef" class="col-form-label">Year:</label>
-			                        </td>
-			                        <td>
-			                           <select class="form-control" id="editYearRef" name="editYearRef">
-			                              <option value="" disabled selected>Select Year</option>
-			                              <th:block th:with="currentYear=${T(java.time.Year).now().value}">
-			                                 <th:block th:each="year : ${#numbers.sequence(1900, currentYear)}">
-			                                    <option th:value="${year}" th:text="${year}"></option>
-			                                 </th:block>
-			                              </th:block>
-			                           </select>
-			                        </td>
-			                     </tr>
-			                  </table>
-			               </div>
-			               <!-- Journal Field -->
-			               <div class="form-group">
-			                  <table>
-			                     <tr>
-			                        <td><label for="editJournalRef" class="col-form-label">Journal:</label></td>
-			                        <td>
-			                           <input type="text" class="form-control" id="editJournalRef" name="editJournalRef" />
-			                        </td>
-			                     </tr>
-			                  </table>
-			               </div>
-			               <!-- Url Field -->
-			               <div class="form-group">
-			                  <table>
-			                     <tr>
-			                        <td><label for="editUrlRef" class="col-form-label">Url:</label></td>
-			                        <td>
-			                           <input type="text" class="form-control" id="editUrlRef" name="editUrlRef" />
-			                        </td>
-			                     </tr>
-			                  </table>
-			               </div>
-			               <!-- Volume Field -->
-			               <div class="form-group">
-			                  <table>
-			                     <tr>
-			                        <td><label for="editVolumeRef" class="col-form-label">Volume:</label></td>
-			                        <td>
-			                           <input type="text" class="form-control" id="editVolumeRef" name="editVolumeRef" />
-			                        </td>
-			                     </tr>
-			                  </table>
-			               </div>
-			               <!-- Issue Field -->
-			               <div class="form-group">
-			                  <table>
-			                     <tr>
-			                        <td><label for="editIssueRef" class="col-form-label">Issue:</label></td>
-			                        <td>
-			                           <input type="text" class="form-control" id="editIssueRef" name="editIssueRef" />
-			                        </td>
-			                     </tr>
-			                  </table>
-			               </div>
-			               <!-- Pages Field -->
-			               <div class="form-group">
-			                  <table>
-			                     <tr>
-			                        <td><label for="editPagesRef" class="col-form-label">Pages:</label></td>
-			                        <td>
-			                           <input type="text" class="form-control" id="editPagesRef" name="editPagesRef" />
-			                        </td>
-			                     </tr>
-			                  </table>
-			               </div>
-			               <!-- Editors Field -->
-			               <div class="form-group">
-			                  <table>
-			                     <tr>
-			                        <td><label for="editEditorsRef" class="col-form-label">Editors:</label></td>
-			                        <td>
-			                           <input type="text" class="form-control" id="editEditorsRef" name="editEditorsRef" />
-			                        </td>
-			                     </tr>
-			                  </table>
-			               </div>
-			               <!-- Type Field as Drop-Down -->
-			               <div class="form-group">
-			                  <table>
-			                     <tr>
-			                        <td><label for="editTypeRef" class="col-form-label">Type:</label></td>
-			                        <td>
-			                           <select class="form-control" id="editTypeRef" name="editTypeRef">
-			                              <option value="" disabled selected>Select a type</option>
-			                              <option value="Book">Book</option>
-			                              <option value="Journal Article">Journal Article</option>
-			                              <option value="Conference Paper">Conference Paper</option>
-			                              <option value="Thesis">Thesis</option>
-			                              <option value="Report">Report</option>
-			                              <option value="Website">Website</option>
-			                              <option value="Patent">Patent</option>
-			                              <option value="Other">Other</option>
-			                           </select>
-			                        </td>
-			                     </tr>
-			                  </table>
-			               </div>
-			               <!-- Note Field -->
-			               <div class="form-group">
-			                  <table>
-			                     <tr>
-			                        <td><label for="editNoteRef" class="col-form-label">Note:</label></td>
-			                        <td>
-			                           <input type="text" class="form-control" id="editNoteRef" name="editNoteRef" />
-			                        </td>
-			                     </tr>
-			                  </table>
-			               </div>
-			               <!-- Visibility Field -->
-			               <div class="form-group">
-			                  <table>
-			                     <tr>
-			                        <td><label for="editVisibilityRef" class="col-form-label">Visibility:</label></td>
-			                        <td>
-			                           <select class="form-control" id="editVisibilityRef" name="editVisibilityRef">
-			                              <option value="" disabled selected>Select Visibility</option>
-			                              <option value="private">Private</option>
-			                              <option value="public">Public</option>
-			                           </select>
-			                        </td>
-			                     </tr>
-			                  </table>
-			               </div>
-			            </div>
-			            <div class="modal-footer">
-			               <button id="cancelRefBlock" type="reset" class="btn light">Cancel</button>
-			               <button type="submit" id="submitRefBlock" class="btn btn-primary">Submit</button>
-			            </div>
-			         </form>
-			      </div>
-			   </div>
-			</div>
+		         <div id="editBiblioAlert" class="modal" tabindex="-1" role="dialog" style="overflow-y: scroll;">
+		            <div class="modal-dialog" role="document" th:draggable="true">
+		               <div class="modal-content">
+		                  <div class="modal-header">
+		                     <h5 class="modal-title">Edit Bibliography Block</h5>
+		                     <button type="button" class="close" data-dismiss="modal"
+		                        aria-label="Close">
+		                     <span aria-hidden="true">&times;</span>
+		                     </button>
+		                  </div>
+		                  <form name="sendBiblioForm" id="sendEditBiblioForm">
+		                     <div class="modal-body">
+		                        <div class="form-group">
+		                           <table>
+		                              <tr>
+		                                 <td><label for="name" class="col-form-label">Title:</label>
+		                                 </td>
+		                                 <td><input type="text" class="form-control"
+		                                    id="editTitleBiblio" name="editTitleBiblio" /></td>
+		                              </tr>
+		                           </table>
+		                        </div>
+		                        <div class="form-group">
+		                           <table>
+		                              <tr>
+		                                 <td><label for="name" class="col-form-label">Description:</label>
+		                                 </td>
+		                                 <td><input type="text" class="form-control"
+		                                    id="editDescBiblio" name="editDescBiblio" /></td>
+		                              </tr>
+		                           </table>
+		                        </div>
+		                     </div>
+		                     <div class="modal-footer">
+		                        <button id="cancelBiblioBlock" type="reset" class="btn light">Cancel</button>
+		                        <button type="submit" id="submitBiblioBlock"
+		                           class="btn btn-primary">Submit</button>
+		                     </div>
+		                  </form>
+		               </div>
+		            </div>
+		         </div>
+				<div id="editReferenceAlert" class="modal" tabindex="-1" role="dialog" style="overflow-y: scroll;">
+				   <div class="modal-dialog" role="document" th:draggable="true">
+				      <div class="modal-content">
+				         <div class="modal-header">
+				            <h5 class="modal-title">Edit Reference</h5>
+				            <button type="button" class="close" data-dismiss="modal"
+				               aria-label="Close">
+				            <span aria-hidden="true">&times;</span>
+				            </button>
+				         </div>
+				         <form name="sendReferenceForm" id="sendEditReferenceForm">
+				            <div class="modal-body">
+				               <!-- TYPE FIELD - NOW FIRST AND REQUIRED -->
+				               <div class="form-group">
+				                  <table>
+				                     <tr>
+				                        <td><label for="editTypeRef" class="col-form-label">Type: <span style="color: red;">*</span></label></td>
+				                        <td>
+				                           <select class="form-control" id="editTypeRef" name="editTypeRef" required>
+				                              <option value="" disabled>Select a type *</option>
+				                              <option value="Book">Book</option>
+				                              <option value="Journal Article">Journal Article</option>
+				                              <option value="Conference Paper">Conference Paper</option>
+				                              <option value="Thesis">Thesis</option>
+				                              <option value="Report">Report</option>
+				                              <option value="Website">Website</option>
+				                              <option value="Patent">Patent</option>
+				                              <option value="Other">Other</option>
+				                           </select>
+				                        </td>
+				                     </tr>
+				                  </table>
+				               </div>
+				               
+				               <!-- TITLE FIELD -->
+				               <div class="form-group">
+				                  <table>
+				                     <tr>
+				                        <td><label for="editTitleRef" class="col-form-label">Title:</label></td>
+				                        <td><input type="text" class="form-control" id="editTitleRef" name="editTitleRef" /></td>
+				                     </tr>
+				                  </table>
+				               </div>
+				               
+				               <!-- AUTHOR FIELD -->
+				               <div class="form-group">
+				                  <table>
+				                     <tr>
+				                        <td><label for="editAuthorRef" class="col-form-label">Author:</label></td>
+				                        <td><input type="text" class="form-control" id="editAuthorRef" name="editAuthorRef" /></td>
+				                     </tr>
+				                  </table>
+				               </div>
+				               
+				               <!-- YEAR FIELD -->
+				               <div class="form-group">
+				                  <table>
+				                     <tr>
+				                        <td><label for="editYearRef" class="col-form-label">Year:</label></td>
+				                        <td><input type="text" class="form-control" id="editYearRef" name="editYearRef" /></td>
+				                     </tr>
+				                  </table>
+				               </div>
+				               
+				               <!-- JOURNAL FIELD -->
+				               <div class="form-group">
+				                  <table>
+				                     <tr>
+				                        <td><label for="editJournalRef" class="col-form-label">Journal:</label></td>
+				                        <td><input type="text" class="form-control" id="editJournalRef" name="editJournalRef" /></td>
+				                     </tr>
+				                  </table>
+				               </div>
+				               
+				               <!-- URL FIELD -->
+				               <div class="form-group">
+				                  <table>
+				                     <tr>
+				                        <td><label for="editUrlRef" class="col-form-label">Url:</label></td>
+				                        <td><input type="text" class="form-control" id="editUrlRef" name="editUrlRef" /></td>
+				                     </tr>
+				                  </table>
+				               </div>
+				               
+				               <!-- VOLUME FIELD -->
+				               <div class="form-group">
+				                  <table>
+				                     <tr>
+				                        <td><label for="editVolumeRef" class="col-form-label">Volume:</label></td>
+				                        <td><input type="text" class="form-control" id="editVolumeRef" name="editVolumeRef" /></td>
+				                     </tr>
+				                  </table>
+				               </div>
+				               
+				               <!-- ISSUE FIELD -->
+				               <div class="form-group">
+				                  <table>
+				                     <tr>
+				                        <td><label for="editIssueRef" class="col-form-label">Issue:</label></td>
+				                        <td><input type="text" class="form-control" id="editIssueRef" name="editIssueRef" /></td>
+				                     </tr>
+				                  </table>
+				               </div>
+				               
+				               <!-- PAGES FIELD -->
+				               <div class="form-group">
+				                  <table>
+				                     <tr>
+				                        <td><label for="editPagesRef" class="col-form-label">Pages:</label></td>
+				                        <td><input type="text" class="form-control" id="editPagesRef" name="editPagesRef" /></td>
+				                     </tr>
+				                  </table>
+				               </div>
+				               
+				               <!-- EDITORS FIELD -->
+				               <div class="form-group">
+				                  <table>
+				                     <tr>
+				                        <td><label for="editEditorsRef" class="col-form-label">Editors:</label></td>
+				                        <td><input type="text" class="form-control" id="editEditorsRef" name="editEditorsRef" /></td>
+				                     </tr>
+				                  </table>
+				               </div>
+				               
+				               <!-- NOTE FIELD -->
+				               <div class="form-group">
+				                  <table>
+				                     <tr>
+				                        <td><label for="editNoteRef" class="col-form-label">Note:</label></td>
+				                        <td><input type="text" class="form-control" id="editNoteRef" name="editNoteRef" /></td>
+				                     </tr>
+				                  </table>
+				               </div>
+				            </div>
+				            <div class="modal-footer">
+				               <button id="cancelRefBlock" type="reset" class="btn light">Cancel</button>
+				               <button type="submit" id="submitRefBlock"
+				                  class="btn btn-primary">Submit</button>
+				            </div>
+				         </form>
+				      </div>
+				   </div>
+				</div>
             <div id="loginAlert" class="modal" tabindex="-1" role="dialog"
                 backdrop="static"
                 style="display: none; background-color: rgba(0, 0, 0, 0.5);">
@@ -3107,93 +3523,216 @@
             </div>
          <div id="slideSpace">
             <div th:each="contents: ${slideContents}">
-               <div th:attr="data-position=${contents.contentOrder}" th:id="${contents.id}" class="valueDiv tab row" th:if="${#strings.equals(contents['class'].simpleName,'ImageBlock')}">
-                  <img th:id="${contents.id}" class="imgDiv" th:src="@{'/api/image/'+${contents.image.id}}" />
-                  <input type="hidden" id="deleteImageId" th:value="${contents.id}"> 
-                  <a class="btn deleteImage col-md-1" href="javascript:;" style="position:absolute; right:25px;"> 
-                  <span class="icon-trash error"></span>
-                  </a>
-               </div>
-               <div th:attr="data-position=${contents.contentOrder}" style="word-break:break-word;" th:id="${contents.id}" class="textDivStaff tab row" th:if="${#strings.equals(contents['class'].simpleName,'TextBlock')}">
-                  <p class="col-md-10"> [[${contents.text}]]</p>
-                  <input type="hidden" id="deleteTextId" th:value="${contents.id}" />
-                  <a class="btn deleteText col-md-1" href="javascript:;"> 
-                  <span class="icon-trash error"></span>
-                  </a>
-               </div>
-               <div th:attr="data-position=${contents.contentOrder}" class="tab vidDiv row" th:id="${contents.id}" th:if="${#strings.equals(contents['class'].simpleName,'VideoBlock')}">
-                  <div>
-                     <h3><strong>[[${contents.video.title}]]</strong></h3>
-                     <br/>
-                     <iframe th:id="${contents.id}" width="800" height="530" th:src="${contents.video.url}" th:if="${contents.video.url}" frameborder="0"
-                        allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen ></iframe>
-                     <video th:id="${contents.id}" width="800" height="530" th:if="${contents.video.url == null}" controls >
-                        <source th:src="@{'/api/video/'+${contents.video.id}}" type="video/mp4"/>
-                     </video>
-                  </div>
-                  <a class="btn deleteVideo col-md-1" href="javascript:;" th:attr="data-video-id=${contents.id}" style="position:absolute; right:25px;"> 
-                  <span class="icon-trash error"></span>
-                  </a>
-                  <a class="btn editVideo col-md-1" href="javascript:;" th:attr="data-editvideo-id=${contents.id}" style="position:absolute; top:60px;right:25px;"> 
-                  <span class="icon-edit"></span>
-                  </a>
-               </div>
-               <div th:attr="data-position=${contents.contentOrder}" class="biblioDivStaff tab row" th:id="${contents.id}"
-                  th:if="${#strings.equals(contents['class'].simpleName,'BiblioBlock')}">
-                  <p class="col-md-10">
-                     Bibliography Title: <span>[[${contents.biblioTitle}]]</span>, Description: <span>[[${contents.description}]]</span>
-                  </p>
-                  <input type="hidden" id="deleteBiblioId" th:value="${contents.id}" />
-                  <a class="btn deleteBiblio col-md-1" href="javascript:;"> <span
-                     class="icon-trash error"></span>
-                  </a>
-                  <a class="btn addReference primary-btn btn-sm" style="padding-top: 8px;">+ New Reference</a>
-                  <div id="referenceSpace" class="col-md-10">
-                     <div th:each="contentRef: ${contents.references}">
-                        <div th:id="${contentRef.id}" class="referenceDivStaff tab row" data-biblio-id="">
-                           <p class="col-md-10">
-                              Reference Title: <span>[[${contentRef.title}]]</span>, Author: <span>[[${contentRef.author}]]</span>,
-                              Year: <span>[[${contentRef.year}]]</span>, Journal: <span>[[${contentRef.journal}]]</span>,
-                              Url: <span>[[${contentRef.url}]]</span>, Volume: <span>[[${contentRef.volume}]]</span>,
-                              Issue: <span>[[${contentRef.issue}]]</span>, Pages: <span>[[${contentRef.pages}]]</span>,
-                              Editors: <span>[[${contentRef.editors}]]</span>, Type: <span>[[${contentRef.type}]]</span>,
-                              Note: <span>[[${contentRef.note}]]</span>
-                           </p>
-                           <input type="hidden" class="deleteReferenceId" th:value="${contentRef.id}" />
-                           <a class="btn deleteReference col-md-1" href="javascript:;"> 
-                        <span class="icon-trash error"></span>
-                        </a>
-                    </div>
-                     </div>
-                  </div>
-               </div>
-                    <div th:attr="data-position=${contents.contentOrder}" style="word-break: break-word;" th:id="${contents.id}" class="SpaceDivStaff tab row" th:if="${#strings.equals(contents['class'].simpleName,'SpaceBlock')}">
-                        <div style="display: flex; flex-direction: column; width: 100%;">
-						<div style = "display:flex; flex-direction: row; width: 100%;">
-						<label>Title: </label>
-                        <p class="col-md-10">[[${contents.title}]]</p>
+            
+            <!-- Image Block -->
+            
+				<div th:attr="data-position=${contents.contentOrder}" 
+				     th:id="${contents.id}" 
+				     class="valueDiv tab row" 
+				     data-image-block
+				     th:if="${#strings.equals(contents['class'].simpleName,'ImageBlock')}">
+				    <img th:id="${contents.id}" 
+				         class="imgDiv" 
+				         th:src="@{'/api/image/'+${contents.image.id}}" />
+				    <input type="hidden" 
+				           data-image-id="${contents.id}"
+				           th:attr="data-image-id=${contents.id}"
+				           th:value="${contents.id}" />
+				    <a class="btn col-md-1" 
+				       data-action="delete-image" 
+				       href="javascript:;" 
+				       style="position:absolute; right:25px;">
+				        <span class="icon-trash error"></span>
+				    </a>
+				</div>
+               
+               <!-- Text Block -->
+               
+				<div th:attr="data-position=${contents.contentOrder}" 
+				     style="word-break:break-word;" 
+				     th:id="${contents.id}" 
+				     class="textDivStaff tab row" 
+				     th:if="${#strings.equals(contents['class'].simpleName,'TextBlock')}">
+				    <p class="col-md-10">[[${contents.text}]]</p>
+				    <input type="hidden" 
+				           data-text-id="${contents.id}" 
+				           th:attr="data-text-id=${contents.id}"
+				           th:value="${contents.id}" />
+				    <a class="btn col-md-1" 
+				       data-action="delete-text" 
+				       href="javascript:;">
+				        <span class="icon-trash error"></span>
+				    </a>
+				</div>
+               
+				<!-- Video Block -->    
+				           
+				<div th:attr="data-position=${contents.contentOrder}" 
+				     class="tab vidDiv row" 
+				     th:id="${contents.id}" 
+				     data-video-block
+				     th:if="${#strings.equals(contents['class'].simpleName,'VideoBlock')}">
+				    <div>
+				        <h3><strong>[[${contents.video.title}]]</strong></h3>
+				        <br/>
+				        <iframe th:id="${contents.id}" 
+				                width="800" 
+				                height="530" 
+				                th:src="${contents.video.url}" 
+				                th:if="${contents.video.url}" 
+				                frameborder="0"
+				                allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+				                allowfullscreen></iframe>
+				        <video th:id="${contents.id}" 
+				               width="800" 
+				               height="530" 
+				               th:if="${contents.video.url == null}" 
+				               controls>
+				            <source th:src="@{'/api/video/'+${contents.video.id}}" type="video/mp4"/>
+				        </video>
+				    </div>
+				    <a class="btn col-md-1" 
+				       data-action="delete-video" 
+				       th:attr="data-video-id=${contents.id}"
+				       data-video-id="${contents.id}"
+				       href="javascript:;" 
+				       style="position:absolute; right:25px;">
+				        <span class="icon-trash error"></span>
+				    </a>
+				    <a class="btn col-md-1" 
+				       data-action="edit-video" 
+				       th:attr="data-editvideo-id=${contents.id}"
+				       data-editvideo-id="${contents.id}"
+				       href="javascript:;" 
+				       style="position:absolute; top:60px;right:25px;">
+				        <span class="icon-edit"></span>
+				    </a>
+				</div>
+               
+               <!-- Biblio Block -->
+               
+					<div th:attr="data-position=${contents.contentOrder}" 
+					     class="biblioDivStaff tab row" 
+					     th:id="${contents.id}"
+					     data-biblio-block
+					     th:if="${#strings.equals(contents['class'].simpleName,'BiblioBlock')}">
+					    <p class="col-md-10">
+					        Bibliography Title: <span>[[${contents.biblioTitle}]]</span>, 
+					        Description: <span>[[${contents.description}]]</span>
+					    </p>
+					    <input type="hidden" 
+					           data-biblio-id="${contents.id}" 
+					           th:attr="data-biblio-id=${contents.id}"
+					           th:value="${contents.id}" />
+					    <a class="btn col-md-1" 
+					       data-action="delete-biblio" 
+					       href="javascript:;" 
+					       style="position: absolute; right: 0px;">
+					        <span class="icon-trash error"></span>
+					    </a>
+					    <a class="btn primary-btn btn-sm" 
+					       data-action="add-reference" 
+					       style="padding-top: 8px;">+ New Reference</a>
+					    <div id="referenceSpace" class="col-md-10">
+						<div th:each="contentRef: ${contents.references}">
+						    <!-- Reference Block with TYPE FIRST -->
+						    <div th:id="${contentRef.id}" 
+						         class="referenceDivStaff tab row" 
+						         data-reference-block
+						         th:attr="data-biblio-id=${contents.id}">
+						        <p class="col-md-10">
+						            Type: <span>[[${contentRef.type}]]</span>,
+						            Reference Title: <span>[[${contentRef.title}]]</span>, 
+						            Author: <span>[[${contentRef.author}]]</span>,
+						            Year: <span>[[${contentRef.year}]]</span>, 
+						            Journal: <span>[[${contentRef.journal}]]</span>,
+						            Url: <span>[[${contentRef.url}]]</span>, 
+						            Volume: <span>[[${contentRef.volume}]]</span>,
+						            Issue: <span>[[${contentRef.issue}]]</span>, 
+						            Pages: <span>[[${contentRef.pages}]]</span>,
+						            Editors: <span>[[${contentRef.editors}]]</span>, 
+						            Note: <span>[[${contentRef.note}]]</span>
+						        </p>
+						        <input type="hidden" 
+						               class="deleteReferenceField" 
+						               data-reference-id="${contentRef.id}"
+						               th:attr="data-reference-id=${contentRef.id}"
+						               th:value="${contentRef.id}" />
+						        <a class="btn col-md-1" 
+						           data-action="delete-reference" 
+						           data-reference-id="${contentRef.id}"
+						           th:attr="data-reference-id=${contentRef.id}"
+						           href="javascript:;">
+						            <span class="icon-trash error"></span>
+						        </a>
+						    </div>
 						</div>
-						<div style = "display:flex; flex-direction: row;width: 100%;">
-						<label>Space: </label>
-                        <p class="col-md-10" th:if="${contents.space != null}">[[${contents.space.name}]]</p>
-						</div>
-                        </div>
-                        <input type="hidden" id="deleteSpaceId" th:value="${contents.id}" />
-                        <a class="btn deleteSpace col-md-1" href="javascript:;" style="position: absolute; right: 0px; bottom: 10px;"> 
-                        <span class="icon-trash error"></span> 
-                        </a>
-                    </div>
-                    <div th:attr="data-position=${contents.contentOrder}" th:id="${contents.id}" class="choiceDiv tab row" th:if="${#strings.equals(contents['class'].simpleName,'ChoiceBlock')}" style="display:block;">
-                        <a th:if="${contents.showsAll}" th:each="choice: ${choices}" style="display:block; color: var(--primary);"
-                            th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${choice.sequence.id}}">[[${choice.sequence?.name}]]</a>
-                        <a th:if="!${contents.showsAll}" th:each="choice: ${contents.choices}" style="display:block; color: var(--primary);"
-                            th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${choice.sequence.id}}">[[${choice.sequence?.name}]]</a>
-                        <input type="hidden" class="col-md-8" id="deleteChoiceBlockId" th:value="${contents.id}"> 
-                        <a class="btn deleteChoiceBlock col-md-1" href="javascript:;" style="position:absolute; right:0; top: 0;">
-                        <span class="icon-trash error"></span>
-                        </a>
-                    </div>
+				
+				    </div>
+				</div>
+               
+               <!-- Space Block -->
+               
+				<div th:attr="data-position=${contents.contentOrder}" 
+				     style="word-break: break-word;" 
+				     th:id="${contents.id}" 
+				     class="SpaceDivStaff tab row" 
+				     data-space-block
+				     th:if="${#strings.equals(contents['class'].simpleName,'SpaceBlock')}">
+				    <div style="display: flex; flex-direction: column; width: 100%;">
+				        <div style="display:flex; flex-direction: row; width: 100%;">
+				            <label>Title: </label>
+				            <p class="col-md-10">[[${contents.title}]]</p>
+				        </div>
+				        <div style="display:flex; flex-direction: row;width: 100%;">
+				            <label>Space: </label>
+				            <p class="col-md-10" th:if="${contents.space != null}">[[${contents.space.name}]]</p>
+				        </div>
+				    </div>
+				    <input type="hidden" 
+				           data-space-id="${contents.id}" 
+				           th:attr="data-space-id=${contents.id}"
+				           th:value="${contents.id}" />
+				    <a class="btn col-md-1" 
+				       data-action="delete-space" 
+				       href="javascript:;" 
+				       style="position: absolute; right: 0px;">
+				        <span class="icon-trash error"></span>
+				    </a>
+				</div>
+				
+				<!-- Choice Block -->
+				
+				<div th:attr="data-position=${contents.contentOrder}" 
+				     th:id="${contents.id}" 
+				     class="choiceDiv tab row" 
+				     data-choice-block
+				     th:if="${#strings.equals(contents['class'].simpleName,'ChoiceBlock')}" 
+				     style="display:block;">
+				    <a th:if="${contents.showsAll}" 
+				       th:each="choice: ${choices}" 
+				       style="display:block; color: var(--primary);"
+				       th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${choice.sequence.id}}">
+				       [[${choice.sequence?.name}]]
+				    </a>
+				    <a th:if="!${contents.showsAll}" 
+				       th:each="choice: ${contents.choices}" 
+				       style="display:block; color: var(--primary);"
+				       th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${choice.sequence.id}}">
+				       [[${choice.sequence?.name}]]
+				    </a>
+				    <input type="hidden" 
+				           class="col-md-8" 
+				           data-choice-id="${contents.id}" 
+				           th:attr="data-choice-id=${contents.id}"
+				           th:value="${contents.id}">
+				    <a class="btn col-md-1" 
+				       data-action="delete-choice" 
+				       href="javascript:;" 
+				       style="position:absolute; right:0; top: 0;">
+				        <span class="icon-trash error"></span>
+				    </a>
+				</div>
             </div>
         </div>
     </body>

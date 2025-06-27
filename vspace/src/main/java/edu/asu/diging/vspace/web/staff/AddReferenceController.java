@@ -24,6 +24,7 @@ public class AddReferenceController {
     @RequestMapping(value = "/staff/module/{id}/slide/{slideId}/bibliography/{biblioId}/reference/add", 
                     method = RequestMethod.POST)
     public ResponseEntity<Reference> addReference(@PathVariable("id") String moduleId, 
+
                                                   @PathVariable("slideId") String slideId, 
                                                   @PathVariable("biblioId") String biblioId, 
                                                   @RequestBody ReferenceData referenceData, 

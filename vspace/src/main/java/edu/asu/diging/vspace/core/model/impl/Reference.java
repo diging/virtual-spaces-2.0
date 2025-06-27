@@ -193,5 +193,4 @@ public class Reference extends VSpaceElement implements IReference {
     public boolean getVisibility() {
         return visibility;
     }
-    
 }
