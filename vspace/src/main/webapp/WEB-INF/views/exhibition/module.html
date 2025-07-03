@@ -133,6 +133,30 @@ ul{
         function closeModal(){
         	$("#moduleOverviewModal").hide();
         }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+          const sortSelect = document.getElementById('referenceSort');
+          const refList = document.getElementById('referenceList');
+
+          sortSelect.addEventListener('change', function() {
+            const sortBy = this.value;
+            let items = Array.from(refList.getElementsByTagName('li'));
+
+            items.sort((a, b) => {
+              const aValue = a.querySelector('.referenceDiv').getAttribute('data-' + sortBy);
+              const bValue = b.querySelector('.referenceDiv').getAttribute('data-' + sortBy);
+              
+              if (sortBy === 'year') {
+                return parseInt(aValue) - parseInt(bValue);
+              } else {
+                return aValue.localeCompare(bValue);
+              }
+            });
+            
+            refList.innerHTML = '';
+            items.forEach(item => refList.appendChild(item));
+          });
+        });
 </script>
 </head>
 <body>

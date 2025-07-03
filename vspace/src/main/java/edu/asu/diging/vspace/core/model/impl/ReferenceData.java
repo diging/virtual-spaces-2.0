@@ -13,6 +13,7 @@ public class ReferenceData {
     private String editors;  
     private String type;
     private String note;
+    private String visibility;
 
     
     public String getTitle() {
@@ -80,6 +81,12 @@ public class ReferenceData {
     }
     public void setNote(String note) {
         this.note = note;
+    }
+    public String getVisibility() {
+        return note;
+    }
+    public void setVisibility(String visibility) {
+        this.visibility = visibility;
     }
 }
 

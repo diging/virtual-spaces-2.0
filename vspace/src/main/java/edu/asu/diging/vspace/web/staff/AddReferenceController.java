@@ -23,7 +23,8 @@ public class AddReferenceController {
 
     @RequestMapping(value = "/staff/module/{id}/slide/{slideId}/bibliography/{biblioId}/reference/add", 
                     method = RequestMethod.POST)
-    public ResponseEntity<IReference> addReference(@PathVariable("id") String moduleId, 
+    public ResponseEntity<Reference> addReference(@PathVariable("id") String moduleId, 
+
                                                   @PathVariable("slideId") String slideId, 
                                                   @PathVariable("biblioId") String biblioId, 
                                                   @RequestBody ReferenceData referenceData, 
@@ -40,9 +41,10 @@ public class AddReferenceController {
             referenceData.getPages(), 
             referenceData.getEditors(), 
             referenceData.getType(), 
-            referenceData.getNote()
+            referenceData.getNote(),
+            referenceData.getVisibility()
         );
         
-        return ResponseEntity.ok(ref);
+        return ResponseEntity.ok((Reference) ref);
     }
 }
