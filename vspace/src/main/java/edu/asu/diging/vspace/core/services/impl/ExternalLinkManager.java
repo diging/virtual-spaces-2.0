@@ -56,8 +56,11 @@ public class ExternalLinkManager extends LinkManager<IExternalLink, ExternalLink
     }
 
     @Override
-    protected IExternalLink createLinkObject(String title, String id) {
+    protected IExternalLink createLinkObject(String title, String id) throws SpaceDoesNotExistException {
         ISpace source = spaceManager.getSpace(id);
+        if (source == null) {
+            throw new SpaceDoesNotExistException("Space with id '" + id + "' does not exist.");
+        }
         IExternalLink link = externalLinkFactory.createExternalLink(title, source);
         return externalLinkRepo.save((ExternalLink) link);
     }

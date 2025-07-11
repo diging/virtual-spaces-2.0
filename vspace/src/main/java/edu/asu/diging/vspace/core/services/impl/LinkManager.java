@@ -54,7 +54,7 @@ public abstract class LinkManager<L extends ILink<T>, T extends IVSpaceElement, 
 
     protected abstract L getLink(String linkId);
 
-    protected abstract L createLinkObject(String title, String id);
+    protected abstract L createLinkObject(String title, String id) throws SpaceDoesNotExistException;
 
     protected abstract T getTarget(String linkedId);
 
