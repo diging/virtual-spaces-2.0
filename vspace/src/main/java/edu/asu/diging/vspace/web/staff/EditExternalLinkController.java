@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-
+import edu.asu.diging.vspace.core.exception.ImageDoesNotExistException;
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
@@ -37,13 +37,16 @@ public class EditExternalLinkController extends EditSpaceLinksController {
             @RequestParam("externalLinkIdValueEdit") String externalLinkIdValueEdit,
             @RequestParam("externalLinkDisplayId") String externalLinkDisplayId,
             @RequestParam("tabOpen") String howToOpen, @RequestParam("type") String displayType,
-            @RequestParam("externalLinkImage") MultipartFile file) throws SpaceDoesNotExistException, IOException,
-            LinkDoesNotExistsException, NumberFormatException, ImageCouldNotBeStoredException {
+            @RequestParam("editExternalLinkInfoImage") MultipartFile file,
+			@RequestParam(value = "editExternalLinkInfo-imageId", required = false) String imageId)
+			throws SpaceDoesNotExistException, IOException, LinkDoesNotExistsException, NumberFormatException,
+			ImageCouldNotBeStoredException, ImageDoesNotExistException {
 
         ResponseEntity<String> validation = checkIfSpaceExists(spaceManager, id, x, y);
         if (validation != null) {
             return validation;
         }
+        String desc = "";
         byte[] linkImage = null;
         String filename = null;
         if (file != null) {
@@ -54,8 +57,8 @@ public class EditExternalLinkController extends EditSpaceLinksController {
         ExternalLinkDisplayMode externalLinkOpenMode = howToOpen.isEmpty() ? null
                 : ExternalLinkDisplayMode.valueOf(howToOpen);
         IExternalLinkDisplay display = (IExternalLinkDisplay) externalLinkManager.updateLink(title, id, new Float(x),
-                new Float(y), 0, externalLink, title, externalLinkIdValueEdit, externalLinkDisplayId, type, linkImage,
-                filename, externalLinkOpenMode);
+                new Float(y), 0, externalLink, title,desc, externalLinkIdValueEdit, externalLinkDisplayId, type, linkImage,
+				filename, imageId);
         return success(display.getExternalLink().getId(), display.getId(), display.getPositionX(),
                 display.getPositionY(), display.getRotation(), display.getExternalLink().getExternalLink(), title,
                 displayType, null, null);
