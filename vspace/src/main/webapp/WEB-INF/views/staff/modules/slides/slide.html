@@ -3092,47 +3092,133 @@
 					</div>
 				</div>
 			</div>
-	         <div id="addBiblioAlert" class="modal" tabindex="-1" role="dialog" style="overflow-y: scroll;">
-	            <div class="modal-dialog" role="document" th:draggable="true">
-	               <div class="modal-content">
-	                  <div class="modal-header">
-	                     <h5 class="modal-title">Add new Bibliography Block</h5>
-	                     <button type="button" class="close" data-dismiss="modal"
-	                        aria-label="Close">
-	                     <span aria-hidden="true">&times;</span>
-	                     </button>
-	                  </div>
-	                  <form name="sendBiblioForm" id="sendBiblioForm">
-	                     <div class="modal-body">
-	                        <div class="form-group">
-	                           <table>
-	                              <tr>
-	                                 <td><label for="name" class="col-form-label">Title: </label>
-	                                 </td>
-	                                 <td><input type="text" class="form-control"
-	                                    id="titleBiblio" name="titleBiblio" /></td>
-	                              </tr>
-	                           </table>
-	                        </div>
-	                        <div class="form-group">
-	                           <table>
-	                              <tr>
-	                                 <td><label for="name" class="col-form-label">Description: </label>
-	                                 </td>
-	                                 <td><input type="text" class="form-control"
-	                                    id="descriptionBiblio" name="descriptionBiblio" /></td>
-	                              </tr>
-	                           </table>
-	                        </div>
-	                     </div>
-	                     <div class="modal-footer">
-	                        <button id="cancelSubmitBiblio" type="reset" class="btn light">Cancel</button>
-	                        <button type="submit" id="submitBiblio" class="btn btn-primary">Submit</button>
-	                     </div>
-	                  </form>
-	               </div>
-	            </div>
-	         </div>
+<div id="addBiblioAlert" class="modal" tabindex="-1" role="dialog" style="overflow-y: scroll;">
+   <div class="modal-dialog" role="document" th:draggable="true">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h5 class="modal-title">Add new Bibliography Block</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+            </button>
+         </div>
+         
+         <!-- Tab Navigation -->
+         <div style="background: var(--base-grey); padding: 0 20px;">
+            <ul class="nav nav-tabs" role="tablist" id="biblioTabs">
+               <li role="presentation" id="manualTab" class="active show">
+                  <a class="active show nav-link" href="#manualContent" aria-controls="manualContent" role="tab" data-toggle="tab">Manual Entry</a>
+               </li>
+               <li role="presentation" id="citesphereTab">
+                  <a class="nav-link" href="#citesphereContent" aria-controls="citesphereContent" role="tab" data-toggle="tab">Add from Citesphere</a>
+               </li>
+            </ul>
+         </div>
+
+         <!-- Tab Content -->
+         <div class="tab-content">
+            <!-- Manual Entry Tab -->
+            <div role="tabpanel" class="tab-pane active show" id="manualContent">
+               <form name="sendBiblioForm" id="sendBiblioForm">
+                  <div class="modal-body">
+                     <div class="form-group">
+                        <table>
+                           <tr>
+                              <td><label for="name" class="col-form-label">Title: </label></td>
+                              <td><input type="text" class="form-control" id="titleBiblio" name="titleBiblio" /></td>
+                           </tr>
+                        </table>
+                     </div>
+                     <div class="form-group">
+                        <table>
+                           <tr>
+                              <td><label for="name" class="col-form-label">Description: </label></td>
+                              <td><input type="text" class="form-control" id="descriptionBiblio" name="descriptionBiblio" /></td>
+                           </tr>
+                        </table>
+                     </div>
+                  </div>
+                  <div class="modal-footer">
+                     <button id="cancelSubmitBiblio" type="reset" class="btn light">Cancel</button>
+                     <button type="submit" id="submitBiblio" class="btn btn-primary">Submit</button>
+                  </div>
+               </form>
+            </div>
+
+            <!-- Citesphere Tab -->
+            <div role="tabpanel" class="tab-pane" id="citesphereContent">
+               <div class="modal-body" style="background: var(--base-grey);">
+                  <div style="margin-bottom: 20px;">
+                     <h6>Select from Citesphere</h6>
+                     <p style="color: var(--dark-grey); font-size: 14px;">Choose bibliography entries from your Citesphere collections</p>
+                  </div>
+
+                  <!-- Search/Filter Section -->
+                  <div style="margin-bottom: 20px;">
+                     <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                        <input type="text" id="citesphereSearch" class="form-control" placeholder="Search collections..." style="flex: 1;">
+                        <button type="button" id="searchCitesphere" class="btn btn-outline-primary">
+                           <i class="icon-search"></i>
+                        </button>
+                     </div>
+                  </div>
+
+                  <!-- Collections List -->
+                  <div id="citesphereCollections" style="max-height: 300px; overflow-y: auto; border: 1px solid #ddd; border-radius: 4px; background: white;">
+                     <!-- Collection items will be populated here -->
+                     <div class="collection-item" data-collection-id="1" style="padding: 15px; border-bottom: 1px solid #eee; cursor: pointer; display: flex; align-items: center;">
+                        <input type="checkbox" class="collection-checkbox" id="collection1" style="margin-right: 10px;">
+                        <div style="flex: 1;">
+                           <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                              <i class="icon-folder" style="margin-right: 8px; color: var(--primary);"></i>
+                              <strong>Research Papers Collection</strong>
+                              <span style="margin-left: auto; color: var(--dark-grey); font-size: 12px;">45%</span>
+                           </div>
+                           <div style="color: var(--dark-grey); font-size: 13px;">Contains 15 research papers and articles</div>
+                        </div>
+                     </div>
+
+                     <div class="collection-item" data-collection-id="2" style="padding: 15px; border-bottom: 1px solid #eee; cursor: pointer; display: flex; align-items: center;">
+                        <input type="checkbox" class="collection-checkbox" id="collection2" style="margin-right: 10px;">
+                        <div style="flex: 1;">
+                           <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                              <i class="icon-folder" style="margin-right: 8px; color: var(--primary);"></i>
+                              <strong>Historical Documents</strong>
+                              <span style="margin-left: auto; color: var(--dark-grey); font-size: 12px;">78%</span>
+                           </div>
+                           <div style="color: var(--dark-grey); font-size: 13px;">Contains 8 historical references and documents</div>
+                        </div>
+                     </div>
+
+                     <div class="collection-item" data-collection-id="3" style="padding: 15px; border-bottom: 1px solid #eee; cursor: pointer; display: flex; align-items: center;">
+                        <input type="checkbox" class="collection-checkbox" id="collection3" style="margin-right: 10px;">
+                        <div style="flex: 1;">
+                           <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                              <i class="icon-book-open-alt" style="margin-right: 8px; color: var(--primary);"></i>
+                              <strong>Academic Books</strong>
+                              <span style="margin-left: auto; color: var(--dark-grey); font-size: 12px;">23%</span>
+                           </div>
+                           <div style="color: var(--dark-grey); font-size: 13px;">Contains 12 academic books and textbooks</div>
+                        </div>
+                     </div>
+                  </div>
+
+                  <!-- Selection Summary -->
+                  <div id="selectionSummary" style="margin-top: 15px; padding: 10px; background: #f8f9fa; border-radius: 4px; display: none;">
+                     <div style="font-size: 14px; color: var(--dark-grey);">
+                        Selected: <span id="selectedCount">0</span> collections
+                     </div>
+                  </div>
+               </div>
+
+               <div class="modal-footer">
+                  <button id="cancelCitesphere" type="reset" class="btn light">Cancel</button>
+                  <button type="button" id="importFromCitesphere" class="btn btn-primary" disabled>Import Selected</button>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
 			<div id="addReferenceAlert" class="modal" tabindex="-1" role="dialog" style="overflow-y: scroll;">
 			   <div class="modal-dialog" role="document" th:draggable="true">
 			      <div class="modal-content">
