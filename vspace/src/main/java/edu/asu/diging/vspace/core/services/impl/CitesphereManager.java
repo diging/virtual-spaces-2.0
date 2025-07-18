@@ -7,13 +7,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.asu.diging.vspace.core.services.CitesphereAuthToken;
 import edu.asu.diging.vspace.core.services.ICitesphereManager;
-import okhttp3.*;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
+import okhttp3.*;
 
 /**
  * Implementation of CitesphereService for API operations
@@ -31,15 +31,16 @@ public class CitesphereManager implements ICitesphereManager {
      * @param authTokenObject Authentication token object
      * @return 
      */
-    public void CitesphereConnectorImpl(String api, CitesphereAuthToken authTokenObject) {
+    public CitesphereManager(String api, CitesphereAuthToken authTokenObject) {
         this.api = api;
         this.authTokenObject = authTokenObject;
         this.client = new OkHttpClient();
         this.objectMapper = new ObjectMapper();
-        
+
         validate();
         handleApiParams();
     }
+
     
     /**
      * Validate authentication token object
