@@ -168,6 +168,38 @@ public class CitesphereManager implements ICitesphereManager {
     }
     
     @Override
+    public Map<String, Object> getGroupCollectionsMapping() {
+        Map<String, Object> result = new HashMap<>();
+
+        List<Map<String, Object>> groups = (List<Map<String, Object>>) getGroups();
+
+        for (Map<String, Object> group : groups) {
+            String groupId = String.valueOf(group.get("id"));
+            String groupName = (String) group.get("name");
+
+            // Get collections for this group
+            Map<String, Object> collectionData = getCollections(groupId);
+
+            List<Map<String, Object>> collections = (List<Map<String, Object>>) collectionData.get("collections");
+            List<String> collectionKeys = new ArrayList<>();
+
+            for (Map<String, Object> collection : collections) {
+                collectionKeys.add((String) collection.get("key"));
+            }
+
+            // Build group summary
+            Map<String, Object> groupSummary = new HashMap<>();
+            groupSummary.put("group_name", groupName);
+            groupSummary.put("collections", collectionKeys);
+
+            result.put(groupId, groupSummary);
+        }
+
+        return result;
+    }
+
+    
+    @Override
     public Map<String, Object> getUser() {
         String url = api + "/v1/user";
         return executeCommand(url);
