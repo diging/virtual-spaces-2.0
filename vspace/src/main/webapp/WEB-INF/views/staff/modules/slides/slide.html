@@ -3092,272 +3092,299 @@
 					</div>
 				</div>
 			</div>
-<div id="addBiblioAlert" class="modal" tabindex="-1" role="dialog" style="overflow-y: scroll;">
-   <div class="modal-dialog" role="document" th:draggable="true">
-      <div class="modal-content">
-         <div class="modal-header">
-            <h5 class="modal-title">Add new Bibliography Block</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-               <span aria-hidden="true">&times;</span>
-            </button>
-         </div>
-         
-         <!-- Tab Navigation -->
-         <div style="background: var(--base-grey); padding: 0 20px;">
-            <ul class="nav nav-tabs" role="tablist" id="biblioTabs">
-               <li role="presentation" id="manualTab" class="active show">
-                  <a class="active show nav-link" href="#manualContent" aria-controls="manualContent" role="tab" data-toggle="tab">Manual Entry</a>
-               </li>
-               <li role="presentation" id="citesphereTab">
-                  <a class="nav-link" href="#citesphereContent" aria-controls="citesphereContent" role="tab" data-toggle="tab">Add from Citesphere</a>
-               </li>
-            </ul>
-         </div>
-
-         <!-- Tab Content -->
-         <div class="tab-content">
-            <!-- Manual Entry Tab -->
-            <div role="tabpanel" class="tab-pane active show" id="manualContent">
-               <form name="sendBiblioForm" id="sendBiblioForm">
-                  <div class="modal-body">
-                     <div class="form-group">
-                        <table>
-                           <tr>
-                              <td><label for="name" class="col-form-label">Title: </label></td>
-                              <td><input type="text" class="form-control" id="titleBiblio" name="titleBiblio" /></td>
-                           </tr>
-                        </table>
-                     </div>
-                     <div class="form-group">
-                        <table>
-                           <tr>
-                              <td><label for="name" class="col-form-label">Description: </label></td>
-                              <td><input type="text" class="form-control" id="descriptionBiblio" name="descriptionBiblio" /></td>
-                           </tr>
-                        </table>
-                     </div>
-                  </div>
-                  <div class="modal-footer">
-                     <button id="cancelSubmitBiblio" type="reset" class="btn light">Cancel</button>
-                     <button type="submit" id="submitBiblio" class="btn btn-primary">Submit</button>
-                  </div>
-               </form>
-            </div>
-
-            <!-- Citesphere Tab -->
-            <div role="tabpanel" class="tab-pane" id="citesphereContent">
-               <div class="modal-body" style="background: var(--base-grey);">
-                  <div style="margin-bottom: 20px;">
-                     <h6>Select from Citesphere</h6>
-                     <p style="color: var(--dark-grey); font-size: 14px;">Choose bibliography entries from your Citesphere collections</p>
-                  </div>
-
-                  <!-- Search/Filter Section -->
-                  <div style="margin-bottom: 20px;">
-                     <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                        <input type="text" id="citesphereSearch" class="form-control" placeholder="Search collections..." style="flex: 1;">
-                        <button type="button" id="searchCitesphere" class="btn btn-outline-primary">
-                           <i class="icon-search"></i>
-                        </button>
-                     </div>
-                  </div>
-
-                  <!-- Collections List -->
-                  <div id="citesphereCollections" style="max-height: 300px; overflow-y: auto; border: 1px solid #ddd; border-radius: 4px; background: white;">
-                     <!-- Collection items will be populated here -->
-                     <div class="collection-item" data-collection-id="1" style="padding: 15px; border-bottom: 1px solid #eee; cursor: pointer; display: flex; align-items: center;">
-                        <input type="checkbox" class="collection-checkbox" id="collection1" style="margin-right: 10px;">
-                        <div style="flex: 1;">
-                           <div style="display: flex; align-items: center; margin-bottom: 5px;">
-                              <i class="icon-folder" style="margin-right: 8px; color: var(--primary);"></i>
-                              <strong>Research Papers Collection</strong>
-                              <span style="margin-left: auto; color: var(--dark-grey); font-size: 12px;">45%</span>
-                           </div>
-                           <div style="color: var(--dark-grey); font-size: 13px;">Contains 15 research papers and articles</div>
-                        </div>
-                     </div>
-
-                     <div class="collection-item" data-collection-id="2" style="padding: 15px; border-bottom: 1px solid #eee; cursor: pointer; display: flex; align-items: center;">
-                        <input type="checkbox" class="collection-checkbox" id="collection2" style="margin-right: 10px;">
-                        <div style="flex: 1;">
-                           <div style="display: flex; align-items: center; margin-bottom: 5px;">
-                              <i class="icon-folder" style="margin-right: 8px; color: var(--primary);"></i>
-                              <strong>Historical Documents</strong>
-                              <span style="margin-left: auto; color: var(--dark-grey); font-size: 12px;">78%</span>
-                           </div>
-                           <div style="color: var(--dark-grey); font-size: 13px;">Contains 8 historical references and documents</div>
-                        </div>
-                     </div>
-
-                     <div class="collection-item" data-collection-id="3" style="padding: 15px; border-bottom: 1px solid #eee; cursor: pointer; display: flex; align-items: center;">
-                        <input type="checkbox" class="collection-checkbox" id="collection3" style="margin-right: 10px;">
-                        <div style="flex: 1;">
-                           <div style="display: flex; align-items: center; margin-bottom: 5px;">
-                              <i class="icon-book-open-alt" style="margin-right: 8px; color: var(--primary);"></i>
-                              <strong>Academic Books</strong>
-                              <span style="margin-left: auto; color: var(--dark-grey); font-size: 12px;">23%</span>
-                           </div>
-                           <div style="color: var(--dark-grey); font-size: 13px;">Contains 12 academic books and textbooks</div>
-                        </div>
-                     </div>
-                  </div>
-
-                  <!-- Selection Summary -->
-                  <div id="selectionSummary" style="margin-top: 15px; padding: 10px; background: #f8f9fa; border-radius: 4px; display: none;">
-                     <div style="font-size: 14px; color: var(--dark-grey);">
-                        Selected: <span id="selectedCount">0</span> collections
-                     </div>
-                  </div>
-               </div>
-
-               <div class="modal-footer">
-                  <button id="cancelCitesphere" type="reset" class="btn light">Cancel</button>
-                  <button type="button" id="importFromCitesphere" class="btn btn-primary" disabled>Import Selected</button>
-               </div>
-            </div>
-         </div>
-      </div>
-   </div>
-</div>
+	         <div id="addBiblioAlert" class="modal" tabindex="-1" role="dialog" style="overflow-y: scroll;">
+	            <div class="modal-dialog" role="document" th:draggable="true">
+	               <div class="modal-content">
+	                  <div class="modal-header">
+	                     <h5 class="modal-title">Add new Bibliography Block</h5>
+	                     <button type="button" class="close" data-dismiss="modal"
+	                        aria-label="Close">
+	                     <span aria-hidden="true">&times;</span>
+	                     </button>
+	                  </div>
+	                  <form name="sendBiblioForm" id="sendBiblioForm">
+	                     <div class="modal-body">
+	                        <div class="form-group">
+	                           <table>
+	                              <tr>
+	                                 <td><label for="name" class="col-form-label">Title: </label>
+	                                 </td>
+	                                 <td><input type="text" class="form-control"
+	                                    id="titleBiblio" name="titleBiblio" /></td>
+	                              </tr>
+	                           </table>
+	                        </div>
+	                        <div class="form-group">
+	                           <table>
+	                              <tr>
+	                                 <td><label for="name" class="col-form-label">Description: </label>
+	                                 </td>
+	                                 <td><input type="text" class="form-control"
+	                                    id="descriptionBiblio" name="descriptionBiblio" /></td>
+	                              </tr>
+	                           </table>
+	                        </div>
+	                     </div>
+	                     <div class="modal-footer">
+	                        <button id="cancelSubmitBiblio" type="reset" class="btn light">Cancel</button>
+	                        <button type="submit" id="submitBiblio" class="btn btn-primary">Submit</button>
+	                     </div>
+	                  </form>
+	               </div>
+	            </div>
+	         </div>
+			<!-- Add Reference Modal with Citesphere Tab -->
 			<div id="addReferenceAlert" class="modal" tabindex="-1" role="dialog" style="overflow-y: scroll;">
-			   <div class="modal-dialog" role="document" th:draggable="true">
+			   <div class="modal-dialog modal-lg" role="document" draggable="true">
 			      <div class="modal-content">
 			         <div class="modal-header">
 			            <h5 class="modal-title">Add new Reference</h5>
-			            <button type="button" class="close" data-dismiss="modal"
-			               aria-label="Close">
-			            <span aria-hidden="true">&times;</span>
+			            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			               <span aria-hidden="true">&times;</span>
 			            </button>
 			         </div>
-			         <form name="sendReferenceForm" id="sendReferenceForm">
-			            <div class="modal-body">
-			               <!-- TYPE FIELD - NOW FIRST AND REQUIRED -->
-			               <div class="form-group">
-			                  <table>
-			                     <tr>
-			                        <td><label for="typeRef" class="col-form-label">Type: <span style="color: red;">*</span></label></td>
-			                        <td>                           
-			                           <select class="form-control" id="typeRef" name="typeRef" required>
-			                              <option value="" disabled selected>Select a type *</option>
-			                              <option value="Book">Book</option>
-			                              <option value="Journal Article">Journal Article</option>
-			                              <option value="Conference Paper">Conference Paper</option>
-			                              <option value="Thesis">Thesis</option>
-			                              <option value="Report">Report</option>
-			                              <option value="Website">Website</option>
-			                              <option value="Patent">Patent</option>
-			                              <option value="Other">Other</option>
-			                           </select>
-			                        </td>
-			                     </tr>
-			                  </table>
-			               </div>
+			         
+			         <!-- Tab Navigation -->
+			         <div class="modal-body" style="background: var(--base-grey)">
+			            <div role="tabpanel">
+			               <ul class="nav nav-tabs" role="tablist">
+			                  <li role="presentation" id="manualRefLink" class="active show">
+			                     <a class="active show nav-link" href="#manualRefTab" aria-controls="manualRefTab" role="tab" data-toggle="tab">Manual Entry</a>
+			                  </li>
+			                  <li role="presentation" id="citesphereRefLink">
+			                     <a class="nav-link" href="#citesphereRefTab" aria-controls="citesphereRefTab" role="tab" data-toggle="tab">Add from Citesphere</a>
+			                  </li>
+			               </ul>
 			               
-			               <!-- TITLE FIELD -->
-			               <div class="form-group">
-			                  <table>
-			                     <tr>
-			                        <td><label for="titleRef" class="col-form-label">Title:</label></td>
-			                        <td><input type="text" class="form-control" id="titleRef" name="titleRef" /></td>
-			                     </tr>
-			                  </table>
-			               </div>
-			               
-			               <!-- AUTHOR FIELD -->
-			               <div class="form-group">
-			                  <table>
-			                     <tr>
-			                        <td><label for="authorRef" class="col-form-label">Author:</label></td>
-			                        <td><input type="text" class="form-control" id="authorRef" name="authorRef" /></td>
-			                     </tr>
-			                  </table>
-			               </div>
-			               
-			               <!-- YEAR FIELD -->
-			               <div class="form-group">
-			                  <table>
-			                     <tr>
-			                        <td><label for="yearRef" class="col-form-label">Year:</label></td>
-			                        <td><input type="text" class="form-control" id="yearRef" name="yearRef" /></td>
-			                     </tr>
-			                  </table>
-			               </div>
-			               
-			               <!-- JOURNAL FIELD -->
-			               <div class="form-group">
-			                  <table>
-			                     <tr>
-			                        <td><label for="journalRef" class="col-form-label">Journal:</label></td>
-			                        <td><input type="text" class="form-control" id="journalRef" name="journalRef" /></td>
-			                     </tr>
-			                  </table>
-			               </div>
-			               
-			               <!-- URL FIELD -->
-			               <div class="form-group">
-			                  <table>
-			                     <tr>
-			                        <td><label for="urlRef" class="col-form-label">Url:</label></td>
-			                        <td><input type="text" class="form-control" id="urlRef" name="urlRef" /></td>
-			                     </tr>
-			                  </table>
-			               </div>
-			               
-			               <!-- VOLUME FIELD -->
-			               <div class="form-group">
-			                  <table>
-			                     <tr>
-			                        <td><label for="volumeRef" class="col-form-label">Volume:</label></td>
-			                        <td><input type="text" class="form-control" id="volumeRef" name="volumeRef" /></td>
-			                     </tr>
-			                  </table>
-			               </div>
-			               
-			               <!-- ISSUE FIELD -->
-			               <div class="form-group">
-			                  <table>
-			                     <tr>
-			                        <td><label for="issueRef" class="col-form-label">Issue:</label></td>
-			                        <td><input type="text" class="form-control" id="issueRef" name="issueRef" /></td>
-			                     </tr>
-			                  </table>
-			               </div>
-			               
-			               <!-- PAGES FIELD -->
-			               <div class="form-group">
-			                  <table>
-			                     <tr>
-			                        <td><label for="pagesRef" class="col-form-label">Pages:</label></td>
-			                        <td><input type="text" class="form-control" id="pagesRef" name="pagesRef" /></td>
-			                     </tr>
-			                  </table>
-			               </div>
-			               
-			               <!-- EDITORS FIELD -->
-			               <div class="form-group">
-			                  <table>
-			                     <tr>
-			                        <td><label for="editorsRef" class="col-form-label">Editors:</label></td>
-			                        <td><input type="text" class="form-control" id="editorsRef" name="editorsRef" /></td>
-			                     </tr>
-			                  </table>
-			               </div>
-			               
-			               <!-- NOTE FIELD -->
-			               <div class="form-group">
-			                  <table>
-			                     <tr>
-			                        <td><label for="noteRef" class="col-form-label">Note:</label></td>
-			                        <td><input type="text" class="form-control" id="noteRef" name="noteRef" /></td>
-			                     </tr>
-			                  </table>
+			               <!-- Tab Content -->
+			               <div class="tab-content">
+			                  <!-- Manual Entry Tab -->
+			                  <div role="tabpanel" class="tab-pane active show" id="manualRefTab">
+			                     <form name="sendReferenceForm" id="sendReferenceForm">
+			                        <div class="modal-body-content" style="padding-top: 20px;">
+			                           <!-- TYPE FIELD - NOW FIRST AND REQUIRED -->
+			                           <div class="form-group">
+			                              <table>
+			                                 <tr>
+			                                    <td><label for="typeRef" class="col-form-label">Type: <span style="color: red;">*</span></label></td>
+			                                    <td>                           
+			                                       <select class="form-control" id="typeRef" name="typeRef" required>
+			                                          <option value="" disabled selected>Select a type *</option>
+			                                          <option value="Book">Book</option>
+			                                          <option value="Journal Article">Journal Article</option>
+			                                          <option value="Conference Paper">Conference Paper</option>
+			                                          <option value="Thesis">Thesis</option>
+			                                          <option value="Report">Report</option>
+			                                          <option value="Website">Website</option>
+			                                          <option value="Patent">Patent</option>
+			                                          <option value="Other">Other</option>
+			                                       </select>
+			                                    </td>
+			                                 </tr>
+			                              </table>
+			                           </div>
+			                           
+			                           <!-- TITLE FIELD -->
+			                           <div class="form-group">
+			                              <table>
+			                                 <tr>
+			                                    <td><label for="titleRef" class="col-form-label">Title:</label></td>
+			                                    <td><input type="text" class="form-control" id="titleRef" name="titleRef" /></td>
+			                                 </tr>
+			                              </table>
+			                           </div>
+			                           
+			                           <!-- AUTHOR FIELD -->
+			                           <div class="form-group">
+			                              <table>
+			                                 <tr>
+			                                    <td><label for="authorRef" class="col-form-label">Author:</label></td>
+			                                    <td><input type="text" class="form-control" id="authorRef" name="authorRef" /></td>
+			                                 </tr>
+			                              </table>
+			                           </div>
+			                           
+			                           <!-- YEAR FIELD -->
+			                           <div class="form-group">
+			                              <table>
+			                                 <tr>
+			                                    <td><label for="yearRef" class="col-form-label">Year:</label></td>
+			                                    <td><input type="text" class="form-control" id="yearRef" name="yearRef" /></td>
+			                                 </tr>
+			                              </table>
+			                           </div>
+			                           
+			                           <!-- JOURNAL FIELD -->
+			                           <div class="form-group">
+			                              <table>
+			                                 <tr>
+			                                    <td><label for="journalRef" class="col-form-label">Journal:</label></td>
+			                                    <td><input type="text" class="form-control" id="journalRef" name="journalRef" /></td>
+			                                 </tr>
+			                              </table>
+			                           </div>
+			                           
+			                           <!-- URL FIELD -->
+			                           <div class="form-group">
+			                              <table>
+			                                 <tr>
+			                                    <td><label for="urlRef" class="col-form-label">Url:</label></td>
+			                                    <td><input type="text" class="form-control" id="urlRef" name="urlRef" /></td>
+			                                 </tr>
+			                              </table>
+			                           </div>
+			                           
+			                           <!-- VOLUME FIELD -->
+			                           <div class="form-group">
+			                              <table>
+			                                 <tr>
+			                                    <td><label for="volumeRef" class="col-form-label">Volume:</label></td>
+			                                    <td><input type="text" class="form-control" id="volumeRef" name="volumeRef" /></td>
+			                                 </tr>
+			                              </table>
+			                           </div>
+			                           
+			                           <!-- ISSUE FIELD -->
+			                           <div class="form-group">
+			                              <table>
+			                                 <tr>
+			                                    <td><label for="issueRef" class="col-form-label">Issue:</label></td>
+			                                    <td><input type="text" class="form-control" id="issueRef" name="issueRef" /></td>
+			                                 </tr>
+			                              </table>
+			                           </div>
+			                           
+			                           <!-- PAGES FIELD -->
+			                           <div class="form-group">
+			                              <table>
+			                                 <tr>
+			                                    <td><label for="pagesRef" class="col-form-label">Pages:</label></td>
+			                                    <td><input type="text" class="form-control" id="pagesRef" name="pagesRef" /></td>
+			                                 </tr>
+			                              </table>
+			                           </div>
+			                           
+			                           <!-- EDITORS FIELD -->
+			                           <div class="form-group">
+			                              <table>
+			                                 <tr>
+			                                    <td><label for="editorsRef" class="col-form-label">Editors:</label></td>
+			                                    <td><input type="text" class="form-control" id="editorsRef" name="editorsRef" /></td>
+			                                 </tr>
+			                              </table>
+			                           </div>
+			                           
+			                           <!-- NOTE FIELD -->
+			                           <div class="form-group">
+			                              <table>
+			                                 <tr>
+			                                    <td><label for="noteRef" class="col-form-label">Note:</label></td>
+			                                    <td><input type="text" class="form-control" id="noteRef" name="noteRef" /></td>
+			                                 </tr>
+			                              </table>
+			                           </div>
+			                        </div>
+			                     </form>
+			                  </div>
+			                  
+			                  <!-- Citesphere Tab -->
+			                  <div role="tabpanel" class="tab-pane" id="citesphereRefTab">
+			                     <div class="modal-body-content" style="padding-top: 20px;">
+			                        <h6 style="margin-bottom: 20px;">Select references from Citesphere</h6>
+			                        
+			                        <!-- Search Input -->
+			                        <div class="form-group" style="margin-bottom: 20px;">
+			                           <div class="input-group">
+			                              <input type="text" class="form-control" id="citesphereSearch" placeholder="Search Citesphere references...">
+			                              <div class="input-group-append">
+			                                 <button class="btn btn-outline-secondary" type="button" id="searchCitesphereBtn">
+			                                    <i class="fa fa-search"></i> Search
+			                                 </button>
+			                              </div>
+			                           </div>
+			                        </div>
+			                        
+			                        <!-- Selection Blocks Container -->
+			                        <div id="citesphereSelectionContainer" style="max-height: 400px; overflow-y: auto;">
+			                           <!-- First Block - Collections/Categories -->
+			                           <div class="citesphere-block" style="border: 1px solid #ddd; border-radius: 5px; margin-bottom: 15px; padding: 15px; background: white;">
+			                              <h6 style="margin-bottom: 10px; color: #333;">
+			                                 <i class="fa fa-folder"></i> Collections
+			                              </h6>
+			                              <div id="citesphereCollections" style="max-height: 150px; overflow-y: auto;">
+			                                 <!-- Dynamic content will be loaded here -->
+			                                 <div class="collection-item" data-collection-id="1" style="padding: 8px; border-bottom: 1px solid #eee; cursor: pointer;">
+			                                    <input type="checkbox" id="collection_1" class="collection-checkbox" style="margin-right: 8px;">
+			                                    <label for="collection_1" style="margin: 0; cursor: pointer;">Academic Papers 2024</label>
+			                                    <small style="color: #666; display: block; margin-left: 20px;">25 references</small>
+			                                 </div>
+			                                 <div class="collection-item" data-collection-id="2" style="padding: 8px; border-bottom: 1px solid #eee; cursor: pointer;">
+			                                    <input type="checkbox" id="collection_2" class="collection-checkbox" style="margin-right: 8px;">
+			                                    <label for="collection_2" style="margin: 0; cursor: pointer;">Research Bibliography</label>
+			                                    <small style="color: #666; display: block; margin-left: 20px;">42 references</small>
+			                                 </div>
+			                                 <div class="collection-item" data-collection-id="3" style="padding: 8px; border-bottom: 1px solid #eee; cursor: pointer;">
+			                                    <input type="checkbox" id="collection_3" class="collection-checkbox" style="margin-right: 8px;">
+			                                    <label for="collection_3" style="margin: 0; cursor: pointer;">Machine Learning Sources</label>
+			                                    <small style="color: #666; display: block; margin-left: 20px;">18 references</small>
+			                                 </div>
+			                              </div>
+			                           </div>
+			                           
+			                           <!-- Second Block - Individual References -->
+			                           <div class="citesphere-block" style="border: 1px solid #ddd; border-radius: 5px; margin-bottom: 15px; padding: 15px; background: white;">
+			                              <h6 style="margin-bottom: 10px; color: #333;">
+			                                 <i class="fa fa-file-text"></i> Individual References
+			                              </h6>
+			                              <div id="citesphereReferences" style="max-height: 200px; overflow-y: auto;">
+			                                 <!-- Dynamic content will be loaded here -->
+			                                 <div class="reference-item" data-reference-id="ref_1" style="padding: 10px; border-bottom: 1px solid #eee; cursor: pointer;">
+			                                    <input type="checkbox" id="reference_1" class="reference-checkbox" style="margin-right: 8px;">
+			                                    <label for="reference_1" style="margin: 0; cursor: pointer; font-weight: 500;">
+			                                       Machine Learning in Modern Applications
+			                                    </label>
+			                                    <small style="color: #666; display: block; margin-left: 20px;">
+			                                       Smith, J. et al. (2024) - Journal of AI Research
+			                                    </small>
+			                                 </div>
+			                                 <div class="reference-item" data-reference-id="ref_2" style="padding: 10px; border-bottom: 1px solid #eee; cursor: pointer;">
+			                                    <input type="checkbox" id="reference_2" class="reference-checkbox" style="margin-right: 8px;">
+			                                    <label for="reference_2" style="margin: 0; cursor: pointer; font-weight: 500;">
+			                                       Deep Learning Fundamentals
+			                                    </label>
+			                                    <small style="color: #666; display: block; margin-left: 20px;">
+			                                       Johnson, A. (2023) - MIT Press
+			                                    </small>
+			                                 </div>
+			                                 <div class="reference-item" data-reference-id="ref_3" style="padding: 10px; border-bottom: 1px solid #eee; cursor: pointer;">
+			                                    <input type="checkbox" id="reference_3" class="reference-checkbox" style="margin-right: 8px;">
+			                                    <label for="reference_3" style="margin: 0; cursor: pointer; font-weight: 500;">
+			                                       Neural Networks and Pattern Recognition
+			                                    </label>
+			                                    <small style="color: #666; display: block; margin-left: 20px;">
+			                                       Davis, M. & Brown, K. (2024) - Conference Proceedings
+			                                    </small>
+			                                 </div>
+			                              </div>
+			                           </div>
+			                        </div>
+			                        
+			                        <!-- Selected Count Display -->
+			                        <div id="selectedCount" style="margin-top: 15px; padding: 10px; background: #f8f9fa; border-radius: 3px; font-size: 14px;">
+			                           <strong>Selected:</strong> <span id="selectedCountText">0 references</span>
+			                        </div>
+			                     </div>
+			                  </div>
 			               </div>
 			            </div>
-			            <div class="modal-footer">
-			               <button id="cancelSubmitReference" type="reset" class="btn light">Cancel</button>
-			               <button type="submit" id="submitReference" class="btn btn-primary">Submit</button>
-			            </div>
-			         </form>
+			         </div>
+			         
+			         <!-- Modal Footer -->
+			         <div class="modal-footer">
+			            <button id="cancelSubmitReference" type="reset" class="btn light">Cancel</button>
+			            <button type="submit" id="submitReference" class="btn btn-primary">Submit</button>
+			            <button type="button" id="submitCitesphereReferences" class="btn btn-primary" style="display: none;">Add Selected References</button>
+			         </div>
 			      </div>
 			   </div>
 			</div>
