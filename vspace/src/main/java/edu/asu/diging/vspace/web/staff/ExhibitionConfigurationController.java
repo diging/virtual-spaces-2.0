@@ -64,7 +64,6 @@ public class ExhibitionConfigurationController {
 
     @RequestMapping("/staff/exhibit/config")
     public String showExhibitions(Model model) {
-        // for now we assume there is just one exhibition
 
         IExhibition exhibition = exhibitionManager.getStartExhibition();
         if (exhibition==null) {
@@ -81,7 +80,7 @@ public class ExhibitionConfigurationController {
         
         @SuppressWarnings("unchecked")
         List<Map<String, Object>> sortedLanguageList = exhibitionLanguageConfig.getExhibitionLanguageList().stream()
-                .map(rawMap -> (Map<String, Object>) rawMap)  // Cast raw Map to Map<String, Object>
+                .map(rawMap -> (Map<String, Object>) rawMap)
                 .sorted((lang1, lang2) -> {
                     String label1 = (String) lang1.get("label");
                     String label2 = (String) lang2.get("label");

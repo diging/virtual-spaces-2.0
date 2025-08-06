@@ -109,11 +109,6 @@ public class ExhibitionManager implements IExhibitionManager {
             throw new LanguageListConfigurationNotFoundException("Exhibition Language Configuration not found");
         }
 
-        if(CollectionUtils.isEmpty(codes)) {
-            exhibition.getLanguages().clear();
-            return;
-        }
-
         // Adds defaultLanguage to codes list if not already exists.
         if(!StringUtils.isEmpty(defaultLanguage) && !codes.contains(defaultLanguage)) {
             codes.add(defaultLanguage);
