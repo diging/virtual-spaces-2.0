@@ -1661,18 +1661,20 @@
                             '<p>' + data.description + '</p>' +
                             '</div>' +
                             '<input type="hidden" data-biblio-id="' + data.id + '" value="' + data.id + '" />' +
-                            '<a class="btn col-md-1" data-action="delete-biblio" href="javascript:;" style="position: absolute; right: 0px;">' +
-                            '<span class="icon-trash error"></span>' +
-                            '</a>' +
-                            '<a class="btn primary-btn btn-sm" data-action="add-reference" style="padding: 8px; display: flex; align-items: center;">' +
+                            '<div class="button-group" style="position: absolute; right: 0px; top: 50%; transform: translateY(-50%); display: flex; gap: 8px;">' +
+                            '<a class="btn primary-btn btn-sm" data-action="add-reference" style="padding: 6px; display: inline-flex; align-items: center; justify-content: center; min-width: 36px; height: 36px;">' +
                             '<span class="icon-circle-add"></span>' +
                             '</a>' +
+                            '<a class="btn col-md-1" data-action="delete-biblio" href="javascript:;" style="padding: 6px; display: inline-flex; align-items: center; justify-content: center; min-width: 36px; height: 36px;">' +
+                            '<span class="icon-trash error"></span>' +
+                            '</a>' +
+                            '</div>' +
                             '<div id="referenceSpace" class="col-md-10">' +
                             '</div>' +
                             '</div>'
                         );
                         
-                        $(biblioblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(biblioBlockDoubleClick);
+                        $(biblioblock[0]).dblclick(biblioBlockDoubleClick);
                         $('#slideSpace').append(biblioblock); 
                     },
                     error: function(data) {
@@ -2138,12 +2140,14 @@
 				        '<p>' + formData.get('description') + '</p>' +
 				        '</div>' +
 				        '<input type="hidden" data-biblio-id="' + blockId + '" value="' + blockId + '" />' +
-				        '<a class="btn col-md-1" data-action="delete-biblio" href="javascript:;" style="position: absolute; right: 0px;">' +
-				        '<span class="icon-trash error"></span>' +
-				        '</a>' +
-				        '<a class="btn primary-btn btn-sm" data-action="add-reference" style="padding: 8px; display: flex; align-items: center;">' +
+				        '<div class="button-group" style="position: absolute; right: 0px; top: 50%; transform: translateY(-50%); display: flex; gap: 8px;">' +
+				        '<a class="btn primary-btn btn-sm" data-action="add-reference" style="padding: 6px; display: inline-flex; align-items: center; justify-content: center; min-width: 36px; height: 36px;">' +
 				        '<span class="icon-circle-add"></span>' +
 				        '</a>' +
+				        '<a class="btn col-md-1" data-action="delete-biblio" href="javascript:;" style="padding: 6px; display: inline-flex; align-items: center; justify-content: center; min-width: 36px; height: 36px;">' +
+				        '<span class="icon-trash error"></span>' +
+				        '</a>' +
+				        '</div>' +
 				        '<div id="referenceSpace" class="col-md-10"></div>';
 				    
 				    $(".open").append(biblioHtml);
@@ -2156,7 +2160,7 @@
 				    }
 				    
 				    // Rebind event handlers for bibliography
-				    $('.biblioDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(biblioBlockDoubleClick);
+				    $('.biblioDivStaff').dblclick(biblioBlockDoubleClick);
 				    
 				    // Rebind event handlers for all restored references
 				    $('.referenceDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(referenceBlockDoubleClick);
@@ -2211,8 +2215,6 @@
 			function rebindBiblioEventHandlers() {
 			    // Rebind bibliography block event handlers
 			    $('.biblioDivStaff').off('mouseenter mouseleave dblclick')
-			        .mouseenter(onMouseEnter)
-			        .mouseleave(onMouseLeave)
 			        .dblclick(biblioBlockDoubleClick);
 			    
 			    // Rebind reference block event handlers
@@ -2293,7 +2295,7 @@
              $('.textDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(textBlockDoubleClick);
              $('.vidDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave);
              $('.SpaceDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(spaceBlockDoubleClick);
-             $('.biblioDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(biblioBlockDoubleClick);
+             $('.biblioDivStaff').dblclick(biblioBlockDoubleClick);
              $('.referenceDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(referenceBlockDoubleClick);
             
              $('#closeTextBlock').on('click', function() {
@@ -3628,17 +3630,19 @@
 					           data-biblio-id="${contents.id}" 
 					           th:attr="data-biblio-id=${contents.id}"
 					           th:value="${contents.id}" />
-					    <a class="btn col-md-1" 
-					       data-action="delete-biblio" 
-					       href="javascript:;" 
-					       style="position: absolute; right: 0px;">
-					        <span class="icon-trash error"></span>
-					    </a>
-					    <a class="btn primary-btn btn-sm" 
-					       data-action="add-reference" 
-					       style="padding: 8px; display: flex; align-items: center;">
-					        <span class="icon-circle-add"></span>
-					    </a>
+					    <div class="button-group" style="position: absolute; right: 0px; top: 50%; transform: translateY(-50%); display: flex; gap: 8px;">
+					        <a class="btn primary-btn btn-sm" 
+					           data-action="add-reference" 
+					           style="padding: 6px; display: inline-flex; align-items: center; justify-content: center; min-width: 36px; height: 36px;">
+					            <span class="icon-circle-add"></span>
+					        </a>
+					        <a class="btn col-md-1" 
+					           data-action="delete-biblio" 
+					           href="javascript:;" 
+					           style="padding: 6px; display: inline-flex; align-items: center; justify-content: center; min-width: 36px; height: 36px;">
+					            <span class="icon-trash error"></span>
+					        </a>
+					    </div>
 					    <div id="referenceSpace" class="col-md-10">
 						<div th:each="contentRef: ${contents.references}">
 						    <!-- Reference Block with TYPE FIRST -->
