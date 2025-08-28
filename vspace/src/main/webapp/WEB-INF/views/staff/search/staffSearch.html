@@ -159,7 +159,7 @@ $('.modulepage-selection').bootpag({
 				var firstSlideFirstImageId = moduleImageIdMap[moduleList[i].id];
 				if(firstSlideFirstImageId == null)
 				{
-					img.attr('src',"[(@{'/resources/images/'})]"+'placeholder.png');
+					img.attr('src',"[(@{'/resources/images/'})]"+'cannot_load_image_placeholder.png');
 				}
 				else
 				{
@@ -256,7 +256,7 @@ $('.slidepage-selection').bootpag({
 			var slideFirstImageId = firstImageOfSlide[slideList[i].id];
 			if(slideFirstImageId == null)
 			{
-				img.attr('src',"[(@{'/resources/images/'})]"+'placeholder.png');
+				img.attr('src',"[(@{'/resources/images/'})]"+'cannot_load_image_placeholder.png');
 			}
 			else
 			{
@@ -329,7 +329,7 @@ $('.slideTextPage-selection').bootpag({
 			var slideTextFirstImageId = slideToFirstImageMap[slideTextList[i].id];
 			if(slideTextFirstImageId == null)
 			{
-				img.attr('src',"[(@{'/resources/images/'})]"+'placeholder.png');
+				img.attr('src',"[(@{'/resources/images/'})]"+'cannot_load_image_placeholder.png');
 			}
 			else
 			{
@@ -427,7 +427,7 @@ a.nav-link.active.show {
 								class="textDivStaff tab  btn btn-light" style="width: 100%">
 								<span class="card-title"
 								style="white-space: pre-wrap; line-break: anywhere;"><img  class="searchImg"
-								th:src="@{'/api/image/'+${contents?.image?.id}}" alt="Space image" /><span 
+								th:src="@{'/api/image/'+${contents?.image?.id}}" th:onerror="if (this.src != '@{/resources/images/cannot_load_image_placeholder.png}') this.src = '@{/resources/images/cannot_load_image_placeholder.png}'" alt="Space image" /><span 
 								style="color: var(--dark-grey)">Space:</span> [[${contents.name}]]<br><span 
                                 style="color: var(--dark-grey)">Description:</span> [[${contents.description}]]</span>
 							</a>
@@ -481,7 +481,7 @@ a.nav-link.active.show {
 											alt="Module image" />
 									</div>
 									<div th:if=" ${slide?.firstImageBlock ==null}">
-										<img class="searchImg" th:src="@{'/resources/images/placeholder.png'}" />
+										<img class="searchImg" th:src="@{'/resources/images/cannot_load_image_placeholder.png'}" />
 									</div>
 								</div>
 								<div th:if=" ${#lists.isEmpty(contents.slides)}">
@@ -528,12 +528,12 @@ a.nav-link.active.show {
 								<div th:if="${not #lists.isEmpty(contents.contents)}">
 									<div th:if="${contents?.firstImageBlock !=null}">
 										<img
-											th:onerror="if (this.src != '@{/resources/images/placeholder.png}') this.src = '@{/resources/images/placeholder.png}'"
+											th:onerror="if (this.src != '@{/resources/images/cannot_load_image_placeholder.png}') this.src = '@{/resources/images/cannot_load_image_placeholder.png}'"
 											class="searchImg" th:src="@{'/api/image/'+${contents?.firstImageBlock?.image?.id}}"
 											alt="Slide image" />
 									</div>
 									<div th:if="${contents?.firstImageBlock ==null}">
-										<img class="searchImg" th:src="@{'/resources/images/placeholder.png'}" />
+										<img class="searchImg" th:src="@{'/resources/images/cannot_load_image_placeholder.png'}" />
 									</div>
 								</div>
 								<div th:if="${#lists.isEmpty(contents.contents)}">
@@ -579,12 +579,12 @@ a.nav-link.active.show {
 								<div th:if="${not #lists.isEmpty(contents.contents)}">
 									<div th:if="${contents?.firstImageBlock !=null}">
 										<img
-											th:onerror="if (this.src != '@{/resources/images/placeholder.png}') this.src = '@{/resources/images/placeholder.png}'"
+											th:onerror="if (this.src != '@{/resources/images/cannot_load_image_placeholder.png}') this.src = '@{/resources/images/cannot_load_image_placeholder.png}'"
 											class="searchImg" th:src="@{'/api/image/'+${contents?.firstImageBlock?.image?.id}}"
 											alt="Slide image" />
 									</div>
 									<div th:if="${contents?.firstImageBlock ==null}">
-										<img class="searchImg" th:src="@{'/resources/images/placeholder.png'}" />
+										<img class="searchImg" th:src="@{'/resources/images/cannot_load_image_placeholder.png'}" />
 									</div>
 								</div>
 								<div th:if="${#lists.isEmpty(contents.contents)}">

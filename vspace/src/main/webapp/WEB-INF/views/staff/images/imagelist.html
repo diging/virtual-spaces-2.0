@@ -165,6 +165,7 @@ $( document ).ready(function() {
                     <th scope="row"><a
                         th:href="@{'/staff/display/image/'+${image.id}}"><img
                             th:src="@{'/api/image/'+${image.id}}"
+                            th:onerror="if (this.src != '@{/resources/images/cannot_load_image_placeholder.png}') this.src = '@{/resources/images/cannot_load_image_placeholder.png}'"
                             class="img-thumbnail">
                             [[${image.filename}]]</a></th>
                     <td>[[${image.name}]]</td>

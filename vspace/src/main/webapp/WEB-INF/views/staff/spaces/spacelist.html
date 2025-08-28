@@ -80,7 +80,7 @@
 				</div>
 				<div class="spaceImage">
                     <a th:href="@{'/staff/space/'+${space.id}}">
-					<img class="card-img-top" th:src="@{'/api/image/'+${space?.image?.id}}" alt="Space image">
+					<img class="card-img-top" th:src="@{'/api/image/'+${space?.image?.id}}" th:onerror="if (this.src != '@{/resources/images/cannot_load_image_placeholder.png}') this.src = '@{/resources/images/cannot_load_image_placeholder.png}'" alt="Space image">
                     </a>
 				</div>
 				<div class="btn-group dropdown">
