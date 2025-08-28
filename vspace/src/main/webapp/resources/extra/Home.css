@@ -799,7 +799,6 @@
 	background: #f2f2f2;
 }
 
-/* Enhanced styling for add reference button integration */
 .btn.primary-btn.btn-sm[data-action="add-reference"] {
 	border-radius: 8px;
 	box-shadow: 0px 2px 4px rgba(0,0,0,0.1);
@@ -823,18 +822,15 @@
 	display: block;
 }
 
-/* Ensure proper positioning context for bibliography blocks */
 .biblioDivStaff.tab.row {
 	position: relative;
-	padding-right: 90px; /* Make room for button group */
+	padding-right: 90px; 
 }
 
-/* Improve spacing and layout integration */
 .biblioDivStaff .col-md-10 {
 	padding-right: 0;
 }
 
-/* Button group styling for bibliography actions */
 .button-group {
 	align-items: center;
 }
