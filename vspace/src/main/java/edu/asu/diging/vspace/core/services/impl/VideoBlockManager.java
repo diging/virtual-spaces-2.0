@@ -16,9 +16,11 @@ import edu.asu.diging.vspace.core.model.IVSVideo;
 import edu.asu.diging.vspace.core.model.IVideoBlock;
 import edu.asu.diging.vspace.core.model.impl.VSVideo;
 import edu.asu.diging.vspace.core.model.impl.VideoBlock;
+import edu.asu.diging.vspace.core.services.IVideoBlockManager;
 
 @Service
-public class VideoBlockManager extends AbstractContentBlockManager<IVideoBlock, VideoContentBlockRepository> {
+public class VideoBlockManager extends GenericContentBlockManager<IVideoBlock, VideoContentBlockRepository> 
+        implements IVideoBlockManager {
 
     @Autowired
     private IVideoFactory videoFactory;
@@ -40,18 +42,17 @@ public class VideoBlockManager extends AbstractContentBlockManager<IVideoBlock, 
         return videoBlockRepo;
     }
 
-    /**
-     * Creates a new video block.
-     * 
-     * @param slideId The ID of the slide
-     * @param video The video bytes (null if using URL)
-     * @param size The file size
-     * @param fileName The filename
-     * @param url The video URL (null if using file upload)
-     * @param title The video title
-     * @return The creation result with the created video block
-     * @throws VideoCouldNotBeStoredException if video storage fails
-     */
+    @Override
+    public IVideoBlock createContentBlock(String slideId) {
+        // Default implementation - creates a video block without video data
+        try {
+            return createVideoBlock(slideId, null, null, "default.mp4", null, "Default Video").getElement();
+        } catch (VideoCouldNotBeStoredException e) {
+            throw new RuntimeException("Failed to create default video block", e);
+        }
+    }
+
+    @Override
     public CreationReturnValue createVideoBlock(String slideId, byte[] video, Long size, String fileName, 
             String url, String title) throws VideoCouldNotBeStoredException {
         ISlide slide = slideManager.getSlide(slideId);
@@ -68,17 +69,7 @@ public class VideoBlockManager extends AbstractContentBlockManager<IVideoBlock, 
         return returnValue;
     }
 
-    /**
-     * Updates an existing video block.
-     * 
-     * @param videoBlock The video block to update
-     * @param video The video bytes
-     * @param fileSize The file size
-     * @param url The video URL
-     * @param filename The filename
-     * @param title The video title
-     * @throws VideoCouldNotBeStoredException if video storage fails
-     */
+    @Override
     public void updateVideoBlock(IVideoBlock videoBlock, byte[] video, Long fileSize, String url, 
             String filename, String title) throws VideoCouldNotBeStoredException {
         IVSVideo slideContentVideo = storeVideo(video, fileSize, filename, url, title);
@@ -86,13 +77,19 @@ public class VideoBlockManager extends AbstractContentBlockManager<IVideoBlock, 
         videoBlockRepo.save((VideoBlock) videoBlock);
     }
 
-    /**
-     * Saves a video block (used for updating video properties).
-     * 
-     * @param videoBlock The video block to save
-     */
+    @Override
+    public void updateContentBlock(IVideoBlock videoBlock) {
+        videoBlockRepo.save((VideoBlock) videoBlock);
+    }
+
+    @Override
     public void saveVideoBlock(IVideoBlock videoBlock) {
         videoRepo.save((VSVideo) videoBlock.getVideo());
+    }
+
+    @Override
+    public void saveContentBlock(IVideoBlock videoBlock) {
+        saveVideoBlock(videoBlock);
     }
 
     private IVSVideo storeVideo(byte[] video, Long size, String fileName, String url, String title)

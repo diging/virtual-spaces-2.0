@@ -1,27 +1,30 @@
 package edu.asu.diging.vspace.core.services.impl;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 import edu.asu.diging.vspace.core.data.ContentBlockRepository;
 import edu.asu.diging.vspace.core.exception.BlockDoesNotExistException;
 import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.impl.ContentBlock;
+import edu.asu.diging.vspace.core.services.IGenericContentBlockManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 
 /**
- * Abstract base class for content block managers providing common functionality
- * for delete and get operations, as well as content order management.
+ * Generic abstract base class for content block managers providing common functionality
+ * following the pattern established by ILinkManager.
  * 
  * @param <T> The type of content block this manager handles
  * @param <R> The repository type for the content block
  */
 @Transactional(rollbackFor = { Exception.class })
-public abstract class AbstractContentBlockManager<T extends IContentBlock, R extends JpaRepository<?, String>> {
+public abstract class GenericContentBlockManager<T extends IContentBlock, R extends CrudRepository<?, String>> 
+        implements IGenericContentBlockManager<T> {
 
     @Autowired
     protected ISlideManager slideManager;
@@ -37,13 +40,26 @@ public abstract class AbstractContentBlockManager<T extends IContentBlock, R ext
     protected abstract R getRepository();
 
     /**
-     * Deletes a content block by ID and updates content order for remaining blocks.
+     * Abstract method to create a content block with specific parameters.
+     * Subclasses implement this with their specific creation logic.
      * 
-     * @param blockId The ID of the block to delete
-     * @param slideId The ID of the slide containing the block
-     * @throws BlockDoesNotExistException if the block doesn't exist
+     * @param slideId The ID of the slide
+     * @return The created content block
      */
-    public void deleteById(String blockId, String slideId) throws BlockDoesNotExistException {
+    public abstract T createContentBlock(String slideId);
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public T getContentBlock(String blockId) {
+        Optional<?> block = getRepository().findById(blockId);
+        if (block.isPresent()) {
+            return (T) block.get();
+        }
+        return null;
+    }
+
+    @Override
+    public void deleteContentBlock(String blockId, String slideId) throws BlockDoesNotExistException {
         if (blockId == null) {
             return;
         }
@@ -62,21 +78,6 @@ public abstract class AbstractContentBlockManager<T extends IContentBlock, R ext
         } catch (EmptyResultDataAccessException e) {
             throw new BlockDoesNotExistException(e);
         }
-    }
-
-    /**
-     * Retrieves a content block by ID.
-     * 
-     * @param blockId The ID of the block to retrieve
-     * @return The content block or null if not found
-     */
-    @SuppressWarnings("unchecked")
-    public T getById(String blockId) {
-        Optional<?> block = getRepository().findById(blockId);
-        if (block.isPresent()) {
-            return (T) block.get();
-        }
-        return null;
     }
 
     /**
@@ -102,7 +103,7 @@ public abstract class AbstractContentBlockManager<T extends IContentBlock, R ext
             return;
         }
         
-        var contentBlockList = contentBlockRepository.findBySlide_IdAndContentOrderGreaterThan(slideId, deletedContentOrder);
+        List<ContentBlock> contentBlockList = contentBlockRepository.findBySlide_IdAndContentOrderGreaterThan(slideId, deletedContentOrder);
         if (contentBlockList != null) {
             for (ContentBlock eachContentBlock : contentBlockList) {
                 eachContentBlock.setContentOrder(eachContentBlock.getContentOrder() - 1);

@@ -23,8 +23,14 @@ import edu.asu.diging.vspace.core.model.IVideoBlock;
 import edu.asu.diging.vspace.core.model.impl.BiblioBlock;
 import edu.asu.diging.vspace.core.model.impl.ContentBlock;
 import edu.asu.diging.vspace.core.model.impl.TextBlock;
+import edu.asu.diging.vspace.core.services.IBiblioBlockManager;
+import edu.asu.diging.vspace.core.services.IChoiceBlockManager;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
+import edu.asu.diging.vspace.core.services.IImageBlockManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
+import edu.asu.diging.vspace.core.services.ISpaceBlockManager;
+import edu.asu.diging.vspace.core.services.ITextBlockManager;
+import edu.asu.diging.vspace.core.services.IVideoBlockManager;
 
 @Transactional(rollbackFor = { Exception.class })
 @Service
@@ -37,22 +43,22 @@ public class ContentBlockManager implements IContentBlockManager {
     private ContentBlockRepository contentBlockRepository;
 
     @Autowired
-    private TextBlockManager textBlockManager;
+    private ITextBlockManager textBlockManager;
 
     @Autowired
-    private ImageBlockManager imageBlockManager;
+    private IImageBlockManager imageBlockManager;
 
     @Autowired
-    private VideoBlockManager videoBlockManager;
+    private IVideoBlockManager videoBlockManager;
 
     @Autowired
-    private SpaceBlockManager spaceBlockManager;
+    private ISpaceBlockManager spaceBlockManager;
 
     @Autowired
-    private ChoiceBlockManager choiceBlockManager;
+    private IChoiceBlockManager choiceBlockManager;
 
     @Autowired
-    private BiblioBlockManager biblioBlockManager;
+    private IBiblioBlockManager biblioBlockManager;
 
     @Override
     public List<IContentBlock> getAllContentBlocks(String slideId) {
@@ -99,27 +105,27 @@ public class ContentBlockManager implements IContentBlockManager {
 
     @Override
     public void deleteTextBlockById(String blockId, String slideId) throws BlockDoesNotExistException {
-        textBlockManager.deleteById(blockId, slideId);
+        textBlockManager.deleteContentBlock(blockId, slideId);
     }
 
     @Override
     public void deleteSpaceBlockById(String blockId, String slideId) throws BlockDoesNotExistException {
-        spaceBlockManager.deleteById(blockId, slideId);
+        spaceBlockManager.deleteContentBlock(blockId, slideId);
     }
 
     @Override
     public void deleteImageBlockById(String blockId, String slideId) throws BlockDoesNotExistException {
-        imageBlockManager.deleteById(blockId, slideId);
+        imageBlockManager.deleteContentBlock(blockId, slideId);
     }
 
     @Override
     public void deleteVideoBlockById(String blockId, String slideId) throws BlockDoesNotExistException {
-        videoBlockManager.deleteById(blockId, slideId);
+        videoBlockManager.deleteContentBlock(blockId, slideId);
     }
 
     @Override
     public void deleteChoiceBlockById(String blockId, String slideId) throws BlockDoesNotExistException {
-        choiceBlockManager.deleteById(blockId, slideId);
+        choiceBlockManager.deleteContentBlock(blockId, slideId);
     }
 
     @Override
@@ -155,32 +161,32 @@ public class ContentBlockManager implements IContentBlockManager {
 
     @Override
     public IImageBlock getImageBlock(String imgBlockId) {
-        return imageBlockManager.getById(imgBlockId);
+        return imageBlockManager.getContentBlock(imgBlockId);
     }
 
     @Override
     public IVideoBlock getVideoBlock(String videoBlockId) {
-        return videoBlockManager.getById(videoBlockId);
+        return videoBlockManager.getContentBlock(videoBlockId);
     }
 
     @Override
     public ITextBlock getTextBlock(String textBlockId) {
-        return textBlockManager.getById(textBlockId);
+        return textBlockManager.getContentBlock(textBlockId);
     }
 
     @Override
     public ISpaceBlock getSpaceBlock(String spaceBlockId) {
-        return spaceBlockManager.getById(spaceBlockId);
+        return spaceBlockManager.getContentBlock(spaceBlockId);
     }
 
     @Override
     public IChoiceBlock getChoiceBlock(String choiceBlockId) {
-        return choiceBlockManager.getById(choiceBlockId);
+        return choiceBlockManager.getContentBlock(choiceBlockId);
     }
 
     @Override
     public BiblioBlock getBiblioBlock(String biblioBlockId) {
-        return (BiblioBlock) biblioBlockManager.getById(biblioBlockId);
+        return (BiblioBlock) biblioBlockManager.getContentBlock(biblioBlockId);
     }
 
     @Override

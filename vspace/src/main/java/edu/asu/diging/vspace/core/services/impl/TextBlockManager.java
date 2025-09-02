@@ -8,9 +8,11 @@ import edu.asu.diging.vspace.core.factory.ITextBlockFactory;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.ITextBlock;
 import edu.asu.diging.vspace.core.model.impl.TextBlock;
+import edu.asu.diging.vspace.core.services.ITextBlockManager;
 
 @Service
-public class TextBlockManager extends AbstractContentBlockManager<ITextBlock, TextContentBlockRepository> {
+public class TextBlockManager extends GenericContentBlockManager<ITextBlock, TextContentBlockRepository> 
+        implements ITextBlockManager {
 
     @Autowired
     private ITextBlockFactory textBlockFactory;
@@ -23,13 +25,13 @@ public class TextBlockManager extends AbstractContentBlockManager<ITextBlock, Te
         return textBlockRepo;
     }
 
-    /**
-     * Creates a new text block for the specified slide.
-     * 
-     * @param slideId The ID of the slide
-     * @param text The text content
-     * @return The created text block
-     */
+    @Override
+    public ITextBlock createContentBlock(String slideId) {
+        // Default implementation - should typically use createTextBlock with content
+        return createTextBlock(slideId, "");
+    }
+
+    @Override
     public ITextBlock createTextBlock(String slideId, String text) {
         ISlide slide = slideManager.getSlide(slideId);
         Integer contentOrder = getNextContentOrder(slideId);
@@ -39,12 +41,18 @@ public class TextBlockManager extends AbstractContentBlockManager<ITextBlock, Te
         return textBlockRepo.save((TextBlock) textBlock);
     }
 
-    /**
-     * Updates an existing text block.
-     * 
-     * @param textBlock The text block to update
-     */
-    public void updateTextBlock(ITextBlock textBlock) {
+    @Override
+    public void updateContentBlock(ITextBlock textBlock) {
+        updateTextBlock((TextBlock) textBlock);
+    }
+
+    @Override
+    public void updateTextBlock(TextBlock textBlock) {
+        textBlockRepo.save(textBlock);
+    }
+
+    @Override
+    public void saveContentBlock(ITextBlock textBlock) {
         textBlockRepo.save((TextBlock) textBlock);
     }
 }

@@ -9,9 +9,11 @@ import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.ISpaceBlock;
 import edu.asu.diging.vspace.core.model.impl.SpaceBlock;
+import edu.asu.diging.vspace.core.services.ISpaceBlockManager;
 
 @Service
-public class SpaceBlockManager extends AbstractContentBlockManager<ISpaceBlock, SpaceContentBlockRepository> {
+public class SpaceBlockManager extends GenericContentBlockManager<ISpaceBlock, SpaceContentBlockRepository> 
+        implements ISpaceBlockManager {
 
     @Autowired
     private ISpaceBlockFactory spaceBlockFactory;
@@ -24,14 +26,13 @@ public class SpaceBlockManager extends AbstractContentBlockManager<ISpaceBlock, 
         return spaceBlockRepo;
     }
 
-    /**
-     * Creates a new space block for the specified slide.
-     * 
-     * @param slideId The ID of the slide
-     * @param title The space block title
-     * @param space The space to be displayed in the block
-     * @return The created space block
-     */
+    @Override
+    public ISpaceBlock createContentBlock(String slideId) {
+        // Default implementation - creates a space block without space data
+        return createSpaceBlock(slideId, "Default Space", null);
+    }
+
+    @Override
     public ISpaceBlock createSpaceBlock(String slideId, String title, ISpace space) {
         ISlide slide = slideManager.getSlide(slideId);
         Integer contentOrder = getNextContentOrder(slideId);
@@ -41,12 +42,18 @@ public class SpaceBlockManager extends AbstractContentBlockManager<ISpaceBlock, 
         return spaceBlockRepo.save((SpaceBlock) spaceBlock);
     }
 
-    /**
-     * Saves/updates an existing space block.
-     * 
-     * @param spaceBlock The space block to save
-     */
+    @Override
+    public void updateContentBlock(ISpaceBlock spaceBlock) {
+        saveSpaceBlock(spaceBlock);
+    }
+
+    @Override
     public void saveSpaceBlock(ISpaceBlock spaceBlock) {
         spaceBlockRepo.save((SpaceBlock) spaceBlock);
+    }
+
+    @Override
+    public void saveContentBlock(ISpaceBlock spaceBlock) {
+        saveSpaceBlock(spaceBlock);
     }
 }

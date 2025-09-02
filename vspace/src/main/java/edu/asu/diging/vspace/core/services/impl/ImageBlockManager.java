@@ -16,9 +16,11 @@ import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.impl.ImageBlock;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
+import edu.asu.diging.vspace.core.services.IImageBlockManager;
 
 @Service
-public class ImageBlockManager extends AbstractContentBlockManager<IImageBlock, ImageContentBlockRepository> {
+public class ImageBlockManager extends GenericContentBlockManager<IImageBlock, ImageContentBlockRepository> 
+        implements IImageBlockManager {
 
     @Autowired
     private IImageFactory imageFactory;
@@ -40,15 +42,17 @@ public class ImageBlockManager extends AbstractContentBlockManager<IImageBlock, 
         return imageBlockRepo;
     }
 
-    /**
-     * Creates a new image block with uploaded image data.
-     * 
-     * @param slideId The ID of the slide
-     * @param image The image bytes
-     * @param filename The filename
-     * @return The creation result with the created image block
-     * @throws ImageCouldNotBeStoredException if image storage fails
-     */
+    @Override
+    public IImageBlock createContentBlock(String slideId) {
+        // Default implementation - creates an image block without image data
+        try {
+            return createImageBlock(slideId, null, "default.jpg").getElement();
+        } catch (ImageCouldNotBeStoredException e) {
+            throw new RuntimeException("Failed to create default image block", e);
+        }
+    }
+
+    @Override
     public CreationReturnValue createImageBlock(String slideId, byte[] image, String filename) 
             throws ImageCouldNotBeStoredException {
         ISlide slide = slideManager.getSlide(slideId);
@@ -104,14 +108,19 @@ public class ImageBlockManager extends AbstractContentBlockManager<IImageBlock, 
         imageBlockRepo.save((ImageBlock) imageBlock);
     }
 
-    /**
-     * Updates an image block with an existing image.
-     * 
-     * @param imageBlock The image block to update
-     * @param image The existing image
-     */
+    @Override
     public void updateImageBlock(IImageBlock imageBlock, IVSImage image) {
         imageBlock.setImage(image);
+        imageBlockRepo.save((ImageBlock) imageBlock);
+    }
+
+    @Override
+    public void updateContentBlock(IImageBlock imageBlock) {
+        imageBlockRepo.save((ImageBlock) imageBlock);
+    }
+
+    @Override
+    public void saveContentBlock(IImageBlock imageBlock) {
         imageBlockRepo.save((ImageBlock) imageBlock);
     }
 

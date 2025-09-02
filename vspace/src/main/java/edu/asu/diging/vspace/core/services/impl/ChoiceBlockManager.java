@@ -12,9 +12,11 @@ import edu.asu.diging.vspace.core.factory.IChoiceBlockFactory;
 import edu.asu.diging.vspace.core.model.IChoice;
 import edu.asu.diging.vspace.core.model.IChoiceBlock;
 import edu.asu.diging.vspace.core.model.impl.ChoiceBlock;
+import edu.asu.diging.vspace.core.services.IChoiceBlockManager;
 
 @Service
-public class ChoiceBlockManager extends AbstractContentBlockManager<IChoiceBlock, ChoiceContentBlockRepository> {
+public class ChoiceBlockManager extends GenericContentBlockManager<IChoiceBlock, ChoiceContentBlockRepository> 
+        implements IChoiceBlockManager {
 
     @Autowired
     private IChoiceBlockFactory choiceBlockFactory;
@@ -27,14 +29,13 @@ public class ChoiceBlockManager extends AbstractContentBlockManager<IChoiceBlock
         return choiceBlockRepo;
     }
 
-    /**
-     * Creates a new choice block for the specified slide.
-     * 
-     * @param slideId The ID of the slide
-     * @param selectedChoices List of selected choice IDs
-     * @param showsAll Whether to show all choices or only selected ones
-     * @return The created choice block
-     */
+    @Override
+    public IChoiceBlock createContentBlock(String slideId) {
+        // Default implementation - creates a choice block that shows all choices
+        return createChoiceBlock(slideId, new ArrayList<>(), true);
+    }
+
+    @Override
     public IChoiceBlock createChoiceBlock(String slideId, List<String> selectedChoices, boolean showsAll) {
         Integer contentOrder = getNextContentOrder(slideId);
         
@@ -52,5 +53,15 @@ public class ChoiceBlockManager extends AbstractContentBlockManager<IChoiceBlock
             showsAll
         );
         return choiceBlockRepo.save((ChoiceBlock) choiceBlock);
+    }
+
+    @Override
+    public void updateContentBlock(IChoiceBlock choiceBlock) {
+        choiceBlockRepo.save((ChoiceBlock) choiceBlock);
+    }
+
+    @Override
+    public void saveContentBlock(IChoiceBlock choiceBlock) {
+        choiceBlockRepo.save((ChoiceBlock) choiceBlock);
     }
 }
