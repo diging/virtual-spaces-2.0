@@ -1983,7 +1983,7 @@ function changeStyle(elementId, styleProperty, value) {
             &nbsp;
         </div>
         <div id="space" th:style="|max-width: ${display.width+400}px;|" th:if="${space.image != null}" class="link-modal flex-spacing">
-        <img id="bgImage" th:style="|max-width: ${display.width}px;|" th:src="@{'/api/image/'+${space.image?.id}}" th:onerror="if (this.src != '@{/resources/images/cannot_load_image_placeholder.png}') this.src = '@{/resources/images/cannot_load_image_placeholder.png}'" />
+        <img id="bgImage" th:style="|max-width: ${display.width}px;|" th:src="@{'/api/image/'+${space.image?.id}}" th:onerror="|this.onerror=null; this.src='@{/resources/images/cannot_load_image_placeholder.png}'|" />
         <div id="errorAlert"
             class="alert alert-danger alert-dismissible fade show"
             role="alert"
@@ -2752,7 +2752,7 @@ function changeStyle(elementId, styleProperty, value) {
             <div id="loader" style="position: absolute; font-size: 30px;">
                 <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
             </div>
-            <img id="main-bgImage" th:style="|max-width: ${display.width}px;|"  th:src="@{'/api/image/'+${space.image?.id}}" th:onerror="if (this.src != '@{/resources/images/cannot_load_image_placeholder.png}') this.src = '@{/resources/images/cannot_load_image_placeholder.png}'" />
+            <img id="main-bgImage" th:style="|max-width: ${display.width}px;|"  th:src="@{'/api/image/'+${space.image?.id}}" th:onerror="|this.onerror=null; this.src='@{/resources/images/cannot_load_image_placeholder.png}'|" />
         </div>
         <p class="text-right" style="margin-top: 50px">
             <button type="button" id="deleteSpace"  class="btn primary-btn btn-sm"><i class="fa fa-trash"></i>&emsp;Delete Space</button>
