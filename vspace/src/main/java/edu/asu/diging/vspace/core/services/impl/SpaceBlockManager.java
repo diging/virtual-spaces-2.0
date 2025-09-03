@@ -28,7 +28,6 @@ public class SpaceBlockManager extends GenericContentBlockManager<ISpaceBlock, S
 
     @Override
     public ISpaceBlock createContentBlock(String slideId) {
-        // Default implementation - creates a space block without space data
         return createSpaceBlock(slideId, "Default Space", null);
     }
 

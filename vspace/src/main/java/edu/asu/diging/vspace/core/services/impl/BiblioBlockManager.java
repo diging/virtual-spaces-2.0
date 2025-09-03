@@ -28,7 +28,6 @@ public class BiblioBlockManager extends GenericContentBlockManager<IBiblioBlock,
 
     @Override
     public IBiblioBlock createContentBlock(String slideId) {
-        // Default implementation - creates a bibliography block with default values
         return createBiblioBlock(slideId, "Default Bibliography", "Default Description");
     }
 

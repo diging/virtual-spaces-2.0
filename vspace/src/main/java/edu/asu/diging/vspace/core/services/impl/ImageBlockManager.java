@@ -44,7 +44,6 @@ public class ImageBlockManager extends GenericContentBlockManager<IImageBlock, I
 
     @Override
     public IImageBlock createContentBlock(String slideId) {
-        // Default implementation - creates an image block without image data
         try {
             return createImageBlock(slideId, null, "default.jpg").getElement();
         } catch (ImageCouldNotBeStoredException e) {
@@ -71,13 +70,8 @@ public class ImageBlockManager extends GenericContentBlockManager<IImageBlock, I
         return returnValue;
     }
 
-    /**
-     * Creates a new image block with an existing image.
-     * 
-     * @param slideId The ID of the slide
-     * @param image The existing image
-     * @return The creation result with the created image block
-     */
+
+    @Override
     public CreationReturnValue createImageBlock(String slideId, IVSImage image) {
         ISlide slide = slideManager.getSlide(slideId);
         Integer contentOrder = getNextContentOrder(slideId);

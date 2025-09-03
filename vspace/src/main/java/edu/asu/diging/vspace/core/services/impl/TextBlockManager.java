@@ -27,7 +27,6 @@ public class TextBlockManager extends GenericContentBlockManager<ITextBlock, Tex
 
     @Override
     public ITextBlock createContentBlock(String slideId) {
-        // Default implementation - should typically use createTextBlock with content
         return createTextBlock(slideId, "");
     }
 

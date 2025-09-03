@@ -31,7 +31,6 @@ public class ChoiceBlockManager extends GenericContentBlockManager<IChoiceBlock,
 
     @Override
     public IChoiceBlock createContentBlock(String slideId) {
-        // Default implementation - creates a choice block that shows all choices
         return createChoiceBlock(slideId, new ArrayList<>(), true);
     }
 
