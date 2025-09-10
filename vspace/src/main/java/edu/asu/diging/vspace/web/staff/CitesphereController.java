@@ -18,7 +18,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.Model;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpSession;
+import java.io.UnsupportedEncodingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import okhttp3.*;
 import edu.asu.diging.vspace.core.model.IReference;
 import edu.asu.diging.vspace.core.services.CitesphereAuthToken;
 import edu.asu.diging.vspace.core.services.ICitesphereManager;
@@ -33,23 +39,100 @@ public class CitesphereController {
     @Value("${citesphere_api_url:https://citesphere.org/api}")
     private String citesphereApiUrl;
 
-    @Value("${citesphere_username:}")
-    private String citesphereUsername;
+    @Value("${citesphere_client_id:}")
+    private String citesphereClientId;
 
-    @Value("${citesphere_password:}")
-    private String citespherePassword;
+    @Value("${citesphere_client_secret:}")
+    private String citesphereClientSecret;
+
+    @Value("${app_base_url:}")
+    private String appBaseUrl;
 
     @Autowired
     private IReferenceManager referenceManager;
+
+
+    /**
+     * Initiate OAuth authorization with Citesphere
+     */
+    @RequestMapping(value = "/staff/citesphere/oauth/authorize", method = RequestMethod.GET)
+    public String initiateOAuth(HttpSession session, RedirectAttributes redirectAttributes) {
+        if (citesphereClientId == null || citesphereClientId.isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Citesphere OAuth is not configured. Please contact your administrator.");
+            return "redirect:/staff/dashboard";
+        }
+
+        try {
+            // Generate state parameter for security
+            String state = java.util.UUID.randomUUID().toString();
+            session.setAttribute("citesphere_oauth_state", state);
+
+            // Build authorization URL
+            String baseUrl = citesphereApiUrl.replace("/api", "");
+            String redirectUri = getCurrentBaseUrl() + "/staff/citesphere/oauth/callback";
+            
+            String authUrl = baseUrl + "/oauth/authorize" +
+                    "?response_type=code" +
+                    "&client_id=" + java.net.URLEncoder.encode(citesphereClientId, "UTF-8") +
+                    "&state=" + java.net.URLEncoder.encode(state, "UTF-8") +
+                    "&redirect_uri=" + java.net.URLEncoder.encode(redirectUri, "UTF-8");
+
+            return "redirect:" + authUrl;
+        } catch (UnsupportedEncodingException e) {
+            logger.error("Error encoding OAuth parameters", e);
+            redirectAttributes.addFlashAttribute("error", "Error initiating OAuth flow.");
+            return "redirect:/staff/dashboard";
+        }
+    }
+
+    /**
+     * Handle OAuth callback from Citesphere
+     */
+    @RequestMapping(value = "/staff/citesphere/oauth/callback", method = RequestMethod.GET)
+    public String handleOAuthCallback(
+            @RequestParam String code,
+            @RequestParam String state,
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
+        
+        try {
+            // Verify state parameter
+            String sessionState = (String) session.getAttribute("citesphere_oauth_state");
+            if (sessionState == null || !sessionState.equals(state)) {
+                redirectAttributes.addFlashAttribute("error", "Invalid OAuth state. Please try again.");
+                return "redirect:/staff/dashboard";
+            }
+            
+            // Exchange code for access token
+            String accessToken = exchangeCodeForToken(code);
+            if (accessToken != null) {
+                // Store token in session
+                session.setAttribute("citesphere_access_token", accessToken);
+                redirectAttributes.addFlashAttribute("success", "Successfully connected to Citesphere!");
+            } else {
+                redirectAttributes.addFlashAttribute("error", "Failed to obtain access token from Citesphere.");
+            }
+            
+        } catch (Exception e) {
+            logger.error("Error handling OAuth callback", e);
+            redirectAttributes.addFlashAttribute("error", "OAuth authentication failed: " + e.getMessage());
+        } finally {
+            // Clean up session
+            session.removeAttribute("citesphere_oauth_state");
+        }
+        
+        return "redirect:/staff/dashboard";
+    }
+
 
     /**
      * Get user groups from Citesphere
      */
     @RequestMapping(value = "/staff/citesphere/groups", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> getGroups() {
+    public ResponseEntity<Map<String, Object>> getGroups(HttpSession session) {
         try {
-            ICitesphereManager citesphereManager = createCitesphereManager();
+            ICitesphereManager citesphereManager = createCitesphereManager(session);
             Map<String, Object> groups = citesphereManager.getGroups();
             return ResponseEntity.ok(groups);
         } catch (Exception e) {
@@ -65,9 +148,9 @@ public class CitesphereController {
      */
     @RequestMapping(value = "/staff/citesphere/groups/{groupId}/collections", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> getCollections(@PathVariable String groupId) {
+    public ResponseEntity<Map<String, Object>> getCollections(@PathVariable String groupId, HttpSession session) {
         try {
-            ICitesphereManager citesphereManager = createCitesphereManager();
+            ICitesphereManager citesphereManager = createCitesphereManager(session);
             Map<String, Object> collections = citesphereManager.getCollections(groupId);
             return ResponseEntity.ok(collections);
         } catch (Exception e) {
@@ -86,9 +169,10 @@ public class CitesphereController {
     public ResponseEntity<Map<String, Object>> getCollectionItems(
             @PathVariable String groupId,
             @PathVariable String collectionId,
-            @RequestParam(value = "page", defaultValue = "0") int page) {
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            HttpSession session) {
         try {
-            ICitesphereManager citesphereManager = createCitesphereManager();
+            ICitesphereManager citesphereManager = createCitesphereManager(session);
             Map<String, Object> items = citesphereManager.getCollectionItems(groupId, collectionId, page);
             return ResponseEntity.ok(items);
         } catch (Exception e) {
@@ -104,9 +188,9 @@ public class CitesphereController {
      */
     @RequestMapping(value = "/staff/citesphere/groups/{groupId}/items", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> getGroupItems(@PathVariable String groupId) {
+    public ResponseEntity<Map<String, Object>> getGroupItems(@PathVariable String groupId, HttpSession session) {
         try {
-            ICitesphereManager citesphereManager = createCitesphereManager();
+            ICitesphereManager citesphereManager = createCitesphereManager(session);
             Map<String, Object> items = citesphereManager.getGroupItems(groupId);
             return ResponseEntity.ok(items);
         } catch (Exception e) {
@@ -167,9 +251,64 @@ public class CitesphereController {
         }
     }
 
-    private ICitesphereManager createCitesphereManager() {
-        CitesphereAuthToken authToken = new CitesphereAuthToken(citesphereUsername, citespherePassword);
-        return new CitesphereManager(citesphereApiUrl, authToken);
+    private ICitesphereManager createCitesphereManager(HttpSession session) {
+        // Check for OAuth token
+        String accessToken = (String) session.getAttribute("citesphere_access_token");
+        
+        if (accessToken != null) {
+            // Use OAuth token
+            CitesphereAuthToken authToken = new CitesphereAuthToken(accessToken);
+            return new CitesphereManager(citesphereApiUrl, authToken);
+        } else {
+            // No authentication available
+            throw new IllegalStateException("No Citesphere access token available. Please authenticate first.");
+        }
+    }
+
+    /**
+     * Exchange authorization code for access token
+     */
+    private String exchangeCodeForToken(String code) {
+        try {
+            OkHttpClient client = new OkHttpClient();
+            
+            RequestBody formBody = new FormBody.Builder()
+                .add("grant_type", "authorization_code")
+                .add("code", code)
+                .add("client_id", citesphereClientId)
+                .add("client_secret", citesphereClientSecret)
+                .add("redirect_uri", getCurrentBaseUrl() + "/staff/citesphere/oauth/callback")
+                .build();
+
+            Request request = new Request.Builder()
+                .url(citesphereApiUrl.replace("/api", "") + "/oauth/token")
+                .post(formBody)
+                .build();
+
+            try (Response response = client.newCall(request).execute()) {
+                String responseBody = response.body() != null ? response.body().string() : "";
+                logger.debug("Token exchange response: {} - {}", response.code(), responseBody);
+                
+                if (response.isSuccessful() && !responseBody.isEmpty()) {
+                    ObjectMapper mapper = new ObjectMapper();
+                    @SuppressWarnings("unchecked")
+                    Map<String, Object> tokenResponse = mapper.readValue(responseBody, Map.class);
+                    return (String) tokenResponse.get("access_token");
+                } else {
+                    logger.error("Token exchange failed: {} - {}", response.code(), responseBody);
+                }
+            }
+        } catch (Exception e) {
+            logger.error("Error exchanging code for token", e);
+        }
+        return null;
+    }
+
+    /**
+     * Get current base URL for redirect URI
+     */
+    private String getCurrentBaseUrl() {
+        return appBaseUrl != null && !appBaseUrl.isEmpty() ? appBaseUrl : "http://localhost:8080";
     }
 
     @SuppressWarnings("unchecked")
