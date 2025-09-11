@@ -36,16 +36,16 @@ public class CitesphereController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Value("${citesphere_api_url:https://citesphere.org/api}")
+    @Value("${citesphere.api.url:}")
     private String citesphereApiUrl;
 
-    @Value("${citesphere_client_id:}")
+    @Value("${citesphere.client.id:}")
     private String citesphereClientId;
 
-    @Value("${citesphere_client_secret:}")
+    @Value("${citesphere.client.secret:}")
     private String citesphereClientSecret;
 
-    @Value("${app_base_url:}")
+    @Value("${app.base.url:http://localhost:8080}")
     private String appBaseUrl;
 
     @Autowired
@@ -55,9 +55,15 @@ public class CitesphereController {
     /**
      * Initiate OAuth authorization with Citesphere
      */
-    @RequestMapping(value = "/staff/citesphere/oauth/authorize", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/oauth/authorize", method = RequestMethod.GET)
     public String initiateOAuth(HttpSession session, RedirectAttributes redirectAttributes) {
+        logger.info("[DEBUG] Initiating OAuth authorization with Citesphere");
+        logger.info("[DEBUG] Citesphere API URL: {}", citesphereApiUrl);
+        logger.info("[DEBUG] Client ID configured: {}", (citesphereClientId != null && !citesphereClientId.isEmpty()));
+        logger.info("[DEBUG] Client Secret configured: {}", (citesphereClientSecret != null && !citesphereClientSecret.isEmpty()));
+        
         if (citesphereClientId == null || citesphereClientId.isEmpty()) {
+            logger.error("[DEBUG] OAuth not configured - missing client ID");
             redirectAttributes.addFlashAttribute("error", "Citesphere OAuth is not configured. Please contact your administrator.");
             return "redirect:/staff/dashboard";
         }
@@ -71,12 +77,17 @@ public class CitesphereController {
             String baseUrl = citesphereApiUrl.replace("/api", "");
             String redirectUri = getCurrentBaseUrl() + "/staff/citesphere/oauth/callback";
             
+            logger.info("[DEBUG] Building OAuth URL - Base URL: {}", baseUrl);
+            logger.info("[DEBUG] Redirect URI: {}", redirectUri);
+            logger.info("[DEBUG] OAuth State: {}", state);
+            
             String authUrl = baseUrl + "/oauth/authorize" +
                     "?response_type=code" +
                     "&client_id=" + java.net.URLEncoder.encode(citesphereClientId, "UTF-8") +
                     "&state=" + java.net.URLEncoder.encode(state, "UTF-8") +
                     "&redirect_uri=" + java.net.URLEncoder.encode(redirectUri, "UTF-8");
 
+            logger.info("[DEBUG] Final OAuth URL: {}", authUrl);
             return "redirect:" + authUrl;
         } catch (UnsupportedEncodingException e) {
             logger.error("Error encoding OAuth parameters", e);
@@ -95,21 +106,35 @@ public class CitesphereController {
             HttpSession session,
             RedirectAttributes redirectAttributes) {
         
+        logger.info("[DEBUG] OAuth callback received");
+        logger.info("[DEBUG] Authorization code: {}", code != null ? "[PRESENT]" : "[MISSING]");
+        logger.info("[DEBUG] State parameter: {}", state);
+        
         try {
             // Verify state parameter
             String sessionState = (String) session.getAttribute("citesphere_oauth_state");
+            logger.info("[DEBUG] Session state: {}", sessionState);
+            logger.info("[DEBUG] Received state: {}", state);
+            logger.info("[DEBUG] State match: {}", sessionState != null && sessionState.equals(state));
+            
             if (sessionState == null || !sessionState.equals(state)) {
+                logger.error("[DEBUG] OAuth state validation failed");
                 redirectAttributes.addFlashAttribute("error", "Invalid OAuth state. Please try again.");
                 return "redirect:/staff/dashboard";
             }
             
             // Exchange code for access token
+            logger.info("[DEBUG] Exchanging authorization code for access token");
             String accessToken = exchangeCodeForToken(code);
+            logger.info("[DEBUG] Access token received: {}", accessToken != null ? "[SUCCESS]" : "[FAILED]");
+            
             if (accessToken != null) {
                 // Store token in session
                 session.setAttribute("citesphere_access_token", accessToken);
+                logger.info("[DEBUG] Access token stored in session");
                 redirectAttributes.addFlashAttribute("success", "Successfully connected to Citesphere!");
             } else {
+                logger.error("[DEBUG] Failed to obtain access token");
                 redirectAttributes.addFlashAttribute("error", "Failed to obtain access token from Citesphere.");
             }
             
@@ -128,12 +153,17 @@ public class CitesphereController {
     /**
      * Get user groups from Citesphere
      */
-    @RequestMapping(value = "/staff/citesphere/groups", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/v1/citesphere/groups", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getGroups(HttpSession session) {
+        logger.info("[DEBUG] API call: getGroups() - Fetching user groups from Citesphere");
+        
         try {
             ICitesphereManager citesphereManager = createCitesphereManager(session);
+            logger.info("[DEBUG] CitesphereManager created successfully, making API call to get groups");
             Map<String, Object> groups = citesphereManager.getGroups();
+            logger.info("[DEBUG] Groups retrieved successfully: {} groups found", 
+                       groups != null && groups.containsKey("data") ? "[DATA_PRESENT]" : "[NO_DATA]");
             return ResponseEntity.ok(groups);
         } catch (Exception e) {
             logger.error("Error fetching groups from Citesphere", e);
@@ -146,12 +176,17 @@ public class CitesphereController {
     /**
      * Get collections for a specific group
      */
-    @RequestMapping(value = "/staff/citesphere/groups/{groupId}/collections", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/v1/citesphere/groups/{groupId}/collections", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getCollections(@PathVariable String groupId, HttpSession session) {
+        logger.info("[DEBUG] API call: getCollections() - Group ID: {}", groupId);
+        
         try {
             ICitesphereManager citesphereManager = createCitesphereManager(session);
+            logger.info("[DEBUG] CitesphereManager created, fetching collections for group: {}", groupId);
             Map<String, Object> collections = citesphereManager.getCollections(groupId);
+            logger.info("[DEBUG] Collections retrieved successfully for group {}: {} collections found", 
+                       groupId, collections != null && collections.containsKey("data") ? "[DATA_PRESENT]" : "[NO_DATA]");
             return ResponseEntity.ok(collections);
         } catch (Exception e) {
             logger.error("Error fetching collections from Citesphere for group: " + groupId, e);
@@ -164,16 +199,21 @@ public class CitesphereController {
     /**
      * Get items for a specific collection
      */
-    @RequestMapping(value = "/staff/citesphere/groups/{groupId}/collections/{collectionId}/items", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/v1/groups/{groupId}/collections/{collectionId}/items", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getCollectionItems(
             @PathVariable String groupId,
             @PathVariable String collectionId,
             @RequestParam(value = "page", defaultValue = "0") int page,
             HttpSession session) {
+        logger.info("[DEBUG] API call: getCollectionItems() - Group: {}, Collection: {}, Page: {}", groupId, collectionId, page);
+        
         try {
             ICitesphereManager citesphereManager = createCitesphereManager(session);
+            logger.info("[DEBUG] CitesphereManager created, fetching items for collection: {} in group: {}", collectionId, groupId);
             Map<String, Object> items = citesphereManager.getCollectionItems(groupId, collectionId, page);
+            logger.info("[DEBUG] Collection items retrieved successfully: {} items found", 
+                       items != null && items.containsKey("data") ? "[DATA_PRESENT]" : "[NO_DATA]");
             return ResponseEntity.ok(items);
         } catch (Exception e) {
             logger.error("Error fetching collection items from Citesphere", e);
@@ -186,12 +226,17 @@ public class CitesphereController {
     /**
      * Get all items for a specific group
      */
-    @RequestMapping(value = "/staff/citesphere/groups/{groupId}/items", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/v1/groups/{groupId}/items", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getGroupItems(@PathVariable String groupId, HttpSession session) {
+        logger.info("[DEBUG] API call: getGroupItems() - Group ID: {}", groupId);
+        
         try {
             ICitesphereManager citesphereManager = createCitesphereManager(session);
+            logger.info("[DEBUG] CitesphereManager created, fetching all items for group: {}", groupId);
             Map<String, Object> items = citesphereManager.getGroupItems(groupId);
+            logger.info("[DEBUG] Group items retrieved successfully: {} items found", 
+                       items != null && items.containsKey("data") ? "[DATA_PRESENT]" : "[NO_DATA]");
             return ResponseEntity.ok(items);
         } catch (Exception e) {
             logger.error("Error fetching group items from Citesphere for group: " + groupId, e);
@@ -204,13 +249,16 @@ public class CitesphereController {
     /**
      * Import selected references from Citesphere to bibliography
      */
-    @RequestMapping(value = "/staff/module/{moduleId}/slide/{slideId}/bibliography/{biblioId}/citesphere/import", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/v1/groups/{groupId}/collections/{collectionId}/items/", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> importCitesphereReferences(
             @PathVariable String moduleId,
             @PathVariable String slideId,
             @PathVariable String biblioId,
             @RequestBody List<Map<String, Object>> selectedReferences) {
+        
+        logger.info("[DEBUG] API call: importCitesphereReferences() - Module: {}, Slide: {}, Bibliography: {}", moduleId, slideId, biblioId);
+        logger.info("[DEBUG] Number of references to import: {}", selectedReferences != null ? selectedReferences.size() : 0);
         
         try {
             List<IReference> createdReferences = new ArrayList<>();
@@ -252,15 +300,22 @@ public class CitesphereController {
     }
 
     private ICitesphereManager createCitesphereManager(HttpSession session) {
+        logger.info("[DEBUG] Creating CitesphereManager");
+        
         // Check for OAuth token
         String accessToken = (String) session.getAttribute("citesphere_access_token");
+        logger.info("[DEBUG] Access token in session: {}", accessToken != null ? "[PRESENT]" : "[MISSING]");
+        logger.info("[DEBUG] API URL: {}", citesphereApiUrl);
         
         if (accessToken != null) {
             // Use OAuth token
+            logger.info("[DEBUG] Creating CitesphereAuthToken with access token");
             CitesphereAuthToken authToken = new CitesphereAuthToken(accessToken);
+            logger.info("[DEBUG] Creating CitesphereManager with API URL: {} and auth token", citesphereApiUrl);
             return new CitesphereManager(citesphereApiUrl, authToken);
         } else {
             // No authentication available
+            logger.error("[DEBUG] No access token available in session - authentication required");
             throw new IllegalStateException("No Citesphere access token available. Please authenticate first.");
         }
     }
@@ -269,33 +324,49 @@ public class CitesphereController {
      * Exchange authorization code for access token
      */
     private String exchangeCodeForToken(String code) {
+        logger.info("[DEBUG] Starting token exchange process");
+        logger.info("[DEBUG] Authorization code: {}", code != null ? "[PRESENT]" : "[MISSING]");
+        
         try {
             OkHttpClient client = new OkHttpClient();
+            String redirectUri = getCurrentBaseUrl() + "/staff/citesphere/oauth/callback";
+            String tokenUrl = citesphereApiUrl.replace("/api", "") + "/oauth/token";
             
-            RequestBody formBody = new FormBody.Builder()
+            logger.info("[DEBUG] Token exchange URL: {}", tokenUrl);
+            logger.info("[DEBUG] Redirect URI: {}", redirectUri);
+            logger.info("[DEBUG] Client ID: {}", citesphereClientId != null ? "[PRESENT]" : "[MISSING]");
+            logger.info("[DEBUG] Client Secret: {}", citesphereClientSecret != null ? "[PRESENT]" : "[MISSING]");
+            
+            okhttp3.RequestBody formBody = new FormBody.Builder()
                 .add("grant_type", "authorization_code")
                 .add("code", code)
                 .add("client_id", citesphereClientId)
                 .add("client_secret", citesphereClientSecret)
-                .add("redirect_uri", getCurrentBaseUrl() + "/staff/citesphere/oauth/callback")
+                .add("redirect_uri", redirectUri)
                 .build();
 
             Request request = new Request.Builder()
-                .url(citesphereApiUrl.replace("/api", "") + "/oauth/token")
+                .url(tokenUrl)
                 .post(formBody)
                 .build();
 
+            logger.info("[DEBUG] Making token exchange request to: {}", tokenUrl);
+            
             try (Response response = client.newCall(request).execute()) {
                 String responseBody = response.body() != null ? response.body().string() : "";
-                logger.debug("Token exchange response: {} - {}", response.code(), responseBody);
+                logger.info("[DEBUG] Token exchange response code: {}", response.code());
+                logger.info("[DEBUG] Token exchange response body: {}", responseBody);
                 
                 if (response.isSuccessful() && !responseBody.isEmpty()) {
+                    logger.info("[DEBUG] Token exchange successful, parsing response");
                     ObjectMapper mapper = new ObjectMapper();
                     @SuppressWarnings("unchecked")
                     Map<String, Object> tokenResponse = mapper.readValue(responseBody, Map.class);
-                    return (String) tokenResponse.get("access_token");
+                    String accessToken = (String) tokenResponse.get("access_token");
+                    logger.info("[DEBUG] Access token extracted: {}", accessToken != null ? "[SUCCESS]" : "[FAILED]");
+                    return accessToken;
                 } else {
-                    logger.error("Token exchange failed: {} - {}", response.code(), responseBody);
+                    logger.error("[DEBUG] Token exchange failed - Response code: {}, Body: {}", response.code(), responseBody);
                 }
             }
         } catch (Exception e) {

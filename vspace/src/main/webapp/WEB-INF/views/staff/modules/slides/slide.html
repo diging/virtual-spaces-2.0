@@ -2668,6 +2668,395 @@
                     $("#addVideoAlert").show();
             	}
             });
+
+            
+            var citesphereData = {
+                selectedReferences: [],
+                groups: [],
+                collections: {}
+            };
+
+            // Initialize Citesphere functionality when modal is shown
+            $('#addReferenceAlert').on('shown.bs.modal', function () {
+                // Show/hide appropriate tab content and buttons based on active tab
+                updateReferenceModalButtons();
+                
+                // If Citesphere tab is active, load initial data
+                if ($('#citesphereRefTab').hasClass('active')) {
+                    loadCitesphereGroups();
+                }
+            });
+
+            // Tab switching handlers
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                updateReferenceModalButtons();
+                
+                // Load Citesphere data when switching to Citesphere tab
+                if ($(e.target).attr('href') === '#citesphereRefTab') {
+                    loadCitesphereGroups();
+                }
+            });
+
+            function updateReferenceModalButtons() {
+                var isCitesphereTab = $('#citesphereRefTab').hasClass('active');
+                
+                if (isCitesphereTab) {
+                    $('#submitReference').hide();
+                    $('#submitCitesphereReferences').show();
+                } else {
+                    $('#submitReference').show();
+                    $('#submitCitesphereReferences').hide();
+                }
+            }
+
+            // Load user groups from Citesphere
+            function loadCitesphereGroups() {
+                var token = $('input[name="_csrf"]').attr('value');
+                
+                $.ajax({
+                    url: '/staff/citesphere/groups',
+                    type: 'GET',
+                    headers: {
+                        'X-CSRF-Token': token
+                    },
+                    success: function(data) {
+                        displayCitesphereGroups(data);
+                        citesphereData.groups = data;
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error loading Citesphere groups:', error);
+                        if (xhr.status === 500 && xhr.responseText && xhr.responseText.includes('access token')) {
+                            // User needs to authenticate
+                            $('#citesphereCollections').html(
+                                '<div class="alert alert-info">' +
+                                '<h6><i class="fa fa-info-circle"></i> Authentication Required</h6>' +
+                                '<p>You need to authenticate with Citesphere to access your bibliography data.</p>' +
+                                '<a href="/staff/citesphere/oauth/authorize" class="btn btn-primary btn-sm">' +
+                                '<i class="fa fa-sign-in"></i> Connect to Citesphere' +
+                                '</a>' +
+                                '</div>'
+                            );
+                        } else {
+                            $('#citesphereCollections').html('<div class="alert alert-warning">Error loading groups. Please check your Citesphere credentials.</div>');
+                        }
+                    }
+                });
+            }
+
+            // Display groups and collections
+            function displayCitesphereGroups(groupsData) {
+                var collectionsContainer = $('#citesphereCollections');
+                collectionsContainer.empty();
+                
+                if (!groupsData || !groupsData.data || !Array.isArray(groupsData.data)) {
+                    collectionsContainer.html('<div class="alert alert-info">No groups found.</div>');
+                    return;
+                }
+
+                groupsData.data.forEach(function(group) {
+                    var groupElement = $('<div class="group-item" style="margin-bottom: 10px; padding: 8px; border: 1px solid #ddd; border-radius: 3px; cursor: pointer; background: #f8f9fa;">' +
+                        '<h6 style="margin: 0; color: #333;"><i class="fa fa-users"></i> ' + (group.name || 'Unnamed Group') + '</h6>' +
+                        '<small class="text-muted">Click to load collections</small>' +
+                        '</div>');
+                    
+                    groupElement.click(function() {
+                        loadGroupCollections(group.zoteroGroupId || group.id, group.name);
+                    });
+                    
+                    collectionsContainer.append(groupElement);
+                });
+            }
+
+            // Load collections for a specific group
+            function loadGroupCollections(groupId, groupName) {
+                var token = $('input[name="_csrf"]').attr('value');
+                
+                $.ajax({
+                    url: '/staff/citesphere/groups/' + groupId + '/collections',
+                    type: 'GET',
+                    headers: {
+                        'X-CSRF-Token': token
+                    },
+                    success: function(data) {
+                        displayCollections(data, groupId, groupName);
+                        loadGroupItems(groupId, groupName); // Also load individual items
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error loading collections for group ' + groupId + ':', error);
+                    }
+                });
+            }
+
+            // Display collections for a group
+            function displayCollections(collectionsData, groupId, groupName) {
+                var collectionsContainer = $('#citesphereCollections');
+                collectionsContainer.empty();
+                
+                // Add back button
+                var backButton = $('<button class="btn btn-sm btn-outline-secondary" style="margin-bottom: 10px;"><i class="fa fa-arrow-left"></i> Back to Groups</button>');
+                backButton.click(function() {
+                    loadCitesphereGroups();
+                });
+                collectionsContainer.append(backButton);
+                
+                var groupHeader = $('<h6 style="margin-bottom: 10px; color: #333;"><i class="fa fa-users"></i> ' + groupName + ' - Collections</h6>');
+                collectionsContainer.append(groupHeader);
+                
+                if (!collectionsData || !collectionsData.data || !Array.isArray(collectionsData.data)) {
+                    collectionsContainer.append('<div class="alert alert-info">No collections found in this group.</div>');
+                    return;
+                }
+
+                collectionsData.data.forEach(function(collection) {
+                    var collectionElement = $('<div class="collection-item" style="margin-bottom: 8px; padding: 6px; border: 1px solid #ddd; border-radius: 3px; cursor: pointer; background: white;">' +
+                        '<div style="font-weight: 500;"><i class="fa fa-folder"></i> ' + (collection.data.name || 'Unnamed Collection') + '</div>' +
+                        '<small class="text-muted">Click to load items</small>' +
+                        '</div>');
+                    
+                    collectionElement.click(function() {
+                        loadCollectionItems(groupId, collection.data.key, collection.data.name);
+                    });
+                    
+                    collectionsContainer.append(collectionElement);
+                });
+            }
+
+            // Load individual items for a group (not in collections)
+            function loadGroupItems(groupId, groupName) {
+                var token = $('input[name="_csrf"]').attr('value');
+                
+                $.ajax({
+                    url: '/staff/citesphere/groups/' + groupId + '/items',
+                    type: 'GET',
+                    headers: {
+                        'X-CSRF-Token': token
+                    },
+                    success: function(data) {
+                        displayIndividualItems(data, 'Individual Items in ' + groupName);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error loading group items:', error);
+                    }
+                });
+            }
+
+            // Load items from a specific collection
+            function loadCollectionItems(groupId, collectionId, collectionName) {
+                var token = $('input[name="_csrf"]').attr('value');
+                
+                $.ajax({
+                    url: '/staff/citesphere/groups/' + groupId + '/collections/' + collectionId + '/items',
+                    type: 'GET',
+                    headers: {
+                        'X-CSRF-Token': token
+                    },
+                    success: function(data) {
+                        displayIndividualItems(data, 'Items in ' + collectionName);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error loading collection items:', error);
+                    }
+                });
+            }
+
+            // Display individual references/items
+            function displayIndividualItems(itemsData, title) {
+                var referencesContainer = $('#citesphereReferences');
+                referencesContainer.empty();
+                
+                var titleElement = $('<h6 style="margin-bottom: 10px; color: #333;"><i class="fa fa-file-text"></i> ' + title + '</h6>');
+                referencesContainer.append(titleElement);
+                
+                if (!itemsData || !itemsData.data || !Array.isArray(itemsData.data)) {
+                    referencesContainer.append('<div class="alert alert-info">No items found.</div>');
+                    return;
+                }
+
+                itemsData.data.forEach(function(item) {
+                    var itemData = item.data || {};
+                    var title = itemData.title || 'Untitled';
+                    var author = extractAuthorsFromItem(itemData);
+                    var year = extractYearFromItem(itemData);
+                    var type = itemData.itemType || 'unknown';
+                    
+                    var checkbox = $('<input type="checkbox" class="citesphere-item-checkbox" style="margin-right: 8px;">');
+                    checkbox.data('item', item);
+                    
+                    var itemElement = $('<div class="reference-item" style="margin-bottom: 8px; padding: 8px; border: 1px solid #ddd; border-radius: 3px; background: white;">' +
+                        '<div style="display: flex; align-items: flex-start;">' +
+                        '<div style="margin-right: 8px;"></div>' +
+                        '<div style="flex-grow: 1;">' +
+                        '<div style="font-weight: 500; color: #333;">' + title + '</div>' +
+                        '<div style="color: #666; font-size: 0.9em;">' + author + (year ? ' (' + year + ')' : '') + '</div>' +
+                        '<div style="color: #888; font-size: 0.8em;">Type: ' + type + '</div>' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>');
+                    
+                    itemElement.find('div').first().prepend(checkbox);
+                    
+                    // Handle selection
+                    checkbox.change(function() {
+                        if (this.checked) {
+                            citesphereData.selectedReferences.push(item);
+                        } else {
+                            citesphereData.selectedReferences = citesphereData.selectedReferences.filter(function(ref) {
+                                return ref.key !== item.key;
+                            });
+                        }
+                        updateSelectedCount();
+                    });
+                    
+                    referencesContainer.append(itemElement);
+                });
+            }
+
+            // Helper function to extract authors from Citesphere item
+            function extractAuthorsFromItem(itemData) {
+                if (!itemData.creators || !Array.isArray(itemData.creators)) {
+                    return 'Unknown Author';
+                }
+                
+                var authors = itemData.creators.map(function(creator) {
+                    var firstName = creator.firstName || '';
+                    var lastName = creator.lastName || '';
+                    
+                    if (lastName && firstName) {
+                        return lastName + ', ' + firstName;
+                    } else if (lastName) {
+                        return lastName;
+                    } else if (firstName) {
+                        return firstName;
+                    }
+                    return '';
+                }).filter(Boolean);
+                
+                return authors.length > 0 ? authors.join('; ') : 'Unknown Author';
+            }
+
+            // Helper function to extract year from Citesphere item
+            function extractYearFromItem(itemData) {
+                var date = itemData.date || itemData.accessDate || '';
+                if (date) {
+                    var match = date.match(/(\d{4})/);
+                    return match ? match[1] : '';
+                }
+                return '';
+            }
+
+            // Update selected count display
+            function updateSelectedCount() {
+                var count = citesphereData.selectedReferences.length;
+                $('#selectedCountText').text(count + ' reference' + (count !== 1 ? 's' : ''));
+            }
+
+            // Handle search functionality
+            $('#searchCitesphereBtn').click(function() {
+                var searchTerm = $('#citesphereSearch').val().trim();
+                if (searchTerm) {
+                    // For now, just show an informative message since Citesphere API doesn't have search endpoint yet
+                    $('#citesphereReferences').html(
+                        '<div class="alert alert-info">' +
+                        '<h6><i class="fa fa-info-circle"></i> Search Not Available</h6>' +
+                        '<p>Search functionality is not yet available in the Citesphere API. Please browse through your groups and collections above to find references.</p>' +
+                        '</div>'
+                    );
+                } else {
+                    // Reload current view
+                    loadCitesphereGroups();
+                }
+            });
+
+            // Allow search on Enter key
+            $('#citesphereSearch').keypress(function(e) {
+                if (e.which === 13) {
+                    $('#searchCitesphereBtn').click();
+                }
+            });
+
+            // Handle importing selected references
+            $('#submitCitesphereReferences').click(function() {
+                if (citesphereData.selectedReferences.length === 0) {
+                    alert('Please select at least one reference to import.');
+                    return;
+                }
+                
+                var biblioId = $('#addReferenceTarget').val();
+                if (!biblioId) {
+                    alert('Error: Could not determine bibliography block.');
+                    return;
+                }
+                
+                var moduleId = '[[${module.id}]]';
+                var slideId = '[[${slide.id}]]';
+                var token = $('input[name="_csrf"]').attr('value');
+                
+                $.ajax({
+                    url: '/staff/module/' + moduleId + '/slide/' + slideId + '/bibliography/' + biblioId + '/citesphere/import',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    headers: {
+                        'X-CSRF-Token': token
+                    },
+                    data: JSON.stringify(citesphereData.selectedReferences),
+                    success: function(response) {
+                        if (response.success) {
+                            alert('Successfully imported ' + response.imported_count + ' references from Citesphere!');
+                            
+                            // Add the imported references to the bibliography block
+                            var biblioBlock = $('[data-biblio-id="' + biblioId + '"]').closest('[data-biblio-block]');
+                            var referenceSpace = biblioBlock.find('#referenceSpace');
+                            
+                            response.references.forEach(function(ref) {
+                                var referenceHtml = '<div id="' + ref.id + '" class="referenceDivStaff tab row" data-reference-block data-biblio-id="' + biblioId + '">' +
+                                    '<p class="col-md-10">' +
+                                    'Type: <span>' + (ref.type || '') + '</span>, ' +
+                                    'Reference Title: <span>' + (ref.title || '') + '</span>, ' +
+                                    'Author: <span>' + (ref.author || '') + '</span>, ' +
+                                    'Year: <span>' + (ref.year || '') + '</span>, ' +
+                                    'Journal: <span>' + (ref.journal || '') + '</span>, ' +
+                                    'Url: <span>' + (ref.url || '') + '</span>, ' +
+                                    'Volume: <span>' + (ref.volume || '') + '</span>, ' +
+                                    'Issue: <span>' + (ref.issue || '') + '</span>, ' +
+                                    'Pages: <span>' + (ref.pages || '') + '</span>, ' +
+                                    'Editors: <span>' + (ref.editors || '') + '</span>, ' +
+                                    'Note: <span>' + (ref.note || '') + '</span>' +
+                                    '</p>' +
+                                    '<input type="hidden" class="deleteReferenceField" data-reference-id="' + ref.id + '" value="' + ref.id + '" />' +
+                                    '<a class="btn col-md-1" data-action="delete-reference" data-reference-id="' + ref.id + '" href="javascript:;">' +
+                                    '<span class="icon-trash error"></span>' +
+                                    '</a>' +
+                                    '</div>';
+                                
+                                var refElement = $(referenceHtml);
+                                refElement.mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(referenceBlockDoubleClick);
+                                referenceSpace.append(refElement);
+                            });
+                            
+                            // Reset and close modal
+                            citesphereData.selectedReferences = [];
+                            updateSelectedCount();
+                            $('#addReferenceAlert').modal('hide');
+                        } else {
+                            alert('Error importing references: ' + (response.error || 'Unknown error'));
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error importing references:', error);
+                        alert('Error importing references. Please try again.');
+                    }
+                });
+            });
+            
+            // Clear Citesphere data when modal is hidden
+            $('#addReferenceAlert').on('hidden.bs.modal', function () {
+                citesphereData.selectedReferences = [];
+                updateSelectedCount();
+                $('#citesphereCollections').empty();
+                $('#citesphereReferences').empty();
+                $('#citesphereSearch').val('');
+            });
+
         </script>
     </head>
     <body>
