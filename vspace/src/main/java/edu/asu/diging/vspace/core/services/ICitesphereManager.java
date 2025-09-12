@@ -1,6 +1,7 @@
 package edu.asu.diging.vspace.core.services;
 
 import java.util.Map;
+import edu.asu.diging.vspace.core.exception.CitesphereTokenException;
 
 /**
  * Service interface for Citesphere API operations
@@ -101,4 +102,17 @@ public interface ICitesphereManager {
      * @return Response from API
      */
     Object addItem(String groupId, Map<String, Object> data, String filePath);
+    
+    /**
+     * Refresh the access token using refresh token
+     * @return New CitesphereAuthToken with refreshed access token
+     * @throws CitesphereTokenException if refresh fails
+     */
+    CitesphereAuthToken refreshToken() throws CitesphereTokenException;
+    
+    /**
+     * Validate if current token is still valid
+     * @return true if token is valid, false otherwise
+     */
+    boolean isTokenValid();
 }

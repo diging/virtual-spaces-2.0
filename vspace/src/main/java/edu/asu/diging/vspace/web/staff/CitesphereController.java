@@ -30,6 +30,7 @@ import edu.asu.diging.vspace.core.services.CitesphereAuthToken;
 import edu.asu.diging.vspace.core.services.ICitesphereManager;
 import edu.asu.diging.vspace.core.services.IReferenceManager;
 import edu.asu.diging.vspace.core.services.impl.CitesphereManager;
+import edu.asu.diging.vspace.core.exception.CitesphereTokenException;
 
 @Controller
 public class CitesphereController {
@@ -125,7 +126,7 @@ public class CitesphereController {
             
             // Exchange code for access token
             logger.info("[DEBUG] Exchanging authorization code for access token");
-            String accessToken = exchangeCodeForToken(code);
+            String accessToken = exchangeCodeForToken(code, session);
             logger.info("[DEBUG] Access token received: {}", accessToken != null ? "[SUCCESS]" : "[FAILED]");
             
             if (accessToken != null) {
@@ -162,9 +163,29 @@ public class CitesphereController {
             ICitesphereManager citesphereManager = createCitesphereManager(session);
             logger.info("[DEBUG] CitesphereManager created successfully, making API call to get groups");
             Map<String, Object> groups = citesphereManager.getGroups();
+            
+            // Check for token expiry in response
+            if (isTokenExpiredResponse(groups)) {
+                logger.warn("[DEBUG] Token expired response detected, requesting re-authentication");
+                session.removeAttribute("citesphere_access_token");
+                session.removeAttribute("citesphere_refresh_token");
+                session.removeAttribute("citesphere_token_expiry");
+                Map<String, Object> error = new HashMap<>();
+                error.put("error", "Authentication expired");
+                error.put("require_auth", true);
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+            }
+            
             logger.info("[DEBUG] Groups retrieved successfully: {} groups found", 
                        groups != null && groups.containsKey("data") ? "[DATA_PRESENT]" : "[NO_DATA]");
+            logger.info("[DEBUG] Groups data: {}", groups);
             return ResponseEntity.ok(groups);
+        } catch (IllegalStateException e) {
+            logger.error("Authentication error: {}", e.getMessage());
+            Map<String, Object> error = new HashMap<>();
+            error.put("error", e.getMessage());
+            error.put("require_auth", true);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
         } catch (Exception e) {
             logger.error("Error fetching groups from Citesphere", e);
             Map<String, Object> error = new HashMap<>();
@@ -304,15 +325,55 @@ public class CitesphereController {
         
         // Check for OAuth token
         String accessToken = (String) session.getAttribute("citesphere_access_token");
+        String refreshToken = (String) session.getAttribute("citesphere_refresh_token");
+        Long expiryTime = (Long) session.getAttribute("citesphere_token_expiry");
+        
         logger.info("[DEBUG] Access token in session: {}", accessToken != null ? "[PRESENT]" : "[MISSING]");
+        logger.info("[DEBUG] Refresh token in session: {}", refreshToken != null ? "[PRESENT]" : "[MISSING]");
+        logger.info("[DEBUG] Token expiry time: {}", expiryTime != null ? "[PRESENT]" : "[MISSING]");
         logger.info("[DEBUG] API URL: {}", citesphereApiUrl);
         
         if (accessToken != null) {
-            // Use OAuth token
-            logger.info("[DEBUG] Creating CitesphereAuthToken with access token");
-            CitesphereAuthToken authToken = new CitesphereAuthToken(accessToken);
+            // Create auth token with all available information
+            CitesphereAuthToken authToken;
+            if (refreshToken != null && expiryTime != null) {
+                authToken = new CitesphereAuthToken(accessToken, refreshToken, expiryTime);
+            } else {
+                authToken = new CitesphereAuthToken(accessToken);
+            }
+            
             logger.info("[DEBUG] Creating CitesphereManager with API URL: {} and auth token", citesphereApiUrl);
-            return new CitesphereManager(citesphereApiUrl, authToken);
+            ICitesphereManager manager = new CitesphereManager(citesphereApiUrl, authToken);
+            
+            // Check if token is valid and refresh if needed
+            if (!manager.isTokenValid()) {
+                logger.info("[DEBUG] Token is invalid or expired, attempting refresh");
+                try {
+                    CitesphereAuthToken refreshedToken = manager.refreshToken();
+                    
+                    // Update session with new token information
+                    session.setAttribute("citesphere_access_token", refreshedToken.getAccessToken());
+                    if (refreshedToken.getRefreshToken() != null) {
+                        session.setAttribute("citesphere_refresh_token", refreshedToken.getRefreshToken());
+                    }
+                    if (refreshedToken.getTokenExpiryTime() > 0) {
+                        session.setAttribute("citesphere_token_expiry", refreshedToken.getTokenExpiryTime());
+                    }
+                    
+                    logger.info("[DEBUG] Token refreshed successfully");
+                    return manager;
+                    
+                } catch (CitesphereTokenException e) {
+                    logger.error("[DEBUG] Token refresh failed: {}", e.getMessage());
+                    // Clear invalid tokens from session
+                    session.removeAttribute("citesphere_access_token");
+                    session.removeAttribute("citesphere_refresh_token");
+                    session.removeAttribute("citesphere_token_expiry");
+                    throw new IllegalStateException("Citesphere token is invalid and cannot be refreshed. Please re-authenticate.", e);
+                }
+            }
+            
+            return manager;
         } else {
             // No authentication available
             logger.error("[DEBUG] No access token available in session - authentication required");
@@ -323,7 +384,7 @@ public class CitesphereController {
     /**
      * Exchange authorization code for access token
      */
-    private String exchangeCodeForToken(String code) {
+    private String exchangeCodeForToken(String code, HttpSession session) {
         logger.info("[DEBUG] Starting token exchange process");
         logger.info("[DEBUG] Authorization code: {}", code != null ? "[PRESENT]" : "[MISSING]");
         
@@ -363,7 +424,22 @@ public class CitesphereController {
                     @SuppressWarnings("unchecked")
                     Map<String, Object> tokenResponse = mapper.readValue(responseBody, Map.class);
                     String accessToken = (String) tokenResponse.get("access_token");
+                    String refreshToken = (String) tokenResponse.get("refresh_token");
+                    Number expiresIn = (Number) tokenResponse.get("expires_in");
+                    
                     logger.info("[DEBUG] Access token extracted: {}", accessToken != null ? "[SUCCESS]" : "[FAILED]");
+                    logger.info("[DEBUG] Refresh token extracted: {}", refreshToken != null ? "[SUCCESS]" : "[MISSING]");
+                    logger.info("[DEBUG] Expires in: {}", expiresIn != null ? expiresIn.toString() + " seconds" : "[MISSING]");
+                    
+                    // Store additional token information in session
+                    if (refreshToken != null) {
+                        session.setAttribute("citesphere_refresh_token", refreshToken);
+                    }
+                    if (expiresIn != null) {
+                        long expiryTime = System.currentTimeMillis() + (expiresIn.longValue() * 1000);
+                        session.setAttribute("citesphere_token_expiry", expiryTime);
+                    }
+                    
                     return accessToken;
                 } else {
                     logger.error("[DEBUG] Token exchange failed - Response code: {}, Body: {}", response.code(), responseBody);
@@ -380,6 +456,33 @@ public class CitesphereController {
      */
     private String getCurrentBaseUrl() {
         return appBaseUrl != null && !appBaseUrl.isEmpty() ? appBaseUrl : "http://localhost:8080";
+    }
+    
+    /**
+     * Check if API response indicates token expiry
+     */
+    private boolean isTokenExpiredResponse(Map<String, Object> response) {
+        if (response == null) {
+            return false;
+        }
+        
+        // Check for token_expired flag
+        Boolean tokenExpired = (Boolean) response.get("token_expired");
+        if (Boolean.TRUE.equals(tokenExpired)) {
+            return true;
+        }
+        
+        // Check for error messages indicating token issues
+        String errorMessage = (String) response.get("error_message");
+        if (errorMessage != null) {
+            String lowerError = errorMessage.toLowerCase();
+            return lowerError.contains("invalid") && lowerError.contains("token") ||
+                   lowerError.contains("expired") && lowerError.contains("token") ||
+                   lowerError.contains("unauthorized") ||
+                   lowerError.contains("forbidden");
+        }
+        
+        return false;
     }
 
     @SuppressWarnings("unchecked")
