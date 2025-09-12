@@ -55,7 +55,7 @@ public class CitesphereController {
     /**
      * Initiate OAuth authorization with Citesphere
      */
-    @RequestMapping(value = "/api/oauth/authorize", method = RequestMethod.GET)
+    @RequestMapping(value = "/staff/citesphere/oauth/authorize", method = RequestMethod.GET)
     public String initiateOAuth(HttpSession session, RedirectAttributes redirectAttributes) {
         logger.info("[DEBUG] Initiating OAuth authorization with Citesphere");
         logger.info("[DEBUG] Citesphere API URL: {}", citesphereApiUrl);
@@ -73,8 +73,8 @@ public class CitesphereController {
             String state = java.util.UUID.randomUUID().toString();
             session.setAttribute("citesphere_oauth_state", state);
 
-            // Build authorization URL
-            String baseUrl = citesphereApiUrl.replace("/api", "");
+            // Build authorization URL  
+            String baseUrl = citesphereApiUrl;
             String redirectUri = getCurrentBaseUrl() + "/staff/citesphere/oauth/callback";
             
             logger.info("[DEBUG] Building OAuth URL - Base URL: {}", baseUrl);
@@ -153,7 +153,7 @@ public class CitesphereController {
     /**
      * Get user groups from Citesphere
      */
-    @RequestMapping(value = "/api/v1/citesphere/groups", method = RequestMethod.GET)
+    @RequestMapping(value = "/staff/citesphere/groups", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getGroups(HttpSession session) {
         logger.info("[DEBUG] API call: getGroups() - Fetching user groups from Citesphere");
@@ -176,7 +176,7 @@ public class CitesphereController {
     /**
      * Get collections for a specific group
      */
-    @RequestMapping(value = "/api/v1/citesphere/groups/{groupId}/collections", method = RequestMethod.GET)
+    @RequestMapping(value = "/staff/citesphere/groups/{groupId}/collections", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getCollections(@PathVariable String groupId, HttpSession session) {
         logger.info("[DEBUG] API call: getCollections() - Group ID: {}", groupId);
@@ -199,7 +199,7 @@ public class CitesphereController {
     /**
      * Get items for a specific collection
      */
-    @RequestMapping(value = "/api/v1/groups/{groupId}/collections/{collectionId}/items", method = RequestMethod.GET)
+    @RequestMapping(value = "/staff/citesphere/groups/{groupId}/collections/{collectionId}/items", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getCollectionItems(
             @PathVariable String groupId,
@@ -226,7 +226,7 @@ public class CitesphereController {
     /**
      * Get all items for a specific group
      */
-    @RequestMapping(value = "/api/v1/groups/{groupId}/items", method = RequestMethod.GET)
+    @RequestMapping(value = "/staff/citesphere/groups/{groupId}/items", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getGroupItems(@PathVariable String groupId, HttpSession session) {
         logger.info("[DEBUG] API call: getGroupItems() - Group ID: {}", groupId);
@@ -249,7 +249,7 @@ public class CitesphereController {
     /**
      * Import selected references from Citesphere to bibliography
      */
-    @RequestMapping(value = "/api/v1/groups/{groupId}/collections/{collectionId}/items/", method = RequestMethod.POST)
+    @RequestMapping(value = "/staff/module/{moduleId}/slide/{slideId}/bibliography/{biblioId}/citesphere/import", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> importCitesphereReferences(
             @PathVariable String moduleId,
@@ -330,7 +330,7 @@ public class CitesphereController {
         try {
             OkHttpClient client = new OkHttpClient();
             String redirectUri = getCurrentBaseUrl() + "/staff/citesphere/oauth/callback";
-            String tokenUrl = citesphereApiUrl.replace("/api", "") + "/oauth/token";
+            String tokenUrl = citesphereApiUrl + "oauth/token";
             
             logger.info("[DEBUG] Token exchange URL: {}", tokenUrl);
             logger.info("[DEBUG] Redirect URI: {}", redirectUri);
