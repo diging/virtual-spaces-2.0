@@ -2673,7 +2673,10 @@
             var citesphereData = {
                 selectedReferences: [],
                 groups: [],
-                collections: {}
+                collections: {},
+                currentStep: 'connection',
+                currentGroup: null,
+                currentCollection: null
             };
 
             // Initialize Citesphere functionality when modal is shown
@@ -2681,9 +2684,9 @@
                 // Show/hide appropriate tab content and buttons based on active tab
                 updateReferenceModalButtons();
                 
-                // If Citesphere tab is active, load initial data
+                // If Citesphere tab is active, initialize step-by-step flow
                 if ($('#citesphereRefTab').hasClass('active')) {
-                    loadCitesphereGroups();
+                    initializeCitesphereSteps();
                 }
             });
 
@@ -2691,10 +2694,19 @@
             $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
                 updateReferenceModalButtons();
                 
-                // Load Citesphere data when switching to Citesphere tab
+                // Initialize Citesphere step-by-step flow when switching to tab
                 if ($(e.target).attr('href') === '#citesphereRefTab') {
-                    loadCitesphereGroups();
+                    console.log('Citesphere tab activated - initializing steps');
+                    initializeCitesphereSteps();
                 }
+            });
+            
+            // Also trigger when tab link is clicked
+            $(document).on('click', 'a[href="#citesphereRefTab"]', function() {
+                setTimeout(function() {
+                    console.log('Citesphere tab clicked - initializing steps');
+                    initializeCitesphereSteps();
+                }, 100);
             });
 
             function updateReferenceModalButtons() {
@@ -2709,143 +2721,223 @@
                 }
             }
 
-            // Load user groups from Citesphere
-            function loadCitesphereGroups() {
+            // Initialize the step-by-step Citesphere flow
+            function initializeCitesphereSteps() {
+                console.log('initializeCitesphereSteps called');
+                
+                // Reset step data
+                citesphereData.currentStep = 'connection';
+                citesphereData.currentGroup = null;
+                citesphereData.currentCollection = null;
+                citesphereData.selectedReferences = [];
+                
+                // Hide all steps initially
+                $('.citesphere-step').hide();
+                console.log('Hidden all steps');
+                
+                // Show a loading message first
+                $('#connectionStatusContent').html(
+                    '<div style="color: #007bff; background: #e3f2fd; border: 1px solid #90caf9; padding: 10px; border-radius: 3px;">' +
+                    '<i class="fa fa-spinner fa-spin"></i> <strong>Checking Citesphere connection...</strong>' +
+                    '</div>'
+                );
+                
+                // Check connection status and show appropriate step
+                checkCitesphereConnection();
+            }
+            
+            // Check if user is connected to Citesphere
+            function checkCitesphereConnection() {
+                console.log('checkCitesphereConnection called');
                 var token = $('input[name="_csrf"]').attr('value');
                 
                 $.ajax({
-                    url: '/staff/citesphere/groups',
+                    url: '/vspace/staff/citesphere/groups',
                     type: 'GET',
                     headers: {
                         'X-CSRF-Token': token
                     },
                     success: function(data) {
-                        displayCitesphereGroups(data);
+                        console.log('Connection successful, received data:', data);
+                        // Connected successfully
+                        showConnectionStatus(true);
                         citesphereData.groups = data;
+                        citesphereData.currentStep = 'groups';
+                        showStep1Groups(data);
                     },
                     error: function(xhr, status, error) {
-                        console.error('Error loading Citesphere groups:', error);
-                        if (xhr.status === 500 && xhr.responseText && xhr.responseText.includes('access token')) {
-                            // User needs to authenticate
-                            $('#citesphereCollections').html(
-                                '<div class="alert alert-info">' +
-                                '<h6><i class="fa fa-info-circle"></i> Authentication Required</h6>' +
-                                '<p>You need to authenticate with Citesphere to access your bibliography data.</p>' +
-                                '<a href="/staff/citesphere/oauth/authorize" class="btn btn-primary btn-sm">' +
-                                '<i class="fa fa-sign-in"></i> Connect to Citesphere' +
-                                '</a>' +
-                                '</div>'
-                            );
-                        } else {
-                            $('#citesphereCollections').html('<div class="alert alert-warning">Error loading groups. Please check your Citesphere credentials.</div>');
-                        }
+                        console.log('Connection failed:', xhr.status, error);
+                        // Not connected or error
+                        showConnectionStatus(false);
+                        citesphereData.currentStep = 'connection';
                     }
                 });
             }
+            
+            // Show connection status at the top
+            function showConnectionStatus(isConnected) {
+                var statusContainer = $('#connectionStatusContent');
+                
+                if (isConnected) {
+                    statusContainer.html(
+                        '<div style="color: #28a745; background: #d4edda; border: 1px solid #c3e6cb; padding: 10px; border-radius: 3px;">' +
+                        '<i class="fa fa-check-circle"></i> <strong>Connected to Citesphere</strong>' +
+                        '</div>'
+                    );
+                } else {
+                    statusContainer.html(
+                        '<div style="color: #dc3545; background: #f8d7da; border: 1px solid #f5c6cb; padding: 10px; border-radius: 3px;">' +
+                        '<i class="fa fa-exclamation-triangle"></i> <strong>Not Connected to Citesphere</strong><br>' +
+                        '<small>You need to authenticate to access your bibliography data.</small><br>' +
+                        '<a href="/vspace/staff/citesphere/oauth/authorize" class="btn btn-primary btn-sm" style="margin-top: 8px;">'  +
+                        '<i class="fa fa-sign-in"></i> Connect to Citesphere' +
+                        '</a>' +
+                        '</div>'
+                    );
+                }
+            }
+            
+            // Show Step 1: Groups
+            function showStep1Groups(groupsData) {
+                $('#step1-groups').show();
+                displayCitesphereGroups(groupsData);
+            }
 
-            // Display groups and collections
+            // Display groups in Step 1
             function displayCitesphereGroups(groupsData) {
-                var collectionsContainer = $('#citesphereCollections');
-                collectionsContainer.empty();
+                var groupsContainer = $('#citesphereGroups');
+                groupsContainer.empty();
                 
                 if (!groupsData || !groupsData.data || !Array.isArray(groupsData.data)) {
-                    collectionsContainer.html('<div class="alert alert-info">No groups found.</div>');
+                    groupsContainer.html('<div class="alert alert-info">No groups found.</div>');
                     return;
                 }
 
                 groupsData.data.forEach(function(group) {
-                    var groupElement = $('<div class="group-item" style="margin-bottom: 10px; padding: 8px; border: 1px solid #ddd; border-radius: 3px; cursor: pointer; background: #f8f9fa;">' +
+                    var groupElement = $('<div class="group-item" style="margin-bottom: 10px; padding: 12px; border: 1px solid #ddd; border-radius: 5px; cursor: pointer; background: #f8f9fa; transition: all 0.2s;">' +
+                        '<div style="display: flex; justify-content: space-between; align-items: center;">' +
+                        '<div>' +
                         '<h6 style="margin: 0; color: #333;"><i class="fa fa-users"></i> ' + (group.name || 'Unnamed Group') + '</h6>' +
-                        '<small class="text-muted">Click to load collections</small>' +
+                        '<small class="text-muted">Click to view collections</small>' +
+                        '</div>' +
+                        '<i class="fa fa-chevron-right" style="color: #007bff;"></i>' +
+                        '</div>' +
                         '</div>');
                     
+                    // Hover effect
+                    groupElement.hover(
+                        function() { $(this).css('background', '#e3f2fd'); },
+                        function() { $(this).css('background', '#f8f9fa'); }
+                    );
+                    
                     groupElement.click(function() {
-                        loadGroupCollections(group.zoteroGroupId || group.id, group.name);
+                        citesphereData.currentGroup = group;
+                        showStep2Collections(group);
                     });
                     
-                    collectionsContainer.append(groupElement);
+                    groupsContainer.append(groupElement);
                 });
             }
 
+            // Show Step 2: Collections
+            function showStep2Collections(group) {
+                $('#step1-groups').hide();
+                $('#step2-collections').show();
+                $('#currentGroupName').text('Group: ' + (group.name || 'Unnamed Group'));
+                citesphereData.currentStep = 'collections';
+                
+                loadGroupCollections(group.zoteroGroupId || group.id, group.name);
+            }
+            
             // Load collections for a specific group
             function loadGroupCollections(groupId, groupName) {
                 var token = $('input[name="_csrf"]').attr('value');
                 
                 $.ajax({
-                    url: '/staff/citesphere/groups/' + groupId + '/collections',
+                    url: '/vspace/staff/citesphere/groups/' + groupId + '/collections',
                     type: 'GET',
                     headers: {
                         'X-CSRF-Token': token
                     },
                     success: function(data) {
                         displayCollections(data, groupId, groupName);
-                        loadGroupItems(groupId, groupName); // Also load individual items
                     },
                     error: function(xhr, status, error) {
                         console.error('Error loading collections for group ' + groupId + ':', error);
+                        $('#citesphereCollections').html('<div class="alert alert-warning">Error loading collections.</div>');
                     }
                 });
             }
 
-            // Display collections for a group
+            // Display collections for a group in Step 2
             function displayCollections(collectionsData, groupId, groupName) {
                 var collectionsContainer = $('#citesphereCollections');
                 collectionsContainer.empty();
                 
-                // Add back button
-                var backButton = $('<button class="btn btn-sm btn-outline-secondary" style="margin-bottom: 10px;"><i class="fa fa-arrow-left"></i> Back to Groups</button>');
-                backButton.click(function() {
-                    loadCitesphereGroups();
-                });
-                collectionsContainer.append(backButton);
-                
-                var groupHeader = $('<h6 style="margin-bottom: 10px; color: #333;"><i class="fa fa-users"></i> ' + groupName + ' - Collections</h6>');
-                collectionsContainer.append(groupHeader);
-                
                 if (!collectionsData || !collectionsData.data || !Array.isArray(collectionsData.data)) {
-                    collectionsContainer.append('<div class="alert alert-info">No collections found in this group.</div>');
+                    collectionsContainer.html('<div class="alert alert-info">No collections found in this group.</div>');
                     return;
                 }
 
                 collectionsData.data.forEach(function(collection) {
-                    var collectionElement = $('<div class="collection-item" style="margin-bottom: 8px; padding: 6px; border: 1px solid #ddd; border-radius: 3px; cursor: pointer; background: white;">' +
-                        '<div style="font-weight: 500;"><i class="fa fa-folder"></i> ' + (collection.data.name || 'Unnamed Collection') + '</div>' +
-                        '<small class="text-muted">Click to load items</small>' +
+                    var collectionElement = $('<div class="collection-item" style="margin-bottom: 10px; padding: 12px; border: 1px solid #ddd; border-radius: 5px; cursor: pointer; background: #f8f9fa; transition: all 0.2s;">' +
+                        '<div style="display: flex; justify-content: space-between; align-items: center;">' +
+                        '<div>' +
+                        '<div style="font-weight: 500; color: #333;"><i class="fa fa-folder"></i> ' + (collection.data.name || 'Unnamed Collection') + '</div>' +
+                        '<small class="text-muted">Click to view references</small>' +
+                        '</div>' +
+                        '<i class="fa fa-chevron-right" style="color: #007bff;"></i>' +
+                        '</div>' +
                         '</div>');
                     
+                    // Hover effect
+                    collectionElement.hover(
+                        function() { $(this).css('background', '#e3f2fd'); },
+                        function() { $(this).css('background', '#f8f9fa'); }
+                    );
+                    
                     collectionElement.click(function() {
-                        loadCollectionItems(groupId, collection.data.key, collection.data.name);
+                        citesphereData.currentCollection = collection;
+                        showStep3References(groupId, collection.data.key, collection.data.name);
                     });
                     
                     collectionsContainer.append(collectionElement);
                 });
             }
 
-            // Load individual items for a group (not in collections)
-            function loadGroupItems(groupId, groupName) {
-                var token = $('input[name="_csrf"]').attr('value');
+            // Show Step 3: References
+            function showStep3References(groupId, collectionId, collectionName) {
+                $('#step2-collections').hide();
+                $('#step3-references').show();
+                $('#currentCollectionName').text('Collection: ' + (collectionName || 'Unnamed Collection'));
+                citesphereData.currentStep = 'references';
                 
-                $.ajax({
-                    url: '/staff/citesphere/groups/' + groupId + '/items',
-                    type: 'GET',
-                    headers: {
-                        'X-CSRF-Token': token
-                    },
-                    success: function(data) {
-                        displayIndividualItems(data, 'Individual Items in ' + groupName);
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error loading group items:', error);
-                    }
-                });
+                loadCollectionItems(groupId, collectionId, collectionName);
             }
+            
+            // Navigation handlers
+            $(document).on('click', '#backToGroups', function() {
+                $('#step2-collections').hide();
+                $('#step1-groups').show();
+                citesphereData.currentStep = 'groups';
+                citesphereData.currentGroup = null;
+            });
+            
+            $(document).on('click', '#backToCollections', function() {
+                $('#step3-references').hide();
+                $('#step2-collections').show();
+                citesphereData.currentStep = 'collections';
+                citesphereData.currentCollection = null;
+                citesphereData.selectedReferences = [];
+                updateSelectedCount();
+            });
 
             // Load items from a specific collection
             function loadCollectionItems(groupId, collectionId, collectionName) {
                 var token = $('input[name="_csrf"]').attr('value');
                 
                 $.ajax({
-                    url: '/staff/citesphere/groups/' + groupId + '/collections/' + collectionId + '/items',
+                    url: '/vspace/staff/citesphere/groups/' + groupId + '/collections/' + collectionId + '/items',
                     type: 'GET',
                     headers: {
                         'X-CSRF-Token': token
@@ -2992,7 +3084,7 @@
                 var token = $('input[name="_csrf"]').attr('value');
                 
                 $.ajax({
-                    url: '/staff/module/' + moduleId + '/slide/' + slideId + '/bibliography/' + biblioId + '/citesphere/import',
+                    url: '/vspace/staff/module/' + moduleId + '/slide/' + slideId + '/bibliography/' + biblioId + '/citesphere/import',
                     type: 'POST',
                     contentType: 'application/json',
                     headers: {
@@ -3050,11 +3142,21 @@
             
             // Clear Citesphere data when modal is hidden
             $('#addReferenceAlert').on('hidden.bs.modal', function () {
+                // Reset Citesphere data
                 citesphereData.selectedReferences = [];
+                citesphereData.currentStep = 'connection';
+                citesphereData.currentGroup = null;
+                citesphereData.currentCollection = null;
                 updateSelectedCount();
+                
+                // Clear all containers
+                $('#citesphereGroups').empty();
                 $('#citesphereCollections').empty();
                 $('#citesphereReferences').empty();
-                $('#citesphereSearch').val('');
+                $('#connectionStatusContent').empty();
+                
+                // Hide all steps
+                $('.citesphere-step').hide();
             });
 
         </script>
@@ -3679,45 +3781,74 @@
 			                  <!-- Citesphere Tab -->
 			                  <div role="tabpanel" class="tab-pane" id="citesphereRefTab">
 			                     <div class="modal-body-content" style="padding-top: 20px;">
-			                        <h6 style="margin-bottom: 20px;">Select references from Citesphere</h6>
 			                        
-			                        <!-- Search Input -->
-			                        <div class="form-group" style="margin-bottom: 20px;">
-			                           <div class="input-group">
-			                              <input type="text" class="form-control" id="citesphereSearch" placeholder="Search Citesphere references...">
-			                              <div class="input-group-append">
-			                                 <button class="btn btn-outline-secondary" type="button" id="searchCitesphereBtn">
-			                                    <i class="fa fa-search"></i> Search
-			                                 </button>
-			                              </div>
+			                        <!-- Connection Status -->
+			                        <div id="citesphereConnectionStatus" style="margin-bottom: 20px; padding: 10px; border-radius: 5px; text-align: center;">
+			                           <div id="connectionStatusContent">
+			                              <!-- Dynamic content will be loaded here -->
 			                           </div>
 			                        </div>
 			                        
-			                        <!-- Selection Blocks Container -->
-			                        <div id="citesphereSelectionContainer" style="max-height: 400px; overflow-y: auto;">
-			                           <!-- First Block - Collections/Categories -->
-			                           <div class="citesphere-block" style="border: 1px solid #ddd; border-radius: 5px; margin-bottom: 15px; padding: 15px; background: white;">
-			                              <h6 style="margin-bottom: 10px; color: #333;">
-			                                 <i class="fa fa-folder"></i> Collections
-			                              </h6>
-			                              <div id="citesphereCollections" style="max-height: 150px; overflow-y: auto;">
+			                        <!-- Step-by-Step Navigation -->
+			                        <div id="citesphereStepsContainer" style="max-height: 450px; overflow-y: auto;">
+			                           
+			                           <!-- Step 1: Select Group -->
+			                           <div id="step1-groups" class="citesphere-step" style="display: none;">
+			                              <div style="border: 1px solid #ddd; border-radius: 5px; padding: 15px; background: white;">
+			                                 <h6 style="margin-bottom: 15px; color: #333; border-bottom: 2px solid #007bff; padding-bottom: 8px;">
+			                                    <i class="fa fa-users"></i> Step 1: Select a Group
+			                                 </h6>
+			                                 <div id="citesphereGroups" style="max-height: 300px; overflow-y: auto;">
+			                                    <!-- Groups will be loaded here -->
+			                                 </div>
 			                              </div>
 			                           </div>
 			                           
-			                           <!-- Second Block - Individual References -->
-			                           <div class="citesphere-block" style="border: 1px solid #ddd; border-radius: 5px; margin-bottom: 15px; padding: 15px; background: white;">
-			                              <h6 style="margin-bottom: 10px; color: #333;">
-			                                 <i class="fa fa-file-text"></i> Individual References
-			                              </h6>
-			                              <div id="citesphereReferences" style="max-height: 200px; overflow-y: auto;">
-			                                 <!-- Dynamic content will be loaded here -->
+			                           <!-- Step 2: Select Collection -->
+			                           <div id="step2-collections" class="citesphere-step" style="display: none;">
+			                              <div style="border: 1px solid #ddd; border-radius: 5px; padding: 15px; background: white;">
+			                                 <div style="margin-bottom: 15px;">
+			                                    <button id="backToGroups" class="btn btn-sm btn-outline-secondary">
+			                                       <i class="fa fa-arrow-left"></i> Back to Groups
+			                                    </button>
+			                                 </div>
+			                                 <h6 style="margin-bottom: 15px; color: #333; border-bottom: 2px solid #007bff; padding-bottom: 8px;">
+			                                    <i class="fa fa-folder"></i> Step 2: Select a Collection
+			                                 </h6>
+			                                 <div id="currentGroupName" style="margin-bottom: 10px; font-weight: 500; color: #666;">
+			                                    <!-- Current group name will be shown here -->
+			                                 </div>
+			                                 <div id="citesphereCollections" style="max-height: 250px; overflow-y: auto;">
+			                                    <!-- Collections will be loaded here -->
+			                                 </div>
 			                              </div>
 			                           </div>
-			                        </div>
-			                        
-			                        <!-- Selected Count Display -->
-			                        <div id="selectedCount" style="margin-top: 15px; padding: 10px; background: #f8f9fa; border-radius: 3px; font-size: 14px;">
-			                           <strong>Selected:</strong> <span id="selectedCountText">0 references</span>
+			                           
+			                           <!-- Step 3: Select References -->
+			                           <div id="step3-references" class="citesphere-step" style="display: none;">
+			                              <div style="border: 1px solid #ddd; border-radius: 5px; padding: 15px; background: white;">
+			                                 <div style="margin-bottom: 15px;">
+			                                    <button id="backToCollections" class="btn btn-sm btn-outline-secondary">
+			                                       <i class="fa fa-arrow-left"></i> Back to Collections
+			                                    </button>
+			                                 </div>
+			                                 <h6 style="margin-bottom: 15px; color: #333; border-bottom: 2px solid #007bff; padding-bottom: 8px;">
+			                                    <i class="fa fa-file-text"></i> Step 3: Select References to Import
+			                                 </h6>
+			                                 <div id="currentCollectionName" style="margin-bottom: 10px; font-weight: 500; color: #666;">
+			                                    <!-- Current collection name will be shown here -->
+			                                 </div>
+			                                 <div id="citesphereReferences" style="max-height: 250px; overflow-y: auto;">
+			                                    <!-- References will be loaded here -->
+			                                 </div>
+			                                 
+			                                 <!-- Selected Count Display -->
+			                                 <div id="selectedCount" style="margin-top: 15px; padding: 10px; background: #f8f9fa; border-radius: 3px; font-size: 14px;">
+			                                    <strong>Selected:</strong> <span id="selectedCountText">0 references</span>
+			                                 </div>
+			                              </div>
+			                           </div>
+			                           
 			                        </div>
 			                     </div>
 			                  </div>
