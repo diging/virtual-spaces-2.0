@@ -281,10 +281,17 @@ public class CitesphereController {
         logger.info("[DEBUG] API call: importCitesphereReferences() - Module: {}, Slide: {}, Bibliography: {}", moduleId, slideId, biblioId);
         logger.info("[DEBUG] Number of references to import: {}", selectedReferences != null ? selectedReferences.size() : 0);
         
+        // Log the raw received data
+        if (selectedReferences != null && !selectedReferences.isEmpty()) {
+            logger.info("[DEBUG] Raw received data: {}", selectedReferences.get(0));
+        }
+        
         try {
             List<IReference> createdReferences = new ArrayList<>();
             
             for (Map<String, Object> refData : selectedReferences) {
+                logger.info("[DEBUG] Processing refData: {}", refData);
+                
                 String title = extractField(refData, "title");
                 String author = extractCreators(refData);
                 String year = extractYear(refData);
@@ -300,7 +307,6 @@ public class CitesphereController {
                 IReference reference = referenceManager.createReference(
                     biblioId, title, author, year, journal, url, volume, issue, pages, editors, type, note
                 );
-                
                 createdReferences.add(reference);
                 logger.info("Created reference: {}", title);
             }
@@ -309,6 +315,12 @@ public class CitesphereController {
             response.put("success", true);
             response.put("imported_count", createdReferences.size());
             response.put("references", createdReferences);
+            
+            
+            
+            if (!createdReferences.isEmpty()) {
+                IReference firstRef = createdReferences.get(0);
+            }
             
             return ResponseEntity.ok(response);
             
@@ -488,10 +500,17 @@ public class CitesphereController {
     @SuppressWarnings("unchecked")
     private String extractField(Map<String, Object> refData, String fieldName) {
         try {
+            logger.debug("[DEBUG] Extracting field '{}' from refData keys: {}", fieldName, refData.keySet());
+            
             Map<String, Object> data = (Map<String, Object>) refData.get("data");
             if (data != null && data.containsKey(fieldName)) {
                 Object value = data.get(fieldName);
-                return value != null ? value.toString() : "";
+                String result = value != null ? value.toString() : "";
+                logger.debug("[DEBUG] Found field '{}' in data: '{}'", fieldName, result);
+                return result;
+            } else {
+                logger.debug("[DEBUG] Field '{}' not found in data section. Data keys: {}", 
+                           fieldName, data != null ? data.keySet() : "data is null");
             }
         } catch (Exception e) {
             logger.warn("Error extracting field {}: {}", fieldName, e.getMessage());

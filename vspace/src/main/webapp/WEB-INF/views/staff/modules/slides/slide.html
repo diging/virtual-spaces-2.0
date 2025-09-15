@@ -1687,6 +1687,9 @@
 
              
             $("#submitReference").on("click", function(e) {
+                console.log('*** REGULAR SUBMIT BUTTON CLICKED ***');
+                console.log('Button visibility:', $('#submitReference').is(':visible'));
+                console.log('Citesphere tab active:', $('#citesphereRefTab').hasClass('active'));
                 e.preventDefault();
                 // ------------- creating reference ------------
                 
@@ -2705,12 +2708,27 @@
             $(document).on('click', 'a[href="#citesphereRefTab"]', function() {
                 setTimeout(function() {
                     console.log('Citesphere tab clicked - initializing steps');
+                    console.log('Manually updating button visibility after tab click');
+                    updateReferenceModalButtons();
                     initializeCitesphereSteps();
+                }, 100);
+            });
+            
+            // Handle manual tab click to update buttons
+            $(document).on('click', 'a[href="#manualRefTab"]', function() {
+                setTimeout(function() {
+                    console.log('Manual tab clicked - updating buttons');
+                    updateReferenceModalButtons();
                 }, 100);
             });
 
             function updateReferenceModalButtons() {
                 var isCitesphereTab = $('#citesphereRefTab').hasClass('active');
+                
+                console.log('*** UPDATING MODAL BUTTONS ***');
+                console.log('Citesphere tab active:', isCitesphereTab);
+                console.log('Before - Submit button visible:', $('#submitReference').is(':visible'));
+                console.log('Before - Citesphere button visible:', $('#submitCitesphereReferences').is(':visible'));
                 
                 if (isCitesphereTab) {
                     $('#submitReference').hide();
@@ -2719,6 +2737,9 @@
                     $('#submitReference').show();
                     $('#submitCitesphereReferences').hide();
                 }
+                
+                console.log('After - Submit button visible:', $('#submitReference').is(':visible'));
+                console.log('After - Citesphere button visible:', $('#submitCitesphereReferences').is(':visible'));
             }
 
             // Initialize the step-by-step Citesphere flow
@@ -2731,7 +2752,8 @@
                 citesphereData.currentCollection = null;
                 citesphereData.selectedReferences = [];
                 
-                // Hide all steps initially
+                // Hide success message and all steps initially
+                hideImportSuccessMessage();
                 $('.citesphere-step').hide();
                 console.log('Hidden all steps');
                 
@@ -2772,6 +2794,29 @@
                         citesphereData.currentStep = 'connection';
                     }
                 });
+            }
+            
+            // Show import success message
+            function showImportSuccessMessage(message) {
+                var successContainer = $('#importSuccessStatus');
+                
+                successContainer.html(
+                    '<div style="color: #28a745; background: #d4edda; border: 1px solid #c3e6cb; padding: 10px; border-radius: 3px;">' +
+                    '<i class="fa fa-check-circle"></i> <strong>' + message + '</strong>' +
+                    '</div>'
+                );
+                
+                successContainer.show();
+                
+                // Auto-hide after 5 seconds
+                setTimeout(function() {
+                    successContainer.fadeOut();
+                }, 5000);
+            }
+            
+            // Function to hide success message
+            function hideImportSuccessMessage() {
+                $('#importSuccessStatus').hide();
             }
             
             // Show connection status at the top
@@ -3017,39 +3062,133 @@
                 
                 console.log('Found', items.length, 'items');
 
-                items.forEach(function(item) {
+                items.forEach(function(item, index) {
                     console.log('Processing item:', item);
                     
                     // Extract item data - try both direct properties and nested data structure
                     var itemData = item.data || item;
-                    var title = item.title || itemData.title || item.referenceString || 'Untitled';
-                    var author = item.authorString || extractAuthorsFromItem(itemData) || item.author || '';
-                    var year = item.year || extractYearFromItem(itemData) || '';
-                    var type = item['@type'] || item.itemType || itemData.itemType || 'Reference';
                     
-                    var checkbox = $('<input type="checkbox" class="citesphere-item-checkbox" style="margin-right: 8px;">');
-                    checkbox.data('item', item);
+                    // Better title extraction - handle empty or missing titles
+                    var title = item.title || itemData.title || item.referenceString || 'Untitled Reference';
+                    if (title.trim() === '') {
+                        title = 'Untitled Reference';
+                    }
                     
-                    var itemElement = $('<div class="reference-item" style="margin-bottom: 8px; padding: 8px; border: 1px solid #ddd; border-radius: 3px; background: white;">' +
+                    // Better author extraction - handle the complex authors array structure
+                    var author = '';
+                    if (item.authors && Array.isArray(item.authors) && item.authors.length > 0) {
+                        // Take the first few authors and format them properly
+                        var displayAuthors = item.authors.slice(0, 3).map(function(auth) {
+                            var firstName = (auth.firstName || '').trim();
+                            var lastName = (auth.lastName || '').trim();
+                            
+                            if (firstName && lastName) {
+                                return firstName + ' ' + lastName;
+                            } else if (lastName) {
+                                return lastName;
+                            } else if (firstName) {
+                                return firstName;
+                            } else if (auth.name) {
+                                return auth.name.trim();
+                            }
+                            return '';
+                        }).filter(function(name) { return name !== ''; });
+                        
+                        if (displayAuthors.length > 0) {
+                            author = displayAuthors.join(', ');
+                            if (item.authors.length > 3) {
+                                author += ' et al.';
+                            }
+                        }
+                    }
+                    
+                    // Fallback to other author fields if authors array didn't work
+                    if (!author) {
+                        author = item.authorString || extractAuthorsFromItem(itemData) || item.author || 'Unknown Author';
+                    }
+                    
+                    // Better year extraction
+                    var year = '';
+                    if (item.date) {
+                        var match = item.date.match(/(\d{4})/);
+                        year = match ? match[1] : '';
+                    }
+                    if (!year && item.dateFreetext) {
+                        var match = item.dateFreetext.match(/(\d{4})/);
+                        year = match ? match[1] : '';
+                    }
+                    if (!year) {
+                        year = item.year || extractYearFromItem(itemData) || '';
+                    }
+                    
+                    // Better type extraction
+                    var type = 'Reference';
+                    if (item.itemType) {
+                        switch(item.itemType) {
+                            case 'JOURNAL_ARTICLE': type = 'Journal Article'; break;
+                            case 'BOOK': type = 'Book'; break;
+                            case 'BOOK_SECTION': type = 'Book Section'; break;
+                            case 'CONFERENCE_PAPER': type = 'Conference Paper'; break;
+                            default: type = item.itemType.replace(/_/g, ' ');
+                        }
+                    } else if (item['@type']) {
+                        type = item['@type'];
+                    } else if (itemData.itemType) {
+                        type = itemData.itemType;
+                    }
+                    
+                    // Use radio button instead of checkbox for single selection
+                    var radioButton = $('<input type="radio" name="citesphere-item-selection" class="citesphere-item-radio" style="margin-right: 8px;">');
+                    radioButton.data('item', item);
+                    radioButton.attr('value', item.key || item.id || index);
+                    
+                    var itemElement = $('<div class="reference-item" style="margin-bottom: 8px; padding: 8px; border: 1px solid #ddd; border-radius: 3px; background: white; cursor: pointer; transition: all 0.2s ease;">' +
                         '<div style="display: flex; align-items: flex-start;">' +
                         '<div style="margin-right: 8px;"></div>' +
                         '<div style="flex-grow: 1;">' +
-                        '<div style="font-weight: 500; color: #333;">' + title + '</div>' +
-                        '<div style="color: #666; font-size: 0.9em;">' + author + (year ? ' (' + year + ')' : '') + '</div>' +
+                        '<div style="font-weight: 500; color: #333; margin-bottom: 4px;">' + title + '</div>' +
+                        '<div style="color: #666; font-size: 0.9em; margin-bottom: 2px;">' + author + (year ? ' (' + year + ')' : '') + '</div>' +
                         '<div style="color: #888; font-size: 0.8em;">Type: ' + type + '</div>' +
                         '</div>' +
                         '</div>' +
                         '</div>');
                     
-                    itemElement.find('div').first().prepend(checkbox);
+                    itemElement.find('div').first().prepend(radioButton);
                     
-                    // Handle selection
-                    checkbox.change(function() {
+                    // Add hover effects
+                    itemElement.hover(
+                        function() { $(this).css('background-color', '#f8f9fa'); },
+                        function() { 
+                            if (!radioButton.prop('checked')) {
+                                $(this).css('background-color', 'white'); 
+                            }
+                        }
+                    );
+                    
+                    // Handle selection - allow clicking on the whole item div
+                    itemElement.click(function(e) {
+                        if (e.target.type !== 'radio') {
+                            radioButton.prop('checked', true);
+                            radioButton.trigger('change');
+                        }
+                    });
+                    
+                    // Handle radio button selection
+                    radioButton.change(function() {
+                        // Clear visual selection from all items
+                        $('.reference-item').css({
+                            'background-color': 'white',
+                            'border-color': '#ddd'
+                        });
+                        
+                        // Clear previous selection and set new one
+                        citesphereData.selectedReferences = [];
                         if (this.checked) {
                             citesphereData.selectedReferences.push(item);
-                        } else {
-                            citesphereData.selectedReferences = citesphereData.selectedReferences.filter(function(ref) {
-                                return ref.key !== item.key;
+                            // Highlight selected item
+                            itemElement.css({
+                                'background-color': '#e3f2fd',
+                                'border-color': '#2196f3'
                             });
                         }
                         updateSelectedCount();
@@ -3105,7 +3244,11 @@
             // Update selected count display
             function updateSelectedCount() {
                 var count = citesphereData.selectedReferences.length;
-                $('#selectedCountText').text(count + ' reference' + (count !== 1 ? 's' : ''));
+                if (count === 0) {
+                    $('#selectedCountText').text('No reference selected');
+                } else {
+                    $('#selectedCountText').text('1 reference selected');
+                }
             }
 
             // Handle search functionality
@@ -3132,13 +3275,29 @@
                 }
             });
 
-            // Handle importing selected references
-            $('#submitCitesphereReferences').click(function() {
+            // Dedicated function to handle Citesphere import
+            function handleCitesphereImport() {
+                console.log('*** CITESPHERE IMPORT FUNCTION CALLED ***');
+                console.log('Selected references count:', citesphereData.selectedReferences.length);
+                console.log('Button visibility:', $('#submitCitesphereReferences').is(':visible'));
+                console.log('Citesphere tab active:', $('#citesphereRefTab').hasClass('active'));
+                
                 if (citesphereData.selectedReferences.length === 0) {
-                    alert('Please select at least one reference to import.');
+                    alert('Please select a reference to import.');
                     return;
                 }
                 
+                if (citesphereData.selectedReferences.length > 1) {
+                    alert('Please select only one reference at a time.');
+                    return;
+                }
+                
+                // Continue with the import process
+                performCitesphereImport();
+            }
+            
+            // Function to perform the actual import
+            function performCitesphereImport() {
                 var biblioId = $('#addReferenceTarget').val();
                 if (!biblioId) {
                     alert('Error: Could not determine bibliography block.');
@@ -3146,47 +3305,105 @@
                 }
                 
                 console.log('Importing references:', citesphereData.selectedReferences);
+                console.log('Original Citesphere item structure:', citesphereData.selectedReferences[0]);
                 
                 // Transform the data to match the expected backend format
                 var transformedReferences = citesphereData.selectedReferences.map(function(item) {
                     console.log('Transforming item:', item);
                     
-                    // Create the nested data structure expected by the backend
-                    var transformedItem = {
-                        data: {
-                            title: item.title || item.referenceString || '',
-                            itemType: item['@type'] || 'Reference',
-                            date: item.year || '',
-                            publicationTitle: item.source || '',
-                            url: item.identifier || '',
-                            volume: item.volume || '',
-                            issue: '',
-                            pages: item.firstPage && item.endPage ? item.firstPage + '-' + item.endPage : (item.firstPage || ''),
-                            note: item.referenceString || '',
-                            creators: []
-                        }
-                    };
+                    // Extract creators from the authors array or fallback to authorString
+                    var creators = [];
+                    console.log('Processing authors from item:', item.authors);
                     
-                    // Handle author data
-                    if (item.authorString) {
-                        // Split authorString and create creators array
+                    if (item.authors && Array.isArray(item.authors)) {
+                        creators = item.authors.map(function(author) {
+                            console.log('Processing author:', author);
+                            return {
+                                firstName: author.firstName || '',
+                                lastName: author.lastName || author.name || '',
+                                creatorType: 'author'
+                            };
+                        });
+                    } else if (item.authorString) {
+                        console.log('Using authorString:', item.authorString);
+                        // Fallback to authorString parsing
                         var authors = item.authorString.split(';');
-                        transformedItem.data.creators = authors.map(function(author) {
+                        creators = authors.map(function(author) {
                             var trimmedAuthor = author.trim();
                             if (trimmedAuthor.includes(',')) {
                                 var parts = trimmedAuthor.split(',');
                                 return {
                                     lastName: parts[0].trim(),
-                                    firstName: parts[1] ? parts[1].trim() : ''
+                                    firstName: parts[1] ? parts[1].trim() : '',
+                                    creatorType: 'author'
                                 };
                             } else {
                                 return {
                                     lastName: trimmedAuthor,
-                                    firstName: ''
+                                    firstName: '',
+                                    creatorType: 'author'
                                 };
                             }
                         });
                     }
+                    
+                    console.log('Final creators array:', creators);
+                    
+                    // Extract date from various possible fields
+                    var dateValue = '';
+                    if (item.date) {
+                        dateValue = item.date;
+                    } else if (item.dateFreetext) {
+                        dateValue = item.dateFreetext;
+                    } else if (item.year) {
+                        dateValue = item.year;
+                    }
+                    
+                    // Map itemType from Citesphere to Zotero format
+                    var itemType = 'journalArticle'; // default
+                    if (item.itemType) {
+                        switch(item.itemType) {
+                            case 'JOURNAL_ARTICLE': itemType = 'journalArticle'; break;
+                            case 'BOOK': itemType = 'book'; break;
+                            case 'BOOK_SECTION': itemType = 'bookSection'; break;
+                            case 'CONFERENCE_PAPER': itemType = 'conferencePaper'; break;
+                            default: itemType = 'journalArticle';
+                        }
+                    } else if (item['@type']) {
+                        itemType = item['@type'];
+                    }
+                    
+                    // Create the nested data structure expected by the backend
+                    console.log('Extracting title from item.title:', item.title);
+                    console.log('Extracting publicationTitle from item.publicationTitle:', item.publicationTitle);
+                    
+                    var transformedItem = {
+                        data: {
+                            title: item.title || 'Untitled',
+                            itemType: itemType,
+                            date: dateValue,
+                            publicationTitle: item.publicationTitle || item.source || '',
+                            url: item.url || '',
+                            volume: item.volume || '',
+                            issue: item.issue || '',
+                            pages: item.pages || (item.firstPage && item.endPage ? item.firstPage + '-' + item.endPage : (item.firstPage || '')),
+                            DOI: item.doi || (item.identifier && item.identifierType === 'doi' ? item.identifier : ''),
+                            abstractNote: item.abstractNote || '',
+                            language: item.language || '',
+                            ISSN: item.issn || '',
+                            journalAbbreviation: item.journalAbbreviation || '',
+                            series: item.series || '',
+                            seriesTitle: item.seriesTitle || '',
+                            archive: item.archive || '',
+                            archiveLocation: item.archiveLocation || '',
+                            callNumber: item.callNumber || '',
+                            rights: item.rights || '',
+                            shortTitle: item.shortTitle || '',
+                            note: item.note || item.referenceString || '',
+                            extra: 'Imported from Citesphere - Key: ' + (item.key || item.id || ''),
+                            creators: creators
+                        }
+                    };
                     
                     console.log('Transformed item:', transformedItem);
                     return transformedItem;
@@ -3208,38 +3425,56 @@
                     data: JSON.stringify(transformedReferences),
                     success: function(response) {
                         console.log('Import response:', response);
+                        console.log('Response type:', typeof response);
+                        console.log('Response keys:', Object.keys(response));
+                        console.log('References array:', response.references);
+                        console.log('References array type:', typeof response.references);
+                        console.log('References array length:', response.references ? response.references.length : 'undefined');
+                        
                         if (response.success) {
-                            alert('Successfully imported ' + response.imported_count + ' references from Citesphere!');
+                            // Show success message instead of alert
+                            showImportSuccessMessage('Bibliography imported successfully!');
                             
                             // Add the imported references to the bibliography block
                             var biblioBlock = $('[data-biblio-id="' + biblioId + '"]').closest('[data-biblio-block]');
                             var referenceSpace = biblioBlock.find('#referenceSpace');
                             
-                            response.references.forEach(function(ref) {
-                                var referenceHtml = '<div id="' + ref.id + '" class="referenceDivStaff tab row" data-reference-block data-biblio-id="' + biblioId + '">' +
-                                    '<p class="col-md-10">' +
-                                    'Type: <span>' + (ref.type || '') + '</span>, ' +
-                                    'Reference Title: <span>' + (ref.title || '') + '</span>, ' +
-                                    'Author: <span>' + (ref.author || '') + '</span>, ' +
-                                    'Year: <span>' + (ref.year || '') + '</span>, ' +
-                                    'Journal: <span>' + (ref.journal || '') + '</span>, ' +
-                                    'Url: <span>' + (ref.url || '') + '</span>, ' +
-                                    'Volume: <span>' + (ref.volume || '') + '</span>, ' +
-                                    'Issue: <span>' + (ref.issue || '') + '</span>, ' +
-                                    'Pages: <span>' + (ref.pages || '') + '</span>, ' +
-                                    'Editors: <span>' + (ref.editors || '') + '</span>, ' +
-                                    'Note: <span>' + (ref.note || '') + '</span>' +
-                                    '</p>' +
-                                    '<input type="hidden" class="deleteReferenceField" data-reference-id="' + ref.id + '" value="' + ref.id + '" />' +
-                                    '<a class="btn col-md-1" data-action="delete-reference" data-reference-id="' + ref.id + '" href="javascript:;">' +
-                                    '<span class="icon-trash error"></span>' +
-                                    '</a>' +
-                                    '</div>';
-                                
-                                var refElement = $(referenceHtml);
-                                refElement.mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(referenceBlockDoubleClick);
-                                referenceSpace.append(refElement);
-                            });
+                            if (response.references && Array.isArray(response.references)) {
+                                response.references.forEach(function(ref, index) {
+                                    console.log('Reference #' + index + ' object from server:', ref);
+                                    console.log('Reference #' + index + ' keys:', Object.keys(ref));
+                                    console.log('Reference #' + index + ' title:', ref.title);
+                                    console.log('Reference #' + index + ' author:', ref.author);
+                                    console.log('Reference #' + index + ' id:', ref.id);
+                                    
+                                    // Use the same format as existing references in the application
+                                    var referenceHtml = '<div id="' + ref.id + '" class="referenceDivStaff tab row" data-reference-block data-biblio-id="' + biblioId + '">' +
+                                        '<p class="col-md-10">' +
+                                        'Reference Title: <span>' + (ref.title || 'NO TITLE') + '</span>, ' +
+                                        'Author: <span>' + (ref.author || 'NO AUTHOR') + '</span>, ' +
+                                        'Year: <span>' + (ref.year || 'NO YEAR') + '</span>, ' +
+                                        'Journal: <span>' + (ref.journal || 'NO JOURNAL') + '</span>, ' +
+                                        'Url: <span>' + (ref.url || '') + '</span>, ' +
+                                        'Volume: <span>' + (ref.volume || '') + '</span>, ' +
+                                        'Issue: <span>' + (ref.issue || '') + '</span>, ' +
+                                        'Pages: <span>' + (ref.pages || '') + '</span>, ' +
+                                        'Editors: <span>' + (ref.editors || '') + '</span>, ' +
+                                        'Type: <span>' + (ref.type || '') + '</span>, ' +
+                                        'Note: <span>' + (ref.note || '') + '</span>' +
+                                        '</p>' +
+                                        '<input type="hidden" class="deleteReferenceField" data-reference-id="' + ref.id + '" value="' + ref.id + '" />' +
+                                        '<a class="btn col-md-1" data-action="delete-reference" data-reference-id="' + ref.id + '" href="javascript:;">' +
+                                        '<span class="icon-trash error"></span>' +
+                                        '</a>' +
+                                        '</div>';
+                                    
+                                    var refElement = $(referenceHtml);
+                                    refElement.mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(referenceBlockDoubleClick);
+                                    referenceSpace.append(refElement);
+                                });
+                            } else {
+                                console.error('References is not an array or is undefined:', response.references);
+                            }
                             
                             // Reset and close modal
                             citesphereData.selectedReferences = [];
@@ -3256,6 +3491,12 @@
                         alert('Error importing references: ' + error + ' (Status: ' + xhr.status + ')');
                     }
                 });
+            }
+            
+            // Handle importing selected reference (jQuery event handler for compatibility)
+            $('#submitCitesphereReferences').click(function() {
+                console.log('*** CITESPHERE IMPORT BUTTON CLICKED VIA JQUERY ***');
+                handleCitesphereImport();
             });
             
             // Clear Citesphere data when modal is hidden
@@ -3266,6 +3507,9 @@
                 citesphereData.currentGroup = null;
                 citesphereData.currentCollection = null;
                 updateSelectedCount();
+                
+                // Hide success message
+                hideImportSuccessMessage();
                 
                 // Clear all containers
                 $('#citesphereGroups').empty();
@@ -3907,6 +4151,11 @@
 			                           </div>
 			                        </div>
 			                        
+			                        <!-- Import Success Status -->
+			                        <div id="importSuccessStatus" style="display: none; margin-bottom: 15px; padding: 10px; border-radius: 5px; text-align: center;">
+			                           <!-- Success message will be shown here -->
+			                        </div>
+			                        
 			                        <!-- Step-by-Step Navigation -->
 			                        <div id="citesphereStepsContainer" style="max-height: 450px; overflow-y: auto;">
 			                           
@@ -3951,7 +4200,7 @@
 			                                    </button>
 			                                 </div>
 			                                 <h6 style="margin-bottom: 15px; color: #333; border-bottom: 2px solid #007bff; padding-bottom: 8px;">
-			                                    <i class="fa fa-file-text"></i> Step 3: Select References to Import
+			                                    <i class="fa fa-file-text"></i> Step 3: Select Reference to Import
 			                                 </h6>
 			                                 <div id="currentCollectionName" style="margin-bottom: 10px; font-weight: 500; color: #666;">
 			                                    <!-- Current collection name will be shown here -->
@@ -3962,7 +4211,7 @@
 			                                 
 			                                 <!-- Selected Count Display -->
 			                                 <div id="selectedCount" style="margin-top: 15px; padding: 10px; background: #f8f9fa; border-radius: 3px; font-size: 14px;">
-			                                    <strong>Selected:</strong> <span id="selectedCountText">0 references</span>
+			                                    <strong>Selected:</strong> <span id="selectedCountText">No reference selected</span>
 			                                 </div>
 			                              </div>
 			                           </div>
@@ -3978,7 +4227,7 @@
 			         <div class="modal-footer">
 			            <button id="cancelSubmitReference" type="reset" class="btn light">Cancel</button>
 			            <button type="submit" id="submitReference" class="btn btn-primary">Submit</button>
-			            <button type="button" id="submitCitesphereReferences" class="btn btn-primary" style="display: none;">Add Selected References</button>
+			            <button type="button" id="submitCitesphereReferences" class="btn btn-primary" style="display: none;" onclick="console.log('Button clicked via onclick!'); handleCitesphereImport();">Add Selected Reference</button>
 			         </div>
 			      </div>
 			   </div>
