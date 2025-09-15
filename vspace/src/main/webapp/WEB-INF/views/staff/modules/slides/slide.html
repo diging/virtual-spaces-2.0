@@ -2814,6 +2814,8 @@
                 }
 
                 groupsData.data.forEach(function(group) {
+                    console.log('Processing group:', group);
+                    
                     var groupElement = $('<div class="group-item" style="margin-bottom: 10px; padding: 12px; border: 1px solid #ddd; border-radius: 5px; cursor: pointer; background: #f8f9fa; transition: all 0.2s;">' +
                         '<div style="display: flex; justify-content: space-between; align-items: center;">' +
                         '<div>' +
@@ -2831,6 +2833,7 @@
                     );
                     
                     groupElement.click(function() {
+                        console.log('Group clicked:', group);
                         citesphereData.currentGroup = group;
                         showStep2Collections(group);
                     });
@@ -2846,12 +2849,21 @@
                 $('#currentGroupName').text('Group: ' + (group.name || 'Unnamed Group'));
                 citesphereData.currentStep = 'collections';
                 
-                loadGroupCollections(group.zoteroGroupId || group.id, group.name);
+                // Show loading message
+                $('#citesphereCollections').html('<div style="color: #007bff; background: #e3f2fd; border: 1px solid #90caf9; padding: 10px; border-radius: 3px;"><i class="fa fa-spinner fa-spin"></i> <strong>Loading collections...</strong></div>');
+                
+                // Extract group ID - try multiple possible fields
+                var groupId = group.zoteroGroupId || group.id || group.groupId || group.key;
+                console.log('Extracted group ID:', groupId, 'from group object:', group);
+                
+                loadGroupCollections(groupId, group.name);
             }
             
             // Load collections for a specific group
             function loadGroupCollections(groupId, groupName) {
                 var token = $('input[name="_csrf"]').attr('value');
+                
+                console.log('Loading collections for group:', groupId, 'with name:', groupName);
                 
                 $.ajax({
                     url: '/vspace/staff/citesphere/groups/' + groupId + '/collections',
@@ -2860,11 +2872,14 @@
                         'X-CSRF-Token': token
                     },
                     success: function(data) {
+                        console.log('Collections loaded successfully for group ' + groupId + ':', data);
                         displayCollections(data, groupId, groupName);
                     },
                     error: function(xhr, status, error) {
                         console.error('Error loading collections for group ' + groupId + ':', error);
-                        $('#citesphereCollections').html('<div class="alert alert-warning">Error loading collections.</div>');
+                        console.error('Response status:', xhr.status);
+                        console.error('Response text:', xhr.responseText);
+                        $('#citesphereCollections').html('<div class="alert alert-warning">Error loading collections: ' + error + ' (Status: ' + xhr.status + ')</div>');
                     }
                 });
             }
@@ -2874,16 +2889,30 @@
                 var collectionsContainer = $('#citesphereCollections');
                 collectionsContainer.empty();
                 
-                if (!collectionsData || !collectionsData.data || !Array.isArray(collectionsData.data)) {
+                console.log('Displaying collections data:', collectionsData);
+                
+                // Handle both possible response structures: {data: []} or {collections: []}
+                var collections = collectionsData.collections || collectionsData.data || [];
+                
+                if (!collections || !Array.isArray(collections) || collections.length === 0) {
+                    console.log('No collections data found or data is not an array');
                     collectionsContainer.html('<div class="alert alert-info">No collections found in this group.</div>');
                     return;
                 }
+                
+                console.log('Found', collections.length, 'collections');
 
-                collectionsData.data.forEach(function(collection) {
+                collections.forEach(function(collection) {
+                    console.log('Processing collection:', collection);
+                    
+                    // Extract collection name and key from different possible structures
+                    var collectionName = collection.name || (collection.data && collection.data.name) || 'Unnamed Collection';
+                    var collectionKey = collection.key || (collection.data && collection.data.key) || collection.id;
+                    
                     var collectionElement = $('<div class="collection-item" style="margin-bottom: 10px; padding: 12px; border: 1px solid #ddd; border-radius: 5px; cursor: pointer; background: #f8f9fa; transition: all 0.2s;">' +
                         '<div style="display: flex; justify-content: space-between; align-items: center;">' +
                         '<div>' +
-                        '<div style="font-weight: 500; color: #333;"><i class="fa fa-folder"></i> ' + (collection.data.name || 'Unnamed Collection') + '</div>' +
+                        '<div style="font-weight: 500; color: #333;"><i class="fa fa-folder"></i> ' + collectionName + '</div>' +
                         '<small class="text-muted">Click to view references</small>' +
                         '</div>' +
                         '<i class="fa fa-chevron-right" style="color: #007bff;"></i>' +
@@ -2897,8 +2926,9 @@
                     );
                     
                     collectionElement.click(function() {
+                        console.log('Collection clicked:', collection, 'using key:', collectionKey);
                         citesphereData.currentCollection = collection;
-                        showStep3References(groupId, collection.data.key, collection.data.name);
+                        showStep3References(groupId, collectionKey, collectionName);
                     });
                     
                     collectionsContainer.append(collectionElement);
@@ -2907,10 +2937,14 @@
 
             // Show Step 3: References
             function showStep3References(groupId, collectionId, collectionName) {
+                console.log('Showing step 3 references - Group:', groupId, 'Collection:', collectionId, 'Name:', collectionName);
                 $('#step2-collections').hide();
                 $('#step3-references').show();
                 $('#currentCollectionName').text('Collection: ' + (collectionName || 'Unnamed Collection'));
                 citesphereData.currentStep = 'references';
+                
+                // Show loading message
+                $('#citesphereReferences').html('<div style="color: #007bff; background: #e3f2fd; border: 1px solid #90caf9; padding: 10px; border-radius: 3px;"><i class="fa fa-spinner fa-spin"></i> <strong>Loading references...</strong></div>');
                 
                 loadCollectionItems(groupId, collectionId, collectionName);
             }
@@ -2936,6 +2970,8 @@
             function loadCollectionItems(groupId, collectionId, collectionName) {
                 var token = $('input[name="_csrf"]').attr('value');
                 
+                console.log('Loading collection items - Group:', groupId, 'Collection:', collectionId);
+                
                 $.ajax({
                     url: '/vspace/staff/citesphere/groups/' + groupId + '/collections/' + collectionId + '/items',
                     type: 'GET',
@@ -2943,10 +2979,14 @@
                         'X-CSRF-Token': token
                     },
                     success: function(data) {
+                        console.log('Collection items loaded successfully:', data);
                         displayIndividualItems(data, 'Items in ' + collectionName);
                     },
                     error: function(xhr, status, error) {
                         console.error('Error loading collection items:', error);
+                        console.error('Response status:', xhr.status);
+                        console.error('Response text:', xhr.responseText);
+                        $('#citesphereReferences').html('<div class="alert alert-warning">Error loading references: ' + error + ' (Status: ' + xhr.status + ')</div>');
                     }
                 });
             }
@@ -2956,20 +2996,36 @@
                 var referencesContainer = $('#citesphereReferences');
                 referencesContainer.empty();
                 
+                console.log('Displaying individual items:', itemsData);
+                
                 var titleElement = $('<h6 style="margin-bottom: 10px; color: #333;"><i class="fa fa-file-text"></i> ' + title + '</h6>');
                 referencesContainer.append(titleElement);
                 
-                if (!itemsData || !itemsData.data || !Array.isArray(itemsData.data)) {
+                // Handle both possible response structures: {data: []} or direct array or {items: []}
+                var items = itemsData.items || itemsData.data || itemsData || [];
+                
+                // If itemsData is directly an array, use it
+                if (Array.isArray(itemsData)) {
+                    items = itemsData;
+                }
+                
+                if (!items || !Array.isArray(items) || items.length === 0) {
+                    console.log('No items data found or data is not an array');
                     referencesContainer.append('<div class="alert alert-info">No items found.</div>');
                     return;
                 }
+                
+                console.log('Found', items.length, 'items');
 
-                itemsData.data.forEach(function(item) {
-                    var itemData = item.data || {};
-                    var title = itemData.title || 'Untitled';
-                    var author = extractAuthorsFromItem(itemData);
-                    var year = extractYearFromItem(itemData);
-                    var type = itemData.itemType || 'unknown';
+                items.forEach(function(item) {
+                    console.log('Processing item:', item);
+                    
+                    // Extract item data - try both direct properties and nested data structure
+                    var itemData = item.data || item;
+                    var title = item.title || itemData.title || item.referenceString || 'Untitled';
+                    var author = item.authorString || extractAuthorsFromItem(itemData) || item.author || '';
+                    var year = item.year || extractYearFromItem(itemData) || '';
+                    var type = item['@type'] || item.itemType || itemData.itemType || 'Reference';
                     
                     var checkbox = $('<input type="checkbox" class="citesphere-item-checkbox" style="margin-right: 8px;">');
                     checkbox.data('item', item);
@@ -3005,29 +3061,39 @@
 
             // Helper function to extract authors from Citesphere item
             function extractAuthorsFromItem(itemData) {
-                if (!itemData.creators || !Array.isArray(itemData.creators)) {
-                    return 'Unknown Author';
+                // Handle different author field structures
+                if (itemData.authorString) {
+                    return itemData.authorString;
                 }
                 
-                var authors = itemData.creators.map(function(creator) {
-                    var firstName = creator.firstName || '';
-                    var lastName = creator.lastName || '';
+                if (itemData.creators && Array.isArray(itemData.creators)) {
+                    var authors = itemData.creators.map(function(creator) {
+                        var firstName = creator.firstName || '';
+                        var lastName = creator.lastName || '';
+                        
+                        if (lastName && firstName) {
+                            return lastName + ', ' + firstName;
+                        } else if (lastName) {
+                            return lastName;
+                        } else if (firstName) {
+                            return firstName;
+                        }
+                        return '';
+                    }).filter(Boolean);
                     
-                    if (lastName && firstName) {
-                        return lastName + ', ' + firstName;
-                    } else if (lastName) {
-                        return lastName;
-                    } else if (firstName) {
-                        return firstName;
-                    }
-                    return '';
-                }).filter(Boolean);
+                    return authors.length > 0 ? authors.join('; ') : 'Unknown Author';
+                }
                 
-                return authors.length > 0 ? authors.join('; ') : 'Unknown Author';
+                return 'Unknown Author';
             }
 
             // Helper function to extract year from Citesphere item
             function extractYearFromItem(itemData) {
+                // Handle different year field structures
+                if (itemData.year) {
+                    return itemData.year;
+                }
+                
                 var date = itemData.date || itemData.accessDate || '';
                 if (date) {
                     var match = date.match(/(\d{4})/);
@@ -3079,9 +3145,58 @@
                     return;
                 }
                 
+                console.log('Importing references:', citesphereData.selectedReferences);
+                
+                // Transform the data to match the expected backend format
+                var transformedReferences = citesphereData.selectedReferences.map(function(item) {
+                    console.log('Transforming item:', item);
+                    
+                    // Create the nested data structure expected by the backend
+                    var transformedItem = {
+                        data: {
+                            title: item.title || item.referenceString || '',
+                            itemType: item['@type'] || 'Reference',
+                            date: item.year || '',
+                            publicationTitle: item.source || '',
+                            url: item.identifier || '',
+                            volume: item.volume || '',
+                            issue: '',
+                            pages: item.firstPage && item.endPage ? item.firstPage + '-' + item.endPage : (item.firstPage || ''),
+                            note: item.referenceString || '',
+                            creators: []
+                        }
+                    };
+                    
+                    // Handle author data
+                    if (item.authorString) {
+                        // Split authorString and create creators array
+                        var authors = item.authorString.split(';');
+                        transformedItem.data.creators = authors.map(function(author) {
+                            var trimmedAuthor = author.trim();
+                            if (trimmedAuthor.includes(',')) {
+                                var parts = trimmedAuthor.split(',');
+                                return {
+                                    lastName: parts[0].trim(),
+                                    firstName: parts[1] ? parts[1].trim() : ''
+                                };
+                            } else {
+                                return {
+                                    lastName: trimmedAuthor,
+                                    firstName: ''
+                                };
+                            }
+                        });
+                    }
+                    
+                    console.log('Transformed item:', transformedItem);
+                    return transformedItem;
+                });
+                
                 var moduleId = '[[${module.id}]]';
                 var slideId = '[[${slide.id}]]';
                 var token = $('input[name="_csrf"]').attr('value');
+                
+                console.log('Sending transformed data:', transformedReferences);
                 
                 $.ajax({
                     url: '/vspace/staff/module/' + moduleId + '/slide/' + slideId + '/bibliography/' + biblioId + '/citesphere/import',
@@ -3090,8 +3205,9 @@
                     headers: {
                         'X-CSRF-Token': token
                     },
-                    data: JSON.stringify(citesphereData.selectedReferences),
+                    data: JSON.stringify(transformedReferences),
                     success: function(response) {
+                        console.log('Import response:', response);
                         if (response.success) {
                             alert('Successfully imported ' + response.imported_count + ' references from Citesphere!');
                             
@@ -3135,7 +3251,9 @@
                     },
                     error: function(xhr, status, error) {
                         console.error('Error importing references:', error);
-                        alert('Error importing references. Please try again.');
+                        console.error('Response status:', xhr.status);
+                        console.error('Response text:', xhr.responseText);
+                        alert('Error importing references: ' + error + ' (Status: ' + xhr.status + ')');
                     }
                 });
             });
