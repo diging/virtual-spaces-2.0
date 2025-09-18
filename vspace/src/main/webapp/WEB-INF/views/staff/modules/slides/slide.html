@@ -364,9 +364,11 @@
                 $("#editEditorsRef").val(editors || '');
                 $("#editNoteRef").val(note || '');
                 
+                // Enhanced type selection logic
                 var trimmedType = type ? type.trim() : '';
                 console.log("Setting type field with value:", trimmedType);
                 
+                // First, reset the select to default
                 $("#editTypeRef").prop('selectedIndex', 0);
                 
                 if (trimmedType) {
@@ -376,6 +378,7 @@
                         $("#editTypeRef").val(trimmedType);
                         console.log("Exact match found for type:", trimmedType);
                     } else {
+                        // Try case-insensitive match
                         var foundOption = false;
                         $("#editTypeRef option").each(function() {
                             var optionValue = $(this).val();
@@ -1650,6 +1653,7 @@
                     success: function(data) {
                         console.log(data);
                         
+                        // Updated biblioblock creation with data attributes
                         var biblioblock = $(
                             '<div id="' + data.id + '" class="biblioDivStaff tab row" data-biblio-block>' +
                             '<p class="col-md-10">' +
