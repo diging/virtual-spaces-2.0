@@ -46,7 +46,7 @@ public class CitesphereController {
     @Value("${citesphere.client.secret:}")
     private String citesphereClientSecret;
 
-    @Value("${app.base.url:http://localhost:8080}")
+    @Value("${app_url}")
     private String appBaseUrl;
 
     @Autowired

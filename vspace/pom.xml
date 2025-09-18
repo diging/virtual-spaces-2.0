@@ -34,6 +34,10 @@
         <email.from></email.from>
         <app.url></app.url>
 
+        <citesphere.api.url></citesphere.api.url>
+        <citesphere.client.id></citesphere.client.id>
+        <citesphere.client.secret></citesphere.client.secret>
+
         <tomcat.deploy.path></tomcat.deploy.path>
         <tomcat.app.name>vspace</tomcat.app.name>
         <tomcat.server.id>TomcatServer</tomcat.server.id>
