@@ -305,7 +305,6 @@
                 // Extract values - if Type is first in display, adjust indices accordingly
                 // Check if the current display has Type first or not
                 var fullText = $("div.open p:eq(0)").text();
-                console.log("Full reference text:", fullText);
                 
                 var type, title, author, year, journal, url, volume, issue, pages, editors, note;
                 
@@ -366,7 +365,6 @@
                 
                 // Enhanced type selection logic
                 var trimmedType = type ? type.trim() : '';
-                console.log("Setting type field with value:", trimmedType);
                 
                 // First, reset the select to default
                 $("#editTypeRef").prop('selectedIndex', 0);
@@ -376,7 +374,6 @@
                     var exactMatch = $("#editTypeRef option[value='" + trimmedType + "']");
                     if (exactMatch.length > 0) {
                         $("#editTypeRef").val(trimmedType);
-                        console.log("Exact match found for type:", trimmedType);
                     } else {
                         // Try case-insensitive match
                         var foundOption = false;
@@ -388,21 +385,14 @@
                                 optionText.toLowerCase() === trimmedType.toLowerCase()) {
                                 $("#editTypeRef").val(optionValue);
                                 foundOption = true;
-                                console.log("Case-insensitive match found. Set to:", optionValue);
                                 return false; // break
                             }
                         });
                         
                         if (!foundOption) {
-                            console.log("No match found for type:", trimmedType);
-                            console.log("Available options:");
-                            $("#editTypeRef option").each(function() {
-                                console.log("- Value:", $(this).val(), "Text:", $(this).text());
-                            });
                         }
                     }
                 } else {
-                    console.log("Type is empty, leaving as default");
                 }
 
                 // Store original values for cancel functionality
@@ -1651,7 +1641,6 @@
                     },
                     data: jsonData,
                     success: function(data) {
-                        console.log(data);
                         
                         // Updated biblioblock creation with data attributes
                         var biblioblock = $(
@@ -1687,9 +1676,6 @@
 
              
             $("#submitReference").on("click", function(e) {
-                console.log('*** REGULAR SUBMIT BUTTON CLICKED ***');
-                console.log('Button visibility:', $('#submitReference').is(':visible'));
-                console.log('Citesphere tab active:', $('#citesphereRefTab').hasClass('active'));
                 e.preventDefault();
                 // ------------- creating reference ------------
                 
@@ -2699,7 +2685,6 @@
                 
                 // Initialize Citesphere step-by-step flow when switching to tab
                 if ($(e.target).attr('href') === '#citesphereRefTab') {
-                    console.log('Citesphere tab activated - initializing steps');
                     initializeCitesphereSteps();
                 }
             });
@@ -2707,8 +2692,6 @@
             // Also trigger when tab link is clicked
             $(document).on('click', 'a[href="#citesphereRefTab"]', function() {
                 setTimeout(function() {
-                    console.log('Citesphere tab clicked - initializing steps');
-                    console.log('Manually updating button visibility after tab click');
                     updateReferenceModalButtons();
                     initializeCitesphereSteps();
                 }, 100);
@@ -2717,18 +2700,12 @@
             // Handle manual tab click to update buttons
             $(document).on('click', 'a[href="#manualRefTab"]', function() {
                 setTimeout(function() {
-                    console.log('Manual tab clicked - updating buttons');
                     updateReferenceModalButtons();
                 }, 100);
             });
 
             function updateReferenceModalButtons() {
                 var isCitesphereTab = $('#citesphereRefTab').hasClass('active');
-                
-                console.log('*** UPDATING MODAL BUTTONS ***');
-                console.log('Citesphere tab active:', isCitesphereTab);
-                console.log('Before - Submit button visible:', $('#submitReference').is(':visible'));
-                console.log('Before - Citesphere button visible:', $('#submitCitesphereReferences').is(':visible'));
                 
                 if (isCitesphereTab) {
                     $('#submitReference').hide();
@@ -2737,14 +2714,10 @@
                     $('#submitReference').show();
                     $('#submitCitesphereReferences').hide();
                 }
-                
-                console.log('After - Submit button visible:', $('#submitReference').is(':visible'));
-                console.log('After - Citesphere button visible:', $('#submitCitesphereReferences').is(':visible'));
             }
 
             // Initialize the step-by-step Citesphere flow
             function initializeCitesphereSteps() {
-                console.log('initializeCitesphereSteps called');
                 
                 // Reset step data
                 citesphereData.currentStep = 'connection';
@@ -2755,7 +2728,6 @@
                 // Hide success message and all steps initially
                 hideImportSuccessMessage();
                 $('.citesphere-step').hide();
-                console.log('Hidden all steps');
                 
                 // Show a loading message first
                 $('#connectionStatusContent').html(
@@ -2770,7 +2742,6 @@
             
             // Check if user is connected to Citesphere
             function checkCitesphereConnection() {
-                console.log('checkCitesphereConnection called');
                 var token = $('input[name="_csrf"]').attr('value');
                 
                 $.ajax({
@@ -2780,7 +2751,6 @@
                         'X-CSRF-Token': token
                     },
                     success: function(data) {
-                        console.log('Connection successful, received data:', data);
                         // Connected successfully
                         showConnectionStatus(true);
                         citesphereData.groups = data;
@@ -2788,7 +2758,6 @@
                         showStep1Groups(data);
                     },
                     error: function(xhr, status, error) {
-                        console.log('Connection failed:', xhr.status, error);
                         // Not connected or error
                         showConnectionStatus(false);
                         citesphereData.currentStep = 'connection';
@@ -2859,7 +2828,6 @@
                 }
 
                 groupsData.data.forEach(function(group) {
-                    console.log('Processing group:', group);
                     
                     var groupElement = $('<div class="group-item" style="margin-bottom: 10px; padding: 12px; border: 1px solid #ddd; border-radius: 5px; cursor: pointer; background: #f8f9fa; transition: all 0.2s;">' +
                         '<div style="display: flex; justify-content: space-between; align-items: center;">' +
@@ -2878,7 +2846,6 @@
                     );
                     
                     groupElement.click(function() {
-                        console.log('Group clicked:', group);
                         citesphereData.currentGroup = group;
                         showStep2Collections(group);
                     });
@@ -2899,7 +2866,6 @@
                 
                 // Extract group ID - try multiple possible fields
                 var groupId = group.zoteroGroupId || group.id || group.groupId || group.key;
-                console.log('Extracted group ID:', groupId, 'from group object:', group);
                 
                 loadGroupCollections(groupId, group.name);
             }
@@ -2908,8 +2874,6 @@
             function loadGroupCollections(groupId, groupName) {
                 var token = $('input[name="_csrf"]').attr('value');
                 
-                console.log('Loading collections for group:', groupId, 'with name:', groupName);
-                
                 $.ajax({
                     url: '/vspace/staff/citesphere/groups/' + groupId + '/collections',
                     type: 'GET',
@@ -2917,13 +2881,9 @@
                         'X-CSRF-Token': token
                     },
                     success: function(data) {
-                        console.log('Collections loaded successfully for group ' + groupId + ':', data);
                         displayCollections(data, groupId, groupName);
                     },
                     error: function(xhr, status, error) {
-                        console.error('Error loading collections for group ' + groupId + ':', error);
-                        console.error('Response status:', xhr.status);
-                        console.error('Response text:', xhr.responseText);
                         $('#citesphereCollections').html('<div class="alert alert-warning">Error loading collections: ' + error + ' (Status: ' + xhr.status + ')</div>');
                     }
                 });
@@ -2934,21 +2894,15 @@
                 var collectionsContainer = $('#citesphereCollections');
                 collectionsContainer.empty();
                 
-                console.log('Displaying collections data:', collectionsData);
-                
                 // Handle both possible response structures: {data: []} or {collections: []}
                 var collections = collectionsData.collections || collectionsData.data || [];
                 
                 if (!collections || !Array.isArray(collections) || collections.length === 0) {
-                    console.log('No collections data found or data is not an array');
                     collectionsContainer.html('<div class="alert alert-info">No collections found in this group.</div>');
                     return;
                 }
-                
-                console.log('Found', collections.length, 'collections');
 
                 collections.forEach(function(collection) {
-                    console.log('Processing collection:', collection);
                     
                     // Extract collection name and key from different possible structures
                     var collectionName = collection.name || (collection.data && collection.data.name) || 'Unnamed Collection';
@@ -2971,7 +2925,6 @@
                     );
                     
                     collectionElement.click(function() {
-                        console.log('Collection clicked:', collection, 'using key:', collectionKey);
                         citesphereData.currentCollection = collection;
                         showStep3References(groupId, collectionKey, collectionName);
                     });
@@ -2982,7 +2935,6 @@
 
             // Show Step 3: References
             function showStep3References(groupId, collectionId, collectionName) {
-                console.log('Showing step 3 references - Group:', groupId, 'Collection:', collectionId, 'Name:', collectionName);
                 $('#step2-collections').hide();
                 $('#step3-references').show();
                 $('#currentCollectionName').text('Collection: ' + (collectionName || 'Unnamed Collection'));
@@ -3015,8 +2967,6 @@
             function loadCollectionItems(groupId, collectionId, collectionName) {
                 var token = $('input[name="_csrf"]').attr('value');
                 
-                console.log('Loading collection items - Group:', groupId, 'Collection:', collectionId);
-                
                 $.ajax({
                     url: '/vspace/staff/citesphere/groups/' + groupId + '/collections/' + collectionId + '/items',
                     type: 'GET',
@@ -3024,13 +2974,9 @@
                         'X-CSRF-Token': token
                     },
                     success: function(data) {
-                        console.log('Collection items loaded successfully:', data);
                         displayIndividualItems(data, 'Items in ' + collectionName);
                     },
                     error: function(xhr, status, error) {
-                        console.error('Error loading collection items:', error);
-                        console.error('Response status:', xhr.status);
-                        console.error('Response text:', xhr.responseText);
                         $('#citesphereReferences').html('<div class="alert alert-warning">Error loading references: ' + error + ' (Status: ' + xhr.status + ')</div>');
                     }
                 });
@@ -3040,8 +2986,6 @@
             function displayIndividualItems(itemsData, title) {
                 var referencesContainer = $('#citesphereReferences');
                 referencesContainer.empty();
-                
-                console.log('Displaying individual items:', itemsData);
                 
                 var titleElement = $('<h6 style="margin-bottom: 10px; color: #333;"><i class="fa fa-file-text"></i> ' + title + '</h6>');
                 referencesContainer.append(titleElement);
@@ -3055,15 +2999,11 @@
                 }
                 
                 if (!items || !Array.isArray(items) || items.length === 0) {
-                    console.log('No items data found or data is not an array');
                     referencesContainer.append('<div class="alert alert-info">No items found.</div>');
                     return;
                 }
-                
-                console.log('Found', items.length, 'items');
 
                 items.forEach(function(item, index) {
-                    console.log('Processing item:', item);
                     
                     // Extract item data - try both direct properties and nested data structure
                     var itemData = item.data || item;
@@ -3277,10 +3217,6 @@
 
             // Dedicated function to handle Citesphere import
             function handleCitesphereImport() {
-                console.log('*** CITESPHERE IMPORT FUNCTION CALLED ***');
-                console.log('Selected references count:', citesphereData.selectedReferences.length);
-                console.log('Button visibility:', $('#submitCitesphereReferences').is(':visible'));
-                console.log('Citesphere tab active:', $('#citesphereRefTab').hasClass('active'));
                 
                 if (citesphereData.selectedReferences.length === 0) {
                     alert('Please select a reference to import.');
@@ -3304,20 +3240,15 @@
                     return;
                 }
                 
-                console.log('Importing references:', citesphereData.selectedReferences);
-                console.log('Original Citesphere item structure:', citesphereData.selectedReferences[0]);
                 
                 // Transform the data to match the expected backend format
                 var transformedReferences = citesphereData.selectedReferences.map(function(item) {
-                    console.log('Transforming item:', item);
                     
                     // Extract creators from the authors array or fallback to authorString
                     var creators = [];
-                    console.log('Processing authors from item:', item.authors);
                     
                     if (item.authors && Array.isArray(item.authors)) {
                         creators = item.authors.map(function(author) {
-                            console.log('Processing author:', author);
                             return {
                                 firstName: author.firstName || '',
                                 lastName: author.lastName || author.name || '',
@@ -3325,7 +3256,6 @@
                             };
                         });
                     } else if (item.authorString) {
-                        console.log('Using authorString:', item.authorString);
                         // Fallback to authorString parsing
                         var authors = item.authorString.split(';');
                         creators = authors.map(function(author) {
@@ -3346,8 +3276,6 @@
                             }
                         });
                     }
-                    
-                    console.log('Final creators array:', creators);
                     
                     // Extract date from various possible fields
                     var dateValue = '';
@@ -3374,8 +3302,6 @@
                     }
                     
                     // Create the nested data structure expected by the backend
-                    console.log('Extracting title from item.title:', item.title);
-                    console.log('Extracting publicationTitle from item.publicationTitle:', item.publicationTitle);
                     
                     var transformedItem = {
                         data: {
@@ -3405,7 +3331,6 @@
                         }
                     };
                     
-                    console.log('Transformed item:', transformedItem);
                     return transformedItem;
                 });
                 
@@ -3413,7 +3338,6 @@
                 var slideId = '[[${slide.id}]]';
                 var token = $('input[name="_csrf"]').attr('value');
                 
-                console.log('Sending transformed data:', transformedReferences);
                 
                 $.ajax({
                     url: '/vspace/staff/module/' + moduleId + '/slide/' + slideId + '/bibliography/' + biblioId + '/citesphere/import',
@@ -3424,12 +3348,6 @@
                     },
                     data: JSON.stringify(transformedReferences),
                     success: function(response) {
-                        console.log('Import response:', response);
-                        console.log('Response type:', typeof response);
-                        console.log('Response keys:', Object.keys(response));
-                        console.log('References array:', response.references);
-                        console.log('References array type:', typeof response.references);
-                        console.log('References array length:', response.references ? response.references.length : 'undefined');
                         
                         if (response.success) {
                             // Show success message instead of alert
@@ -3441,11 +3359,6 @@
                             
                             if (response.references && Array.isArray(response.references)) {
                                 response.references.forEach(function(ref, index) {
-                                    console.log('Reference #' + index + ' object from server:', ref);
-                                    console.log('Reference #' + index + ' keys:', Object.keys(ref));
-                                    console.log('Reference #' + index + ' title:', ref.title);
-                                    console.log('Reference #' + index + ' author:', ref.author);
-                                    console.log('Reference #' + index + ' id:', ref.id);
                                     
                                     // Use the same format as existing references in the application
                                     var referenceHtml = '<div id="' + ref.id + '" class="referenceDivStaff tab row" data-reference-block data-biblio-id="' + biblioId + '">' +
@@ -3472,8 +3385,6 @@
                                     refElement.mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(referenceBlockDoubleClick);
                                     referenceSpace.append(refElement);
                                 });
-                            } else {
-                                console.error('References is not an array or is undefined:', response.references);
                             }
                             
                             // Reset and close modal
@@ -3485,9 +3396,6 @@
                         }
                     },
                     error: function(xhr, status, error) {
-                        console.error('Error importing references:', error);
-                        console.error('Response status:', xhr.status);
-                        console.error('Response text:', xhr.responseText);
                         alert('Error importing references: ' + error + ' (Status: ' + xhr.status + ')');
                     }
                 });
@@ -3495,7 +3403,6 @@
             
             // Handle importing selected reference (jQuery event handler for compatibility)
             $('#submitCitesphereReferences').click(function() {
-                console.log('*** CITESPHERE IMPORT BUTTON CLICKED VIA JQUERY ***');
                 handleCitesphereImport();
             });
             
@@ -4227,7 +4134,7 @@
 			         <div class="modal-footer">
 			            <button id="cancelSubmitReference" type="reset" class="btn light">Cancel</button>
 			            <button type="submit" id="submitReference" class="btn btn-primary">Submit</button>
-			            <button type="button" id="submitCitesphereReferences" class="btn btn-primary" style="display: none;" onclick="console.log('Button clicked via onclick!'); handleCitesphereImport();">Add Selected Reference</button>
+			            <button type="button" id="submitCitesphereReferences" class="btn btn-primary" style="display: none;" onclick="handleCitesphereImport();">Add Selected Reference</button>
 			         </div>
 			      </div>
 			   </div>

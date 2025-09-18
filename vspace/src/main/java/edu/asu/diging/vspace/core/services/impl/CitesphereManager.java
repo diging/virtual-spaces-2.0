@@ -185,12 +185,10 @@ public class CitesphereManager implements ICitesphereManager {
             Request request = requestBuilder.build();
             
             try (Response response = client.newCall(request).execute()) {
-                System.out.println("Response code: " + response.code());
                 return response;
             }
             
         } catch (Exception e) {
-            System.err.println("[ERROR] -------- Error during API request with " + filePath + ": " + e.getMessage());
             return "Error loading/reading file";
         }
     }
