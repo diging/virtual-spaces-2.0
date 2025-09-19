@@ -66,9 +66,13 @@ public class ExhibitionConfigurationController {
     public String showExhibitions(Model model) {
 
         IExhibition exhibition = exhibitionManager.getStartExhibition();
-        if (exhibition==null) {
+        if (exhibition == null) {
             exhibition = (Exhibition) exhibitFactory.createExhibition();
         }
+        
+        // Create final reference for lambda usage
+        final IExhibition finalExhibition = exhibition;
+        
         if (exhibition.getLanguages() != null) {
             model.addAttribute("savedExhibitionLanguages", exhibition.getLanguages()
                     .stream().map(language -> language.getLabel()).collect(Collectors.toList()));
@@ -78,12 +82,24 @@ public class ExhibitionConfigurationController {
         model.addAttribute("exhibitionModes", Arrays.asList(ExhibitionModes.values()));
         model.addAttribute("spacesList", spaceRepo.findAll());
         
-        @SuppressWarnings("unchecked")
         List<Map<String, Object>> sortedLanguageList = exhibitionLanguageConfig.getExhibitionLanguageList().stream()
                 .map(rawMap -> (Map<String, Object>) rawMap)
                 .sorted((lang1, lang2) -> {
                     String label1 = (String) lang1.get("label");
                     String label2 = (String) lang2.get("label");
+                    
+                    // Check if languages are currently selected for this exhibition
+                    boolean isLang1Selected = finalExhibition.getLanguages() != null && 
+                        finalExhibition.getLanguages().stream().anyMatch(l -> l.getLabel().equals(label1));
+                    boolean isLang2Selected = finalExhibition.getLanguages() != null && 
+                        finalExhibition.getLanguages().stream().anyMatch(l -> l.getLabel().equals(label2));
+                    
+                    // show selected languages first
+                    if (isLang1Selected != isLang2Selected) {
+                        return isLang1Selected ? -1 : 1; // Selected languages come first
+                    }
+                    
+                    // alphabetical within each group (selected or unselected)
                     return label1.compareToIgnoreCase(label2);
                 })
                 .collect(Collectors.toList());

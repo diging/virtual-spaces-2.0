@@ -36,9 +36,9 @@ public class ExhibitionLanguage extends VSpaceElement implements IExhibitionLang
     }
     
     public ExhibitionLanguage(String label, String code, IExhibition exhibition) {
-        this.label=label;
-        this.code=code;
-        this.exhibition=exhibition;
+        this.label = label;
+        this.code = code;
+        this.exhibition = exhibition;
     }
     
     @Override
@@ -48,7 +48,7 @@ public class ExhibitionLanguage extends VSpaceElement implements IExhibitionLang
 
     @Override
     public void setId(String id) {
-    	this.id = id;      
+        this.id = id;      
     }
 
     public String getLabel() {
@@ -103,12 +103,12 @@ public class ExhibitionLanguage extends VSpaceElement implements IExhibitionLang
         ExhibitionLanguage other = (ExhibitionLanguage) obj;
         
         if (!Objects.equals(this.code, other.code))
-        	return false;
+            return false;
         
         if (this.exhibition == null || other.exhibition == null)
-        	return false;
+            return false;
         
-        return Objects.equals(this.exhibition.getId(),other.exhibition.getId());
+        return Objects.equals(this.exhibition.getId(), other.exhibition.getId());
     }
 
 
