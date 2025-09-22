@@ -38,8 +38,8 @@ public class LocalizedTextForm {
         return localizedTextId;
     }
 
-    public void setLocalizedTextId(String localisedTextId) {
-        this.localizedTextId = localisedTextId;
+    public void setLocalizedTextId(String localizedTextId) {
+        this.localizedTextId = localizedTextId;
     }
 
     public String getExhibitionLanguageId() {

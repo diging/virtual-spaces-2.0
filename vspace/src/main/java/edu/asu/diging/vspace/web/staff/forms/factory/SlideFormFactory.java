@@ -35,16 +35,21 @@ public class SlideFormFactory implements ISlideFormFactory{
         slideForm.setName(slide.getName());
         slideForm.setDescription(slide.getDescription());
         
-        startExhibition.getLanguages().forEach(language -> {
-            if(language.isDefault()) {
-                slideForm.setDefaultName(localizedTextFormCreation.createLocalizedTextForm(language, slide.getSlideNames()));               
-                slideForm.setDefaultDescription(localizedTextFormCreation.createLocalizedTextForm(language, slide.getSlideDescriptions())); 
-            }
-            else {
-                slideForm.getNames().add(localizedTextFormCreation.createLocalizedTextForm(language, slide.getSlideNames()));
-                slideForm.getDescriptions().add(localizedTextFormCreation.createLocalizedTextForm(language, slide.getSlideDescriptions())); 
-            }
-        });
+        if (startExhibition != null && startExhibition.getLanguages() != null && !startExhibition.getLanguages().isEmpty()) {
+            startExhibition.getLanguages().forEach(language -> {
+                if(language.isDefault()) {
+                    slideForm.setDefaultName(localizedTextFormCreation.createLocalizedTextForm(language, slide.getSlideNames()));               
+                    slideForm.setDefaultDescription(localizedTextFormCreation.createLocalizedTextForm(language, slide.getSlideDescriptions())); 
+                }
+                else {
+                    slideForm.getNames().add(localizedTextFormCreation.createLocalizedTextForm(language, slide.getSlideNames()));
+                    slideForm.getDescriptions().add(localizedTextFormCreation.createLocalizedTextForm(language, slide.getSlideDescriptions())); 
+                }
+            });
+        } else {
+            slideForm.setDefaultName(new edu.asu.diging.vspace.web.staff.forms.LocalizedTextForm("", null, null, "Default"));
+            slideForm.setDefaultDescription(new edu.asu.diging.vspace.web.staff.forms.LocalizedTextForm("", null, null, "Default"));
+        }
         return slideForm;
     }
 }

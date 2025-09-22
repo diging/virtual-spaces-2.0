@@ -32,18 +32,26 @@ public class AboutPageFormFactory  implements IAboutPageFormFactory{
         IExhibition startExhibition = exhibitionManager.getStartExhibition();    
         IExhibitionLanguage defaultLanguage = exhibitionManager.getDefaultLanguage(startExhibition);
 
-        aboutPageForm.setDefaultTitle(localizedTextFormCreation.createLocalizedTextForm( defaultLanguage, 
-                exhibitionAboutPage.getExhibitionTitles()));
-        aboutPageForm.setDefaultAboutPageText(localizedTextFormCreation.createLocalizedTextForm( defaultLanguage, 
-                exhibitionAboutPage.getExhibitionTextDescriptions()));
-        startExhibition.getLanguages().forEach(language -> {
-            if(!language.isDefault()) {
-                aboutPageForm.getTitles().add(localizedTextFormCreation.createLocalizedTextForm( language, 
-                        exhibitionAboutPage.getExhibitionTitles()));               
-                aboutPageForm.getAboutPageTexts().add(localizedTextFormCreation.createLocalizedTextForm(language, 
-                        exhibitionAboutPage.getExhibitionTextDescriptions())); 
-            }
-        });
+        if (defaultLanguage != null) {
+            aboutPageForm.setDefaultTitle(localizedTextFormCreation.createLocalizedTextForm( defaultLanguage, 
+                    exhibitionAboutPage.getExhibitionTitles()));
+            aboutPageForm.setDefaultAboutPageText(localizedTextFormCreation.createLocalizedTextForm( defaultLanguage, 
+                    exhibitionAboutPage.getExhibitionTextDescriptions()));
+        } else {
+            aboutPageForm.setDefaultTitle(new edu.asu.diging.vspace.web.staff.forms.LocalizedTextForm("", null, null, "Default"));
+            aboutPageForm.setDefaultAboutPageText(new edu.asu.diging.vspace.web.staff.forms.LocalizedTextForm("", null, null, "Default"));
+        }
+        
+        if (startExhibition != null && startExhibition.getLanguages() != null && !startExhibition.getLanguages().isEmpty()) {
+            startExhibition.getLanguages().forEach(language -> {
+                if(!language.isDefault()) {
+                    aboutPageForm.getTitles().add(localizedTextFormCreation.createLocalizedTextForm( language, 
+                            exhibitionAboutPage.getExhibitionTitles()));               
+                    aboutPageForm.getAboutPageTexts().add(localizedTextFormCreation.createLocalizedTextForm(language, 
+                            exhibitionAboutPage.getExhibitionTextDescriptions())); 
+                }
+            });
+        }
         return aboutPageForm;
     }
 }

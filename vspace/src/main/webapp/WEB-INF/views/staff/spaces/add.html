@@ -105,37 +105,51 @@ $(document).ready(function(){
 			
 			<div>
 				<div class="tab" >	
-					<button class="tablinks"  th:onclick="openForm(event, [[${space.defaultName.exhibitionLanguageLabel}]] )">[[${space.defaultName.exhibitionLanguageLabel}]]</button>				
+					<button th:if="${space.defaultName != null and space.defaultName.exhibitionLanguageLabel != null}" class="tablinks"  th:onclick="openForm(event, [[${space.defaultName.exhibitionLanguageLabel}]] )">[[${space.defaultName.exhibitionLanguageLabel}]]</button>				
+					<button th:if="${space.defaultName == null or space.defaultName.exhibitionLanguageLabel == null}" class="tablinks"  th:onclick="openForm(event, 'Default')">Default</button>				
 							
 					<div th:each= "title,  stat : ${space.names}">
-					  <button class="tablinks"  th:onclick="openForm(event, [[${title.exhibitionLanguageLabel}]] )">[[${title.exhibitionLanguageLabel}]]</button>				
+					  <button th:if="${title != null and title.exhibitionLanguageLabel != null}" class="tablinks"  th:onclick="openForm(event, [[${title.exhibitionLanguageLabel}]] )">[[${title.exhibitionLanguageLabel}]]</button>				
+					  <button th:if="${title == null or title.exhibitionLanguageLabel == null}" class="tablinks"  th:onclick="openForm(event, 'Default')">Default</button>				
 					</div>
 				</div>
 				<div>
-					<div th:id = "${space.defaultName.exhibitionLanguageLabel}" class = "tabcontent">
+					<div th:if="${space.defaultName != null and space.defaultName.exhibitionLanguageLabel != null}" th:id = "${space.defaultName.exhibitionLanguageLabel}" class = "tabcontent">
 						<p>  [[${space.defaultName.exhibitionLanguageLabel}]]</p>	
 					<label for="title">Space Name:</label>
-					<input type="hidden" class="form-control" id="title" th:value="${space.defaultName.localisedTextId}" th:name="defaultName.localisedTextId" ></input>
+					<input type="hidden" class="form-control" id="title" th:value="${space.defaultName.localizedTextId}" th:name="defaultName.localizedTextId" ></input>
 					<input type="hidden" class="form-control" id="title" th:value="${space.defaultName.exhibitionLanguageId}" th:name="defaultName.exhibitionLanguageId" ></input> 					
 					<input type="text" class="form-control" id="title" th:value="${space.defaultName.text}" th:name="defaultName.text" ></input>
 					<label for="description">Description:</label>
 								<textarea class="form-control" rows="5" cols="30" id="spacePageText" th:value= "${space.defaultDescription.text}" th:name="defaultDescription.text">[[${space.defaultDescription.text}]]</textarea>
-		 						<input type="hidden"   class="form-control"  id="spaceText" th:value="${space.defaultDescription.localisedTextId}" th:name="defaultDescription.localisedTextId" ></input>
+		 						<input type="hidden"   class="form-control"  id="spaceText" th:value="${space.defaultDescription.localizedTextId}" th:name="defaultDescription.localizedTextId" ></input>
 								<input type="hidden" class="form-control"  id="spaceText" th:value="${space.defaultDescription.exhibitionLanguageId}" th:name="defaultDescription.exhibitionLanguageId" ></input>			
+ 						
+ 					</div>
+					<div th:if="${space.defaultName == null or space.defaultName.exhibitionLanguageLabel == null}" th:id = "Default" class = "tabcontent">
+						<p>Default</p>	
+					<label for="title">Space Name:</label>
+					<input type="hidden" class="form-control" id="title" th:value="${space.defaultName != null ? space.defaultName.localizedTextId : ''}" th:name="defaultName.localizedTextId" ></input>
+					<input type="hidden" class="form-control" id="title" th:value="${space.defaultName != null ? space.defaultName.exhibitionLanguageId : ''}" th:name="defaultName.exhibitionLanguageId" ></input> 					
+					<input type="text" class="form-control" id="title" th:value="${space.defaultName != null ? space.defaultName.text : ''}" th:name="defaultName.text" ></input>
+					<label for="description">Description:</label>
+								<textarea class="form-control" rows="5" cols="30" id="spacePageText" th:value= "${space.defaultDescription != null ? space.defaultDescription.text : ''}" th:name="defaultDescription.text">[[${space.defaultDescription != null ? space.defaultDescription.text : ''}]]</textarea>
+		 						<input type="hidden"   class="form-control"  id="spaceText" th:value="${space.defaultDescription != null ? space.defaultDescription.localizedTextId : ''}" th:name="defaultDescription.localizedTextId" ></input>
+								<input type="hidden" class="form-control"  id="spaceText" th:value="${space.defaultDescription != null ? space.defaultDescription.exhibitionLanguageId : ''}" th:name="defaultDescription.exhibitionLanguageId" ></input>			
  						
  					</div>
  					
 					<div th:each= "title,  stat : ${space.names}" > 
-					<div th:id = "${title.exhibitionLanguageLabel}" class = "tabcontent">
+					<div th:if="${title != null and title.exhibitionLanguageLabel != null}" th:id = "${title.exhibitionLanguageLabel}" class = "tabcontent">
 						<p>  [[${title.exhibitionLanguageLabel}]]</p>	
 					<label for="title">Space Name:</label>
-					<input type="hidden" class="form-control" id="title" th:value="${title.localisedTextId}" th:name="|names[${stat.index}].localisedTextId|" ></input>
+					<input type="hidden" class="form-control" id="title" th:value="${title.localizedTextId}" th:name="|names[${stat.index}].localizedTextId|" ></input>
 					<input type="hidden" class="form-control" id="title" th:value="${title.exhibitionLanguageId}" th:name="|names[${stat.index}].exhibitionLanguageId|" ></input> 					
 					<input type="text" class="form-control" id="title" th:value="${title.text}" th:name="|names[${stat.index}].text|" ></input>
 						<div th:each= "description : ${space.descriptions}"  > 								
 								<label th:if="${description.exhibitionLanguageId} == ${title.exhibitionLanguageId} "  for="description">Description:</label>
 								<textarea  th:if="${description.exhibitionLanguageId} == ${title.exhibitionLanguageId} " class="form-control" rows="5" cols="30" id="description" th:value= "${description.text}" th:name="|descriptions[${stat.index}].text|">[[${description.text}]]</textarea>
-		 						<input type="hidden"  th:if="${description.exhibitionLanguageId} == ${title.exhibitionLanguageId} " class="form-control"  id="spaceText" th:value="${description.localisedTextId}" th:name="|descriptions[${stat.index}].localisedTextId|" ></input>
+		 						<input type="hidden"  th:if="${description.exhibitionLanguageId} == ${title.exhibitionLanguageId} " class="form-control"  id="spaceText" th:value="${description.localizedTextId}" th:name="|descriptions[${stat.index}].localizedTextId|" ></input>
 								<input type="hidden" th:if="${description.exhibitionLanguageId} == ${title.exhibitionLanguageId} " class="form-control"  id="spaceText" th:value="${description.exhibitionLanguageId}" th:name="|descriptions[${stat.index}].exhibitionLanguageId|" ></input>
 
 		 				</div>

@@ -31,16 +31,21 @@ public class SpaceFormFactory implements ISpaceFormFactory {
         spaceForm.setName(space.getName());
         spaceForm.setDescription(space.getDescription());
         
-        startExhibition.getLanguages().forEach(language -> {
-            if(language.isDefault()) {
-                spaceForm.setDefaultName(localizedTextFormCreation.createLocalizedTextForm(language, space.getSpaceNames()));
-                spaceForm.setDefaultDescription(localizedTextFormCreation.createLocalizedTextForm(language, space.getSpaceDescriptions()));                
-            }
-            else {
-                spaceForm.getNames().add(localizedTextFormCreation.createLocalizedTextForm(language, space.getSpaceNames()));               
-                spaceForm.getDescriptions().add(localizedTextFormCreation.createLocalizedTextForm(language, space.getSpaceDescriptions())); 
-            }
-        });
+        if (startExhibition != null && startExhibition.getLanguages() != null && !startExhibition.getLanguages().isEmpty()) {
+            startExhibition.getLanguages().forEach(language -> {
+                if(language.isDefault()) {
+                    spaceForm.setDefaultName(localizedTextFormCreation.createLocalizedTextForm(language, space.getSpaceNames()));
+                    spaceForm.setDefaultDescription(localizedTextFormCreation.createLocalizedTextForm(language, space.getSpaceDescriptions()));                
+                }
+                else {
+                    spaceForm.getNames().add(localizedTextFormCreation.createLocalizedTextForm(language, space.getSpaceNames()));               
+                    spaceForm.getDescriptions().add(localizedTextFormCreation.createLocalizedTextForm(language, space.getSpaceDescriptions())); 
+                }
+            });
+        } else {
+            spaceForm.setDefaultName(new edu.asu.diging.vspace.web.staff.forms.LocalizedTextForm("", null, null, "Default"));
+            spaceForm.setDefaultDescription(new edu.asu.diging.vspace.web.staff.forms.LocalizedTextForm("", null, null, "Default"));
+        }
         
         return spaceForm;      
     }
