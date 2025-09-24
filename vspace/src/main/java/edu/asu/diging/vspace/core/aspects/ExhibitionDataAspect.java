@@ -31,6 +31,7 @@ import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
+import edu.asu.diging.vspace.core.services.ILanguageService;
 import edu.asu.diging.vspace.web.exhibit.view.ExhibitionConstants;
 
 @Component
@@ -48,6 +49,9 @@ public class ExhibitionDataAspect {
 
     @Autowired
     private AuthenticationFacade authFacade;
+    
+    @Autowired
+    private ILanguageService languageService;
 
     @After("execution(public * edu.asu.diging.vspace.web..*Controller.*(..))")
     public void setExhibition(JoinPoint jp) {
@@ -69,6 +73,29 @@ public class ExhibitionDataAspect {
                          * spaces with null space status
                          */
                         publishedSpaces.addAll(spaceManager.getSpacesWithStatus(null));
+                        
+                        // Apply language localization to published spaces for navigation
+                        try {
+                            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+                            String selectedLanguage = request.getParameter("lang");
+                            if (selectedLanguage == null && request.getSession() != null) {
+                                selectedLanguage = (String) request.getSession().getAttribute("selectedLanguage");
+                            }
+                            if (selectedLanguage == null) {
+                                selectedLanguage = languageService.getDefaultLanguageCode();
+                            }
+                            
+                            // Localize space names for navigation
+                            for (ISpace space : publishedSpaces) {
+                                String localizedName = languageService.getLocalizedText(space.getSpaceNames(), selectedLanguage, languageService.getDefaultLanguageCode());
+                                if (!localizedName.isEmpty()) {
+                                    space.setName(localizedName);
+                                }
+                            }
+                        } catch (Exception e) {
+                            // If language localization fails, continue with original names
+                        }
+                        
                         ((Model) obj).addAttribute("publishedSpaces", publishedSpaces);
                     }
                 }

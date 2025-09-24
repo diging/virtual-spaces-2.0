@@ -104,21 +104,12 @@ public class ExhibitionConfigurationController {
     public RedirectView createOrUpdateExhibition(HttpServletRequest request,
             @RequestParam(required = false, name = "exhibitionParam") String exhibitID,
             @RequestParam("spaceParam") String spaceID, @RequestParam("title") String title,
-            @RequestParam("exhibitMode") ExhibitionModes exhibitMode,
+            @RequestParam("exhibitionMode") ExhibitionModes exhibitMode,
             @RequestParam(value = "customMessage", required = false, defaultValue = "") String customMessage,
             @RequestParam("exhibitLanguage") List<String> languages,
             @RequestParam("defaultExhibitLanguage") String defaultLanguage,
             RedirectAttributes attributes) throws IOException {
-        if(result.hasErrors()) {
-            attributes.addAttribute("showAlert", true);
-            attributes.addAttribute("alertType", "danger");
-            attributes.addAttribute("message", result.getFieldError().getDefaultMessage());
-            return new RedirectView(request.getContextPath() + "/staff/exhibit/config");
-        }
-        ExhibitionModes exhibitMode = exhibitionConfigForm.getExhibitionMode();
-        List<String> languages = exhibitionConfigForm.getExhibitLanguage();
-        String defaultLanguage = exhibitionConfigForm.getDefaultExhibitLanguage();
-        String customMessage = exhibitionConfigForm.getCustomMessage();
+        
         IExhibition exhibition;
 
         if (exhibitID == null || exhibitID.isEmpty()) {
@@ -127,7 +118,7 @@ public class ExhibitionConfigurationController {
             exhibition = exhibitionManager.getExhibitionById(exhibitID);
         }
         exhibition.setStartSpace(spaceManager.getSpace(spaceID));
-        exhibition.setTitle(exhibitionConfigForm.getTitle());
+        exhibition.setTitle(title);
         exhibition.setMode(exhibitMode);
         try {
             exhibitionManager.updateExhibitionLanguages((Exhibition) exhibition,languages,defaultLanguage);
