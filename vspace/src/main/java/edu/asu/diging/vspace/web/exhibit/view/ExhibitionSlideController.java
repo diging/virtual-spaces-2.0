@@ -2,6 +2,9 @@ package edu.asu.diging.vspace.web.exhibit.view;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,6 +29,7 @@ import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
 
 import edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
+import edu.asu.diging.vspace.core.services.ILanguageService;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISequenceManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
@@ -56,6 +60,9 @@ public class ExhibitionSlideController {
     
     @Autowired
     private IExhibitionManager exhibitManager;
+    
+    @Autowired
+    private ILanguageService languageService;
 
     @RequestMapping(value = {
         "/exhibit/{spaceId}/module/{moduleId}/sequence/{sequenceId}/slide/{slideId}",
@@ -67,7 +74,9 @@ public class ExhibitionSlideController {
             @RequestParam(required = false, name = "back") boolean back,
             @RequestParam(required = false, name = "branchingPoint") String branchingPointId,
             @RequestParam(required = false, name = "previousSequenceId") String previousSequenceId,
-            @PathVariable("moduleId") String moduleId)
+            @RequestParam(required = false, name = "languageCode") String languageCode,
+            @PathVariable("moduleId") String moduleId,
+            HttpServletRequest request)
             throws ModuleNotFoundException, SequenceNotFoundException, SlidesInSequenceNotFoundException,
             SlideNotFoundException, SpaceDoesNotExistException, SpaceNotFoundException {
 
@@ -87,6 +96,18 @@ public class ExhibitionSlideController {
         model.addAttribute("startSequenceId", startSequenceId);
         IExhibition exhibition = exhibitManager.getStartExhibition();
         model.addAttribute("exhibitionConfig", exhibition);
+        
+        HttpSession session = request.getSession();
+        if (languageCode != null) {
+            session.setAttribute("selectedLanguage", languageCode);
+        } else {
+            languageCode = (String) session.getAttribute("selectedLanguage");
+            if (languageCode == null) {
+                languageCode = languageService.getDefaultLanguageCode();
+            }
+        }
+        model.addAttribute("selectedLanguage", languageCode);
+        model.addAttribute("defaultLanguageCode", languageService.getDefaultLanguageCode());
         ISequence sequenceExist = moduleManager.checkIfSequenceExists(moduleId, sequenceId);
         if (sequenceExist == null) {
             throw new SequenceNotFoundException(sequenceId);

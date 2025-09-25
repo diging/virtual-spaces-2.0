@@ -1816,12 +1816,13 @@
                 $("#submitText").on("click", function(e) {
                     $("#addTextAlert").hide();
                     e.preventDefault();
-                    // ------------- creating text content blocks ------------
                     
                     var formData = new FormData();
                     var token = [[${_csrf.token}]];
                     var text = markDown.value();
+                    var languageCode = $('#textBlockLanguage').val();
                     formData.append('content', text);
+                    formData.append('languageCode', languageCode);
                     markDown.value('');
                     $.ajax({
                         url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/textcontent'})]",
@@ -2901,6 +2902,17 @@
                             enctype="multipart/form-data" method="post">
                             <div class="modal-body">
                                 <h6>
+                                    <small>Select Language: </small>
+                                </h6>
+                                <select class="form-control" id="textBlockLanguage" name="languageCode">
+                                    <option th:each="language : ${availableLanguages}" 
+                                            th:value="${language.code}" 
+                                            th:text="${language.label}"
+                                            th:selected="${language.code == defaultLanguageCode}">
+                                    </option>
+                                </select>
+                                
+                                <h6 style="margin-top: 15px;">
                                     <small>Enter Text: </small>
                                 </h6>
                                 <textarea class="form-control"

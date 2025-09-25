@@ -15,6 +15,8 @@ public interface ExhibitionLanguageRepository extends PagingAndSortingRepository
 
     ExhibitionLanguage findByLabel(String label);
     
+    ExhibitionLanguage findByCode(String code);
+    
     @Query("SELECT l FROM ExhibitionLanguage l WHERE l.exhibition = ?1 AND l.isDefault = true")
     IExhibitionLanguage findByExhibitionAndIsDefault(IExhibition exhibition);
     
