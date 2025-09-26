@@ -24,7 +24,6 @@ public class LanguageService implements ILanguageService {
             return "";
         }
         
-        // First, try to find text in the requested language
         if (StringUtils.hasText(languageCode)) {
             for (ILocalizedText localizedText : localizedTexts) {
                 if (localizedText.getExhibitionLanguage() != null && 
@@ -34,7 +33,6 @@ public class LanguageService implements ILanguageService {
             }
         }
         
-        // If not found, try default language
         if (StringUtils.hasText(defaultLanguageCode) && !defaultLanguageCode.equals(languageCode)) {
             for (ILocalizedText localizedText : localizedTexts) {
                 if (localizedText.getExhibitionLanguage() != null && 
@@ -44,7 +42,6 @@ public class LanguageService implements ILanguageService {
             }
         }
         
-        // If still not found, try the exhibition's default language
         IExhibition exhibition = exhibitionManager.getStartExhibition();
         if (exhibition != null) {
             IExhibitionLanguage defaultLang = exhibitionManager.getDefaultLanguage(exhibition);
@@ -57,15 +54,6 @@ public class LanguageService implements ILanguageService {
                 }
             }
         }
-        
-        // Last resort: return the first available text
-        for (ILocalizedText localizedText : localizedTexts) {
-            if (localizedText.getText() != null && !localizedText.getText().trim().isEmpty()) {
-                return localizedText.getText();
-            }
-        }
-        
-        return "";
     }
     
     @Override

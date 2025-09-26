@@ -94,12 +94,10 @@ public class ExhibitionSpaceController {
                 languageCode = languageService.getDefaultLanguageCode();
             }
         }
-        
-        // Get localized content for the selected language
+
         String localizedSpaceName = languageService.getLocalizedText(space.getSpaceNames(), languageCode, languageService.getDefaultLanguageCode());
         String localizedSpaceDescription = languageService.getLocalizedText(space.getSpaceDescriptions(), languageCode, languageService.getDefaultLanguageCode());
         
-        // Use localized content if available, fallback to original
         if (!localizedSpaceName.isEmpty()) {
             space.setName(localizedSpaceName);
         }
