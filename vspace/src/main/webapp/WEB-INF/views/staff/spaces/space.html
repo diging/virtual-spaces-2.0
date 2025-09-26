@@ -41,16 +41,15 @@ $(window).on("load", function() {
     
     var textBlockElements = document.getElementsByClassName("textBlock");
     Array.from(textBlockElements).forEach(function(textBlock, index){
-    	if(textBlock != null) {
-    	   	const color = textBlock.style.borderColor;
-         	textBlock.addEventListener('focus', function(e) {
-       		e.target.style.outline = "2px solid "+ color;
-         	});
-         	textBlock.addEventListener('blur', function(e) {
-         		e.target.style.outline = "none";
-        	});
-    	}
- 
+        if(textBlock != null) {
+            const color = textBlock.style.borderColor;
+            textBlock.addEventListener('focus', function(e) {
+                e.target.style.outline = "2px solid "+ color;
+            });
+            textBlock.addEventListener('blur', function(e) {
+                e.target.style.outline = "none";
+            });
+        }
     })
 });
 //store where a user clicked on an image
@@ -80,7 +79,7 @@ linkIconReader.onload = function(e) {
 var moduleLinkIconReader = new FileReader();
 var moduleLinkIcon;
 moduleLinkIconReader.onload = function(e) {
-	moduleLinkIcon = e.target.result;
+    moduleLinkIcon = e.target.result;
     showModuleLink(createModuleLinkInfo());
 }
 
@@ -92,7 +91,7 @@ externalLinkIconReader.onload = function(e) {
 }
 
 function setLinkPosition(modalLink, link, isSpaceLink, isModal, isExternalLink, posX, posY, posXModal, posYModal, isTextBlock, isModuleLink){
-	modalLink.css('position', 'absolute');
+    modalLink.css('position', 'absolute');
     if(isModal){
         modalLink.css('left',link.positionX + posXModal);
         modalLink.css('top', link.positionY + posYModal);
@@ -107,38 +106,38 @@ function setLinkPosition(modalLink, link, isSpaceLink, isModal, isExternalLink, 
     var positionX = isModal ? posXModal : posX;
     var positionY = isModal ? posYModal : posY;
     if(isSpaceLink && (link.link.targetSpace==null || link.link.targetSpace.spaceStatus=="UNPUBLISHED")){
-	var inactiveLinkId;
-	var inactiveLinkClasses;
-	var inactiveLinkTitle;
-	if(link.link.targetSpace==null) {
-	    inactiveLinkId = "deletedSpace-";
-	    inactiveLinkClasses = "deletedSpaceClass deletedClass-";   
-	    inactiveLinkTitle = "The target space for this link has been deleted. This link won't be shown on the public site."
-    	} else {
-	    inactiveLinkId = "unpublished-";
-	    inactiveLinkClasses = "unpublishedSpaceClass unpublishedClass-";
-	    inactiveLinkTitle = "The target space for this link is unpublished. This link won't be shown on the public site."
-    	}
-	var inactiveSpaceElement  = $('<span data-link-id="'+inactiveLinkId +link.link.id+'" class="icon-warning secondary '+inactiveLinkClasses+link.link.id+'"></span>')
-    	inactiveSpaceElement.css('position', 'absolute');
-	inactiveSpaceElement.css('left', link.positionX + positionX + displaceUnpublishedOnX);
-	inactiveSpaceElement.css('top', link.positionY + positionY - displaceUnpublishedOnY);
-	inactiveSpaceElement.css('transform', 'rotate('+link.rotation+'deg)');
-	inactiveSpaceElement.css('font-size', "24px");
-	inactiveSpaceElement.attr('title', inactiveLinkTitle);
-	if(isModal){
-	    $("#space").append(inactiveSpaceElement);
-	} else{
-	    $("#main-space").append(inactiveSpaceElement);
-	}
+        var inactiveLinkId;
+        var inactiveLinkClasses;
+        var inactiveLinkTitle;
+        if(link.link.targetSpace==null) {
+            inactiveLinkId = "deletedSpace-";
+            inactiveLinkClasses = "deletedSpaceClass deletedClass-";   
+            inactiveLinkTitle = "The target space for this link has been deleted. This link won't be shown on the public site."
+        } else {
+            inactiveLinkId = "unpublished-";
+            inactiveLinkClasses = "unpublishedSpaceClass unpublishedClass-";
+            inactiveLinkTitle = "The target space for this link is unpublished. This link won't be shown on the public site."
+        }
+        var inactiveSpaceElement  = $('<span data-link-id="'+inactiveLinkId +link.link.id+'" class="icon-warning secondary '+inactiveLinkClasses+link.link.id+'"></span>')
+        inactiveSpaceElement.css('position', 'absolute');
+        inactiveSpaceElement.css('left', link.positionX + positionX + displaceUnpublishedOnX);
+        inactiveSpaceElement.css('top', link.positionY + positionY - displaceUnpublishedOnY);
+        inactiveSpaceElement.css('transform', 'rotate('+link.rotation+'deg)');
+        inactiveSpaceElement.css('font-size', "24px");
+        inactiveSpaceElement.attr('title', inactiveLinkTitle);
+        if(isModal){
+            $("#space").append(inactiveSpaceElement);
+        } else{
+            $("#main-space").append(inactiveSpaceElement);
+        }
     }
     if(isModuleLink && link.link.module.moduleStatus!=null && link.link.module.moduleStatus=="UNPUBLISHED"){
-    	var unpublishedModuleElement = $('<span data-link-id="unpublished-'+link.link.id+'" class="icon-warning secondary unpublishedSpaceClass unpublishedClass-'+link.link.id+'"></span>')
+        var unpublishedModuleElement = $('<span data-link-id="unpublished-'+link.link.id+'" class="icon-warning secondary unpublishedSpaceClass unpublishedClass-'+link.link.id+'"></span>')
         unpublishedModuleElement.css('position', 'absolute');
-    	unpublishedModuleElement.css('left', link.positionX + positionX + displaceUnpublishedOnX);
-    	unpublishedModuleElement.css('top', link.positionY + positionY - displaceUnpublishedOnY);
-    	unpublishedModuleElement.css('transform', 'rotate('+link.rotation+'deg)');
-    	unpublishedModuleElement.css('font-size', "24px");
+        unpublishedModuleElement.css('left', link.positionX + positionX + displaceUnpublishedOnX);
+        unpublishedModuleElement.css('top', link.positionY + positionY - displaceUnpublishedOnY);
+        unpublishedModuleElement.css('transform', 'rotate('+link.rotation+'deg)');
+        unpublishedModuleElement.css('font-size', "24px");
         if(isModal){
             $("#space").append(unpublishedModuleElement);
         }else{
@@ -151,11 +150,11 @@ function setLinkPosition(modalLink, link, isSpaceLink, isModal, isExternalLink, 
     }
 }
 function setLabelPosition(link,id, positionX, positionY){
-	$(".label-"+id).css({
-	    'left': link.positionX + positionX - displaceLableOnX,
-	    'top': link.positionY + positionY + displaceLableOnY,
-	    'color': 'red'
-	}); 
+    $(".label-"+id).css({
+        'left': link.positionX + positionX - displaceLableOnX,
+        'top': link.positionY + positionY + displaceLableOnY,
+        'color': 'red'
+    }); 
 }
 
 function generateSpaceLinks(link,spanId,divId,isModal, posX, posY, posXModal, posYModal){
@@ -210,24 +209,24 @@ function generateModuleLinks(link,spanId,divId,isModal, posX, posY, posXModal, p
 }
 
 function generateExternalLinks(link,spanId,divId,isModal, posX, posY, posXModal, posYModal){
-	if(link != null){
-		var externalLink;
-		if(link.type=="IMAGE" && link.image != null){
-			var imageURL = [[@{/api/image/}]]+link.image.id;
-			externalLink = $('<img id="'+spanId+link.externalLink.id+'" data-linkTarget="'+link.externalLink.externalLink+'" data-linkType="'+link.type+'"  data-howToOpen="'+ link.howToOpen+'" data-linkLabel="'+link.externalLink.name+'" class="externalLink-'+link.externalLink.id+' imageLink" data-link-id="'+link.externalLink.id+'" src="'+imageURL+'" />');
-		}else{
-			externalLink = $('<span id="'+spanId+link.externalLink.id+'" data-link-id="'+link.externalLink.id+'" data-linkTarget="'+link.externalLink.externalLink+'" data-linkType="'+link.type+'"  data-howToOpen="'+ link.howToOpen+'" data-linkLabel="'+link.externalLink.name+'" class="externalLink-'+link.externalLink.id+' Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-ext-link Icon_awesome_info_staff_e"></span><p class="label-'+link.externalLink.id+'" data-link-id="'+link.externalLink.id+'"><span class="tooltiptext">'+link.externalLink.name+'</span></p></span>');
-		}
-		setLinkPosition(externalLink,link,false,isModal,true, posX, posY, posXModal, posYModal);
-		$(divId).append(externalLink);
-		if(spanId === "externallinkId-"){
-			$('#'+spanId+link.externalLink.id).css('cursor', 'pointer');
-			$('#'+spanId+link.externalLink.id).click(function(e) {
-				var linkData = $('#'+spanId+link.externalLink.id).data();
-				makeExternalLinksEditable(linkData["linklabel"],link.externalLink.id,linkData["linktarget"],link.positionX,link.positionY,link.id,linkData["linktype"],linkData["howtoopen"]);
-			});
-		}
-	}
+    if(link != null){
+        var externalLink;
+        if(link.type=="IMAGE" && link.image != null){
+            var imageURL = [[@{/api/image/}]]+link.image.id;
+            externalLink = $('<img id="'+spanId+link.externalLink.id+'" data-linkTarget="'+link.externalLink.externalLink+'" data-linkType="'+link.type+'"  data-howToOpen="'+ link.howToOpen+'" data-linkLabel="'+link.externalLink.name+'" class="externalLink-'+link.externalLink.id+' imageLink" data-link-id="'+link.externalLink.id+'" src="'+imageURL+'" />');
+        }else{
+            externalLink = $('<span id="'+spanId+link.externalLink.id+'" data-link-id="'+link.externalLink.id+'" data-linkTarget="'+link.externalLink.externalLink+'" data-linkType="'+link.type+'"  data-howToOpen="'+ link.howToOpen+'" data-linkLabel="'+link.externalLink.name+'" class="externalLink-'+link.externalLink.id+' Info_cz_Class"><svg class="Ellipse_8_c ellipse_class"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c ellipse_class"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c ellipse_class"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-ext-link Icon_awesome_info_staff_e"></span><p class="label-'+link.externalLink.id+'" data-link-id="'+link.externalLink.id+'"><span class="tooltiptext">'+link.externalLink.name+'</span></p></span>');
+        }
+        setLinkPosition(externalLink,link,false,isModal,true, posX, posY, posXModal, posYModal);
+        $(divId).append(externalLink);
+        if(spanId === "externallinkId-"){
+            $('#'+spanId+link.externalLink.id).css('cursor', 'pointer');
+            $('#'+spanId+link.externalLink.id).click(function(e) {
+                var linkData = $('#'+spanId+link.externalLink.id).data();
+                makeExternalLinksEditable(linkData["linklabel"],link.externalLink.id,linkData["linktarget"],link.positionX,link.positionY,link.id,linkData["linktype"],linkData["howtoopen"]);
+            });
+        }
+    }
 }
 
 function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, posYModal, imageHeight, imageWidth){
@@ -1958,49 +1957,48 @@ $(function(){
 
 <body>
     <div layout:fragment="content" class="main-content">
- 		<div class="flex-spacing">
- 			<div>
-	    		<h2>
-		            <span style="color: var(--dark-grey)">Space:</span> [[${space?.name}]]
-		            <i class="fa fa-info-circle black" data-toggle="tooltip" data-html="true" data-placement="top" 
-						th:title="|Created on <span class='date'>${space.creationDate}</span> by ${space.createdBy}|"></i>
-		            <a th:href="@{'/staff/space/'+${space?.id}+'/edit'}"><span class="icon-edit"></span></a>
-		            <a th:href="@{'/exhibit/space/'+${space?.id}}" data-toggle="tooltip" title="Link to the public space"><span class="icon-link"></span></a>
-		            </h2>
-		        <p>[[${space.description}]]</p>
-		        <div class="inline-spacing">
-		        	<div class="dropdown">
-					  <button class="btn form-control btn-sm dropdown-toggle" type="button" id="incominglinks" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					    Incoming space links
-					  </button>
-					  <div class="dropdown-menu" aria-labelledby="incominglinks">
-					    <span th:if="${#lists.isEmpty(linksToThisSpace)}"><small>There are no links to this space.</small></span>
-			            <div th:each="spaceLinks : ${linksToThisSpace}">          	
-			                <a th:href="@{'/staff/space/'+${spaceLinks.sourceSpace?.id}}" style="padding: .25rem; color: var(--secondary);"
-			                    th:id="${spaceLinks?.id}"><small>[[${spaceLinks.sourceSpace?.name}]]</small> <span class="icon-warning secondary unpublishedSpaceClass"
-                            th:if="${#strings.equals(spaceLinks.sourceSpace?.spaceStatus,'UNPUBLISHED')}" style="font-size: 100%; font-weight: 400;"></span></a>
-			            </div>
-					  </div>
-					</div>
-					
-					<div class="dropdown right-aligned">
-					  <button class="btn form-control btn-sm dropdown-toggle" type="button" id="outgoinglinks" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					    Outgoing space links
-					  </button>
-					  <div class="dropdown-menu" aria-labelledby="outgoinglinks">
-					    <span th:if="${#lists.isEmpty(linksOnThisSpace)}"><small>There are no links from this space.</small></span>
-			            <div th:each="spaceLinks : ${linksOnThisSpace}">              	
-		                    <a th:href="@{'/staff/space/'+${spaceLinks.targetSpace?.id}}" style="padding: .25rem; color: var(--secondary);"
-		                        th:if="${spaceLinks.targetSpace != null}"
-		                        th:id="${spaceLinks?.id}"><small>[[${spaceLinks.targetSpace?.name}]]</small> <span class="icon-warning secondary unpublishedSpaceClass"
-                            th:if="${#strings.equals(spaceLinks.targetSpace?.spaceStatus,'UNPUBLISHED')}" style="font-size: 100%; font-weight: 400;"></span></a>
-						</div>
-					  </div>
-					</div>
-		        </div>
-		        
-		        
-	    	</div>
+        <div class="flex-spacing">
+            <div>
+                <h2>
+                    <span style="color: var(--dark-grey)">Space:</span> [[${space?.name}]]
+                    <i class="fa fa-info-circle black" data-toggle="tooltip" data-html="true" data-placement="top" 
+                        th:title="|Created on <span class='date'>${space.creationDate}</span> by ${space.createdBy}|"></i>
+                    <a th:href="@{'/staff/space/'+${space?.id}+'/edit'}"><span class="icon-edit"></span></a>
+                    <a th:href="@{'/exhibit/space/'+${space?.id}}" data-toggle="tooltip" title="Link to the public space"><span class="icon-link"></span></a>
+                </h2>
+                <p>[[${space.description}]]</p>
+                <div class="inline-spacing">
+                    <div class="dropdown">
+                        <button class="btn form-control btn-sm dropdown-toggle" type="button" id="incominglinks" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Incoming space links
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="incominglinks">
+                            <span th:if="${#lists.isEmpty(linksToThisSpace)}"><small>There are no links to this space.</small></span>
+                            <div th:each="spaceLinks : ${linksToThisSpace}">          	
+                                <a th:href="@{'/staff/space/'+${spaceLinks.sourceSpace?.id}}" style="padding: .25rem; color: var(--secondary);"
+                                    th:id="${spaceLinks?.id}"><small>[[${spaceLinks.sourceSpace?.name}]]</small> <span class="icon-warning secondary unpublishedSpaceClass"
+                                    th:if="${#strings.equals(spaceLinks.sourceSpace?.spaceStatus,'UNPUBLISHED')}" style="font-size: 100%; font-weight: 400;"></span></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dropdown right-aligned">
+                        <button class="btn form-control btn-sm dropdown-toggle" type="button" id="outgoinglinks" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Outgoing space links
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="outgoinglinks">
+                            <span th:if="${#lists.isEmpty(linksOnThisSpace)}"><small>There are no links from this space.</small></span>
+                            <div th:each="spaceLinks : ${linksOnThisSpace}">              	
+                                <a th:href="@{'/staff/space/'+${spaceLinks.targetSpace?.id}}" style="padding: .25rem; color: var(--secondary);"
+                                    th:if="${spaceLinks.targetSpace != null}"
+                                    th:id="${spaceLinks?.id}"><small>[[${spaceLinks.targetSpace?.name}]]</small> <span class="icon-warning secondary unpublishedSpaceClass"
+                                    th:if="${#strings.equals(spaceLinks.targetSpace?.spaceStatus,'UNPUBLISHED')}" style="font-size: 100%; font-weight: 400;"></span></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                
+            </div>
 	    	<div>
                 <label style="margin-right: 10px;">Space Status</label> 
                 <form method="POST" th:action="@{'/staff/space/'+${space?.id}+'/status'}">
