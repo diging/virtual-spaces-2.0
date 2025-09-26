@@ -157,7 +157,7 @@ public class ExhibitionSlideController {
                     ( slideManager.getSlide(sequenceHistory.peekBranchingPointId())));
         }
              
-        ModuleOverview moduleOverview = moduleOverviewManager.getModuleOverview(moduleId);
+        ModuleOverview moduleOverview = moduleOverviewManager.getModuleOverview(moduleId, languageCode, languageService.getDefaultLanguageCode());
         moduleOverview.setName(module.getName());
         moduleOverview.setId(module.getId());
         model.addAttribute("overview", moduleOverview);

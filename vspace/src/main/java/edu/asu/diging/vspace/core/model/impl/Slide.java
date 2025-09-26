@@ -201,4 +201,68 @@ public class Slide extends VSpaceElement implements ISlide {
         }
         return null;
     }
+    
+    @Override
+    public String getLocalizedName(String languageCode, String defaultLanguageCode) {
+        if (slideNames == null || slideNames.isEmpty()) {
+            return getName() != null ? getName() : "";
+        }
+     vspace/src/main/java/edu/asu/diging/vspace/core/services/impl/ModuleOverviewManager.java
+        if (languageCode != null && !languageCode.trim().isEmpty()) {
+            for (ILocalizedText localizedText : slideNames) {
+                if (localizedText.getExhibitionLanguage() != null && 
+                    languageCode.equals(localizedText.getExhibitionLanguage().getCode())) {
+                    return localizedText.getText() != null ? localizedText.getText() : "";
+                }
+            }
+        }
+        
+        if (defaultLanguageCode != null && !defaultLanguageCode.trim().isEmpty() && !defaultLanguageCode.equals(languageCode)) {
+            for (ILocalizedText localizedText : slideNames) {
+                if (localizedText.getExhibitionLanguage() != null && 
+                    defaultLanguageCode.equals(localizedText.getExhibitionLanguage().getCode())) {
+                    return localizedText.getText() != null ? localizedText.getText() : "";
+                }
+            }
+        }
+
+        
+        return getName() != null ? getName() : "";
+    }
+    
+    @Override
+    public String getLocalizedDescription(String languageCode, String defaultLanguageCode) {
+        if (slideDescriptions == null || slideDescriptions.isEmpty()) {
+            return getDescription() != null ? getDescription() : "";
+        }
+        
+        // First, try to find text in the requested language
+        if (languageCode != null && !languageCode.trim().isEmpty()) {
+            for (ILocalizedText localizedText : slideDescriptions) {
+                if (localizedText.getExhibitionLanguage() != null && 
+                    languageCode.equals(localizedText.getExhibitionLanguage().getCode())) {
+                    return localizedText.getText() != null ? localizedText.getText() : "";
+                }
+            }
+        }
+        
+        // If not found, try default language
+        if (defaultLanguageCode != null && !defaultLanguageCode.trim().isEmpty() && !defaultLanguageCode.equals(languageCode)) {
+            for (ILocalizedText localizedText : slideDescriptions) {
+                if (localizedText.getExhibitionLanguage() != null && 
+                    defaultLanguageCode.equals(localizedText.getExhibitionLanguage().getCode())) {
+                    return localizedText.getText() != null ? localizedText.getText() : "";
+                }
+            }
+        }
+        
+        // Last resort: return the first available text or the base description
+        for (ILocalizedText localizedText : slideDescriptions) {
+            if (localizedText.getText() != null && !localizedText.getText().trim().isEmpty()) {
+                return localizedText.getText();
+            }
+        }
+        
+        return getDescription() != null ? getDescription() : "";
+    }
 }

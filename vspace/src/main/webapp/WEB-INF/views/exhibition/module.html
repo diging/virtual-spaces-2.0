@@ -210,7 +210,7 @@ ul{
         </div>
 
          <div style="position: relative;top: 6.5%;">
-            <h3 style="text-align:center;">[[${currentSlideCon.name}]]</h3>
+            <h3 style="text-align:center;">[(${currentSlideCon.getLocalizedName(selectedLanguage, defaultLanguageCode) != null && !currentSlideCon.getLocalizedName(selectedLanguage, defaultLanguageCode).isEmpty() ? currentSlideCon.getLocalizedName(selectedLanguage, defaultLanguageCode) : currentSlideCon.name})]</h3>
             <div th:id="blocks" class="Group_8_Class" th:each="contents: ${currentSlideCon.contents}">
                 <img th:if="${contents['class'].simpleName ==  'ImageBlock'}" th:id="${contents.id}" class="imgDiv" th:src="@{'/api/image/'+${contents.image.id}}" style="max-width:57%">
                 <div th:if="${contents['class'].simpleName ==  'TextBlock'}" th:id="${contents.id}" class="textDiv">[(${contents.getLocalizedHtmlRenderedText(selectedLanguage, defaultLanguageCode) != null && !contents.getLocalizedHtmlRenderedText(selectedLanguage, defaultLanguageCode).isEmpty() ? contents.getLocalizedHtmlRenderedText(selectedLanguage, defaultLanguageCode) : contents.htmlRenderedText()})]</div>

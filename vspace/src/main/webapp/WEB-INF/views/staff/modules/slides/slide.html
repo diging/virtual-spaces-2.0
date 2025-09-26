@@ -2686,7 +2686,7 @@
                 <li class="breadcrumb-item" th:each="slideSequence: ${slideSequences}">
                     <a th:href="@{'/staff/module/'+${module.id}+'/sequence/'+${slideSequence.id}}" th:name="${slideSequence.name}">[[${slideSequence.name}]]</a>
                 </li>
-                <li class="breadcrumb-item active">[[${slide.name}]]</li>
+                <li class="breadcrumb-item active">[(${slide.getLocalizedName(selectedLanguage, defaultLanguageCode) != null && !slide.getLocalizedName(selectedLanguage, defaultLanguageCode).isEmpty() ? slide.getLocalizedName(selectedLanguage, defaultLanguageCode) : slide.name})]</li>
             </ol>
             <div class="error"></div>
             <div class="dropdown" style="float: right;" th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}">
@@ -2699,13 +2699,13 @@
                         th:name="${choice.sequence.name}" style="color:var(--primary);">[[${choice.sequence.name}]]</a>
                 </div>
             </div>
-         <h2><span style="color: var(--dark-grey)">Slide:</span> [[${slide.name}]]
+         <h2><span style="color: var(--dark-grey)">Slide:</span> [(${slide.getLocalizedName(selectedLanguage, defaultLanguageCode) != null && !slide.getLocalizedName(selectedLanguage, defaultLanguageCode).isEmpty() ? slide.getLocalizedName(selectedLanguage, defaultLanguageCode) : slide.name})]
             <span class="icon-info-circle" data-toggle="tooltip" data-html="true" data-placement="top" 
                th:title="|Created on <span class='date'>${slide.creationDate}</span> by ${slide.createdBy}|"></span>&emsp;
             <a th:href="@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/edit'}">
             <span class="icon-edit"></span></a>
          </h2>
-         <p id="description">[[${slide.description}]]</p>
+         <p id="description">[(${slide.getLocalizedDescription(selectedLanguage, defaultLanguageCode) != null && !slide.getLocalizedDescription(selectedLanguage, defaultLanguageCode).isEmpty() ? slide.getLocalizedDescription(selectedLanguage, defaultLanguageCode) : slide.description})]</p>
             <div style="margin: 40px 0 20px; width: fit-content" class="content-btns">
                 <button type="button" id="addText" class="btn pill-btn" data-toggle="tooltip" title="Add Text Block" data-placement="top">
                 +&nbsp;<span class="icon-text"></span></button>&nbsp;
