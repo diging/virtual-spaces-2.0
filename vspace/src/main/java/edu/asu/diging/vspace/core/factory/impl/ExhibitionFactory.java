@@ -30,15 +30,15 @@ public class ExhibitionFactory implements IExhibitionFactory {
     /**
      * Updates the exhibition object with preview id
      * 
-     * @param exhibitionObj
+     * @param exhibition
      * @return
      */
     @Override
-    public void updatePreviewId(Exhibition exhibitionObj) {
+    public void updatePreviewId(IExhibition exhibition) {
         UUID randomUUID = UUID.randomUUID();
         String randomString = randomUUID.toString().replaceAll("-", "");
-        exhibitionObj.setPreviewId(EXH_PREVIEW + randomString.substring(0, 8));
-        exhibitionObj.setMode(ExhibitionModes.ACTIVE);
+        exhibition.setPreviewId(EXH_PREVIEW + randomString.substring(0, 8));
+        exhibition.setMode(ExhibitionModes.ACTIVE);
     }
 
 }

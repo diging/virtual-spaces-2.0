@@ -143,7 +143,6 @@ public abstract class LinkManager<L extends ILink<T>, T extends IVSpaceElement, 
             imageRepo.save((VSImage) image);
             linkDisplay.setImage(image);
         }
-
     }
     
     protected void setDisplayProperties(ILinkDisplay linkDisplay, float positionX, float positionY, int rotation, 

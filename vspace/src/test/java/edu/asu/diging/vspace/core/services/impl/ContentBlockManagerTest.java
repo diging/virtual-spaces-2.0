@@ -1,9 +1,9 @@
 package edu.asu.diging.vspace.core.services.impl;
 
+import static org.mockito.Mockito.doNothing;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
@@ -15,22 +15,30 @@ import java.util.stream.Collectors;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.dao.EmptyResultDataAccessException;
 
+import edu.asu.diging.vspace.core.data.BiblioBlockRepository;
+import edu.asu.diging.vspace.core.data.ReferenceRepository;
 import edu.asu.diging.vspace.core.data.ChoiceContentBlockRepository;
 import edu.asu.diging.vspace.core.data.ContentBlockRepository;
 import edu.asu.diging.vspace.core.data.ImageContentBlockRepository;
 import edu.asu.diging.vspace.core.data.ImageRepository;
-import edu.asu.diging.vspace.core.data.SlideRepository;
 import edu.asu.diging.vspace.core.data.SpaceContentBlockRepository;
 import edu.asu.diging.vspace.core.data.TextContentBlockRepository;
 import edu.asu.diging.vspace.core.data.VideoContentBlockRepository;
 import edu.asu.diging.vspace.core.data.VideoRepository;
 import edu.asu.diging.vspace.core.exception.BlockDoesNotExistException;
+import edu.asu.diging.vspace.core.exception.ReferenceListDeletionForBiblioException;
+import edu.asu.diging.vspace.core.model.IBiblioBlock;
+import edu.asu.diging.vspace.core.model.IReference;
+import edu.asu.diging.vspace.core.model.impl.BiblioBlock;
+import edu.asu.diging.vspace.core.model.impl.Reference;
+import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.exception.VideoCouldNotBeStoredException;
@@ -79,16 +87,48 @@ public class ContentBlockManagerTest {
 
     @Mock
     private ImageContentBlockRepository imageBlockRepo;
+    
+    @Mock
+    private BiblioBlockRepository biblioBlockRepo;
+    
+    @Mock
+    private ReferenceRepository refRepo;
+    
+    @Mock
+    private SlideManager slideManager;
+    
+    @Mock
+    private ReferenceManager refManager;
 
     @Mock
-
     private SlideRepository slideRepo;
+   
+    @Mock
+    private IVideoFactory videoFactory;
+    
+    @Mock
+    private IImageBlockFactory imageBlockFactory;
+    
+    @Mock
+    private ImageRepository imageRepo;
+    
+    @Mock
+    private ITextBlockFactory textBlockFactory;
 
     @Mock
-    private ISlideManager slideManager;
+    private IVideoBlockFactory videoBlockFactory;
 
     @Mock
     private IStorageEngine storage;
+
+    @Mock
+    private SpaceBlockFactory spaceBlockFactory;
+
+    @Mock
+    private IImageFactory imageFactory;
+
+    @Mock
+    private ChoiceBlockFactory choiceBlockFactory;
 
     @Mock
     private IImageBlockFactory imageBlockFactory;
@@ -281,14 +321,15 @@ public class ContentBlockManagerTest {
     }
 
     @Test
-    public void test_updateSpaceBlock_success() {
+    public void test_saveSpaceBlock_updateSuccess() {
         String updatedSpaceId = "spaceId1";
+        String updatedTitle = "Title1";
         SpaceBlock spaceBlock = new SpaceBlock();
         spaceBlock.setId(updatedSpaceId);
+        spaceBlock.setTitle(updatedTitle);
         Mockito.when(spaceBlockRepo.save(spaceBlock)).thenReturn(spaceBlock);
         managerToTest.saveSpaceBlock(spaceBlock);
         Mockito.verify(spaceBlockRepo).save(spaceBlock);
-
     }
 
     @Test
@@ -323,6 +364,72 @@ public class ContentBlockManagerTest {
         when(contentBlockRepository.findById("notARealId")).thenReturn(contentBlockOptional);
         Mockito.doThrow(EmptyResultDataAccessException.class).when(imageBlockRepo).deleteById(imageBlockId);
         managerToTest.deleteImageBlockById(imageBlockId, "slideId_1");
+    }
+
+    @Test
+    public void test_deleteImagetBlockById_whenIdIsNull() throws BlockDoesNotExistException {
+        String imageBlockId = null;
+        managerToTest.deleteImageBlockById(null, "slideId_1");
+        Mockito.verify(imageBlockRepo, Mockito.never()).deleteById(imageBlockId);
+
+    }
+    
+    @Test
+    public void test_deleteBiblioBlockById_success() throws BlockDoesNotExistException, ReferenceListDeletionForBiblioException {
+        String biblioBlockId = "2";
+        managerToTest.deleteBiblioBlockById(biblioBlockId);
+        Mockito.verify(biblioBlockRepo).deleteById(biblioBlockId);
+    }
+    
+    @Test
+    public void test_deleteBiblioBlockByIdWithRefs_success() throws BlockDoesNotExistException, ReferenceListDeletionForBiblioException {
+        String biblioId = "CON000000002";
+        String refId = "REF000000002";
+        Reference refObj = new Reference();
+        refObj.setId(refId);
+        
+        List<IReference> refList = new ArrayList<>();
+        refList.add(refObj);
+        
+        when(refManager.getReferencesForBiblio(biblioId)).thenReturn(refList);
+        managerToTest.deleteBiblioBlockById(biblioId);
+        Mockito.verify(biblioBlockRepo).deleteById(biblioId);
+        when(refManager.getReference(refId)).thenReturn(null);
+    }
+
+    @Test(expected = BlockDoesNotExistException.class)
+    public void test_deleteBiblioBlockById_forNonExistentId() throws BlockDoesNotExistException, ReferenceListDeletionForBiblioException {
+        String biblioBlockId = "notARealId";
+        Mockito.doThrow(BlockDoesNotExistException.class).when(biblioBlockRepo).deleteById(biblioBlockId);
+        managerToTest.deleteBiblioBlockById(biblioBlockId);
+    }
+
+    @Test
+    public void test_deleteBiblioBlockById_whenIdIsNull() throws BlockDoesNotExistException, ReferenceListDeletionForBiblioException {
+        String biblioBlockId = null;
+        managerToTest.deleteBiblioBlockById(null);
+        Mockito.verify(biblioBlockRepo, Mockito.never()).deleteById(biblioBlockId);
+    }
+    
+    @Test
+    public void test_createBiblioBlock_success() {
+
+        Integer contentOrder = 1;
+        Slide slide = new Slide();
+        slide.setId("slide1");
+
+        when(slideManager.getSlide(slide.getId())).thenReturn(slide);
+
+        managerToTest.createBiblioBlock(slide.getId(), "TestTitle", "Test Description", contentOrder);
+
+        ArgumentCaptor<BiblioBlock> captor = ArgumentCaptor.forClass(BiblioBlock.class);
+        Mockito.verify(biblioBlockRepo).save(captor.capture());
+
+        BiblioBlock capturedBlock = captor.getValue();
+        assertEquals("TestTitle", capturedBlock.getBiblioTitle());
+        assertEquals("Test Description", capturedBlock.getDescription());
+        assertEquals(contentOrder, capturedBlock.getContentOrder());
+        assertEquals(slide, capturedBlock.getSlide());
     }
 
     @Test
