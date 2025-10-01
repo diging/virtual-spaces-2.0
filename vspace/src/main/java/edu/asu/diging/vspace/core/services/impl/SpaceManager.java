@@ -11,9 +11,12 @@ import org.apache.tika.Tika;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.ExhibitionRepository;
@@ -31,6 +34,7 @@ import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
+import edu.asu.diging.vspace.core.model.SortByField;
 import edu.asu.diging.vspace.core.model.display.ISpaceDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.SpaceDisplay;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
@@ -93,6 +97,9 @@ public class SpaceManager implements ISpaceManager {
     @Autowired
     private SpacesCustomOrderRepository spacesCustomOrderRepo;
 
+    
+    @Value("${page_size}")
+    private int pageSize;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -219,6 +226,15 @@ public class SpaceManager implements ISpaceManager {
         spaceRepo.findAll().forEach(s -> spaces.add(s));
         return spaces;
     }
+    
+    @Override
+    public List<ISpace> getAllSpacesPaginated(int page, int pageSize) {
+        Pageable pageable = PageRequest.of(page - 1, pageSize);
+        Page<Space> spacePage = spaceRepo.findAll(pageable);
+        List<ISpace> spaceResults = new ArrayList<>();
+        spacePage.forEach(spaceResults::add);
+        return spaceResults;
+    }
 
     @Override
     public List<ISpace> getSpacesWithStatus(SpaceStatus status) {
@@ -320,6 +336,81 @@ public class SpaceManager implements ISpaceManager {
     public Page<ISpace> findByNameOrDescription(Pageable requestedPage, String searchText) {
         return spaceRepo.findDistinctByNameContainingOrDescriptionContaining(requestedPage, searchText,searchText);
     }
+    
+    @Override
+    public List<ISpace> findByName(String searchText){
+        String searchTerm = "%" + searchText + "%";
+        List<Space> spaces = spaceRepo.findByNameLike(searchTerm);
+        List<ISpace> spaceResults = new ArrayList<>();
+        spaces.forEach(r -> spaceResults.add(r));
+        return spaceResults;
+    }
+    
+    @Override
+    public List<ISpace> findByNamePaginated(String searchText, int page, int pageSize) {
+        String searchTerm = "%" + searchText + "%";
+        Pageable pageable = PageRequest.of(page - 1, pageSize);
+        Page<Space> spacePage = spaceRepo.findByNameLike(searchTerm, pageable);
+        List<ISpace> spaceResults = new ArrayList<>();
+        spacePage.forEach(spaceResults::add);
+        return spaceResults;
+    }
+    
+    @Override
+    public List<ISpace> getSpaces(int pageNo) {
+        return getSpaces(pageNo, SortByField.CREATION_DATE.getValue(), Sort.Direction.DESC.toString());
+    }
+    /**
+     * Method to return the requested spaces
+     * 
+     * @param pageNo. if pageNo<1, 1st page is returned, if pageNo>total pages,last
+     *                page is returned
+     * @return list of images in the requested pageNo and requested order.
+     */
+    @Override
+    public List<ISpace> getSpaces(int pageNo, String sortedBy, String order) {
+        Sort sortingParameters = getSortingParameters(sortedBy, order);
+        if(pageNo < 1) {
+            pageNo = 1;
+        }
+        Pageable pagable = PageRequest.of(pageNo - 1, pageSize, sortingParameters);
+        Page<Space> spaces = spaceRepo.findAll(pagable);
+        if(spaces.getContent().size() == 0) {
+            pagable = PageRequest.of(spaces.getTotalPages() - 1, pageSize, sortingParameters);
+            spaces = spaceRepo.findAll(pagable);
+        }
+        List<ISpace> results = new ArrayList<>();
+        if(spaces != null) {
+            spaces.getContent().forEach(i -> results.add(i));
+        }
+        return results;
+    }
+    
+    private Sort getSortingParameters(String sortedBy, String order) {
+        Sort sortingParameters = Sort.by(SortByField.CREATION_DATE.getValue()).descending();
+        if(sortedBy!=null && SortByField.getAllValues().contains(sortedBy)) {
+            sortingParameters = Sort.by(sortedBy);
+        }
+        if(order!=null && order.equalsIgnoreCase(Sort.Direction.ASC.toString())) {
+            sortingParameters = sortingParameters.ascending();
+        } else {
+            sortingParameters = sortingParameters.descending();
+        }
+        return sortingParameters;
+    }
+    
+    @Override
+    public int getTotalSpaceCount(String searchTerm) {
+        if (searchTerm != null && !searchTerm.trim().isEmpty()) {
+            // Count spaces matching the search term
+            String formattedSearchTerm = "%" + searchTerm + "%";
+            return (int) spaceRepo.countByNameLike(formattedSearchTerm);
+        } else {
+            // Count all spaces
+            return (int) spaceRepo.count();
+        }
+    }
+    
 
     /**
      * Method to sort published spaces based on the given order, i.e Alphabetical,

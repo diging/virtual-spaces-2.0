@@ -39,6 +39,25 @@ public interface ISpaceManager {
     
     Page<ISpace> findByNameOrDescription(Pageable requestedPage,String searchText);
     
+    List<ISpace> findByName(String name);
+
+    List<ISpace> findByNamePaginated(String name, int page, int pageSize);
+
+    /**
+     * Method to return the requested spaces
+     * 
+     * @param pageNo. if pageNo<1, 1st page is returned, if pageNo>total pages,last
+     *                page is returned
+     * @return list of images in the requested pageNo and requested order.
+     */
+    List<ISpace> getSpaces(int pageNo, String sortedBy, String order);
+    
+    List<ISpace> getSpaces(int pageNo);
+    
+    List<ISpace> getAllSpacesPaginated(int page, int pageSize);
+    
+    int getTotalSpaceCount(String searchTerm);
+    
     List<ISpace> sortPublishedSpacesByGivenOrder(List<ISpace> publishedSpaces);
     
     void addSpaceToCustomOrders(ISpace space);

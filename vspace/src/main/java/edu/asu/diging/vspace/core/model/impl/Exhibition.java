@@ -15,6 +15,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.annotations.Parameter;
 
 import edu.asu.diging.vspace.core.model.ExhibitionModes;
@@ -22,6 +24,7 @@ import edu.asu.diging.vspace.core.model.ExhibitionSpaceOrderMode;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.IVSImage;
 
 /**
  * Represents an exhibition that can have a default start space.
@@ -53,6 +56,18 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     @OneToOne(targetEntity = SpacesCustomOrder.class)
     @JoinColumn(name = "Space_Custom_Order_Id", referencedColumnName = "id")
     private SpacesCustomOrder spacesCustomOrder;
+    
+    @OneToOne(targetEntity = VSImage.class)
+    @NotFound(action = NotFoundAction.IGNORE)
+    private IVSImage spaceLinkDefaultImage;
+    
+    @OneToOne(targetEntity = VSImage.class)
+    @NotFound(action = NotFoundAction.IGNORE)
+    private IVSImage moduleLinkDefaultImage;
+    
+    @OneToOne(targetEntity = VSImage.class)
+    @NotFound(action = NotFoundAction.IGNORE)
+    private IVSImage externalLinkDefaultImage;
     
     private boolean aboutPageConfigured;
     
@@ -130,6 +145,30 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     }
     
     @Override
+    public IVSImage getSpaceLinkDefaultImage() {
+        return spaceLinkDefaultImage;
+    }
+    @Override
+    public void setSpaceLinkDefaultImage(IVSImage spaceLinkDefaultImage) {
+        this.spaceLinkDefaultImage = spaceLinkDefaultImage;
+    }
+    @Override
+    public IVSImage getModuleLinkDefaultImage() {
+        return moduleLinkDefaultImage;
+    }
+    @Override
+    public void setModuleLinkDefaultImage(IVSImage moduleLinkDefaultImage) {
+        this.moduleLinkDefaultImage = moduleLinkDefaultImage;
+    }
+    @Override
+    public IVSImage getExternalLinkDefaultImage() {
+        return externalLinkDefaultImage;
+    }
+    @Override
+    public void setExternalLinkDefaultImage(IVSImage externalLinkDefaultImage) {
+        this.externalLinkDefaultImage = externalLinkDefaultImage;
+    }
+    @Override
     public ExhibitionSpaceOrderMode getSpaceOrderMode() {
         return spaceOrderMode;
     }
@@ -153,12 +192,11 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     public boolean isAboutPageConfigured() {
         return aboutPageConfigured;
     }
-    
     @Override
     public void setAboutPageConfigured(boolean aboutPageConfigured) {
         this.aboutPageConfigured = aboutPageConfigured;
     }
-
+    
     public List<IExhibitionLanguage> getLanguages() {
         return languages;
     }
@@ -179,7 +217,7 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     public int hashCode() {
         return Objects.hash(id);
     }
-
+    
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -190,4 +228,5 @@ public class Exhibition extends VSpaceElement implements IExhibition {
             return false;
         return Objects.equals(id, ((Exhibition) obj).id);
     }
+
 }

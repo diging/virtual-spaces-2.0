@@ -41,6 +41,17 @@
     font-size: 30px;
 }
 
+.spaceClass {
+    /* text-align: center; */
+    height: 800px;
+    /* width: 800px; */
+    /* width: 57%;
+    max-width: 57%;
+    margin: auto;
+    background-size: cover;
+    border-radius: 13px; */
+}
+
 .nav-bar {
     position: relative;
     width: 100%;
@@ -57,7 +68,8 @@
 }
 
 .footer {
-	position: absolute;
+	position: relative;
+	height: 10%;
 	text-align: center;
 	bottom: 0;
 	font-size: 12px;
@@ -233,11 +245,18 @@
     margin: auto;	
     border-radius: 10px;	
     background: #f2f2f2;	
-}	
+}
 
 .form-control {
 	border: none;
+	width: 350px;
 }	
+
+.col-form-label {
+  display: inline-block;
+  width: 80px;
+  text-align: right;
+}	 
 
 .form_icon {	
   	position: absolute;	
@@ -260,6 +279,7 @@
     transition: 0.5s;
     padding-top: 70px;
     word-break: break-all;
+    overflow-y: scroll;
 }
 
 .btn-light {
@@ -276,6 +296,7 @@
 .side-list {
 	list-style: none;
 	margin-top: 40px;
+	height: 90%;
 }
 
 .sidenav a {
@@ -720,6 +741,26 @@
     text-align: justify;
 }
 
+.biblioDivStaff {
+    position: relative;
+    top: 0px;
+    overflow: visible;
+    text-align: justify;
+}
+
+.referenceDivStaff {
+	position: relative;
+    top: 0px;
+    overflow: visible;
+    text-align: justify;
+}
+
+.SpaceDivStaff {
+    position: relative;
+    top: 0px;
+    overflow: visible;
+    text-align: justify;
+}
 .choiceDiv {
     position: relative;
     top: 0px;

@@ -1,5 +1,6 @@
 package edu.asu.diging.vspace.core.model.display.impl;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
@@ -11,8 +12,6 @@ import edu.asu.diging.vspace.core.model.IExternalLink;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.IExternalLinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.ExternalLink;
-
-import javax.persistence.Entity;
 
 @Entity
 public class ExternalLinkDisplay extends LinkDisplay implements IExternalLinkDisplay {

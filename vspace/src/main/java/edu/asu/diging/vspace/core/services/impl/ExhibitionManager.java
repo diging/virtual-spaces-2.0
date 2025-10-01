@@ -46,8 +46,8 @@ public class ExhibitionManager implements IExhibitionManager {
      * asu.diging.vspace.core.model.impl.Exhibition)
      */
     @Override
-    public IExhibition storeExhibition(Exhibition exhibition) {
-        return exhibitRepo.save(exhibition);
+    public IExhibition storeExhibition(IExhibition exhibition) {
+        return exhibitRepo.save((Exhibition) exhibition);
     }
 
     /*
@@ -70,23 +70,30 @@ public class ExhibitionManager implements IExhibitionManager {
     public List<IExhibition> findAll() {
         Iterable<Exhibition> exhibitions = exhibitRepo.findAll();
         List<IExhibition> results = new ArrayList<>();
-        exhibitions.forEach(e -> results.add((IExhibition) e));
+        exhibitions.forEach(e -> results.add(e));
         return results;
     }
 
+    /**
+     * Returns the start exhibition. If it does not exist, a new exhibition is created.
+     */
     @Override
     public IExhibition getStartExhibition() {
         // for now we just take the first one created, there shouldn't be more than one
         List<Exhibition> exhibitions = exhibitRepo.findAllByOrderByIdAsc();
+        IExhibition exhibition;
         if (exhibitions.size() > 0) {
-            Exhibition exhibition = exhibitions.get(0);
+            exhibition = exhibitions.get(0);
             String previewId = exhibition.getPreviewId();
             if(previewId==null || previewId.isEmpty()) {
                 exhibitFactory.updatePreviewId(exhibition);
             }
-            return exhibition;
         }
-        return null;
+        else {
+            exhibition = (Exhibition) exhibitFactory.createExhibition();
+            storeExhibition(exhibition);
+        }
+        return exhibition;
     }
     
 
@@ -99,7 +106,7 @@ public class ExhibitionManager implements IExhibitionManager {
      * @throws LanguageListConfigurationNotFoundException 
      */
     @Override
-    public void updateExhibitionLanguages(Exhibition exhibition, List<String> codes, String defaultLanguage) {
+    public void updateExhibitionLanguages(IExhibition exhibition, List<String> codes, String defaultLanguage) {
         if(CollectionUtils.isEmpty(exhibitionLanguageConfig.getExhibitionLanguageList())) {
             throw new LanguageListConfigurationNotFoundException("Exhibition Language Configuration not found");
         }
@@ -118,11 +125,13 @@ public class ExhibitionManager implements IExhibitionManager {
             .forEach(languageMap -> {
                 IExhibitionLanguage exhibitionLanguage =  addExhibitionLanguage(exhibition , languageMap);  
                 exhibitionLanguage.setDefault(exhibitionLanguage.getCode().equalsIgnoreCase(defaultLanguage));
-            });  
+            });
 
-        // Removes exhibition langauge if unselected.
-        exhibition.getLanguages().removeAll(exhibition.getLanguages().stream()
-                .filter(language -> !codes.contains(language.getCode())).collect(Collectors.toList()));
+        // Removes exhibition language if unselected.
+        List<IExhibitionLanguage> languagesToBeRemoved = exhibition.getLanguages().stream()
+                .filter(language -> !codes.contains(language.getCode())).collect(Collectors.toList());
+        
+        exhibition.getLanguages().removeAll(languagesToBeRemoved);
 
     }
 
@@ -133,7 +142,7 @@ public class ExhibitionManager implements IExhibitionManager {
      * @param languageMap
      * @return
      */
-    private IExhibitionLanguage addExhibitionLanguage(Exhibition exhibition, Map languageMap) {
+    private IExhibitionLanguage addExhibitionLanguage(IExhibition exhibition, Map languageMap) {
         IExhibitionLanguage exhibitionLanguage =   new ExhibitionLanguage((String) languageMap.get(ConfigConstants.LABEL),
                 (String) languageMap.get(ConfigConstants.CODE), exhibition);
 
