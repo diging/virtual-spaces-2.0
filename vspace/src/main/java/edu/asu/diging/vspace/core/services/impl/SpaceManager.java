@@ -376,8 +376,6 @@ public class SpaceManager implements ISpaceManager {
         return sortingParameters;
     }
     
-<<<<<<< HEAD
-=======
     @Override
     public int getTotalSpaceCount(String searchTerm) {
         if (searchTerm != null && !searchTerm.trim().isEmpty()) {
@@ -389,6 +387,4 @@ public class SpaceManager implements ISpaceManager {
             return (int) spaceRepo.count();
         }
     }
-    
->>>>>>> develop
 }

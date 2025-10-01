@@ -1,6 +1,6 @@
 package edu.asu.diging.vspace.core.services.impl;
 
-import java.util.ArrayList;
+vspace/src/main/java/edu/asu/diging/vspace/web/staff/StaffSearchSpaceController.javaimport java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -81,9 +81,6 @@ public class ContentBlockManager implements IContentBlockManager {
     private ISpaceBlockFactory spaceBlockFactory;
 
     @Autowired
-    private ISpaceBlockFactory spaceBlockFactory;
-
-    @Autowired
     private IImageBlockFactory imageBlockFactory;
 
     @Autowired
@@ -103,9 +100,6 @@ public class ContentBlockManager implements IContentBlockManager {
     
     @Autowired
     private BiblioBlockRepository biblioBlockRepo;
-
-    @Autowired
-    private SpaceContentBlockRepository spaceBlockRepo;
 
     @Autowired
     private SpaceContentBlockRepository spaceBlockRepo;
@@ -598,12 +592,7 @@ public class ContentBlockManager implements IContentBlockManager {
      *                         content order corresponding to each blocks.
      */
     @Override
-<<<<<<< HEAD
     public void updateContentOrder(List<ContentBlock> contentBlockList, ISlide slide) throws BlockDoesNotExistException {
-
-=======
-    public void updateContentOrder(List<ContentBlock> contentBlockList) throws BlockDoesNotExistException {
->>>>>>> develop
         if (contentBlockList == null) {
             return;
         }
