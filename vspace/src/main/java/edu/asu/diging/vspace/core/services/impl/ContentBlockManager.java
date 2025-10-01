@@ -1,6 +1,6 @@
 package edu.asu.diging.vspace.core.services.impl;
 
-vspace/src/main/java/edu/asu/diging/vspace/web/staff/StaffSearchSpaceController.javaimport java.util.ArrayList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -58,6 +58,7 @@ import edu.asu.diging.vspace.core.model.impl.VSVideo;
 import edu.asu.diging.vspace.core.model.impl.VideoBlock;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
+import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
 
 @Transactional(rollbackFor = { Exception.class })
 @Service
@@ -611,6 +612,24 @@ public class ContentBlockManager implements IContentBlockManager {
             }
         }
         contentBlockRepository.saveAll(contentBlocks);
+    }
+
+    /**
+     * Adjusting the content order of the blocks of slide once it is dragged and
+     * changed position.
+     * 
+     * @param contentBlockList - The list contains the blocks and the updated
+     *                         content order corresponding to each blocks.
+     */
+    @Override
+    public void updateContentOrder(List<ContentBlock> contentBlockList) throws BlockDoesNotExistException {
+        if (contentBlockList == null || contentBlockList.isEmpty()) {
+            return;
+        }
+        
+        // Get the slide from the first content block
+        ISlide slide = contentBlockList.get(0).getSlide();
+        updateContentOrder(contentBlockList, slide);
     }
 
     /**

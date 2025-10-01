@@ -100,7 +100,4 @@ public interface IContentBlockManager {
      */
     void updateContentOrder(List<ContentBlock> contentBlockList) throws BlockDoesNotExistException;
 
-    void saveVideoBlock(IVideoBlock videoBlock);
-    
-
 }
