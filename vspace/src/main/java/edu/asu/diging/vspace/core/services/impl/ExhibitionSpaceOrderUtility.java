@@ -28,7 +28,12 @@ public class ExhibitionSpaceOrderUtility implements IExhibitionSpaceOrderUtility
     private  IExhibitionManager exhibitionManager;
     
     /**
-     * used to sort spaces alphabetically
+     * Sorts the spaces in alphabetical order by name (case-insensitive).
+     * This method sorts the spaces in place, so the passed-in list of spaces
+     * will be sorted after the method is done.
+     * 
+     * @param publishedSpaces the list of spaces to be sorted alphabetically
+     * @return the same list of spaces, now sorted alphabetically by name
      */
     private List<ISpace> sortSpacesAlphabetically(List<ISpace> publishedSpaces){
         Collections.sort(publishedSpaces, new Comparator<ISpace>() {
@@ -41,7 +46,12 @@ public class ExhibitionSpaceOrderUtility implements IExhibitionSpaceOrderUtility
     }
     
     /**
-     * used to sort spaces based on creation date
+     * Sorts the spaces based on their creation date in ascending order.
+     * This method sorts the spaces in place, so the passed-in list of spaces
+     * will be sorted after the method is done.
+     * 
+     * @param publishedSpaces the list of spaces to be sorted by creation date
+     * @return the same list of spaces, now sorted by creation date
      */
     private List<ISpace> sortSpacesOnCreationDate(List<ISpace> publishedSpaces){
         Collections.sort(publishedSpaces, new Comparator<ISpace>() {
@@ -54,7 +64,15 @@ public class ExhibitionSpaceOrderUtility implements IExhibitionSpaceOrderUtility
     }
     
     /**
-     * used to sort spaces based on user defined order
+     * Sorts the spaces based on user-defined custom order.
+     * If no custom order is defined (spacesCustomOrder is null), the method
+     * falls back to alphabetical sorting and the passed-in list will be modified.
+     * Otherwise, a new filtered list is returned containing only published spaces
+     * from the custom order, and the original passed-in list remains unchanged.
+     * 
+     * @param publishedSpaces the list of spaces to be sorted (may or may not be modified)
+     * @return either the same list sorted alphabetically (if no custom order exists)
+     *         or a new filtered list based on custom order containing only published spaces
      */
     private List<ISpace>  sortSpacesByCustomOrder(List<ISpace> publishedSpaces){
         IExhibition exhibition  = exhibitionManager.getStartExhibition();
@@ -71,7 +89,14 @@ public class ExhibitionSpaceOrderUtility implements IExhibitionSpaceOrderUtility
     }
     
     /**
-     * used to sort spaces based on the selected mode
+     * Sorts the spaces based on the specified ordering mode.
+     * 
+     * @param publishedSpaces the list of spaces to be sorted
+     * @param mode the ordering mode to apply (ALPHABETICAL, CREATION_DATE, or CUSTOM).
+     *             If null, defaults to ALPHABETICAL ordering
+     * @return the sorted list of spaces according to the specified mode.
+     *         Note: For ALPHABETICAL and CREATION_DATE modes, the original list is modified in place.
+     *         For CUSTOM mode, behavior depends on whether custom order exists - see sortSpacesByCustomOrder()
      */
     @Override
     public List<ISpace> sortSpaces(List<ISpace> publishedSpaces, ExhibitionSpaceOrderMode mode){
