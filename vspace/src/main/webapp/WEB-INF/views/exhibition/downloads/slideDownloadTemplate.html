@@ -60,10 +60,14 @@
    </head>
    <body>
     <div layout:fragment="content">
-    <div th:fragment="navbar">
+	<div th:fragment="navbar">
 			<nav class="nav-bar" style="height:48px">
-		      <a class="navbar-brand" title="Go to exhibition" ><img src="./../resources/maintenance/img/logo-11.png" alt="Virtual Spaces logo" width="100px">
+		      <a class="navbar-brand" title="Go to exhibition" href="../index.html"><img src="./../resources/maintenance/img/logo-11.png" alt="Virtual Spaces logo" width="100px">
 		      [[${exhibition?.title}]]</a>
+		      <div style="margin-left: auto;">
+		          <a th:href="${spaceId + '.html'}" class="btn outline btn-sm" style="margin-right: 10px;">Back to Space</a>
+		          <a href="../index.html" class="btn outline btn-sm">Exhibition Home</a>
+		      </div>
 		    </nav>
 	    </div>
         <div th:if="${showAlert == true}"
@@ -89,16 +93,36 @@
                 <div th:if="${contents['class'].simpleName ==  'TextBlock'}" id="${contents.id}" class="textDiv">[(${contents.htmlRenderedText()})]</div>
                 <div th:if="${contents['class'].simpleName == 'ChoiceBlock'}" id="${contents.id}" class="textDiv" style="margin: 1%;">
                     <div th:if="${contents.showsAll eq true}" th:each="choice: ${choices}" class="list-group">
-                        <a  class="list-group-item list-group-item-action" 
-                        href="'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${choice.sequence.id}+'?branchingPoint='+${slideId}+'&previousSequenceId='+${currentSequenceId}">
+                        <a class="list-group-item list-group-item-action" 
+                           th:href="${choice.sequence.slides != null && choice.sequence.slides.size() > 0 ? choice.sequence.slides[0].id + '.html' : '#'}">
                             [[${choice.sequence.name}]]</a>
                     </div>
                     <div class="list-group" th:if="${contents.showsAll eq false}" th:each="choice: ${contents.choices}">
-                        <a class="list-group-item list-group-item-action">
-                         th:href="'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${choice.sequence.id}+'?branchingPoint='+${slideId}+'&previousSequenceId='+${currentSequenceId}"
+                        <a class="list-group-item list-group-item-action"
+                           th:href="${choice.sequence.slides != null && choice.sequence.slides.size() > 0 ? choice.sequence.slides[0].id + '.html' : '#'}">
                              [[${choice.sequence.name}]]</a>
                     </div>
                 </div>
+            </div>
+        </div>
+        
+        <!-- Navigation buttons -->
+        <div style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 1000;">
+            <div class="btn-group" role="group">
+                <a th:if="${prevSlide != null && prevSlide != ''}" 
+                   th:href="${prevSlide + '.html'}" 
+                   class="btn primary-btn">
+                    <span class="icon-chevron-left"></span> Previous
+                </a>
+                <a th:href="${spaceId + '.html'}" 
+                   class="btn outline" style="margin: 0 10px;">
+                    Back to Space
+                </a>
+                <a th:if="${nextSlide != null && nextSlide != ''}" 
+                   th:href="${nextSlide + '.html'}" 
+                   class="btn primary-btn">
+                    Next <span class="icon-chevron-right"></span>
+                </a>
             </div>
         </div>
       </div>

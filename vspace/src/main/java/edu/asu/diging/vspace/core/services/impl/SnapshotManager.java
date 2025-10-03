@@ -31,6 +31,7 @@ import edu.asu.diging.vspace.core.model.impl.ExhibitionSnapshot;
 import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
 import edu.asu.diging.vspace.core.model.impl.SnapshotTask;
 import edu.asu.diging.vspace.core.services.IRenderingManager;
+import edu.asu.diging.vspace.core.services.IAsyncSnapshotCreator;
 import edu.asu.diging.vspace.core.services.ISnapshotManager;
 
 @Service
@@ -59,7 +60,7 @@ public class SnapshotManager  implements  ISnapshotManager {
     private SnapshotTaskRepository snapshotTaskRepository;
     
     @Autowired
-    private AsyncSnapshotCreator asyncSnapshotCreator;
+    private IAsyncSnapshotCreator asyncSnapshotCreator;
     
     private final String ZIP_FILE_EXTENSION = ".zip";
 

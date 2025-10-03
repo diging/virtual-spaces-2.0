@@ -57,6 +57,15 @@
     }
     
     function triggerExhibitionSnapshotCreation(){ 
+        // Show immediate feedback
+        var button = $('.download');
+        var originalText = button.text();
+        button.prop('disabled', true).text('Creating Snapshot...');
+        
+        // Show info alert immediately
+        var infoAlert = $('<div class="alert alert-info alert-dismissible fade show" role="alert"><p><span class="icon-spinner"></span> Snapshot creation has started. Please wait...</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+        $('.successAlert').empty().append(infoAlert);
+        
         $.ajax({
             type : "POST",
             url : "[(@{'/staff/snapshot/create?'+ ${_csrf.parameterName}+'='+${_csrf.token} })] ",
@@ -66,9 +75,17 @@
             processData : false,
             
             success : function(data) {
+            	// Re-enable button
+            	button.prop('disabled', false).text(originalText);
             	pollForExhibitionDownload(data.id, data.folderName); 		
             },
-            error : function(data) {					
+            error : function(data) {
+            	// Re-enable button
+            	button.prop('disabled', false).text(originalText);
+            	
+            	// Clear any existing alerts
+            	$('.successAlert').empty();
+            	
             	var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>Snapshot could not be created</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
             	$('.errorAdd').append(alert);
             	
