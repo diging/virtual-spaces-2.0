@@ -38,6 +38,9 @@
     visibility: visible;
 }
 
+ul{
+    list-style-type: none;
+}
 .tooltiptextForExitFullscreen {
     visibility: hidden;
     width: 120px;
@@ -52,6 +55,40 @@
     top: -15px;
     background: rgba(0, 0, 0, 0.6);
 }
+
+.biblioDiv {
+    border: 1px solid lightgray;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 16px 0;
+    background-color: #f9f9f9;
+}
+
+.biblioDiv h3 {
+    margin-top: 0;
+    font-family: 'Arial', sans-serif;
+}
+
+.biblioDiv p {
+    margin: 8px 0; 
+    font-size: 14px;
+}
+
+.biblioDiv ul {
+    list-style: none;
+    padding: 0;
+    margin: 16px 0 0 0;
+}
+
+.referenceDiv {
+    border: 1px solid lightgray;
+    border-radius: 8px;
+    padding: 8px;
+    background-color: white;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
 <script th:inline="javascript">       
@@ -174,12 +211,37 @@
 
          <div style="position: relative;top: 6.5%;">
             <h3 style="text-align:center;">[[${currentSlideCon.name}]]</h3>
-            <div id="blocks" class="Group_8_Class" th:each="contents: ${currentSlideCon.contents}">
-                <img th:if="${contents['class'].simpleName ==  'ImageBlock'}" id="${contents.id}" class="imgDiv" th:src="@{'/api/image/'+${contents.image.id}}" style="max-width:57%">
-                <div th:if="${contents['class'].simpleName ==  'TextBlock'}" id="${contents.id}" class="textDiv">[(${contents.htmlRenderedText()})]</div>
-                <div th:if="${contents['class'].simpleName ==  'SpaceBlock'}" id="${contents.id}" class="textDiv">
+            <div th:id="blocks" class="Group_8_Class" th:each="contents: ${currentSlideCon.contents}">
+                <img th:if="${contents['class'].simpleName ==  'ImageBlock'}" th:id="${contents.id}" class="imgDiv" th:src="@{'/api/image/'+${contents.image.id}}" style="max-width:57%">
+                <div th:if="${contents['class'].simpleName ==  'TextBlock'}" th:id="${contents.id}" class="textDiv">[(${contents.htmlRenderedText()})]</div>
+                <div th:if="${contents['class'].simpleName ==  'BiblioBlock'}" th:id="${contents.id}" class="biblioDiv">
+                	<h4>Title: [(${contents.getBiblioTitle()})]</h4>
+                	<p>description: [(${contents.getDescription()})]</p>
+                	<ul>
+	                	<div th:each="contentRef: ${contents.references}">
+							<li>
+								<div th:id="${contentRef.id}" class="referenceDiv">
+									<p th:text="|${contentRef.getTitle()}, ${contentRef.getAuthor()}, ${contentRef.getYear()}, ${contentRef.getJournal()}, ${contentRef.getUrl()}, ${contentRef.getVolume()}, ${contentRef.getIssue()}, ${contentRef.getPages()}, ${contentRef.getEditors()}, ${contentRef.getType()}, ${contentRef.getNote()}|">
+								</div>
+							</li>
+						</div>
+					</ul>
+                </div>
+               <div th:if="${contents['class'].simpleName ==  'VideoBlock'}" th:id="${contents.id}" class="VideoDiv">
+                  <div>
+                     <h3><strong>[[${contents.video.title}]]</strong></h3>
+                     <br/>
+                     <iframe th:id="${contents.id}" width="800" height="530" th:src="${contents.video.url}" th:if="${contents.video.url}" frameborder="0"
+                        allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen ></iframe>
+                     <video th:id="${contents.id}" width="800" height="530" th:if="${contents.video.url == null}" controls >
+                        <source th:src="@{'/api/video/'+${contents.video.id}}" type="video/mp4"/>
+                     </video>
+                  </div>
+               </div>
+                <div th:if="${contents['class'].simpleName ==  'SpaceBlock'}" th:id="${contents.id}" class="textDiv">
                 <a th:href="@{'/exhibit/space/'+${contents.space?.id}}">[(${contents.title})]</a></div>
-                <div th:if="${contents['class'].simpleName == 'ChoiceBlock'}" id="${contents.id}" class="textDiv" style="margin: 1%;">
+                <div th:if="${contents['class'].simpleName == 'ChoiceBlock'}" th:id="${contents.id}" class="textDiv" style="margin: 1%;">
                     <div th:if="${contents.showsAll eq true}" th:each="choice: ${choices}" class="list-group">
                         <a th:href="${isExhPreview == null OR isExhPreview == false}?@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${choice.sequence.id}+'?branchingPoint='+${slideId}+'&previousSequenceId='+${currentSequenceId}}:@{'/preview/'+${previewId}+'/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${choice.sequence.id}+'?branchingPoint='+${slideId}+'&previousSequenceId='+${currentSequenceId}}"
                             class="list-group-item list-group-item-action">[[${choice.sequence.name}]]</a>

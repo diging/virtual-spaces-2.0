@@ -126,7 +126,5 @@ public abstract class LinkManager<L extends ILink<T>, T extends IVSpaceElement, 
             imageRepo.save((VSImage) image);
             linkDisplay.setImage(image);
         }
-
     }
-
 }
