@@ -19,6 +19,7 @@ import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
+import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionSnapshot;
 import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
 import edu.asu.diging.vspace.core.model.impl.SnapshotTask;
@@ -93,7 +94,7 @@ public class AsyncSnapshotCreator implements IAsyncSnapshotCreator {
         StringBuilder htmlContent = new StringBuilder();
         
         // Get exhibition details
-        var exhibition = exhibitionManager.getStartExhibition();
+        IExhibition exhibition = exhibitionManager.getStartExhibition();
         String exhibitionTitle = exhibition != null ? exhibition.getTitle() : "Virtual Exhibition";
         Space startSpace = exhibition != null && exhibition.getStartSpace() != null ? 
             (Space) exhibition.getStartSpace() : (spaces.isEmpty() ? null : spaces.get(0));
