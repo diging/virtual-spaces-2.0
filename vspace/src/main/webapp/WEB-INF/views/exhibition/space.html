@@ -225,8 +225,16 @@ $(document).ready(function() {
 		//# sourceURL=click.js
 		
 		function changeLanguage(language){
-			var url = "[(@{'/exhibit/space/'+${space.id}+'/'})]";
-			window.location.href = url+language.value;            
+			var isPreview = [[${isExhPreview}]];
+			var previewId = [[${previewId}]];
+			var spaceId = [[${space.id}]];
+			
+			if(isPreview && previewId) {
+				window.location.href = "/preview/" + previewId + "/space/" + spaceId + "/" + language.value;
+			} else {
+				var url = "[(@{'/exhibit/space/'+${space.id}+'/'})]";
+				window.location.href = url+language.value;
+			}
 		}
 						
 		function toggleImgSize(isClicked){
@@ -386,6 +394,8 @@ $(document).ready(function() {
 			var isExhPreview  =[[${isExhPreview}]];
 			var externalLinks = [[${externalLinkList}]];
 			var spaceTextBlocks = [[${spaceTextBlocks}]];
+			var currentLanguage = [[${languageCode}]];
+			var previewId = [[${previewId}]];
 			var height = parseInt($("#bgImage").css("height"));
 			var width = parseInt($("#bgImage").css("width"));
 			let relativeHeight = ([(${display?.width})]/width)*height;
@@ -395,10 +405,10 @@ $(document).ready(function() {
     		        var posY = $("#space").position().top;
     		        var spaceLink = $('<a></a>');
     		        if(isExhPreview=== true){
-    		        	spaceLink.attr("href",[[@{|/preview/${previewId}/space/|}]]+link.link.targetSpace.id);
+    		        	spaceLink.attr("href", "/preview/" + previewId + "/space/" + link.link.targetSpace.id + "/" + currentLanguage);
     		        }
     		        else{
-    		        	spaceLink.attr("href", link.link.targetSpace.id);
+    		        	spaceLink.attr("href", "/exhibit/space/" + link.link.targetSpace.id + "/" + currentLanguage);
     		        }
     		        
     		        var linkDisplay;
@@ -439,9 +449,9 @@ $(document).ready(function() {
     		        var moduleLink = $('<a></a>');
     		        var moduleLinkURL = null;
     		        if(isExhPreview=== true){
-    		        	moduleLinkURL = [[@{|/preview/${previewId}/${space?.id}/module/|}]]+link.link.module.id;
+    		        	moduleLinkURL = "/preview/" + previewId + "/" + [[${space?.id}]] + "/module/" + link.link.module.id;
     		        } else{
-    		        	 moduleLinkURL = [[@{|/exhibit/${space?.id}/module/|}]]+link.link.module.id;
+    		        	moduleLinkURL = "/exhibit/" + [[${space?.id}]] + "/module/" + link.link.module.id;
     		        }
     		        moduleLink.attr("href", moduleLinkURL);
     		        var linkDisplay;
@@ -608,7 +618,7 @@ $(document).ready(function() {
                         onclick="closeNav()">&times;</a>
                     <ul th:each="space: ${publishedSpaces}">
                         <li><a class="dropdown-item"
-                            th:href="@{'/exhibit/space/'+${space?.id}}">[[${space.name}]]</a> 
+                            th:href="@{'/exhibit/space/'+${space?.id}+'/'+${languageCode}}">[[${space.name}]]</a> 
                              
                             
                         </li>
@@ -618,7 +628,7 @@ $(document).ready(function() {
                 <div  th:if="${isExhPreview} == true" id="mySidenav" class="sidenav">
                   <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
                     <ul th:each="space: ${publishedSpaces}">
-                        <li><a class="dropdown-item" id="previewNavBarItem" th:href="@{'/preview/'+${previewId}+'/space/'+${space?.id}}">[[${space.name}]]
+                        <li><a class="dropdown-item" id="previewNavBarItem" th:href="@{'/preview/'+${previewId}+'/space/'+${space?.id}+'/'+${languageCode}}">[[${space.name}]]
                             </a>
                         </li>
                     </ul>

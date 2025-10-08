@@ -33,8 +33,19 @@
          });
          
          function changeLanguage(language){
-             var url = "[(@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${currentSequenceId}+'/slide/'+${currentSlideId}})]";
-             window.location.href = url+"/"+language.value;            
+             var isPreview = [[${isExhPreview}]];
+             var previewId = [[${previewId}]];
+             var spaceId = [[${spaceId}]];
+             var moduleId = [[${module.id}]];
+             var sequenceId = [[${currentSequenceId}]];
+             var slideId = [[${currentSlideId}]];
+             
+             if(isPreview && previewId) {
+                 window.location.href = "/preview/" + previewId + "/" + spaceId + "/module/" + moduleId + "/sequence/" + sequenceId + "/slide/" + slideId + "/" + language.value;
+             } else {
+                 var url = "[(@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${currentSequenceId}+'/slide/'+${currentSlideId}})]";
+                 window.location.href = url+"/"+language.value;
+             }
          }
          
          function imageFullScreen(){
