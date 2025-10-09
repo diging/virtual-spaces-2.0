@@ -23,7 +23,7 @@ public interface IExhibitionManager {
      * @see edu.asu.diging.vspace.core.services.IExhibitionManager#storeExhibition(edu.
      * asu.diging.vspace.core.model.impl.Exhibition)
      */
-    IExhibition storeExhibition(Exhibition exhibit);
+    IExhibition storeExhibition(IExhibition exhibition);
 
     /*
      * (non-Javadoc)
@@ -37,9 +37,7 @@ public interface IExhibitionManager {
 
     IExhibition getStartExhibition();
 
-    void updateExhibitionLanguages(Exhibition exhibition, List<String> languages, String defaultLanguage) throws ExhibitionLanguageDeletionException;
-    
-    boolean checkIfLocalizedTextsExists(IExhibitionLanguage language);
+    void updateExhibitionLanguages(IExhibition exhibition, List<String> languages, String defaultLanguage);
 
     void deleteLocalizedTexts(List<ILocalizedText> emptyLocalizedTexts);
     

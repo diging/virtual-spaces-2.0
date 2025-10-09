@@ -3,6 +3,7 @@ package edu.asu.diging.vspace.core.model.impl;
 import java.util.Objects;
 
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -12,6 +13,7 @@ import org.hibernate.annotations.Parameter;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
 
 @Entity
@@ -36,7 +38,7 @@ public class ExhibitionLanguage extends VSpaceElement implements IExhibitionLang
         super();
     }
     
-    public ExhibitionLanguage(String label, String code, Exhibition exhibition) {
+    public ExhibitionLanguage(String label, String code, IExhibition exhibition) {
         this.label=label;
         this.code=code;
         this.exhibition=exhibition;
@@ -60,7 +62,7 @@ public class ExhibitionLanguage extends VSpaceElement implements IExhibitionLang
         this.label = label;
     }
     
-    public Exhibition getExhibition() {
+    public IExhibition getExhibition() {
         return exhibition;
     }
 

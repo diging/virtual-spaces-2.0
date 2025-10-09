@@ -20,6 +20,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -27,13 +28,19 @@ import edu.asu.diging.vspace.config.ExhibitionLanguageConfig;
 import edu.asu.diging.vspace.core.data.ExhibitionRepository;
 import edu.asu.diging.vspace.core.data.LocalizedTextRepository;
 import edu.asu.diging.vspace.core.exception.ExhibitionLanguageDeletionException;
+import edu.asu.diging.vspace.core.data.ImageRepository;
 import edu.asu.diging.vspace.core.exception.LanguageListConfigurationNotFoundException;
+import edu.asu.diging.vspace.core.factory.IImageFactory;
+import edu.asu.diging.vspace.core.factory.impl.ExhibitionFactory;
+import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.ILocalizedText;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.impl.LocalizedText;
+import edu.asu.diging.vspace.core.services.IImageService;
+
 
 @RunWith(MockitoJUnitRunner.class)
 public class ExhibitionManagerTest {
@@ -42,10 +49,23 @@ public class ExhibitionManagerTest {
     private ExhibitionRepository exhibitRepo;
 
     @Mock
+    private IStorageEngine storage;
+
+    @Mock
+    private IImageFactory imageFactory;
+
+    @Mock
+    private IImageService imageService;
+
+    @Mock
+    private ImageRepository imageRepo;
+    
+    @Mock
     private ExhibitionLanguageConfig exhibitionLanguageConfig;
     
     @Mock
-    private ExhibitionManager serviceToTestMock;
+    private ExhibitionFactory exhibitFactory;
+
 
     @InjectMocks
     private ExhibitionManager serviceToTest;
@@ -56,7 +76,10 @@ public class ExhibitionManagerTest {
     @Before
     public void init() {
         MockitoAnnotations.initMocks(this);
+
     }
+
+    private final String ID = "IMAGE_ID";
 
     @Test
     public void test_storeExhibition_success() {
@@ -69,15 +92,44 @@ public class ExhibitionManagerTest {
 
     @Test
     public void test_getExhibitionById_success() {
-        String id = "ID";
+        
         Exhibition exhibition = new Exhibition();
-        exhibition.setId(id);
+        exhibition.setId(ID);
         Optional<Exhibition> exhibitionOptional = Optional.of(exhibition);
-        when(exhibitRepo.findById(id)).thenReturn(exhibitionOptional);
-
-        IExhibition exhibitionTest = serviceToTest.getExhibitionById(id);
+        when(exhibitRepo.findById(ID)).thenReturn(exhibitionOptional);
+        IExhibition exhibitionTest = serviceToTest.getExhibitionById(ID);
         assertEquals(exhibitionTest, exhibition);
-        verify(exhibitRepo).findById(id);
+        verify(exhibitRepo).findById(ID);
+    }
+    
+    @Test
+    public void test_findAll_success() {
+        
+        Exhibition exhibition = new Exhibition();
+        exhibition.setId(ID);
+        List<Exhibition> list = new ArrayList();
+        list.add(exhibition);
+        
+        when(exhibitRepo.findAll()).thenReturn(list);
+        List<IExhibition> exhibitionTest = serviceToTest.findAll();
+        
+        assertEquals(exhibitionTest.size(), list.size());
+        assertEquals(exhibitionTest.indexOf(exhibition), 0);
+        verify(exhibitRepo).findAll();
+    }
+    
+    
+    @Test
+    public void test_getStartExhibition_success() {
+        
+        Exhibition exhibition = new Exhibition();
+        exhibition.setId(ID);
+        List<Exhibition> list = new ArrayList();
+        list.add(exhibition);
+        Mockito.when(exhibitRepo.findAllByOrderByIdAsc()).thenReturn(list);
+        IExhibition exhibitionTest = serviceToTest.getStartExhibition();
+        assertEquals(exhibitionTest, exhibition);
+        verify(exhibitRepo).findAllByOrderByIdAsc();
     }
 
     @Test
@@ -194,6 +246,7 @@ public class ExhibitionManagerTest {
         exhibition.getLanguages().forEach(language -> {
             if (language.getCode().equals("en")) {
                 assertFalse(language.isDefault());
+
             }
             if (language.getCode().equals("aa")) {
                 assertTrue(language.isDefault());

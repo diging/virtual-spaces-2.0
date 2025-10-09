@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import javax.imageio.ImageIO;
 
+import org.apache.tika.Tika;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.ImageRepository;
+import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.ImageDoesNotExistException;
+import edu.asu.diging.vspace.core.factory.IImageFactory;
+import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.ImageCategory;
 import edu.asu.diging.vspace.core.model.SortByField;
@@ -36,8 +40,17 @@ public class ImageService implements IImageService {
     @Autowired
     private ImageRepository imageRepo;
 
+    @Autowired
+    private IImageFactory imageFactory;
+
+    @Autowired
+    private IStorageEngine storage;
+
     @Value("${page_size}")
     private int pageSize;
+
+    private final String DEFAULT_IMAGE_EXCEPTION = "Default image could not be stored: ";
+    private final String NO_IMAGE_EXCEPTION = "Image doesn't exist for image id";
 
     /*
      * (non-Javadoc)
@@ -218,7 +231,7 @@ public class ImageService implements IImageService {
         if(imageOptional.isPresent()) {
             return imageOptional.get();
         } else {
-            throw new ImageDoesNotExistException("Image doesn't exist for image id" + imageId);
+            throw new ImageDoesNotExistException(NO_IMAGE_EXCEPTION + imageId);
         }
     }
 
@@ -247,6 +260,65 @@ public class ImageService implements IImageService {
     public void removeCategory(IVSImage image, ImageCategory category) {
         image.getCategories().remove(category);
         imageRepo.save((VSImage) image);
+    }   
+    
+    /**
+     * Method to store an image in the file 
+     * 
+     *@param image - The image data as a byte array
+     *@param filename - The name of the file to be stored
+     *@return {@link IVSImage} instance
+     */
+    @Override
+    public IVSImage storeImage(byte[] image, String filename) {
+
+        IVSImage storedImage = null;
+        if (image != null && image.length > 0) {
+            Tika tika = new Tika();
+            String contentType = tika.detect(image);
+            storedImage = imageFactory.createImage(filename, contentType);
+            storedImage = imageRepo.save((VSImage) storedImage);
+        }
+
+        CreationReturnValue returnValue = new CreationReturnValue();
+        returnValue.setErrorMsgs(new ArrayList<>());
+        if (storedImage != null) {
+            String relativePath = null;
+            try {
+                relativePath = storage.storeFile(image, filename, storedImage.getId());
+            } catch (FileStorageException e) {
+                // don't store a VSImage instance, if an exception occurs
+                imageRepo.deleteById(storedImage.getId());
+                
+                logger.error(DEFAULT_IMAGE_EXCEPTION,e);
+                returnValue.getErrorMsgs().add(DEFAULT_IMAGE_EXCEPTION + e.getMessage());
+            }
+            storedImage.setParentPath(relativePath);
+            ImageData imageData = getImageData(image);
+
+            if (imageData != null) {
+                storedImage.setHeight(imageData.getHeight());
+                storedImage.setWidth(imageData.getWidth());
+            }
+            imageRepo.save((VSImage) storedImage);
+        }
+        return storedImage;
+    }
+
+    /**
+     *Method to return content of the image
+     *
+     *@param image - {@link IVSImage} instance of the image to be retrieved
+     *@return byte[] - the image content as byte array
+     */
+    @Override
+    public byte[] getImageContent(IVSImage image) {
+        try {
+            return storage.getMediaContent(image.getId(), image.getFilename());
+        } catch (IOException e) {
+            logger.error("Could not retrieve the image",e);  
+        }
+        return null;
     }
     
     /**
