@@ -213,9 +213,9 @@
                     },
                     error: function(data) {
                         var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                        $('.error').append(alert);
-                        $(".error").delay(4000).slideUp(500, function() {
-                            $(".error").empty();
+                        $('#slide-error-container').append(alert);
+                        $("#slide-error-container").delay(4000).slideUp(500, function() {
+                            $("#slide-error-container").empty();
                         });
                     }
                 });
@@ -253,7 +253,10 @@
 
             var originalBiblioHtml = {};
 
-            function biblioBlockDoubleClick(e) {
+            function biblioBlockEditClick(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
                 $(".EasyMDEContainer").remove();
                 var biblioBlock = $(e.target).closest('.biblioDivStaff');
                 biblioBlock.addClass("open");
@@ -263,11 +266,9 @@
                 // Store the COMPLETE original HTML including all references
                 originalBiblioHtml[blockId] = biblioBlock.html();
                 
-                var description = $("div.open p:eq(0)").text();
-                defaultValue = description;
-                
-                var title = $("div.open p span:eq(0)").text();
-                var desc = $("div.open p span:eq(1)").text();  
+                // Extract title from h4 strong tag and description from p tag
+                var title = $("div.open > .col-md-10 h4 strong").text().trim();
+                var desc = $("div.open > .col-md-10 > p").text().trim();
                 
                 // Showing the edit bibliography form with all the respective values
                 $("#editBiblioAlert").show();
@@ -280,15 +281,21 @@
                 formDataCancel.append('biblioTitle', title);
                 formDataCancel.append('description', desc);
                 
-                // Remove card border
+                // Hide the block while editing (don't change overflow or height)
                 $(".open").css('display', 'none');
-                $(".open").css('overflow-y', 'scroll');
-                $(".open").css('max-height', '200px');
             }
              
             var originalReferenceHtml = {};
 
-            function referenceBlockDoubleClick(e) {
+            function referenceBlockClick(e) {
+                // Don't open edit modal if clicking on a button or icon
+                if ($(e.target).closest('a[data-action], .btn, .icon-trash').length > 0) {
+                    return;
+                }
+                
+                e.preventDefault();
+                e.stopPropagation();
+                
                 var referenceBlock = $(e.target).closest('.referenceDivStaff');
                 currentRefId = referenceBlock.find('input[data-reference-id]').val();
 
@@ -717,7 +724,7 @@
                             $("#loginAlert").show();
                         } else {
                             var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>Please try again.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                            $('.error').append(alert);
+                            $('#slide-error-container').append(alert);
                         }
                     }
                 });
@@ -1045,7 +1052,7 @@
                         },
                         error: function(data) {
                             var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                            $('.error').append(alert);
+                            $('#slide-error-container').append(alert);
                         }
                     });
                   });
@@ -1345,10 +1352,10 @@
          		    },
          			error: function(data) {
          				var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-         				$('.error').append(alert); 
-         				$(".error").delay(4000).slideUp(500, function(){
-         				    $(".error").empty();
-         				});
+           		        $('#slide-error-container').append(alert); 
+           		        $("#slide-error-container").delay(4000).slideUp(500, function(){
+           		            $("#slide-error-container").empty();
+           		        });
          			}
          		});
          	});
@@ -1386,9 +1393,9 @@
          		        },
          		        error: function(data) {
          		            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-         		            $('.error').append(alert); 
-         		            $(".error").delay(4000).slideUp(500, function(){
-         		                $(".error").empty();
+         		            $('#slide-error-container').append(alert); 
+         		            $("#slide-error-container").delay(4000).slideUp(500, function(){
+         		                $("#slide-error-container").empty();
          		            });
          		        }
          		    });
@@ -1417,9 +1424,9 @@
          		        },
          		        error: function(data) {
          		            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-         		            $('.error').append(alert); 
-         		            $(".error").delay(4000).slideUp(500, function(){
-         		                $(".error").empty();
+         		            $('#slide-error-container').append(alert); 
+         		            $("#slide-error-container").delay(4000).slideUp(500, function(){
+         		                $("#slide-error-container").empty();
          		            });
          		        }
          		    });
@@ -1450,10 +1457,10 @@
          		        },
          		        error: function(data) {
          		            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-         		            $('.error').append(alert);
-         		            $(".error").delay(4000).slideUp(500, function(){
-         		                $(".error").empty();
-         		            });
+           		        $('#slide-error-container').append(alert); 
+           		        $("#slide-error-container").delay(4000).slideUp(500, function(){
+           		            $("#slide-error-container").empty();
+           		        });
          		        }
          		    });
          		});
@@ -1472,10 +1479,10 @@
          		    var blockId = $('#deleteImageId').val();
          		    if(blockId == null || blockId == ''){
          		        var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-         		        $('.error').append(alert); 
-         		        $(".error").delay(4000).slideUp(500, function(){
-         		            $(".error").empty();
-         		        });
+           		        $('#slide-error-container').append(alert); 
+           		        $("#slide-error-container").delay(4000).slideUp(500, function(){
+           		            $("#slide-error-container").empty();
+           		        });
          		    } else{
          		        $('#deleteImageId').remove();
          		        // ------------- delete image content blocks ------------
@@ -1487,10 +1494,10 @@
          		            },
          		            error: function(data) {
          		                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-         		                $('.error').append(alert); 
-         		                $(".error").delay(4000).slideUp(500, function(){
-         		                    $(".error").empty();
-         		                });
+           		        $('#slide-error-container').append(alert); 
+           		        $("#slide-error-container").delay(4000).slideUp(500, function(){
+           		            $("#slide-error-container").empty();
+           		        });
          		            }
          		        });
          		    }
@@ -1510,10 +1517,10 @@
          		    var blockId = $('#deleteChoiceBlockId').val();
          		    if(blockId == null || blockId == ''){
          		        var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-         		        $('.error').append(alert); 
-         		        $(".error").delay(4000).slideUp(500, function(){
-         		            $(".error").empty();
-         		        });
+           		        $('#slide-error-container').append(alert); 
+           		        $("#slide-error-container").delay(4000).slideUp(500, function(){
+           		            $("#slide-error-container").empty();
+           		        });
          		    } else{
          		        $('#deleteChoiceBlockId').remove();
          		        // ------------- delete choices content blocks ------------
@@ -1525,10 +1532,10 @@
          		            },
          		            error: function(data) {
          		                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-         		                $('.error').append(alert); 
-         		                $(".error").delay(4000).slideUp(500, function(){
-         		                    $(".error").empty();
-         		                });
+           		        $('#slide-error-container').append(alert); 
+           		        $("#slide-error-container").delay(4000).slideUp(500, function(){
+           		            $("#slide-error-container").empty();
+           		        });
          		            }
          		        });
          		    }
@@ -1547,10 +1554,10 @@
 			    
 			    if(blockId == null || blockId == ''){
 			        var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-			        $('.error').append(alert); 
-			        $(".error").delay(4000).slideUp(500, function(){
-			            $(".error").empty();
-			        });
+           		        $('#slide-error-container').append(alert); 
+           		        $("#slide-error-container").delay(4000).slideUp(500, function(){
+           		            $("#slide-error-container").empty();
+           		        });
 			    } else{
 			        // ------------- delete video content blocks ------------
 			        $.ajax({
@@ -1561,10 +1568,10 @@
 			            },
 			            error: function(data) {
 			                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-			                $('.error').append(alert); 
-			                $(".error").delay(4000).slideUp(500, function(){
-			                    $(".error").empty();
-			                });
+           		        $('#slide-error-container').append(alert); 
+           		        $("#slide-error-container").delay(4000).slideUp(500, function(){
+           		            $("#slide-error-container").empty();
+           		        });
 			            }
 			        });
 			    }
@@ -1579,10 +1586,10 @@
            		var blockId = $('#deleteChoiceBlockId').attr('value');
            		if(blockId == null || blockId == ''){
            			var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-           			$('.error').append(alert); 
-           			$(".error").delay(4000).slideUp(500, function(){
-           			    $(".error").empty();
-           			});
+           		        $('#slide-error-container').append(alert); 
+           		        $("#slide-error-container").delay(4000).slideUp(500, function(){
+           		            $("#slide-error-container").empty();
+           		        });
            		} else{
            			$('#deleteChoiceBlockId').remove()
            			// ------------- delete choices content blocks ------------
@@ -1594,10 +1601,10 @@
            			    },
            				error: function(data) {
            					var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-           					$('.error').append(alert); 
-           					$(".error").delay(4000).slideUp(500, function(){
-           					    $(".error").empty();
-           					});
+           		        $('#slide-error-container').append(alert); 
+           		        $("#slide-error-container").delay(4000).slideUp(500, function(){
+           		            $("#slide-error-container").empty();
+           		        });
            				}
            			});
            		}
@@ -1661,9 +1668,12 @@
                             '<p>' + data.description + '</p>' +
                             '</div>' +
                             '<input type="hidden" data-biblio-id="' + data.id + '" value="' + data.id + '" />' +
-                            '<div class="button-group" style="position: absolute; right: 0px; top: 50%; transform: translateY(-50%); display: flex; gap: 8px;">' +
-                            '<a class="btn primary-btn btn-sm" data-action="add-reference" style="padding: 6px; display: inline-flex; align-items: center; justify-content: center; min-width: 36px; height: 36px;">' +
+                            '<div class="button-group" style="position: absolute; right: 0px; top: 10px; display: flex; gap: 8px;">' +
+                            '<a data-action="add-reference" style="padding: 6px; display: inline-flex; align-items: center; justify-content: center; min-width: 36px; height: 36px; cursor: pointer;">' +
                             '<span class="icon-circle-add"></span>' +
+                            '</a>' +
+                            '<a data-action="edit-biblio" style="padding: 6px; display: inline-flex; align-items: center; justify-content: center; min-width: 36px; height: 36px; cursor: pointer;">' +
+                            '<span class="icon-edit"></span>' +
                             '</a>' +
                             '<a class="btn col-md-1" data-action="delete-biblio" href="javascript:;" style="padding: 6px; display: inline-flex; align-items: center; justify-content: center; min-width: 36px; height: 36px;">' +
                             '<span class="icon-trash error"></span>' +
@@ -1674,7 +1684,7 @@
                             '</div>'
                         );
                         
-                        $(biblioblock[0]).dblclick(biblioBlockDoubleClick);
+                        // Don't bind any click handlers to the block itself
                         $('#slideSpace').append(biblioblock); 
                     },
                     error: function(data) {
@@ -1683,7 +1693,7 @@
                         }
                         else {
                             var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                            $('.error').append(alert);
+                            $('#slide-error-container').append(alert);
                         }
                     }
                 });
@@ -1752,10 +1762,11 @@
                     },
                     data: jsonData,
                     success: function(data) {
-                        // Updated with data attributes
+                        // Updated with data attributes - Type should be FIRST
 						var referenceblock = $(
 						    '<div id="'+ data.id +'" class="referenceDivStaff tab row" data-reference-block data-biblio-id="' + biblioBlockId + '">' +
 						    '<p class="col-md-10">' +
+						    'Type: <span>' + data.type + '</span>, ' +
 						    'Reference Title: <span>' + data.title + '</span>, ' +
 						    'Author: <span>' + data.author + '</span>, ' +
 						    'Year: <span>' + data.year + '</span>, ' +
@@ -1765,16 +1776,15 @@
 						    'Issue: <span>' + data.issue + '</span>, ' +
 						    'Pages: <span>' + data.pages + '</span>, ' +
 						    'Editors: <span>' + data.editors + '</span>, ' +
-						    'Type: <span>' + data.type + '</span>, ' +
 						    'Note: <span>' + data.note + '</span>' +
 						    '</p>' +
 						    '<input type="hidden" data-reference-id="' + data.id + '" value="' + data.id + '" />' +
-						    '<a class="btn col-md-1" data-action="delete-reference" href="javascript:;" style="position: absolute; right:0px;">' +
+						    '<a class="btn col-md-1" data-action="delete-reference" href="javascript:;" style="position: absolute; right:0px; top: 0px;">' +
 						    '<span class="icon-trash error"></span></a>' +
 						    '</div>'
 						);
 
-                        $(referenceblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(referenceBlockDoubleClick);
+                        $(referenceblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).on('click', referenceBlockClick);
                         var elem = $('#' + biblioBlockId).find('#referenceSpace');
                         elem.append(referenceblock);
                         
@@ -1787,7 +1797,7 @@
                         }
                         else {
                             var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                            $('.error').append(alert);
+                            $('#slide-error-container').append(alert);
                         }
                     }
                 });
@@ -1911,7 +1921,7 @@
                                     $("#loginAlert").show();
                                 } else {
                                     var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                                    $('.error').append(alert);
+                                    $('#slide-error-container').append(alert);
                                 }
                             }
                         });
@@ -1981,7 +1991,7 @@
                         },
                         error: function(data) {
                             var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                            $('.error').append(alert);
+                            $('#slide-error-container').append(alert);
                         }
                     });
                     $('#choiceForm')[0].reset();
@@ -2140,9 +2150,12 @@
 				        '<p>' + formData.get('description') + '</p>' +
 				        '</div>' +
 				        '<input type="hidden" data-biblio-id="' + blockId + '" value="' + blockId + '" />' +
-				        '<div class="button-group" style="position: absolute; right: 0px; top: 50%; transform: translateY(-50%); display: flex; gap: 8px;">' +
-				        '<a class="btn primary-btn btn-sm" data-action="add-reference" style="padding: 6px; display: inline-flex; align-items: center; justify-content: center; min-width: 36px; height: 36px;">' +
+				        '<div class="button-group" style="position: absolute; right: 0px; top: 10px; display: flex; gap: 8px;">' +
+				        '<a data-action="add-reference" style="padding: 6px; display: inline-flex; align-items: center; justify-content: center; min-width: 36px; height: 36px; cursor: pointer;">' +
 				        '<span class="icon-circle-add"></span>' +
+				        '</a>' +
+				        '<a data-action="edit-biblio" style="padding: 6px; display: inline-flex; align-items: center; justify-content: center; min-width: 36px; height: 36px; cursor: pointer;">' +
+				        '<span class="icon-edit"></span>' +
 				        '</a>' +
 				        '<a class="btn col-md-1" data-action="delete-biblio" href="javascript:;" style="padding: 6px; display: inline-flex; align-items: center; justify-content: center; min-width: 36px; height: 36px;">' +
 				        '<span class="icon-trash error"></span>' +
@@ -2159,13 +2172,18 @@
 				        });
 				    }
 				    
-				    // Rebind event handlers for bibliography
-				    $('.biblioDivStaff').dblclick(biblioBlockDoubleClick);
+				    // Rebind event handlers for bibliography - no double click on block
+				    $('[data-action="edit-biblio"]').off('click').on('click', biblioBlockEditClick);
 				    
-				    // Rebind event handlers for all restored references
-				    $('.referenceDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(referenceBlockDoubleClick);
+				    // Rebind event handlers for all restored references - use click instead of dblclick
+				    $('.referenceDivStaff').off('click').mouseenter(onMouseEnter).mouseleave(onMouseLeave).on('click', referenceBlockClick);
 				    
-				    $(".open").css('display', 'flex');
+				    // Reset CSS properties that were set during edit
+				    $(".open").css({
+				        'display': 'flex',
+				        'overflow-y': 'visible',
+				        'max-height': 'none'
+				    });
 				    $(".open").removeClass("open");
 				}
              
@@ -2180,11 +2198,8 @@
 			        delete originalBiblioHtml[blockId];
 			    }
 			    
-			    // Reset styles and classes
+			    // Reset display property
 			    $(".open").css('display', 'flex');
-			    $(".open").css('height', 'auto');
-			    $(".open").css('overflow-y', 'visible');
-			    $(".open").css('max-height', 'none');
 			    $(".open").removeClass("open");
 			    
 			    // Rebind all event handlers for the restored content
@@ -2213,15 +2228,14 @@
 			});
 			
 			function rebindBiblioEventHandlers() {
-			    // Rebind bibliography block event handlers
-			    $('.biblioDivStaff').off('mouseenter mouseleave dblclick')
-			        .dblclick(biblioBlockDoubleClick);
+			    // Rebind bibliography block edit button handlers
+			    $('[data-action="edit-biblio"]').off('click').on('click', biblioBlockEditClick);
 			    
-			    // Rebind reference block event handlers
-			    $('.referenceDivStaff').off('mouseenter mouseleave dblclick')
+			    // Rebind reference block event handlers - use click instead of dblclick
+			    $('.referenceDivStaff').off('mouseenter mouseleave click')
 			        .mouseenter(onMouseEnter)
 			        .mouseleave(onMouseLeave)
-			        .dblclick(referenceBlockDoubleClick);
+			        .on('click', referenceBlockClick);
 			}
           	
 			function updateReferenceBox(blockId, formData) {
@@ -2243,6 +2257,7 @@
 			    
 			    $(".open").append(
 			        '<p class="col-md-10">' +
+			        'Type: <span>' + type + '</span>, ' +
 			        'Reference Title: <span>' + title + '</span>, ' +
 			        'Author: <span>' + author + '</span>, ' +
 			        'Year: <span>' + year + '</span>, ' +
@@ -2252,17 +2267,16 @@
 			        'Issue: <span>' + issue + '</span>, ' +
 			        'Pages: <span>' + pages + '</span>, ' +
 			        'Editors: <span>' + editors + '</span>, ' +
-			        'Type: <span>' + type + '</span>, ' +
 			        'Note: <span>' + note + '</span>' +
 			        '</p>' +
 			        '<input type="hidden" data-reference-id="' + blockId + '" value="' + blockId + '" />' +
-			        '<a class="btn col-md-1" data-action="delete-reference" href="javascript:;">' +
+			        '<a class="btn col-md-1" data-action="delete-reference" href="javascript:;" style="position: absolute; right:0px; top: 0px;">' +
 			        '<span class="icon-trash error"></span></a>'
 			    );
 			    
 			    // Reset border of the card 
-			    // Rebind event handlers
-			    $('.referenceDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(referenceBlockDoubleClick);
+			    // Rebind event handlers - use click instead of dblclick
+			    $('.referenceDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).on('click', referenceBlockClick);
 			    $(".open").css('display', 'flex');
 			    
 			    // Remove id from storage so it's not there on refresh
@@ -2295,8 +2309,10 @@
              $('.textDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(textBlockDoubleClick);
              $('.vidDiv').mouseenter(onMouseEnter).mouseleave(onMouseLeave);
              $('.SpaceDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(spaceBlockDoubleClick);
-             $('.biblioDivStaff').dblclick(biblioBlockDoubleClick);
-             $('.referenceDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(referenceBlockDoubleClick);
+             // Bind edit button for bibliography blocks, not the block itself
+             $('[data-action="edit-biblio"]').on('click', biblioBlockEditClick);
+             // Use click instead of dblclick for references
+             $('.referenceDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).on('click', referenceBlockClick);
             
              $('#closeTextBlock').on('click', function() {
             	    $("#editTextAlert").hide();
@@ -2412,15 +2428,22 @@
                     e.preventDefault();
                     // ------------- editing bibliography blocks ------------
                     
-                    var formData = new FormData();
                     var title = $("#editTitleBiblio").val();
                     var desc = $("#editDescBiblio").val();
                     var blockId = $(".open").attr("id");
                     var token = [[${_csrf.token}]];
                     
+                    // Create JSON object with correct field names for backend
+                    var requestData = {
+                        biblioTitle: title,
+                        description: desc,
+                        id: blockId
+                    };
+                    
+                    // Create FormData for updateBiblioBox function
+                    var formData = new FormData();
                     formData.append('biblioTitle', title);
                     formData.append('description', desc);
-                    formData.append('biblioBlockId', blockId);
                     
                     $("#editBiblioAlert").hide();
                     
@@ -2428,13 +2451,12 @@
                         url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/bibliography/edit'})]",
                         type: 'POST',
                         cache: false,
-                        contentType: false,
+                        contentType: 'application/json; charset=utf-8',
                         processData: false,
-                        data: formData,
+                        data: JSON.stringify(requestData),
                         headers: {
                             'X-CSRF-Token': token
                         },
-                        enctype: 'multipart/form-data',
                         success: function(data) {
                             // Replace bibliography box with new values
                             updateBiblioBox(blockId, formData);
@@ -2449,7 +2471,7 @@
                                 $("#loginAlert").show();
                             } else {
                                 var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                                $('.error').append(alert);
+                                $('#slide-error-container').append(alert);
                             }
                         }
                     });
@@ -2531,10 +2553,11 @@
             	    });
             	});
              
-          // Use event delegation for reference blocks
+          // Use event delegation for reference blocks and biblio edit buttons
              $(document).on('mouseenter', '.referenceDivStaff', onMouseEnter);
              $(document).on('mouseleave', '.referenceDivStaff', onMouseLeave);
-             $(document).on('dblclick', '.referenceDivStaff', referenceBlockDoubleClick);
+             $(document).on('click', '.referenceDivStaff', referenceBlockClick);
+             $(document).on('click', '[data-action="edit-biblio"]', biblioBlockEditClick);
                 
 	            $("#submitSpaceBlock").on("click", function(e){
 		            e.preventDefault();
@@ -2693,7 +2716,7 @@
                 </li>
                 <li class="breadcrumb-item active">[[${slide.name}]]</li>
             </ol>
-            <div class="error"></div>
+            <div id="slide-error-container" class="error"></div>
             <div class="dropdown" style="float: right;" th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}">
                 <button class="btn branchbtn dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="icon-branch"></span> This Branching Point links to the following Sequences
@@ -3631,10 +3654,13 @@
 					           th:attr="data-biblio-id=${contents.id}"
 					           th:value="${contents.id}" />
 					    <div class="button-group" style="position: absolute; right: 0px; top: 10px; display: flex; gap: 8px;">
-					        <a class="btn primary-btn btn-sm" 
-					           data-action="add-reference" 
-					           style="padding: 6px; display: inline-flex; align-items: center; justify-content: center; min-width: 36px; height: 36px;">
+					        <a data-action="add-reference" 
+					           style="padding: 6px; display: inline-flex; align-items: center; justify-content: center; min-width: 36px; height: 36px; cursor: pointer;">
 					            <span class="icon-circle-add"></span>
+					        </a>
+					        <a data-action="edit-biblio" 
+					           style="padding: 6px; display: inline-flex; align-items: center; justify-content: center; min-width: 36px; height: 36px; cursor: pointer;">
+					            <span class="icon-edit"></span>
 					        </a>
 					        <a class="btn col-md-1" 
 					           data-action="delete-biblio" 
@@ -3672,7 +3698,8 @@
 						           data-action="delete-reference" 
 						           data-reference-id="${contentRef.id}"
 						           th:attr="data-reference-id=${contentRef.id}"
-						           href="javascript:;">
+						           href="javascript:;"
+						           style="position: absolute; right:0px; top: 0px;">
 						            <span class="icon-trash error"></span>
 						        </a>
 						    </div>
