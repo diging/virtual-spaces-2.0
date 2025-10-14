@@ -64,7 +64,7 @@ public class ExhibitionConfigurationController {
 
     @RequestMapping("/staff/exhibit/config")
     public String showExhibitions(Model model) {
-
+        // for now we assume there is just one exhibition
         IExhibition exhibition = exhibitionManager.getStartExhibition();
         if (exhibition == null) {
             exhibition = (Exhibition) exhibitFactory.createExhibition();
@@ -85,14 +85,16 @@ public class ExhibitionConfigurationController {
         List<Map<String, Object>> sortedLanguageList = exhibitionLanguageConfig.getExhibitionLanguageList().stream()
                 .map(rawMap -> (Map<String, Object>) rawMap)
                 .sorted((lang1, lang2) -> {
+                    String code1 = (String) lang1.get("code");
+                    String code2 = (String) lang2.get("code");
                     String label1 = (String) lang1.get("label");
                     String label2 = (String) lang2.get("label");
                     
                     // Check if languages are currently selected for this exhibition
                     boolean isLang1Selected = finalExhibition.getLanguages() != null && 
-                        finalExhibition.getLanguages().stream().anyMatch(l -> l.getLabel().equals(label1));
+                        finalExhibition.getLanguages().stream().anyMatch(l -> l.getCode().equals(code1));
                     boolean isLang2Selected = finalExhibition.getLanguages() != null && 
-                        finalExhibition.getLanguages().stream().anyMatch(l -> l.getLabel().equals(label2));
+                        finalExhibition.getLanguages().stream().anyMatch(l -> l.getCode().equals(code2));
                     
                     // show selected languages first
                     if (isLang1Selected != isLang2Selected) {
