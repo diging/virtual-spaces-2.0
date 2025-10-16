@@ -217,16 +217,14 @@
       			glowMerge.append("feMergeNode")
       				.attr("in", "SourceGraphic");
                 
-                // Create curved links using paths instead of lines
+                // Create straight links
                 const link = svg.append("g")
                     .attr("stroke", "#8E8E8E")
                     .attr("stroke-opacity", 0.4)
-                    .attr("fill", "none")
-                  .selectAll("path")
+                  .selectAll("line")
                   .data(links)
-                  .join("path")
-                  .attr("stroke-width", 2)
-                  .attr("stroke-linecap", "round");
+                  .join("line")
+                  .attr("stroke-width", 2);
                 
                 drag = simulation => {
   	          	  
@@ -295,36 +293,27 @@
 	           		.style("stroke", function(d) { return d.depth === 1 ? "#A55941" : "#8E8E8E"; })
 	           		.style("stroke-width", function(d) { return d.depth === 1 ? 3 : 2; })
 	           		.style("filter", "url(#dropShadow)")
-	           		.style("transition", "all 0.3s ease")
 	           		
 		           	.on("mouseover", function(event, d) {
 					    d3.select(this)
 					      .style("cursor", "pointer")
-					      .transition()
-					      .duration(200)
 					      .style("stroke-width", 5)
-					      .style("filter", "url(#glow)")
-					      .attr("r", function(d) { return d.depth === 2 ? 25 : d.depth === 1 ? 36 : 0; });
+					      .style("filter", "url(#glow)");
 					})
 					.on("mouseout", function(event, d) {
 					    d3.select(this)
 					      .style("cursor", "default")
-					      .transition()
-					      .duration(200)
 					      .style("stroke-width", function(d) { return d.depth === 1 ? 3 : 2; })
-					      .style("filter", "url(#dropShadow)")
-					      .attr("r", function(d) { return d.depth === 2 ? 22 : d.depth === 1 ? 32 : 0; });
+					      .style("filter", "url(#dropShadow)");
 					})
 	            	.on('click', function(event, d) {
 	            		//Reset highlighting
 	            		d3.selectAll("circle")
-							.transition()
-							.duration(300)
 							.style("fill", function(d) { 
 								return d.depth === 1 ? "url(#spaceGradient)" : "url(#moduleGradient)"; 
 							})
 							.style("stroke", function(d) { return d.depth === 1 ? "#A55941" : "#8E8E8E"; })
-							.attr("r", function(d) { return d.depth === 2 ? 22 : d.depth === 1 ? 32 : 0; });
+							.style("stroke-width", function(d) { return d.depth === 1 ? 3 : 2; });
 	            		
 	            		//Update card for node clicked
 	            		if (d.data.img) {
@@ -347,12 +336,9 @@
 	           			// Highlight selected node with gradient
 	           			d3.selectAll("circle").filter(function(n) {
 	                    	return n.data.id == d.data.id;
-	                  	}).transition()
-	                  	  .duration(300)
-	                  	  .style("fill", "url(#selectedGradient)")
+	                  	}).style("fill", "url(#selectedGradient)")
 	                  	  .style("stroke", "#A55941")
-	                  	  .style("stroke-width", 4)
-	                  	  .attr("r", function(d) { return d.depth === 2 ? 25 : d.depth === 1 ? 36 : 0; });
+	                  	  .style("stroke-width", 4);
 	            	});
 	           	
 	           	text.style("fill", function(d) { return d.depth === 1 ? "#121212" : "#fff"; })
@@ -361,27 +347,19 @@
 	           		.style("text-shadow", "0 1px 2px rgba(0,0,0,0.2)")
 	           		.style("user-select", "none");
 	           	
-           	 	d3.selectAll("path").filter(function(d) {
+           	 	d3.selectAll("line").filter(function(d) {
                 	return d.source.depth === 0;
               	}).style("visibility", "hidden")
               	  .style("opacity", 0)
            	 	  .style("pointer-events", "none");
            	 	  
 	            simulation.on("tick", () => {
-	              // Draw curved links
-	              link.attr("d", d => {
-	                const dx = d.target.x - d.source.x;
-	                const dy = d.target.y - d.source.y;
-	                const dr = Math.sqrt(dx * dx + dy * dy);
-	                
-	                // Calculate control point for quadratic curve
-	                const offsetX = -dy * 0.15;
-	                const offsetY = dx * 0.15;
-	                const midX = (d.source.x + d.target.x) / 2 + offsetX;
-	                const midY = (d.source.y + d.target.y) / 2 + offsetY;
-	                
-	                return `M${d.source.x},${d.source.y} Q${midX},${midY} ${d.target.x},${d.target.y}`;
-	              });
+	              // Draw straight links
+	              link
+	                  .attr("x1", d => d.source.x)
+	                  .attr("y1", d => d.source.y)
+	                  .attr("x2", d => d.target.x)
+	                  .attr("y2", d => d.target.y);
 
 	              node
 	                  .attr("cx", d => d.x)
