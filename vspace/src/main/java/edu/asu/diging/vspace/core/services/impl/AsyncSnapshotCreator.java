@@ -13,6 +13,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import edu.asu.diging.vspace.core.data.SnapshotTaskRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
@@ -35,6 +37,8 @@ public class AsyncSnapshotCreator implements IAsyncSnapshotCreator {
 
     private final String RESOURCES_FOLDER_NAME = "resources";
     
+    private final String INDEX_DOWNLOAD_TEMPLATE = "exhibition/downloads/indexDownloadTemplate";
+    
     @Autowired
     private SpaceRepository spaceRepository;
     
@@ -49,7 +53,10 @@ public class AsyncSnapshotCreator implements IAsyncSnapshotCreator {
     private SnapshotTaskRepository snapshotTaskRepository;
     
     @Autowired
-    private IExhibitionManager exhibitionManager;   
+    private IExhibitionManager exhibitionManager;
+    
+    @Autowired
+    private SpringTemplateEngine springTemplateEngine;   
 
     /**
      * Creates a snapshot and copies the spaces to exhibitionFolderPath
@@ -91,65 +98,22 @@ public class AsyncSnapshotCreator implements IAsyncSnapshotCreator {
      * @throws FileStorageException - if an error occurs while storing the index file
      */
     private void generateIndexHtml(String exhibitionFolderName, List<Space> spaces) throws FileStorageException {
-        StringBuilder htmlContent = new StringBuilder();
-        
         // Get exhibition details
         IExhibition exhibition = exhibitionManager.getStartExhibition();
         String exhibitionTitle = exhibition != null ? exhibition.getTitle() : "Virtual Exhibition";
         Space startSpace = exhibition != null && exhibition.getStartSpace() != null ? 
             (Space) exhibition.getStartSpace() : (spaces.isEmpty() ? null : spaces.get(0));
         
-        // Build HTML content
-        htmlContent.append("<!DOCTYPE html>\n");
-        htmlContent.append("<html>\n");
-        htmlContent.append("<head>\n");
-        htmlContent.append("    <meta charset='UTF-8'>\n");
-        htmlContent.append("    <meta name='viewport' content='width=device-width, initial-scale=1'>\n");
-        htmlContent.append("    <title>").append(exhibitionTitle).append("</title>\n");
-        htmlContent.append("    <link href='./resources/bootstrap-4.1.2/css/bootstrap.min.css' rel='stylesheet'>\n");
-        htmlContent.append("    <link href='./resources/extra/Home.css' rel='stylesheet'>\n");
-        htmlContent.append("    <link href='./resources/extra/diging-icon-pack.css' rel='stylesheet'>\n");
-        htmlContent.append("</head>\n");
-        htmlContent.append("<body>\n");
-        htmlContent.append("    <div class='container-fluid'>\n");
-        htmlContent.append("        <div class='nav-bar' style='height:48px; margin-bottom: 20px;'>\n");
-        htmlContent.append("            <h2 class='navbar-brand'>").append(exhibitionTitle).append("</h2>\n");
-        htmlContent.append("        </div>\n");
-        htmlContent.append("        <div class='row'>\n");
-        htmlContent.append("            <div class='col-md-12'>\n");
-        htmlContent.append("                <h1>Welcome to ").append(exhibitionTitle).append("</h1>\n");
+        // Create Thymeleaf context and populate with data
+        Context context = new Context();
+        context.setVariable("exhibitionTitle", exhibitionTitle);
+        context.setVariable("startSpace", startSpace);
+        context.setVariable("spaces", spaces);
         
-        if (startSpace != null) {
-            htmlContent.append("                <p>Click below to start exploring the exhibition:</p>\n");
-            htmlContent.append("                <a href='./").append(startSpace.getId()).append("/").append(startSpace.getId()).append(".html' class='btn primary-btn btn-lg'>Start Exhibition</a>\n");
-        }
-        
-        htmlContent.append("                <hr>\n");
-        htmlContent.append("                <h3>Available Spaces:</h3>\n");
-        htmlContent.append("                <div class='row'>\n");
-        
-        for (Space space : spaces) {
-            htmlContent.append("                    <div class='col-md-4 mb-3'>\n");
-            htmlContent.append("                        <div class='card'>\n");
-            htmlContent.append("                            <div class='card-body'>\n");
-            htmlContent.append("                                <h5 class='card-title'>").append(space.getName()).append("</h5>\n");
-            if (space.getDescription() != null && !space.getDescription().trim().isEmpty()) {
-                htmlContent.append("                                <p class='card-text'>").append(space.getDescription()).append("</p>\n");
-            }
-            htmlContent.append("                                <a href='./").append(space.getId()).append("/").append(space.getId()).append(".html' class='btn primary-btn'>Visit Space</a>\n");
-            htmlContent.append("                            </div>\n");
-            htmlContent.append("                        </div>\n");
-            htmlContent.append("                    </div>\n");
-        }
-        
-        htmlContent.append("                </div>\n");
-        htmlContent.append("            </div>\n");
-        htmlContent.append("        </div>\n");
-        htmlContent.append("    </div>\n");
-        htmlContent.append("</body>\n");
-        htmlContent.append("</html>");
+        // Render the template
+        String htmlContent = springTemplateEngine.process(INDEX_DOWNLOAD_TEMPLATE, context);
         
         // Store the index.html file
-        storageEngineDownloads.storeFile(htmlContent.toString().getBytes(), "index.html", exhibitionFolderName);
+        storageEngineDownloads.storeFile(htmlContent.getBytes(), "index.html", exhibitionFolderName);
     }
 }

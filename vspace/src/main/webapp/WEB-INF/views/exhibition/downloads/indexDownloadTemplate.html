@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <title th:text="${exhibitionTitle}">Virtual Exhibition</title>
+    <link href='./resources/bootstrap-4.1.2/css/bootstrap.min.css' rel='stylesheet'>
+    <link href='./resources/extra/Home.css' rel='stylesheet'>
+    <link href='./resources/extra/diging-icon-pack.css' rel='stylesheet'>
+</head>
+<body>
+    <div class='container-fluid'>
+        <div class='nav-bar' style='height:48px; margin-bottom: 20px;'>
+            <h2 class='navbar-brand' th:text="${exhibitionTitle}">Virtual Exhibition</h2>
+        </div>
+        <div class='row'>
+            <div class='col-md-12'>
+                <h1>Welcome to <span th:text="${exhibitionTitle}">Virtual Exhibition</span></h1>
+                
+                <div th:if="${startSpace != null}">
+                    <p>Click below to start exploring the exhibition:</p>
+                    <a th:href="${'./' + startSpace.id + '/' + startSpace.id + '.html'}" class='btn primary-btn btn-lg'>Start Exhibition</a>
+                </div>
+                
+                <hr>
+                <h3>Available Spaces:</h3>
+                <div class='row'>
+                    <div class='col-md-4 mb-3' th:each="space : ${spaces}">
+                        <div class='card'>
+                            <div class='card-body'>
+                                <h5 class='card-title' th:text="${space.name}">Space Name</h5>
+                                <p class='card-text' th:if="${space.description != null && !#strings.isEmpty(space.description)}" th:text="${space.description}">Space Description</p>
+                                <a th:href="${'./' + space.id + '/' + space.id + '.html'}" class='btn primary-btn'>Visit Space</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
