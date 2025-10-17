@@ -614,23 +614,6 @@ public class ContentBlockManager implements IContentBlockManager {
         contentBlockRepository.saveAll(contentBlocks);
     }
 
-    /**
-     * Adjusting the content order of the blocks of slide once it is dragged and
-     * changed position.
-     * 
-     * @param contentBlockList - The list contains the blocks and the updated
-     *                         content order corresponding to each blocks.
-     */
-    @Override
-    public void updateContentOrder(List<ContentBlock> contentBlockList) throws BlockDoesNotExistException {
-        if (contentBlockList == null || contentBlockList.isEmpty()) {
-            return;
-        }
-        
-        // Get the slide from the first content block
-        ISlide slide = contentBlockList.get(0).getSlide();
-        updateContentOrder(contentBlockList, slide);
-    }
 
     /**
      * Decreasing content order by 1 of the slide's block which are after the

@@ -41,10 +41,14 @@ public class UpdateContentOrderController {
         ISlide slide = slideManager.getSlide(slideId);
         List<ContentBlock> contentBlockList;
         try {
-            System.out.println(contentBlockString);
             contentBlockList = objectMapper.readValue(contentBlockString, new TypeReference<List<ContentBlock>>(){});
-            contentBlockManager.updateContentOrder(contentBlockList,slide);
+            contentBlockManager.updateContentOrder(contentBlockList, slide);
+        } catch (BlockDoesNotExistException e) {
+            logger.warn("Block does not exist, bad request.", e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
+            // Catching generic Exception for JSON parsing errors (JsonProcessingException, IOException, etc.)
+            // ObjectMapper.readValue() can throw JsonProcessingException, JsonMappingException, or IOException
             logger.warn("Error while parsing content blocks.", e);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }

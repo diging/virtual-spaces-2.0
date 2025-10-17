@@ -11,13 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import edu.asu.diging.vspace.core.model.ISpace;
-import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.IStaffSearchManager;
 import edu.asu.diging.vspace.core.services.impl.model.StaffSearchSpaceResults;
 
@@ -26,14 +20,11 @@ public class StaffSearchSpaceController {
 
     @Autowired
     private IStaffSearchManager staffSearchManager;
-    
-    @Autowired
-    private ISpaceManager spaceManager;
 
     @RequestMapping(value = "/staff/search/space")
     public ResponseEntity<StaffSearchSpaceResults> searchInVspace(
             @RequestParam(value = "spacePagenum", required = false, defaultValue = "1") String spacePagenum,
-            Model model, @RequestParam(name = "searchText") String searchTerm) throws JsonProcessingException {
+            Model model, @RequestParam(name = "searchText") String searchTerm) {
 
         List<ISpace> spaceList = paginationForSpace(spacePagenum, searchTerm);
         StaffSearchSpaceResults staffSearch = new StaffSearchSpaceResults();
