@@ -5,3 +5,6 @@ vspace/.classpath
 /target/
 .settings/
 **/.settings/
+.classpath
+.project
+pom.xml
