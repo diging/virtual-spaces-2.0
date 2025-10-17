@@ -29,7 +29,7 @@ public abstract class LinkManager<L extends ILink<T>, T extends IVSpaceElement, 
 
     @Autowired
     private ISpaceManager spaceManager;
-
+  
     @Autowired
     private IImageFactory imageFactory;
 
@@ -55,7 +55,7 @@ public abstract class LinkManager<L extends ILink<T>, T extends IVSpaceElement, 
     protected abstract L getLink(String linkId);
 
     protected abstract L createLinkObject(String title, String id);
-
+   
     protected abstract T getTarget(String linkedId);
 
     protected abstract U createDisplayLink(L link);
@@ -121,7 +121,6 @@ public abstract class LinkManager<L extends ILink<T>, T extends IVSpaceElement, 
         linkDisplay.setRotation(rotation);
         linkDisplay.setType(displayType != null ? displayType : DisplayType.ARROW);   	
     }
-
     protected void setDisplayProperties(ILinkDisplay linkDisplay, String id, float positionX, float positionY,
             int rotation, DisplayType displayType, byte[] linkImage, String imageFilename)
             throws ImageCouldNotBeStoredException {
