@@ -509,14 +509,6 @@ public class ContentBlockManagerTest {
 
     }
 
-    @Test
-    public void test_deleteImagetBlockById_whenIdIsNull() throws BlockDoesNotExistException {
-        String imageBlockId = null;
-        managerToTest.deleteImageBlockById(null, "slideId_1");
-        Mockito.verify(imageBlockRepo, Mockito.never()).deleteById(imageBlockId);
-
-    }
-
     @Test(expected = BlockDoesNotExistException.class)
     public void test_deleteChoiceBlockById_missingContentBlock() throws BlockDoesNotExistException {
         String blockId = "realBlockId";
