@@ -1,218 +1,224 @@
 package edu.asu.diging.vspace.core.util;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.List;
+import edu.asu.diging.vspace.core.model.impl.Reference;
 
-public class CitationFormatter {
-    
-    // Pattern to match citation syntax: [@author year, pages]
-    private static final Pattern CITATION_PATTERN = Pattern.compile(
-        "\\[@([^,]+)\\s+(\\d{4})(?:,\\s*([^\\]]+))?\\]"
-    );
-    
-    // Pattern to match full citation entries: {author, year, title, journal, etc.}
-    private static final Pattern FULL_CITATION_PATTERN = Pattern.compile(
-        "\\{([^}]+)\\}"
-    );
+public class APACitationFormatter {
     
     /**
-     * Formats text containing citation markers into proper APA format.
+     * Formats a list of references in APA style
      * 
-     * @param text The input text containing citation markers
-     * @return Formatted text with proper citations
+     * @param references List of Reference objects to format
+     * @return HTML formatted string with APA-style references
      */
-    public static String formatCitations(String text) {
-        if (text == null || text.isEmpty()) {
-            return text;
+    public static String formatReferences(List<Reference> references) {
+        if (references == null || references.isEmpty()) {
+            return "";
         }
         
         StringBuilder result = new StringBuilder();
-        String[] lines = text.split("\n");
+        result.append("<div class=\"apa-references\">");
         
-        for (String line : lines) {
-            result.append(formatLine(line)).append("\n");
+        for (int i = 0; i < references.size(); i++) {
+            Reference ref = references.get(i);
+            result.append(formatSingleReference(ref, i + 1));
         }
         
-        return result.toString().trim();
+        result.append("</div>");
+        return result.toString();
     }
     
     /**
-     * Formats a single line of text with citations.
+     * Formats a single reference in APA style
      */
-    private static String formatLine(String line) {
-        // Handle full citation entries (transform to reference list format)
-        line = formatFullCitations(line);
+    private static String formatSingleReference(Reference ref, int index) {
+        StringBuilder citation = new StringBuilder();
+        citation.append("<div class=\"apa-reference\" id=\"ref-").append(index).append("\">");
         
-        // Handle in-text citations
-        line = formatInTextCitations(line);
+        // Author(s)
+        String authors = formatAuthors(ref.getAuthor());
+        if (authors != null && !authors.isEmpty()) {
+            citation.append(authors).append(" ");
+        }
         
-        return line;
-    }
-    
-    /**
-     * Formats in-text citations like [@author 2020] to (Author, 2020)
-     */
-    private static String formatInTextCitations(String text) {
-        Matcher matcher = CITATION_PATTERN.matcher(text);
-        StringBuffer result = new StringBuffer();
+        // Year
+        if (ref.getYear() != null && !ref.getYear().isEmpty()) {
+            citation.append("(").append(ref.getYear()).append("). ");
+        }
         
-        while (matcher.find()) {
-            String author = matcher.group(1).trim();
-            String year = matcher.group(2);
-            String pages = matcher.group(3);
-            
-            // Capitalize first letter of author's last name
-            author = capitalizeAuthor(author);
-            
-            String replacement;
-            if (pages != null && !pages.trim().isEmpty()) {
-                replacement = String.format("(%s, %s, %s)", author, year, pages.trim());
-            } else {
-                replacement = String.format("(%s, %s)", author, year);
+        // Title
+        if (ref.getTitle() != null && !ref.getTitle().isEmpty()) {
+            String title = ref.getTitle().trim();
+            if (!title.endsWith(".")) {
+                title += ".";
             }
-            
-            matcher.appendReplacement(result, replacement);
-        }
-        matcher.appendTail(result);
-        
-        return result.toString();
-    }
-    
-    /**
-     * Formats full citation entries into APA reference format
-     */
-    private static String formatFullCitations(String text) {
-        Matcher matcher = FULL_CITATION_PATTERN.matcher(text);
-        StringBuffer result = new StringBuffer();
-        
-        while (matcher.find()) {
-            String citationData = matcher.group(1);
-            String formattedReference = parseAndFormatReference(citationData);
-            matcher.appendReplacement(result, formattedReference);
-        }
-        matcher.appendTail(result);
-        
-        return result.toString();
-    }
-    
-    /**
-     * Parses citation data and formats it as APA reference
-     */
-    private static String parseAndFormatReference(String citationData) {
-        String[] parts = citationData.split(",");
-        if (parts.length < 3) {
-            return citationData; // Return as-is if not enough parts
+            citation.append("<em>").append(title).append("</em> ");
         }
         
-        String author;
-        String year;
-        String title;
-        int titleIndex;
-        
-        // Check if the first part looks like "LastName, FirstName" format
-        if (parts.length >= 4 && parts[1].trim().matches("^[A-Z][a-z]*\\.?$|^[A-Z][a-z]+$")) {
-            // Author is "LastName, FirstName" format (first two parts)
-            author = parts[0].trim() + ", " + parts[1].trim();
-            year = parts[2].trim();
-            title = parts[3].trim();
-            titleIndex = 4;
+        // Journal/Publication info
+        if (ref.getType() != null) {
+            String type = ref.getType().toLowerCase();
+            switch (type) {
+                case "journal article":
+                    formatJournalArticle(ref, citation);
+                    break;
+                case "book":
+                    formatBook(ref, citation);
+                    break;
+                case "thesis":
+                    formatThesis(ref, citation);
+                    break;
+                case "patent":
+                    formatPatent(ref, citation);
+                    break;
+                case "report":
+                    formatReport(ref, citation);
+                    break;
+                default:
+                    formatGeneric(ref, citation);
+                    break;
+            }
         } else {
-            // Author is just the first part
-            author = parts[0].trim();
-            year = parts[1].trim();
-            title = parts[2].trim();
-            titleIndex = 3;
+            formatGeneric(ref, citation);
         }
         
-        // Basic APA format: Author, A. (Year). Title. 
-        StringBuilder reference = new StringBuilder();
-        reference.append(capitalizeAuthor(author));
-        reference.append(" (").append(year).append("). ");
-        reference.append("*").append(title).append("*");
-        
-        if (parts.length > titleIndex) {
-            String journal = parts[titleIndex].trim();
-            reference.append(". ").append(journal);
+        // URL
+        if (ref.getUrl() != null && !ref.getUrl().isEmpty()) {
+            citation.append(" Retrieved from ").append(ref.getUrl());
         }
         
-        if (parts.length > titleIndex + 1) {
-            String pages = parts[titleIndex + 1].trim();
-            reference.append(", ").append(pages);
-        }
-        
-        reference.append(".");
-        
-        return reference.toString();
+        citation.append("</div>");
+        return citation.toString();
     }
     
     /**
-     * Capitalizes author name properly for citations
+     * Formats author names in APA style
      */
-    private static String capitalizeAuthor(String author) {
+    private static String formatAuthors(String author) {
         if (author == null || author.isEmpty()) {
-            return author;
+            return "";
         }
         
-        // Handle "et al." case - preserve it as is
-        if (author.toLowerCase().contains("et al")) {
-            return author; // Keep original formatting for et al.
-        }
+        String[] authors = author.split(",");
+        StringBuilder formatted = new StringBuilder();
         
-        // Handle "lastname, firstname" format
-        if (author.contains(",")) {
-            String[] nameParts = author.split(",");
-            if (nameParts.length >= 2) {
-                String lastName = nameParts[0].trim();
-                String firstName = nameParts[1].trim();
-                return capitalizeFirstLetter(lastName) + ", " + 
-                       (firstName.length() > 0 ? Character.toUpperCase(firstName.charAt(0)) + "." : "");
+        for (int i = 0; i < authors.length; i++) {
+            String name = authors[i].trim();
+            if (name.isEmpty()) continue;
+            
+            String[] parts = name.split("\\s+");
+            if (parts.length >= 2) {
+                // Last name, First initial
+                formatted.append(parts[parts.length - 1]).append(", ");
+                for (int j = 0; j < parts.length - 1; j++) {
+                    if (parts[j].length() > 0) {
+                        formatted.append(parts[j].charAt(0)).append(". ");
+                    }
+                }
+            } else {
+                formatted.append(name);
+            }
+            
+            if (i < authors.length - 1) {
+                formatted.append(", ");
             }
         }
         
-        // Handle "firstname lastname" format
-        String[] words = author.split("\\s+");
-        if (words.length >= 2) {
-            String firstName = words[0];
-            String lastName = words[words.length - 1];
-            return capitalizeFirstLetter(lastName) + ", " + 
-                   (firstName.length() > 0 ? Character.toUpperCase(firstName.charAt(0)) + "." : "");
+        return formatted.toString().trim();
+    }
+    
+    /**
+     * Formats journal article references
+     */
+    private static void formatJournalArticle(Reference ref, StringBuilder citation) {
+        if (ref.getJournal() != null && !ref.getJournal().isEmpty()) {
+            citation.append("<em>").append(ref.getJournal()).append("</em>");
         }
         
-        return capitalizeFirstLetter(author);
-    }
-    
-    /**
-     * Capitalizes the first letter of a string
-     */
-    private static String capitalizeFirstLetter(String str) {
-        if (str == null || str.isEmpty()) {
-            return str;
-        }
-        return str.substring(0, 1).toUpperCase() + str.substring(1).toLowerCase();
-    }
-    
-    /**
-     * Validates if text contains properly formatted citations
-     */
-    public static boolean hasValidCitations(String text) {
-        if (text == null || text.isEmpty()) {
-            return true; // Empty text is valid
+        if (ref.getVolume() != null && !ref.getVolume().isEmpty()) {
+            citation.append(", ").append(ref.getVolume());
         }
         
-        // Check for basic citation patterns
-        return CITATION_PATTERN.matcher(text).find() || 
-               FULL_CITATION_PATTERN.matcher(text).find() ||
-               !containsUnformattedReferences(text);
+        if (ref.getIssue() != null && !ref.getIssue().isEmpty()) {
+            citation.append("(").append(ref.getIssue()).append(")");
+        }
+        
+        if (ref.getPages() != null && !ref.getPages().isEmpty()) {
+            citation.append(", ").append(ref.getPages());
+        }
+        
+        citation.append(".");
     }
     
     /**
-     * Checks if text contains unformatted references that should be citations
+     * Formats book references
      */
-    private static boolean containsUnformattedReferences(String text) {
-        // Look for patterns that suggest unformatted references
-        String lowerText = text.toLowerCase();
-        return lowerText.contains("journal article") || 
-               lowerText.contains("report") ||
-               (lowerText.contains("20") && lowerText.matches(".*\\b\\d{4}\\b.*"));
+    private static void formatBook(Reference ref, StringBuilder citation) {
+        if (ref.getEditors() != null && !ref.getEditors().isEmpty()) {
+            citation.append("(Ed.), ");
+        }
+        
+        if (ref.getVolume() != null && !ref.getVolume().isEmpty()) {
+            citation.append("Vol. ").append(ref.getVolume()).append(". ");
+        }
+        
+        if (ref.getPages() != null && !ref.getPages().isEmpty()) {
+            citation.append("pp. ").append(ref.getPages()).append(". ");
+        }
+    }
+    
+    /**
+     * Formats thesis references
+     */
+    private static void formatThesis(Reference ref, StringBuilder citation) {
+        citation.append("Unpublished ");
+        if (ref.getJournal() != null && !ref.getJournal().isEmpty()) {
+            citation.append(ref.getJournal()).append(" ");
+        }
+        citation.append("thesis.");
+    }
+    
+    /**
+     * Formats patent references
+     */
+    private static void formatPatent(Reference ref, StringBuilder citation) {
+        citation.append("U.S. Patent No. ");
+        if (ref.getVolume() != null && !ref.getVolume().isEmpty()) {
+            citation.append(ref.getVolume());
+        }
+        citation.append(".");
+    }
+    
+    /**
+     * Formats report references
+     */
+    private static void formatReport(Reference ref, StringBuilder citation) {
+        if (ref.getJournal() != null && !ref.getJournal().isEmpty()) {
+            citation.append("(").append(ref.getJournal()).append("). ");
+        }
+        citation.append("Report.");
+    }
+    
+    /**
+     * Formats generic references
+     */
+    private static void formatGeneric(Reference ref, StringBuilder citation) {
+        if (ref.getJournal() != null && !ref.getJournal().isEmpty()) {
+            citation.append(ref.getJournal()).append(".");
+        }
+        
+        if (ref.getVolume() != null && !ref.getVolume().isEmpty()) {
+            citation.append(" ").append(ref.getVolume());
+        }
+        
+        if (ref.getIssue() != null && !ref.getIssue().isEmpty()) {
+            citation.append("(").append(ref.getIssue()).append(")");
+        }
+        
+        if (ref.getPages() != null && !ref.getPages().isEmpty()) {
+            citation.append(", ").append(ref.getPages());
+        }
+        
+        citation.append(".");
     }
 } 

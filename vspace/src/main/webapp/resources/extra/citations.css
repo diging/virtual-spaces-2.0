@@ -230,4 +230,182 @@
     0% { background-color: #fff3cd; }
     50% { background-color: #ffeaa7; }
     100% { background-color: rgba(0, 102, 204, 0.05); }
+}
+
+/* APA Bibliography Styling */
+.apa-bibliography {
+    margin: 20px 0;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    border-left: 4px solid #007bff;
+}
+
+.apa-bibliography .bibliography-title {
+    color: #2c3e50;
+    font-size: 1.4em;
+    font-weight: 600;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 8px;
+}
+
+.apa-bibliography .bibliography-description {
+    color: #6c757d;
+    font-style: italic;
+    margin-bottom: 15px;
+    font-size: 0.95em;
+}
+
+.apa-references {
+    margin-top: 15px;
+}
+
+.apa-reference {
+    margin-bottom: 12px;
+    padding: 8px 0;
+    line-height: 1.6;
+    font-size: 0.9em;
+    color: #2c3e50;
+    border-bottom: 1px solid #e9ecef;
+    padding-bottom: 8px;
+}
+
+.apa-reference:last-child {
+    border-bottom: none;
+}
+
+.apa-reference em {
+    font-style: italic;
+    color: #495057;
+}
+
+/* Raw Bibliography Styling (for editing) */
+.raw-bibliography {
+    margin: 20px 0;
+    padding: 15px;
+    background-color: #fff3cd;
+    border-radius: 6px;
+    border-left: 4px solid #ffc107;
+}
+
+.raw-bibliography .bibliography-title {
+    color: #856404;
+    font-size: 1.2em;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.raw-bibliography .bibliography-description {
+    color: #856404;
+    font-style: italic;
+    margin-bottom: 15px;
+    font-size: 0.9em;
+}
+
+.raw-references {
+    margin-top: 15px;
+}
+
+.raw-reference {
+    margin-bottom: 8px;
+    padding: 6px 8px;
+    background-color: #fff;
+    border: 1px solid #ffeaa7;
+    border-radius: 4px;
+    font-size: 0.85em;
+    color: #856404;
+    font-family: 'Courier New', monospace;
+    line-height: 1.4;
+}
+
+.raw-reference:hover {
+    background-color: #fefefe;
+    border-color: #ffc107;
+}
+
+/* APA Reference Numbering */
+.apa-reference::before {
+    content: counter(apa-ref-counter) ". ";
+    counter-increment: apa-ref-counter;
+    font-weight: bold;
+    color: #007bff;
+    margin-right: 8px;
+}
+
+.apa-references {
+    counter-reset: apa-ref-counter;
+}
+
+/* Hanging indent for APA references */
+.apa-reference {
+    text-indent: -20px;
+    padding-left: 20px;
+}
+
+/* APA formatting for different reference types */
+.apa-reference .journal-title {
+    font-style: italic;
+    font-weight: 500;
+}
+
+.apa-reference .volume {
+    font-weight: 500;
+}
+
+.apa-reference .issue {
+    font-weight: 500;
+}
+
+.apa-reference .pages {
+    font-weight: 500;
+}
+
+.apa-reference .url {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.apa-reference .url:hover {
+    text-decoration: underline;
+}
+
+/* Responsive APA styling */
+@media (max-width: 768px) {
+    .apa-bibliography {
+        margin: 15px 0;
+        padding: 12px;
+    }
+    
+    .apa-bibliography .bibliography-title {
+        font-size: 1.2em;
+    }
+    
+    .apa-reference {
+        font-size: 0.85em;
+        line-height: 1.5;
+    }
+    
+    .raw-reference {
+        font-size: 0.8em;
+        padding: 4px 6px;
+    }
+}
+
+/* Print styles for APA references */
+@media print {
+    .apa-bibliography {
+        background-color: transparent;
+        border: none;
+        margin: 10px 0;
+    }
+    
+    .apa-reference {
+        color: #000;
+        border-bottom: 1px solid #ccc;
+    }
+    
+    .raw-bibliography {
+        display: none; /* Hide raw references in print */
+    }
 } 
