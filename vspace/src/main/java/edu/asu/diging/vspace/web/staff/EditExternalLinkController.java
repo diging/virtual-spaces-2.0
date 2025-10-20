@@ -59,7 +59,7 @@ public class EditExternalLinkController extends EditSpaceLinksController {
 				new Float(y), 0, externalLink, title,desc, externalLinkIdValueEdit, externalLinkDisplayId, type, linkImage,
 				filename, imageId);
         return success(display.getExternalLink().getId(), display.getId(), display.getPositionX(),
-				display.getPositionY(), display.getRotation(), display.getExternalLink().getExternalLink(), title,
-				displayType, null, null);
+                display.getPositionY(), display.getRotation(), display.getExternalLink().getExternalLink(), title,
+                displayType, null, null);
     }
 }

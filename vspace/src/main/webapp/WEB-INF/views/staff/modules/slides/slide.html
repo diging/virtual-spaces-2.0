@@ -1349,6 +1349,145 @@
             		templateResult: formatSpace,
             		templateSelection: formatSpaceSelection
                 });
+              
+              $("#addExternalLinkButton").click(function(e) {
+           	   $('#errorAlert')[0].style.display = "none";
+                  hideLinkInfoTabs();
+                  displayForms("#createExternalLinkAlert");
+              });
+
+              $(document).on("click", ".editExternalLink", function(e) {
+       			  externalLink = {};
+       			  externalLink["id"] = $(this).attr("data-link-id");
+                  externalLink["label"] = $(this).attr("data-label");
+                  externalLink["url"] = $(this).attr("data-url");
+                  $(".externalLinkIdEdit").attr('data-link-id', $(this).attr("data-link-id"));
+       		      displayForms("#editExternalLinkInfo");
+         	  });
+               
+              $("#editExternalLinkBtn").click(function(e) {
+            	  e.preventDefault();
+                  $("#space").scrollTop(0);
+                  var linkId = $(".externalLinkIdEdit").attr('data-link-id');
+                  var form = $("#editExternalLinkForm");
+                  var formData = new FormData(form[0]);
+                  $.ajax({
+                      type: "POST",
+                      url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide?.id}+'/link/external/'})]"+linkId+'?[(${_csrf.parameterName})]=[(${_csrf.token})]',
+                      cache: false,
+                      contentType : false,
+                      processData : false,
+                      enctype: 'multipart/form-data',
+                      data: formData,
+                      beforeSend: function () {
+                          $(".saveLoader").show();
+                      },
+                      complete: function () {
+                          $(".saveLoader").hide();
+                      },
+                      success: function(data) {
+                    	  var linkData = JSON.parse(data);
+                          hideLinkInfoTabs();
+                          $("#space").css("display", "none");
+                   	      $('#'+ externalLink["id"]).remove();
+                	      $('#'+ externalLink["id"] +'form').remove();
+                          showExternalLinks(linkData);;
+                      }
+                  });
+               });
+				
+               const closeButton = document.createElement('button');
+               closeButton.textContent = 'x';
+               closeButton.classList.add('closebtn');
+               $("#createExternalLinkBtn").click(function(e) {
+                   e.preventDefault();
+                   $("#space").scrollTop(0);
+                   var externalLink = $(".externalLink").val();
+                   var externalLinkLabel = $(".externalLinkLabel").val();
+                   if (externalLinkLabel == undefined || externalLinkLabel == "") {
+                	   $("#errorAlert")[0].style.display = "block";
+                	   $("#errorAlert")[0].textContent = "Please enter a label for this external link.";
+                	   $("#errorAlert")[0].appendChild(closeButton);
+                       $("#space").scrollTop($('#space')[0].scrollHeight);
+                       return;
+                   }
+                   if (externalLink == undefined || externalLink == "") {
+                	   $("#errorAlert")[0].style.display = "block";
+                	   $("#errorAlert")[0].textContent = "Please provide the link to the external link.";
+                	   $("#errorAlert")[0].appendChild(closeButton);
+                       $("#space").scrollTop($('#space')[0].scrollHeight);
+                       return;
+                   }
+                   var form = $("#createExternalLinkForm");
+                   var formData = new FormData(form[0]);
+                   $.ajax({
+                       type: "POST",
+                       url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/externallink?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+                       cache       : false,
+                       contentType : false,
+                       processData : false,
+                       enctype: 'multipart/form-data',
+                       data: formData,
+                       beforeSend: function () {
+                           $(".saveLoader").show();
+                           },
+                      	complete: function () {
+                           $(".saveLoader").hide();
+                           },
+                       success: function(data) {
+                           var linkData = JSON.parse(data);
+                           $("#createExternalLinkAlert").hide();
+                           form[0].reset();
+                           $("#space").css("display", "none");
+                           showExternalLinks(linkData);
+                       }
+                   });
+               });
+               
+               $(document).on("click", ".deleteExternalLink", function(e) {
+            	   $("#confirmDeleteLinkAlert").show();
+               	   $(".deleteExternalLinkAlert").attr('data-link-id', $(this).attr("data-link-id"));
+               });
+               
+           	   $(".deleteExternalLinkAlert").on("click", function(e) {
+            	    e.preventDefault();
+              	    $("#confirmDeleteImageAlert").find('input').remove();
+              		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
+              		$("#confirmDeleteTextAlert").find('input').remove();
+              		$("#confirmDeleteLinkAlert").hide();
+               		var linkId = $(this).attr("data-link-id");
+                    $.ajax({
+                    	url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/externallink/'})]"+ linkId + '?[(${_csrf.parameterName})]=[(${_csrf.token})]',
+                        method: "DELETE",
+                        beforeSend: function () {
+                        	$(".saveLoader").show();
+                        },
+                      	complete: function () {
+                        	$(".saveLoader").hide();
+                        },
+                        success:function(data) {
+               		        $('#' + linkId).remove();
+               		    	$('#' + linkId + "form").remove();
+                            hideLinkInfoTabs();
+                        }
+                    });
+               });
+
+               // ------------- adjust links on background image (e.g. when inputs are changed) ------------
+               
+               $("#externalLinkImage").change(function() {
+                   if (this.files && this.files[0]) {
+                       externalLinkIconReader.readAsDataURL(this.files[0]);
+                   }
+               });
+               
+               $(".cancelExternalLinkBtn").click(function() {
+                   $("#space").scrollTop(0);
+                   $("#undefined").remove();
+                   $("#space").hide();
+                   $("#createExternalLinkAlert").hide();
+                   $("#editExternalLinkInfo").hide();
+               });
                 
                 $("#spaceName").select2({
                 	ajax: {
