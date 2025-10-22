@@ -64,6 +64,7 @@ public class BiblioBlock extends ContentBlock implements IBiblioBlock {
      * 
      * @return HTML formatted string with APA-style references
      */
+    @Override
     @Transient
     public String renderAPAReferences() {
         if (references == null || references.isEmpty()) {
@@ -75,7 +76,7 @@ public class BiblioBlock extends ContentBlock implements IBiblioBlock {
         
         // Add bibliography title and description
         if (biblioTitle != null && !biblioTitle.isEmpty()) {
-            result.append("<h3 class=\"bibliography-title\">").append(biblioTitle).append("</h3>");
+            result.append("<h3 class=\"bibliography-title\"><strong>").append(biblioTitle).append("</strong></h3>");
         }
         
         if (description != null && !description.isEmpty()) {
@@ -94,6 +95,7 @@ public class BiblioBlock extends ContentBlock implements IBiblioBlock {
      * 
      * @return HTML formatted string with raw reference data
      */
+    @Override
     @Transient
     public String renderRawReferences() {
         if (references == null || references.isEmpty()) {
