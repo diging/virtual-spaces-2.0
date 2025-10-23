@@ -49,9 +49,6 @@ public class SnapshotManager  implements  ISnapshotManager {
     @Autowired
     @Qualifier("storageEngineDownloads")
     private IStorageEngine storageEngineDownloads;
-    
-    @Autowired
-    private SequenceHistory sequenceHistory;
 
     @Autowired
     private ExhibitionSnapshotRepository exhibitionSnapshotRepository;
@@ -66,14 +63,13 @@ public class SnapshotManager  implements  ISnapshotManager {
 
     /**
      * Triggers the creation of an exhibition snapshot.
-     *
-     * This method initializes and saves an {@link ExhibitionSnapshot} and a {@link SnapshotTask},
+     * This method initializes and saves an {@link ExhibitionSnapshot} and a {@link SnapshotTask}.
      *
      * @return the created {@link ExhibitionSnapshot}
-     * @throws IOException                          if an I/O error occurs during the snapshot creation process
-     * @throws InterruptedException                 if the snapshot creation process is interrupted
-     * @throws SnapshotCouldNotBeCreatedException   if the snapshot could not be created due to any other errors
-     * @throws ExecutionException 
+     * @throws IOException if an I/O error occurs during the snapshot creation process
+     * @throws InterruptedException if the snapshot creation process is interrupted
+     * @throws SnapshotCouldNotBeCreatedException if the snapshot could not be created due to any other errors
+     * @throws ExecutionException if the async task execution fails
      */
     @Override
     @Transactional
@@ -81,12 +77,12 @@ public class SnapshotManager  implements  ISnapshotManager {
         String exhibitionFolderName = getExhibitionFolderName();
         ExhibitionSnapshot exhibitionSnapshot = new ExhibitionSnapshot();
         createSnapshotFolder(exhibitionSnapshot, exhibitionFolderName);       
-        SnapshotTask snapshotTask =  createSnapshotTask(exhibitionSnapshot);
+        SnapshotTask snapshotTask = createSnapshotTask(exhibitionSnapshot);
         exhibitionSnapshot.setSnapshotTask(snapshotTask); 
         exhibitionSnapshot = exhibitionSnapshotRepository.save(exhibitionSnapshot);
 
         try {
-            snapshotTask = createSnapshot(resourcesPath, exhibitionFolderName, sequenceHistory, exhibitionSnapshot);
+            snapshotTask = createSnapshot(resourcesPath, exhibitionFolderName, exhibitionSnapshot);
             storageEngineDownloads.generateZip(exhibitionFolderName);
         } catch (IOException | InterruptedException | FileStorageException e) {
             throw new SnapshotCouldNotBeCreatedException(e.getMessage(), e);
@@ -107,24 +103,22 @@ public class SnapshotManager  implements  ISnapshotManager {
     }
     
     /**
-     * Creates a snapshot and copies the spaces to exhibitionFolderPath
+     * Creates a snapshot and copies the spaces to exhibitionFolderPath.
      * 
-     * @param resourcesPath - the path to the resources directory
-     * @param exhibitionFolderName - the name of the folder where the exhibition data is stored
-     * @param sequenceHistory - the history of sequences to be included in the snapshot
-     * @param exhibitionSnapshot - the snapshot object that will store the exhibition state
-     * @return 
-     * @throws IOException - if an I/O error occurs during the snapshot creation
-     * @throws InterruptedException - if the snapshot creation process is interrupted
-     * @throws FileStorageException - if an error occurs while storing the snapshot
-     * @throws ExecutionException 
-     * @throws ImageCouldNotBeStoredException 
+     * @param resourcesPath the path to the resources directory
+     * @param exhibitionFolderName the name of the folder where the exhibition data is stored
+     * @param exhibitionSnapshot the snapshot object that will store the exhibition state
+     * @return the completed SnapshotTask
+     * @throws IOException if an I/O error occurs during the snapshot creation
+     * @throws InterruptedException if the snapshot creation process is interrupted
+     * @throws FileStorageException if an error occurs while storing the snapshot
+     * @throws ExecutionException if the async task execution fails
      */   
     @Override
     @Transactional
-    public SnapshotTask createSnapshot(String resourcesPath, String exhibitionFolderName,SequenceHistory sequenceHistory, ExhibitionSnapshot exhibitionSnapshot) 
+    public SnapshotTask createSnapshot(String resourcesPath, String exhibitionFolderName, ExhibitionSnapshot exhibitionSnapshot) 
             throws IOException, InterruptedException, FileStorageException, ExecutionException {
-        Future<SnapshotTask> futureTask =  asyncSnapshotCreator.createSnapshot(resourcesPath, exhibitionFolderName, sequenceHistory, exhibitionSnapshot);
+        Future<SnapshotTask> futureTask = asyncSnapshotCreator.createSnapshot(resourcesPath, exhibitionFolderName, exhibitionSnapshot);
         return futureTask.get();
     }
 
@@ -156,16 +150,14 @@ public class SnapshotManager  implements  ISnapshotManager {
     public byte[] getExhibitionSnapshot(String id) throws ExhibitionSnapshotNotFoundException, IOException {
         Optional<ExhibitionSnapshot> exhibitionSnapshot = exhibitionSnapshotRepository.findById(id);
 
-        if(!exhibitionSnapshot.isPresent()) {           
+        if (!exhibitionSnapshot.isPresent()) {           
             throw new ExhibitionSnapshotNotFoundException("Exhibition Snapshot not found");             
         }
         try {
-            return storageEngineDownloads.getMediaContent("",exhibitionSnapshot.get().getFolderName()+ZIP_FILE_EXTENSION);                
-        }
-        catch(IOException e) {
+            return storageEngineDownloads.getMediaContent("", exhibitionSnapshot.get().getFolderName() + ZIP_FILE_EXTENSION);                
+        } catch (IOException e) {
             throw new ExhibitionSnapshotNotFoundException(e.getMessage(), e);
         }
-        
     }
 
     /**

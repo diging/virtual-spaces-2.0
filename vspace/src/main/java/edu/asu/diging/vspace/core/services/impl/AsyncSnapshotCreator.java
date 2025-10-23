@@ -59,27 +59,25 @@ public class AsyncSnapshotCreator implements IAsyncSnapshotCreator {
     private SpringTemplateEngine springTemplateEngine;   
 
     /**
-     * Creates a snapshot and copies the spaces to exhibitionFolderPath
+     * Creates a snapshot and copies the spaces to exhibitionFolderPath.
      * 
-     * @param resourcesPath - the path to the resources directory
-     * @param exhibitionFolderName - the name of the folder where the exhibition data is stored
-     * @param sequenceHistory - the history of sequences to be included in the snapshot
-     * @param exhibitionSnapshot - the snapshot object that will store the exhibition state
-     * @return 
-     * @throws IOException - if an I/O error occurs during the snapshot creation
-     * @throws InterruptedException - if the snapshot creation process is interrupted
-     * @throws FileStorageException - if an error occurs while storing the snapshot
-     * @throws ImageCouldNotBeStoredException 
+     * @param resourcesPath the path to the resources directory
+     * @param exhibitionFolderName the name of the folder where the exhibition data is stored
+     * @param exhibitionSnapshot the snapshot object that will store the exhibition state
+     * @return Future containing the completed SnapshotTask
+     * @throws IOException if an I/O error occurs during the snapshot creation
+     * @throws InterruptedException if the snapshot creation process is interrupted
+     * @throws FileStorageException if an error occurs while storing the snapshot
      */   
     @Async
     @Transactional
-    public Future<SnapshotTask> createSnapshot(String resourcesPath, String exhibitionFolderName,SequenceHistory sequenceHistory, ExhibitionSnapshot exhibitionSnapshot) 
+    public Future<SnapshotTask> createSnapshot(String resourcesPath, String exhibitionFolderName, ExhibitionSnapshot exhibitionSnapshot) 
             throws IOException, InterruptedException, FileStorageException {
         storageEngineDownloads.copyToFolder(exhibitionFolderName + File.separator + RESOURCES_FOLDER_NAME, resourcesPath);
-        List<Space> spaces= spaceRepository.findAllBySpaceStatus(SpaceStatus.PUBLISHED);
+        List<Space> spaces = spaceRepository.findAllBySpaceStatus(SpaceStatus.PUBLISHED);
 
-        for(Space space : spaces) {
-            renderingManager.createSpaceSnapshot(space, exhibitionFolderName, sequenceHistory);                
+        for (Space space : spaces) {
+            renderingManager.createSpaceSnapshot(space, exhibitionFolderName);                
         }
         
         // Generate index.html as the entry point for the exhibition

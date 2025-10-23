@@ -101,23 +101,20 @@ public class RenderingManager implements IRenderingManager {
     private final String ERROR_PAGE_404 = "exhibition/downloads/page404Template";
     
     /**
+     * Creates a snapshot of the given space and related modules into exhibitionFolder.
      * 
-     * Creates a snapshot of the given space and related modules into exhibitionFolder
-     * 
-     * @param space                            the space object 
-     * @param exhibitionFolderName             the folder name of the exhibition where space contents will be stored           
-     * @param sequenceHistory                  the sequence history object having the history of sequences                        
-     * @throws FileStorageException 
-     * @return
+     * @param space                the space object 
+     * @param exhibitionFolderName the folder name of the exhibition where space contents will be stored           
+     * @throws FileStorageException if an error occurs while storing files
      */
     @Override
-    public void createSpaceSnapshot(Space space, String exhibitionFolderName,  SequenceHistory sequenceHistory) throws FileStorageException {
+    public void createSpaceSnapshot(Space space, String exhibitionFolderName) throws FileStorageException {
         
         String spaceId = space.getId();
         String spaceFolderName = exhibitionFolderName + File.separator + spaceId;
         storageEngineDownloads.createFolder(spaceFolderName);
         
-        byte[] fileContent = renderSpace(spaceId, sequenceHistory);
+        byte[] fileContent = renderSpace(spaceId);
         storageEngineDownloads.storeFile(fileContent, spaceId + PAGE_EXTENSION, spaceFolderName );
         
         String imagesFolder = spaceFolderName + File.separator  + IMAGES_FOLDER_NAME;
@@ -138,14 +135,13 @@ public class RenderingManager implements IRenderingManager {
      * Renders the given space.
      * 
      * @param spaceId                the space id to be rendered
-     * @param sequenceHistory        the sequence history object having the history of sequences 
      * @return byte array as a rendered space content
      * @throws FileStorageException 
      */
-    private byte[] renderSpace(String spaceId, SequenceHistory sequenceHistory) throws FileStorageException {
+    private byte[] renderSpace(String spaceId) throws FileStorageException {
 
         Context thymeleafContext = new Context();
-        populateContextForSpace(thymeleafContext, spaceId, sequenceHistory);
+        populateContextForSpace(thymeleafContext, spaceId);
         // add attributes to context
         String response = springTemplateEngine.process(SPACE_DOWNLOAD_TEMPLATE, thymeleafContext);
         return response.getBytes();
@@ -163,12 +159,15 @@ public class RenderingManager implements IRenderingManager {
      */
     private void createModuleSnapshot(IModule module, ISpace space, String imagesFolder, String spaceFolderName) {
         ISequence startSequence = module.getStartSequence();
-        if(startSequence!= null) {
+        if (startSequence != null) {
             try {
                 Set<String> visitedSequences = new HashSet<String>();
                 createSequencesSnapshot(startSequence, module, space, spaceFolderName, imagesFolder, visitedSequences);
             } catch (FileStorageException e) {
-                logger.error("Could not download Module",e);
+                logger.error("Could not download Module: " + module.getId() + " in Space: " + space.getId(), e);
+                // Note: This error occurs during async snapshot generation. Users are notified
+                // through the SnapshotTask completion status if the overall snapshot fails.
+                // Individual module failures are logged for admin review.
             }
         }
     }
@@ -303,12 +302,13 @@ public class RenderingManager implements IRenderingManager {
         } 
     }
     
-    /** Populates context with variables to process space template
+    /**
+     * Populates context with variables to process space template
      * 
-     * @param context
-     * @param id
+     * @param context the Thymeleaf context to populate
+     * @param id the space id
      */
-    private void populateContextForSpace(Context context, String id, SequenceHistory sequenceHistory) {
+    private void populateContextForSpace(Context context, String id) {
 
         ISpace space = spaceManager.getSpace(id);
         List<ISpaceLinkDisplay> spaceLinks;

@@ -10,7 +10,6 @@ import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.SnapshotCouldNotBeCreatedException;
 import edu.asu.diging.vspace.core.model.ISnapshotTask;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionSnapshot;
-import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
 import edu.asu.diging.vspace.core.model.impl.SnapshotTask;
 
 public interface ISnapshotManager {
@@ -26,7 +25,7 @@ public interface ISnapshotManager {
 
     ISnapshotTask getSnapshotTask(String id) throws ExhibitionSnapshotNotFoundException;
         
-    ISnapshotTask createSnapshot(String resourcesPath, String exhibitionFolderName, SequenceHistory sequenceHistory, ExhibitionSnapshot exhibitionSnapshot) 
-            throws IOException, InterruptedException, FileStorageException, ExecutionException ;
+    ISnapshotTask createSnapshot(String resourcesPath, String exhibitionFolderName, ExhibitionSnapshot exhibitionSnapshot) 
+            throws IOException, InterruptedException, FileStorageException, ExecutionException;
 
 }
