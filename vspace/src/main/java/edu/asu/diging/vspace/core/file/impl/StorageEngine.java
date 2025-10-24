@@ -157,7 +157,7 @@ public class StorageEngine implements IStorageEngine {
     public String createFolder(String folderName) {
         File folder = new File(path + File.separator + folderName);
         if (!folder.exists()) {
-            folder.mkdir();
+            folder.mkdirs();
         }
         return folderName;
     }
