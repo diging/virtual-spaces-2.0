@@ -574,11 +574,11 @@ ul{
        	</div>
      	</div>
    		</div>
-   				<div th:if="${slideExternalLinkList != null and !#lists.isEmpty(slideExternalLinkList)}" style="margin:auto; width: 57%; padding: 30px 0 80px 0; background-color: white; z-index: 1; position: relative;">
-   					<h5 style="margin-bottom: 15px;">External Resources:</h5>
-	     			<div th:each="link: ${slideExternalLinkList}" style="margin-bottom: 8px; line-height: 1.5;"> -
-	      				<a style="text-decoration: underline; color:var(--primary); display: inline-block;" th:href="@{${link.getExternalLink()}}" th:target="_blank">[[${link.getLabel()}]]</a>
-	     			</div>
-    			</div>
+  				<div th:if="${slideExternalLinkList != null and !#lists.isEmpty(slideExternalLinkList)}" style="margin:auto; width: 57%; padding: 20px 0 30px 0; background-color: white; z-index: 1; position: relative;">
+  					<h5 style="margin-bottom: 15px;">External Resources:</h5>
+     			<div th:each="link: ${slideExternalLinkList}" style="margin-bottom: 8px; line-height: 1.5;"> -
+      				<a style="text-decoration: underline; color:var(--primary); display: inline-block;" th:href="@{${link.getExternalLink()}}" th:target="_blank">[[${link.getLabel()}]]</a>
+     			</div>
+   			</div>
 </body>
 </html>
