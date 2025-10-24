@@ -89,9 +89,20 @@ public class APACitationFormatter {
     }
     
     /**
-     * Formats author names in APA style
-     * Handles formats like "First Last", "Last, First", or "First Middle Last"
-     * Multiple authors can be separated by semicolons or " and "
+     * Formats author names in APA style.
+     * 
+     * Handles various input formats:
+     * - "First Last" or "First Middle Last" (converted to "Last, F. M.")
+     * - "Last, First" (converted to "Last, F.")
+     * - Multiple authors separated by semicolons or " and "
+     * 
+     * Output format follows APA style:
+     * - Single author: "Last, F. M."
+     * - Two authors: "Last1, F. M., & Last2, F. M."
+     * - Three+ authors: "Last1, F. M., Last2, F. M., & Last3, F. M."
+     * 
+     * @param author The author string to format
+     * @return APA-formatted author string, or empty string if input is null/empty
      */
     private static String formatAuthors(String author) {
         if (author == null || author.isEmpty()) {
@@ -102,54 +113,121 @@ public class APACitationFormatter {
         String[] authors = author.split(";|\\s+and\\s+");
         StringBuilder formatted = new StringBuilder();
         
+        // Process each author and add appropriate separators
         for (int i = 0; i < authors.length; i++) {
             String name = authors[i].trim();
             if (name.isEmpty()) continue;
             
-            // Check if already in "Last, First" format
-            if (name.contains(",")) {
-                String[] parts = name.split(",", 2);
-                String lastName = parts[0].trim();
-                String firstName = parts[1].trim();
-                
-                formatted.append(lastName).append(", ");
-                // Add initials from first name
-                String[] firstParts = firstName.split("\\s+");
-                for (String part : firstParts) {
-                    if (part.length() > 0) {
-                        formatted.append(part.charAt(0)).append(".");
-                        if (part.length() == 1 || Character.isUpperCase(part.charAt(0))) {
-                            formatted.append(" ");
-                        }
-                    }
-                }
-            } else {
-                // Assume "First Middle Last" format
-                String[] parts = name.split("\\s+");
-                if (parts.length >= 2) {
-                    // Last name is the final part
-                    formatted.append(parts[parts.length - 1]).append(", ");
-                    // First/middle names as initials
-                    for (int j = 0; j < parts.length - 1; j++) {
-                        if (parts[j].length() > 0) {
-                            formatted.append(parts[j].charAt(0)).append(". ");
-                        }
-                    }
-                } else {
-                    // Single name (organization or mononym)
-                    formatted.append(name);
-                }
-            }
-            
-            // Add separator between authors
-            if (i < authors.length - 2) {
-                formatted.append(", ");
-            } else if (i == authors.length - 2) {
-                formatted.append(", & ");
-            }
+            // Format the individual author name
+            formatted.append(formatSingleAuthorName(name));
+            // Add the appropriate separator (comma, ampersand, or nothing)
+            formatted.append(getAuthorSeparator(i, authors.length));
         }
         
         return formatted.toString().trim();
+    }
+    
+    /**
+     * Formats a single author name in APA style.
+     * 
+     * Determines the input format and delegates to the appropriate formatting method.
+     * 
+     * @param name A single author name to format
+     * @return APA-formatted author name
+     */
+    private static String formatSingleAuthorName(String name) {
+        // Check if name is already in "Last, First" format (contains comma)
+        if (name.contains(",")) {
+            return formatLastFirstName(name);
+        } else {
+            // Assume "First Middle Last" format
+            return formatFirstLastName(name);
+        }
+    }
+    
+    /**
+     * Formats a name already in "Last, First" format to APA style.
+     * 
+     * Converts "Last, First Middle" to "Last, F. M."
+     * Extracts initials from the first name portion and adds proper formatting.
+     * 
+     * @param name Name in "Last, First" format
+     * @return APA-formatted name with initials (e.g., "Smith, J. K.")
+     */
+    private static String formatLastFirstName(String name) {
+        String[] parts = name.split(",", 2);
+        String lastName = parts[0].trim();
+        String firstName = parts[1].trim();
+        
+        StringBuilder result = new StringBuilder();
+        result.append(lastName).append(", ");
+        
+        // Add initials from first name (handles middle names too)
+        String[] firstParts = firstName.split("\\s+");
+        for (String part : firstParts) {
+            if (part.length() > 0) {
+                result.append(part.charAt(0)).append(".");
+                // Add space after initial
+                if (part.length() == 1 || Character.isUpperCase(part.charAt(0))) {
+                    result.append(" ");
+                }
+            }
+        }
+        
+        return result.toString();
+    }
+    
+    /**
+     * Formats a name in "First Middle Last" format to APA style.
+     * 
+     * Converts "First Middle Last" to "Last, F. M."
+     * The last word is treated as the surname, all others as given names.
+     * 
+     * @param name Name in "First Middle Last" format
+     * @return APA-formatted name with initials, or original name if single word
+     */
+    private static String formatFirstLastName(String name) {
+        String[] parts = name.split("\\s+");
+        
+        if (parts.length >= 2) {
+            StringBuilder result = new StringBuilder();
+            // Last name is the final part (surname comes last)
+            result.append(parts[parts.length - 1]).append(", ");
+            // Convert first/middle names to initials
+            for (int j = 0; j < parts.length - 1; j++) {
+                if (parts[j].length() > 0) {
+                    result.append(parts[j].charAt(0)).append(". ");
+                }
+            }
+            return result.toString();
+        } else {
+            // Single name (organization or mononym) - return as-is
+            return name;
+        }
+    }
+    
+    /**
+     * Returns the appropriate separator between authors based on position.
+     * 
+     * APA style uses:
+     * - Commas between most authors
+     * - Comma + ampersand (&) before the final author
+     * - No separator after the last author
+     * 
+     * @param index Current author index (0-based)
+     * @param totalAuthors Total number of authors
+     * @return Appropriate separator string (", ", ", & ", or "")
+     */
+    private static String getAuthorSeparator(int index, int totalAuthors) {
+        if (index < totalAuthors - 2) {
+            // Not near the end: use comma
+            return ", ";
+        } else if (index == totalAuthors - 2) {
+            // Second to last: use comma and ampersand
+            return ", & ";
+        }
+        // Last author: no separator
+        return "";
     }
     
     /**

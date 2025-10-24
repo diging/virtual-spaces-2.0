@@ -129,56 +129,58 @@ public class BiblioBlock extends ContentBlock implements IBiblioBlock {
     }
     
     /**
-     * Formats a single reference as raw data for editing
+     * Formats a single reference as raw data for editing.
+     * 
+     * Creates a human-readable string representation of all reference fields
+     * in the format "Label: Value, Label: Value, ..."
+     * Only non-empty fields are included in the output.
+     * 
+     * @param ref The reference to format
+     * @return A formatted string with all available reference information
      */
     private String formatRawReference(Reference ref) {
         StringBuilder result = new StringBuilder();
         
-        if (ref.getTitle() != null && !ref.getTitle().isEmpty()) {
-            result.append("Reference Title: ").append(ref.getTitle()).append(", ");
-        }
-        
-        if (ref.getAuthor() != null && !ref.getAuthor().isEmpty()) {
-            result.append("Author: ").append(ref.getAuthor()).append(", ");
-        }
-        
-        if (ref.getYear() != null && !ref.getYear().isEmpty()) {
-            result.append("Year: ").append(ref.getYear()).append(", ");
-        }
-        
-        if (ref.getJournal() != null && !ref.getJournal().isEmpty()) {
-            result.append("Journal: ").append(ref.getJournal()).append(", ");
-        }
-        
-        if (ref.getUrl() != null && !ref.getUrl().isEmpty()) {
-            result.append("Url: ").append(ref.getUrl()).append(", ");
-        }
-        
-        if (ref.getVolume() != null && !ref.getVolume().isEmpty()) {
-            result.append("Volume: ").append(ref.getVolume()).append(", ");
-        }
-        
-        if (ref.getIssue() != null && !ref.getIssue().isEmpty()) {
-            result.append("Issue: ").append(ref.getIssue()).append(", ");
-        }
-        
-        if (ref.getPages() != null && !ref.getPages().isEmpty()) {
-            result.append("Pages: ").append(ref.getPages()).append(", ");
-        }
-        
-        if (ref.getEditors() != null && !ref.getEditors().isEmpty()) {
-            result.append("Editors: ").append(ref.getEditors()).append(", ");
-        }
-        
-        if (ref.getType() != null && !ref.getType().isEmpty()) {
-            result.append("Type: ").append(ref.getType()).append(", ");
-        }
-        
-        if (ref.getNote() != null && !ref.getNote().isEmpty()) {
-            result.append("Note: ").append(ref.getNote());
-        }
+        // Append each field if it has a value
+        // The third parameter (true/false) controls whether to add a comma after the field
+        appendFieldIfPresent(result, "Reference Title", ref.getTitle(), true);
+        appendFieldIfPresent(result, "Author", ref.getAuthor(), true);
+        appendFieldIfPresent(result, "Year", ref.getYear(), true);
+        appendFieldIfPresent(result, "Journal", ref.getJournal(), true);
+        appendFieldIfPresent(result, "Url", ref.getUrl(), true);
+        appendFieldIfPresent(result, "Volume", ref.getVolume(), true);
+        appendFieldIfPresent(result, "Issue", ref.getIssue(), true);
+        appendFieldIfPresent(result, "Pages", ref.getPages(), true);
+        appendFieldIfPresent(result, "Editors", ref.getEditors(), true);
+        appendFieldIfPresent(result, "Type", ref.getType(), true);
+        // Note is the last field, so no comma is added after it
+        appendFieldIfPresent(result, "Note", ref.getNote(), false);
         
         return result.toString();
+    }
+    
+    /**
+     * Helper method to append a field to the result string if the field has a value.
+     * 
+     * This method encapsulates the null-checking and formatting logic to reduce
+     * code duplication and improve maintainability. It only appends the field
+     * if the value is not null and not empty.
+     * 
+     * @param result StringBuilder to append the formatted field to
+     * @param label The display label for the field (e.g., "Author", "Year")
+     * @param value The field value to check and append
+     * @param addComma Whether to add a comma separator after the value (use false for last field)
+     */
+    private void appendFieldIfPresent(StringBuilder result, String label, String value, boolean addComma) {
+        // Only append if the value exists and is not empty
+        if (value != null && !value.isEmpty()) {
+            // Format: "Label: Value"
+            result.append(label).append(": ").append(value);
+            // Add comma separator if this is not the last field
+            if (addComma) {
+                result.append(", ");
+            }
+        }
     }
 
 }
