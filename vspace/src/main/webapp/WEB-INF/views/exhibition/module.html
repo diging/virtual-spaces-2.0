@@ -25,7 +25,6 @@
 .text {
     font-size: 11px;
 }
-
 .imgFullScreen:hover .tooltiptext {
     visibility: visible;
 }
@@ -38,6 +37,9 @@
     visibility: visible;
 }
 
+ul{
+    list-style-type: none;
+}
 .tooltiptextForExitFullscreen {
     visibility: hidden;
     width: 120px;
@@ -52,6 +54,57 @@
     top: -15px;
     background: rgba(0, 0, 0, 0.6);
 }
+
+.Group_8_Class {
+    display: block;
+}
+
+.slide_container {
+	display: grid;
+	align-items:center;
+
+.biblioDiv {
+    border: 1px solid lightgray;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 16px 0;
+    background-color: #f9f9f9;
+}
+
+.biblioDiv h3 {
+    margin-top: 0;
+    font-family: 'Arial', sans-serif;
+}
+
+.biblioDiv p {
+    margin: 8px 0; 
+    font-size: 14px;
+}
+
+.biblioDiv ul {
+    list-style: none;
+    padding: 0;
+    margin: 16px 0 0 0;
+}
+
+.referenceDiv {
+    border: 1px solid lightgray;
+    border-radius: 8px;
+    padding: 8px;
+    background-color: white;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.list-group-item-action {
+    color: var(--primary) !important;
+}
+
+.list-group-item-action:hover {
+    background-color: var(--primary) !important;
+    color: white !important;
+}
+
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
 <script th:inline="javascript">       
@@ -79,7 +132,7 @@
 		{
 			$(".exitfullscreen").remove();
 			$(".imgFullScreen").show();
-			$("#Module_1").css('overflow-y','hidden')
+			$("#Module_1").css('overflow-y','visible')
 			if (document.exitFullscreen) {
 			    document.exitFullscreen();
 			  } else if (document.webkitExitFullscreen) { /* Safari */
@@ -110,7 +163,7 @@
                 </button>
             </a>
         </div>
-        <div th:if="${showAlert != true}" id="Module_1" class="Module_1_Class">
+        <div th:if="${showAlert != true}" id="Module_1" class="Module_1_Class" style="min-height: 100vh; overflow-y: visible; padding-bottom: 100px;">
         <div th:if="${showAlert != true}" style="padding-top: 4%; padding-bottom: 1%; background-color: white; position: relative; z-index: 100; top: 5.5%; width: 100%; display: flex;">
             <h3 class="textDiv">[[${module.name}]]</h3>
             <p class="slideNumberClass">Slide [[${currentNumOfSlide}]]/[[${numOfSlides}]]</p>
@@ -125,7 +178,7 @@
                </div>
            </a>
             <a th:if="${!#strings.isEmpty(nextSlide)}" th:href= "${isExhPreview == null OR isExhPreview == false}?@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${currentSequenceId}+'/slide/'+${nextSlide}}:@{'/preview/'+${previewId}+'/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${currentSequenceId}+'/slide/'+${nextSlide}}">
-               <div class="slideshow_next slideshow_next_Class" style="position: fixed; z-index:110; right: 11%; top: 40.3%;">
+               <div class="slideshow_next slideshow_next_Class" style="position: fixed; z-index:110; right: 11%; top: 40.3%;"> 
                     <button class="btn circle-btn-slide-nav">
                          <span class="icon-chevron-right slide-nav"></span>
                          <span class="tooltiptext">Next slide</span>
@@ -174,12 +227,38 @@
 
          <div style="position: relative;top: 6.5%;">
             <h3 style="text-align:center;">[[${currentSlideCon.name}]]</h3>
-            <div id="blocks" class="Group_8_Class" th:each="contents: ${currentSlideCon.contents}">
-                <img th:if="${contents['class'].simpleName ==  'ImageBlock'}" id="${contents.id}" class="imgDiv" th:src="@{'/api/image/'+${contents.image.id}}" style="max-width:57%">
-                <div th:if="${contents['class'].simpleName ==  'TextBlock'}" id="${contents.id}" class="textDiv">[(${contents.htmlRenderedText()})]</div>
-                <div th:if="${contents['class'].simpleName ==  'SpaceBlock'}" id="${contents.id}" class="textDiv">
+            <div class="slide_container">
+            <div th:id="blocks" class="Group_8_Class" th:each="contents: ${currentSlideCon.contents}">
+                <img th:if="${contents['class'].simpleName ==  'ImageBlock'}" th:id="${contents.id}" class="imgDiv" th:src="@{'/api/image/'+${contents.image.id}}" style="max-width:57%; max-height: 650px;">
+                <div th:if="${contents['class'].simpleName ==  'TextBlock'}" th:id="${contents.id}" class="textDiv">[(${contents.htmlRenderedText()})]</div>
+                <div th:if="${contents['class'].simpleName ==  'BiblioBlock'}" th:id="${contents.id}" class="biblioDiv">
+                	<h4>Title: [(${contents.getBiblioTitle()})]</h4>
+                	<p>description: [(${contents.getDescription()})]</p>
+                	<ul>
+	                	<div th:each="contentRef: ${contents.references}">
+							<li>
+								<div th:id="${contentRef.id}" class="referenceDiv">
+									<p th:text="|${contentRef.getTitle()}, ${contentRef.getAuthor()}, ${contentRef.getYear()}, ${contentRef.getJournal()}, ${contentRef.getUrl()}, ${contentRef.getVolume()}, ${contentRef.getIssue()}, ${contentRef.getPages()}, ${contentRef.getEditors()}, ${contentRef.getType()}, ${contentRef.getNote()}|">
+								</div>
+							</li>
+						</div>
+					</ul>
+                </div>
+               <div th:if="${contents['class'].simpleName ==  'VideoBlock'}" th:id="${contents.id}" class="VideoDiv">
+                  <div>
+                     <h3><strong>[[${contents.video.title}]]</strong></h3>
+                     <br/>
+                     <iframe th:id="${contents.id}" width="800" height="530" th:src="${contents.video.url}" th:if="${contents.video.url}" frameborder="0"
+                        allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen ></iframe>
+                     <video th:id="${contents.id}" width="800" height="530" th:if="${contents.video.url == null}" controls >
+                        <source th:src="@{'/api/video/'+${contents.video.id}}" type="video/mp4"/>
+                     </video>
+                  </div>
+               </div>
+                <div th:if="${contents['class'].simpleName ==  'SpaceBlock'}" th:id="${contents.id}" class="textDiv">
                 <a th:href="@{'/exhibit/space/'+${contents.space?.id}}">[(${contents.title})]</a></div>
-                <div th:if="${contents['class'].simpleName == 'ChoiceBlock'}" id="${contents.id}" class="textDiv" style="margin: 1%;">
+                <div th:if="${contents['class'].simpleName == 'ChoiceBlock'}" th:id="${contents.id}" class="textDiv" style="margin: 1%;">
                     <div th:if="${contents.showsAll eq true}" th:each="choice: ${choices}" class="list-group">
                         <a th:href="${isExhPreview == null OR isExhPreview == false}?@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${choice.sequence.id}+'?branchingPoint='+${slideId}+'&previousSequenceId='+${currentSequenceId}}:@{'/preview/'+${previewId}+'/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${choice.sequence.id}+'?branchingPoint='+${slideId}+'&previousSequenceId='+${currentSequenceId}}"
                             class="list-group-item list-group-item-action">[[${choice.sequence.name}]]</a>
@@ -487,13 +566,19 @@
                         function openSlide (d){
                             window.open([[@{/exhibit/}]]+spaceId+'/module/'+moduleId+'/sequence/'+d.sequenceId+'/slide/'+d.slideId, "_self");
                         }
-
-             </script>
-             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+             		</script>
+             		</div>
+                	</div>
+             	</div>
+          	</div>
+       	</div>
+     	</div>
+   		</div>
+   				<div th:if="${slideExternalLinkList != null and !#lists.isEmpty(slideExternalLinkList)}" style="margin:auto; width: 57%; padding: 30px 0 80px 0; background-color: white; z-index: 1; position: relative;">
+   					<h5 style="margin-bottom: 15px;">External Resources:</h5>
+	     			<div th:each="link: ${slideExternalLinkList}" style="margin-bottom: 8px; line-height: 1.5;"> -
+	      				<a style="text-decoration: underline; color:var(--primary); display: inline-block;" th:href="@{${link.getExternalLink()}}" th:target="_blank">[[${link.getLabel()}]]</a>
+	     			</div>
+    			</div>
 </body>
 </html>
