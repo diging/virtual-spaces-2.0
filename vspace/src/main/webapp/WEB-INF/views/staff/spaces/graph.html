@@ -18,11 +18,11 @@
         		gap: 20px;
         		align-items: flex-start;
         		flex-wrap: wrap;
+        		position: relative;
         	}
         	
         	#graph {
-        		flex: 1;
-        		min-width: 600px;
+        		width: 100%;
         		background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
         		border-radius: 12px;
         		box-shadow: 0px 4px 20px rgba(0,0,0,0.15);
@@ -42,72 +42,107 @@
         		pointer-events: none;
         	}
         	
-        	#space-overview-card {
-        		width: 22rem;
-        		max-width: 100%;
-        		box-shadow: 0px 4px 20px rgba(0,0,0,0.12);
-        		border: none;
+        	#node-info-panel {
+        		position: absolute;
+        		top: 20px;
+        		right: 20px;
+        		width: 350px;
+        		max-height: 80%;
+        		background: rgba(255, 255, 255, 0.98);
         		border-radius: 12px;
-        		overflow: hidden;
-        		transition: transform 0.3s ease, box-shadow 0.3s ease;
+        		box-shadow: 0px 8px 30px rgba(0,0,0,0.25);
+        		padding: 1.5rem;
+        		display: none;
+        		overflow-y: auto;
+        		z-index: 100;
+        		backdrop-filter: blur(10px);
+        		border: 2px solid var(--primary);
         	}
         	
-        	#space-overview-card:hover {
-        		transform: translateY(-2px);
-        		box-shadow: 0px 8px 30px rgba(0,0,0,0.18);
+        	#node-info-panel.show {
+        		display: block;
+        		animation: slideInRight 0.3s ease-out;
         	}
         	
-        	#space-overview-card-img {
-        		border-bottom: 3px solid var(--primary);
-        		transition: all 0.3s ease;
-        	}
-        	
-        	#space-overview-card-body {
-        		display: block !important;
-        		padding: 1.5rem !important;
-        		text-align: center;
-        		background: linear-gradient(to bottom, #ffffff, #fafafa);
-        	}
-        	
-        	#space-overview-card-title {
-        		color: var(--primary);
-        		font-weight: 700;
-        		margin-bottom: 1rem;
-        	}
-        	
-        	#space-overview-btn {
-        		background: linear-gradient(135deg, var(--primary), #8E4A36) !important;
-        		border: none !important;
-        		padding: 0.6rem 1.5rem !important;
-        		border-radius: 6px !important;
-        		font-weight: 600 !important;
-        		transition: all 0.3s ease !important;
-        		box-shadow: 0 2px 8px rgba(165, 89, 65, 0.3);
-        	}
-        	
-        	#space-overview-btn:hover {
-        		background: linear-gradient(135deg, var(--secondary), #E09840) !important;
-        		transform: translateY(-2px);
-        		box-shadow: 0 4px 12px rgba(242, 169, 80, 0.4) !important;
-        	}
-        	
-        	@keyframes fadeInUp {
+        	@keyframes slideInRight {
         		from {
         			opacity: 0;
-        			transform: translateY(20px);
+        			transform: translateX(20px);
         		}
         		to {
         			opacity: 1;
-        			transform: translateY(0);
+        			transform: translateX(0);
         		}
         	}
         	
-        	.graph-container > * {
-        		animation: fadeInUp 0.6s ease-out;
+        	#node-info-panel .close-btn {
+        		position: absolute;
+        		top: 10px;
+        		right: 10px;
+        		background: var(--primary);
+        		color: white;
+        		border: none;
+        		width: 30px;
+        		height: 30px;
+        		border-radius: 50%;
+        		cursor: pointer;
+        		font-size: 18px;
+        		line-height: 1;
+        		transition: all 0.2s ease;
         	}
         	
-        	.graph-container > *:nth-child(2) {
-        		animation-delay: 0.2s;
+        	#node-info-panel .close-btn:hover {
+        		background: var(--secondary);
+        		transform: rotate(90deg);
+        	}
+        	
+        	#node-info-title {
+        		color: var(--primary);
+        		font-weight: 700;
+        		margin-bottom: 1rem;
+        		padding-right: 30px;
+        	}
+        	
+        	#node-info-description {
+        		color: #333;
+        		margin-bottom: 1rem;
+        		line-height: 1.6;
+        	}
+        	
+        	#node-info-links {
+        		margin-top: 1rem;
+        	}
+        	
+        	#node-info-links a {
+        		display: inline-block;
+        		background: linear-gradient(135deg, var(--primary), #8E4A36);
+        		color: white;
+        		padding: 0.6rem 1.2rem;
+        		border-radius: 6px;
+        		text-decoration: none;
+        		font-weight: 600;
+        		transition: all 0.3s ease;
+        		margin-right: 0.5rem;
+        		margin-bottom: 0.5rem;
+        	}
+        	
+        	#node-info-links a:hover {
+        		background: linear-gradient(135deg, var(--secondary), #E09840);
+        		transform: translateY(-2px);
+        		box-shadow: 0 4px 12px rgba(242, 169, 80, 0.4);
+        	}
+        	
+        	#node-info-panel .stat-item {
+        		background: #f8f8f8;
+        		padding: 0.5rem;
+        		border-radius: 6px;
+        		margin-bottom: 0.5rem;
+        		font-size: 14px;
+        	}
+        	
+        	#node-info-panel .stat-label {
+        		font-weight: 600;
+        		color: var(--primary);
         	}
         </style>
     </head>
@@ -115,20 +150,23 @@
         <div layout:fragment="content">
         <div class="container">
         	<div class="graph-container">
-	            <div id="graph" style="width: 100%; height: 600px;"></div>
-	            <div class="card" id="space-overview-card">
-				  <img src="../resources/maintenance/img/logo-11.png" class="card-img-top" id="space-overview-card-img" alt="Space/Module Image">
-				  <div class="card-body" id="space-overview-card-body">
-				    <h5 class="card-title" id="space-overview-card-title">Space Overview Map</h5>
-				    <p class="card-text" id="space-overview-card-text">This is a map of all spaces and modules and their links with one another. Click or drag nodes to interact with them.</p>
-				    <a href="#" class="btn btn-primary" id="space-overview-btn">Click a space or module node...</a>
-				  </div>
-				</div>
+	            <div id="graph" style="width: 100%; height: 800px;"></div>
+	            <div id="node-info-panel">
+	            	<button class="close-btn" onclick="closeNodeInfo()">&times;</button>
+	            	<h5 id="node-info-title"></h5>
+	            	<div id="node-info-description"></div>
+	            	<div id="node-info-stats"></div>
+	            	<div id="node-info-links"></div>
+	            </div>
 			</div>
             <script>
+            	function closeNodeInfo() {
+            		document.getElementById('node-info-panel').classList.remove('show');
+            	}
+            	
                 var nodeJson = JSON.parse(jsonMap['nodesJson']);                
-                const width = 928;
-                const height = 600;
+                const width = 1400;
+                const height = 800;
 
                 const nodeArrays = categorizeNodes(nodeJson);
                 const root = structureData(nodeArrays);            	
@@ -140,8 +178,8 @@
                 const nodes = root.descendants();
                 
                 const simulation = d3.forceSimulation(nodes)
-	                .force("link", d3.forceLink(links).id(d => d.data.id).distance(100).strength(1))
-	                .force("charge", d3.forceManyBody().strength(-500))
+	                .force("link", d3.forceLink(links).id(d => d.data.id).distance(150).strength(1))
+	                .force("charge", d3.forceManyBody().strength(-600))
 	                .force("x", d3.forceX())
 	                .force("y", d3.forceY());
                 
@@ -273,7 +311,7 @@
                   .attr("x", d => d.x)
                   .attr("y", d => d.y)
                   .attr("text-anchor", "middle")
-                  .style("font-size", "12px")
+                  .style("font-size", "14px")
                   .style("font-weight", 900)
                   .style("opacity", 0);
                   
@@ -286,7 +324,7 @@
 	           	// Hide root node and set pointer events
 	           	node.style("pointer-events", function(d) { return d.depth === 0 ? "none" : "all"; })
 	           	// Make module nodes smaller and style with gradients
-	           		.style("r", function(d) { return d.depth === 2 ? 22 : d.depth === 1 ? 32 : 0; })
+	           		.style("r", function(d) { return d.depth === 2 ? 30 : d.depth === 1 ? 42 : 0; })
 	           		.style("fill", function(d) { 
 	           			return d.depth === 1 ? "url(#spaceGradient)" : "url(#moduleGradient)"; 
 	           		})
@@ -315,23 +353,31 @@
 							.style("stroke", function(d) { return d.depth === 1 ? "#A55941" : "#8E8E8E"; })
 							.style("stroke-width", function(d) { return d.depth === 1 ? 3 : 2; });
 	            		
-	            		//Update card for node clicked
-	            		if (d.data.img) {
-		            		document.getElementById("space-overview-card-img").src = d.data.img;
-		            		document.getElementById("space-overview-card-img").style.display = "block";
-	            		} else {
-	            			document.getElementById("space-overview-card-img").src = "../resources/maintenance/img/logo-11.png";
-	            			document.getElementById("space-overview-card-img").style.display = "block";
+	            		// Show info panel with node data
+	            		document.getElementById("node-info-title").innerHTML = d.data.name;
+	            		document.getElementById("node-info-description").innerHTML = d.data.description || "No description available.";
+	            		
+	            		// Build stats section
+	            		let statsHTML = "<h6 style='color: var(--primary); margin-top: 1rem; margin-bottom: 0.5rem;'>Information</h6>";
+	            		statsHTML += '<div class="stat-item"><span class="stat-label">Type:</span> ' + (d.data.module ? 'Module' : 'Space') + '</div>';
+	            		if (d.data.edges && d.data.edges.length > 0) {
+	            			statsHTML += '<div class="stat-item"><span class="stat-label">Connections:</span> ' + d.data.edges.length + '</div>';
 	            		}
-	           			if (d.data.link) {
-	           				document.getElementById("space-overview-btn").href = d.data.link;
-	           				document.getElementById("space-overview-btn").style.display = "inline-block";
-	            		} else {
-	            			document.getElementById("space-overview-btn").style.display = "none";
+	            		if (d.children && d.children.length > 0) {
+	            			statsHTML += '<div class="stat-item"><span class="stat-label">Modules:</span> ' + d.children.length + '</div>';
 	            		}
-	           			document.getElementById("space-overview-btn").innerHTML = "Go to " + d.data.name;
-	           			document.getElementById("space-overview-card-title").innerHTML = d.data.name;
-	           			document.getElementById("space-overview-card-text").innerHTML = d.data.description;
+	            		document.getElementById("node-info-stats").innerHTML = statsHTML;
+	            		
+	            		// Build links section
+	            		let linksHTML = "";
+	            		if (d.data.link) {
+	            			linksHTML = '<h6 style="color: var(--primary); margin-top: 1rem; margin-bottom: 0.5rem;">Actions</h6>';
+	            			linksHTML += '<a href="' + d.data.link + '">View ' + d.data.name + '</a>';
+	            		}
+	            		document.getElementById("node-info-links").innerHTML = linksHTML;
+	            		
+	            		// Show the panel
+	            		document.getElementById('node-info-panel').classList.add('show');
 	           			
 	           			// Highlight selected node with gradient
 	           			d3.selectAll("circle").filter(function(n) {
