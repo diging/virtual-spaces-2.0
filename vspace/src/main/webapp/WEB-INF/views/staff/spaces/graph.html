@@ -103,6 +103,19 @@
         		padding-right: 30px;
         	}
         	
+        	#node-info-image {
+        		width: 100%;
+        		height: 200px;
+        		object-fit: cover;
+        		border-radius: 8px;
+        		margin-bottom: 1rem;
+        		display: none;
+        	}
+        	
+        	#node-info-image.show {
+        		display: block;
+        	}
+        	
         	#node-info-description {
         		color: #333;
         		margin-bottom: 1rem;
@@ -213,6 +226,7 @@
 	            <div id="node-info-panel">
 	            	<button class="close-btn" onclick="closeNodeInfo()">&times;</button>
 	            	<h5 id="node-info-title"></h5>
+	            	<img id="node-info-image" src="" alt="Space Image" />
 	            	<div id="node-info-description"></div>
 	            	<div id="node-info-stats"></div>
 	            	<div id="node-info-links"></div>
@@ -237,8 +251,8 @@
                 const nodes = root.descendants();
                 
                 const simulation = d3.forceSimulation(nodes)
-	                .force("link", d3.forceLink(links).id(d => d.data.id).distance(150).strength(1))
-	                .force("charge", d3.forceManyBody().strength(-600))
+	                .force("link", d3.forceLink(links).id(d => d.data.id).distance(180).strength(1))
+	                .force("charge", d3.forceManyBody().strength(-700))
 	                .force("x", d3.forceX())
 	                .force("y", d3.forceY());
                 
@@ -394,17 +408,31 @@
 					.delay((d, i) => i * 50)
 					.style("opacity", function(d) { return d.depth === 0 ? 0 : 1; })
 	             		
+           	    // Function to truncate text
+           	    function truncateText(text, maxLength) {
+           	    	if (!text) return '';
+           	    	if (text.length <= maxLength) return text;
+           	    	return text.substring(0, maxLength) + '...';
+           	    }
+           	    
            	    const text = g.append("g")
                   .selectAll("text")
                   .data(nodes)
                   .enter().append("text")
-                  .text(d => d.data.name)
                   .attr("x", d => d.x)
                   .attr("y", d => d.y)
                   .attr("text-anchor", "middle")
+                  .attr("dy", ".35em")
                   .style("font-size", "14px")
-                  .style("font-weight", 900)
-                  .style("opacity", 0);
+                  .style("font-weight", 600)
+                  .style("opacity", 0)
+                  .text(d => truncateText(d.data.name, 15))
+                  .each(function(d) {
+                  	// Add tooltip for full text on hover
+                  	if (d.data.name) {
+                  		d3.select(this).append("title").text(d.data.name);
+                  	}
+                  });
                   
                 // Fade in text
                 text.transition()
@@ -415,7 +443,7 @@
 	           	// Hide root node and set pointer events
 	           	node.style("pointer-events", function(d) { return d.depth === 0 ? "none" : "all"; })
 	           	// Make module nodes smaller and style with gradients
-	           		.style("r", function(d) { return d.depth === 2 ? 30 : d.depth === 1 ? 42 : 0; })
+	           		.style("r", function(d) { return d.depth === 2 ? 38 : d.depth === 1 ? 50 : 0; })
 	           		.style("fill", function(d) { 
 	           			return d.depth === 1 ? "url(#spaceGradient)" : "url(#moduleGradient)"; 
 	           		})
@@ -448,22 +476,45 @@
 	            		document.getElementById("node-info-title").innerHTML = d.data.name;
 	            		document.getElementById("node-info-description").innerHTML = d.data.description || "No description available.";
 	            		
+	            		// Show image if available (for spaces)
+	            		const imageEl = document.getElementById("node-info-image");
+	            		if (d.data.img) {
+	            			imageEl.src = d.data.img;
+	            			imageEl.classList.add('show');
+	            		} else {
+	            			imageEl.classList.remove('show');
+	            		}
+	            		
 	            		// Build stats section
 	            		let statsHTML = "<h6 style='color: var(--primary); margin-top: 1rem; margin-bottom: 0.5rem;'>Information</h6>";
-	            		statsHTML += '<div class="stat-item"><span class="stat-label">Type:</span> ' + (d.data.module ? 'Module' : 'Space') + '</div>';
-	            		if (d.data.edges && d.data.edges.length > 0) {
-	            			statsHTML += '<div class="stat-item"><span class="stat-label">Connections:</span> ' + d.data.edges.length + '</div>';
+	            		
+	            		// Add type information
+	            		const nodeType = d.data.module ? 'Module' : 'Space';
+	            		statsHTML += '<div class="stat-item"><span class="stat-label">Type:</span> ' + nodeType + '</div>';
+	            		
+	            		// For modules, show parent space
+	            		if (d.data.module && d.parent && d.parent.data && d.parent.data.name) {
+	            			statsHTML += '<div class="stat-item"><span class="stat-label">Part of Space:</span> ' + d.parent.data.name + '</div>';
 	            		}
-	            		if (d.children && d.children.length > 0) {
-	            			statsHTML += '<div class="stat-item"><span class="stat-label">Modules:</span> ' + d.children.length + '</div>';
+	            		
+	            		// For spaces, show connections and module count
+	            		if (!d.data.module) {
+		            		if (d.data.edges && d.data.edges.length > 0) {
+		            			statsHTML += '<div class="stat-item"><span class="stat-label">Connections:</span> ' + d.data.edges.length + '</div>';
+		            		}
+		            		if (d.children && d.children.length > 0) {
+		            			statsHTML += '<div class="stat-item"><span class="stat-label">Modules:</span> ' + d.children.length + '</div>';
+		            		}
 	            		}
+	            		
 	            		document.getElementById("node-info-stats").innerHTML = statsHTML;
 	            		
 	            		// Build links section
 	            		let linksHTML = "";
 	            		if (d.data.link) {
 	            			linksHTML = '<h6 style="color: var(--primary); margin-top: 1rem; margin-bottom: 0.5rem;">Actions</h6>';
-	            			linksHTML += '<a href="' + d.data.link + '">View ' + d.data.name + '</a>';
+	            			const viewText = d.data.module ? 'View Module' : 'View Space';
+	            			linksHTML += '<a href="' + d.data.link + '">' + viewText + '</a>';
 	            		}
 	            		document.getElementById("node-info-links").innerHTML = linksHTML;
 	            		
@@ -479,9 +530,10 @@
 	            	});
 	           	
 	           	text.style("fill", function(d) { return d.depth === 1 ? "#121212" : "#fff"; })
-	           		.style("font-weight", "600")
 	           		.style("pointer-events", "none")
-	           		.style("text-shadow", "0 1px 2px rgba(0,0,0,0.2)")
+	           		.style("text-shadow", function(d) { 
+	           			return d.depth === 1 ? "0 1px 2px rgba(255,255,255,0.8)" : "0 1px 2px rgba(0,0,0,0.5)"; 
+	           		})
 	           		.style("user-select", "none");
 	           	
            	 	d3.selectAll("line").filter(function(d) {
