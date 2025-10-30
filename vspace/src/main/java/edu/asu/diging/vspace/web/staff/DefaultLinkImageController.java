@@ -55,7 +55,7 @@ public class DefaultLinkImageController {
             @RequestParam(name = "image", required = false) MultipartFile image,
             @RequestParam(name="linkType") String linkType,
             RedirectAttributes attributes) throws IOException {
-        Exhibition exhibition = (Exhibition) exhibitionManager.getStartExhibition();
+        IExhibition exhibition = (IExhibition) exhibitionManager.getStartExhibition();
         IVSImage defaultImage = imageService.storeImage(image.getBytes(), image.getOriginalFilename());
         
         BiConsumer<IExhibition, IVSImage> setter = imageSetterMap.get(linkType);
@@ -66,7 +66,7 @@ public class DefaultLinkImageController {
             attributes.addAttribute("showAlert", "true");
         } else {
             setter.accept(exhibition, defaultImage);
-            exhibition = (Exhibition) exhibitionManager.storeExhibition(exhibition);
+            exhibition = (IExhibition) exhibitionManager.storeExhibition(exhibition);
             attributes.addAttribute("exhibitId", exhibition.getId());
             attributes.addAttribute("alertType", "success");
             attributes.addAttribute("message", "Successfully saved!");
@@ -86,7 +86,7 @@ public class DefaultLinkImageController {
      */
     @RequestMapping(value = "/staff/exhibit/config/link/defaultImage/{linkType}", method = RequestMethod.DELETE)
     public String deleteLinkImage(@PathVariable("linkType") String linkType, RedirectAttributes attributes) throws IOException {
-        Exhibition exhibition = (Exhibition) exhibitionManager.getStartExhibition();        
+        IExhibition exhibition = (IExhibition) exhibitionManager.getStartExhibition();        
         
         Map<String, Supplier<IVSImage>> imageGetterMap = Map.of(
                 "space", exhibition::getSpaceLinkDefaultImage,
@@ -118,7 +118,7 @@ public class DefaultLinkImageController {
             attributes.addAttribute("showAlert", "true");
         } else {
             deleteDefautImageMethod.run();
-            exhibition = (Exhibition) exhibitionManager.storeExhibition(exhibition);
+            exhibition = (IExhibition) exhibitionManager.storeExhibition(exhibition);
             attributes.addAttribute("exhibitId", exhibition.getId());
             attributes.addAttribute("alertType", "success");
             attributes.addAttribute("message", "Successfully deleted the default image!");
@@ -138,7 +138,7 @@ public class DefaultLinkImageController {
      */
     @RequestMapping(value = "/staff/exhibit/config/link/defaultImage/{linkType}", method = RequestMethod.PUT)
     public ResponseEntity<String> disableLinkImage(@PathVariable("linkType") String linkType, RedirectAttributes attributes) throws IOException {
-        Exhibition exhibition = (Exhibition) exhibitionManager.getStartExhibition();
+        IExhibition exhibition = (IExhibition) exhibitionManager.getStartExhibition();
         JsonObject jsonObj = new JsonObject(); 
         
         Map<String, Supplier<IVSImage>> imageGetterMap = Map.of(
