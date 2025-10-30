@@ -2,6 +2,8 @@ package edu.asu.diging.vspace.core.services;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
 import edu.asu.diging.vspace.core.model.IBiblioBlock;
 import edu.asu.diging.vspace.core.model.IReference;
 import edu.asu.diging.vspace.core.model.impl.Reference;
@@ -19,5 +21,11 @@ public interface IReferenceManager {
     void deleteReferences(List<IReference> references, String BiblioId);
 
     List<IReference> getReferencesForBiblio(String biblioId);
+    
+    List<IReference> getAllReferences(int pageNo, String sortedBy, String order);
+    
+    long getTotalReferenceCount();
+    
+    long getTotalPages();
 
 }
