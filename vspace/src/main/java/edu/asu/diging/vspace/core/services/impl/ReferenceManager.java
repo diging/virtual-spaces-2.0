@@ -26,6 +26,8 @@ import edu.asu.diging.vspace.core.services.IReferenceManager;
 @Service
 public class ReferenceManager implements IReferenceManager {
 
+    private static final String VISIBILITY_PRIVATE = "Private";
+    
     private final Logger logger = LoggerFactory.getLogger(getClass());
     
     @Autowired
@@ -52,11 +54,10 @@ public class ReferenceManager implements IReferenceManager {
         reference.setEditors(editor);
         reference.setType(type);
         reference.setNote(note);
-        if(visibility == "Private") {
-        	reference.setVisibility(false);
-        }
-        else {
-        	reference.setVisibility(true);
+        if(VISIBILITY_PRIVATE.equals(visibility)) {
+            reference.setPublic(false);
+        } else {
+            reference.setPublic(true);
         }
 
         BiblioBlock biblio = contentBlockManager.getBiblioBlock(biblioId);

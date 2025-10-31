@@ -83,7 +83,7 @@ public class ReferenceData {
         this.note = note;
     }
     public String getVisibility() {
-        return note;
+        return visibility;
     }
     public void setVisibility(String visibility) {
         this.visibility = visibility;

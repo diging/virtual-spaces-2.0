@@ -54,7 +54,7 @@ public class Reference extends VSpaceElement implements IReference {
 
     private String note;
     
-    private boolean visibility;
+    private boolean isPublic;
 
     @Override
     public String getTitle() {
@@ -185,12 +185,12 @@ public class Reference extends VSpaceElement implements IReference {
     }
     
     @Override
-    public void setVisibility(boolean visibility) {
-        this.visibility = visibility;
+    public void setPublic(boolean isPublic) {
+        this.isPublic = isPublic;
     }
 
     @Override
-    public boolean getVisibility() {
-        return visibility;
+    public boolean isPublic() {
+        return isPublic;
     }
 }
