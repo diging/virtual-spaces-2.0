@@ -138,6 +138,12 @@ public class DefaultLinkImageController {
      */
     @RequestMapping(value = "/staff/exhibit/config/link/defaultImage/{linkType}", method = RequestMethod.PUT)
     public ResponseEntity<String> disableLinkImage(@PathVariable("linkType") String linkType, RedirectAttributes attributes) throws IOException {
+        // Validate linkType first
+        if (!imageSetterMap.containsKey(linkType)) {
+            String errorMessage = "Invalid link type: " + linkType;
+            return ResponseEntity.badRequest().body(errorMessage);
+        }
+        
         IExhibition exhibition = (IExhibition) exhibitionManager.getStartExhibition();
         JsonObject jsonObj = new JsonObject(); 
         
@@ -160,14 +166,9 @@ public class DefaultLinkImageController {
         );
         
         Runnable disableDefautImageMethod = imageDisablerMap.get(linkType);
-        if (disableDefautImageMethod == null) {
-            String errorMessage = "Could not disable the default image";
-            return ResponseEntity.badRequest().body(errorMessage);
-        } else {
-            disableDefautImageMethod.run();
-            exhibitionManager.storeExhibition(exhibition);
-            jsonObj.addProperty("defaultImageDisableFlag", image.getDisableFlag());
-        }
+        disableDefautImageMethod.run();
+        exhibitionManager.storeExhibition(exhibition);
+        jsonObj.addProperty("defaultImageDisableFlag", image.getDisableFlag());
 
         return new ResponseEntity<>(jsonObj.toString(), HttpStatus.OK);
 

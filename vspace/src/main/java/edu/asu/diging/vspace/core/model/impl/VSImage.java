@@ -142,7 +142,12 @@ public class VSImage extends VSMedia implements IVSImage {
     @Override
     public String toString() {
         return "VSImage{" +
-                "disableFlag='" + disableFlag +
+                "id='" + id + '\'' +
+                ", filename='" + getFilename() + '\'' +
+                ", width=" + width +
+                ", height=" + height +
+                ", disableFlag=" + disableFlag +
+                ", hashCode=" + hashCode() +
                 '}';
     }
 }
