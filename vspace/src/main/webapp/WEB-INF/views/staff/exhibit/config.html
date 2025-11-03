@@ -12,6 +12,26 @@
 		}
 	}
 
+	function setupLinkImageUploadControls(linkType) {
+		$("#" + linkType + "CancelBtn").click(function() {
+			document.getElementById(linkType + 'LinkImageBlock').value = null;
+			window['closeUpload' + linkType.charAt(0).toUpperCase() + linkType.slice(1) + 'LinkImage']();
+			$('#' + linkType + 'CancelBtn').attr('disabled', true);
+		});
+
+		$("#change" + linkType.charAt(0).toUpperCase() + linkType.slice(1) + "LinkImageBtn").click(function() {
+			window['openUpload' + linkType.charAt(0).toUpperCase() + linkType.slice(1) + 'LinkImage']();
+		});
+
+		$("#" + linkType + "LinkImageBlock").change(function() {
+			if ($(this).val()) {
+				$("#" + linkType + "CancelBtn").attr("disabled", false);
+			} else {
+				$("#" + linkType + "CancelBtn").attr("disabled", true);
+			}
+		});
+	}
+
 	$(document).ready(function() {
 		var offlineMessage = $('#offlineMessage');			
 		var spaceParamExihibit = $('#spaceParamExihibit');
@@ -21,8 +41,8 @@
 		// Disable the cancel button if there is nothing to cancel, set intial position for disable slider
 		setupLinkImageControls('space', [[${defaultSpaceLinkImage}]]!=null, [[${defaultSpaceLinkImage?.getDisableFlag()}]]);
 		setupLinkImageControls('module', [[${defaultModuleLinkImage}]]!=null, [[${defaultModuleLinkImage?.getDisableFlag()}]]);
-		setupLinkImageControls('external', [[${defaultExternalLinkImage}]]!=null, [[${defaultExternalLinkImage?.getDisableFlag()}]]);		
-		
+		setupLinkImageControls('external', [[${defaultExternalLinkImage}]]!=null, [[${defaultExternalLinkImage?.getDisableFlag()}]]);
+
 		if ('[(${exhibition})]' != null && '[(${exhibition.mode})]' == 'OFFLINE') {
 		    offlineMessage.show();
 		} else {
@@ -30,60 +50,10 @@
 		}
 		$("#changeBgImgAlert").show();
 
-		$("#spaceCancelBtn").click(function() {
-		    document.getElementById('spaceLinkImageBlock').value = null;
-		    closeUploadSpaceLinkImage();
-		    $('#spaceCancelBtn').attr('disabled', true);
-		});
-		
-		$("#changeSpaceLinkImageBtn").click(function() {
-			openUploadSpaceLinkImage();
-		});
-
-		$("#moduleCancelBtn").click(function() {
-		    document.getElementById('moduleLinkImageBlock').value = null;
-		    closeUploadModuleLinkImage();
-		    $('#moduleCancelBtn').attr('disabled', true);
-		});
-		
-		$("#changeModuleLinkImageBtn").click(function() {
-			openUploadModuleLinkImage();
-		});
-
-		$("#externalCancelBtn").click(function() {
-		    document.getElementById('externalLinkImageBlock').value = null;
-		    closeUploadExternalLinkImage();
-		    $('#externalCancelBtn').attr('disabled', true);
-		});
-		
-		$("#changeExternalLinkImageBtn").click(function() {
-			openUploadExternalLinkImage();
-		});
-
-		//when input's value changes
-		$("#spaceLinkImageBlock").change(function() {
-		    if ($(this).val()) {
-		        $("#spaceCancelBtn").attr("disabled", false);
-		    } else {
-		    	$("#spaceCancelBtn").attr("disabled", true);
-		    }
-		});
-
-		$("#moduleLinkImageBlock").change(function() {
-		    if ($(this).val()) {
-		    	$("#moduleCancelBtn").attr("disabled", false);
-		    } else {
-		    	$("#moduleCancelBtn").attr("disabled", true);
-		    }
-		});
-
-		$("#externalLinkImageBlock").change(function() {
-		    if ($(this).val()) {
-		    	$("#externalCancelBtn").attr("disabled", false);
-		    } else {
-		    	$("#externalCancelBtn").attr("disabled", true);
-		    }
-		});
+		// Setup click handlers for all link types
+		setupLinkImageUploadControls('space');
+		setupLinkImageUploadControls('module');
+		setupLinkImageUploadControls('external');
 		
 		$(".deleteDefaultLinkImage").click(function() {
 			var linkType = $(this).attr('link-type');
@@ -134,32 +104,34 @@
 	    var defaultImages = $('#defaultImages');
 	    defaultImages.show();
 	}
-	
+
+	function toggleUploadLinkImage(linkType, show) {
+		var displayValue = show ? 'block' : 'none';
+		$("#" + linkType + "UploadLinkImage").css('display', displayValue);
+	}
 
 	function openUploadSpaceLinkImage() {
-	    $("#spaceUploadLinkImage").css('display', 'block');
+		toggleUploadLinkImage('space', true);
 	}
 
 	function closeUploadSpaceLinkImage() {
-	    $("#spaceUploadLinkImage").css('display', 'none');
+		toggleUploadLinkImage('space', false);
 	}
 
 	function openUploadModuleLinkImage() {
-	    $("#moduleUploadLinkImage").css('display', 'block');
+		toggleUploadLinkImage('module', true);
 	}
 
-	
 	function closeUploadModuleLinkImage() {
-	    $("#moduleUploadLinkImage").css('display', 'none');
+		toggleUploadLinkImage('module', false);
 	}
-	
+
 	function openUploadExternalLinkImage() {
-	    $("#externalUploadLinkImage").css('display', 'block');
+		toggleUploadLinkImage('external', true);
 	}
-	
 
 	function closeUploadExternalLinkImage() {
-	    $("#externalUploadLinkImage").css('display', 'none');
+		toggleUploadLinkImage('external', false);
 	}
 
 </script>
