@@ -14,6 +14,7 @@ import edu.asu.diging.vspace.core.data.ModuleRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.factory.impl.ExhibitionFactory;
 import edu.asu.diging.vspace.core.model.ExhibitionModes;
+import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.Module;
 import edu.asu.diging.vspace.core.model.impl.Space;
@@ -50,14 +51,28 @@ public class DashboardController {
         Exhibition exhibition = (Exhibition) exhibitManager.getStartExhibition();
         String previewId = null;
         ExhibitionModes exhibitionMode = null;
+        boolean hasDefaultSpaceImage = false;
+        boolean isDefaultSpaceImageDisabled = false;
+
         if (exhibition != null) {
             previewId = exhibition.getPreviewId();
             exhibitionMode = exhibition.getMode();
+
+            // Check if default space link image exists and is not disabled
+            IVSImage defaultSpaceImage = exhibition.getSpaceLinkDefaultImage();
+            if (defaultSpaceImage != null) {
+                hasDefaultSpaceImage = true;
+                isDefaultSpaceImageDisabled = defaultSpaceImage.getDisableFlag();
+            }
         }
+
         model.addAttribute("recentSpaces", recentSpaces);
         model.addAttribute("recentModules", recentModules);
         model.addAttribute("previewId", previewId);
         model.addAttribute("exhibitionMode", exhibitionMode!=null?exhibitionMode.name():null);
+        model.addAttribute("hasDefaultSpaceImage", hasDefaultSpaceImage);
+        model.addAttribute("isDefaultSpaceImageDisabled", isDefaultSpaceImageDisabled);
+
         return "staff/dashboard/dashboard";
     }
 
