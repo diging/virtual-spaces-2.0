@@ -41,6 +41,7 @@ import edu.asu.diging.vspace.core.services.IModuleLinkManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.IRenderingManager;
 import edu.asu.diging.vspace.core.services.ISequenceManager;
+import edu.asu.diging.vspace.core.services.ISlideManager;
 import edu.asu.diging.vspace.core.services.ISpaceDisplayManager;
 import edu.asu.diging.vspace.core.services.ISpaceLinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
@@ -54,7 +55,7 @@ public class RenderingManager implements IRenderingManager {
     private IModuleManager moduleManager;
 
     @Autowired
-    private SlideManager slideManager;
+    private ISlideManager slideManager;
 
     @Autowired
     private ISequenceManager sequenceManager;
