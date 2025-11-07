@@ -107,22 +107,25 @@ public class SpaceOverviewManager implements ISpaceOverviewManager {
             for (Space space : allSpacesList) {
                 Set<ModuleLinkDisplay> spaceToModulelinksList = spaceToModuleLinksMap.get(space.getId());
                 Set<SpaceLinkDisplay> spaceToSpaceLinksList = spaceToSpaceLinksMap.get(space.getId());
-                List<String> listOfSpaceIdAndModuleIds = new ArrayList<>();
+                // Use HashSet to prevent duplicate edge IDs
+                Set<String> uniqueEdgeIds = new HashSet<>();
 
                 if (spaceToModulelinksList != null) {
                     spaceToModulelinksList.forEach(link -> {
                         if (link.getLink() != null && link.getLink().getModule() != null) {
-                            listOfSpaceIdAndModuleIds.add(link.getLink().getModule().getId());
+                            uniqueEdgeIds.add(link.getLink().getModule().getId());
                         }
                     });
                 }
                 if (spaceToSpaceLinksList != null) {
                     spaceToSpaceLinksList.forEach(link -> {
                         if (link.getLink() != null && link.getLink().getTarget() != null) {
-                            listOfSpaceIdAndModuleIds.add(link.getLink().getTarget().getId());
+                            uniqueEdgeIds.add(link.getLink().getTarget().getId());
                         }
                     });
                 }
+                // Convert Set to List for JSON serialization
+                List<String> listOfSpaceIdAndModuleIds = new ArrayList<>(uniqueEdgeIds);
                 spaceLinkMap.put(space.getId(), listOfSpaceIdAndModuleIds);
             }
         }
