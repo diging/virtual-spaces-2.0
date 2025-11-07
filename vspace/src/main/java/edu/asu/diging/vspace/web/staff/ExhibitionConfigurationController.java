@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import org.javers.common.collections.Arrays;
+import java.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -54,11 +54,14 @@ public class ExhibitionConfigurationController {
     @RequestMapping("/staff/exhibit/config")
     public String showExhibitions(Model model) {
         // for now we assume there is just one exhibition
-
         IExhibition exhibition = exhibitionManager.getStartExhibition();
-        if (exhibition==null) {
+        if (exhibition == null) {
             exhibition = (Exhibition) exhibitFactory.createExhibition();
         }
+        
+        // Create final reference for lambda usage
+        final IExhibition finalExhibition = exhibition;
+        
         if (exhibition.getLanguages() != null) {
             model.addAttribute("savedExhibitionLanguages", exhibition.getLanguages()
                     .stream().map(language -> language.getLabel()).collect(Collectors.toList()));
@@ -67,7 +70,32 @@ public class ExhibitionConfigurationController {
         }
         model.addAttribute("exhibitionModes", Arrays.asList(ExhibitionModes.values()));
         model.addAttribute("spacesList", spaceRepo.findAll());
-        model.addAttribute("languageList", exhibitionLanguageConfig.getExhibitionLanguageList());
+        
+        List<Map<String, Object>> sortedLanguageList = exhibitionLanguageConfig.getExhibitionLanguageList().stream()
+                .map(rawMap -> (Map<String, Object>) rawMap)
+                .sorted((lang1, lang2) -> {
+                    String code1 = (String) lang1.get("code");
+                    String code2 = (String) lang2.get("code");
+                    String label1 = (String) lang1.get("label");
+                    String label2 = (String) lang2.get("label");
+                    
+                    // Check if languages are currently selected for this exhibition
+                    boolean isLang1Selected = finalExhibition.getLanguages() != null && 
+                        finalExhibition.getLanguages().stream().anyMatch(l -> l.getCode().equals(code1));
+                    boolean isLang2Selected = finalExhibition.getLanguages() != null && 
+                        finalExhibition.getLanguages().stream().anyMatch(l -> l.getCode().equals(code2));
+                    
+                    // show selected languages first
+                    if (isLang1Selected != isLang2Selected) {
+                        return isLang1Selected ? -1 : 1; // Selected languages come first
+                    }
+                    
+                    // alphabetical within each group (selected or unselected)
+                    return label1.compareToIgnoreCase(label2);
+                })
+                .collect(Collectors.toList());
+                
+        model.addAttribute("languageList", sortedLanguageList);
         model.addAttribute("exhibition", exhibition);
         model.addAttribute("defaultSpaceLinkImage", exhibition.getSpaceLinkDefaultImage());
         model.addAttribute("defaultModuleLinkImage", exhibition.getModuleLinkDefaultImage());
