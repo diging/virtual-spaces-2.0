@@ -51,8 +51,12 @@ public interface IReference extends IVSpaceElement {
     void setType(String type);
     
     String getNote();
-    
+
     void setNote(String note);
+
+    String getVisibility();
+
+    void setVisibility(String visibility);
 
     void setId(String id);
 

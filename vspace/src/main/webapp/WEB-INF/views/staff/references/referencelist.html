@@ -76,6 +76,59 @@ $( document ).ready(function() {
 .sortable-header:hover {
     background-color: #f0f0f0;
 }
+
+table.table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+table.table thead th:nth-child(1) { /* Type */
+    width: 8%;
+}
+
+table.table thead th:nth-child(2) { /* Title */
+    width: 20%;
+}
+
+table.table thead th:nth-child(3) { /* Author */
+    width: 12%;
+}
+
+table.table thead th:nth-child(4) { /* Year */
+    width: 6%;
+}
+
+table.table thead th:nth-child(5) { /* Created Date */
+    width: 10%;
+}
+
+table.table thead th:nth-child(6) { /* Module */
+    width: 12%;
+}
+
+table.table thead th:nth-child(7) { /* Slide Link */
+    width: 10%;
+}
+
+table.table thead th:nth-child(8) { /* Details */
+    width: 22%;
+}
+
+table.table td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+}
+
+table.table td a {
+    color: var(--primary);
+    text-decoration: none;
+}
+
+table.table td a:hover {
+    color: var(--primary);
+    text-decoration: underline;
+}
 </style>
 </head>
 <body>
@@ -104,6 +157,8 @@ $( document ).ready(function() {
                     <th scope="col" sort-prop="creationDate" class="sortable-header">
                         <a href="#">Created Date</a>
                     </th>
+                    <th scope="col">Module</th>
+                    <th scope="col">Slide Link</th>
                     <th scope="col">Details</th>
                 </tr>
             </thead>
@@ -116,6 +171,29 @@ $( document ).ready(function() {
                     <td>[[${reference.author}]]</td>
                     <td>[[${reference.year}]]</td>
                     <td><span class="date">[[${reference.creationDate}]]</span></td>
+                    <td>
+                        <span th:if="${!#lists.isEmpty(reference.biblios)}">
+                            <span th:with="firstBiblio=${reference.biblios[0]}">
+                                <span th:if="${firstBiblio.slide != null && firstBiblio.slide.module != null}">
+                                    [[${firstBiblio.slide.module.name}]]
+                                </span>
+                            </span>
+                        </span>
+                        <span th:if="${#lists.isEmpty(reference.biblios)}">-</span>
+                    </td>
+                    <td>
+                        <span th:if="${!#lists.isEmpty(reference.biblios)}">
+                            <span th:with="firstBiblio=${reference.biblios[0]}">
+                                <span th:if="${firstBiblio.slide != null && firstBiblio.slide.module != null}">
+                                    <a th:href="@{/staff/module/{moduleId}/slide/{slideId}(moduleId=${firstBiblio.slide.module.id},slideId=${firstBiblio.slide.id})}"
+                                       target="_blank">
+                                        [[${firstBiblio.slide.name}]]
+                                    </a>
+                                </span>
+                            </span>
+                        </span>
+                        <span th:if="${#lists.isEmpty(reference.biblios)}">-</span>
+                    </td>
                     <td>
                         <div style="font-size: 0.9em;">
                             <span th:if="${reference.journal != null && !#strings.isEmpty(reference.journal)}">
@@ -144,7 +222,7 @@ $( document ).ready(function() {
                     </td>
                 </tr>
                 <tr th:if="${#lists.isEmpty(references)}">
-                    <td colspan="6" style="text-align: center; padding: 40px;">
+                    <td colspan="8" style="text-align: center; padding: 40px;">
                         <em>No references found.</em>
                     </td>
                 </tr>

@@ -27,7 +27,8 @@ import edu.asu.diging.vspace.core.services.IReferenceManager;
 public class ReferenceManager implements IReferenceManager {
 
     private static final String VISIBILITY_PRIVATE = "Private";
-    
+    private static final String VISIBILITY_PUBLIC = "Public";
+
     private final Logger logger = LoggerFactory.getLogger(getClass());
     
     @Autowired
@@ -54,6 +55,13 @@ public class ReferenceManager implements IReferenceManager {
         reference.setEditors(editor);
         reference.setType(type);
         reference.setNote(note);
+
+        // Default visibility to "Public" if null or empty
+        if (visibility == null || visibility.trim().isEmpty()) {
+            visibility = VISIBILITY_PUBLIC;
+        }
+        reference.setVisibility(visibility);
+
         if(VISIBILITY_PRIVATE.equals(visibility)) {
             reference.setPublic(false);
         } else {
