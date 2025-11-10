@@ -28,18 +28,64 @@ import edu.asu.diging.vspace.core.services.IImageService;
 
 @Controller
 public class DefaultLinkImageController {
-    
+
+    private static final String LINK_TYPE_SPACE = "space";
+    private static final String LINK_TYPE_MODULE = "module";
+    private static final String LINK_TYPE_EXTERNAL = "external";
+
     private final Map<String, BiConsumer<IExhibition, IVSImage>> imageSetterMap = Map.of(
-            "space", IExhibition::setSpaceLinkDefaultImage,
-            "module", IExhibition::setModuleLinkDefaultImage,
-            "external", IExhibition::setExternalLinkDefaultImage
+            LINK_TYPE_SPACE, IExhibition::setSpaceLinkDefaultImage,
+            LINK_TYPE_MODULE, IExhibition::setModuleLinkDefaultImage,
+            LINK_TYPE_EXTERNAL, IExhibition::setExternalLinkDefaultImage
     );
     
     @Autowired
     private IExhibitionManager exhibitionManager;
     
     @Autowired
-    private IImageService imageService;   
+    private IImageService imageService;
+
+    /**
+     * Helper method to create image getter map for a specific exhibition instance.
+     *
+     * @param exhibition - the exhibition instance
+     * @return - a map of link types to their corresponding image getter methods
+     */
+    private Map<String, Supplier<IVSImage>> getImageGetterMap(IExhibition exhibition) {
+        return Map.of(
+                LINK_TYPE_SPACE, exhibition::getSpaceLinkDefaultImage,
+                LINK_TYPE_MODULE, exhibition::getModuleLinkDefaultImage,
+                LINK_TYPE_EXTERNAL, exhibition::getExternalLinkDefaultImage
+        );
+    }
+
+    /**
+     * Helper method to create image deleter map for a specific exhibition instance.
+     *
+     * @param exhibition - the exhibition instance
+     * @return - a map of link types to their corresponding image deleter methods
+     */
+    private Map<String, Runnable> getImageDeleterMap(IExhibition exhibition) {
+        return Map.of(
+                LINK_TYPE_SPACE, exhibition::deleteSpaceLinkDefaultImage,
+                LINK_TYPE_MODULE, exhibition::deleteModuleLinkDefaultImage,
+                LINK_TYPE_EXTERNAL, exhibition::deleteExternalLinkDefaultImage
+        );
+    }
+
+    /**
+     * Helper method to create image disabler map for a specific exhibition instance.
+     *
+     * @param exhibition - the exhibition instance
+     * @return - a map of link types to their corresponding image disabler methods
+     */
+    private Map<String, Runnable> getImageDisablerMap(IExhibition exhibition) {
+        return Map.of(
+                LINK_TYPE_SPACE, exhibition::disableSpaceLinkDefaultImage,
+                LINK_TYPE_MODULE, exhibition::disableModuleLinkDefaultImage,
+                LINK_TYPE_EXTERNAL, exhibition::disableExternalLinkDefaultImage
+        );
+    }
 
     /**
      * To create or update the default link images.
@@ -55,7 +101,7 @@ public class DefaultLinkImageController {
             @RequestParam(name = "image", required = false) MultipartFile image,
             @RequestParam(name="linkType") String linkType,
             RedirectAttributes attributes) throws IOException {
-        IExhibition exhibition = (IExhibition) exhibitionManager.getStartExhibition();
+        IExhibition exhibition = exhibitionManager.getStartExhibition();
         IVSImage defaultImage = imageService.storeImage(image.getBytes(), image.getOriginalFilename());
         
         BiConsumer<IExhibition, IVSImage> setter = imageSetterMap.get(linkType);
@@ -66,7 +112,7 @@ public class DefaultLinkImageController {
             attributes.addAttribute("showAlert", "true");
         } else {
             setter.accept(exhibition, defaultImage);
-            exhibition = (IExhibition) exhibitionManager.storeExhibition(exhibition);
+            exhibition = exhibitionManager.storeExhibition(exhibition);
             attributes.addAttribute("exhibitId", exhibition.getId());
             attributes.addAttribute("alertType", "success");
             attributes.addAttribute("message", "Successfully saved!");
@@ -86,14 +132,10 @@ public class DefaultLinkImageController {
      */
     @RequestMapping(value = "/staff/exhibit/config/link/defaultImage/{linkType}", method = RequestMethod.DELETE)
     public String deleteLinkImage(@PathVariable("linkType") String linkType, RedirectAttributes attributes) throws IOException {
-        IExhibition exhibition = (IExhibition) exhibitionManager.getStartExhibition();        
-        
-        Map<String, Supplier<IVSImage>> imageGetterMap = Map.of(
-                "space", exhibition::getSpaceLinkDefaultImage,
-                "module", exhibition::getModuleLinkDefaultImage,
-                "external", exhibition::getExternalLinkDefaultImage
-        );
-        
+        IExhibition exhibition = exhibitionManager.getStartExhibition();
+
+        Map<String, Supplier<IVSImage>> imageGetterMap = getImageGetterMap(exhibition);
+
         IVSImage image = imageGetterMap.get(linkType).get();
         if (image == null) {
             attributes.addAttribute("exhibitId", exhibition.getId());
@@ -104,12 +146,7 @@ public class DefaultLinkImageController {
             imageService.removeImage(image.getId());
         }
 
-        Map<String, Runnable> imageDeleterMap = Map.of(
-            "space", exhibition::deleteSpaceLinkDefaultImage,
-            "module", exhibition::deleteModuleLinkDefaultImage,
-            "external", exhibition::deleteExternalLinkDefaultImage
-        );
-        
+        Map<String, Runnable> imageDeleterMap = getImageDeleterMap(exhibition);
         Runnable deleteDefautImageMethod = imageDeleterMap.get(linkType);
         if (deleteDefautImageMethod == null) {
             attributes.addAttribute("exhibitId", exhibition.getId());
@@ -118,7 +155,7 @@ public class DefaultLinkImageController {
             attributes.addAttribute("showAlert", "true");
         } else {
             deleteDefautImageMethod.run();
-            exhibition = (IExhibition) exhibitionManager.storeExhibition(exhibition);
+            exhibition = exhibitionManager.storeExhibition(exhibition);
             attributes.addAttribute("exhibitId", exhibition.getId());
             attributes.addAttribute("alertType", "success");
             attributes.addAttribute("message", "Successfully deleted the default image!");
@@ -144,27 +181,19 @@ public class DefaultLinkImageController {
             return ResponseEntity.badRequest().body(errorMessage);
         }
         
-        IExhibition exhibition = (IExhibition) exhibitionManager.getStartExhibition();
-        JsonObject jsonObj = new JsonObject(); 
-        
-        Map<String, Supplier<IVSImage>> imageGetterMap = Map.of(
-                "space", exhibition::getSpaceLinkDefaultImage,
-                "module", exhibition::getModuleLinkDefaultImage,
-                "external", exhibition::getExternalLinkDefaultImage
-        );
-        
+        IExhibition exhibition = exhibitionManager.getStartExhibition();
+        JsonObject jsonObj = new JsonObject();
+
+        Map<String, Supplier<IVSImage>> imageGetterMap = getImageGetterMap(exhibition);
+
         IVSImage image = imageGetterMap.get(linkType).get();
         if (image == null) {
             String errorMessage = "Could not retrieve the default image prior to disabling";
             return ResponseEntity.badRequest().body(errorMessage);
         }
-        
-        Map<String, Runnable> imageDisablerMap = Map.of(
-            "space", exhibition::disableSpaceLinkDefaultImage,
-            "module", exhibition::disableModuleLinkDefaultImage,
-            "external", exhibition::disableExternalLinkDefaultImage
-        );
-        
+
+        Map<String, Runnable> imageDisablerMap = getImageDisablerMap(exhibition);
+
         Runnable disableDefautImageMethod = imageDisablerMap.get(linkType);
         disableDefautImageMethod.run();
         exhibitionManager.storeExhibition(exhibition);
