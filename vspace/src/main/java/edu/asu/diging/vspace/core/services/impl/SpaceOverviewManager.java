@@ -107,7 +107,7 @@ public class SpaceOverviewManager implements ISpaceOverviewManager {
             for (Space space : allSpacesList) {
                 Set<ModuleLinkDisplay> spaceToModulelinksList = spaceToModuleLinksMap.get(space.getId());
                 Set<SpaceLinkDisplay> spaceToSpaceLinksList = spaceToSpaceLinksMap.get(space.getId());
-                // Use HashSet to prevent duplicate edge IDs
+                // HashSet to prevent duplicate edge IDs
                 Set<String> uniqueEdgeIds = new HashSet<>();
 
                 if (spaceToModulelinksList != null) {
@@ -124,7 +124,6 @@ public class SpaceOverviewManager implements ISpaceOverviewManager {
                         }
                     });
                 }
-                // Convert Set to List for JSON serialization
                 List<String> listOfSpaceIdAndModuleIds = new ArrayList<>(uniqueEdgeIds);
                 spaceLinkMap.put(space.getId(), listOfSpaceIdAndModuleIds);
             }
