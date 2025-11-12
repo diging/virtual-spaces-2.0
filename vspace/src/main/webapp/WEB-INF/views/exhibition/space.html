@@ -388,7 +388,7 @@
 		
 		function checkDefaultImage() {
 			return $.ajax({
-				url: "[(@{'/api/exhibition/default/link/image/status'})]",
+				url: "[(@{'/api/exhibition/default/link/image/status/'})]",
 				type: 'GET',
 		        cache       : false,
 		        contentType : false,
@@ -410,7 +410,7 @@
 
 		function checkDefaultImageDisabled() {
 			return $.ajax({
-				url: "[(@{'/api/exhibition/default/link/image/disableStatus'})]",
+				url: "[(@{'/api/exhibition/default/link/image/disableStatus/'})]",
 				type: 'GET',
 		        cache : false,
 		        contentType : false,
@@ -459,7 +459,7 @@
                         linkDisplay = $('<img class="InfoSpace_'+index+'" src="'+spaceImageURL+'" />');
     		        }
     		        else if(defaultSpaceImageFlag === true && defaultSpaceImageDisableFlag !== true) {
-    		        	var defaultSpaceLinkImageURL = [[@{/api/image/default/link/space}]];
+    		        	var defaultSpaceLinkImageURL = [[@{/api/image/default/link/space/}]];
     		        	linkDisplay = $('<div class="InfoSpace_'+index+' Info_cz_Class"><img class="InfoSpace_'+index+'" src="'+defaultSpaceLinkImageURL+'" width="30" height="30" border-radius = "50%"/><span class="tooltiptext">'+link.link.name+'</span></div>');
     		        }
     		        linkDisplay.css('position', 'absolute');
@@ -499,7 +499,7 @@
                         var moduleImageURL = [[@{/api/image/}]]+link.image.id;
                         linkDisplay = $('<img class="InfoModule_'+index+'" src="'+moduleImageURL+'" />');
     		        } else if(defaultModuleImageFlag === true && defaultModuleImageDisableFlag !== true){
-    		        	var defaultModuleURL = [[@{/api/image/default/link/module}]];
+    		        	var defaultModuleURL = [[@{/api/image/default/link/module/}]];
     		        	linkDisplay = $('<div class="InfoModule_'+index+' Info_cz_Class"><img class="InfoModule_'+index+'" src="'+defaultModuleURL+'" width="30" height="30" border-radius = "100%""/><span class="tooltiptext">'+link.link.name+'</span></div>');
                 	}
     		        linkDisplay.css('position', 'absolute');
@@ -541,7 +541,7 @@
     		        	linkDisplay = $('<img class="InfoExt_'+index+'" src="'+extImageURL+'" />');
                 	}
                     else if(defaultExternalLinkImageFlag === true && defaultExternalImageDisableFlag !== true){
-                   		var defaultExternalLinkURL = [[@{/api/image/default/link/external}]];
+                   		var defaultExternalLinkURL = [[@{/api/image/default/link/external/}]];
                    		linkDisplay = $('<div class="InfoExt_'+index+' Info_cz_Class"><img class="InfoExt_'+index+'" src="'+defaultExternalLinkURL+'" width="30" height="30" border-radius = "50%""/><span class="tooltiptext">'+link.externalLink.name+'</span></div>');
                 	}
                     linkDisplay.css('position', 'absolute');
