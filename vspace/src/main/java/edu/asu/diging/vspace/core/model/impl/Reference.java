@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.Transient;
 
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
@@ -19,6 +20,7 @@ import org.hibernate.annotations.Parameter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import edu.asu.diging.vspace.core.model.IReference;
+import edu.asu.diging.vspace.core.util.APACitationFormatter;
 
 @Entity
 public class Reference extends VSpaceElement implements IReference {
@@ -181,5 +183,16 @@ public class Reference extends VSpaceElement implements IReference {
     public void setBiblios(List<BiblioBlock> biblios) {
         this.biblios = biblios;
     }
-    
+
+    /**
+     * Returns the APA formatted citation for this reference
+     * This is a transient method that formats the reference using APACitationFormatter
+     *
+     * @return HTML string with APA-formatted citation
+     */
+    @Transient
+    public String getApaFormatted() {
+        return APACitationFormatter.formatSingleReference(this);
+    }
+
 }

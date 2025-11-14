@@ -2060,24 +2060,14 @@
                     },
                     data: jsonData,
                     success: function(data) {
-                        // Updated with data attributes
+                        // Updated with APA formatted citation
 						var referenceblock = $(
 						    '<div id="'+ data.id +'" class="referenceDivStaff tab row" data-reference-block data-biblio-id="' + biblioBlockId + '">' +
-						    '<p class="col-md-10">' +
-						    'Reference Title: <span>' + data.title + '</span>, ' +
-						    'Author: <span>' + data.author + '</span>, ' +
-						    'Year: <span>' + data.year + '</span>, ' +
-						    'Journal: <span>' + data.journal + '</span>, ' +
-						    'Url: <span>' + data.url + '</span>, ' +
-						    'Volume: <span>' + data.volume + '</span>, ' +
-						    'Issue: <span>' + data.issue + '</span>, ' +
-						    'Pages: <span>' + data.pages + '</span>, ' +
-						    'Editors: <span>' + data.editors + '</span>, ' +
-						    'Type: <span>' + data.type + '</span>, ' +
-						    'Note: <span>' + data.note + '</span>' +
-						    '</p>' +
-						    '<input type="hidden" data-reference-id="' + data.id + '" value="' + data.id + '" />' +
-						    '<a class="btn col-md-1" data-action="delete-reference" href="javascript:;" style="position: absolute; right:0px;">' +
+						    '<div class="col-md-10 apa-formatted-reference">' +
+						    (data.apaFormatted || 'Reference added successfully.') +
+						    '</div>' +
+						    '<input type="hidden" class="deleteReferenceField" data-reference-id="' + data.id + '" value="' + data.id + '" />' +
+						    '<a class="btn col-md-1" data-action="delete-reference" data-reference-id="' + data.id + '" href="javascript:;">' +
 						    '<span class="icon-trash error"></span></a>' +
 						    '</div>'
 						);
@@ -4058,31 +4048,21 @@
 					       style="padding-top: 8px;">+ New Reference</a>
 					    <div id="referenceSpace" class="col-md-10">
 						<div th:each="contentRef: ${contents.references}">
-						    <!-- Reference Block with TYPE FIRST -->
-						    <div th:id="${contentRef.id}" 
-						         class="referenceDivStaff tab row" 
+						    <!-- Reference Block with APA Formatting -->
+						    <div th:id="${contentRef.id}"
+						         class="referenceDivStaff tab row"
 						         data-reference-block
 						         th:attr="data-biblio-id=${contents.id}">
-						        <p class="col-md-10">
-						            Type: <span>[[${contentRef.type}]]</span>,
-						            Reference Title: <span>[[${contentRef.title}]]</span>, 
-						            Author: <span>[[${contentRef.author}]]</span>,
-						            Year: <span>[[${contentRef.year}]]</span>, 
-						            Journal: <span>[[${contentRef.journal}]]</span>,
-						            Url: <span>[[${contentRef.url}]]</span>, 
-						            Volume: <span>[[${contentRef.volume}]]</span>,
-						            Issue: <span>[[${contentRef.issue}]]</span>, 
-						            Pages: <span>[[${contentRef.pages}]]</span>,
-						            Editors: <span>[[${contentRef.editors}]]</span>, 
-						            Note: <span>[[${contentRef.note}]]</span>
-						        </p>
-						        <input type="hidden" 
-						               class="deleteReferenceField" 
+						        <div class="col-md-10 apa-formatted-reference">
+						            [(${contentRef.apaFormatted})]
+						        </div>
+						        <input type="hidden"
+						               class="deleteReferenceField"
 						               data-reference-id="${contentRef.id}"
 						               th:attr="data-reference-id=${contentRef.id}"
 						               th:value="${contentRef.id}" />
-						        <a class="btn col-md-1" 
-						           data-action="delete-reference" 
+						        <a class="btn col-md-1"
+						           data-action="delete-reference"
 						           data-reference-id="${contentRef.id}"
 						           th:attr="data-reference-id=${contentRef.id}"
 						           href="javascript:;">
@@ -4090,7 +4070,7 @@
 						        </a>
 						    </div>
 						</div>
-				
+
 				    </div>
 				</div>
                

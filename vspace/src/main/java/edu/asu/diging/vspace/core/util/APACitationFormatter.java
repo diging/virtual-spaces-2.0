@@ -7,7 +7,7 @@ public class APACitationFormatter {
     
     /**
      * Formats a list of references in APA style
-     * 
+     *
      * @param references List of Reference objects to format
      * @return HTML formatted string with APA-style references
      */
@@ -15,23 +15,36 @@ public class APACitationFormatter {
         if (references == null || references.isEmpty()) {
             return "";
         }
-        
+
         StringBuilder result = new StringBuilder();
         result.append("<div class=\"apa-references\">");
-        
+
         for (int i = 0; i < references.size(); i++) {
             Reference ref = references.get(i);
-            result.append(formatSingleReference(ref, i + 1));
+            result.append(formatSingleReferenceInternal(ref, i + 1));
         }
-        
+
         result.append("</div>");
         return result.toString();
     }
-    
+
     /**
-     * Formats a single reference in APA style
+     * Formats a single reference in APA style (public method)
+     *
+     * @param ref The reference to format
+     * @return HTML formatted string with APA-style citation
      */
-    private static String formatSingleReference(Reference ref, int index) {
+    public static String formatSingleReference(Reference ref) {
+        if (ref == null) {
+            return "";
+        }
+        return formatSingleReferenceInternal(ref, 1);
+    }
+
+    /**
+     * Formats a single reference in APA style (internal method with index)
+     */
+    private static String formatSingleReferenceInternal(Reference ref, int index) {
         StringBuilder citation = new StringBuilder();
         citation.append("<div class=\"apa-reference\" id=\"ref-").append(index).append("\">");
         
