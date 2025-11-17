@@ -373,7 +373,7 @@ public class ContentBlockManagerTest {
     @Test(expected = BlockDoesNotExistException.class)
     public void test_deleteBiblioBlockById_forNonExistentId() throws BlockDoesNotExistException, ReferenceListDeletionForBiblioException {
         String biblioBlockId = "notARealId";
-        Mockito.doThrow(BlockDoesNotExistException.class).when(biblioBlockRepo).deleteById(biblioBlockId);
+        Mockito.doThrow(new IllegalArgumentException()).when(biblioBlockRepo).deleteById(biblioBlockId);
         managerToTest.deleteBiblioBlockById(biblioBlockId);
     }
 
