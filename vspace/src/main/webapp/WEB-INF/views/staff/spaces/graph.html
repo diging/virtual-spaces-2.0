@@ -237,21 +237,17 @@
             		document.getElementById('node-info-panel').classList.remove('show');
             	}
             	
-                var nodeJson = JSON.parse(jsonMap['nodesJson']);                
+                var nodeJson = JSON.parse(jsonMap['nodesJson']);
                 const width = 1400;
                 const height = 800;
 
-                const nodeArrays = categorizeNodes(nodeJson);
-                const root = structureData(nodeArrays);            	
-                const spaceLinks = getSpaceLinks(root.children);
-                const links = root.links();
-                spaceLinks.forEach(function (link) {
-                	links.push(link);
-                });
-                const nodes = root.descendants();
+                // Create flat structure with unique nodes (all spaces + only linked modules)
+                const structuredData = structureData(nodeJson);
+                const nodes = structuredData.nodes;
+                const links = structuredData.links;
                 
                 const simulation = d3.forceSimulation(nodes)
-	                .force("link", d3.forceLink(links).id(d => d.data.id).distance(180).strength(1))
+	                .force("link", d3.forceLink(links).id(d => d.id).distance(180).strength(1))
 	                .force("charge", d3.forceManyBody().strength(-700))
 	                .force("x", d3.forceX())
 	                .force("y", d3.forceY());
@@ -406,7 +402,7 @@
 				node.transition()
 					.duration(800)
 					.delay((d, i) => i * 50)
-					.style("opacity", function(d) { return d.depth === 0 ? 0 : 1; })
+					.style("opacity", 1)
 	             		
            	    // Function to truncate text
            	    function truncateText(text, maxLength) {
@@ -438,17 +434,17 @@
                 text.transition()
                 	.duration(800)
                 	.delay((d, i) => i * 50 + 200)
-                	.style("opacity", function(d) { return d.depth === 0 ? 0 : 1; });
+                	.style("opacity", 1);
            	    
-	           	// Hide root node and set pointer events
-	           	node.style("pointer-events", function(d) { return d.depth === 0 ? "none" : "all"; })
+	           	// Set pointer events for all nodes
+	           	node.style("pointer-events", "all")
 	           	// Make module nodes smaller and style with gradients
-	           		.style("r", function(d) { return d.depth === 2 ? 38 : d.depth === 1 ? 50 : 0; })
-	           		.style("fill", function(d) { 
-	           			return d.depth === 1 ? "url(#spaceGradient)" : "url(#moduleGradient)"; 
+	           		.style("r", function(d) { return d.data.module ? 38 : 50; })
+	           		.style("fill", function(d) {
+	           			return d.data.module ? "url(#moduleGradient)" : "url(#spaceGradient)";
 	           		})
-	           		.style("stroke", function(d) { return d.depth === 1 ? "#A55941" : "#8E8E8E"; })
-	           		.style("stroke-width", function(d) { return d.depth === 1 ? 3 : 2; })
+	           		.style("stroke", function(d) { return d.data.module ? "#8E8E8E" : "#A55941"; })
+	           		.style("stroke-width", function(d) { return d.data.module ? 2 : 3; })
 	           		.style("filter", "url(#dropShadow)")
 	           		
 		           	.on("mouseover", function(event, d) {
@@ -460,17 +456,17 @@
 					.on("mouseout", function(event, d) {
 					    d3.select(this)
 					      .style("cursor", "default")
-					      .style("stroke-width", function(d) { return d.depth === 1 ? 3 : 2; })
+					      .style("stroke-width", function(d) { return d.data.module ? 2 : 3; })
 					      .style("filter", "url(#dropShadow)");
 					})
 	            	.on('click', function(event, d) {
 	            		//Reset highlighting
 	            		d3.selectAll("circle")
 							.style("fill", function(d) { 
-								return d.depth === 1 ? "url(#spaceGradient)" : "url(#moduleGradient)"; 
+								return d.data.module ? "url(#moduleGradient)" : "url(#spaceGradient)"; 
 							})
-							.style("stroke", function(d) { return d.depth === 1 ? "#A55941" : "#8E8E8E"; })
-							.style("stroke-width", function(d) { return d.depth === 1 ? 3 : 2; });
+							.style("stroke", function(d) { return d.data.module ? "#8E8E8E" : "#A55941"; })
+							.style("stroke-width", function(d) { return d.data.module ? 2 : 3; });
 	            		
 	            		// Show info panel with node data
 	            		document.getElementById("node-info-title").innerHTML = d.data.name;
@@ -492,18 +488,16 @@
 	            		const nodeType = d.data.module ? 'Module' : 'Space';
 	            		statsHTML += '<div class="stat-item"><span class="stat-label">Type:</span> ' + nodeType + '</div>';
 	            		
-	            		// For modules, show parent space
-	            		if (d.data.module && d.parent && d.parent.data && d.parent.data.name) {
-	            			statsHTML += '<div class="stat-item"><span class="stat-label">Part of Space:</span> ' + d.parent.data.name + '</div>';
+	            		// For modules, show all linked spaces
+	            		if (d.data.module && d.data.linkedSpaceNames && d.data.linkedSpaceNames.length > 0) {
+	            			const spacesList = d.data.linkedSpaceNames.join(', ');
+	            			statsHTML += '<div class="stat-item"><span class="stat-label">Linked from:</span> ' + spacesList + '</div>';
 	            		}
 	            		
-	            		// For spaces, show connections and module count
+	            		// For spaces, show connections
 	            		if (!d.data.module) {
 		            		if (d.data.edges && d.data.edges.length > 0) {
 		            			statsHTML += '<div class="stat-item"><span class="stat-label">Connections:</span> ' + d.data.edges.length + '</div>';
-		            		}
-		            		if (d.children && d.children.length > 0) {
-		            			statsHTML += '<div class="stat-item"><span class="stat-label">Modules:</span> ' + d.children.length + '</div>';
 		            		}
 	            		}
 	            		
@@ -529,18 +523,12 @@
 	                  	  .style("stroke-width", 4);
 	            	});
 	           	
-	           	text.style("fill", function(d) { return d.depth === 1 ? "#121212" : "#fff"; })
+	           	text.style("fill", function(d) { return d.data.module ? "#fff" : "#121212"; })
 	           		.style("pointer-events", "none")
-	           		.style("text-shadow", function(d) { 
-	           			return d.depth === 1 ? "0 1px 2px rgba(255,255,255,0.8)" : "0 1px 2px rgba(0,0,0,0.5)"; 
+	           		.style("text-shadow", function(d) {
+	           			return d.data.module ? "0 1px 2px rgba(0,0,0,0.5)" : "0 1px 2px rgba(255,255,255,0.8)";
 	           		})
 	           		.style("user-select", "none");
-	           	
-           	 	d3.selectAll("line").filter(function(d) {
-                	return d.source.depth === 0;
-              	}).style("visibility", "hidden")
-              	  .style("opacity", 0)
-           	 	  .style("pointer-events", "none");
            	 	  
 	            simulation.on("tick", () => {
 	              // Draw straight links
@@ -559,60 +547,73 @@
 		              .attr("y", d => d.y);
 	            });
              
-                function structureData(nodeArrays) {
-                	var map = {};
-                	map.children = [];
+                /**
+                 * Creates a flat structure with unique nodes
+                 * Shows ALL spaces + modules that are linked from spaces
+                 * Each module appears only once, even if linked from multiple spaces
+                 */
+                function structureData(allNodes) {
+                	// Separate spaces and modules
+                	const spaces = [];
+                	const allModules = {};
 
-                	function createHierarchy(spaces, modules) {
-                		spaces.forEach(function (space) {
-                			if (space.edges.length > 0) {
-                				space.edges.forEach(function (edge) {
-                    				childModule = modules.find(item => item.id === edge);
-                    				if (childModule) {
-                    					space.children.push(childModule);
-                    				}
-                    			});	
-                			}
-                			map.children.push(space);
-                		});
-                	}
-                	                	
-                	createHierarchy(nodeArrays.spaces, nodeArrays.modules);         	
-                	return d3.hierarchy(map);
-                }
-                
-                function categorizeNodes(nodes) {
-            		spaces = [];
-            		modules = [];
-            		nodes.forEach(function (node) {
+                	allNodes.forEach(node => {
                 		if (!node.module) {
-                			// Only spaces have children
-                			node.children = [];
                 			spaces.push(node);
                 		} else {
-                			modules.push(node);
+                			allModules[node.id] = node;
                 		}
                 	});
-            		return {"spaces": spaces, "modules": modules};
-            	}
-                
-                // Links between spaces need to be created manually because tree hierarchy only generates links with children
-                function getSpaceLinks(spaces) {
-                	spaceLinkList = [];
-                	spaces.forEach(function (space) {
-            			if (space.data.edges.length > 0) {
-            				space.data.edges.forEach(function (edge) {
-                				spaceTarget = spaces.find(item => item.data.id === edge);
-                				if (spaceTarget) {
-                					spaceLinkList.push({
-                						source: space,
-                						target: spaceTarget
+
+                	// Find unique module IDs that are referenced by spaces
+                	const linkedModuleIds = new Set();
+                	spaces.forEach(space => {
+                		if (space.edges && space.edges.length > 0) {
+                			space.edges.forEach(edgeId => {
+                				// Check if this edge is a module
+                				if (allModules[edgeId]) {
+                					linkedModuleIds.add(edgeId);
+                				}
+                			});
+                		}
+                	});
+
+                	// Create nodes array: all spaces + linked modules
+                	const nodes = [];
+
+                	// Add all spaces
+                	spaces.forEach(space => {
+                		nodes.push({
+                			id: space.id,
+                			data: space
+                		});
+                	});
+
+                	// only linked modules (each will appear once)
+                	linkedModuleIds.forEach(moduleId => {
+                		nodes.push({
+                			id: moduleId,
+                			data: allModules[moduleId]
+                		});
+                	});
+
+                	// Create links array
+                	const links = [];
+                	spaces.forEach(space => {
+                		if (space.edges && space.edges.length > 0) {
+                			space.edges.forEach(edgeId => {
+                				const targetExists = nodes.some(n => n.id === edgeId);
+                				if (targetExists) {
+                					links.push({
+                						source: space.id,
+                						target: edgeId
                 					});
                 				}
-                			});	
-            			}
-            		});
-                	return spaceLinkList;
+                			});
+                		}
+                	});
+
+                	return { nodes: nodes, links: links };
                 }
             </script>
         </div>
