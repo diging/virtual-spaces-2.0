@@ -247,10 +247,11 @@
                 const links = structuredData.links;
                 
                 const simulation = d3.forceSimulation(nodes)
-	                .force("link", d3.forceLink(links).id(d => d.id).distance(180).strength(1))
-	                .force("charge", d3.forceManyBody().strength(-700))
-	                .force("x", d3.forceX())
-	                .force("y", d3.forceY());
+	                .force("link", d3.forceLink(links).id(d => d.id).distance(250).strength(0.3))
+	                .force("charge", d3.forceManyBody().strength(-1200))
+	                .force("x", d3.forceX().strength(0.05))
+	                .force("y", d3.forceY().strength(0.05))
+	                .force("collision", d3.forceCollide().radius(60));
                 
                 const svg = d3.select("#graph").append("svg")
                     .attr("width", width)
@@ -365,38 +366,44 @@
                   .join("line")
                   .attr("stroke-width", 2);
                 
-                drag = simulation => {
-  	          	  
-  	          	  function dragstarted(event, d) {
-  	          	    if (!event.active) simulation.alphaTarget(0.3).restart();
-  	          	    d.fx = d.x;
-  	          	    d.fy = d.y;
-  	          	  }
-  	          	  
+                let node, text;
+
+                function createDrag() {
   	          	  function dragged(event, d) {
-  	          	    d.fx = event.x;
-  	          	    d.fy = event.y;
+  	          	    // Update data position
+  	          	    d.x = event.x;
+  	          	    d.y = event.y;
+
+  	          	    // Manually update visual positions
+  	          	    d3.select(this)
+  	          	      .attr("cx", event.x)
+  	          	      .attr("cy", event.y);
+
+  	          	    // Update the corresponding text
+  	          	    text.filter(t => t.id === d.id)
+  	          	      .attr("x", event.x)
+  	          	      .attr("y", event.y);
+
+  	          	    // Update connected links
+  	          	    link.filter(l => l.source.id === d.id)
+  	          	      .attr("x1", event.x)
+  	          	      .attr("y1", event.y);
+  	          	    link.filter(l => l.target.id === d.id)
+  	          	      .attr("x2", event.x)
+  	          	      .attr("y2", event.y);
   	          	  }
-  	          	  
-  	          	  function dragended(event, d) {
-  	          	    if (!event.active) simulation.alphaTarget(0);
-  	          	    // Keep nodes fixed in place after dragging
-  	          	    // d.fx and d.fy remain set, so node stays where dropped
-  	          	  }
-  	          	  
+
   	          	  return d3.drag()
-  	          	      .on("start", dragstarted)
-  	          	      .on("drag", dragged)
-  	          	      .on("end", dragended);
+  	          	      .on("drag", dragged);
   	         	}
                 
-                const node = g.append("g")
+                node = g.append("g")
 				    .attr("stroke-width", 1.5)
                   .selectAll("circle")
 			      .data(nodes)
 			      .join("circle")
 			      .style("opacity", 0)
-				    .call(drag(simulation));
+				    .call(createDrag());
 				
 				// Fade in animation
 				node.transition()
@@ -411,7 +418,7 @@
            	    	return text.substring(0, maxLength) + '...';
            	    }
            	    
-           	    const text = g.append("g")
+           	    text = g.append("g")
                   .selectAll("text")
                   .data(nodes)
                   .enter().append("text")
@@ -541,16 +548,19 @@
 	              node
 	                  .attr("cx", d => d.x)
 	                  .attr("cy", d => d.y);
-	              
+
 	              text
 		              .attr("x", d => d.x)
 		              .attr("y", d => d.y);
+	            }).on("end", () => {
+	              // Stop simulation after initial layout settles
+	              simulation.stop();
 	            });
              
                 /**
                  * Creates a flat structure with unique nodes
-                 * Shows ALL spaces + modules that are linked from spaces
-                 * Each module appears only once, even if linked from multiple spaces
+                 * Shows ALL spaces + ALL modules
+                 * Each module appears only once
                  */
                 function structureData(allNodes) {
                 	// Separate spaces and modules
@@ -565,20 +575,7 @@
                 		}
                 	});
 
-                	// Find unique module IDs that are referenced by spaces
-                	const linkedModuleIds = new Set();
-                	spaces.forEach(space => {
-                		if (space.edges && space.edges.length > 0) {
-                			space.edges.forEach(edgeId => {
-                				// Check if this edge is a module
-                				if (allModules[edgeId]) {
-                					linkedModuleIds.add(edgeId);
-                				}
-                			});
-                		}
-                	});
-
-                	// Create nodes array: all spaces + linked modules
+                	// Create nodes array: all spaces + ALL modules
                 	const nodes = [];
 
                 	// Add all spaces
@@ -589,8 +586,8 @@
                 		});
                 	});
 
-                	// only linked modules (each will appear once)
-                	linkedModuleIds.forEach(moduleId => {
+                	// Add ALL modules (each will appear once)
+                	Object.keys(allModules).forEach(moduleId => {
                 		nodes.push({
                 			id: moduleId,
                 			data: allModules[moduleId]
