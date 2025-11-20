@@ -88,19 +88,7 @@
 				<div th:each="space,iterStat: ${recentSpaces}" th:if="${iterStat.index}<5" style="width: 12rem;">
 					<div class="spaceImage">
                         <a th:href="@{'/staff/space/'+${space?.id}}">
-						  <img class="card-img-top space-thumbnail"
-						       th:if="${space.image != null}"
-						       th:src="@{'/api/image/'+${space.image.id}}"
-						       alt="Space image">
-						  <img class="card-img-top space-thumbnail"
-						       th:if="${space.image == null and hasDefaultSpaceImage and !isDefaultSpaceImageDisabled}"
-						       th:src="@{'/api/image/default/link/space/'}"
-						       alt="Default space image">
-						  <div class="card-img-top space-thumbnail"
-						       th:if="${space.image == null and (!hasDefaultSpaceImage or isDefaultSpaceImageDisabled)}"
-						       style="background-color: #f0f0f0; display: flex; align-items: center; justify-content: center; min-height: 150px;">
-						      <span style="color: #999;">No image</span>
-						  </div>
+						  <img class="card-img-top space-thumbnail" th:src="@{'/api/image/'+${space?.image?.id}}" alt="Space image">
                         </a>
 					</div>
 					<div class="btn-group dropdown">

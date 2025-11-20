@@ -28,22 +28,10 @@ public class ListSpacesController {
 
         model.addAttribute("spaces", spaceManager.addIncomingLinkInfoToSpaces(spaceRepo.findAll()));
         IExhibition startExhibition = exhibitionManager.getStartExhibition();
-        boolean hasDefaultSpaceImage = false;
-        boolean isDefaultSpaceImageDisabled = false;
 
         if(startExhibition!=null) {
             model.addAttribute("startSpace", startExhibition.getStartSpace());
-
-            // Check if default space link image exists and is not disabled
-            IVSImage defaultSpaceImage = startExhibition.getSpaceLinkDefaultImage();
-            if (defaultSpaceImage != null) {
-                hasDefaultSpaceImage = true;
-                isDefaultSpaceImageDisabled = defaultSpaceImage.getDisableFlag();
-            }
         }
-
-        model.addAttribute("hasDefaultSpaceImage", hasDefaultSpaceImage);
-        model.addAttribute("isDefaultSpaceImageDisabled", isDefaultSpaceImageDisabled);
 
         return "staff/spaces/spacelist";
     }
