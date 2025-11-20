@@ -24,7 +24,7 @@ public class DefaultImageApiController {
     public static final String API_DEFAULT_MODULE_IMAGE_PATH = "/api/image/default/link/module/";
     public static final String API_DEFAULT_EXTERNAL_IMAGE_PATH = "/api/image/default/link/external/";
     public static final String API_DEFAULT_SPACE_IMAGE_STATUS = "/api/exhibition/default/link/image/status/";
-    public static final String API_DEFAULT_IMAGE_DISABLE_STATUS = "/api/exhibition/default/link/image/disableStatus/";
+    public static final String API_DEFAULT_IMAGE_DISABLED_STATUS = "/api/exhibition/default/link/image/disabledStatus/";
 
     @Autowired
     private IImageService imageService;
@@ -67,42 +67,42 @@ public class DefaultImageApiController {
         // Check if image exists and is not disabled
         IVSImage spaceImage = exhibition.getSpaceLinkDefaultImage();
         jsonObj.addProperty("defaultSpaceImageFlag",
-            spaceImage != null && !spaceImage.getDisableFlag());
+            spaceImage != null && !spaceImage.isDisabled());
 
         IVSImage moduleImage = exhibition.getModuleLinkDefaultImage();
         jsonObj.addProperty("defaultModuleImageFlag",
-            moduleImage != null && !moduleImage.getDisableFlag());
+            moduleImage != null && !moduleImage.isDisabled());
 
         IVSImage externalImage = exhibition.getExternalLinkDefaultImage();
         jsonObj.addProperty("defaultExternalLinkImageFlag",
-            externalImage != null && !externalImage.getDisableFlag());
+            externalImage != null && !externalImage.isDisabled());
 
         return new ResponseEntity<>(jsonObj.toString(), HttpStatus.OK);
     }
     
     /**
-     * Retrieves the disable status of default images for exhibition links.
+     * Retrieves the disabled status of default images for exhibition links.
      * Returns false if image is null (treated as not disabled since it doesn't exist).
      * @return A JSON response containing flags indicating whether default images are disabled.
      */
-    @RequestMapping(value = API_DEFAULT_IMAGE_DISABLE_STATUS, method = RequestMethod.GET)
-    public ResponseEntity<String> getDefaultImageDisableStatus() {
+    @RequestMapping(value = API_DEFAULT_IMAGE_DISABLED_STATUS, method = RequestMethod.GET)
+    public ResponseEntity<String> getDefaultImageDisabledStatus() {
         IExhibition exhibition = exhibitManager.getStartExhibition();
 
         JsonObject jsonObj = new JsonObject();
 
         // Return false if image is null (not disabled because it doesn't exist)
         IVSImage spaceImage = exhibition.getSpaceLinkDefaultImage();
-        jsonObj.addProperty("defaultSpaceImageDisableFlag",
-            spaceImage != null && spaceImage.getDisableFlag());
+        jsonObj.addProperty("defaultSpaceImageDisabled",
+            spaceImage != null && spaceImage.isDisabled());
 
         IVSImage moduleImage = exhibition.getModuleLinkDefaultImage();
-        jsonObj.addProperty("defaultModuleImageDisableFlag",
-            moduleImage != null && moduleImage.getDisableFlag());
+        jsonObj.addProperty("defaultModuleImageDisabled",
+            moduleImage != null && moduleImage.isDisabled());
 
         IVSImage externalImage = exhibition.getExternalLinkDefaultImage();
-        jsonObj.addProperty("defaultExternalImageDisableFlag",
-            externalImage != null && externalImage.getDisableFlag());
+        jsonObj.addProperty("defaultExternalImageDisabled",
+            externalImage != null && externalImage.isDisabled());
 
         return new ResponseEntity<>(jsonObj.toString(), HttpStatus.OK);
     }
@@ -115,7 +115,7 @@ public class DefaultImageApiController {
      * @return ResponseEntity with image bytes and headers, or 404 if unavailable
      */
     private ResponseEntity<byte[]> getResponseWithDefaultHeaders(IVSImage image) {
-        if(image == null || image.getDisableFlag() == true) {
+        if(image == null || image.isDisabled()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         byte[] imageContent = imageService.getImageContent(image);

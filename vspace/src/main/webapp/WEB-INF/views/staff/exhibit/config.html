@@ -41,9 +41,9 @@
 		$('.selectpicker').selectpicker();
 
 		// Disable the cancel button if there is nothing to cancel, set intial position for disable slider
-		setupLinkImageControls('space', [[${defaultSpaceLinkImage}]]!=null, [[${defaultSpaceLinkImage?.getDisableFlag()}]]);
-		setupLinkImageControls('module', [[${defaultModuleLinkImage}]]!=null, [[${defaultModuleLinkImage?.getDisableFlag()}]]);
-		setupLinkImageControls('external', [[${defaultExternalLinkImage}]]!=null, [[${defaultExternalLinkImage?.getDisableFlag()}]]);
+		setupLinkImageControls('space', [[${defaultSpaceLinkImage}]]!=null, [[${defaultSpaceLinkImage?.isDisabled()}]]);
+		setupLinkImageControls('module', [[${defaultModuleLinkImage}]]!=null, [[${defaultModuleLinkImage?.isDisabled()}]]);
+		setupLinkImageControls('external', [[${defaultExternalLinkImage}]]!=null, [[${defaultExternalLinkImage?.isDisabled()}]]);
 
 		if ('[(${exhibition})]' != null && '[(${exhibition.mode})]' == 'OFFLINE') {
 		    offlineMessage.show();

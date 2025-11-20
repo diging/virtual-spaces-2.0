@@ -48,15 +48,15 @@ public class Exhibition extends VSpaceElement implements IExhibition {
 
     private String customMessage;
     
-    @OneToOne(targetEntity = VSImage.class, cascade = CascadeType.ALL, orphanRemoval=true)
+    @OneToOne(targetEntity = VSImage.class)
     @NotFound(action = NotFoundAction.IGNORE)
     private IVSImage spaceLinkDefaultImage;
     
-    @OneToOne(targetEntity = VSImage.class, cascade = CascadeType.ALL, orphanRemoval=true)
+    @OneToOne(targetEntity = VSImage.class)
     @NotFound(action = NotFoundAction.IGNORE)
     private IVSImage moduleLinkDefaultImage;
     
-    @OneToOne(targetEntity = VSImage.class, cascade = CascadeType.ALL, orphanRemoval=true)
+    @OneToOne(targetEntity = VSImage.class)
     @NotFound(action = NotFoundAction.IGNORE)
     private IVSImage externalLinkDefaultImage;
     
@@ -152,7 +152,7 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     
     @Override
     public void disableSpaceLinkDefaultImage() {
-        this.spaceLinkDefaultImage.toggleDisableFlag();
+        this.spaceLinkDefaultImage.toggleDisabled();
     }
     
     @Override
@@ -172,7 +172,7 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     
     @Override
     public void disableModuleLinkDefaultImage() {
-        this.moduleLinkDefaultImage.toggleDisableFlag();
+        this.moduleLinkDefaultImage.toggleDisabled();
     }
     
     @Override
@@ -192,7 +192,7 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     
     @Override
     public void disableExternalLinkDefaultImage() {
-        this.externalLinkDefaultImage.toggleDisableFlag();
+        this.externalLinkDefaultImage.toggleDisabled();
     }
     
     @Override

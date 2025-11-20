@@ -197,7 +197,7 @@ public class DefaultLinkImageController {
         Runnable disableDefautImageMethod = imageDisablerMap.get(linkType);
         disableDefautImageMethod.run();
         exhibitionManager.storeExhibition(exhibition);
-        jsonObj.addProperty("defaultImageDisableFlag", image.getDisableFlag());
+        jsonObj.addProperty("defaultImageDisabled", image.isDisabled());
 
         return new ResponseEntity<>(jsonObj.toString(), HttpStatus.OK);
 
