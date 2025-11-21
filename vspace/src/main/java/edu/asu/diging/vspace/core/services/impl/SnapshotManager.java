@@ -154,9 +154,9 @@ public class SnapshotManager  implements  ISnapshotManager {
             throw new ExhibitionSnapshotNotFoundException("Exhibition Snapshot not found");             
         }
         try {
-            return storageEngineDownloads.getMediaContent("", exhibitionSnapshot.get().getFolderName() + ZIP_FILE_EXTENSION);                
+            return storageEngineDownloads.getMediaContent("", exhibitionSnapshot.get().getFolderName() + ZIP_FILE_EXTENSION);
         } catch (IOException e) {
-            throw new ExhibitionSnapshotNotFoundException(e.getMessage(), e);
+            throw new ExhibitionSnapshotNotFoundException("Failed to retrieve media content for exhibition snapshot", e);
         }
     }
 

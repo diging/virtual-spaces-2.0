@@ -216,7 +216,7 @@ public class RenderingManager implements IRenderingManager {
                     try {
                         storageManager.copyImage(image, imagesFolderName);
                     } catch (FileStorageException e) {
-                        logger.error("Could not download Sequence",e);
+                        logger.error("Failed to copy image to folder: " + imagesFolderName, e);
                     }
                 }
                 

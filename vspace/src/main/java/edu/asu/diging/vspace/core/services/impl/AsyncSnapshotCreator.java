@@ -25,6 +25,7 @@ import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionSnapshot;
 import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
 import edu.asu.diging.vspace.core.model.impl.SnapshotTask;
+import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.IAsyncSnapshotCreator;
@@ -96,11 +97,10 @@ public class AsyncSnapshotCreator implements IAsyncSnapshotCreator {
      * @throws FileStorageException - if an error occurs while storing the index file
      */
     private void generateIndexHtml(String exhibitionFolderName, List<Space> spaces) throws FileStorageException {
-        // Get exhibition details
         IExhibition exhibition = exhibitionManager.getStartExhibition();
         String exhibitionTitle = exhibition != null ? exhibition.getTitle() : "Virtual Exhibition";
-        Space startSpace = exhibition != null && exhibition.getStartSpace() != null ? 
-            (Space) exhibition.getStartSpace() : (spaces.isEmpty() ? null : spaces.get(0));
+        ISpace startSpace = exhibition != null && exhibition.getStartSpace() != null ?
+            exhibition.getStartSpace() : (spaces.isEmpty() ? null : spaces.get(0));
         
         // Create Thymeleaf context and populate with data
         Context context = new Context();

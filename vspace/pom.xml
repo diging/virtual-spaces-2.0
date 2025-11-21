@@ -25,9 +25,9 @@
         <db.url>jdbc:mysql://localhost:3306/vspace?serverTimezone=UTC&amp;useEncoding=true</db.url>
         <db.user>vspace</db.user>
         <db.password>vspace</db.password>
-        <uploaded.files.path>${project.basedir}/uploads</uploaded.files.path>
-        <downloaded.files.path>${project.basedir}/downloads</downloaded.files.path>
-        <resources.path>${project.basedir}/src/main/webapp/resources</resources.path>
+        <uploaded.files.path>./uploads</uploaded.files.path>
+        <downloaded.files.path>./downloads</downloaded.files.path>
+        <resources.path>./resources</resources.path>
         <email.user></email.user>
         <email.password></email.password>
         <email.host></email.host>

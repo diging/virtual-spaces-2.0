@@ -100,7 +100,7 @@
     	$('.successAlert').append(alert);
     	const poll = (id, folderName) => {
             maxAttempts = 10;
-            interval= 3000;
+            interval = 3000; // polling interval in milliseconds
             let attempts = 0;
             const executePoll = async (resolve, reject) => {
                 const url = "[(@{'/staff/snapshot/'})]"+id+"/status?folderName="+folderName;			  

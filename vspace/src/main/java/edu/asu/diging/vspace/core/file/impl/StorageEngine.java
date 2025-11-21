@@ -187,18 +187,14 @@ public class StorageEngine implements IStorageEngine {
                     Files.copy(path, responseZipStream);
                     responseZipStream.closeEntry();
                 } catch (IOException e) {
-                    // Delete the created zip if an exception occurs
                     deleteFile(folderPath, zipFile);
                     throw new IOException(e.getMessage(), e);
                 }
             }
-            // Delete the folder
-            deleteFolder(folderPath, folderName); 
+            deleteFolder(folderPath, folderName);
         } catch (IOException e) {
-            // Delete the zip file if an exception occurred
             deleteFile(folderPath, zipFile);
             deleteFolder(folderPath, folderName);
-
             throw new IOException(e.getMessage(), e);
         }
         return byteArrayOutputStream.toByteArray();        
