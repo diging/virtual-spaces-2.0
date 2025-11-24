@@ -19,4 +19,6 @@ public interface IExternalLinkManager extends ILinkManager<IExternalLink, Extern
             String linkLabel, String linkId, String linkDisplayId, DisplayType displayType, byte[] linkImage,
             String imageFilename,ExternalLinkDisplayMode howToOpen)
             throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException;
+
+   
 }
