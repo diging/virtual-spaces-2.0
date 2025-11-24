@@ -121,7 +121,8 @@
 		        <input type="hidden"  th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 		        <input type="hidden" th:value="${exhibition?.id}" name="exhibitionParam" id="exhibitionParam"/>
 		        <label for="space">Select the start space of the exhibition:</label>
-		        <select class="form-control" name="spaceParam">
+		        <select class="form-control" name="spaceParam" required>
+		             <option value="">-- Please select a start space --</option>
 		             <option th:id="${space.id}" th:each="space: ${spacesList}" th:value="${space.id}"
 		             th:selected="${#strings.equals(space.id,exhibition?.startSpace?.id)}">
 		             	[[${space.name}]]
