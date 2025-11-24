@@ -178,10 +178,9 @@ public class SnapshotManager  implements  ISnapshotManager {
         if (filesPagenum < 1) {
             filesPagenum = 1;
         }
-        
+
         Pageable requestedPageForFiles = PageRequest.of(filesPagenum - 1, pageSize);
-        Page<ExhibitionSnapshot> page = exhibitionSnapshotRepository.findAllByOrderByCreationDateDesc(requestedPageForFiles);
-        return page.map(exhibitionSnapshot-> {return (ExhibitionSnapshot) exhibitionSnapshot;});
+        return exhibitionSnapshotRepository.findAllByOrderByCreationDateDesc(requestedPageForFiles);
     }
     
     @Override
@@ -192,10 +191,9 @@ public class SnapshotManager  implements  ISnapshotManager {
     @Override
     public SnapshotTask getSnapshotTask(String snapshotId) throws ExhibitionSnapshotNotFoundException {
         Optional<SnapshotTask> snapshotTask = snapshotTaskRepository.findByExhibitionSnapshotId(snapshotId);
-        if(snapshotTask.isPresent()) {
+        if (snapshotTask.isPresent()) {
             return snapshotTask.get();
-        }
-        else {
+        } else {
             throw new ExhibitionSnapshotNotFoundException(snapshotId);
         }
     }

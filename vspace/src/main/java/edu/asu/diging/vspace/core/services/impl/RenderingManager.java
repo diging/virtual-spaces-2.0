@@ -143,7 +143,6 @@ public class RenderingManager implements IRenderingManager {
 
         Context thymeleafContext = new Context();
         populateContextForSpace(thymeleafContext, spaceId);
-        // add attributes to context
         String response = springTemplateEngine.process(SPACE_DOWNLOAD_TEMPLATE, thymeleafContext);
         return response.getBytes();
     }
@@ -174,16 +173,19 @@ public class RenderingManager implements IRenderingManager {
     }
        
     /**
-     * 
-     * Creates snapshot of the given sequence into spacefolderPath.
-     * 
-     * @param startSequence      the {@link ISequence} object indicating the start sequence of the module
+     *
+     * Recursively creates snapshots of the given sequence and any branching sequences.
+     * This method processes slides within a sequence and follows branching points to
+     * recursively process connected sequences, using visitedSequences to prevent infinite loops.
+     *
+     * @param sequence           the {@link ISequence} object to process
      * @param module             the {@link IModule} object
      * @param space              the {@link ISpace} object
-     * @param spaceFolderPath    the space folder path where space content will be stored
-     * @param imagesFolderPath   the images folder path where images will be stored
-     * @throws FileStorageException
-     * 
+     * @param spaceFolderName    the space folder name where space content will be stored
+     * @param imagesFolderName   the images folder name where images will be stored
+     * @param visitedSequences   set of already processed sequence IDs to prevent infinite recursion
+     * @throws FileStorageException if an error occurs while storing snapshot files
+     *
      */
     private void createSequencesSnapshot(ISequence sequence, IModule module, ISpace space, String spaceFolderName,
             String imagesFolderName, Set<String> visitedSequences) throws FileStorageException {

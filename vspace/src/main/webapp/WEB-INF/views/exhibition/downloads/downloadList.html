@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+vspace/src/main/java/edu/asu/diging/vspace/core/services/impl/RenderingManager.java<!DOCTYPE html>
 <html layout:decorate="~{layouts/main_staff}">
 <head>
 <script th:src="@{/resources/bootpag/js/bootpag.min.js}">
@@ -99,33 +99,32 @@
     	var alert = $('<div class="alert alert-info alert-dismissible fade show" role="alert"><p>Snapshot '+folderName+' creation is in progress. Please wait. </p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
     	$('.successAlert').append(alert);
     	const poll = (id, folderName) => {
-            maxAttempts = 10;
             interval = 3000; // polling interval in milliseconds
-            let attempts = 0;
             const executePoll = async (resolve, reject) => {
-                const url = "[(@{'/staff/snapshot/'})]"+id+"/status?folderName="+folderName;			  
-                const result = await fetch(url).then((response)=> response.json());
-                attempts++;
-                var text = await result;
-                if (text.taskComplete == true) {
-                    var alert = $('<div class="alert alert-success alert-dismissible fade show" role="alert"><p>Snapshot '+folderName+' is ready. Please click to download. <a href=[[@{/staff/snapshot/'+id+'?folderName='+folderName+'}]] > <span class="btn primary-btn btn-sm">Download</span></a> </p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                    $('.successAlert').empty();
-                    $('.successAlert').append(alert); 
-                    return resolve(result);
-                } else if (maxAttempts && attempts === maxAttempts) {
+                const url = "[(@{'/staff/snapshot/'})]"+id+"/status?folderName="+folderName;
+                try {
+                    const result = await fetch(url).then((response)=> response.json());
+                    var text = await result;
+                    if (text.taskComplete == true) {
+                        var alert = $('<div class="alert alert-success alert-dismissible fade show" role="alert"><p>Snapshot '+folderName+' is ready. Please click to download. <a href=[[@{/staff/snapshot/'+id+'?folderName='+folderName+'}]] > <span class="btn primary-btn btn-sm">Download</span></a> </p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        $('.successAlert').empty();
+                        $('.successAlert').append(alert);
+                        return resolve(result);
+                    } else {
+                        setTimeout( executePoll, interval, resolve, reject  );
+                    }
+                } catch (error) {
                     var num = '[[${downloadsCurrentPageNumber}]]';
-                    var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>Snapshot '+folderName+' creation is still in progress. Please check again later <a href=[[@{/staff/snapshots/list?downloadsPagenum='+num+'}]]> <span class="btn primary-btn btn-sm">Refresh</span></p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>Error checking snapshot status. Please <a href=[[@{/staff/snapshots/list?downloadsPagenum='+num+'}]]> <span class="btn primary-btn btn-sm">Refresh</span></a> to try again.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
                     $('.errorAdd').append(alert);
-                    
+
                     var errorAlert = document.getElementById('downloadError');
                     errorAlert.style.visibility="visible";
-                    
-                    return reject(new Error('Exceeded max attempts'));
-                } else {
-                    setTimeout( executePoll, interval, resolve, reject  );
+
+                    return reject(error);
                 }
             };
-            return new Promise(executePoll);	
+            return new Promise(executePoll);
          };
          poll(id, folderName)
          .then(value => value)
