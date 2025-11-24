@@ -36,21 +36,21 @@ public class DefaultImageApiController {
     public ResponseEntity<byte[]> getDefaultSpaceImage() {
         IExhibition exhibition = exhibitManager.getStartExhibition();
         IVSImage spaceImage = exhibition.getSpaceLinkDefaultImage();
-        return getResponseWithDefaultHeaders(spaceImage);
+        return getResponseWithDefaultHeaders(spaceImage, exhibition.isSpaceLinkDefaultImageDisabled());
     }
 
     @RequestMapping(value = API_DEFAULT_MODULE_IMAGE_PATH, method = RequestMethod.GET)
     public ResponseEntity<byte[]> getDefaultModuleImage() {
         IExhibition exhibition = exhibitManager.getStartExhibition();
         IVSImage moduleImage = exhibition.getModuleLinkDefaultImage();
-        return getResponseWithDefaultHeaders(moduleImage);
+        return getResponseWithDefaultHeaders(moduleImage, exhibition.isModuleLinkDefaultImageDisabled());
     }
 
     @RequestMapping(value = API_DEFAULT_EXTERNAL_IMAGE_PATH, method = RequestMethod.GET)
     public ResponseEntity<byte[]> getDefaultExternalImage() {
         IExhibition exhibition = exhibitManager.getStartExhibition();
         IVSImage externalLinkImage = exhibition.getExternalLinkDefaultImage();
-        return getResponseWithDefaultHeaders(externalLinkImage);
+        return getResponseWithDefaultHeaders(externalLinkImage, exhibition.isExternalLinkDefaultImageDisabled());
     }
 
     /**
@@ -67,15 +67,15 @@ public class DefaultImageApiController {
         // Check if image exists and is not disabled
         IVSImage spaceImage = exhibition.getSpaceLinkDefaultImage();
         jsonObj.addProperty("defaultSpaceImageFlag",
-            spaceImage != null && !spaceImage.isDisabled());
+            spaceImage != null && !exhibition.isSpaceLinkDefaultImageDisabled());
 
         IVSImage moduleImage = exhibition.getModuleLinkDefaultImage();
         jsonObj.addProperty("defaultModuleImageFlag",
-            moduleImage != null && !moduleImage.isDisabled());
+            moduleImage != null && !exhibition.isModuleLinkDefaultImageDisabled());
 
         IVSImage externalImage = exhibition.getExternalLinkDefaultImage();
         jsonObj.addProperty("defaultExternalLinkImageFlag",
-            externalImage != null && !externalImage.isDisabled());
+            externalImage != null && !exhibition.isExternalLinkDefaultImageDisabled());
 
         return new ResponseEntity<>(jsonObj.toString(), HttpStatus.OK);
     }
@@ -94,15 +94,15 @@ public class DefaultImageApiController {
         // Return false if image is null (not disabled because it doesn't exist)
         IVSImage spaceImage = exhibition.getSpaceLinkDefaultImage();
         jsonObj.addProperty("defaultSpaceImageDisabled",
-            spaceImage != null && spaceImage.isDisabled());
+            spaceImage != null && exhibition.isSpaceLinkDefaultImageDisabled());
 
         IVSImage moduleImage = exhibition.getModuleLinkDefaultImage();
         jsonObj.addProperty("defaultModuleImageDisabled",
-            moduleImage != null && moduleImage.isDisabled());
+            moduleImage != null && exhibition.isModuleLinkDefaultImageDisabled());
 
         IVSImage externalImage = exhibition.getExternalLinkDefaultImage();
         jsonObj.addProperty("defaultExternalImageDisabled",
-            externalImage != null && externalImage.isDisabled());
+            externalImage != null && exhibition.isExternalLinkDefaultImageDisabled());
 
         return new ResponseEntity<>(jsonObj.toString(), HttpStatus.OK);
     }
@@ -112,10 +112,11 @@ public class DefaultImageApiController {
      * Returns 404 if image is null or disabled.
      *
      * @param image - the image to serve
+     * @param isDisabled - whether the default image role is disabled in the exhibition
      * @return ResponseEntity with image bytes and headers, or 404 if unavailable
      */
-    private ResponseEntity<byte[]> getResponseWithDefaultHeaders(IVSImage image) {
-        if(image == null || image.isDisabled()) {
+    private ResponseEntity<byte[]> getResponseWithDefaultHeaders(IVSImage image, boolean isDisabled) {
+        if(image == null || isDisabled) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         byte[] imageContent = imageService.getImageContent(image);

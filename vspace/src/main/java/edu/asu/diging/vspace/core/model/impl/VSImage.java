@@ -35,9 +35,6 @@ public class VSImage extends VSMedia implements IVSImage {
     private int height;
     private int width;
 
-    @Column(name = "disabled", nullable = false)
-    private boolean disabled = false;
-
     @OneToMany(targetEntity = Tag.class)
     private List<ITag> tags;
 
@@ -110,16 +107,6 @@ public class VSImage extends VSMedia implements IVSImage {
     }
 
     @Override
-    public boolean isDisabled() {
-        return disabled;
-    }
-    
-    @Override
-    public void toggleDisabled() {
-        disabled = !disabled;
-    }
-    
-    @Override
     public List<ITag> getTags() {
         return tags;
     }
@@ -146,7 +133,6 @@ public class VSImage extends VSMedia implements IVSImage {
                 ", filename='" + getFilename() + '\'' +
                 ", width=" + width +
                 ", height=" + height +
-                ", disabled=" + disabled +
                 ", hashCode=" + hashCode() +
                 '}';
     }

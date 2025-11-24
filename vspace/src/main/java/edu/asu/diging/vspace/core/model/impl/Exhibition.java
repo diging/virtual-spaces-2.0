@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -59,7 +60,16 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     @OneToOne(targetEntity = VSImage.class)
     @NotFound(action = NotFoundAction.IGNORE)
     private IVSImage externalLinkDefaultImage;
-    
+
+    @Column(name = "space_link_default_image_disabled", nullable = false)
+    private boolean spaceLinkDefaultImageDisabled = false;
+
+    @Column(name = "module_link_default_image_disabled", nullable = false)
+    private boolean moduleLinkDefaultImageDisabled = false;
+
+    @Column(name = "external_link_default_image_disabled", nullable = false)
+    private boolean externalLinkDefaultImageDisabled = false;
+
     private boolean aboutPageConfigured;
     
     @OneToMany(targetEntity = ExhibitionLanguage.class, mappedBy = "exhibition", cascade = CascadeType.ALL, orphanRemoval=true)
@@ -152,7 +162,7 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     
     @Override
     public void disableSpaceLinkDefaultImage() {
-        this.spaceLinkDefaultImage.toggleDisabled();
+        this.spaceLinkDefaultImageDisabled = !this.spaceLinkDefaultImageDisabled;
     }
     
     @Override
@@ -172,7 +182,7 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     
     @Override
     public void disableModuleLinkDefaultImage() {
-        this.moduleLinkDefaultImage.toggleDisabled();
+        this.moduleLinkDefaultImageDisabled = !this.moduleLinkDefaultImageDisabled;
     }
     
     @Override
@@ -192,9 +202,24 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     
     @Override
     public void disableExternalLinkDefaultImage() {
-        this.externalLinkDefaultImage.toggleDisabled();
+        this.externalLinkDefaultImageDisabled = !this.externalLinkDefaultImageDisabled;
     }
-    
+
+    @Override
+    public boolean isSpaceLinkDefaultImageDisabled() {
+        return spaceLinkDefaultImageDisabled;
+    }
+
+    @Override
+    public boolean isModuleLinkDefaultImageDisabled() {
+        return moduleLinkDefaultImageDisabled;
+    }
+
+    @Override
+    public boolean isExternalLinkDefaultImageDisabled() {
+        return externalLinkDefaultImageDisabled;
+    }
+
     @Override
     public boolean isAboutPageConfigured() {
         return aboutPageConfigured;

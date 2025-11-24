@@ -75,15 +75,17 @@ public class ExhibitionDataAspect {
                         ((Model) obj).addAttribute("publishedSpaces", publishedSpaces);
                     }
                     // Add default link image flags (true = show the default image)
+                    // Only check for showDefaultSpaceLinkImage as a guard - all three attributes
+                    // are always added together, so checking one is sufficient to avoid re-adding
                     if (!((Model) obj).containsAttribute("showDefaultSpaceLinkImage") && exhibition != null) {
                         IVSImage spaceImg = exhibition.getSpaceLinkDefaultImage();
-                        ((Model) obj).addAttribute("showDefaultSpaceLinkImage", spaceImg != null && !spaceImg.isDisabled());
+                        ((Model) obj).addAttribute("showDefaultSpaceLinkImage", spaceImg != null && !exhibition.isSpaceLinkDefaultImageDisabled());
 
                         IVSImage moduleImg = exhibition.getModuleLinkDefaultImage();
-                        ((Model) obj).addAttribute("showDefaultModuleLinkImage", moduleImg != null && !moduleImg.isDisabled());
+                        ((Model) obj).addAttribute("showDefaultModuleLinkImage", moduleImg != null && !exhibition.isModuleLinkDefaultImageDisabled());
 
                         IVSImage externalImg = exhibition.getExternalLinkDefaultImage();
-                        ((Model) obj).addAttribute("showDefaultExternalLinkImage", externalImg != null && !externalImg.isDisabled());
+                        ((Model) obj).addAttribute("showDefaultExternalLinkImage", externalImg != null && !exhibition.isExternalLinkDefaultImageDisabled());
                     }
                 }
             }

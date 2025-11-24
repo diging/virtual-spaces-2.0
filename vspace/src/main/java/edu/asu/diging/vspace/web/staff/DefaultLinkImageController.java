@@ -197,7 +197,15 @@ public class DefaultLinkImageController {
         Runnable disableDefautImageMethod = imageDisablerMap.get(linkType);
         disableDefautImageMethod.run();
         exhibitionManager.storeExhibition(exhibition);
-        jsonObj.addProperty("defaultImageDisabled", image.isDisabled());
+
+        // Get the disabled status from the exhibition based on link type
+        Map<String, Supplier<Boolean>> disabledGetterMap = Map.of(
+            LINK_TYPE_SPACE, exhibition::isSpaceLinkDefaultImageDisabled,
+            LINK_TYPE_MODULE, exhibition::isModuleLinkDefaultImageDisabled,
+            LINK_TYPE_EXTERNAL, exhibition::isExternalLinkDefaultImageDisabled
+        );
+        boolean isDisabled = disabledGetterMap.get(linkType).get();
+        jsonObj.addProperty("defaultImageDisabled", isDisabled);
 
         return new ResponseEntity<>(jsonObj.toString(), HttpStatus.OK);
 
