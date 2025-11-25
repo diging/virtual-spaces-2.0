@@ -27,7 +27,9 @@
         <db.password>vspace</db.password>
         <uploaded.files.path>./uploads</uploaded.files.path>
         <downloaded.files.path>./downloads</downloaded.files.path>
-        <resources.path>./resources</resources.path>
+        <!-- for development: use absolute path to source resources folder.
+             for production: override via environment variable VSPACE_RESOURCES_PATH -->
+        <resources.path>${project.basedir}/src/main/webapp/resources</resources.path>
         <email.user></email.user>
         <email.password></email.password>
         <email.host></email.host>
