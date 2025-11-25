@@ -36,8 +36,8 @@ public interface IContentBlockManager {
     public CreationReturnValue createVideoBlock(String slideId, byte[] video, Long size, String fileName, String url, String title) throws VideoCouldNotBeStoredException;
 
     void deleteTextBlockById(String blockid, String slideId) throws BlockDoesNotExistException;
-    
-    void deleteBiblioBlockById(String blockid) throws BlockDoesNotExistException;
+
+    void deleteBiblioBlockById(String blockid, String slideId) throws BlockDoesNotExistException;
 
     void deleteImageBlockById(String blockid, String slideId) throws BlockDoesNotExistException;
 

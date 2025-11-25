@@ -8,7 +8,7 @@ public interface IBiblioBlockManager extends IGenericContentBlockManager<IBiblio
 
     IBiblioBlock createBiblioBlock(String slideId, String title, String description);
 
-    void deleteBiblioBlockById(String id) throws BlockDoesNotExistException;
+    void deleteBiblioBlockById(String id, String slideId) throws BlockDoesNotExistException;
 
     void updateBiblioBlock(BiblioBlock biblioBlock);
 }

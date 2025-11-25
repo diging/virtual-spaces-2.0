@@ -45,17 +45,8 @@ public class BiblioBlockManager extends GenericContentBlockManager<IBiblioBlock,
     }
 
     @Override
-    public void deleteBiblioBlockById(String id) throws BlockDoesNotExistException {
-        if (id == null) {
-            logger.warn("Attempted to delete biblio block with null id.");
-            return;
-        }
-
-        try {
-            biblioBlockRepo.deleteById(id);
-        } catch (IllegalArgumentException e) {
-            throw new BlockDoesNotExistException("Biblio block with id " + id + " does not exist.", e);
-        }
+    public void deleteBiblioBlockById(String id, String slideId) throws BlockDoesNotExistException {
+        deleteContentBlock(id, slideId);
     }
 
     @Override

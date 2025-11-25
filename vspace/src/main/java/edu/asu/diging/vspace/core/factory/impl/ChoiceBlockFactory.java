@@ -14,14 +14,13 @@ import edu.asu.diging.vspace.core.model.impl.ChoiceBlock;
 public class ChoiceBlockFactory implements IChoiceBlockFactory {
 
     /* (non-Javadoc)
-     * @see edu.asu.diging.vspace.core.factory.impl.IChoiceBlockFactory#createChoiceBlock(edu.asu.diging.vspace.core.model.impl.ISlide, java.lang.Integer,
+     * @see edu.asu.diging.vspace.core.factory.impl.IChoiceBlockFactory#createChoiceBlock(edu.asu.diging.vspace.core.model.impl.ISlide,
      * edu.asu.diging.vspace.core.model.impl.IChoice)
-     */    
+     */
     @Override
-    public IChoiceBlock createChoiceBlock(ISlide slide, Integer contentOrder, List<IChoice> choices, boolean showsAll) {
+    public IChoiceBlock createChoiceBlock(ISlide slide, List<IChoice> choices, boolean showsAll) {
         IChoiceBlock choiceBlock = new ChoiceBlock();
         choiceBlock.setSlide(slide);
-        choiceBlock.setContentOrder(contentOrder);
         choiceBlock.setShowsAll(showsAll);
         if(!showsAll) {
             choiceBlock.setChoices(choices);
