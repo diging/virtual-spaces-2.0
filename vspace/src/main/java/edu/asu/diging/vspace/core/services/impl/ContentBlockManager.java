@@ -129,8 +129,8 @@ public class ContentBlockManager implements IContentBlockManager {
     }
 
     @Override
-    public void deleteBiblioBlockById(String blockId) throws BlockDoesNotExistException {
-        biblioBlockManager.deleteBiblioBlockById(blockId);
+    public void deleteBiblioBlockById(String blockId, String slideId) throws BlockDoesNotExistException {
+        biblioBlockManager.deleteBiblioBlockById(blockId, slideId);
     }
 
     @Override

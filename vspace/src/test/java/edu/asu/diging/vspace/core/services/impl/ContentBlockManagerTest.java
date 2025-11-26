@@ -350,22 +350,38 @@ public class ContentBlockManagerTest {
     @Test
     public void test_deleteBiblioBlockById_success() throws BlockDoesNotExistException, ReferenceListDeletionForBiblioException {
         String biblioBlockId = "2";
-        managerToTest.deleteBiblioBlockById(biblioBlockId);
+        String slideId = "slideId_1";
+        BiblioBlock biblioBlock = new BiblioBlock();
+        biblioBlock.setId(biblioBlockId);
+        biblioBlock.setContentOrder(1);
+        Optional<ContentBlock> contentBlockOptional = Optional.of(biblioBlock);
+        when(contentBlockRepository.findById(biblioBlockId)).thenReturn(contentBlockOptional);
+        when(contentBlockRepository.findBySlide_IdAndContentOrderGreaterThan(slideId, Integer.valueOf(1)))
+                .thenReturn(contentBlockList);
+        managerToTest.deleteBiblioBlockById(biblioBlockId, slideId);
         Mockito.verify(biblioBlockRepo).deleteById(biblioBlockId);
     }
-    
+
     @Test
     public void test_deleteBiblioBlockByIdWithRefs_success() throws BlockDoesNotExistException, ReferenceListDeletionForBiblioException {
         String biblioId = "CON000000002";
+        String slideId = "slideId_1";
         String refId = "REF000000002";
         Reference refObj = new Reference();
         refObj.setId(refId);
-        
+        BiblioBlock biblioBlock = new BiblioBlock();
+        biblioBlock.setId(biblioId);
+        biblioBlock.setContentOrder(1);
+
         List<IReference> refList = new ArrayList<>();
         refList.add(refObj);
-        
+        Optional<ContentBlock> contentBlockOptional = Optional.of(biblioBlock);
+
+        when(contentBlockRepository.findById(biblioId)).thenReturn(contentBlockOptional);
+        when(contentBlockRepository.findBySlide_IdAndContentOrderGreaterThan(slideId, Integer.valueOf(1)))
+                .thenReturn(contentBlockList);
         when(refManager.getReferencesForBiblio(biblioId)).thenReturn(refList);
-        managerToTest.deleteBiblioBlockById(biblioId);
+        managerToTest.deleteBiblioBlockById(biblioId, slideId);
         Mockito.verify(biblioBlockRepo).deleteById(biblioId);
         when(refManager.getReference(refId)).thenReturn(null);
     }
@@ -373,15 +389,17 @@ public class ContentBlockManagerTest {
     @Test(expected = BlockDoesNotExistException.class)
     public void test_deleteBiblioBlockById_forNonExistentId() throws BlockDoesNotExistException, ReferenceListDeletionForBiblioException {
         String biblioBlockId = "notARealId";
-        Mockito.doThrow(BlockDoesNotExistException.class).when(biblioBlockRepo).deleteById(biblioBlockId);
-        managerToTest.deleteBiblioBlockById(biblioBlockId);
+        String slideId = "slideId_1";
+        when(contentBlockRepository.findById(biblioBlockId)).thenReturn(Optional.empty());
+        managerToTest.deleteBiblioBlockById(biblioBlockId, slideId);
     }
 
-    @Test
+    @Test(expected = BlockDoesNotExistException.class)
     public void test_deleteBiblioBlockById_whenIdIsNull() throws BlockDoesNotExistException, ReferenceListDeletionForBiblioException {
         String biblioBlockId = null;
-        managerToTest.deleteBiblioBlockById(null);
-        Mockito.verify(biblioBlockRepo, Mockito.never()).deleteById(biblioBlockId);
+        String slideId = "slideId_1";
+        when(contentBlockRepository.findById(biblioBlockId)).thenReturn(Optional.empty());
+        managerToTest.deleteBiblioBlockById(null, slideId);
     }
     
     @Test
@@ -678,13 +696,13 @@ public class ContentBlockManagerTest {
         List<IChoice> choices = new ArrayList<IChoice>();
         IChoiceBlock choiceBlock = new ChoiceBlock();
         choiceBlock.setChoices(choices);
-        choiceBlock.setContentOrder(contentOrder);
 
         Mockito.when(slideManager.getChoice(choiceString)).thenReturn(choice);
         Mockito.when(slideManager.getSlide(slideId)).thenReturn(slide);
-        Mockito.when(choiceBlockFactory.createChoiceBlock(slide, contentOrder, choices, true)).thenReturn(choiceBlock);
+        Mockito.when(contentBlockRepository.findMaxContentOrder(slideId)).thenReturn(1);
+        Mockito.when(choiceBlockFactory.createChoiceBlock(slide, choices, true)).thenReturn(choiceBlock);
         Mockito.when(choiceBlockRepo.save((ChoiceBlock) choiceBlock)).thenReturn((ChoiceBlock) choiceBlock);
-        IChoiceBlock createdChoiceBlock = managerToTest.createChoiceBlock(slideId, selectedChoices, contentOrder, true);
+        IChoiceBlock createdChoiceBlock = managerToTest.createChoiceBlock(slideId, selectedChoices, true);
         Assert.assertEquals(createdChoiceBlock.getContentOrder(), contentOrder);
     }
 

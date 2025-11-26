@@ -37,20 +37,20 @@ public class ChoiceBlockManager extends GenericContentBlockManager<IChoiceBlock,
     @Override
     public IChoiceBlock createChoiceBlock(String slideId, List<String> selectedChoices, boolean showsAll) {
         Integer contentOrder = getNextContentOrder(slideId);
-        
+
         List<IChoice> choices = new ArrayList<IChoice>();
         if (!showsAll) {
             choices = selectedChoices.stream()
                     .map(choice -> slideManager.getChoice(choice))
                     .collect(Collectors.toList());
         }
-        
+
         IChoiceBlock choiceBlock = choiceBlockFactory.createChoiceBlock(
-            slideManager.getSlide(slideId), 
-            contentOrder,
-            choices, 
+            slideManager.getSlide(slideId),
+            choices,
             showsAll
         );
+        choiceBlock.setContentOrder(contentOrder);
         return choiceBlockRepo.save((ChoiceBlock) choiceBlock);
     }
 
