@@ -8,17 +8,21 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Transient;
 
-import org.commonmark.node.Node;
-import org.commonmark.parser.Parser;
-import org.commonmark.renderer.html.HtmlRenderer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import edu.asu.diging.vspace.core.model.IBiblioBlock;
-import edu.asu.diging.vspace.core.util.APACitationFormatter;
+import edu.asu.diging.vspace.core.references.IReferenceMetadataProvider;
+import edu.asu.diging.vspace.core.references.IReferenceMetadataRegistry;
+import edu.asu.diging.vspace.core.references.ReferenceMetadataRegistryHolder;
+import edu.asu.diging.vspace.core.references.ReferenceMetadataType;
 
 @Entity
 public class BiblioBlock extends ContentBlock implements IBiblioBlock {
+
+    private static final Logger logger = LoggerFactory.getLogger(BiblioBlock.class);
 
     private String biblioTitle;
 
@@ -60,8 +64,11 @@ public class BiblioBlock extends ContentBlock implements IBiblioBlock {
     }
     
     /**
-     * Renders the bibliography block with APA-formatted references
-     * 
+     * Renders the bibliography block with APA-formatted references.
+     *
+     * This method delegates to the IReferenceMetadataRegistry to get the APA provider,
+     * which uses ReferenceDisplayFormatter to build the citations.
+     *
      * @return HTML formatted string with APA-style references
      */
     @Override
@@ -70,22 +77,43 @@ public class BiblioBlock extends ContentBlock implements IBiblioBlock {
         if (references == null || references.isEmpty()) {
             return "<div class=\"apa-references\"><p>No references available.</p></div>";
         }
-        
+
         StringBuilder result = new StringBuilder();
         result.append("<div class=\"apa-bibliography\">");
-        
+
         // Add bibliography title and description
         if (biblioTitle != null && !biblioTitle.isEmpty()) {
             result.append("<h3 class=\"bibliography-title\"><strong>").append(biblioTitle).append("</strong></h3>");
         }
-        
+
         if (description != null && !description.isEmpty()) {
             result.append("<p class=\"bibliography-description\">").append(description).append("</p>");
         }
-        
-        // Add APA formatted references
-        result.append(APACitationFormatter.formatReferences(references));
-        
+
+        // Get provider from registry and format references
+        result.append("<div class=\"apa-references\">");
+        IReferenceMetadataRegistry registry = ReferenceMetadataRegistryHolder.getRegistry();
+        IReferenceMetadataProvider provider = registry != null
+                ? registry.getProvider(ReferenceMetadataType.APA)
+                : null;
+
+        for (int i = 0; i < references.size(); i++) {
+            Reference ref = references.get(i);
+            result.append("<div class=\"apa-reference\" id=\"ref-").append(i + 1).append("\">");
+            if (provider != null) {
+                try {
+                    result.append(provider.getReferenceMetadata(ref));
+                } catch (Exception e) {
+                    logger.error("Error formatting reference: {}", ref.getId(), e);
+                    result.append("Error formatting reference");
+                }
+            } else {
+                result.append("Reference provider not available");
+            }
+            result.append("</div>");
+        }
+        result.append("</div>");
+
         result.append("</div>");
         return result.toString();
     }

@@ -17,13 +17,22 @@ import org.commonmark.renderer.html.HtmlRenderer;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import edu.asu.diging.vspace.core.model.IReference;
-import edu.asu.diging.vspace.core.util.APACitationFormatter;
+import edu.asu.diging.vspace.core.references.IReferenceMetadataProvider;
+import edu.asu.diging.vspace.core.references.IReferenceMetadataRegistry;
+import edu.asu.diging.vspace.core.references.ReferenceMetadataRegistryHolder;
+import edu.asu.diging.vspace.core.references.ReferenceMetadataType;
 
 @Entity
 public class Reference extends VSpaceElement implements IReference {
+
+    private static final Logger logger = LoggerFactory.getLogger(Reference.class);
+
     @Id
     @GeneratedValue(generator = "reference_id_generator")
     @GenericGenerator(name = "reference_id_generator", 
@@ -185,14 +194,27 @@ public class Reference extends VSpaceElement implements IReference {
     }
 
     /**
-     * Returns the APA formatted citation for this reference
-     * This is a transient method that formats the reference using APACitationFormatter
+     * Returns the APA formatted citation for this reference.
+     *
+     * This method delegates to the IReferenceMetadataRegistry to get the APA provider,
+     * which uses ReferenceDisplayFormatter to build the citation.
      *
      * @return HTML string with APA-formatted citation
      */
     @Transient
     public String getApaFormatted() {
-        return APACitationFormatter.formatSingleReference(this);
+        IReferenceMetadataRegistry registry = ReferenceMetadataRegistryHolder.getRegistry();
+        if (registry != null) {
+            IReferenceMetadataProvider provider = registry.getProvider(ReferenceMetadataType.APA);
+            if (provider != null) {
+                try {
+                    return provider.getReferenceMetadata(this);
+                } catch (Exception e) {
+                    logger.error("Error formatting reference: {}", this.getId(), e);
+                }
+            }
+        }
+        return "";
     }
 
 }

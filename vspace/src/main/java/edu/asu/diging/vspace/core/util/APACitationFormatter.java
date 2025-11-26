@@ -3,6 +3,17 @@ package edu.asu.diging.vspace.core.util;
 import java.util.List;
 import edu.asu.diging.vspace.core.model.impl.Reference;
 
+/**
+ * @deprecated Use IReferenceMetadataRegistry with ReferenceMetadataType.APA instead.
+ * This class is kept for backward compatibility but will be removed in a future version.
+ * The new architecture uses providers registered with the IReferenceMetadataRegistry,
+ * which use ReferenceDisplayFormatter to build citations.
+ *
+ * @see edu.asu.diging.vspace.core.references.IReferenceMetadataRegistry
+ * @see edu.asu.diging.vspace.core.references.impl.APAReferenceMetadataProvider
+ * @see edu.asu.diging.vspace.core.references.ReferenceDisplayFormatter
+ */
+@Deprecated
 public class APACitationFormatter {
     
     /**
