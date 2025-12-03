@@ -95,7 +95,7 @@
 }
 
 .spaceClass {
-    transition: width 0.3s ease, margin-left 0.3s ease;
+    transition: width 0.3s ease, margin-left 0.3s ease, margin-right 0.3s ease;
 }
 
 .imgFullScreen {
@@ -277,10 +277,11 @@
 			// resize the image to max width (button is disabled if image is too small)
 			if ( isResizeImgBtnClicked == 1) {
 				$("#toggleImgClass").attr('class', "icon-collapse secondary");
-				// Expand: fill full browser width
+				// Expand: fill browser width with right margin
 				$("body").css("overflow-x", "hidden");
-				$(".spaceClass").css("width", "100%");
-				$(".spaceClass").css("margin-left", "0");
+				$(".spaceClass").css("width", "calc(100% - 40px)");
+				$(".spaceClass").css("margin-left", "20px");
+				$(".spaceClass").css("margin-right", "20px");
 				$(".spaceClass").css("display", "block");
 				$(".spaceClass").css("justify-content", "");
 				$("#bgImage").css("width", "100%");
@@ -296,6 +297,7 @@
 				$("body").css("overflow-x", "");
 				$(".spaceClass").css("width", "80%");
 				$(".spaceClass").css("margin-left", "10px");
+				$(".spaceClass").css("margin-right", "");
 				$(".spaceClass").css("display", "flex");
 				$(".spaceClass").css("justify-content", "center");
 				$("#bgImage").css("width", "100%");
@@ -305,10 +307,10 @@
 			}
 			$("#space a").remove();
 			$(".Info_cz_Class").remove();
-			// Delay drawLinks to let CSS changes apply first
+			// Delay drawLinks to let CSS transition complete (transition is 300ms)
 			setTimeout(function() {
 				drawLinks();
-			}, 50);
+			}, 350);
 		}
 		
 		function imageFullScreen(){
