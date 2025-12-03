@@ -85,6 +85,19 @@
     visibility: visible;
 }
 
+#toggleBtn.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+#bgImage {
+    transition: width 0.3s ease, max-width 0.3s ease;
+}
+
+.spaceClass {
+    transition: width 0.3s ease, margin-left 0.3s ease;
+}
+
 .imgFullScreen {
     position: absolute;
     z-index: 1;
@@ -224,48 +237,78 @@
 			textBlock.addEventListener('focus-visible', function(e) {
 				e.target.style.outline = "2px solid blue";
 			});
+			checkImageResizeability();
+			$(window).resize(checkImageResizeability);
 		});
 		var defaultSpaceImageFlag;
 		var defaultModuleImageFlag;
-		var defaultExternalLinkImageFlag;		
+		var defaultExternalLinkImageFlag;
+
+		function checkImageResizeability() {
+			// Store original max-width if not already stored
+			if (!$("#bgImage").data("originalMaxWidth")) {
+				var maxWidth = parseFloat($("#bgImage").css("max-width"));
+				if (!isNaN(maxWidth)) {
+					$("#bgImage").data("originalMaxWidth", maxWidth);
+				}
+			}
+			var maxImgWidthOrig = $("#bgImage").data("originalMaxWidth");
+			var windowWidth = $(window).width();
+
+			if (!maxImgWidthOrig || maxImgWidthOrig <= windowWidth) {
+				$("#toggleBtn").prop("disabled", true);
+				$("#toggleBtn").addClass("disabled");
+				$("#toggleBtn .tooltiptext").text("Image is not big enough to expand.");
+			} else {
+				$("#toggleBtn").prop("disabled", false);
+				$("#toggleBtn").removeClass("disabled");
+				$("#toggleBtn .tooltiptext").text("Resize Image");
+			}
+		}		
 			
 		function toggleImgSize(isClicked){
-			var maxImgWidth = $(window).width();
-			var spaceWidth = $("#bgImage").css("width");
-			var maxImgWidthOrig = parseFloat($("#bgImage").css("max-width"));
+			var maxImgWidthOrig = $("#bgImage").data("originalMaxWidth");
 			var isResizeImgBtnClicked = getCookie('isResizeImgBtnClicked');
-			
+
 			if(isClicked) {
 				isResizeImgBtnClicked = -isResizeImgBtnClicked;
 				setCookie('isResizeImgBtnClicked', isResizeImgBtnClicked, null);
 			}
-			// resize the image to max width
+			// resize the image to max width (button is disabled if image is too small)
 			if ( isResizeImgBtnClicked == 1) {
 				$("#toggleImgClass").attr('class', "icon-collapse secondary");
-				if(maxImgWidthOrig > maxImgWidth) {
-					$(".spaceClass").css("display", ""); 
-					$(".spaceClass").css("justify-content", "");
-					$("#bgImage").css("width", maxImgWidth);
-					$(".spaceClass").css("height", "");
-					$("#Module_1").css("height", "");
-					$("#Module_1").css("min-height", "0");
-					$("#Module_1").css("margin-bottom", "0px");
-				}
+				// Expand: fill full browser width
+				$("body").css("overflow-x", "hidden");
+				$(".spaceClass").css("width", "100%");
+				$(".spaceClass").css("margin-left", "0");
+				$(".spaceClass").css("display", "block");
+				$(".spaceClass").css("justify-content", "");
+				$("#bgImage").css("width", "100%");
+				$("#bgImage").css("max-width", "none");
+				$(".spaceClass").css("height", "");
+				$("#Module_1").css("height", "");
+				$("#Module_1").css("min-height", "0");
+				$("#Module_1").css("margin-bottom", "0px");
         		}
 			else {
 				$("#toggleImgClass").attr('class', "icon-expand secondary");
-				if(maxImgWidthOrig > maxImgWidth) {
-					$(".spaceClass").css("display", "flex"); 
-					$(".spaceClass").css("justify-content", "");
-					$("#bgImage").css("width", spaceWidth);
-					$('#bgImage').width('100%');
-					$(".spaceClass").css("height", "800px");
-					$("#Module_1").css("margin-bottom", "60px");
-				}
+				// Collapse: restore original layout
+				$("body").css("overflow-x", "");
+				$(".spaceClass").css("width", "80%");
+				$(".spaceClass").css("margin-left", "10px");
+				$(".spaceClass").css("display", "flex");
+				$(".spaceClass").css("justify-content", "center");
+				$("#bgImage").css("width", "100%");
+				$("#bgImage").css("max-width", maxImgWidthOrig + "px");
+				$(".spaceClass").css("height", "800px");
+				$("#Module_1").css("margin-bottom", "60px");
 			}
-			$("#space a").remove(); 
+			$("#space a").remove();
 			$(".Info_cz_Class").remove();
-			drawLinks();
+			// Delay drawLinks to let CSS changes apply first
+			setTimeout(function() {
+				drawLinks();
+			}, 50);
 		}
 		
 		function imageFullScreen(){
