@@ -277,11 +277,13 @@
 			// resize the image to max width (button is disabled if image is too small)
 			if ( isResizeImgBtnClicked == 1) {
 				$("#toggleImgClass").attr('class', "icon-collapse secondary");
-				// Expand: fill browser width with right margin
+				// Expand: fill browser width with 5% gap
 				$("body").css("overflow-x", "hidden");
-				$(".spaceClass").css("width", "calc(100% - 40px)");
-				$(".spaceClass").css("margin-left", "20px");
-				$(".spaceClass").css("margin-right", "20px");
+				$(".spaceClass").css("width", "95%");
+				$(".spaceClass").css("margin-left", "auto");
+				$(".spaceClass").css("margin-right", "auto");
+				$(".spaceClass").css("left", "0");
+				$(".spaceClass").css("right", "0");
 				$(".spaceClass").css("display", "block");
 				$(".spaceClass").css("justify-content", "");
 				$("#bgImage").css("width", "100%");
@@ -298,6 +300,8 @@
 				$(".spaceClass").css("width", "80%");
 				$(".spaceClass").css("margin-left", "10px");
 				$(".spaceClass").css("margin-right", "");
+				$(".spaceClass").css("left", "");
+				$(".spaceClass").css("right", "");
 				$(".spaceClass").css("display", "flex");
 				$(".spaceClass").css("justify-content", "center");
 				$("#bgImage").css("width", "100%");
