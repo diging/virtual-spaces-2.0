@@ -259,6 +259,8 @@
 				$("#toggleBtn").prop("disabled", true);
 				$("#toggleBtn").addClass("disabled");
 				$("#toggleBtn .tooltiptext").text("Image is not big enough to expand.");
+				// Reset cookie to collapsed state for small images
+				setCookie('isResizeImgBtnClicked', -1, null);
 			} else {
 				$("#toggleBtn").prop("disabled", false);
 				$("#toggleBtn").removeClass("disabled");
@@ -267,6 +269,10 @@
 		}		
 			
 		function toggleImgSize(isClicked){
+			// Don't allow expansion if button is disabled (image too small)
+			if ($("#toggleBtn").prop("disabled") && isClicked) {
+				return;
+			}
 			var maxImgWidthOrig = $("#bgImage").data("originalMaxWidth");
 			var isResizeImgBtnClicked = getCookie('isResizeImgBtnClicked');
 
@@ -303,7 +309,7 @@
 				$(".spaceClass").css("left", "");
 				$(".spaceClass").css("right", "");
 				$(".spaceClass").css("display", "flex");
-				$(".spaceClass").css("justify-content", "center");
+				$(".spaceClass").css("justify-content", "flex-start");
 				$("#bgImage").css("width", "100%");
 				$("#bgImage").css("max-width", maxImgWidthOrig + "px");
 				$(".spaceClass").css("height", "800px");
@@ -423,6 +429,8 @@
 		    	});
 		    	drawLinks();
 		    	checkDefaultImage();
+		    	// Check if image is resizeable and reset cookie if needed before applying resize state
+		    	checkImageResizeability();
 		    	toggleImgSize(false);
 		});
 		
