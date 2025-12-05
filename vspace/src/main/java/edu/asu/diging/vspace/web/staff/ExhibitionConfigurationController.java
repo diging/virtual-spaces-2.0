@@ -125,7 +125,7 @@ public class ExhibitionConfigurationController {
     @RequestMapping(value = "/staff/exhibit/config", method = RequestMethod.POST)
     public RedirectView createOrUpdateExhibition(HttpServletRequest request,
             @RequestParam(required = false, name = "exhibitionParam") String exhibitID,
-            @RequestParam("spaceParam") String spaceID,
+            @RequestParam(required = false, name = "spaceParam") String spaceID,
             @Valid @ModelAttribute("exhibitionConfigurationForm") ExhibitionConfigurationForm exhibitionConfigForm,
             BindingResult result,           
             RedirectAttributes attributes) throws IOException {
@@ -133,6 +133,13 @@ public class ExhibitionConfigurationController {
             attributes.addAttribute("showAlert", true);
             attributes.addAttribute("alertType", "danger");
             attributes.addAttribute("message", result.getFieldError().getDefaultMessage());
+            return new RedirectView(request.getContextPath() + "/staff/exhibit/config");
+        }
+        
+        if (spaceID == null || spaceID.trim().isEmpty()) {
+            attributes.addAttribute("showAlert", true);
+            attributes.addAttribute("alertType", "danger");
+            attributes.addAttribute("message", "Please select a start space for the exhibition.");
             return new RedirectView(request.getContextPath() + "/staff/exhibit/config");
         }
         ExhibitionModes exhibitMode = exhibitionConfigForm.getExhibitionMode();
