@@ -1,227 +1,616 @@
 <html layout:decorate="~{layouts/main_staff}">
     <head>
         <script th:inline="javascript">
-            var jsonMap = [[${jsonFormatMap}]];
+            const jsonMap = [[${jsonFormatMap}]];
         </script>
-        <script src="https://d3js.org/d3.v4.js"></script>
+        <script src="https://d3js.org/d3.v7.min.js"></script>
         <style>
-            .links line {
-            stroke: #999;
-            stroke-width: 2px;
-            }
-            text {
-            font-family: sans-serif;
-            font-size: 15px;
-            }
-            image { 
-            filter: drop-shadow(1px 1px 7px  #e39e44);
-            }
-            svg
-            {
-            width: 100%;
-            }
-            .container
-             {  
-             display: flex;  
-             justify-content: center;
-             margin: 0;
-             padding: 0;
-             max-width: 100%;
-             }
-             .nav-bar {
-             	margin-bottom: 0 !important; 
-             }
+        	:root {
+        		--primary: #A55941;
+        		--secondary: #F2A950;
+        		--base-grey: #F2F2F2;
+        		--med-grey: #C7C7C7;
+        		--dark-grey: #8E8E8E;
+        	}
+        	
+        	.graph-container {
+        		display: flex;
+        		gap: 20px;
+        		align-items: flex-start;
+        		flex-wrap: wrap;
+        		position: relative;
+        	}
+        	
+        	#graph {
+        		width: 100%;
+        		background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+        		border-radius: 12px;
+        		box-shadow: 0px 4px 20px rgba(0,0,0,0.15);
+        		position: relative;
+        		overflow: hidden;
+        	}
+        	
+        	#graph::before {
+        		content: '';
+        		position: absolute;
+        		top: 0;
+        		left: 0;
+        		right: 0;
+        		bottom: 0;
+        		background: radial-gradient(circle at 30% 30%, rgba(242, 169, 80, 0.03), transparent 60%),
+        		            radial-gradient(circle at 70% 70%, rgba(165, 89, 65, 0.03), transparent 60%);
+        		pointer-events: none;
+        	}
+        	
+        	#node-info-panel {
+        		position: absolute;
+        		top: 20px;
+        		right: 20px;
+        		width: 350px;
+        		max-height: 80%;
+        		background: rgba(255, 255, 255, 0.98);
+        		border-radius: 12px;
+        		box-shadow: 0px 8px 30px rgba(0,0,0,0.25);
+        		padding: 1.5rem;
+        		display: none;
+        		overflow-y: auto;
+        		z-index: 100;
+        		backdrop-filter: blur(10px);
+        		border: 2px solid var(--primary);
+        	}
+        	
+        	#node-info-panel.show {
+        		display: block;
+        		animation: slideInRight 0.3s ease-out;
+        	}
+        	
+        	@keyframes slideInRight {
+        		from {
+        			opacity: 0;
+        			transform: translateX(20px);
+        		}
+        		to {
+        			opacity: 1;
+        			transform: translateX(0);
+        		}
+        	}
+        	
+        	#node-info-panel .close-btn {
+        		position: absolute;
+        		top: 10px;
+        		right: 10px;
+        		background: var(--primary);
+        		color: white;
+        		border: none;
+        		width: 30px;
+        		height: 30px;
+        		border-radius: 50%;
+        		cursor: pointer;
+        		font-size: 18px;
+        		line-height: 1;
+        		transition: all 0.2s ease;
+        	}
+        	
+        	#node-info-panel .close-btn:hover {
+        		background: var(--secondary);
+        		transform: rotate(90deg);
+        	}
+        	
+        	#node-info-title {
+        		color: var(--primary);
+        		font-weight: 700;
+        		margin-bottom: 1rem;
+        		padding-right: 30px;
+        	}
+        	
+        	#node-info-image {
+        		width: 100%;
+        		height: 200px;
+        		object-fit: cover;
+        		border-radius: 8px;
+        		margin-bottom: 1rem;
+        		display: none;
+        	}
+        	
+        	#node-info-image.show {
+        		display: block;
+        	}
+        	
+        	#node-info-description {
+        		color: #333;
+        		margin-bottom: 1rem;
+        		line-height: 1.6;
+        	}
+        	
+        	#node-info-links {
+        		margin-top: 1rem;
+        	}
+        	
+        	#node-info-links a {
+        		display: inline-block;
+        		background: linear-gradient(135deg, var(--primary), #8E4A36);
+        		color: white;
+        		padding: 0.6rem 1.2rem;
+        		border-radius: 6px;
+        		text-decoration: none;
+        		font-weight: 600;
+        		transition: all 0.3s ease;
+        		margin-right: 0.5rem;
+        		margin-bottom: 0.5rem;
+        	}
+        	
+        	#node-info-links a:hover {
+        		background: linear-gradient(135deg, var(--secondary), #E09840);
+        		transform: translateY(-2px);
+        		box-shadow: 0 4px 12px rgba(242, 169, 80, 0.4);
+        	}
+        	
+        	#node-info-panel .stat-item {
+        		background: #f8f8f8;
+        		padding: 0.5rem;
+        		border-radius: 6px;
+        		margin-bottom: 0.5rem;
+        		font-size: 14px;
+        	}
+        	
+        	#node-info-panel .stat-label {
+        		font-weight: 600;
+        		color: var(--primary);
+        	}
+        	
+        	/* Zoom Controls */
+        	.zoom-controls {
+        		position: absolute;
+        		bottom: 20px;
+        		right: 20px;
+        		display: flex;
+        		flex-direction: column;
+        		gap: 2px;
+        		z-index: 50;
+        		box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        		border-radius: 4px;
+        		overflow: hidden;
+        	}
+        	
+        	.zoom-controls button {
+        		width: 42px;
+        		height: 42px;
+        		border: none;
+        		background: var(--primary);
+        		color: white;
+        		font-size: 24px;
+        		font-weight: 300;
+        		cursor: pointer;
+        		transition: all 0.2s ease;
+        		display: flex;
+        		align-items: center;
+        		justify-content: center;
+        		padding: 0;
+        		line-height: 1;
+        	}
+        	
+        	.zoom-controls button:hover {
+        		background: var(--secondary);
+        		color: white;
+        	}
+        	
+        	.zoom-controls button:active {
+        		background: #8E4A36;
+        	}
+        	
+        	.zoom-controls button:first-child {
+        		border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        	}
+        	
+        	.zoom-controls button:disabled {
+        		opacity: 0.5;
+        		cursor: not-allowed;
+        	}
+        	
+        	.zoom-controls button:disabled:hover {
+        		background: var(--primary);
+        		color: white;
+        	}
         </style>
     </head>
     <body>
         <div layout:fragment="content">
         <div class="container">
-            <div id="graph" style="width: 100%;height: 100%;"></div>
+        	<div class="graph-container">
+	            <div id="graph" style="width: 100%; height: 800px;">
+	            	<div class="zoom-controls">
+	            		<button id="zoom-in" title="Zoom in">+</button>
+	            		<button id="zoom-out" title="Zoom out">−</button>
+	            	</div>
+	            </div>
+	            <div id="node-info-panel">
+	            	<button class="close-btn" onclick="closeNodeInfo()">&times;</button>
+	            	<h5 id="node-info-title"></h5>
+	            	<img id="node-info-image" src="" alt="Space Image" />
+	            	<div id="node-info-description"></div>
+	            	<div id="node-info-stats"></div>
+	            	<div id="node-info-links"></div>
+	            </div>
+			</div>
             <script>
+            	function closeNodeInfo() {
+            		document.getElementById('node-info-panel').classList.remove('show');
+            	}
+            	
                 var nodeJson = JSON.parse(jsonMap['nodesJson']);
-                // Some constants controlling the graph appearance
-                const PADDING_BUBBLE = 15 // distance between edge end and bubble
-                const PADDING_LABEL = 30 // distance between edge end and engineer id
+                const width = 1400;
+                const height = 800;
+
+                // Create flat structure with unique nodes (all spaces + only linked modules)
+                const structuredData = structureData(nodeJson);
+                const nodes = structuredData.nodes;
+                const links = structuredData.links;
                 
-                var diameter = 700,
-                    radius = diameter / 2,
-                    innerRadius = radius - 170; // between center and edge end
+                const simulation = d3.forceSimulation(nodes)
+	                .force("link", d3.forceLink(links).id(d => d.id).distance(250).strength(0.3))
+	                .force("charge", d3.forceManyBody().strength(-1200))
+	                .force("x", d3.forceX().strength(0.05))
+	                .force("y", d3.forceY().strength(0.05))
+	                .force("collision", d3.forceCollide().radius(60));
                 
-                var cluster = d3.cluster()
-                    .size([360, innerRadius]);
+                const svg = d3.select("#graph").append("svg")
+                    .attr("width", width)
+                    .attr("height", height)
+                    .attr("viewBox", [-width / 2, -height / 2, width, height])
+      				.attr("style", "max-width: 100%; height: auto;");
+      			
+      			// Create a group for all graph elements that will be zoomed
+      			const g = svg.append("g");
+      			
+      			// Define zoom behavior
+      			const zoom = d3.zoom()
+      				.scaleExtent([0.25, 4])  // Min and max zoom levels
+      				.on("zoom", (event) => {
+      					g.attr("transform", event.transform);
+      					updateZoomButtons(event.transform.k);
+      				});
+      			
+      			// Apply zoom to SVG
+      			svg.call(zoom);
+      			
+      			// Function to update zoom button states
+      			function updateZoomButtons(scale) {
+      				d3.select("#zoom-in").property("disabled", scale >= 4);
+      				d3.select("#zoom-out").property("disabled", scale <= 0.25);
+      			}
+      			
+      			// Zoom button handlers
+      			d3.select("#zoom-in").on("click", function() {
+      				svg.transition().duration(300).call(zoom.scaleBy, 1.3);
+      			});
+      			
+      			d3.select("#zoom-out").on("click", function() {
+      				svg.transition().duration(300).call(zoom.scaleBy, 0.77);
+      			});
+      			
+      			// Initial button state
+      			updateZoomButtons(1);
+      				
+      			// Define gradients and filters
+      			const defs = g.append("defs");
+      			
+      			// Gradient for space nodes (white center)
+      			const spaceGradient = defs.append("radialGradient")
+      				.attr("id", "spaceGradient");
+      			spaceGradient.append("stop")
+      				.attr("offset", "0%")
+      				.attr("stop-color", "#ffffff");
+      			spaceGradient.append("stop")
+      				.attr("offset", "100%")
+      				.attr("stop-color", "#f8f8f8");
+      			
+      			// Gradient for module nodes
+      			const moduleGradient = defs.append("radialGradient")
+      				.attr("id", "moduleGradient");
+      			moduleGradient.append("stop")
+      				.attr("offset", "0%")
+      				.attr("stop-color", "#C47A5E");
+      			moduleGradient.append("stop")
+      				.attr("offset", "100%")
+      				.attr("stop-color", "#A55941");
+      			
+      			// Selected node gradient
+      			const selectedGradient = defs.append("radialGradient")
+      				.attr("id", "selectedGradient");
+      			selectedGradient.append("stop")
+      				.attr("offset", "0%")
+      				.attr("stop-color", "#FFD699");
+      			selectedGradient.append("stop")
+      				.attr("offset", "100%")
+      				.attr("stop-color", "#F2A950");
+      			
+      			// Drop shadow filter
+      			const filter = defs.append("filter")
+      				.attr("id", "dropShadow")
+      				.attr("height", "150%")
+      				.attr("width", "150%");
+      			filter.append("feGaussianBlur")
+      				.attr("in", "SourceAlpha")
+      				.attr("stdDeviation", 3);
+      			filter.append("feOffset")
+      				.attr("dx", 0)
+      				.attr("dy", 2)
+      				.attr("result", "offsetblur");
+      			filter.append("feComponentTransfer")
+      				.append("feFuncA")
+      				.attr("type", "linear")
+      				.attr("slope", 0.3);
+      			const feMerge = filter.append("feMerge");
+      			feMerge.append("feMergeNode");
+      			feMerge.append("feMergeNode")
+      				.attr("in", "SourceGraphic");
+      			
+      			// Glow filter for hover
+      			const glowFilter = defs.append("filter")
+      				.attr("id", "glow");
+      			glowFilter.append("feGaussianBlur")
+      				.attr("stdDeviation", "4")
+      				.attr("result", "coloredBlur");
+      			const glowMerge = glowFilter.append("feMerge");
+      			glowMerge.append("feMergeNode")
+      				.attr("in", "coloredBlur");
+      			glowMerge.append("feMergeNode")
+      				.attr("in", "SourceGraphic");
                 
-                var line = d3.radialLine()
-                    .curve(d3.curveBundle.beta(0.85))
-                    .radius(function (d) { return d.y; })
-                    .angle(function (d) { return d.x / 180 * Math.PI; });
+                // Create straight links
+                const link = g.append("g")
+                    .attr("stroke", "#8E8E8E")
+                    .attr("stroke-opacity", 0.4)
+                  .selectAll("line")
+                  .data(links)
+                  .join("line")
+                  .attr("stroke-width", 2);
                 
-                var svg = d3.select("#graph").append("svg")
-                    .attr("width", "100%")
-                    .attr("height", diameter)
-                    .append("g")
-                    .attr("style", "transform: translate(" + "50%" + "," + "48%" + ")");
+                let node, text;
+
+                function createDrag() {
+  	          	  function dragged(event, d) {
+  	          	    // Update data position
+  	          	    d.x = event.x;
+  	          	    d.y = event.y;
+
+  	          	    // Manually update visual positions
+  	          	    d3.select(this)
+  	          	      .attr("cx", event.x)
+  	          	      .attr("cy", event.y);
+
+  	          	    // Update the corresponding text
+  	          	    text.filter(t => t.id === d.id)
+  	          	      .attr("x", event.x)
+  	          	      .attr("y", event.y);
+
+  	          	    // Update connected links
+  	          	    link.filter(l => l.source.id === d.id)
+  	          	      .attr("x1", event.x)
+  	          	      .attr("y1", event.y);
+  	          	    link.filter(l => l.target.id === d.id)
+  	          	      .attr("x2", event.x)
+  	          	      .attr("y2", event.y);
+  	          	  }
+
+  	          	  return d3.drag()
+  	          	      .on("drag", dragged);
+  	         	}
                 
-                var link = svg.append("g").selectAll(".link"),
-                    label = svg.append("g").selectAll(".label"),
-                    bubble = svg.append("g").selectAll(".bubble");
-                
-                 var root = packageHierarchy(nodeJson);
-                
-                    // Build an object that gives feature of each leaves
-                    cluster(root);
-                    leaves = root.leaves()
-                
-                    // Leaves is an array of Objects. 1 item = one leaf. Provides x and y for leaf position in the svg. Also gives details about its parent.
-                    link = link
-                        .data(getEdges(leaves))
-                        .enter().append("path")
-                        .each(function (d) { d.source = d[0], d.target = d[d.length - 1]; })
-                        .attr("class", "link")
-                        .attr("d", line)
-                        .attr("fill", "none")
-                        .attr("stroke", "black")
-                
-                    label = label
-                        .data(leaves)
-                        .enter().append("text")
-                        .attr("class", "label")
-                        .attr("dy", "0.31em")
-                        .attr("transform", function (d) { return "rotate(" + (d.x - 90) + ")translate(" + (d.y + PADDING_LABEL) + ",0)" + (d.x < 180 ? "" : "rotate(180)"); })
-                        .attr("text-anchor", function (d) { return d.x < 180 ? "start" : "end"; })
-                        .text(function (d) { return d.data.name; });
-                
-                    bubble = bubble
-                        .data(leaves)
-                        .enter().append("g")
-                        .attr("class", "bubble")
-                        .attr("transform", function (d) { return "rotate(" + (d.x - 90) + ")translate(" + (d.y + PADDING_BUBBLE) + ",0)" })
-                       
-                        
-                  var modules = bubble.filter(function(d,i){
-                	  return d.data.module;
-                	}).append("svg:foreignObject")
-                        .attr("x", function(d) { return -10;})
-                        .attr("y", function(d) { return -10;})
-                        .attr("height", 22)
-                        .attr("width", 22) 
-                        .html('<span class="icon-2x2-grid secondary"></span>');
-                        
-                  var images =  bubble.filter(function(d,i){
-                	  return !d.data.module;
-                	}).append("svg:image")
-                          .attr("xlink:href",  function(d) {  return d.data.img;})
-                          .attr("x", function(d) { return -25;})
-                          .attr("y", function(d) { return -25;}) 
-                          .attr("height", 35)
-                          .attr("width", 35);
+                node = g.append("g")
+				    .attr("stroke-width", 1.5)
+                  .selectAll("circle")
+			      .data(nodes)
+			      .join("circle")
+			      .style("opacity", 0)
+				    .call(createDrag());
+				
+				// Fade in animation
+				node.transition()
+					.duration(800)
+					.delay((d, i) => i * 50)
+					.style("opacity", 1)
+	             		
+           	    // Function to truncate text
+           	    function truncateText(text, maxLength) {
+           	    	if (!text) return '';
+           	    	if (text.length <= maxLength) return text;
+           	    	return text.substring(0, maxLength) + '...';
+           	    }
+           	    
+           	    text = g.append("g")
+                  .selectAll("text")
+                  .data(nodes)
+                  .enter().append("text")
+                  .attr("x", d => d.x)
+                  .attr("y", d => d.y)
+                  .attr("text-anchor", "middle")
+                  .attr("dy", ".35em")
+                  .style("font-size", "14px")
+                  .style("font-weight", 600)
+                  .style("opacity", 0)
+                  .text(d => truncateText(d.data.name, 15))
+                  .each(function(d) {
+                  	// Add tooltip for full text on hover
+                  	if (d.data.name) {
+                  		d3.select(this).append("title").text(d.data.name);
+                  	}
+                  });
                   
-                  bubble.filter(function(d,i){
-                 	  return !d.data.module && d.data.unpublished;
-                 	}).append("svg:foreignObject")
-                     .attr("x", function(d) { return -25;})
-                     .attr("y", function(d) { return -5;})
-                     .attr("height", 24)
-                     .attr("width", 24) 
-                     .html('<span class="icon-warning secondary" aria-hidden="true" data-toggle="tooltip" data-html="true" data-placement="top" title="This space is currently unpublished."></span>');
-                  
-                  bubble.filter(function(d,i){
-                 return !d.data.module && d.data.hideIncomingLinks;
-                }).append("svg:foreignObject")
-                  .attr("x", function(d) { return 1;})
-                  .attr("y", function(d) { return 5;})
-                  .attr("height", 24)
-                  .attr("width", 24) 
-                  .html('<span class="icon-close-alt hiddenLinks secondary" aria-hidden="true" data-toggle="tooltip" data-html="true" data-placement="top" title="This space has hidden links"></span>');
-                  
-                  var setEvents = modules
-                  .on( 'dblclick', function (d) {
-                      location.href = d.data.link;
-                   })
-                 .on('mouseover', function(d){
-                	 link.style('stroke', a=>  a.source.data.id === d.data.id || a.target.data.id === d.data.id ? '#F2A950' : "black")
-                	 .style('stroke-width', a=>  a.source.data.id === d.data.id || a.target.data.id === d.data.id  ? 2 : 1)
-                  })
-                 .on('mouseout', function(event,d){
-                	link.style('stroke', 'black')
-                	.style('stroke-width', '1')
-                  }); 
-                  
-                   var setEvents = images
-                	    .on( 'dblclick', function (d) {
-                	        location.href = d.data.link;
-                	     })
-                .on('mouseover', function(d){
-                	 link.style('stroke', a=>  a.source.data.id === d.data.id || a.target.data.id === d.data.id ? '#F2A950': "black")
-                	 .style('stroke-width', a=>  a.source.data.id === d.data.id || a.target.data.id === d.data.id  ? 2 : 1);
-                  })
-                 .on('mouseout', function(event,d){
-                	link.style('stroke', 'black')
-                	.style('stroke-width', '1')
-                  })
-                 .on( 'mouseenter', function() {
-				// select element in current context
-				d3.select( this )
-				.transition()
-				.attr("x", function(d) { return -60;})
-				.attr("y", function(d) { return -60;})
-				.attr("height", 300)
-				.attr("width", 300);
-				})
-				// set back
-				.on( 'mouseleave', function() {
-				d3.select( this )
-				.transition()
-				.attr("x", function(d) { return -25;})
-				.attr("y", function(d) { return -25;})
-				.attr("height", 35)
-				.attr("width", 35);
-				});
-                d3.selectAll("g").on("mouseover", function() {
-                	d3.select(this).raise();
-                });
-                        
-                // Lazily construct the package hierarchy from class ids.
-                function packageHierarchy(classes) {
-                    var map = {};
-                
-                    function find(id, data) {
-                        var node = map[id], i;
-                        if (!node) {
-                            node = map[id] = data || { id: id, children: [] };
-                            if (id.length) {
-                                node.parent = find(id.substring(0, i = id.lastIndexOf(".")));
-                                node.parent.children.push(node);
-                                node.key = id.substring(i + 1);
-                            }
-                        }
-                        return node;
-                    }
-                
-                    classes.forEach(function (d) {
-                        find(d.id, d);
-                    });
-                
-                    return d3.hierarchy(map[""]);
-                }
-                
-                // Return a list of edges for the given array of nodes.
-                function getEdges(nodes) {
-                    var map = {},
-                        edges = [];
-                
-                    // Compute a map from id to node.
-                    nodes.forEach(function (d) {
-                        map[d.data.id] = d;
-                    });
-                
-                    // For each import, construct a link from the source to target node.
-                    nodes.forEach(function (d) {
-                        if (d.data.edges) d.data.edges.forEach(function (i) {
-                            edges.push(map[d.data.id].path(map[i]));
-                        });
-                    });
-                
-                    return edges;
+                // Fade in text
+                text.transition()
+                	.duration(800)
+                	.delay((d, i) => i * 50 + 200)
+                	.style("opacity", 1);
+           	    
+	           	// Set pointer events for all nodes
+	           	node.style("pointer-events", "all")
+	           	// Make module nodes smaller and style with gradients
+	           		.style("r", function(d) { return d.data.module ? 38 : 50; })
+	           		.style("fill", function(d) {
+	           			return d.data.module ? "url(#moduleGradient)" : "url(#spaceGradient)";
+	           		})
+	           		.style("stroke", function(d) { return d.data.module ? "#8E8E8E" : "#A55941"; })
+	           		.style("stroke-width", function(d) { return d.data.module ? 2 : 3; })
+	           		.style("filter", "url(#dropShadow)")
+	           		
+		           	.on("mouseover", function(event, d) {
+					    d3.select(this)
+					      .style("cursor", "pointer")
+					      .style("stroke-width", 5)
+					      .style("filter", "url(#glow)");
+					})
+					.on("mouseout", function(event, d) {
+					    d3.select(this)
+					      .style("cursor", "default")
+					      .style("stroke-width", function(d) { return d.data.module ? 2 : 3; })
+					      .style("filter", "url(#dropShadow)");
+					})
+	            	.on('click', function(event, d) {
+	            		//Reset highlighting
+	            		d3.selectAll("circle")
+							.style("fill", function(d) { 
+								return d.data.module ? "url(#moduleGradient)" : "url(#spaceGradient)"; 
+							})
+							.style("stroke", function(d) { return d.data.module ? "#8E8E8E" : "#A55941"; })
+							.style("stroke-width", function(d) { return d.data.module ? 2 : 3; });
+	            		
+	            		// Show info panel with node data
+	            		document.getElementById("node-info-title").innerHTML = d.data.name;
+	            		document.getElementById("node-info-description").innerHTML = d.data.description || "No description available.";
+	            		
+	            		// Show image if available (for spaces)
+	            		const imageEl = document.getElementById("node-info-image");
+	            		if (d.data.img) {
+	            			imageEl.src = d.data.img;
+	            			imageEl.classList.add('show');
+	            		} else {
+	            			imageEl.classList.remove('show');
+	            		}
+	            		
+	            		// Build stats section
+	            		let statsHTML = "<h6 style='color: var(--primary); margin-top: 1rem; margin-bottom: 0.5rem;'>Information</h6>";
+	            		
+	            		// Add type information
+	            		const nodeType = d.data.module ? 'Module' : 'Space';
+	            		statsHTML += '<div class="stat-item"><span class="stat-label">Type:</span> ' + nodeType + '</div>';
+	            		
+	            		// For modules, show all linked spaces
+	            		if (d.data.module && d.data.linkedSpaceNames && d.data.linkedSpaceNames.length > 0) {
+	            			const spacesList = d.data.linkedSpaceNames.join(', ');
+	            			statsHTML += '<div class="stat-item"><span class="stat-label">Linked from:</span> ' + spacesList + '</div>';
+	            		}
+	            		
+	            		// For spaces, show connections
+	            		if (!d.data.module) {
+		            		if (d.data.edges && d.data.edges.length > 0) {
+		            			statsHTML += '<div class="stat-item"><span class="stat-label">Connections:</span> ' + d.data.edges.length + '</div>';
+		            		}
+	            		}
+	            		
+	            		document.getElementById("node-info-stats").innerHTML = statsHTML;
+	            		
+	            		// Build links section
+	            		let linksHTML = "";
+	            		if (d.data.link) {
+	            			linksHTML = '<h6 style="color: var(--primary); margin-top: 1rem; margin-bottom: 0.5rem;">Actions</h6>';
+	            			const viewText = d.data.module ? 'View Module' : 'View Space';
+	            			linksHTML += '<a href="' + d.data.link + '">' + viewText + '</a>';
+	            		}
+	            		document.getElementById("node-info-links").innerHTML = linksHTML;
+	            		
+	            		// Show the panel
+	            		document.getElementById('node-info-panel').classList.add('show');
+	           			
+	           			// Highlight selected node with gradient
+	           			d3.selectAll("circle").filter(function(n) {
+	                    	return n.data.id == d.data.id;
+	                  	}).style("fill", "url(#selectedGradient)")
+	                  	  .style("stroke", "#A55941")
+	                  	  .style("stroke-width", 4);
+	            	});
+	           	
+	           	text.style("fill", function(d) { return d.data.module ? "#fff" : "#121212"; })
+	           		.style("pointer-events", "none")
+	           		.style("text-shadow", function(d) {
+	           			return d.data.module ? "0 1px 2px rgba(0,0,0,0.5)" : "0 1px 2px rgba(255,255,255,0.8)";
+	           		})
+	           		.style("user-select", "none");
+           	 	  
+	            simulation.on("tick", () => {
+	              // Draw straight links
+	              link
+	                  .attr("x1", d => d.source.x)
+	                  .attr("y1", d => d.source.y)
+	                  .attr("x2", d => d.target.x)
+	                  .attr("y2", d => d.target.y);
+
+	              node
+	                  .attr("cx", d => d.x)
+	                  .attr("cy", d => d.y);
+
+	              text
+		              .attr("x", d => d.x)
+		              .attr("y", d => d.y);
+	            }).on("end", () => {
+	              // Stop simulation after initial layout settles
+	              simulation.stop();
+	            });
+             
+                /**
+                 * Creates a flat structure with unique nodes
+                 * Shows ALL spaces + ALL modules
+                 * Each module appears only once
+                 */
+                function structureData(allNodes) {
+                	// Separate spaces and modules
+                	const spaces = [];
+                	const allModules = {};
+
+                	allNodes.forEach(node => {
+                		if (!node.module) {
+                			spaces.push(node);
+                		} else {
+                			allModules[node.id] = node;
+                		}
+                	});
+
+                	// Create nodes array: all spaces + ALL modules
+                	const nodes = [];
+
+                	// Add all spaces
+                	spaces.forEach(space => {
+                		nodes.push({
+                			id: space.id,
+                			data: space
+                		});
+                	});
+
+                	// Add ALL modules (each will appear once)
+                	Object.keys(allModules).forEach(moduleId => {
+                		nodes.push({
+                			id: moduleId,
+                			data: allModules[moduleId]
+                		});
+                	});
+
+                	// Create links array
+                	const links = [];
+                	spaces.forEach(space => {
+                		if (space.edges && space.edges.length > 0) {
+                			space.edges.forEach(edgeId => {
+                				const targetExists = nodes.some(n => n.id === edgeId);
+                				if (targetExists) {
+                					links.push({
+                						source: space.id,
+                						target: edgeId
+                					});
+                				}
+                			});
+                		}
+                	});
+
+                	return { nodes: nodes, links: links };
                 }
             </script>
         </div>
