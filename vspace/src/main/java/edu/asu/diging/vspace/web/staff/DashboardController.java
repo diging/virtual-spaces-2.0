@@ -50,14 +50,17 @@ public class DashboardController {
         Exhibition exhibition = (Exhibition) exhibitManager.getStartExhibition();
         String previewId = null;
         ExhibitionModes exhibitionMode = null;
+
         if (exhibition != null) {
             previewId = exhibition.getPreviewId();
             exhibitionMode = exhibition.getMode();
         }
+
         model.addAttribute("recentSpaces", recentSpaces);
         model.addAttribute("recentModules", recentModules);
         model.addAttribute("previewId", previewId);
         model.addAttribute("exhibitionMode", exhibitionMode!=null?exhibitionMode.name():null);
+
         return "staff/dashboard/dashboard";
     }
 
