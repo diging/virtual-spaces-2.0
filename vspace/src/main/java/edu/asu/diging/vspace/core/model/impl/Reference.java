@@ -3,6 +3,7 @@ package edu.asu.diging.vspace.core.model.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -53,6 +54,11 @@ public class Reference extends VSpaceElement implements IReference {
     private String type;
 
     private String note;
+
+    @Column(name = "visibility", length = 20)
+    private String visibility = "Public";
+
+    private boolean isPublic = true;
 
     @Override
     public String getTitle() {
@@ -181,5 +187,22 @@ public class Reference extends VSpaceElement implements IReference {
     public void setBiblios(List<BiblioBlock> biblios) {
         this.biblios = biblios;
     }
-    
+
+    public String getVisibility() {
+        return visibility;
+    }
+
+    public void setVisibility(String visibility) {
+        this.visibility = visibility;
+    }
+
+    @Override
+    public void setPublic(boolean isPublic) {
+        this.isPublic = isPublic;
+    }
+
+    @Override
+    public boolean isPublic() {
+        return isPublic;
+    }
 }

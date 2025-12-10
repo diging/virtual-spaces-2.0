@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public enum SortByField {
-    CREATION_DATE("creationDate"), FILENAME("filename"), NAME("name"), CREATED_BY("createdBy");
+    CREATION_DATE("creationDate"), FILENAME("filename"), NAME("name"), CREATED_BY("createdBy"), 
+    AUTHOR("author"), YEAR("year"), TITLE("title");
 
     private final String value;
 
@@ -18,7 +19,7 @@ public enum SortByField {
 
     public static List<String> getAllValues() {
         List<String> allValues = new ArrayList<>();
-        for(SortByField sbf : SortByField.values()) {
+        for (SortByField sbf : SortByField.values()) {
             allValues.add(sbf.getValue());
         }
         return allValues;
