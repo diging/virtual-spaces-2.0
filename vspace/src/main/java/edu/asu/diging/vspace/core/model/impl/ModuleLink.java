@@ -7,6 +7,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.annotations.Parameter;
 
 import edu.asu.diging.vspace.core.model.IModule;
@@ -25,6 +27,7 @@ public class ModuleLink extends VSpaceElement implements IModuleLink {
 
     @ManyToOne(targetEntity=Space.class)
     @JoinColumn(name="space_id", nullable=false)
+    @NotFound(action = NotFoundAction.IGNORE)
     private ISpace space;
 
     @ManyToOne(targetEntity=Module.class, optional=true)

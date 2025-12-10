@@ -21,7 +21,7 @@ public interface ISlideManager {
 
     ISlide createSlide(IModule module, SlideForm slideForm, SlideType type);
 
-    void updateSlide(Slide slide);
+    ISlide updateSlide(ISlide slide);
 
     IBranchingPoint createBranchingPoint(IModule module, SlideForm slideForm, SlideType type);
 
@@ -32,11 +32,10 @@ public interface ISlideManager {
     void deleteSlideById(String slideId, String moduleId);
 
     List<Sequence> getSlideSequences(String slideId, String moduleId);
-    
-    Page<ISlide> findByNameOrDescription(Pageable requestedPage,String searchText);
-    
+
+    Page<ISlide> findByNameOrDescription(Pageable requestedPage, String searchText);
+
     void updateNameAndDescription(ISlide slide, SlideForm slideForm);
 
     void addSlideLocalizedText(ISlide slide, LocalizedTextForm localizedTextFormData, List<ILocalizedText> localizedTextList);
-
 }

@@ -1,8 +1,6 @@
 package edu.asu.diging.vspace.web.staff;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -10,12 +8,11 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import org.javers.common.collections.Arrays;
+import java.util.Arrays;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,7 +20,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -34,10 +30,8 @@ import edu.asu.diging.vspace.core.factory.impl.ExhibitionFactory;
 import edu.asu.diging.vspace.core.model.ExhibitionModes;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISpace;
-import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
-import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.web.staff.forms.ExhibitionConfigurationForm;
 import edu.asu.diging.vspace.core.services.impl.ExhibitionManager;
@@ -58,9 +52,6 @@ public class ExhibitionConfigurationController {
     private ExhibitionFactory exhibitFactory;
 
     @Autowired
-    private IImageService imageService;
-
-    @Autowired
     private ExhibitionLanguageConfig exhibitionLanguageConfig;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -70,11 +61,14 @@ public class ExhibitionConfigurationController {
     @RequestMapping("/staff/exhibit/config")
     public String showExhibitions(Model model) {
         // for now we assume there is just one exhibition
-
         IExhibition exhibition = exhibitionManager.getStartExhibition();
-        if (exhibition==null) {
+        if (exhibition == null) {
             exhibition = (Exhibition) exhibitFactory.createExhibition();
         }
+        
+        // Create final reference for lambda usage
+        final IExhibition finalExhibition = exhibition;
+        
         if (exhibition.getLanguages() != null) {
             model.addAttribute("savedExhibitionLanguages", exhibition.getLanguages()
                     .stream().map(language -> language.getLabel()).collect(Collectors.toList()));
@@ -83,11 +77,36 @@ public class ExhibitionConfigurationController {
         }
         model.addAttribute("exhibitionModes", Arrays.asList(ExhibitionModes.values()));
         model.addAttribute("spacesList", spaceRepo.findAll());
-        model.addAttribute("languageList", exhibitionLanguageConfig.getExhibitionLanguageList());
+        
+        List<Map<String, Object>> sortedLanguageList = exhibitionLanguageConfig.getExhibitionLanguageList().stream()
+                .map(rawMap -> (Map<String, Object>) rawMap)
+                .sorted((lang1, lang2) -> {
+                    String code1 = (String) lang1.get("code");
+                    String code2 = (String) lang2.get("code");
+                    String label1 = (String) lang1.get("label");
+                    String label2 = (String) lang2.get("label");
+                    
+                    // Check if languages are currently selected for this exhibition
+                    boolean isLang1Selected = finalExhibition.getLanguages() != null && 
+                        finalExhibition.getLanguages().stream().anyMatch(l -> l.getCode().equals(code1));
+                    boolean isLang2Selected = finalExhibition.getLanguages() != null && 
+                        finalExhibition.getLanguages().stream().anyMatch(l -> l.getCode().equals(code2));
+                    
+                    // show selected languages first
+                    if (isLang1Selected != isLang2Selected) {
+                        return isLang1Selected ? -1 : 1; // Selected languages come first
+                    }
+                    
+                    // alphabetical within each group (selected or unselected)
+                    return label1.compareToIgnoreCase(label2);
+                })
+                .collect(Collectors.toList());
+                
+        model.addAttribute("languageList", sortedLanguageList);
         model.addAttribute("exhibition", exhibition);
-        model.addAttribute("defaultSpaceLinkImage",exhibition.getSpaceLinkDefaultImage());
-        model.addAttribute("defaultModuleLinkImage",exhibition.getModuleLinkDefaultImage());
-        model.addAttribute("defaultExternalLinkImage",exhibition.getExternalLinkDefaultImage());
+        model.addAttribute("defaultSpaceLinkImage", exhibition.getSpaceLinkDefaultImage());
+        model.addAttribute("defaultModuleLinkImage", exhibition.getModuleLinkDefaultImage());
+        model.addAttribute("defaultExternalLinkImage", exhibition.getExternalLinkDefaultImage());
         return "staff/exhibit/config";
     }
 
@@ -103,13 +122,30 @@ public class ExhibitionConfigurationController {
     @RequestMapping(value = "/staff/exhibit/config", method = RequestMethod.POST)
     public RedirectView createOrUpdateExhibition(HttpServletRequest request,
             @RequestParam(required = false, name = "exhibitionParam") String exhibitID,
-            @RequestParam("spaceParam") String spaceID, @RequestParam("title") String title,
-            @RequestParam("exhibitionMode") ExhibitionModes exhibitMode,
-            @RequestParam(value = "customMessage", required = false, defaultValue = "") String customMessage,
-            @RequestParam("exhibitLanguage") List<String> languages,
-            @RequestParam("defaultExhibitLanguage") String defaultLanguage,
+            @RequestParam(required = false, name = "spaceParam") String spaceID,
+            @Valid @ModelAttribute("exhibitionConfigurationForm") ExhibitionConfigurationForm exhibitionConfigForm,
+            BindingResult result,
             RedirectAttributes attributes) throws IOException {
-        
+        if (result.hasErrors()) {
+            attributes.addAttribute("showAlert", true);
+            attributes.addAttribute("alertType", "danger");
+            attributes.addAttribute("message", result.getFieldError().getDefaultMessage());
+            return new RedirectView(request.getContextPath() + "/staff/exhibit/config");
+        }
+
+        if (spaceID == null || spaceID.trim().isEmpty()) {
+            attributes.addAttribute("showAlert", true);
+            attributes.addAttribute("alertType", "danger");
+            attributes.addAttribute("message", "Please select a start space for the exhibition.");
+            return new RedirectView(request.getContextPath() + "/staff/exhibit/config");
+        }
+
+        String title = exhibitionConfigForm.getTitle();
+        ExhibitionModes exhibitMode = exhibitionConfigForm.getExhibitionMode();
+        List<String> languages = exhibitionConfigForm.getExhibitLanguage();
+        String defaultLanguage = exhibitionConfigForm.getDefaultExhibitLanguage();
+        String customMessage = exhibitionConfigForm.getCustomMessage();
+
         IExhibition exhibition;
 
         if (exhibitID == null || exhibitID.isEmpty()) {

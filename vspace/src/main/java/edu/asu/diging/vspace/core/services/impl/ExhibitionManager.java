@@ -95,7 +95,7 @@ public class ExhibitionManager implements IExhibitionManager {
         if (exhibitions.size() > 0) {
             exhibition = exhibitions.get(0);
             String previewId = exhibition.getPreviewId();
-            if(previewId==null || previewId.isEmpty()) {
+            if (previewId == null || previewId.isEmpty()) {
                 exhibitFactory.updatePreviewId(exhibition);
             }
         }
@@ -115,24 +115,25 @@ public class ExhibitionManager implements IExhibitionManager {
      * @throws ExhibitionLanguageDeletionException 
      */
     @Override
-    public void updateExhibitionLanguages(Exhibition exhibition, List<String> codes, String defaultLanguage) throws ExhibitionLanguageDeletionException{
-        if(CollectionUtils.isEmpty(exhibitionLanguageConfig.getExhibitionLanguageList())) {
+    public void updateExhibitionLanguages(IExhibition exhibition, List<String> codes, String defaultLanguage) throws ExhibitionLanguageDeletionException {
+        if (CollectionUtils.isEmpty(exhibitionLanguageConfig.getExhibitionLanguageList())) {
             throw new LanguageListConfigurationNotFoundException("Exhibition Language Configuration not found");
         }
 
-        if(CollectionUtils.isEmpty(codes) ) {
-            return;
+        // Ensure at least one language is selected
+        if (CollectionUtils.isEmpty(codes)) {
+            throw new IllegalArgumentException("At least one language must be selected for the exhibition");
         }
         
         // Adds defaultLanguage to codes list if not already exists.
-        if(StringUtils.hasText(defaultLanguage) && !codes.contains(defaultLanguage)) {
+        if (StringUtils.hasText(defaultLanguage) && !codes.contains(defaultLanguage)) {
             codes.add(defaultLanguage);
         }
 
         exhibitionLanguageConfig.getExhibitionLanguageList().stream()
             .filter(languageConfig -> codes.contains(languageConfig.get(ConfigConstants.CODE)))
             .forEach(languageMap -> {
-                IExhibitionLanguage exhibitionLanguage =  addExhibitionLanguage(exhibition , languageMap);  
+                IExhibitionLanguage exhibitionLanguage = addExhibitionLanguage(exhibition, languageMap);  
                 exhibitionLanguage.setDefault(exhibitionLanguage.getCode().equalsIgnoreCase(defaultLanguage));
             });
 
@@ -177,12 +178,12 @@ public class ExhibitionManager implements IExhibitionManager {
      * @param languageMap
      * @return
      */
-    private IExhibitionLanguage addExhibitionLanguage(IExhibition exhibition, Map languageMap) {
-        IExhibitionLanguage exhibitionLanguage =   new ExhibitionLanguage((String) languageMap.get(ConfigConstants.LABEL),
+    private IExhibitionLanguage addExhibitionLanguage(IExhibition exhibition, Map<String, Object> languageMap) {
+        IExhibitionLanguage exhibitionLanguage = new ExhibitionLanguage((String) languageMap.get(ConfigConstants.LABEL),
                 (String) languageMap.get(ConfigConstants.CODE), exhibition);
 
-        int index =  exhibition.getLanguages().indexOf(exhibitionLanguage);
-        if( index < 0 ) {
+        int index = exhibition.getLanguages().indexOf(exhibitionLanguage);
+        if (index < 0) {
             exhibition.getLanguages().add(exhibitionLanguage);
         } else {
             exhibitionLanguage = exhibition.getLanguages().get(index);

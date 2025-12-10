@@ -15,7 +15,7 @@ public interface ISlide extends IVSpaceElement {
     IImageBlock getFirstImageBlock();
     
     ITextBlock getFirstMatchedTextBlock(String searchTerm);
-    
+
     List<ILocalizedText> getSlideNames();
 
     void setSlideNames(List<ILocalizedText> slideNames);
@@ -23,7 +23,7 @@ public interface ISlide extends IVSpaceElement {
     void setSlideDescriptions(List<ILocalizedText> slideDescriptions);
 
     List<ILocalizedText> getSlideDescriptions();
-    
+
     /**
      * Get the localized name for the slide in the specified language
      * @param languageCode The language code to get the name in
@@ -31,7 +31,7 @@ public interface ISlide extends IVSpaceElement {
      * @return The localized name or fallback to default name
      */
     String getLocalizedName(String languageCode, String defaultLanguageCode);
-    
+
     /**
      * Get the localized description for the slide in the specified language
      * @param languageCode The language code to get the description in
@@ -39,4 +39,8 @@ public interface ISlide extends IVSpaceElement {
      * @return The localized description or fallback to default description
      */
     String getLocalizedDescription(String languageCode, String defaultLanguageCode);
+
+    List<ISlideExternalLink> getExternalLinks();
+
+    void setExternalLinks(List<ISlideExternalLink> externalLinks);
 }
