@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.BiblioBlockRepository;
 import org.springframework.transaction.annotation.Transactional;
+
 import edu.asu.diging.vspace.core.data.ChoiceContentBlockRepository;
 import edu.asu.diging.vspace.core.data.ContentBlockRepository;
 import edu.asu.diging.vspace.core.data.ImageContentBlockRepository;
@@ -57,6 +58,7 @@ import edu.asu.diging.vspace.core.model.impl.VSVideo;
 import edu.asu.diging.vspace.core.model.impl.VideoBlock;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
+import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
 
 @Transactional(rollbackFor = { Exception.class })
 @Service
@@ -273,7 +275,9 @@ public class ContentBlockManager implements IContentBlockManager {
     private IVSVideo storeVideo(byte[] video, Long size, String fileName, String url, String title)
             throws VideoCouldNotBeStoredException {
         IVSVideo slideContentVideo = null;
+        
         if (video != null) {
+            
             slideContentVideo = saveVideo(video, size, fileName, title);
             storeVideoFile(video, slideContentVideo, fileName);
             slideContentVideo.setUrl(null);
@@ -589,12 +593,13 @@ public class ContentBlockManager implements IContentBlockManager {
      *                         content order corresponding to each blocks.
      */
     @Override
-    public void updateContentOrder(List<ContentBlock> contentBlockList) throws BlockDoesNotExistException {
+    public void updateContentOrder(List<ContentBlock> contentBlockList, ISlide slide) throws BlockDoesNotExistException {
         if (contentBlockList == null) {
             return;
         }
         List<ContentBlock> contentBlocks = new ArrayList<>();
         for (ContentBlock eachBlock : contentBlockList) {
+            eachBlock.setSlide(slide);
             String blockId = eachBlock.getId();
             int contentOrder = eachBlock.getContentOrder();
             Optional<ContentBlock> contentBlock = contentBlockRepository.findById(blockId);
@@ -608,6 +613,7 @@ public class ContentBlockManager implements IContentBlockManager {
         }
         contentBlockRepository.saveAll(contentBlocks);
     }
+
 
     /**
      * Decreasing content order by 1 of the slide's block which are after the

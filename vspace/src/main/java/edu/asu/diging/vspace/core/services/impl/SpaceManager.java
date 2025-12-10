@@ -387,5 +387,4 @@ public class SpaceManager implements ISpaceManager {
             return (int) spaceRepo.count();
         }
     }
-    
 }

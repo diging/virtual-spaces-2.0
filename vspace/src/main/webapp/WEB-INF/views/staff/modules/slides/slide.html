@@ -1,139 +1,139 @@
 <html layout:decorate="~{layouts/main_staff}">
     <head>
         <link th:href="@{/resources/extra/Home.css}" type="text/css" rel="stylesheet">
-        <link rel="stylesheet"
-            href="https://unpkg.com/easymde/dist/easymde.min.css">
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+        <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
         <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
         <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
-		<script th:src="@{/resources/jquery/jquery-ui.min_custom_sortable.js}"></script>
+        <script th:src="@{/resources/jquery/jquery-ui.min_custom_sortable.js}"></script>
         <style type="text/css">
             .hova {
             background-color: #f2f2f2;
-            }
-            .EasyMDEContainer .CodeMirror-wrap{
+        }
+
+        .EasyMDEContainer .CodeMirror-wrap {
             overflow-y: scroll;
             height: 400px;
-            }
-            .fixed {
-		    position: fixed;
-		    top:0; left:0;
-		    width: 100%;
-		    z-index:100;
-     		}
-     		
-     		li.active>a{
-			background: solid var(--primary);
-			color: #fff;
-			font-size: 15px;
-			}
-			
-			a.nav-link.active.show {
-			border-color: transparent;
-			border-bottom: 4px solid var(--primary);
-			color: var(--primary) !important;
-			background: transparent;
-			}
-			
-			.Info_cz_Class .tooltiptext {
-			    visibility: hidden;
-			    width: 120px;
-			    color: white;
-			    text-align: center;
-			    font-size: 12px;
-			    padding: 3px 0;
-			    border-radius: 6px;
-			    position: absolute;
-			    z-index: 1;
-			    left: -38px;
-			    top: 31px;
-			    background: rgba(0, 0, 0, 0.6);
-			}
-			
-			.Info_cz_Class:hover .tooltiptext {
-			    visibility: visible;
-			}
-			
-			#space {
-			    max-width: max-content;
-			    max-height: max-content;
-			}
-			
-			.alert {
-				padding: 20px;
-		  		background-color: #f44336;
-		  		color: white;
-		  		width: 100%;
-			  	left: 0;
-			  	position: absolute;
-			  	display:none;
-			}
-			
-			.closebtn {
-				margin-left: 15px;
-				color: white;
-				font-weight: bold;
-				float: right;
-				font-size: 22px;
-				line-height: 20px;
-				cursor: pointer;
-				transition: 0.3s;
-				padding: 0;
-				border: none;
-				background: none;
-			}
-			
-			.closebtn:hover {
-				color: black;
-			}
-			
-			#Ext_Links_Module_Slide1 {
-				text-align: left;
-				display: inline-block;
-				margin: auto 20px;
-			}
+        }
+        
+        .fixed {
+            position: fixed;
+            top:0; left:0;
+            width: 100%;
+            z-index:100;
+        }
+        
+        li.active>a{
+            background: solid var(--primary);
+            color: #fff;
+            font-size: 15px;
+        }
+        
+        a.nav-link.active.show {
+            border-color: transparent;
+            border-bottom: 4px solid var(--primary);
+            color: var(--primary) !important;
+            background: transparent;
+        }
+        
+        .Info_cz_Class .tooltiptext {
+            visibility: hidden;
+            width: 120px;
+            color: white;
+            text-align: center;
+            font-size: 12px;
+            padding: 3px 0;
+            border-radius: 6px;
+            position: absolute;
+            z-index: 1;
+            left: -38px;
+            top: 31px;
+            background: rgba(0, 0, 0, 0.6);
+        }
+        
+        .Info_cz_Class:hover .tooltiptext {
+            visibility: visible;
+        }
+        
+        #space {
+            max-width: max-content;
+            max-height: max-content;
+        }
+        
+        .alert {
+            padding: 20px;
+            background-color: #f44336;
+            color: white;
+            width: 100%;
+            left: 0;
+            position: absolute;
+            display:none;
+        }
+        
+        .closebtn {
+            margin-left: 15px;
+            color: white;
+            font-weight: bold;
+            float: right;
+            font-size: 22px;
+            line-height: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+            padding: 0;
+            border: none;
+            background: none;
+        }
+        
+        .closebtn:hover {
+            color: black;
+        }
+        
+        #Ext_Links_Module_Slide1 {
+            text-align: left;
+            display: inline-block;
+            margin: auto 20px;
+        }
 
-			div.settings {
-				display: grid;
-    			grid-template-columns: 1fr 3fr;
-    			grid-gap: 5px;
-    			margin-top: 10px;
-			}
-			
-			div.settings label {
-				text-align: right;
-			}
-			
-			#Ext_Links_Module_Slide2 {
-				background: white;
-				padding: 25px;
-				text-align: left;
-				display: block;
-				margin: 15px;
-				margin-top: 40px;
-				margin-bottom: 20px;
-				margin-right: -15px;
-			    margin-left: -15px;
-			    top: 0px;
-			    overflow: visible;
-			    border-radius: 5px;
-			}
-			
-			.imgDiv {
-				display: inline-block;
-			}
-			
-			.deleteExternalLink {
-				width: auto;
-			}
-          
+        div.settings {
+            display: grid;
+            grid-template-columns: 1fr 3fr;
+            grid-gap: 5px;
+            margin-top: 10px;
+        }
+        
+        div.settings label {
+            text-align: right;
+        }
+        
+        #Ext_Links_Module_Slide2 {
+            background: white;
+            padding: 25px;
+            text-align: left;
+            display: block;
+            margin: 15px;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            margin-right: -15px;
+            margin-left: -15px;
+            top: 0px;
+            overflow: visible;
+            border-radius: 5px;
+        }
+        
+        .imgDiv {
+            display: inline-block;
+        }
+        
+        .deleteExternalLink {
+            width: auto;
+        }
         </style>
         <script th:inline="javascript">
             $(function () {
-		        $('.close').on('click', function () {
-		        	$('.modal').hide();
-		        })
+                $('.close').on('click', function () {
+                    $('.modal').hide();
+                })
             })
 
             var currentSpaceName;
@@ -153,7 +153,6 @@
             $(function () {
             	  $('[data-toggle="tooltip"]').tooltip()
             });
-            
             $(window).scroll(function(){
             	  var sticky = $('.sticky'),
             	      scroll = $(window).scrollTop();
@@ -324,7 +323,6 @@
                 $(".EasyMDEContainer").remove();
                 var divName = $(e.target).closest('div').attr('class');
                 
-                //if the div is a text content block 
                 var textBlock = $(e.target).closest('.textDivStaff');
                 textBlock.addClass("open");
                 
@@ -1018,30 +1016,98 @@
             	});
             	var timeout=null;
             	$('#slideSpace').sortable({
-	            	update: function(event,ui) {
-		            	var jsonObj = [];
-		            	var blockId;
-		            	$(this).children().each(function(index,element){
-			            	if(typeof($(element.innerHTML).filter('div').attr('data-position'))=="undefined") {
-			            		blockId=$(element).attr('id');
-			            	}else {
-			            		blockId = $(element.innerHTML).filter('div').attr('id');
-			            	}
-			            	item = {}
-			            	item ["id"] = blockId;
-			            	item ["contentOrder"] = index;
-			            	jsonObj.push(item);
-			            	$(element.innerHTML).filter('div').attr('data-position',index);
-		            	});
-		            	var token = [[${_csrf.token}]];
-		            	if (jsonObj.length != 0){
-			            	if (timeout != null){
-			            		clearTimeout(timeout);
-			            	}
-			            	timeout = setTimeout(updateContentOrder(jsonObj,token), 1000);
-		            	}
-	            	}
-            	});
+            	    // This function is called whenever the sorting is updated
+            	    update: function(event, ui) {
+            	        // Array to store the JSON representation of each sortable item
+            	        var jsonObj = [];
+            	        // Variable to store the ID of the current sortable item
+            	        var blockId;
+
+            	        // Loop through each sortable item within the container
+            	        $(this).children().each(function(index, element) {
+            	            // Check if the data-position attribute is undefined
+            	            if (typeof($(element.innerHTML).filter('div').attr('data-position')) == "undefined") {
+            	                // If undefined, set the blockId to the ID attribute of the current element
+            	                blockId = $(element).attr('id');
+            	            } else {
+            	                // If not undefined, set the blockId to the ID attribute of the child div element
+            	                blockId = $(element.innerHTML).filter('div').attr('id');
+            	            }
+            	            // Create an object representing the current sortable item
+            	            var item = {};
+            	            item["id"] = blockId;
+            	            item["contentOrder"] = index;
+            	            item["slide"] = null;
+            	            // Add the item to the jsonObj array
+            	            jsonObj.push(item);
+            	            // Set the data-position attribute of the child div element to the current index
+            	            $(element.innerHTML).filter('div').attr('data-position', index);
+            	        });
+
+            	        // Retrieve the CSRF token from the server-side
+            	        var token = [[${_csrf.token}]];
+            	        
+            	        // Check if the jsonObj array is not empty
+            	        if (jsonObj.length != 0) {
+            	            // If a previous timeout is set, clear it
+            	            if (timeout != null) {
+            	                clearTimeout(timeout);
+            	            }
+            	            // Set a timeout to update the content order after 1000 milliseconds (1 second)
+            	            timeout = setTimeout(updateContentOrder(jsonObj, token), 1000);
+            	        }
+            	    }
+            });
+            
+            function updateContentOrder(jsonObj,token){
+                $.ajax({
+                 // ------------- adjusting content order of blocks if their position changed after dragging ----------
+                    url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/blocks/order/update'})]",
+                    type: 'POST',
+                    beforeSend: function(){
+                        $(".loader").remove();
+                        $('#contOrdUpdStatus').empty();
+                        $('#contOrdUpdStatus').append($('<div class="loader" style="font-size: 30px;display: none; text-align: center;"><i class="icon-spinner" aria-hidden="true">Saving...</i></div>'));
+                        $(".loader").show();
+                    },
+                    complete: function(){
+                        $(".loader").hide();
+                        timeout = null;
+                    },
+                    cache       : false,
+                    contentType: 'application/json; charset=utf-8',
+                    processData :false,
+                    headers:{
+                        'X-CSRF-Token':token
+                    },
+                    data: JSON.stringify(jsonObj),
+                    success: function(data) {
+                        $(".save").remove();
+                        for(let i=0;i<data.length;i++) {
+                            $('#'+data[i].id).attr('data-position',data[i].contentOrder);
+                        } 
+                        var successDiv = $('<div style="width: 100%;height: 50px;" class="save alert alert-success alert-dismissible fade show" role="alert">');
+                        successDiv.append('<p>Successfully Saved.</p>');
+                        successDiv.append('<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
+                        successDiv.append('</div>');
+                        $('#contOrdUpdStatus').empty();
+                        $('#contOrdUpdStatus').append(successDiv);
+                    },
+                    error: function(data) {
+                        $(".errInSave").remove();
+                        var errorDiv = $('<div style="width: 100%;height: 50px;" class="errInSave alert alert-danger alert-dismissible fade show" role="alert">');
+                        errorDiv.append('<p>We are sorry but something went wrong. Please try again later.</p>');
+                        errorDiv.append('<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
+                        errorDiv.append('</div>');
+                        $('#contOrdUpdStatus').empty();
+                        $('#contOrdUpdStatus').append(errorDiv);
+                    }
+                });
+            }
+            [# th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}"]
+                $('#addChoice').show();
+                $('#choiceSpace').show();
+            [/]
             	
             	function hideLinkInfoTabs(){
                	    $("#editExternalLinkInfo").hide();
@@ -1236,42 +1302,232 @@
                     $("#addTextAlert").show();
                 });
                 
-	            $("#addSpace").click(function() {
-		            markDown = new EasyMDE({element: $('#spaceBlockText')[0]});
-		            $("#addSpaceAlert").show();
-	            });
+                $("#addSpace").click(function() {
+                    markDown = new EasyMDE({element: $('#spaceBlockText')[0]});
+                    $("#addSpaceAlert").show();
+                });
 
-	            $("#spaceName").select2({
-		            ajax: {
-			            url: [[@{|/staff/spaces/search|}]],
-			            dataType: 'json',
-			            processResults: function (data) {
-				            return {
-				            	results: data,
-				            };
-			            },
-		            },
-		            templateResult: formatSpace,
-		            templateSelection: formatSpace
-	            });
+                $("#spaceName").select2({
+                    ajax: {
+                        url: [[@{|/staff/spaces/search|}]],
+                        dataType: 'json',
+                        processResults: function (data) {
+                            return {
+                                results: data,
+                            };
+                        },
+                    },
+                    templateResult: formatSpace,
+                    templateSelection: formatSpace
+                });
 
-	            function formatSpace (space) {
-		            if (!space.id) {
-		            	return space.name;
-		            }
-		            var $space = $('<span>' + space.name + '</span>');
-		            return $space;
-	            }
-	
+                function formatSpace (space) {
+                    if (!space.id) {
+                        return space.name;
+                    }
+                    var $space = $('<span>' + space.name + '</span>');
+                    return $space;
+                }
+    
                 $("#addImage").click(function() {
                     $("#addImgAlert").show();
                 });
                 
-                $("#addVideo").click(function() {
-                    $("#videoTitle").value = "";
-                    $("#addVideoAlert").show();
-                    addVideoClk =1;
-                    editVideoClk=0;
+                $("#editSpaceName").select2({
+                	ajax: {
+            		    url: function (params) {
+            		  		var spaceURL = [[@{|/staff/spaces/search|}]];
+            		  		return spaceURL;
+            		    },
+            		    dataType: 'json',
+            		    processResults: function (data) {
+            		        return {
+            		          results: data,
+            		        };
+            		      },
+            		},
+            		templateResult: formatSpace,
+            		templateSelection: formatSpaceSelection
+                });
+              
+              $("#addExternalLinkButton").click(function(e) {
+           	   $('#errorAlert')[0].style.display = "none";
+                  hideLinkInfoTabs();
+                  displayForms("#createExternalLinkAlert");
+              });
+
+              $(document).on("click", ".editExternalLink", function(e) {
+       			  externalLink = {};
+       			  externalLink["id"] = $(this).attr("data-link-id");
+                  externalLink["label"] = $(this).attr("data-label");
+                  externalLink["url"] = $(this).attr("data-url");
+                  $(".externalLinkIdEdit").attr('data-link-id', $(this).attr("data-link-id"));
+       		      displayForms("#editExternalLinkInfo");
+         	  });
+               
+              $("#editExternalLinkBtn").click(function(e) {
+            	  e.preventDefault();
+                  $("#space").scrollTop(0);
+                  var linkId = $(".externalLinkIdEdit").attr('data-link-id');
+                  var form = $("#editExternalLinkForm");
+                  var formData = new FormData(form[0]);
+                  $.ajax({
+                      type: "POST",
+                      url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide?.id}+'/link/external/'})]"+linkId+'?[(${_csrf.parameterName})]=[(${_csrf.token})]',
+                      cache: false,
+                      contentType : false,
+                      processData : false,
+                      enctype: 'multipart/form-data',
+                      data: formData,
+                      beforeSend: function () {
+                          $(".saveLoader").show();
+                      },
+                      complete: function () {
+                          $(".saveLoader").hide();
+                      },
+                      success: function(data) {
+                    	  var linkData = JSON.parse(data);
+                          hideLinkInfoTabs();
+                          $("#space").css("display", "none");
+                   	      $('#'+ externalLink["id"]).remove();
+                	      $('#'+ externalLink["id"] +'form').remove();
+                          showExternalLinks(linkData);;
+                      }
+                  });
+               });
+				
+               const closeButton = document.createElement('button');
+               closeButton.textContent = 'x';
+               closeButton.classList.add('closebtn');
+               $("#createExternalLinkBtn").click(function(e) {
+                   e.preventDefault();
+                   $("#space").scrollTop(0);
+                   var externalLink = $(".externalLink").val();
+                   var externalLinkLabel = $(".externalLinkLabel").val();
+                   if (externalLinkLabel == undefined || externalLinkLabel == "") {
+                	   $("#errorAlert")[0].style.display = "block";
+                	   $("#errorAlert")[0].textContent = "Please enter a label for this external link.";
+                	   $("#errorAlert")[0].appendChild(closeButton);
+                       $("#space").scrollTop($('#space')[0].scrollHeight);
+                       return;
+                   }
+                   if (externalLink == undefined || externalLink == "") {
+                	   $("#errorAlert")[0].style.display = "block";
+                	   $("#errorAlert")[0].textContent = "Please provide the link to the external link.";
+                	   $("#errorAlert")[0].appendChild(closeButton);
+                       $("#space").scrollTop($('#space')[0].scrollHeight);
+                       return;
+                   }
+                   var form = $("#createExternalLinkForm");
+                   var formData = new FormData(form[0]);
+                   $.ajax({
+                       type: "POST",
+                       url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/externallink?'+${_csrf.parameterName}+'='+${_csrf.token}})]",
+                       cache       : false,
+                       contentType : false,
+                       processData : false,
+                       enctype: 'multipart/form-data',
+                       data: formData,
+                       beforeSend: function () {
+                           $(".saveLoader").show();
+                           },
+                      	complete: function () {
+                           $(".saveLoader").hide();
+                           },
+                       success: function(data) {
+                           var linkData = JSON.parse(data);
+                           $("#createExternalLinkAlert").hide();
+                           form[0].reset();
+                           $("#space").css("display", "none");
+                           showExternalLinks(linkData);
+                       }
+                   });
+               });
+               
+               $(document).on("click", ".deleteExternalLink", function(e) {
+            	   $("#confirmDeleteLinkAlert").show();
+               	   $(".deleteExternalLinkAlert").attr('data-link-id', $(this).attr("data-link-id"));
+               });
+               
+           	   $(".deleteExternalLinkAlert").on("click", function(e) {
+            	    e.preventDefault();
+              	    $("#confirmDeleteImageAlert").find('input').remove();
+              		$("#confirmDeleteChoiceBlockAlert").find('input').remove();
+              		$("#confirmDeleteTextAlert").find('input').remove();
+              		$("#confirmDeleteLinkAlert").hide();
+               		var linkId = $(this).attr("data-link-id");
+                    $.ajax({
+                    	url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/externallink/'})]"+ linkId + '?[(${_csrf.parameterName})]=[(${_csrf.token})]',
+                        method: "DELETE",
+                        beforeSend: function () {
+                        	$(".saveLoader").show();
+                        },
+                      	complete: function () {
+                        	$(".saveLoader").hide();
+                        },
+                        success:function(data) {
+               		        $('#' + linkId).remove();
+               		    	$('#' + linkId + "form").remove();
+                            hideLinkInfoTabs();
+                        }
+                    });
+               });
+
+               // ------------- adjust links on background image (e.g. when inputs are changed) ------------
+               
+               $("#externalLinkImage").change(function() {
+                   if (this.files && this.files[0]) {
+                       externalLinkIconReader.readAsDataURL(this.files[0]);
+                   }
+               });
+               
+               $(".cancelExternalLinkBtn").click(function() {
+                   $("#space").scrollTop(0);
+                   $("#undefined").remove();
+                   $("#space").hide();
+                   $("#createExternalLinkAlert").hide();
+                   $("#editExternalLinkInfo").hide();
+               });
+                
+                $("#spaceName").select2({
+                	ajax: {
+            		    url: function (params) {
+            		  		var spaceURL = [[@{|/staff/spaces/search|}]];
+            		  		return spaceURL;
+            		    },
+            		    dataType: 'json',
+            		    processResults: function (data) {
+            		        return {
+            		          results: data,
+            		        };
+            		      },
+            		},
+            		templateResult: formatSpace,
+            		templateSelection: formatSpaceSelection
+                });
+                
+                function formatSpace (space) {
+                	if (!space.id) {
+                	    return space.name;
+                	}
+                	var $space = $(
+                	    '<span>' + space.name + '</span>'
+                	);
+                	return $space;
+                }
+                
+                function formatSpaceSelection(space) {
+                	if (!space.id) {
+                            return space.name;
+                    }
+                    var $image = $(
+                        '<span>' + space.name + '</span>'
+                    );
+                    return $image;
+                }
+                
+                $("#addImage").click(function() {
+                    $("#addImgAlert").show();
                 });
               
               $("#addExternalLinkButton").click(function(e) {
@@ -1420,20 +1676,6 @@
                     $('#chooseFromLocal').trigger( "click" );
                 });
                 
-                $("#saveVideo").click(function(e) {
-                    e.preventDefault();
-                    $("#addVideoAlert").hide();
-                    embedVideo();
-                    $("#saveVideo").data('value', '');
-                    $("#saveVideo").data('url', '');
-                    $("#uploadTab").addClass("active");
-                    $("#urlTab").removeClass("active");
-                    $("#urlLink").removeClass("active show");
-                    $("#urlLink>a").removeClass("active show");
-                    $("#uploadLink").addClass("active show");
-                    $("#uploadLink>a").addClass("active show");
-                });
-                
                 $("#addChoice").click(function() {
                     $("#addChoiceAlert").show();
                 });
@@ -1544,7 +1786,7 @@
              });
                 
                 $("#cancelSubmitText").click(function() {
-            		$("#addTextAlert").hide();	
+            	    $("#addTextAlert").hide();	
             	});
 
                 $("#cancelSpaceText").click(function() {
@@ -1578,14 +1820,9 @@
 					$("#confirmDeleteChoiceBlockAlert").find('input').remove();
 					$("#confirmDeleteSpaceAlert").hide();
             	});
-	            
+            	
             	$("#cancelDeleteImage").click(function() {
             		$("#confirmDeleteImageAlert").hide();
-            	});
-            	
-            	$("#cancelDeleteVideo").click(function() {
-            		$("#confirmDeleteVideoAlert").find('input').remove();
-            		$("#confirmDeleteVideoAlert").hide();	
             	});
             	
          	$("#cancelSubmitBiblio").click(function() {
@@ -2121,8 +2358,8 @@
                 });
                 
                 $("#file").click(function() {
-                    $("#selectedImage").empty();
-                    $('#imageId').prop('selectedIndex',0).trigger( "change" );
+                	$("#selectedImage").empty();
+                	$('#imageId').prop('selectedIndex',0).trigger( "change" );
                 });
                 
                 $("#submitText").on("click", function(e) {
@@ -2225,7 +2462,6 @@
                         });
                     }
                 });
-
                 $('input:checkbox').click(function() {
                     if ($(this).is(':checked')) {
                     	$('#submitChoices').prop("disabled", false);
@@ -2385,7 +2621,7 @@
  				    if ($("#videoFile").val() || $("#videoLink").val()) {
  						$("#saveVideo").prop('disabled', false);
  					}
- 				}); 
+ 				});
                 
  				function updateTextBox(blockId, text) {
  				    // clear text box and buttons
@@ -2412,6 +2648,21 @@
  				    // remove id from storage so its not there on refresh
  				    $(".open").removeClass("open");
  				}
+                
+                function updateSpaceBox(blockId, text) {
+                    // clear text box and buttons
+                    $(".open").empty();
+                    $(".open").append('<label>Title: </label><p class="col-md-10">'+text+'</p><input type="hidden" id="deleteSpaceId" value="'+blockId+'" /><a class="btn deleteSpace col-md-1" href="javascript:;" style="position: absolute; right:0;"><span class="icon-trash error"></span></a>');
+                    // reset border of the card
+                    //rebind event handlers
+                    $('.SpaceDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(onDoubleClick);
+                    //resetting the height and overflow-y so that the TextBlock doesn't expand
+                    $('.SpaceDivStaff').css('height', 'auto');
+                    $('.SpaceDivStaff').css('overflow-y', 'visible');
+                    $(".open").css('display', 'flex');
+                    // remove id from storage so its not there on refresh
+                    $(".open").removeClass("open");
+                }
                 
                 // must add the event to the document since the buttons are added dynamically
 				$('#cancelTextBlock').on('click', function() {
@@ -2712,7 +2963,7 @@
                     		}
                     }
                 });
-             });   
+             });
              
                 $("#submitBiblioBlock").on("click", function(e) {
                     e.preventDefault();
