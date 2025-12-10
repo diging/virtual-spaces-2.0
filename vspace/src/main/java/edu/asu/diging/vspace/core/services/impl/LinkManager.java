@@ -27,7 +27,7 @@ public abstract class LinkManager<L extends ILink<T>, T extends IVSpaceElement, 
 
     @Autowired
     private ISpaceManager spaceManager;
-
+  
     @Autowired
     private IImageFactory imageFactory;
 
@@ -51,7 +51,7 @@ public abstract class LinkManager<L extends ILink<T>, T extends IVSpaceElement, 
         return updateLinkAndDisplay(link, displayLink);
 
     }
-
+    
     @Override
     public U updateLink(String title, String id, float positionX, float positionY, int rotation, String linkedId,
             String linkLabel, String linkId, String linkDisplayId, DisplayType displayType, byte[] linkImage,
@@ -90,7 +90,7 @@ public abstract class LinkManager<L extends ILink<T>, T extends IVSpaceElement, 
     protected abstract L getLink(String linkId);
 
     protected abstract L createLinkObject(String title, String id);
-
+   
     protected abstract T getTarget(String linkedId);
 
     protected abstract U createDisplayLink(L link);
@@ -101,7 +101,7 @@ public abstract class LinkManager<L extends ILink<T>, T extends IVSpaceElement, 
             throw new SpaceDoesNotExistException();
         }
     }
-
+    
     protected void setDisplayProperties(ILinkDisplay linkDisplay, String id, float positionX, float positionY,
             int rotation, DisplayType displayType, byte[] linkImage, String imageFilename)
             throws ImageCouldNotBeStoredException {
