@@ -157,7 +157,7 @@ public class ExhibitionConfigurationController {
         exhibition.setTitle(title);
         exhibition.setMode(exhibitMode);
         try {
-            exhibitionManager.updateExhibitionLanguages((Exhibition) exhibition,languages,defaultLanguage);
+            exhibitionManager.updateExhibitionLanguages(exhibition, languages, defaultLanguage);
             
         } catch (ExhibitionLanguageDeletionException e) {
             attributes.addAttribute("alertType", "failure");

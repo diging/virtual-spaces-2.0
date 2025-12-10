@@ -47,13 +47,15 @@ public class LanguageService implements ILanguageService {
             IExhibitionLanguage defaultLang = exhibitionManager.getDefaultLanguage(exhibition);
             if (defaultLang != null) {
                 for (ILocalizedText localizedText : localizedTexts) {
-                    if (localizedText.getExhibitionLanguage() != null && 
+                    if (localizedText.getExhibitionLanguage() != null &&
                         defaultLang.getCode().equals(localizedText.getExhibitionLanguage().getCode())) {
                         return localizedText.getText() != null ? localizedText.getText() : "";
                     }
                 }
             }
         }
+
+        return ""; // fallback if no matching localized text found
     }
     
     @Override

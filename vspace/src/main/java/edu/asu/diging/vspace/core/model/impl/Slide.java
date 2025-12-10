@@ -236,7 +236,7 @@ public class Slide extends VSpaceElement implements ISlide {
         if (slideNames == null || slideNames.isEmpty()) {
             return getName() != null ? getName() : "";
         }
-     vspace/src/main/java/edu/asu/diging/vspace/core/services/impl/ModuleOverviewManager.java
+
         if (languageCode != null && !languageCode.trim().isEmpty()) {
             for (ILocalizedText localizedText : slideNames) {
                 if (localizedText.getExhibitionLanguage() != null && 
