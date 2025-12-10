@@ -5,23 +5,22 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-
+import javax.persistence.JoinColumn;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.ISlideExternalLink;
 import edu.asu.diging.vspace.core.model.IImageBlock;
+import edu.asu.diging.vspace.core.model.ILocalizedText;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
@@ -46,6 +45,34 @@ public class Slide extends VSpaceElement implements ISlide {
     @JsonIgnore
     @ManyToMany(mappedBy = "slides", targetEntity = Sequence.class)
     private List<ISequence> sequence;
+    
+    @OneToMany(targetEntity = LocalizedText.class, cascade={CascadeType.ALL})
+    @JoinTable(name="Slide_LangObj_names",  
+        joinColumns = @JoinColumn(name = "Slide_Id", referencedColumnName="id"),
+        inverseJoinColumns = @JoinColumn(name = "LocalizedText_Id", referencedColumnName="id"))
+    private List<ILocalizedText> slideNames = new ArrayList<ILocalizedText>();
+
+    @OneToMany(targetEntity = LocalizedText.class, cascade={CascadeType.ALL})
+    @JoinTable(name="Slide_LangObj_descriptions",
+        joinColumns = @JoinColumn(name = "Slide_Id", referencedColumnName="id"),
+        inverseJoinColumns = @JoinColumn(name = "LocalizedText_Id", referencedColumnName="id"))
+    private List<ILocalizedText> slideDescriptions = new ArrayList<ILocalizedText>();
+    
+    public List<ILocalizedText> getSlideNames() {
+        return slideNames;
+    }
+
+    public void setSlideNames(List<ILocalizedText> slideNames) {
+        this.slideNames = slideNames;
+    }
+
+    public List<ILocalizedText> getSlideDescriptions() {
+        return slideDescriptions;
+    }
+
+    public void setSlideDescriptions(List<ILocalizedText> slideDescriptions) {
+        this.slideDescriptions = slideDescriptions;
+    }
 
     @JsonIgnore
     @OneToMany(mappedBy = "slide", targetEntity = SlideExternalLink.class, cascade = CascadeType.ALL)
@@ -202,5 +229,69 @@ public class Slide extends VSpaceElement implements ISlide {
             }
         }
         return null;
+    }
+    
+    @Override
+    public String getLocalizedName(String languageCode, String defaultLanguageCode) {
+        if (slideNames == null || slideNames.isEmpty()) {
+            return getName() != null ? getName() : "";
+        }
+
+        if (languageCode != null && !languageCode.trim().isEmpty()) {
+            for (ILocalizedText localizedText : slideNames) {
+                if (localizedText.getExhibitionLanguage() != null && 
+                    languageCode.equals(localizedText.getExhibitionLanguage().getCode())) {
+                    return localizedText.getText() != null ? localizedText.getText() : "";
+                }
+            }
+        }
+        
+        if (defaultLanguageCode != null && !defaultLanguageCode.trim().isEmpty() && !defaultLanguageCode.equals(languageCode)) {
+            for (ILocalizedText localizedText : slideNames) {
+                if (localizedText.getExhibitionLanguage() != null && 
+                    defaultLanguageCode.equals(localizedText.getExhibitionLanguage().getCode())) {
+                    return localizedText.getText() != null ? localizedText.getText() : "";
+                }
+            }
+        }
+
+        
+        return getName() != null ? getName() : "";
+    }
+    
+    @Override
+    public String getLocalizedDescription(String languageCode, String defaultLanguageCode) {
+        if (slideDescriptions == null || slideDescriptions.isEmpty()) {
+            return getDescription() != null ? getDescription() : "";
+        }
+        
+        // First, try to find text in the requested language
+        if (languageCode != null && !languageCode.trim().isEmpty()) {
+            for (ILocalizedText localizedText : slideDescriptions) {
+                if (localizedText.getExhibitionLanguage() != null && 
+                    languageCode.equals(localizedText.getExhibitionLanguage().getCode())) {
+                    return localizedText.getText() != null ? localizedText.getText() : "";
+                }
+            }
+        }
+        
+        // If not found, try default language
+        if (defaultLanguageCode != null && !defaultLanguageCode.trim().isEmpty() && !defaultLanguageCode.equals(languageCode)) {
+            for (ILocalizedText localizedText : slideDescriptions) {
+                if (localizedText.getExhibitionLanguage() != null && 
+                    defaultLanguageCode.equals(localizedText.getExhibitionLanguage().getCode())) {
+                    return localizedText.getText() != null ? localizedText.getText() : "";
+                }
+            }
+        }
+        
+        // Last resort: return the first available text or the base description
+        for (ILocalizedText localizedText : slideDescriptions) {
+            if (localizedText.getText() != null && !localizedText.getText().trim().isEmpty()) {
+                return localizedText.getText();
+            }
+        }
+        
+        return getDescription() != null ? getDescription() : "";
     }
 }

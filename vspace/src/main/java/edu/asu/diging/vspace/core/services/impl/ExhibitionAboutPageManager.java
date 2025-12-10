@@ -1,19 +1,29 @@
 package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.ArrayList;
+
 import java.util.List;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.util.StringUtils;
 
 import edu.asu.diging.vspace.core.data.ExhibitionAboutPageRepository;
+import edu.asu.diging.vspace.core.data.ExhibitionLanguageRepository;
+import edu.asu.diging.vspace.core.data.LocalizedTextRepository;
+import edu.asu.diging.vspace.core.data.ExhibitionAboutPageRepository;
 import edu.asu.diging.vspace.core.model.IExhibition;
+import edu.asu.diging.vspace.core.model.ILocalizedText;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionAboutPage;
+import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
+import edu.asu.diging.vspace.core.model.impl.LocalizedText;
 import edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
+import edu.asu.diging.vspace.web.staff.forms.AboutPageForm;
+import edu.asu.diging.vspace.web.staff.forms.LocalizedTextForm;
 /**
  * 
  * @author Avirup Biswas
@@ -28,6 +38,12 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
     
     @Autowired
     private IExhibitionManager exhibitionManager;
+    
+    @Autowired
+    private ExhibitionLanguageRepository exhibitionLanguageRepository;
+    
+    @Autowired
+    private LocalizedTextRepository localizedTextRepo;
     
     /* (non-Javadoc)
      * @see edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager#findAll()
@@ -44,12 +60,27 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
      * @see edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager#store()
      */
     @Override
-    public ExhibitionAboutPage store(ExhibitionAboutPage exhibitionAboutPage) {
+    public ExhibitionAboutPage store(AboutPageForm aboutPageForm) {
         IExhibition exhibition = exhibitionManager.getStartExhibition();
         if(!exhibition.isAboutPageConfigured()) {
             exhibition.setAboutPageConfigured(true);
             exhibitionManager.storeExhibition((Exhibition)exhibition);
         }
+
+        ExhibitionAboutPage exhibitionAboutPage = getExhibitionAboutPage();       
+        exhibitionAboutPage.setTitle(aboutPageForm.getDefaultTitle().getText());
+        exhibitionAboutPage.setAboutPageText(aboutPageForm.getDefaultAboutPageText().getText());        
+        
+        setLocalizedText(aboutPageForm.getDefaultTitle(), exhibitionAboutPage.getExhibitionTitles());
+        setLocalizedText(aboutPageForm.getDefaultAboutPageText(), exhibitionAboutPage.getExhibitionTextDescriptions());
+        
+        for(LocalizedTextForm title:aboutPageForm.getTitles()) {        
+            setLocalizedText(title, exhibitionAboutPage.getExhibitionTitles());
+        }
+        for(LocalizedTextForm aboutPageText:aboutPageForm.getAboutPageTexts()) {
+            setLocalizedText(aboutPageText, exhibitionAboutPage.getExhibitionTextDescriptions());
+        }
+        
         return repo.save(exhibitionAboutPage);
     }
     
@@ -64,5 +95,26 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
         List<ExhibitionAboutPage> aboutPageList = findAll();
         return aboutPageList != null && !aboutPageList.isEmpty() ? aboutPageList.get(0):new ExhibitionAboutPage();
     }
-    
+
+    private void setLocalizedText(LocalizedTextForm textForm, List<ILocalizedText> localizedTextList) {
+        if (textForm!=null) {
+            LocalizedText localizedText = localizedTextRepo.findById(textForm.getLocalizedTextId()).orElse(null);
+            
+            if(StringUtils.isEmpty(textForm.getText())){
+                //then delete the localized text if it has no text
+                if(localizedText!=null) {
+                    localizedTextRepo.delete(localizedText);
+                    localizedTextList.remove(localizedText);
+                }                
+                return;
+            }
+            if (localizedText != null) {
+                localizedText.setText(textForm.getText());
+            } else {
+                ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findById(textForm.getExhibitionLanguageId()).orElse(null);
+                localizedText = new LocalizedText(exhibitionLanguage, textForm.getText());
+                localizedTextList.add(localizedText);
+            }
+        }
+    }
 }

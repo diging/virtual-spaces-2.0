@@ -24,6 +24,11 @@ import edu.asu.diging.vspace.core.services.ISpaceDisplayManager;
 import edu.asu.diging.vspace.core.services.ISpaceLinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.ISpaceTextBlockManager;
+import edu.asu.diging.vspace.core.services.ILanguageService;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class ExhibitionSpaceController {
@@ -54,9 +59,14 @@ public class ExhibitionSpaceController {
     
     @Autowired
     private ISpaceTextBlockManager spaceTextBlockManager;
+    
+    @Autowired
+    private ILanguageService languageService;
 
     @RequestMapping(value = { "/exhibit/space/{id}", "/preview/{"+ExhibitionConstants.PREVIEW_ID+"}/space/{id}" })
-    public String space(@PathVariable("id") String id, Model model) {
+    public String space(@PathVariable("id") String id, 
+                       @RequestParam(value = "lang", required = false) String languageCode,
+                       HttpServletRequest request, Model model) {
         ISpace space = spaceManager.getSpace(id);
         List<ISpaceLinkDisplay> spaceLinks;
         Boolean isSpacePublished = true;
@@ -73,7 +83,31 @@ public class ExhibitionSpaceController {
         model.addAttribute("isSpacePublished", isSpacePublished);
         IExhibition exhibition = exhibitManager.getStartExhibition();
         model.addAttribute("exhibitionConfig", exhibition);
+        
+        // Handle language selection
+        HttpSession session = request.getSession();
+        if (languageCode != null) {
+            session.setAttribute("selectedLanguage", languageCode);
+        } else {
+            languageCode = (String) session.getAttribute("selectedLanguage");
+            if (languageCode == null) {
+                languageCode = languageService.getDefaultLanguageCode();
+            }
+        }
+
+        String localizedSpaceName = languageService.getLocalizedText(space.getSpaceNames(), languageCode, languageService.getDefaultLanguageCode());
+        String localizedSpaceDescription = languageService.getLocalizedText(space.getSpaceDescriptions(), languageCode, languageService.getDefaultLanguageCode());
+        
+        if (!localizedSpaceName.isEmpty()) {
+            space.setName(localizedSpaceName);
+        }
+        if (!localizedSpaceDescription.isEmpty()) {
+            space.setDescription(localizedSpaceDescription);
+        }
+        
         model.addAttribute("space", space);
+        model.addAttribute("selectedLanguage", languageCode);
+        model.addAttribute("availableLanguages", languageService.getAvailableLanguages());
         model.addAttribute("moduleList", moduleLinkManager.getLinkDisplays(id));
         model.addAttribute("spaceTextBlocks", spaceTextBlockManager.getSpaceTextBlockDisplays(id));
         if (space.isShowUnpublishedLinks()) {

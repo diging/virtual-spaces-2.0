@@ -9,6 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import java.util.Arrays;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +25,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import edu.asu.diging.vspace.config.ExhibitionLanguageConfig;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
+import edu.asu.diging.vspace.core.exception.ExhibitionLanguageDeletionException;
 import edu.asu.diging.vspace.core.factory.impl.ExhibitionFactory;
 import edu.asu.diging.vspace.core.model.ExhibitionModes;
 import edu.asu.diging.vspace.core.model.IExhibition;
@@ -49,6 +53,8 @@ public class ExhibitionConfigurationController {
 
     @Autowired
     private ExhibitionLanguageConfig exhibitionLanguageConfig;
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     public static final String EXH_PREVIEW = "EXH_PREVIEW_";
 
@@ -111,31 +117,35 @@ public class ExhibitionConfigurationController {
      * @param spaceParam
      * @param attributes
      * @return
-     */    
+     * @throws IOException
+     */
     @RequestMapping(value = "/staff/exhibit/config", method = RequestMethod.POST)
     public RedirectView createOrUpdateExhibition(HttpServletRequest request,
             @RequestParam(required = false, name = "exhibitionParam") String exhibitID,
             @RequestParam(required = false, name = "spaceParam") String spaceID,
             @Valid @ModelAttribute("exhibitionConfigurationForm") ExhibitionConfigurationForm exhibitionConfigForm,
-            BindingResult result,           
+            BindingResult result,
             RedirectAttributes attributes) throws IOException {
-        if(result.hasErrors()) {
+        if (result.hasErrors()) {
             attributes.addAttribute("showAlert", true);
             attributes.addAttribute("alertType", "danger");
             attributes.addAttribute("message", result.getFieldError().getDefaultMessage());
             return new RedirectView(request.getContextPath() + "/staff/exhibit/config");
         }
-        
+
         if (spaceID == null || spaceID.trim().isEmpty()) {
             attributes.addAttribute("showAlert", true);
             attributes.addAttribute("alertType", "danger");
             attributes.addAttribute("message", "Please select a start space for the exhibition.");
             return new RedirectView(request.getContextPath() + "/staff/exhibit/config");
         }
+
+        String title = exhibitionConfigForm.getTitle();
         ExhibitionModes exhibitMode = exhibitionConfigForm.getExhibitionMode();
         List<String> languages = exhibitionConfigForm.getExhibitLanguage();
         String defaultLanguage = exhibitionConfigForm.getDefaultExhibitLanguage();
         String customMessage = exhibitionConfigForm.getCustomMessage();
+
         IExhibition exhibition;
 
         if (exhibitID == null || exhibitID.isEmpty()) {
@@ -144,12 +154,20 @@ public class ExhibitionConfigurationController {
             exhibition = exhibitionManager.getExhibitionById(exhibitID);
         }
         exhibition.setStartSpace(spaceManager.getSpace(spaceID));
-        exhibition.setTitle(exhibitionConfigForm.getTitle());
+        exhibition.setTitle(title);
         exhibition.setMode(exhibitMode);
-
-        exhibitionManager.updateExhibitionLanguages(exhibition, languages, defaultLanguage);
-
-        if (exhibitMode.equals(ExhibitionModes.OFFLINE) && !customMessage.equals(ExhibitionModes.OFFLINE.getValue())) {
+        try {
+            exhibitionManager.updateExhibitionLanguages(exhibition, languages, defaultLanguage);
+            
+        } catch (ExhibitionLanguageDeletionException e) {
+            attributes.addAttribute("alertType", "failure");
+            attributes.addAttribute("message", "Could not delete the Exhibition Language as it has localized data associated to it.");
+            attributes.addAttribute("showAlert", "true");
+            logger.info("Could not delete the Exhibition Language as it has localized data associated to it.",e);
+            return new RedirectView(request.getContextPath() + "/staff/exhibit/config");
+        }
+    
+        if(exhibitMode.equals(ExhibitionModes.OFFLINE) && !customMessage.equals(ExhibitionModes.OFFLINE.getValue())) {
 
             exhibition.setCustomMessage(customMessage);
         }

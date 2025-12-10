@@ -328,9 +328,9 @@ $(document).ready(function() {
             <div class="grid" id="grid" style="margin-top: 10px;">
                 <div th:each="slide: ${slides}" class="btn-group dropdown slide" th:id="${slide.id}">
                     <a th:href="@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}}" class="btn btn-light" style="width: 80%;">
-                        <span class="card-head" style="white-space: pre-wrap;">[[${slide.name}]]</span>
+                        <span class="card-head" style="white-space: pre-wrap;">[(${slide.getLocalizedName(selectedLanguage, defaultLanguageCode) != null && !slide.getLocalizedName(selectedLanguage, defaultLanguageCode).isEmpty() ? slide.getLocalizedName(selectedLanguage, defaultLanguageCode) : slide.name})]</span>
                         <span class="icon-branch" th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}" style="margin-left: 20px"></span><br> 
-                        <span class="card-text" style="white-space: pre-wrap; max-height: 70px; overflow-y: scroll;">[[${slide.description}]]</span>
+                        <span class="card-text" style="white-space: pre-wrap; max-height: 70px; overflow-y: scroll;">[(${slide.getLocalizedDescription(selectedLanguage, defaultLanguageCode) != null && !slide.getLocalizedDescription(selectedLanguage, defaultLanguageCode).isEmpty() ? slide.getLocalizedDescription(selectedLanguage, defaultLanguageCode) : slide.description})]</span>
                     </a>
                     <button type="button" class="btn btn-light dropdown-toggle-split checkSlideInSequence" data-toggle="modal" th:attr="data-target='#slide-modal'"
                         th:onclick="javascript:checkSlideInSequence([[${slide.id}]]);">

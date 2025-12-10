@@ -76,10 +76,10 @@ public class ExhibitionLanguageConfigTest {
     @Test
     public void test_getExhibitionLanguageList_success() {
         Map<String, String> map1 = new HashMap();
-        map1.put("key1", "value1");
-        
+        map1.put("key1", "value1");       
         Map<String, String> map2 = new HashMap();
         map2.put("key2", "value2");
+        
         List<Map> languageList = Arrays.asList(map1, map2);
 
         serviceToTest.setExhibitionLanguageList(languageList);
