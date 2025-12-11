@@ -31,14 +31,20 @@ public interface IExhibition extends IVSpaceElement {
     IVSImage getSpaceLinkDefaultImage();
 
     void setSpaceLinkDefaultImage(IVSImage spaceLinkDefaultImage);
+    
+    void deleteSpaceLinkDefaultImage();
 
     IVSImage getModuleLinkDefaultImage();
 
     void setModuleLinkDefaultImage(IVSImage moduleLinkDefaultImage);
+    
+    void deleteModuleLinkDefaultImage();
 
     IVSImage getExternalLinkDefaultImage();
 
     void setExternalLinkDefaultImage(IVSImage externalLinkDefaultImage);
+    
+    void deleteExternalLinkDefaultImage();
 
     List<IExhibitionLanguage> getLanguages();
     
@@ -51,5 +57,17 @@ public interface IExhibition extends IVSpaceElement {
     void setPreviewId(String previewId);
     
     void setCustomMessage(String customMessage);
+
+    void disableSpaceLinkDefaultImage();
+
+    void disableModuleLinkDefaultImage();
+
+    void disableExternalLinkDefaultImage();
+
+    boolean isSpaceLinkDefaultImageDisabled();
+
+    boolean isModuleLinkDefaultImageDisabled();
+
+    boolean isExternalLinkDefaultImageDisabled();
 
 }
