@@ -13,11 +13,14 @@ import edu.asu.diging.vspace.core.exception.ModuleNotFoundException;
 import edu.asu.diging.vspace.core.exception.SequenceNotFoundException;
 import edu.asu.diging.vspace.core.exception.SlidesInSequenceNotFoundException;
 import edu.asu.diging.vspace.core.exception.SpaceNotFoundException;
+import edu.asu.diging.vspace.core.model.IExhibition;
+import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
+import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISequenceManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
@@ -36,6 +39,9 @@ public class ExhibitionSequencesController {
 
     @Autowired
     private SequenceHistory sequenceHistory;
+    
+    @Autowired
+    private IExhibitionManager exhibitionManager;
 
     @RequestMapping(value = { 
         "/exhibit/{spaceId}/module/{moduleId}/sequence/{sequenceId}",
@@ -73,15 +79,20 @@ public class ExhibitionSequencesController {
         if (sequenceHistory.hasHistory() && (clearHistory != null && clearHistory == true)) {
             sequenceHistory.flushFromHistory();
         }
+        
+        IExhibition exhibition = exhibitionManager.getStartExhibition();
+        IExhibitionLanguage defaultLanguage = exhibitionManager.getDefaultLanguage(exhibition);
+        String languageCode = defaultLanguage != null ? defaultLanguage.getCode() : "en";
+        
         if (previewId != null) {
             return String.format(
-                    "redirect:/preview/{previewId}/{spaceId}/module/{moduleId}/sequence/{sequenceId}/slide/%s?branchingPoint=%s&previousSequenceId=%s",
-                    firstSlideId,(branchingPointId != null ? branchingPointId : ""),
+                    "redirect:/preview/{previewId}/{spaceId}/module/{moduleId}/sequence/{sequenceId}/slide/%s/%s?branchingPoint=%s&previousSequenceId=%s",
+                    firstSlideId, languageCode, (branchingPointId != null ? branchingPointId : ""),
                     (previousSequenceId != null ? previousSequenceId : ""));
         }
         return String.format(
-                "redirect:/exhibit/{spaceId}/module/{moduleId}/sequence/{sequenceId}/slide/%s?branchingPoint=%s&previousSequenceId=%s",
-                firstSlideId, (branchingPointId != null ? branchingPointId : ""),
+                "redirect:/exhibit/{spaceId}/module/{moduleId}/sequence/{sequenceId}/slide/%s/%s?branchingPoint=%s&previousSequenceId=%s",
+                firstSlideId, languageCode, (branchingPointId != null ? branchingPointId : ""),
                 (previousSequenceId != null ? previousSequenceId : ""));
 
     }

@@ -1,11 +1,11 @@
 package edu.asu.diging.vspace.core.factory.impl;
 
 import java.util.ArrayList;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import edu.asu.diging.vspace.core.factory.IChoiceFactory;
 import edu.asu.diging.vspace.core.factory.ISlideFactory;
 import edu.asu.diging.vspace.core.model.IBranchingPoint;
@@ -40,11 +40,12 @@ public class SlideFactory implements ISlideFactory {
             slide = new BranchingPoint();            
             List<IChoice> choices = choiceFactory.createChoices(form.getChoices());
             ((IBranchingPoint) slide).setChoices(choices);
-        }        
+        }
         slide.setName(form.getName());
         slide.setDescription(form.getDescription());
         slide.setModule(module);
         slide.setContents(new ArrayList<IContentBlock>());
         return slide;        
-    }   
+    }
+    
 }

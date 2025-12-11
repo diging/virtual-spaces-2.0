@@ -16,6 +16,14 @@ public interface ISlide extends IVSpaceElement {
     
     ITextBlock getFirstMatchedTextBlock(String searchTerm);
     
+    List<ILocalizedText> getSlideNames();
+
+    void setSlideNames(List<ILocalizedText> slideNames);
+
+    void setSlideDescriptions(List<ILocalizedText> slideDescriptions);
+
+    List<ILocalizedText> getSlideDescriptions();
+
     List<ISlideExternalLink> getExternalLinks();
 
     void setExternalLinks(List<ISlideExternalLink> externalLinks);
