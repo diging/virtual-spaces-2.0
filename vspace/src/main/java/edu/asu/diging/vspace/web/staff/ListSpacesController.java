@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.model.ExhibitionSpaceOrderMode;
 import edu.asu.diging.vspace.core.model.IExhibition;
+import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 

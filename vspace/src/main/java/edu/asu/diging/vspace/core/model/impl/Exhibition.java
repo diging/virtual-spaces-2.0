@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -68,7 +69,16 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     @OneToOne(targetEntity = VSImage.class)
     @NotFound(action = NotFoundAction.IGNORE)
     private IVSImage externalLinkDefaultImage;
-    
+
+    @Column(name = "space_link_default_image_disabled", nullable = false)
+    private boolean spaceLinkDefaultImageDisabled = false;
+
+    @Column(name = "module_link_default_image_disabled", nullable = false)
+    private boolean moduleLinkDefaultImageDisabled = false;
+
+    @Column(name = "external_link_default_image_disabled", nullable = false)
+    private boolean externalLinkDefaultImageDisabled = false;
+
     private boolean aboutPageConfigured;
     
     @OneToMany(targetEntity = ExhibitionLanguage.class, mappedBy = "exhibition", cascade = CascadeType.ALL, orphanRemoval=true)
@@ -148,26 +158,77 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     public IVSImage getSpaceLinkDefaultImage() {
         return spaceLinkDefaultImage;
     }
+    
     @Override
     public void setSpaceLinkDefaultImage(IVSImage spaceLinkDefaultImage) {
         this.spaceLinkDefaultImage = spaceLinkDefaultImage;
     }
+    
+    @Override
+    public void deleteSpaceLinkDefaultImage() {
+        this.spaceLinkDefaultImage = null;
+    }
+    
+    @Override
+    public void disableSpaceLinkDefaultImage() {
+        this.spaceLinkDefaultImageDisabled = !this.spaceLinkDefaultImageDisabled;
+    }
+    
     @Override
     public IVSImage getModuleLinkDefaultImage() {
         return moduleLinkDefaultImage;
     }
+    
     @Override
     public void setModuleLinkDefaultImage(IVSImage moduleLinkDefaultImage) {
         this.moduleLinkDefaultImage = moduleLinkDefaultImage;
     }
+    
+    @Override
+    public void deleteModuleLinkDefaultImage() {
+        this.moduleLinkDefaultImage = null;
+    }
+    
+    @Override
+    public void disableModuleLinkDefaultImage() {
+        this.moduleLinkDefaultImageDisabled = !this.moduleLinkDefaultImageDisabled;
+    }
+    
     @Override
     public IVSImage getExternalLinkDefaultImage() {
         return externalLinkDefaultImage;
     }
+    
     @Override
     public void setExternalLinkDefaultImage(IVSImage externalLinkDefaultImage) {
         this.externalLinkDefaultImage = externalLinkDefaultImage;
     }
+    
+    @Override
+    public void deleteExternalLinkDefaultImage() {
+        this.externalLinkDefaultImage = null;
+    }
+    
+    @Override
+    public void disableExternalLinkDefaultImage() {
+        this.externalLinkDefaultImageDisabled = !this.externalLinkDefaultImageDisabled;
+    }
+
+    @Override
+    public boolean isSpaceLinkDefaultImageDisabled() {
+        return spaceLinkDefaultImageDisabled;
+    }
+
+    @Override
+    public boolean isModuleLinkDefaultImageDisabled() {
+        return moduleLinkDefaultImageDisabled;
+    }
+
+    @Override
+    public boolean isExternalLinkDefaultImageDisabled() {
+        return externalLinkDefaultImageDisabled;
+    }
+
     @Override
     public ExhibitionSpaceOrderMode getSpaceOrderMode() {
         return spaceOrderMode;
@@ -192,6 +253,7 @@ public class Exhibition extends VSpaceElement implements IExhibition {
     public boolean isAboutPageConfigured() {
         return aboutPageConfigured;
     }
+    
     @Override
     public void setAboutPageConfigured(boolean aboutPageConfigured) {
         this.aboutPageConfigured = aboutPageConfigured;
