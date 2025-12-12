@@ -427,7 +427,7 @@ a.nav-link.active.show {
 								class="textDivStaff tab  btn btn-light" style="width: 100%">
 								<span class="card-title"
 								style="white-space: pre-wrap; line-break: anywhere;"><img  class="searchImg"
-								th:src="@{'/api/image/'+${contents?.image?.id}}" alt="Space image" /><span 
+								th:src="@{'/api/image/'+${contents?.image?.id}}" th:onerror="|this.onerror=null; this.src='@{/resources/images/cannot_load_image_placeholder.png}'|" alt="Space image" /><span 
 								style="color: var(--dark-grey)">Space:</span> [[${contents.name}]]<br><span 
                                 style="color: var(--dark-grey)">Description:</span> [[${contents.description}]]</span>
 							</a>
@@ -528,7 +528,7 @@ a.nav-link.active.show {
 								<div th:if="${not #lists.isEmpty(contents.contents)}">
 									<div th:if="${contents?.firstImageBlock !=null}">
 										<img
-											th:onerror="if (this.src != '@{/resources/images/placeholder.png}') this.src = '@{/resources/images/placeholder.png}'"
+											th:onerror="|this.onerror=null; this.src='@{/resources/images/cannot_load_image_placeholder.png}'|"
 											class="searchImg" th:src="@{'/api/image/'+${contents?.firstImageBlock?.image?.id}}"
 											alt="Slide image" />
 									</div>
@@ -579,7 +579,7 @@ a.nav-link.active.show {
 								<div th:if="${not #lists.isEmpty(contents.contents)}">
 									<div th:if="${contents?.firstImageBlock !=null}">
 										<img
-											th:onerror="if (this.src != '@{/resources/images/placeholder.png}') this.src = '@{/resources/images/placeholder.png}'"
+											th:onerror="|this.onerror=null; this.src='@{/resources/images/cannot_load_image_placeholder.png}'|"
 											class="searchImg" th:src="@{'/api/image/'+${contents?.firstImageBlock?.image?.id}}"
 											alt="Slide image" />
 									</div>
