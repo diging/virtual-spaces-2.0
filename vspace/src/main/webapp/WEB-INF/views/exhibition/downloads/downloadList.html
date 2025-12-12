@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layouts/main_staff}">
+<head>
+<script th:src="@{/resources/bootpag/js/bootpag.min.js}">
+</script>
+<script th:inline="javascript">
+    $(document).ready(function($) {
+    	$("#downloads").addClass("active");	
+    	$('.downloadPage-selection').bootpag({
+    	total: [[${downloadsTotalPages}]],
+    	page: [[${downloadsCurrentPageNumber}]],
+    	maxVisible: 10,
+    	leaps: true,
+    	firstLastUse: true,
+    	first: '|<',
+    	last: '>|',
+    	wrapClass: 'pagination',
+    	activeClass: 'active',
+    	disabledClass: 'disabled',
+    	nextClass: 'next',
+    	prevClass: 'prev',
+    	lastClass: 'last',
+    	firstClass: 'first'
+    }).on("page", function(event, num){
+    		window.location.assign("[(@{'/staff/snapshots/list'})]"+'?'+"downloadsPagenum="+num);
+    });
+})
+
+    function checkSnapshotCreationStatus(id){
+    	let snapshotId = id;
+    	$.ajax({
+            type : "GET",
+            url : "[(@{'/staff/snapshot/'})]"+id+'/status',
+            cache : false,
+            success : function(data) {
+                if(data.taskComplete ==  false) {
+                    pollForExhibitionDownload(data.exhibitionSnapshot.id, data.exhibitionSnapshot.folderName);
+                }
+                else{
+                    var folderName = data.exhibitionSnapshot.folderName;
+                    var alert = $('<div class="alert alert-success alert-dismissible fade show" role="alert"><p>Snapshot '+folderName+' is ready. Please click to download. <a href=[[@{/staff/snapshot/'+id+'?folderName='+folderName+'}]] > <span class="btn primary-btn btn-sm">Download</span></a> </p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    $('.successAlert').empty();
+                    $('.successAlert').append(alert);
+                }
+            },
+            error : function(data) {
+                var loader = document.getElementById('downloadLoader');
+                loader.style.visibility="hidden";
+                
+                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>Snapshot could not be created</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                $('.errorAdd').append(alert);
+                
+                var errorAlert = document.getElementById('downloadError');
+                errorAlert.style.visibility="visible";
+            }
+        });
+    }
+    
+    function triggerExhibitionSnapshotCreation(){ 
+        // Show immediate feedback
+        var button = $('.download');
+        var originalText = button.text();
+        button.prop('disabled', true).text('Creating Snapshot...');
+        
+        // Show info alert immediately
+        var infoAlert = $('<div class="alert alert-info alert-dismissible fade show" role="alert"><p><span class="icon-spinner"></span> Snapshot creation has started. Please wait...</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+        $('.successAlert').empty().append(infoAlert);
+        
+        $.ajax({
+            type : "POST",
+            url : "[(@{'/staff/snapshot/create?'+ ${_csrf.parameterName}+'='+${_csrf.token} })] ",
+            cache : false,
+            
+            contentType : false,
+            processData : false,
+            
+            success : function(data) {
+            	// Re-enable button
+            	button.prop('disabled', false).text(originalText);
+            	pollForExhibitionDownload(data.id, data.folderName); 		
+            },
+            error : function(data) {
+            	// Re-enable button
+            	button.prop('disabled', false).text(originalText);
+            	
+            	// Clear any existing alerts
+            	$('.successAlert').empty();
+            	
+            	var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>Snapshot could not be created</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+            	$('.errorAdd').append(alert);
+            	
+            	var errorAlert = document.getElementById('downloadError');
+            	errorAlert.style.visibility="visible";
+            }
+        });
+    }
+
+    function pollForExhibitionDownload(id, folderName) {
+    	var alert = $('<div class="alert alert-info alert-dismissible fade show" role="alert"><p>Snapshot '+folderName+' creation is in progress. Please wait. </p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+    	$('.successAlert').append(alert);
+    	const poll = (id, folderName) => {
+            interval = 3000; // polling interval in milliseconds
+            const executePoll = async (resolve, reject) => {
+                const url = "[(@{'/staff/snapshot/'})]"+id+"/status?folderName="+folderName;
+                try {
+                    const result = await fetch(url).then((response)=> response.json());
+                    var text = await result;
+                    if (text.taskComplete == true) {
+                        var alert = $('<div class="alert alert-success alert-dismissible fade show" role="alert"><p>Snapshot '+folderName+' is ready. Please click to download. <a href=[[@{/staff/snapshot/'+id+'?folderName='+folderName+'}]] > <span class="btn primary-btn btn-sm">Download</span></a> </p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        $('.successAlert').empty();
+                        $('.successAlert').append(alert);
+                        return resolve(result);
+                    } else {
+                        setTimeout( executePoll, interval, resolve, reject  );
+                    }
+                } catch (error) {
+                    var num = '[[${downloadsCurrentPageNumber}]]';
+                    var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>Error checking snapshot status. Please <a href=[[@{/staff/snapshots/list?downloadsPagenum='+num+'}]]> <span class="btn primary-btn btn-sm">Refresh</span></a> to try again.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                    $('.errorAdd').append(alert);
+
+                    var errorAlert = document.getElementById('downloadError');
+                    errorAlert.style.visibility="visible";
+
+                    return reject(error);
+                }
+            };
+            return new Promise(executePoll);
+         };
+         poll(id, folderName)
+         .then(value => value)
+         .catch(err => console.error(err))  
+    }
+
+</script>
+<style>
+.pagination>li>a {
+    border: 1px solid #A55941;
+    padding: 5px;
+    color: #A55941;
+    font-size: 15px;
+}
+
+.pagination>li.active>a {
+    background: #A55941;
+    color: #fff;
+    font-size: 15px;
+}
+
+a.nav-link.active.show {
+    border-color: transparent;
+    border-bottom: 4px solid var(--primary);
+    color: var(--primary) !important;
+    background: transparent;
+    font-weight: 600;
+}
+
+.img-thumbnail {
+    height: 100px;
+    width: 140px;
+}
+.loader {
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid blue;
+  border-bottom: 16px solid blue;
+  width: 12px;
+  height: 12px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+
+
+}
+#downloadInProgress {
+    visibility: hidden;
+}
+
+#downloadReady {
+    visibility: hidden;
+}
+#infoSection {
+    display: none;
+}
+
+
+@-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+</style>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<div layout:fragment="content" class="main-content">
+	<span class = "errorAdd" id="downloadError"></span>
+	<span class = "successAlert" id="downloadSuccess"></span>
+	
+ 	<button class="download btn primary-btn" onClick="triggerExhibitionSnapshotCreation()">Create Snapshot</button>	
+ 	
+ 	 <h2>Downloads</h2>
+ 	 
+ 	 <div class="downloadPage-selection"></div>
+	 <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col" sort-prop="filename"><a href="#">Creation date</a></th>
+                    <th scope="col" sort-prop="name"><a href="#">Created by</a></th>
+                    <th scope="col" >View</th>
+                </tr>
+            </thead>
+            <tbody class="tableBody" id="downloads">
+                <tr th:each="exhibitionSnapshot:  ${downloadsList}">
+                    <th scope="row">[[${exhibitionSnapshot.creationDate}]]</th>	            
+                    <td>[[${exhibitionSnapshot.createdBy}]]</td>
+                    <td>
+                        <span th:if="${!exhibitionSnapshot.getSnapshotTask().isTaskComplete()}"> 
+                            <a id="snapshotStatus" th:onclick=checkSnapshotCreationStatus([[${exhibitionSnapshot.getId()}]]);><span class="btn primary-btn btn-sm">Check Status</span></a>
+                        </span>
+                        <span th:if="${exhibitionSnapshot.getSnapshotTask().isTaskComplete()}"><a th:href="@{'/staff/snapshot/'+${exhibitionSnapshot.id}+'?folderName='+${exhibitionSnapshot.folderName}}" ><span class="btn primary-btn btn-sm">Download</span></a></span>
+                </tr>
+            </tbody>
+	 
+	</table>
+    <div class="downloadPage-selection"></div>
+
+</div>
+</body>
+</html>

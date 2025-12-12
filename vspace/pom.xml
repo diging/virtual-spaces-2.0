@@ -25,8 +25,11 @@
         <db.url>jdbc:mysql://localhost:3306/vspace?serverTimezone=UTC&amp;useEncoding=true</db.url>
         <db.user>vspace</db.user>
         <db.password>vspace</db.password>
-        <uploaded.files.path></uploaded.files.path>
-
+        <uploaded.files.path>./uploads</uploaded.files.path>
+        <downloaded.files.path>./downloads</downloaded.files.path>
+        <!-- for development: use absolute path to source resources folder.
+             for production: override via environment variable VSPACE_RESOURCES_PATH -->
+        <resources.path>${project.basedir}/src/main/webapp/resources</resources.path>
         <email.user></email.user>
         <email.password></email.password>
         <email.host></email.host>

@@ -1,0 +1,131 @@
+<html>
+   <head>
+    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+	<meta name="description" content="">
+	<meta name="author" content="">
+	
+	<link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+	
+	<title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">Virtual Spaces</title>
+	
+	<!-- Bootstrap core CSS -->
+	<link href="./../resources/bootstrap-4.1.2/css/bootstrap.min.css" type="text/css" rel="stylesheet">
+	
+	<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+	<link href="./../resources/bootstrap/assets/css/ie10-viewport-bug-workaround.css" type="text/css" rel="stylesheet">
+	
+	<!-- Custom styles for this template -->
+	<link href="./../resources/bootstrap/grid.css" type="text/css" rel="stylesheet">
+	<link href="./../resources/extra/Module_1.css" type="text/css" rel="stylesheet">
+	<link href="./../resources/extra/Module_1_slideshow_1.css" type="text/css" rel="stylesheet">
+	<link href="./../resources/extra/Home.css" type="text/css" rel="stylesheet">
+	<link href="./../resources/extra/Sequence.css" type="text/css" rel="stylesheet">
+	<link href="./../resources/extra/diging-icon-pack.css" type="text/css" rel="stylesheet">
+    
+    <style type="text/css">
+      
+.imgFullScreen:hover .tooltiptext {
+    visibility: visible;
+}
+
+.exitfullscreen:hover .tooltiptextForExitFullscreen {
+    visibility: visible;
+}
+
+.tooltiptextForExitFullscreen {
+    visibility: hidden;
+    width: 120px;
+    color: white;
+    text-align: center;
+    font-size: 12px;
+    padding: 3px 0;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1;
+    left: -138px;
+    top: -15px;
+    background: rgba(0, 0, 0, 0.6);
+}
+      
+      </style>
+      <script th:inline="javascript">
+         $( document ).ready(function() {
+            $("#blocks a").css('color','rgb(150, 45, 62)').css('font-weight','bold');
+            $(".nav-bar").css('position','fixed').css('width','100%').css('z-index','125');
+         });
+      </script>
+   </head>
+   <body>
+    <div layout:fragment="content">
+	<div th:fragment="navbar">
+			<nav class="nav-bar" style="height:48px">
+		      <a class="navbar-brand" title="Go to exhibition" href="../index.html"><img src="./../resources/maintenance/img/logo-11.png" alt="Virtual Spaces logo" width="100px">
+		      [[${exhibition?.title}]]</a>
+		      <div style="margin-left: auto;">
+		          <a th:href="${spaceId + '.html'}" class="btn outline btn-sm" style="margin-right: 10px;">Back to Space</a>
+		          <a href="../index.html" class="btn outline btn-sm">Exhibition Home</a>
+		      </div>
+		    </nav>
+	    </div>
+        <div th:if="${showAlert == true}"
+            class="alert alert-warning center col-md-12"
+            style="text-align: center;">[[${message}]] 
+                <button class="btn circle-btn" style="margin-left: 10px;">
+                    <span class="icon-double-chevron-left"></span> <span
+                        class="tooltiptext">Go To Space</span>
+                </button>
+            </a>
+        </div>
+        <div th:if="${showAlert != true}" id="Module_1" class="Module_1_Class">
+        <div th:if="${showAlert != true}" style="padding-top: 4%; padding-bottom: 1%; background-color: white; position: relative; z-index: 100; top: 5.5%; width: 100%; display: flex;">
+            <h3 class="textDiv">[[${module.name}]]</h3>
+            <p class="slideNumberClass">Slide [[${currentNumOfSlide}]]/[[${numOfSlides}]]</p>
+        </div>
+         <div class="Group_7_Class" >
+    
+         <div style="position: relative;top: 6.5%;">
+            <h3 style="text-align:center;">[[${currentSlideCon.name}]]</h3>
+            <div id="blocks" class="Group_8_Class" th:each="contents: ${currentSlideCon.contents}">
+                <img th:if="${contents['class'].simpleName ==  'ImageBlock'}" id="${contents.id}" class="imgDiv" th:src="${'./images/'+ contents.image.id + '/'+ contents.image.filename}" style="max-width:57%">
+                <div th:if="${contents['class'].simpleName ==  'TextBlock'}" id="${contents.id}" class="textDiv">[(${contents.htmlRenderedText()})]</div>
+                <div th:if="${contents['class'].simpleName == 'ChoiceBlock'}" id="${contents.id}" class="textDiv" style="margin: 1%;">
+                    <div th:if="${contents.showsAll eq true}" th:each="choice: ${choices}" class="list-group">
+                        <a class="list-group-item list-group-item-action" 
+                           th:href="${choice.sequence.slides != null && choice.sequence.slides.size() > 0 ? choice.sequence.slides[0].id + '.html' : '#'}">
+                            [[${choice.sequence.name}]]</a>
+                    </div>
+                    <div class="list-group" th:if="${contents.showsAll eq false}" th:each="choice: ${contents.choices}">
+                        <a class="list-group-item list-group-item-action"
+                           th:href="${choice.sequence.slides != null && choice.sequence.slides.size() > 0 ? choice.sequence.slides[0].id + '.html' : '#'}">
+                             [[${choice.sequence.name}]]</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Navigation buttons -->
+        <div style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 1000;">
+            <div class="btn-group" role="group">
+                <a th:if="${prevSlide != null && prevSlide != ''}" 
+                   th:href="${prevSlide + '.html'}" 
+                   class="btn primary-btn">
+                    <span class="icon-chevron-left"></span> Previous
+                </a>
+                <a th:href="${spaceId + '.html'}" 
+                   class="btn outline" style="margin: 0 10px;">
+                    Back to Space
+                </a>
+                <a th:if="${nextSlide != null && nextSlide != ''}" 
+                   th:href="${nextSlide + '.html'}" 
+                   class="btn primary-btn">
+                    Next <span class="icon-chevron-right"></span>
+                </a>
+            </div>
+        </div>
+      </div>
+      </div>
+    </body>
+</html>

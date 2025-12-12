@@ -1,0 +1,81 @@
+<html>
+<head>
+    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    
+    <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+    
+    <title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">Virtual Spaces</title>
+    
+    <!-- Bootstrap core CSS -->
+    <link href="./../resources/bootstrap-4.1.2/css/bootstrap.min.css" type="text/css" rel="stylesheet">
+    
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="./../resources/bootstrap/assets/css/ie10-viewport-bug-workaround.css" type="text/css" rel="stylesheet">
+    
+    <!-- Custom styles for this template -->
+    <link href="./../resources/bootstrap/grid.css" type="text/css" rel="stylesheet">
+    <link href="./../resources/extra/Module_1.css" type="text/css" rel="stylesheet">
+    <link href="./../resources/extra/Module_1_slideshow_1.css" type="text/css" rel="stylesheet">
+    <link href="./../resources/extra/Home.css" type="text/css" rel="stylesheet">
+    <link href="./../resources/extra/Sequence.css" type="text/css" rel="stylesheet">
+    <link href="./../resources/extra/diging-icon-pack.css" type="text/css" rel="stylesheet">
+    
+    <style type="text/css">
+      
+.imgFullScreen:hover .tooltiptext {
+    visibility: visible;
+}
+
+.exitfullscreen:hover .tooltiptextForExitFullscreen {
+    visibility: visible;
+}
+
+.tooltiptextForExitFullscreen {
+    visibility: hidden;
+    width: 120px;
+    color: white;
+    text-align: center;
+    font-size: 12px;
+    padding: 3px 0;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1;
+    left: -138px;
+    top: -15px;
+    background: rgba(0, 0, 0, 0.6);
+}
+      
+      </style>
+      <script th:inline="javascript">
+         $( document ).ready(function() {
+            $("#blocks a").css('color','rgb(150, 45, 62)').css('font-weight','bold');
+            $(".nav-bar").css('position','fixed').css('width','100%').css('z-index','125');
+         });
+      </script>
+   </head>
+<body>
+
+<script>
+    $(document).ready(function() {
+
+    });
+</script>
+<div layout:fragment="content">
+    <div class="container-fluid">
+    
+        <div style="text-align: center;">
+            <h1
+                style="color: rgba(0, 0, 0, .9); font-size: 24px; margin-top: 70px;">The
+                page you were looking for could not be found.</h1>
+            <img src="./../resources/images/404_Vspace-01.png"
+                style="max-width: 900px; width: 100%; text-align: center; object-fit: cover; height: auto; max-height: 800px; margin-top: 30px;" />
+        </div>
+    </div>
+</div>
+</body>
+</html>
