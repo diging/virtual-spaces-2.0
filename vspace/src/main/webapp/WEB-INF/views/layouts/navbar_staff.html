@@ -93,6 +93,9 @@
 					      	<em style="color: var(--dark-grey); font-size: 12px; margin-left: 10px">logged in as <span th:text="${#authentication.name}"></span></em>
 					    </div>
 		        	</li>
+		        	<li class="nav-item active" style="padding: 5px 15px;">
+						<a class="nav-link" title="Go to space overview map" th:href="@{/staff/overview}"><span class="icon-map secondary"></span></a>
+					</li>
 					<li class="nav-item active" style="padding: 5px 15px;">
 						<a class="nav-link" title="Go to exhibition" th:href="@{|/exhibit/space/${exhibition?.startSpace?.id}|}"><span class="icon-play-circle secondary"></span></a>
 					</li> 

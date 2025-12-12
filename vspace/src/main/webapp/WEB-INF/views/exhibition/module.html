@@ -25,7 +25,6 @@
 .text {
     font-size: 11px;
 }
-
 .imgFullScreen:hover .tooltiptext {
     visibility: visible;
 }
@@ -55,6 +54,14 @@ ul{
     top: -15px;
     background: rgba(0, 0, 0, 0.6);
 }
+
+.Group_8_Class {
+    display: block;
+}
+
+.slide_container {
+	display: grid;
+	align-items:center;
 
 .biblioDiv {
     border: 1px solid lightgray;
@@ -89,6 +96,15 @@ ul{
     margin-bottom: 8px;
 }
 
+.list-group-item-action {
+    color: var(--primary) !important;
+}
+
+.list-group-item-action:hover {
+    background-color: var(--primary) !important;
+    color: white !important;
+}
+
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
 <script th:inline="javascript">       
@@ -116,7 +132,7 @@ ul{
 		{
 			$(".exitfullscreen").remove();
 			$(".imgFullScreen").show();
-			$("#Module_1").css('overflow-y','hidden')
+			$("#Module_1").css('overflow-y','visible')
 			if (document.exitFullscreen) {
 			    document.exitFullscreen();
 			  } else if (document.webkitExitFullscreen) { /* Safari */
@@ -147,7 +163,7 @@ ul{
                 </button>
             </a>
         </div>
-        <div th:if="${showAlert != true}" id="Module_1" class="Module_1_Class">
+        <div th:if="${showAlert != true}" id="Module_1" class="Module_1_Class" style="min-height: 100vh; overflow-y: visible; padding-bottom: 100px;">
         <div th:if="${showAlert != true}" style="padding-top: 4%; padding-bottom: 1%; background-color: white; position: relative; z-index: 100; top: 5.5%; width: 100%; display: flex;">
             <h3 class="textDiv">[[${module.name}]]</h3>
             <p class="slideNumberClass">Slide [[${currentNumOfSlide}]]/[[${numOfSlides}]]</p>
@@ -162,7 +178,7 @@ ul{
                </div>
            </a>
             <a th:if="${!#strings.isEmpty(nextSlide)}" th:href= "${isExhPreview == null OR isExhPreview == false}?@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${currentSequenceId}+'/slide/'+${nextSlide}}:@{'/preview/'+${previewId}+'/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${currentSequenceId}+'/slide/'+${nextSlide}}">
-               <div class="slideshow_next slideshow_next_Class" style="position: fixed; z-index:110; right: 11%; top: 40.3%;">
+               <div class="slideshow_next slideshow_next_Class" style="position: fixed; z-index:110; right: 11%; top: 40.3%;"> 
                     <button class="btn circle-btn-slide-nav">
                          <span class="icon-chevron-right slide-nav"></span>
                          <span class="tooltiptext">Next slide</span>
@@ -211,8 +227,9 @@ ul{
 
          <div style="position: relative;top: 6.5%;">
             <h3 style="text-align:center;">[[${currentSlideCon.name}]]</h3>
+            <div class="slide_container">
             <div th:id="blocks" class="Group_8_Class" th:each="contents: ${currentSlideCon.contents}">
-                <img th:if="${contents['class'].simpleName ==  'ImageBlock'}" th:id="${contents.id}" class="imgDiv" th:src="@{'/api/image/'+${contents.image.id}}" th:onerror="|this.onerror=null; this.src='@{/resources/images/cannot_load_image_placeholder.png}'|" style="max-width:57%">
+                <img th:if="${contents['class'].simpleName ==  'ImageBlock'}" th:id="${contents.id}" class="imgDiv" th:src="@{'/api/image/'+${contents.image.id}}" th:onerror="|this.onerror=null; this.src='@{/resources/images/cannot_load_image_placeholder.png}'|" style="max-width:57%; max-height: 650px;">
                 <div th:if="${contents['class'].simpleName ==  'TextBlock'}" th:id="${contents.id}" class="textDiv">[(${contents.htmlRenderedText()})]</div>
                 <div th:if="${contents['class'].simpleName ==  'BiblioBlock'}" th:id="${contents.id}" class="biblioDiv">
                 	<h4>Title: [(${contents.getBiblioTitle()})]</h4>
@@ -549,13 +566,19 @@ ul{
                         function openSlide (d){
                             window.open([[@{/exhibit/}]]+spaceId+'/module/'+moduleId+'/sequence/'+d.sequenceId+'/slide/'+d.slideId, "_self");
                         }
-
-             </script>
-             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+             		</script>
+             		</div>
+                	</div>
+             	</div>
+          	</div>
+       	</div>
+     	</div>
+   		</div>
+   				<div th:if="${slideExternalLinkList != null and !#lists.isEmpty(slideExternalLinkList)}" style="margin:auto; width: 57%; padding: 30px 0 80px 0; background-color: white; z-index: 1; position: relative;">
+   					<h5 style="margin-bottom: 15px;">External Resources:</h5>
+	     			<div th:each="link: ${slideExternalLinkList}" style="margin-bottom: 8px; line-height: 1.5;"> -
+	      				<a style="text-decoration: underline; color:var(--primary); display: inline-block;" th:href="@{${link.getExternalLink()}}" th:target="_blank">[[${link.getLabel()}]]</a>
+	     			</div>
+    			</div>
 </body>
 </html>
