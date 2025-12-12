@@ -37,8 +37,7 @@ public class AddVideoBlockController {
             @RequestParam(required = false) String url, @RequestParam(required = false) String videoTitle,
             Principal principal, RedirectAttributes attributes) throws IOException {
 
-        Integer contentOrder = contentBlockManager.findMaxContentOrder(slideId);
-        contentOrder = contentOrder == null ? 0 : contentOrder + 1;
+
         String videoId;
         try {
             if (videoFile == null && url.isEmpty()) {
@@ -51,7 +50,7 @@ public class AddVideoBlockController {
                 fileName = videoFile.getOriginalFilename();
             }
             CreationReturnValue videoBlockValue = contentBlockManager.createVideoBlock(slideId, video,
-                    (videoFile != null) ? videoFile.getSize() : null, fileName, url, contentOrder, videoTitle);
+                    (videoFile != null) ? videoFile.getSize() : null, fileName, url, videoTitle);
             videoId = videoBlockValue.getElement().getId();
         } catch (VideoCouldNotBeStoredException e) {
             logger.warn("Video block could not be stored, bad request.", e);

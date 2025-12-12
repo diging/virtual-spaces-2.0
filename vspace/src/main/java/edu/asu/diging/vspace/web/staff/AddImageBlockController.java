@@ -45,8 +45,7 @@ public class AddImageBlockController {
             @RequestParam(value = "imageId", required = false) String imageId, RedirectAttributes attributes)
             throws IOException {
 
-        Integer contentOrder = contentBlockManager.findMaxContentOrder(slideId);
-        contentOrder = contentOrder == null ? 0 : contentOrder + 1;
+
         
         IVSpaceElement imageBlock;
         String imageBlockId = null;
@@ -58,8 +57,7 @@ public class AddImageBlockController {
                 logger.error("Image does not exist.", e);
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
-            CreationReturnValue imageBlockReturnValue = contentBlockManager.createImageBlock(slideId, image,
-                    contentOrder);
+            CreationReturnValue imageBlockReturnValue = contentBlockManager.createImageBlock(slideId, image);
             imageBlock = imageBlockReturnValue.getElement();
             imageBlockId = imageBlock.getId();
         } else {
@@ -68,7 +66,7 @@ public class AddImageBlockController {
                 String filename = file.getOriginalFilename();
                 try {
                     CreationReturnValue imageBlockReturnValue = contentBlockManager.createImageBlock(slideId, image,
-                            filename, contentOrder);
+                            filename);
                     imageBlock = imageBlockReturnValue.getElement();
                 } catch (ImageCouldNotBeStoredException e) {
                     ObjectMapper mapper = new ObjectMapper();
