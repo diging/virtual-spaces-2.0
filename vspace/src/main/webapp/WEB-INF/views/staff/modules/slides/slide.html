@@ -1991,7 +1991,7 @@
                             '<span class="icon-trash error"></span>' +
                             '</a>' +
                             '</div>' +
-                            '<div id="referenceSpace" class="col-md-10">' +
+                            '<div class="referenceSpace col-md-10">' +
                             '</div>' +
                             '</div>'
                         );
@@ -2097,7 +2097,7 @@
 						);
 
                         $(referenceblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).on('click', referenceBlockClick);
-                        var elem = $('#' + biblioBlockId).find('#referenceSpace');
+                        var elem = $('#' + biblioBlockId).find('.referenceSpace');
                         elem.append(referenceblock);
                         
                         // Remove the reference target ID input
@@ -2473,14 +2473,14 @@
 				        '<span class="icon-trash error"></span>' +
 				        '</a>' +
 				        '</div>' +
-				        '<div id="referenceSpace" class="col-md-10"></div>';
+				        '<div class="referenceSpace col-md-10"></div>';
 				    
 				    $(".open").append(biblioHtml);
 				    
 				    // Restore ALL reference blocks with their complete HTML and event handlers
 				    if (allReferences.length > 0) {
 				        allReferences.each(function() {
-				            $("#referenceSpace").append($(this));
+				            $(".open .referenceSpace").append($(this));
 				        });
 				    }
 				    
@@ -2779,6 +2779,17 @@
                             }
                         },
                         error: function(data) {
+                            // Restore the block visibility on error
+                            var openBlockId = $(".open").attr("id");
+                            if (originalBiblioHtml[openBlockId]) {
+                                $(".open").html(originalBiblioHtml[openBlockId]);
+                                delete originalBiblioHtml[openBlockId];
+                            }
+                            $(".open").css('display', 'flex');
+                            $(".open").removeClass("open");
+                            rebindBiblioEventHandlers();
+
+                            // Show error alert
                             if (data.status == 403) {
                                 $("#loginAlert").show();
                             } else {
@@ -4092,7 +4103,7 @@
 					            <span class="icon-trash error"></span>
 					        </a>
 					    </div>
-					    <div id="referenceSpace" class="col-md-10">
+					    <div class="referenceSpace col-md-10">
 						<div th:each="contentRef: ${contents.references}">
 						    <!-- Reference Block with TYPE FIRST -->
 						    <div th:id="${contentRef.id}" 
