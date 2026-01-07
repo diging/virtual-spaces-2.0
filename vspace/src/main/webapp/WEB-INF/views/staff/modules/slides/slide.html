@@ -383,7 +383,6 @@
             var originalReferenceHtml = {};
 
             function referenceBlockClick(e) {
-                // Don't open edit modal if clicking on a button or icon
                 if ($(e.target).closest('a[data-action], .btn, .icon-trash').length > 0) {
                     return;
                 }
@@ -2745,14 +2744,12 @@
                     var blockId = $(".open").attr("id");
                     var token = [[${_csrf.token}]];
                     
-                    // Create JSON object with correct field names for backend
                     var requestData = {
                         biblioTitle: title,
                         description: desc,
                         id: blockId
                     };
                     
-                    // Create FormData for updateBiblioBox function
                     var formData = new FormData();
                     formData.append('biblioTitle', title);
                     formData.append('description', desc);
