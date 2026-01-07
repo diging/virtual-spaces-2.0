@@ -2,13 +2,13 @@ package edu.asu.diging.vspace.core.model.impl;
 
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Inheritance;
 import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 
@@ -126,4 +126,14 @@ public class VSImage extends VSMedia implements IVSImage {
         this.categories = categories;
     }
   
+    @Override
+    public String toString() {
+        return "VSImage{" +
+                "id='" + id + '\'' +
+                ", filename='" + getFilename() + '\'' +
+                ", width=" + width +
+                ", height=" + height +
+                ", hashCode=" + hashCode() +
+                '}';
+    }
 }

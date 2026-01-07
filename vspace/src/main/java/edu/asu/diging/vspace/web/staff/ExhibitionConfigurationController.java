@@ -1,8 +1,6 @@
 package edu.asu.diging.vspace.web.staff;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -12,8 +10,6 @@ import javax.validation.Valid;
 
 import java.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,7 +17,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -31,10 +26,8 @@ import edu.asu.diging.vspace.core.factory.impl.ExhibitionFactory;
 import edu.asu.diging.vspace.core.model.ExhibitionModes;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISpace;
-import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
-import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.web.staff.forms.ExhibitionConfigurationForm;
 import edu.asu.diging.vspace.core.services.impl.ExhibitionManager;
@@ -53,9 +46,6 @@ public class ExhibitionConfigurationController {
 
     @Autowired
     private ExhibitionFactory exhibitFactory;
-
-    @Autowired
-    private IImageService imageService;
 
     @Autowired
     private ExhibitionLanguageConfig exhibitionLanguageConfig;
@@ -108,9 +98,9 @@ public class ExhibitionConfigurationController {
                 
         model.addAttribute("languageList", sortedLanguageList);
         model.addAttribute("exhibition", exhibition);
-        model.addAttribute("defaultSpaceLinkImage",exhibition.getSpaceLinkDefaultImage());
-        model.addAttribute("defaultModuleLinkImage",exhibition.getModuleLinkDefaultImage());
-        model.addAttribute("defaultExternalLinkImage",exhibition.getExternalLinkDefaultImage());
+        model.addAttribute("defaultSpaceLinkImage", exhibition.getSpaceLinkDefaultImage());
+        model.addAttribute("defaultModuleLinkImage", exhibition.getModuleLinkDefaultImage());
+        model.addAttribute("defaultExternalLinkImage", exhibition.getExternalLinkDefaultImage());
         return "staff/exhibit/config";
     }
 
