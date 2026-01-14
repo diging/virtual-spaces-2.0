@@ -11,8 +11,6 @@ public class CitesphereAuthToken {
     private Map<String, String> headers;
     private String accessToken;
     private String refreshToken;
-    private String username;
-    private String password;
     private long tokenExpiryTime;
     
     /**
@@ -35,17 +33,6 @@ public class CitesphereAuthToken {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
         this.tokenExpiryTime = expiryTime;
-    }
-    
-    /**
-     * Constructor for Basic authentication
-     * @param username Username
-     * @param password Password
-     */
-    public CitesphereAuthToken(String username, String password) {
-        this.authType = "basic";
-        this.username = username;
-        this.password = password;
     }
     
     // Getters and setters
@@ -72,23 +59,7 @@ public class CitesphereAuthToken {
     public void setAccessToken(String accessToken) {
         this.accessToken = accessToken;
     }
-    
-    public String getUsername() {
-        return username;
-    }
-    
-    public void setUsername(String username) {
-        this.username = username;
-    }
-    
-    public String getPassword() {
-        return password;
-    }
-    
-    public void setPassword(String password) {
-        this.password = password;
-    }
-    
+
     public String getRefreshToken() {
         return refreshToken;
     }

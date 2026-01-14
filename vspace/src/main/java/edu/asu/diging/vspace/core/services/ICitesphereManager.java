@@ -93,16 +93,7 @@ public interface ICitesphereManager {
      * @return Collections as Map
      */
     Map<String, Object> getCollectionsByCollectionId(String zoteroGroupId, String collectionId);
-    
-    /**
-     * Add item to group
-     * @param groupId Group ID
-     * @param data Item data
-     * @param filePath Path to file to upload
-     * @return Response from API
-     */
-    Object addItem(String groupId, Map<String, Object> data, String filePath);
-    
+
     /**
      * Refresh the access token using refresh token
      * @return New CitesphereAuthToken with refreshed access token

@@ -10,13 +10,12 @@ import edu.asu.diging.vspace.core.services.CitesphereAuthToken;
 import edu.asu.diging.vspace.core.services.ICitesphereManager;
 import edu.asu.diging.vspace.core.exception.CitesphereTokenException;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import okhttp3.*;
+import org.springframework.http.HttpStatus;
 
 /**
  * Implementation of CitesphereService for API operations
@@ -52,17 +51,13 @@ public class CitesphereManager implements ICitesphereManager {
         if (authTokenObject.getAuthType() == null) {
             throw new IllegalArgumentException("Missing authType attribute");
         }
-        
+
         if (authTokenObject.getAccessToken() == null) {
-            if (authTokenObject.getUsername() == null || authTokenObject.getPassword() == null) {
-                throw new IllegalArgumentException(
-                    "Either username and password or access_token should be present");
-            }
+            throw new IllegalArgumentException("access_token is required");
         }
-        
-        if (!"oauth".equals(authTokenObject.getAuthType()) && 
-            !"basic".equals(authTokenObject.getAuthType())) {
-            throw new IllegalArgumentException("authType should be either oauth or basic");
+
+        if (!"oauth".equals(authTokenObject.getAuthType())) {
+            throw new IllegalArgumentException("authType should be oauth");
         }
     }
     
@@ -71,15 +66,7 @@ public class CitesphereManager implements ICitesphereManager {
      */
     private void handleApiParams() {
         Map<String, String> headers = new HashMap<>();
-        
-        if ("oauth".equals(authTokenObject.getAuthType())) {
-            headers.put("Authorization", "Bearer " + authTokenObject.getAccessToken());
-        } else if ("basic".equals(authTokenObject.getAuthType())) {
-            String authStr = authTokenObject.getUsername() + ":" + authTokenObject.getPassword();
-            String authB64 = Base64.getEncoder().encodeToString(authStr.getBytes());
-            headers.put("Authorization", "Basic " + authB64);
-        }
-        
+        headers.put("Authorization", "Bearer " + authTokenObject.getAccessToken());
         authTokenObject.setHeaders(headers);
     }
     
@@ -104,10 +91,10 @@ public class CitesphereManager implements ICitesphereManager {
             
             try (Response response = client.newCall(request).execute()) {
                 // Check for unauthorized or forbidden responses
-                if (response.code() == 401 || response.code() == 403) {
+                if (response.code() == HttpStatus.UNAUTHORIZED.value() || response.code() == HttpStatus.FORBIDDEN.value()) {
                     throw new CitesphereTokenException(
-                        "Invalid or expired access token", 
-                        response.code(), 
+                        "Invalid or expired access token",
+                        response.code(),
                         true
                     );
                 }
@@ -130,67 +117,13 @@ public class CitesphereManager implements ICitesphereManager {
                     }
                 }
             }
-        } catch (CitesphereTokenException e) {
-            throw e; // Re-throw token exceptions
-        } catch (Exception e) {
+        } catch (IOException e) {
             Map<String, Object> errorMap = new HashMap<>();
             errorMap.put("error_message", e.getMessage());
             return errorMap;
         }
-        
+
         return new HashMap<>();
-    }
-    
-    /**
-     * Execute POST request
-     * @param url Request URL
-     * @param data Request data
-     * @param filePath File path for upload
-     * @return Response object
-     */
-    private Object executePostRequest(String url, Map<String, Object> data, String filePath) {
-        try {
-            MultipartBody.Builder builder = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM);
-            
-            // Add data parameters
-            if (data != null) {
-                for (Map.Entry<String, Object> entry : data.entrySet()) {
-                    builder.addFormDataPart(entry.getKey(), entry.getValue().toString());
-                }
-            }
-            
-            // Add file if provided
-            if (filePath != null) {
-                File file = new File(filePath);
-                if (file.exists()) {
-                    RequestBody fileBody = RequestBody.create(file, MediaType.parse("application/pdf"));
-                    builder.addFormDataPart("files", file.getName(), fileBody);
-                }
-            }
-            
-            RequestBody requestBody = builder.build();
-            
-            Request.Builder requestBuilder = new Request.Builder()
-                .url(url)
-                .post(requestBody);
-            
-            // Add headers
-            if (authTokenObject.getHeaders() != null) {
-                for (Map.Entry<String, String> header : authTokenObject.getHeaders().entrySet()) {
-                    requestBuilder.addHeader(header.getKey(), header.getValue());
-                }
-            }
-            
-            Request request = requestBuilder.build();
-            
-            try (Response response = client.newCall(request).execute()) {
-                return response;
-            }
-            
-        } catch (Exception e) {
-            return "Error loading/reading file";
-        }
     }
     
     @Override
@@ -343,13 +276,7 @@ public class CitesphereManager implements ICitesphereManager {
             return errorMap;
         }
     }
-    
-    @Override
-    public Object addItem(String groupId, Map<String, Object> data, String filePath) {
-        String url = api + "/v1/groups/" + groupId + "/items/create";
-        return executePostRequest(url, data, filePath);
-    }
-    
+
     @Override
     public CitesphereAuthToken refreshToken() throws CitesphereTokenException {
         if (authTokenObject.getRefreshToken() == null || authTokenObject.getRefreshToken().isEmpty()) {
@@ -370,10 +297,10 @@ public class CitesphereManager implements ICitesphereManager {
                 .build();
 
             try (Response response = client.newCall(request).execute()) {
-                if (response.code() == 401 || response.code() == 403) {
+                if (response.code() == HttpStatus.UNAUTHORIZED.value() || response.code() == HttpStatus.FORBIDDEN.value()) {
                     throw new CitesphereTokenException(
-                        "Refresh token is invalid or expired", 
-                        response.code(), 
+                        "Refresh token is invalid or expired",
+                        response.code(),
                         true
                     );
                 }
@@ -409,9 +336,7 @@ public class CitesphereManager implements ICitesphereManager {
                 
                 throw new CitesphereTokenException("Failed to refresh token: " + response.code());
             }
-        } catch (CitesphereTokenException e) {
-            throw e;
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new CitesphereTokenException("Error refreshing token: " + e.getMessage(), e);
         }
     }
@@ -441,9 +366,9 @@ public class CitesphereManager implements ICitesphereManager {
             Request request = requestBuilder.build();
             
             try (Response response = client.newCall(request).execute()) {
-                return response.code() != 401 && response.code() != 403;
+                return response.code() != HttpStatus.UNAUTHORIZED.value() && response.code() != HttpStatus.FORBIDDEN.value();
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             return false;
         }
     }
