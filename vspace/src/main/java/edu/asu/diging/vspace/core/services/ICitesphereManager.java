@@ -13,20 +13,7 @@ public interface ICitesphereManager {
      * @return User data as Map
      */
     Map<String, Object> getUser();
-    
-    /**
-     * Check test endpoint
-     * @return Test response as Map
-     */
-    Map<String, Object> checkTest();
-    
-    /**
-     * Check access for a document
-     * @param documentId Document ID to check access for
-     * @return Access check response as Map
-     */
-    Map<String, Object> checkAccess(String documentId);
-    
+
     /**
      * Get data by endpoint
      * @param endpoint API endpoint path

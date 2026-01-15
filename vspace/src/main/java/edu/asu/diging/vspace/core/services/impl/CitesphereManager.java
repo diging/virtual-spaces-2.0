@@ -125,156 +125,75 @@ public class CitesphereManager implements ICitesphereManager {
 
         return new HashMap<>();
     }
-    
+
+    /**
+     * Execute command with error handling
+     * @param url Request URL
+     * @return Response data as Map, or error map if exception occurs
+     */
+    private Map<String, Object> executeWithErrorHandling(String url) {
+        try {
+            return executeCommand(url);
+        } catch (CitesphereTokenException e) {
+            Map<String, Object> errorMap = new HashMap<>();
+            errorMap.put("error_message", e.getMessage());
+            errorMap.put("token_expired", e.isTokenExpired());
+            return errorMap;
+        }
+    }
+
     @Override
     public Map<String, Object> getUser() {
-        try {
-            String url = api + "/v1/user";
-            return executeCommand(url);
-        } catch (CitesphereTokenException e) {
-            Map<String, Object> errorMap = new HashMap<>();
-            errorMap.put("error_message", e.getMessage());
-            errorMap.put("token_expired", e.isTokenExpired());
-            return errorMap;
-        }
+        return executeWithErrorHandling(api + "/v1/user");
     }
-    
-    @Override
-    public Map<String, Object> checkTest() {
-        try {
-            String url = api + "/v1/test";
-            return executeCommand(url);
-        } catch (CitesphereTokenException e) {
-            Map<String, Object> errorMap = new HashMap<>();
-            errorMap.put("error_message", e.getMessage());
-            errorMap.put("token_expired", e.isTokenExpired());
-            return errorMap;
-        }
-    }
-    
-    @Override
-    public Map<String, Object> checkAccess(String documentId) {
-        try {
-            String url = api + "/files/giles/" + documentId + "/access/check";
-            return executeCommand(url);
-        } catch (CitesphereTokenException e) {
-            Map<String, Object> errorMap = new HashMap<>();
-            errorMap.put("error_message", e.getMessage());
-            errorMap.put("token_expired", e.isTokenExpired());
-            return errorMap;
-        }
-    }
-    
+
     @Override
     public Map<String, Object> getDataByEndpoint(String endpoint) {
-        try {
-            String url = api + "/v1" + endpoint;
-            return executeCommand(url);
-        } catch (CitesphereTokenException e) {
-            Map<String, Object> errorMap = new HashMap<>();
-            errorMap.put("error_message", e.getMessage());
-            errorMap.put("token_expired", e.isTokenExpired());
-            return errorMap;
-        }
+        return executeWithErrorHandling(api + "/v1" + endpoint);
     }
-    
+
     @Override
     public Map<String, Object> getGroups() {
-        try {
-            String url = api + "/v1/groups";
-            return executeCommand(url);
-        } catch (CitesphereTokenException e) {
-            Map<String, Object> errorMap = new HashMap<>();
-            errorMap.put("error_message", e.getMessage());
-            errorMap.put("token_expired", e.isTokenExpired());
-            return errorMap;
-        }
+        return executeWithErrorHandling(api + "/v1/groups");
     }
-    
+
     @Override
     public Map<String, Object> getGroupInfo(String groupId) {
-        try {
-            String url = api + "/v1/groups/" + groupId;
-            return executeCommand(url);
-        } catch (CitesphereTokenException e) {
-            Map<String, Object> errorMap = new HashMap<>();
-            errorMap.put("error_message", e.getMessage());
-            errorMap.put("token_expired", e.isTokenExpired());
-            return errorMap;
-        }
+        return executeWithErrorHandling(api + "/v1/groups/" + groupId);
     }
-    
+
     @Override
     public Map<String, Object> getGroupItems(String zoteroGroupId) {
-        try {
-            String url = api + "/v1/groups/" + zoteroGroupId + "/items";
-            return executeCommand(url);
-        } catch (CitesphereTokenException e) {
-            Map<String, Object> errorMap = new HashMap<>();
-            errorMap.put("error_message", e.getMessage());
-            errorMap.put("token_expired", e.isTokenExpired());
-            return errorMap;
-        }
+        return executeWithErrorHandling(api + "/v1/groups/" + zoteroGroupId + "/items");
     }
-    
+
     @Override
     public Map<String, Object> getCollections(String zoteroGroupId) {
-        try {
-            String url = api + "/v1/groups/" + zoteroGroupId + "/collections";
-            return executeCommand(url);
-        } catch (CitesphereTokenException e) {
-            Map<String, Object> errorMap = new HashMap<>();
-            errorMap.put("error_message", e.getMessage());
-            errorMap.put("token_expired", e.isTokenExpired());
-            return errorMap;
-        }
+        return executeWithErrorHandling(api + "/v1/groups/" + zoteroGroupId + "/collections");
     }
-    
+
     @Override
     public Map<String, Object> getCollectionItems(String zoteroGroupId, String collectionId, int pageNumber) {
-        try {
-            String url = api + "/v1/groups/" + zoteroGroupId + "/collections/" + collectionId + "/items";
-            if (pageNumber > 0) {
-                url += "?&page=" + pageNumber;
-            }
-            return executeCommand(url);
-        } catch (CitesphereTokenException e) {
-            Map<String, Object> errorMap = new HashMap<>();
-            errorMap.put("error_message", e.getMessage());
-            errorMap.put("token_expired", e.isTokenExpired());
-            return errorMap;
+        String url = api + "/v1/groups/" + zoteroGroupId + "/collections/" + collectionId + "/items";
+        if (pageNumber > 0) {
+            url += "?&page=" + pageNumber;
         }
+        return executeWithErrorHandling(url);
     }
-    
+
     @Override
     public Map<String, Object> getCollectionItems(String zoteroGroupId, String collectionId) {
         return getCollectionItems(zoteroGroupId, collectionId, 0);
     }
-    
+
     @Override
     public Map<String, Object> getItemInfo(String zoteroGroupId, String itemId) {
-        try {
-            String url = api + "/v1/groups/" + zoteroGroupId + "/items/" + itemId;
-            return executeCommand(url);
-        } catch (CitesphereTokenException e) {
-            Map<String, Object> errorMap = new HashMap<>();
-            errorMap.put("error_message", e.getMessage());
-            errorMap.put("token_expired", e.isTokenExpired());
-            return errorMap;
-        }
+        return executeWithErrorHandling(api + "/v1/groups/" + zoteroGroupId + "/items/" + itemId);
     }
-    
+
     @Override
     public Map<String, Object> getCollectionsByCollectionId(String zoteroGroupId, String collectionId) {
-        try {
-            String url = api + "/groups/" + zoteroGroupId + "/collections/" + collectionId + "/collections";
-            return executeCommand(url);
-        } catch (CitesphereTokenException e) {
-            Map<String, Object> errorMap = new HashMap<>();
-            errorMap.put("error_message", e.getMessage());
-            errorMap.put("token_expired", e.isTokenExpired());
-            return errorMap;
-        }
+        return executeWithErrorHandling(api + "/groups/" + zoteroGroupId + "/collections/" + collectionId + "/collections");
     }
 
     @Override
