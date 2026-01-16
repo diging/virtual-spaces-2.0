@@ -1,0 +1,292 @@
+package edu.asu.diging.vspace.core.services.impl;
+
+
+//import com.citesphere.api.CitesphereService;
+//import com.citesphere.api.auth.CitesphereAuthToken;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.type.TypeReference;
+
+import edu.asu.diging.vspace.core.services.CitesphereAuthToken;
+import edu.asu.diging.vspace.core.services.ICitesphereManager;
+import edu.asu.diging.vspace.core.exception.CitesphereTokenException;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import okhttp3.*;
+import org.springframework.http.HttpStatus;
+
+/**
+ * Implementation of CitesphereService for API operations
+ */
+public class CitesphereManager implements ICitesphereManager {
+    
+    private final String api;
+    private final CitesphereAuthToken authTokenObject;
+    private final OkHttpClient client;
+    private final ObjectMapper objectMapper;
+    
+    /**
+     * Constructor
+     * @param api API base URL
+     * @param authTokenObject Authentication token object
+     * @return 
+     */
+    public CitesphereManager(String api, CitesphereAuthToken authTokenObject) {
+        this.api = api;
+        this.authTokenObject = authTokenObject;
+        this.client = new OkHttpClient();
+        this.objectMapper = new ObjectMapper();
+
+        validate();
+        handleApiParams();
+    }
+
+    
+    /**
+     * Validate authentication token object
+     */
+    private void validate() {
+        if (authTokenObject.getAuthType() == null) {
+            throw new IllegalArgumentException("Missing authType attribute");
+        }
+
+        if (authTokenObject.getAccessToken() == null) {
+            throw new IllegalArgumentException("access_token is required");
+        }
+
+        if (!"oauth".equals(authTokenObject.getAuthType())) {
+            throw new IllegalArgumentException("authType should be oauth");
+        }
+    }
+    
+    /**
+     * Handle API parameters and set headers
+     */
+    private void handleApiParams() {
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Authorization", "Bearer " + authTokenObject.getAccessToken());
+        authTokenObject.setHeaders(headers);
+    }
+    
+    /**
+     * Execute GET command
+     * @param url Request URL
+     * @return Response data as Map
+     * @throws CitesphereTokenException if token is invalid or expired
+     */
+    private Map<String, Object> executeCommand(String url) throws CitesphereTokenException {
+        try {
+            Request.Builder requestBuilder = new Request.Builder().url(url);
+            
+            // Add headers
+            if (authTokenObject.getHeaders() != null) {
+                for (Map.Entry<String, String> header : authTokenObject.getHeaders().entrySet()) {
+                    requestBuilder.addHeader(header.getKey(), header.getValue());
+                }
+            }
+            
+            Request request = requestBuilder.build();
+            
+            try (Response response = client.newCall(request).execute()) {
+                // Check for unauthorized or forbidden responses
+                if (response.code() == HttpStatus.UNAUTHORIZED.value() || response.code() == HttpStatus.FORBIDDEN.value()) {
+                    throw new CitesphereTokenException(
+                        "Invalid or expired access token",
+                        response.code(),
+                        true
+                    );
+                }
+                
+                if (response.body() != null) {
+                    String responseBody = response.body().string();
+                    
+                    // Check if response is an array or object
+                    if (responseBody.trim().startsWith("[")) {
+                        // Response is an array, wrap it in a data object
+                        List<Object> responseList = objectMapper.readValue(responseBody, new TypeReference<List<Object>>(){});
+                        Map<String, Object> responseMap = new HashMap<>();
+                        responseMap.put("data", responseList);
+                        return responseMap;
+                    } else {
+                        // Response is an object
+                        @SuppressWarnings("unchecked")
+                        Map<String, Object> responseMap = objectMapper.readValue(responseBody, Map.class);
+                        return responseMap;
+                    }
+                }
+            }
+        } catch (IOException e) {
+            Map<String, Object> errorMap = new HashMap<>();
+            errorMap.put("error_message", e.getMessage());
+            return errorMap;
+        }
+
+        return new HashMap<>();
+    }
+
+    /**
+     * Execute command with error handling
+     * @param url Request URL
+     * @return Response data as Map, or error map if exception occurs
+     */
+    private Map<String, Object> executeWithErrorHandling(String url) {
+        try {
+            return executeCommand(url);
+        } catch (CitesphereTokenException e) {
+            Map<String, Object> errorMap = new HashMap<>();
+            errorMap.put("error_message", e.getMessage());
+            errorMap.put("token_expired", e.isTokenExpired());
+            return errorMap;
+        }
+    }
+
+    @Override
+    public Map<String, Object> getUser() {
+        return executeWithErrorHandling(api + "/api/v1/user");
+    }
+
+    @Override
+    public Map<String, Object> getDataByEndpoint(String endpoint) {
+        return executeWithErrorHandling(api + "/api/v1" + endpoint);
+    }
+
+    @Override
+    public Map<String, Object> getGroups() {
+        return executeWithErrorHandling(api + "/api/v1/groups");
+    }
+
+    @Override
+    public Map<String, Object> getGroupInfo(String groupId) {
+        return executeWithErrorHandling(api + "/api/v1/groups/" + groupId);
+    }
+
+    @Override
+    public Map<String, Object> getGroupItems(String zoteroGroupId) {
+        return executeWithErrorHandling(api + "/api/v1/groups/" + zoteroGroupId + "/items");
+    }
+
+    @Override
+    public Map<String, Object> getCollections(String zoteroGroupId) {
+        return executeWithErrorHandling(api + "/api/v1/groups/" + zoteroGroupId + "/collections");
+    }
+
+    @Override
+    public Map<String, Object> getCollectionItems(String zoteroGroupId, String collectionId, int pageNumber) {
+        String url = api + "/api/v1/groups/" + zoteroGroupId + "/collections/" + collectionId + "/items";
+        if (pageNumber > 0) {
+            url += "?page=" + pageNumber;
+        }
+        return executeWithErrorHandling(url);
+    }
+
+    @Override
+    public Map<String, Object> getCollectionItems(String zoteroGroupId, String collectionId) {
+        return getCollectionItems(zoteroGroupId, collectionId, 0);
+    }
+
+    @Override
+    public Map<String, Object> getItemInfo(String zoteroGroupId, String itemId) {
+        return executeWithErrorHandling(api + "/api/v1/groups/" + zoteroGroupId + "/items/" + itemId);
+    }
+
+    @Override
+    public Map<String, Object> getCollectionsByCollectionId(String zoteroGroupId, String collectionId) {
+        return executeWithErrorHandling(api + "/api/v1/groups/" + zoteroGroupId + "/collections/" + collectionId + "/collections");
+    }
+
+    @Override
+    public CitesphereAuthToken refreshToken() throws CitesphereTokenException {
+        if (authTokenObject.getRefreshToken() == null || authTokenObject.getRefreshToken().isEmpty()) {
+            throw new CitesphereTokenException("No refresh token available");
+        }
+        
+        try {
+            String tokenUrl = api + "/api/oauth/token";
+            
+            RequestBody formBody = new FormBody.Builder()
+                .add("grant_type", "refresh_token")
+                .add("refresh_token", authTokenObject.getRefreshToken())
+                .build();
+
+            Request request = new Request.Builder()
+                .url(tokenUrl)
+                .post(formBody)
+                .build();
+
+            try (Response response = client.newCall(request).execute()) {
+                if (response.code() == HttpStatus.UNAUTHORIZED.value() || response.code() == HttpStatus.FORBIDDEN.value()) {
+                    throw new CitesphereTokenException(
+                        "Refresh token is invalid or expired",
+                        response.code(),
+                        true
+                    );
+                }
+                
+                if (response.isSuccessful() && response.body() != null) {
+                    String responseBody = response.body().string();
+                    @SuppressWarnings("unchecked")
+                    Map<String, Object> tokenResponse = objectMapper.readValue(responseBody, Map.class);
+                    
+                    String newAccessToken = (String) tokenResponse.get("access_token");
+                    String newRefreshToken = (String) tokenResponse.get("refresh_token");
+                    Number expiresIn = (Number) tokenResponse.get("expires_in");
+                    
+                    if (newAccessToken != null) {
+                        long expiryTime = 0;
+                        if (expiresIn != null) {
+                            expiryTime = System.currentTimeMillis() + (expiresIn.longValue() * 1000);
+                        }
+                        
+                        // Update current token object
+                        authTokenObject.setAccessToken(newAccessToken);
+                        if (newRefreshToken != null) {
+                            authTokenObject.setRefreshToken(newRefreshToken);
+                        }
+                        authTokenObject.setTokenExpiryTime(expiryTime);
+                        
+                        // Re-initialize headers with new token
+                        handleApiParams();
+                        
+                        return authTokenObject;
+                    }
+                }
+                
+                throw new CitesphereTokenException("Failed to refresh token: " + response.code());
+            }
+        } catch (IOException e) {
+            throw new CitesphereTokenException("Error refreshing token: " + e.getMessage(), e);
+        }
+    }
+    
+    @Override
+    public boolean isTokenValid() {
+        if (authTokenObject.getAccessToken() == null || authTokenObject.getAccessToken().isEmpty()) {
+            return false;
+        }
+        
+        if (authTokenObject.isTokenExpired()) {
+            return false;
+        }
+        
+        try {
+            String url = api + "/api/v1/test";
+            Request.Builder requestBuilder = new Request.Builder().url(url);
+            
+            if (authTokenObject.getHeaders() != null) {
+                for (Map.Entry<String, String> header : authTokenObject.getHeaders().entrySet()) {
+                    requestBuilder.addHeader(header.getKey(), header.getValue());
+                }
+            }
+            
+            Request request = requestBuilder.build();
+            
+            try (Response response = client.newCall(request).execute()) {
+                return response.code() != HttpStatus.UNAUTHORIZED.value() && response.code() != HttpStatus.FORBIDDEN.value();
+            }
+        } catch (IOException e) {
+            return false;
+        }
+    }
+}
