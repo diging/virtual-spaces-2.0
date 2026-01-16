@@ -144,39 +144,39 @@ public class CitesphereManager implements ICitesphereManager {
 
     @Override
     public Map<String, Object> getUser() {
-        return executeWithErrorHandling(api + "/v1/user");
+        return executeWithErrorHandling(api + "/api/v1/user");
     }
 
     @Override
     public Map<String, Object> getDataByEndpoint(String endpoint) {
-        return executeWithErrorHandling(api + "/v1" + endpoint);
+        return executeWithErrorHandling(api + "/api/v1" + endpoint);
     }
 
     @Override
     public Map<String, Object> getGroups() {
-        return executeWithErrorHandling(api + "/v1/groups");
+        return executeWithErrorHandling(api + "/api/v1/groups");
     }
 
     @Override
     public Map<String, Object> getGroupInfo(String groupId) {
-        return executeWithErrorHandling(api + "/v1/groups/" + groupId);
+        return executeWithErrorHandling(api + "/api/v1/groups/" + groupId);
     }
 
     @Override
     public Map<String, Object> getGroupItems(String zoteroGroupId) {
-        return executeWithErrorHandling(api + "/v1/groups/" + zoteroGroupId + "/items");
+        return executeWithErrorHandling(api + "/api/v1/groups/" + zoteroGroupId + "/items");
     }
 
     @Override
     public Map<String, Object> getCollections(String zoteroGroupId) {
-        return executeWithErrorHandling(api + "/v1/groups/" + zoteroGroupId + "/collections");
+        return executeWithErrorHandling(api + "/api/v1/groups/" + zoteroGroupId + "/collections");
     }
 
     @Override
     public Map<String, Object> getCollectionItems(String zoteroGroupId, String collectionId, int pageNumber) {
-        String url = api + "/v1/groups/" + zoteroGroupId + "/collections/" + collectionId + "/items";
+        String url = api + "/api/v1/groups/" + zoteroGroupId + "/collections/" + collectionId + "/items";
         if (pageNumber > 0) {
-            url += "?&page=" + pageNumber;
+            url += "?page=" + pageNumber;
         }
         return executeWithErrorHandling(url);
     }
@@ -188,12 +188,12 @@ public class CitesphereManager implements ICitesphereManager {
 
     @Override
     public Map<String, Object> getItemInfo(String zoteroGroupId, String itemId) {
-        return executeWithErrorHandling(api + "/v1/groups/" + zoteroGroupId + "/items/" + itemId);
+        return executeWithErrorHandling(api + "/api/v1/groups/" + zoteroGroupId + "/items/" + itemId);
     }
 
     @Override
     public Map<String, Object> getCollectionsByCollectionId(String zoteroGroupId, String collectionId) {
-        return executeWithErrorHandling(api + "/groups/" + zoteroGroupId + "/collections/" + collectionId + "/collections");
+        return executeWithErrorHandling(api + "/api/v1/groups/" + zoteroGroupId + "/collections/" + collectionId + "/collections");
     }
 
     @Override
@@ -203,7 +203,7 @@ public class CitesphereManager implements ICitesphereManager {
         }
         
         try {
-            String tokenUrl = api + "/oauth/token";
+            String tokenUrl = api + "/api/oauth/token";
             
             RequestBody formBody = new FormBody.Builder()
                 .add("grant_type", "refresh_token")
@@ -273,7 +273,7 @@ public class CitesphereManager implements ICitesphereManager {
         
         // Optionally, test token with a simple API call
         try {
-            String url = api + "/v1/test";
+            String url = api + "/api/v1/test";
             Request.Builder requestBuilder = new Request.Builder().url(url);
             
             if (authTokenObject.getHeaders() != null) {
