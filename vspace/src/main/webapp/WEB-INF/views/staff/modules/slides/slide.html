@@ -3401,10 +3401,10 @@
                         type = itemData.itemType;
                     }
                     
-                    // Use radio button instead of checkbox for single selection
-                    var radioButton = $('<input type="radio" name="citesphere-item-selection" class="citesphere-item-radio" style="margin-right: 8px;">');
-                    radioButton.data('item', item);
-                    radioButton.attr('value', item.key || item.id || index);
+                    // Use checkbox for multiple selection
+                    var checkbox = $('<input type="checkbox" class="citesphere-item-checkbox" style="margin-right: 8px;">');
+                    checkbox.data('item', item);
+                    checkbox.attr('value', item.key || item.id || index);
                     
                     var itemElement = $('<div class="reference-item" style="margin-bottom: 8px; padding: 8px; border: 1px solid #ddd; border-radius: 3px; background: white; cursor: pointer; transition: all 0.2s ease;">' +
                         '<div style="display: flex; align-items: flex-start;">' +
@@ -3417,42 +3417,52 @@
                         '</div>' +
                         '</div>');
                     
-                    itemElement.find('div').first().prepend(radioButton);
-                    
+                    itemElement.find('div').first().prepend(checkbox);
+
                     // Add hover effects
                     itemElement.hover(
                         function() { $(this).css('background-color', '#f8f9fa'); },
-                        function() { 
-                            if (!radioButton.prop('checked')) {
-                                $(this).css('background-color', 'white'); 
+                        function() {
+                            if (!checkbox.prop('checked')) {
+                                $(this).css('background-color', 'white');
                             }
                         }
                     );
-                    
+
                     // Handle selection - allow clicking on the whole item div
                     itemElement.click(function(e) {
-                        if (e.target.type !== 'radio') {
-                            radioButton.prop('checked', true);
-                            radioButton.trigger('change');
+                        if (e.target.type !== 'checkbox') {
+                            checkbox.prop('checked', !checkbox.prop('checked'));
+                            checkbox.trigger('change');
                         }
                     });
-                    
-                    // Handle radio button selection
-                    radioButton.change(function() {
-                        // Clear visual selection from all items
-                        $('.reference-item').css({
-                            'background-color': 'white',
-                            'border-color': '#ddd'
-                        });
-                        
-                        // Clear previous selection and set new one
-                        citesphereData.selectedReferences = [];
+
+                    // Handle checkbox selection
+                    checkbox.change(function() {
                         if (this.checked) {
-                            citesphereData.selectedReferences.push(item);
+                            // Add to selected references if not already present
+                            var itemKey = item.key || item.id;
+                            var alreadySelected = citesphereData.selectedReferences.some(function(ref) {
+                                return (ref.key || ref.id) === itemKey;
+                            });
+                            if (!alreadySelected) {
+                                citesphereData.selectedReferences.push(item);
+                            }
                             // Highlight selected item
                             itemElement.css({
                                 'background-color': '#e3f2fd',
                                 'border-color': '#2196f3'
+                            });
+                        } else {
+                            // Remove from selected references
+                            var itemKey = item.key || item.id;
+                            citesphereData.selectedReferences = citesphereData.selectedReferences.filter(function(ref) {
+                                return (ref.key || ref.id) !== itemKey;
+                            });
+                            // Remove highlight
+                            itemElement.css({
+                                'background-color': 'white',
+                                'border-color': '#ddd'
                             });
                         }
                         updateSelectedCount();
@@ -3509,11 +3519,33 @@
             function updateSelectedCount() {
                 var count = citesphereData.selectedReferences.length;
                 if (count === 0) {
-                    $('#selectedCountText').text('No reference selected');
-                } else {
+                    $('#selectedCountText').text('No references selected');
+                } else if (count === 1) {
                     $('#selectedCountText').text('1 reference selected');
+                } else {
+                    $('#selectedCountText').text(count + ' references selected');
                 }
             }
+
+            // Select All button handler
+            $(document).on('click', '#selectAllReferences', function() {
+                $('.citesphere-item-checkbox').each(function() {
+                    if (!$(this).prop('checked')) {
+                        $(this).prop('checked', true);
+                        $(this).trigger('change');
+                    }
+                });
+            });
+
+            // Deselect All button handler
+            $(document).on('click', '#deselectAllReferences', function() {
+                $('.citesphere-item-checkbox').each(function() {
+                    if ($(this).prop('checked')) {
+                        $(this).prop('checked', false);
+                        $(this).trigger('change');
+                    }
+                });
+            });
 
             // Handle search functionality
             $('#searchCitesphereBtn').click(function() {
@@ -3541,17 +3573,12 @@
 
             // Dedicated function to handle Citesphere import
             function handleCitesphereImport() {
-                
+
                 if (citesphereData.selectedReferences.length === 0) {
-                    alert('Please select a reference to import.');
+                    alert('Please select at least one reference to import.');
                     return;
                 }
-                
-                if (citesphereData.selectedReferences.length > 1) {
-                    alert('Please select only one reference at a time.');
-                    return;
-                }
-                
+
                 // Continue with the import process
                 performCitesphereImport();
             }
@@ -3672,10 +3699,12 @@
                     },
                     data: JSON.stringify(transformedReferences),
                     success: function(response) {
-                        
+
                         if (response.success) {
-                            // Show success message instead of alert
-                            showImportSuccessMessage('Bibliography imported successfully!');
+                            // Show success message with count
+                            var count = response.imported_count || citesphereData.selectedReferences.length;
+                            var message = count === 1 ? '1 reference imported successfully!' : count + ' references imported successfully!';
+                            showImportSuccessMessage(message);
                             
                             // Add the imported references to the bibliography block
                             var biblioBlock = $('[data-biblio-id="' + biblioId + '"]').closest('[data-biblio-block]');
@@ -4466,18 +4495,27 @@
 			                                    </button>
 			                                 </div>
 			                                 <h6 style="margin-bottom: 15px; color: #333; border-bottom: 2px solid #007bff; padding-bottom: 8px;">
-			                                    <i class="fa fa-file-text"></i> Step 3: Select Reference to Import
+			                                    <i class="fa fa-file-text"></i> Step 3: Select References to Import
 			                                 </h6>
 			                                 <div id="currentCollectionName" style="margin-bottom: 10px; font-weight: 500; color: #666;">
 			                                    <!-- Current collection name will be shown here -->
 			                                 </div>
+			                                 <!-- Select All / Deselect All buttons -->
+			                                 <div id="selectionControls" style="margin-bottom: 10px;">
+			                                    <button id="selectAllReferences" class="btn btn-sm btn-outline-primary" style="margin-right: 5px;">
+			                                       <i class="fa fa-check-square-o"></i> Select All
+			                                    </button>
+			                                    <button id="deselectAllReferences" class="btn btn-sm btn-outline-secondary">
+			                                       <i class="fa fa-square-o"></i> Deselect All
+			                                    </button>
+			                                 </div>
 			                                 <div id="citesphereReferences" style="max-height: 250px; overflow-y: auto;">
 			                                    <!-- References will be loaded here -->
 			                                 </div>
-			                                 
+
 			                                 <!-- Selected Count Display -->
 			                                 <div id="selectedCount" style="margin-top: 15px; padding: 10px; background: #f8f9fa; border-radius: 3px; font-size: 14px;">
-			                                    <strong>Selected:</strong> <span id="selectedCountText">No reference selected</span>
+			                                    <strong>Selected:</strong> <span id="selectedCountText">No references selected</span>
 			                                 </div>
 			                              </div>
 			                           </div>
