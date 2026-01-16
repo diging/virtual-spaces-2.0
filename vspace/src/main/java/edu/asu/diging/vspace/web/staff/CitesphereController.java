@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -55,8 +56,8 @@ public class CitesphereController {
 
     // initiate oauth authorization with citesphere
     @RequestMapping(value = "/staff/citesphere/oauth/authorize", method = RequestMethod.GET)
-    public String initiateOAuth(HttpSession session, RedirectAttributes redirectAttributes) {
-        
+    public String initiateOAuth(HttpServletRequest request, HttpSession session, RedirectAttributes redirectAttributes) {
+
         if (citesphereClientId == null || citesphereClientId.isEmpty()) {
             logger.error("OAuth not configured - missing client ID");
             redirectAttributes.addFlashAttribute("error", "Citesphere OAuth is not configured. Please contact your administrator.");
@@ -70,11 +71,12 @@ public class CitesphereController {
 
             // build authorization url
             String baseUrl = citesphereApiUrl;
-            String redirectUri = getCurrentBaseUrl() + "/staff/citesphere/oauth/callback";
+            String redirectUri = getCurrentBaseUrl(request) + "/staff/citesphere/oauth/callback";
             
-            String authUrl = baseUrl + "/oauth/authorize" +
+            String authUrl = baseUrl + "/api/oauth/authorize" +
                     "?response_type=code" +
                     "&client_id=" + java.net.URLEncoder.encode(citesphereClientId, "UTF-8") +
+                    "&scope=read" +
                     "&state=" + java.net.URLEncoder.encode(state, "UTF-8") +
                     "&redirect_uri=" + java.net.URLEncoder.encode(redirectUri, "UTF-8");
             return "redirect:" + authUrl;
@@ -90,21 +92,22 @@ public class CitesphereController {
     public String handleOAuthCallback(
             @RequestParam String code,
             @RequestParam String state,
+            HttpServletRequest request,
             HttpSession session,
             RedirectAttributes redirectAttributes) {
-        
+
         try {
             // verify state parameter
             String sessionState = (String) session.getAttribute("citesphere_oauth_state");
-            
+
             if (sessionState == null || !sessionState.equals(state)) {
                 logger.error("OAuth state validation failed");
                 redirectAttributes.addFlashAttribute("error", "Invalid OAuth state. Please try again.");
                 return "redirect:/staff/dashboard";
             }
-            
+
             // exchange code for access token
-            String accessToken = exchangeCodeForToken(code, session);
+            String accessToken = exchangeCodeForToken(code, session, request);
             
             if (accessToken != null) {
                 session.setAttribute("citesphere_access_token", accessToken);
@@ -320,12 +323,12 @@ public class CitesphereController {
     }
 
     // exchange authorization code for access token
-    private String exchangeCodeForToken(String code, HttpSession session) {
-        
+    private String exchangeCodeForToken(String code, HttpSession session, HttpServletRequest httpRequest) {
+
         try {
             OkHttpClient client = new OkHttpClient();
-            String redirectUri = getCurrentBaseUrl() + "/staff/citesphere/oauth/callback";
-            String tokenUrl = citesphereApiUrl + "oauth/token";
+            String redirectUri = getCurrentBaseUrl(httpRequest) + "/staff/citesphere/oauth/callback";
+            String tokenUrl = citesphereApiUrl + "/api/oauth/token";
             
             okhttp3.RequestBody formBody = new FormBody.Builder()
                 .add("grant_type", "authorization_code")
@@ -372,8 +375,23 @@ public class CitesphereController {
     }
 
     // get current base url for redirect uri
-    private String getCurrentBaseUrl() {
-        return appBaseUrl != null && !appBaseUrl.isEmpty() ? appBaseUrl : "http://localhost:8080";
+    private String getCurrentBaseUrl(HttpServletRequest request) {
+        if (appBaseUrl != null && !appBaseUrl.isEmpty()) {
+            return appBaseUrl;
+        }
+        // Build URL dynamically from request
+        String scheme = request.getScheme();
+        String serverName = request.getServerName();
+        int serverPort = request.getServerPort();
+        String contextPath = request.getContextPath();
+
+        StringBuilder url = new StringBuilder();
+        url.append(scheme).append("://").append(serverName);
+        if ((scheme.equals("http") && serverPort != 80) || (scheme.equals("https") && serverPort != 443)) {
+            url.append(":").append(serverPort);
+        }
+        url.append(contextPath);
+        return url.toString();
     }
     
     // check if api response indicates token expiry
