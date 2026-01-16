@@ -54,7 +54,6 @@ public class CitesphereController {
     private IReferenceManager referenceManager;
 
 
-    // initiate oauth authorization with citesphere
     @RequestMapping(value = "/staff/citesphere/oauth/authorize", method = RequestMethod.GET)
     public String initiateOAuth(HttpServletRequest request, HttpSession session, RedirectAttributes redirectAttributes) {
 
@@ -65,11 +64,8 @@ public class CitesphereController {
         }
 
         try {
-            // generate state parameter for security
             String state = java.util.UUID.randomUUID().toString();
             session.setAttribute("citesphere_oauth_state", state);
-
-            // build authorization url
             String baseUrl = citesphereApiUrl;
             String redirectUri = getCurrentBaseUrl(request) + "/staff/citesphere/oauth/callback";
             
@@ -87,7 +83,6 @@ public class CitesphereController {
         }
     }
 
-    // handle oauth callback from citesphere
     @RequestMapping(value = "/staff/citesphere/oauth/callback", method = RequestMethod.GET)
     public String handleOAuthCallback(
             @RequestParam String code,
@@ -97,7 +92,6 @@ public class CitesphereController {
             RedirectAttributes redirectAttributes) {
 
         try {
-            // verify state parameter
             String sessionState = (String) session.getAttribute("citesphere_oauth_state");
 
             if (sessionState == null || !sessionState.equals(state)) {
@@ -106,7 +100,6 @@ public class CitesphereController {
                 return "redirect:/staff/dashboard";
             }
 
-            // exchange code for access token
             String accessToken = exchangeCodeForToken(code, session, request);
             
             if (accessToken != null) {
@@ -120,7 +113,6 @@ public class CitesphereController {
             logger.error("Error handling OAuth callback", e);
             redirectAttributes.addFlashAttribute("error", "OAuth authentication failed: " + e.getMessage());
         } finally {
-            // clean up session
             session.removeAttribute("citesphere_oauth_state");
         }
         
@@ -137,7 +129,6 @@ public class CitesphereController {
             ICitesphereManager citesphereManager = createCitesphereManager(session);
             Map<String, Object> groups = citesphereManager.getGroups();
             
-            // check for token expiry in response
             if (isTokenExpiredResponse(groups)) {
                 session.removeAttribute("citesphere_access_token");
                 session.removeAttribute("citesphere_refresh_token");
@@ -162,7 +153,6 @@ public class CitesphereController {
         }
     }
 
-    // get collections for a specific group
     @RequestMapping(value = "/staff/citesphere/groups/{groupId}/collections", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getCollections(@PathVariable String groupId, HttpSession session) {
@@ -179,7 +169,6 @@ public class CitesphereController {
         }
     }
 
-    // get items for a specific collection
     @RequestMapping(value = "/staff/citesphere/groups/{groupId}/collections/{collectionId}/items", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getCollectionItems(
@@ -200,7 +189,6 @@ public class CitesphereController {
         }
     }
 
-    // get all items for a specific group
     @RequestMapping(value = "/staff/citesphere/groups/{groupId}/items", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getGroupItems(@PathVariable String groupId, HttpSession session) {
@@ -217,7 +205,6 @@ public class CitesphereController {
         }
     }
 
-    // import selected references from citesphere to bibliography
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{slideId}/bibliography/{biblioId}/citesphere/import", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<Map<String, Object>> importCitesphereReferences(
@@ -306,7 +293,6 @@ public class CitesphereController {
                     
                 } catch (CitesphereTokenException e) {
                     logger.error("Token refresh failed: {}", e.getMessage());
-                    // clear invalid tokens from session
                     session.removeAttribute("citesphere_access_token");
                     session.removeAttribute("citesphere_refresh_token");
                     session.removeAttribute("citesphere_token_expiry");
@@ -316,13 +302,11 @@ public class CitesphereController {
             
             return manager;
         } else {
-            // no authentication available
             logger.error("No access token available in session - authentication required");
             throw new IllegalStateException("No Citesphere access token available. Please authenticate first.");
         }
     }
 
-    // exchange authorization code for access token
     private String exchangeCodeForToken(String code, HttpSession session, HttpServletRequest httpRequest) {
 
         try {
@@ -374,12 +358,10 @@ public class CitesphereController {
         return null;
     }
 
-    // get current base url for redirect uri
     private String getCurrentBaseUrl(HttpServletRequest request) {
         if (appBaseUrl != null && !appBaseUrl.isEmpty()) {
             return appBaseUrl;
         }
-        // Build URL dynamically from request
         String scheme = request.getScheme();
         String serverName = request.getServerName();
         int serverPort = request.getServerPort();
@@ -394,19 +376,16 @@ public class CitesphereController {
         return url.toString();
     }
     
-    // check if api response indicates token expiry
     private boolean isTokenExpiredResponse(Map<String, Object> response) {
         if (response == null) {
             return false;
         }
         
-        // check for token_expired flag
         Boolean tokenExpired = (Boolean) response.get("token_expired");
         if (Boolean.TRUE.equals(tokenExpired)) {
             return true;
         }
         
-        // check for error messages indicating token issues
         String errorMessage = (String) response.get("error_message");
         if (errorMessage != null) {
             String lowerError = errorMessage.toLowerCase();
@@ -434,7 +413,7 @@ public class CitesphereController {
         return "";
     }
 
-    // extract creators (authors) from citesphere reference data
+    // extract authors from citesphere reference data
     @SuppressWarnings("unchecked")
     private String extractCreators(Map<String, Object> refData) {
         try {
@@ -468,7 +447,6 @@ public class CitesphereController {
         return "";
     }
 
-    // extract year from citesphere reference data
     @SuppressWarnings("unchecked")
     private String extractYear(Map<String, Object> refData) {
         try {

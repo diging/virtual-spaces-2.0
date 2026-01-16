@@ -266,12 +266,10 @@ public class CitesphereManager implements ICitesphereManager {
             return false;
         }
         
-        // Check if token is expired based on stored expiry time
         if (authTokenObject.isTokenExpired()) {
             return false;
         }
         
-        // Optionally, test token with a simple API call
         try {
             String url = api + "/api/v1/test";
             Request.Builder requestBuilder = new Request.Builder().url(url);

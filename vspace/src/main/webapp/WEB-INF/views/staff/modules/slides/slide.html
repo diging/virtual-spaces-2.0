@@ -2992,12 +2992,9 @@
                 currentCollection: null
             };
 
-            // Initialize Citesphere functionality when modal is shown
             $('#addReferenceAlert').on('shown.bs.modal', function () {
-                // Show/hide appropriate tab content and buttons based on active tab
                 updateReferenceModalButtons();
                 
-                // If Citesphere tab is active, initialize step-by-step flow
                 if ($('#citesphereRefTab').hasClass('active')) {
                     initializeCitesphereSteps();
                 }
@@ -3007,13 +3004,11 @@
             $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
                 updateReferenceModalButtons();
                 
-                // Initialize Citesphere step-by-step flow when switching to tab
                 if ($(e.target).attr('href') === '#citesphereRefTab') {
                     initializeCitesphereSteps();
                 }
             });
             
-            // Also trigger when tab link is clicked
             $(document).on('click', 'a[href="#citesphereRefTab"]', function() {
                 setTimeout(function() {
                     updateReferenceModalButtons();
@@ -3040,10 +3035,8 @@
                 }
             }
 
-            // Initialize the step-by-step Citesphere flow
             function initializeCitesphereSteps() {
                 
-                // Reset step data
                 citesphereData.currentStep = 'connection';
                 citesphereData.currentGroup = null;
                 citesphereData.currentCollection = null;
@@ -3053,18 +3046,16 @@
                 hideImportSuccessMessage();
                 $('.citesphere-step').hide();
                 
-                // Show a loading message first
+                // Show a loading message
                 $('#connectionStatusContent').html(
                     '<div style="color: #007bff; background: #e3f2fd; border: 1px solid #90caf9; padding: 10px; border-radius: 3px;">' +
                     '<i class="fa fa-spinner fa-spin"></i> <strong>Checking Citesphere connection...</strong>' +
                     '</div>'
                 );
                 
-                // Check connection status and show appropriate step
                 checkCitesphereConnection();
             }
             
-            // Check if user is connected to Citesphere
             function checkCitesphereConnection() {
                 var token = $('input[name="_csrf"]').attr('value');
                 
@@ -3075,21 +3066,18 @@
                         'X-CSRF-Token': token
                     },
                     success: function(data) {
-                        // Connected successfully
                         showConnectionStatus(true);
                         citesphereData.groups = data;
                         citesphereData.currentStep = 'groups';
                         showStep1Groups(data);
                     },
                     error: function(xhr, status, error) {
-                        // Not connected or error
                         showConnectionStatus(false);
                         citesphereData.currentStep = 'connection';
                     }
                 });
             }
             
-            // Show import success message
             function showImportSuccessMessage(message) {
                 var successContainer = $('#importSuccessStatus');
                 
@@ -3101,18 +3089,15 @@
                 
                 successContainer.show();
                 
-                // Auto-hide after 5 seconds
                 setTimeout(function() {
                     successContainer.fadeOut();
                 }, 5000);
             }
             
-            // Function to hide success message
             function hideImportSuccessMessage() {
                 $('#importSuccessStatus').hide();
             }
             
-            // Show connection status at the top
             function showConnectionStatus(isConnected) {
                 var statusContainer = $('#connectionStatusContent');
                 
@@ -3135,13 +3120,11 @@
                 }
             }
             
-            // Show Step 1: Groups
             function showStep1Groups(groupsData) {
                 $('#step1-groups').show();
                 displayCitesphereGroups(groupsData);
             }
 
-            // Display groups in Step 1
             function displayCitesphereGroups(groupsData) {
                 var groupsContainer = $('#citesphereGroups');
                 groupsContainer.empty();
@@ -3163,7 +3146,6 @@
                         '</div>' +
                         '</div>');
                     
-                    // Hover effect
                     groupElement.hover(
                         function() { $(this).css('background', '#e3f2fd'); },
                         function() { $(this).css('background', '#f8f9fa'); }
@@ -3178,23 +3160,20 @@
                 });
             }
 
-            // Show Step 2: Collections
             function showStep2Collections(group) {
                 $('#step1-groups').hide();
                 $('#step2-collections').show();
                 $('#currentGroupName').text('Group: ' + (group.name || 'Unnamed Group'));
                 citesphereData.currentStep = 'collections';
                 
-                // Show loading message
                 $('#citesphereCollections').html('<div style="color: #007bff; background: #e3f2fd; border: 1px solid #90caf9; padding: 10px; border-radius: 3px;"><i class="fa fa-spinner fa-spin"></i> <strong>Loading collections...</strong></div>');
                 
-                // Extract group ID - try multiple possible fields
+                // Extract group ID
                 var groupId = group.zoteroGroupId || group.id || group.groupId || group.key;
                 
                 loadGroupCollections(groupId, group.name);
             }
             
-            // Load collections for a specific group
             function loadGroupCollections(groupId, groupName) {
                 var token = $('input[name="_csrf"]').attr('value');
                 
@@ -3213,12 +3192,10 @@
                 });
             }
 
-            // Display collections for a group in Step 2
             function displayCollections(collectionsData, groupId, groupName) {
                 var collectionsContainer = $('#citesphereCollections');
                 collectionsContainer.empty();
                 
-                // Handle both possible response structures: {data: []} or {collections: []}
                 var collections = collectionsData.collections || collectionsData.data || [];
                 
                 if (!collections || !Array.isArray(collections) || collections.length === 0) {
@@ -3228,7 +3205,6 @@
 
                 collections.forEach(function(collection) {
                     
-                    // Extract collection name and key from different possible structures
                     var collectionName = collection.name || (collection.data && collection.data.name) || 'Unnamed Collection';
                     var collectionKey = collection.key || (collection.data && collection.data.key) || collection.id;
                     
@@ -3242,7 +3218,6 @@
                         '</div>' +
                         '</div>');
                     
-                    // Hover effect
                     collectionElement.hover(
                         function() { $(this).css('background', '#e3f2fd'); },
                         function() { $(this).css('background', '#f8f9fa'); }
@@ -3257,7 +3232,6 @@
                 });
             }
 
-            // Show Step 3: References
             function showStep3References(groupId, collectionId, collectionName) {
                 $('#step2-collections').hide();
                 $('#step3-references').show();
@@ -3270,7 +3244,6 @@
                 loadCollectionItems(groupId, collectionId, collectionName);
             }
             
-            // Navigation handlers
             $(document).on('click', '#backToGroups', function() {
                 $('#step2-collections').hide();
                 $('#step1-groups').show();
@@ -3287,7 +3260,6 @@
                 updateSelectedCount();
             });
 
-            // Load items from a specific collection
             function loadCollectionItems(groupId, collectionId, collectionName) {
                 var token = $('input[name="_csrf"]').attr('value');
                 
@@ -3306,7 +3278,6 @@
                 });
             }
 
-            // Display individual references/items
             function displayIndividualItems(itemsData, title) {
                 var referencesContainer = $('#citesphereReferences');
                 referencesContainer.empty();
@@ -3314,10 +3285,8 @@
                 var titleElement = $('<h6 style="margin-bottom: 10px; color: #333;"><i class="fa fa-file-text"></i> ' + title + '</h6>');
                 referencesContainer.append(titleElement);
                 
-                // Handle both possible response structures: {data: []} or direct array or {items: []}
                 var items = itemsData.items || itemsData.data || itemsData || [];
                 
-                // If itemsData is directly an array, use it
                 if (Array.isArray(itemsData)) {
                     items = itemsData;
                 }
@@ -3329,19 +3298,15 @@
 
                 items.forEach(function(item, index) {
                     
-                    // Extract item data - try both direct properties and nested data structure
                     var itemData = item.data || item;
                     
-                    // Better title extraction - handle empty or missing titles
                     var title = item.title || itemData.title || item.referenceString || 'Untitled Reference';
                     if (title.trim() === '') {
                         title = 'Untitled Reference';
                     }
                     
-                    // Better author extraction - handle the complex authors array structure
                     var author = '';
                     if (item.authors && Array.isArray(item.authors) && item.authors.length > 0) {
-                        // Take the first few authors and format them properly
                         var displayAuthors = item.authors.slice(0, 3).map(function(auth) {
                             var firstName = (auth.firstName || '').trim();
                             var lastName = (auth.lastName || '').trim();
@@ -3366,12 +3331,10 @@
                         }
                     }
                     
-                    // Fallback to other author fields if authors array didn't work
                     if (!author) {
                         author = item.authorString || extractAuthorsFromItem(itemData) || item.author || 'Unknown Author';
                     }
                     
-                    // Better year extraction
                     var year = '';
                     if (item.date) {
                         var match = item.date.match(/(\d{4})/);
@@ -3385,7 +3348,6 @@
                         year = item.year || extractYearFromItem(itemData) || '';
                     }
                     
-                    // Better type extraction
                     var type = 'Reference';
                     if (item.itemType) {
                         switch(item.itemType) {
@@ -3401,7 +3363,6 @@
                         type = itemData.itemType;
                     }
                     
-                    // Use checkbox for multiple selection
                     var checkbox = $('<input type="checkbox" class="citesphere-item-checkbox" style="margin-right: 8px;">');
                     checkbox.data('item', item);
                     checkbox.attr('value', item.key || item.id || index);
@@ -3419,7 +3380,6 @@
                     
                     itemElement.find('div').first().prepend(checkbox);
 
-                    // Add hover effects
                     itemElement.hover(
                         function() { $(this).css('background-color', '#f8f9fa'); },
                         function() {
@@ -3429,7 +3389,6 @@
                         }
                     );
 
-                    // Handle selection - allow clicking on the whole item div
                     itemElement.click(function(e) {
                         if (e.target.type !== 'checkbox') {
                             checkbox.prop('checked', !checkbox.prop('checked'));
@@ -3437,10 +3396,8 @@
                         }
                     });
 
-                    // Handle checkbox selection
                     checkbox.change(function() {
                         if (this.checked) {
-                            // Add to selected references if not already present
                             var itemKey = item.key || item.id;
                             var alreadySelected = citesphereData.selectedReferences.some(function(ref) {
                                 return (ref.key || ref.id) === itemKey;
@@ -3448,18 +3405,15 @@
                             if (!alreadySelected) {
                                 citesphereData.selectedReferences.push(item);
                             }
-                            // Highlight selected item
                             itemElement.css({
                                 'background-color': '#e3f2fd',
                                 'border-color': '#2196f3'
                             });
                         } else {
-                            // Remove from selected references
                             var itemKey = item.key || item.id;
                             citesphereData.selectedReferences = citesphereData.selectedReferences.filter(function(ref) {
                                 return (ref.key || ref.id) !== itemKey;
                             });
-                            // Remove highlight
                             itemElement.css({
                                 'background-color': 'white',
                                 'border-color': '#ddd'
@@ -3472,9 +3426,7 @@
                 });
             }
 
-            // Helper function to extract authors from Citesphere item
             function extractAuthorsFromItem(itemData) {
-                // Handle different author field structures
                 if (itemData.authorString) {
                     return itemData.authorString;
                 }
@@ -3500,9 +3452,7 @@
                 return 'Unknown Author';
             }
 
-            // Helper function to extract year from Citesphere item
             function extractYearFromItem(itemData) {
-                // Handle different year field structures
                 if (itemData.year) {
                     return itemData.year;
                 }
@@ -3515,7 +3465,6 @@
                 return '';
             }
 
-            // Update selected count display
             function updateSelectedCount() {
                 var count = citesphereData.selectedReferences.length;
                 if (count === 0) {
@@ -3527,7 +3476,6 @@
                 }
             }
 
-            // Select All button handler
             $(document).on('click', '#selectAllReferences', function() {
                 $('.citesphere-item-checkbox').each(function() {
                     if (!$(this).prop('checked')) {
@@ -3537,7 +3485,6 @@
                 });
             });
 
-            // Deselect All button handler
             $(document).on('click', '#deselectAllReferences', function() {
                 $('.citesphere-item-checkbox').each(function() {
                     if ($(this).prop('checked')) {
@@ -3547,11 +3494,9 @@
                 });
             });
 
-            // Handle search functionality
             $('#searchCitesphereBtn').click(function() {
                 var searchTerm = $('#citesphereSearch').val().trim();
                 if (searchTerm) {
-                    // For now, just show an informative message since Citesphere API doesn't have search endpoint yet
                     $('#citesphereReferences').html(
                         '<div class="alert alert-info">' +
                         '<h6><i class="fa fa-info-circle"></i> Search Not Available</h6>' +
@@ -3559,19 +3504,16 @@
                         '</div>'
                     );
                 } else {
-                    // Reload current view
                     loadCitesphereGroups();
                 }
             });
 
-            // Allow search on Enter key
             $('#citesphereSearch').keypress(function(e) {
                 if (e.which === 13) {
                     $('#searchCitesphereBtn').click();
                 }
             });
 
-            // Dedicated function to handle Citesphere import
             function handleCitesphereImport() {
 
                 if (citesphereData.selectedReferences.length === 0) {
@@ -3579,11 +3521,9 @@
                     return;
                 }
 
-                // Continue with the import process
                 performCitesphereImport();
             }
             
-            // Function to perform the actual import
             function performCitesphereImport() {
                 var biblioId = $('#addReferenceTarget').val();
                 if (!biblioId) {
@@ -3592,10 +3532,8 @@
                 }
                 
                 
-                // Transform the data to match the expected backend format
                 var transformedReferences = citesphereData.selectedReferences.map(function(item) {
                     
-                    // Extract creators from the authors array or fallback to authorString
                     var creators = [];
                     
                     if (item.authors && Array.isArray(item.authors)) {
@@ -3607,7 +3545,6 @@
                             };
                         });
                     } else if (item.authorString) {
-                        // Fallback to authorString parsing
                         var authors = item.authorString.split(';');
                         creators = authors.map(function(author) {
                             var trimmedAuthor = author.trim();
@@ -3628,7 +3565,6 @@
                         });
                     }
                     
-                    // Extract date from various possible fields
                     var dateValue = '';
                     if (item.date) {
                         dateValue = item.date;
@@ -3638,8 +3574,7 @@
                         dateValue = item.year;
                     }
                     
-                    // Map itemType from Citesphere to Zotero format
-                    var itemType = 'journalArticle'; // default
+                    var itemType = 'journalArticle'; // Default to journal article
                     if (item.itemType) {
                         switch(item.itemType) {
                             case 'JOURNAL_ARTICLE': itemType = 'journalArticle'; break;
@@ -3652,7 +3587,6 @@
                         itemType = item['@type'];
                     }
                     
-                    // Create the nested data structure expected by the backend
                     
                     var transformedItem = {
                         data: {
@@ -3701,19 +3635,16 @@
                     success: function(response) {
 
                         if (response.success) {
-                            // Show success message with count
                             var count = response.imported_count || citesphereData.selectedReferences.length;
                             var message = count === 1 ? '1 reference imported successfully!' : count + ' references imported successfully!';
                             showImportSuccessMessage(message);
                             
-                            // Add the imported references to the bibliography block
                             var biblioBlock = $('[data-biblio-id="' + biblioId + '"]').closest('[data-biblio-block]');
                             var referenceSpace = biblioBlock.find('#referenceSpace');
                             
                             if (response.references && Array.isArray(response.references)) {
                                 response.references.forEach(function(ref, index) {
                                     
-                                    // Use the same format as existing references in the application
                                     var referenceHtml = '<div id="' + ref.id + '" class="referenceDivStaff tab row" data-reference-block data-biblio-id="' + biblioId + '">' +
                                         '<p class="col-md-10">' +
                                         'Reference Title: <span>' + (ref.title || 'NO TITLE') + '</span>, ' +
@@ -3754,30 +3685,24 @@
                 });
             }
             
-            // Handle importing selected reference (jQuery event handler for compatibility)
             $('#submitCitesphereReferences').click(function() {
                 handleCitesphereImport();
             });
             
-            // Clear Citesphere data when modal is hidden
             $('#addReferenceAlert').on('hidden.bs.modal', function () {
-                // Reset Citesphere data
                 citesphereData.selectedReferences = [];
                 citesphereData.currentStep = 'connection';
                 citesphereData.currentGroup = null;
                 citesphereData.currentCollection = null;
                 updateSelectedCount();
                 
-                // Hide success message
                 hideImportSuccessMessage();
                 
-                // Clear all containers
                 $('#citesphereGroups').empty();
                 $('#citesphereCollections').empty();
                 $('#citesphereReferences').empty();
                 $('#connectionStatusContent').empty();
                 
-                // Hide all steps
                 $('.citesphere-step').hide();
             });
 
@@ -4486,7 +4411,7 @@
 			                              </div>
 			                           </div>
 			                           
-			                           <!-- Step 3: Select References -->
+			                           <!-- Select References -->
 			                           <div id="step3-references" class="citesphere-step" style="display: none;">
 			                              <div style="border: 1px solid #ddd; border-radius: 5px; padding: 15px; background: white;">
 			                                 <div style="margin-bottom: 15px;">
