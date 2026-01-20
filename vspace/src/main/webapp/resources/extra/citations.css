@@ -399,13 +399,112 @@
         border: none;
         margin: 10px 0;
     }
-    
+
     .apa-reference {
         color: #000;
         border-bottom: 1px solid #ccc;
     }
-    
+
     .raw-bibliography {
         display: none; /* Hide raw references in print */
     }
+}
+
+/* ========================================
+   citation.js Formatted References
+   ======================================== */
+
+/* Container for formatted references */
+.formatted-references-container {
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+/* Individual formatted reference from citation.js */
+.formatted-reference {
+    margin-bottom: 12px;
+    padding: 12px 16px;
+    background-color: white;
+    border-radius: 6px;
+    border-left: 4px solid var(--primary, #A55941);
+    font-size: 14px;
+    line-height: 1.7;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    transition: box-shadow 0.2s;
+}
+
+.formatted-reference:hover {
+    box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+}
+
+.formatted-reference:last-child {
+    margin-bottom: 0;
+}
+
+.formatted-reference p {
+    margin: 0;
+    text-align: left;
+}
+
+.formatted-reference a {
+    color: var(--primary, #A55941);
+    text-decoration: none;
+    word-break: break-all;
+}
+
+.formatted-reference a:hover {
+    text-decoration: underline;
+}
+
+/* Citation.js generated CSL styles */
+.formatted-reference .csl-entry {
+    margin: 0;
+}
+
+.formatted-reference .csl-left-margin {
+    float: left;
+    padding-right: 8px;
+}
+
+.formatted-reference .csl-right-inline {
+    margin-left: 0;
+}
+
+/* Hide raw data used for JavaScript processing */
+.reference-raw-data {
+    display: none !important;
+}
+
+/* No references message */
+.no-references {
+    color: #666;
+    font-style: italic;
+    margin: 0;
+}
+
+/* Bibliography description */
+.biblio-description {
+    color: #666;
+    font-style: italic;
+    margin-bottom: 16px;
+}
+
+/* Scrollbar styling for references container */
+.formatted-references-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.formatted-references-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.formatted-references-container::-webkit-scrollbar-thumb {
+    background: #aaa;
+    border-radius: 3px;
+}
+
+.formatted-references-container::-webkit-scrollbar-thumb:hover {
+    background: #888;
 } 
