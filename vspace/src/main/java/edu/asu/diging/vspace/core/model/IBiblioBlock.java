@@ -21,19 +21,5 @@ public interface IBiblioBlock extends IContentBlock {
     void setId(String id);
 
     String getId();
-    
-    /**
-     * Renders the bibliography block with APA-formatted references
-     * 
-     * @return HTML formatted string with APA-style references
-     */
-    String renderAPAReferences();
-    
-    /**
-     * Renders the bibliography block with raw reference data (for editing)
-     * 
-     * @return HTML formatted string with raw reference data
-     */
-    String renderRawReferences();
 
 }
