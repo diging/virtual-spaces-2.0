@@ -2060,24 +2060,30 @@
                     },
                     data: jsonData,
                     success: function(data) {
-                        // Updated with data attributes
+                        // Build reference display from fields
+                        var displayParts = [];
+                        if (data.author) displayParts.push(data.author);
+                        if (data.year) displayParts.push(' (' + data.year + ')');
+                        if (displayParts.length > 0) displayParts.push('. ');
+                        if (data.title) displayParts.push('<em>' + data.title + '</em>. ');
+                        if (data.journal) displayParts.push(data.journal);
+                        if (data.volume) displayParts.push(', ' + data.volume);
+                        if (data.issue) displayParts.push('(' + data.issue + ')');
+                        if (data.pages) displayParts.push(', ' + data.pages);
+                        if (data.editors) displayParts.push('. Edited by ' + data.editors);
+                        if (data.type) displayParts.push(' [' + data.type + ']');
+                        if (data.url) displayParts.push('. <a href="' + data.url + '" target="_blank">' + data.url + '</a>');
+                        if (data.note) displayParts.push('. Note: ' + data.note);
+
+                        var displayText = displayParts.join('') || 'Reference added';
+
 						var referenceblock = $(
 						    '<div id="'+ data.id +'" class="referenceDivStaff tab row" data-reference-block data-biblio-id="' + biblioBlockId + '">' +
-						    '<p class="col-md-10">' +
-						    'Reference Title: <span>' + data.title + '</span>, ' +
-						    'Author: <span>' + data.author + '</span>, ' +
-						    'Year: <span>' + data.year + '</span>, ' +
-						    'Journal: <span>' + data.journal + '</span>, ' +
-						    'Url: <span>' + data.url + '</span>, ' +
-						    'Volume: <span>' + data.volume + '</span>, ' +
-						    'Issue: <span>' + data.issue + '</span>, ' +
-						    'Pages: <span>' + data.pages + '</span>, ' +
-						    'Editors: <span>' + data.editors + '</span>, ' +
-						    'Type: <span>' + data.type + '</span>, ' +
-						    'Note: <span>' + data.note + '</span>' +
-						    '</p>' +
-						    '<input type="hidden" data-reference-id="' + data.id + '" value="' + data.id + '" />' +
-						    '<a class="btn col-md-1" data-action="delete-reference" href="javascript:;" style="position: absolute; right:0px;">' +
+						    '<div class="col-md-10 reference-display">' +
+						    displayText +
+						    '</div>' +
+						    '<input type="hidden" class="deleteReferenceField" data-reference-id="' + data.id + '" value="' + data.id + '" />' +
+						    '<a class="btn col-md-1" data-action="delete-reference" data-reference-id="' + data.id + '" href="javascript:;">' +
 						    '<span class="icon-trash error"></span></a>' +
 						    '</div>'
 						);
@@ -4058,31 +4064,33 @@
 					       style="padding-top: 8px;">+ New Reference</a>
 					    <div id="referenceSpace" class="col-md-10">
 						<div th:each="contentRef: ${contents.references}">
-						    <!-- Reference Block with TYPE FIRST -->
-						    <div th:id="${contentRef.id}" 
-						         class="referenceDivStaff tab row" 
+						    <!-- Reference Block -->
+						    <div th:id="${contentRef.id}"
+						         class="referenceDivStaff tab row"
 						         data-reference-block
 						         th:attr="data-biblio-id=${contents.id}">
-						        <p class="col-md-10">
-						            Type: <span>[[${contentRef.type}]]</span>,
-						            Reference Title: <span>[[${contentRef.title}]]</span>, 
-						            Author: <span>[[${contentRef.author}]]</span>,
-						            Year: <span>[[${contentRef.year}]]</span>, 
-						            Journal: <span>[[${contentRef.journal}]]</span>,
-						            Url: <span>[[${contentRef.url}]]</span>, 
-						            Volume: <span>[[${contentRef.volume}]]</span>,
-						            Issue: <span>[[${contentRef.issue}]]</span>, 
-						            Pages: <span>[[${contentRef.pages}]]</span>,
-						            Editors: <span>[[${contentRef.editors}]]</span>, 
-						            Note: <span>[[${contentRef.note}]]</span>
-						        </p>
-						        <input type="hidden" 
-						               class="deleteReferenceField" 
+						        <div class="col-md-10 reference-display">
+						            <span th:if="${not #strings.isEmpty(contentRef.author)}" th:text="${contentRef.author}"></span>
+						            <span th:if="${not #strings.isEmpty(contentRef.year)}"> (<span th:text="${contentRef.year}"></span>)</span>
+						            <span th:if="${not #strings.isEmpty(contentRef.author) or not #strings.isEmpty(contentRef.year)}">. </span>
+						            <em th:if="${not #strings.isEmpty(contentRef.title)}" th:text="${contentRef.title}"></em>
+						            <span th:if="${not #strings.isEmpty(contentRef.title)}">. </span>
+						            <span th:if="${not #strings.isEmpty(contentRef.journal)}" th:text="${contentRef.journal}"></span>
+						            <span th:if="${not #strings.isEmpty(contentRef.volume)}">, <span th:text="${contentRef.volume}"></span></span>
+						            <span th:if="${not #strings.isEmpty(contentRef.issue)}">(<span th:text="${contentRef.issue}"></span>)</span>
+						            <span th:if="${not #strings.isEmpty(contentRef.pages)}">, <span th:text="${contentRef.pages}"></span></span>
+						            <span th:if="${not #strings.isEmpty(contentRef.editors)}">. Edited by <span th:text="${contentRef.editors}"></span></span>
+						            <span th:if="${not #strings.isEmpty(contentRef.type)}"> [<span th:text="${contentRef.type}"></span>]</span>
+						            <a th:if="${not #strings.isEmpty(contentRef.url)}" th:href="${contentRef.url}" target="_blank">. <span th:text="${contentRef.url}"></span></a>
+						            <span th:if="${not #strings.isEmpty(contentRef.note)}">. Note: <span th:text="${contentRef.note}"></span></span>
+						        </div>
+						        <input type="hidden"
+						               class="deleteReferenceField"
 						               data-reference-id="${contentRef.id}"
 						               th:attr="data-reference-id=${contentRef.id}"
 						               th:value="${contentRef.id}" />
-						        <a class="btn col-md-1" 
-						           data-action="delete-reference" 
+						        <a class="btn col-md-1"
+						           data-action="delete-reference"
 						           data-reference-id="${contentRef.id}"
 						           th:attr="data-reference-id=${contentRef.id}"
 						           href="javascript:;">
@@ -4090,7 +4098,7 @@
 						        </a>
 						    </div>
 						</div>
-				
+
 				    </div>
 				</div>
                
