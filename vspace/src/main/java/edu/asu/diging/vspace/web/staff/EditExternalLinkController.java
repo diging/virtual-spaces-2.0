@@ -28,7 +28,7 @@ public class EditExternalLinkController extends EditSpaceLinksController {
 
     @Autowired
     private IExternalLinkManager externalLinkManager;
-    
+
     @RequestMapping(value = "/staff/space/link/external/{id}", method = RequestMethod.POST)
     public ResponseEntity<String> createExternalLink(@PathVariable("id") String id, @RequestParam("x") String x,
             @RequestParam("y") String y, @RequestParam("externalLinkLabel") String title,
@@ -37,9 +37,9 @@ public class EditExternalLinkController extends EditSpaceLinksController {
             @RequestParam("externalLinkDisplayId") String externalLinkDisplayId,
             @RequestParam("tabOpen") String howToOpen, @RequestParam("type") String displayType,
             @RequestParam("editExternalLinkInfoImage") MultipartFile file,
-			@RequestParam(value = "editExternalLinkInfo-imageId", required = false) String imageId)
-			throws SpaceDoesNotExistException, IOException, LinkDoesNotExistsException, NumberFormatException,
-			ImageCouldNotBeStoredException, ImageDoesNotExistException {
+            @RequestParam(value = "editExternalLinkInfo-imageId", required = false) String imageId)
+            throws SpaceDoesNotExistException, IOException, LinkDoesNotExistsException, NumberFormatException,
+            ImageCouldNotBeStoredException, ImageDoesNotExistException {
 
         ResponseEntity<String> validation = checkIfSpaceExists(spaceManager, id, x, y);
         if (validation != null) {
@@ -57,7 +57,7 @@ public class EditExternalLinkController extends EditSpaceLinksController {
                 : ExternalLinkDisplayMode.valueOf(howToOpen);
         IExternalLinkDisplay display = (IExternalLinkDisplay) externalLinkManager.updateLink(title, id, new Float(x),
                 new Float(y), 0, externalLink, title,desc, externalLinkIdValueEdit, externalLinkDisplayId, type, linkImage,
-				filename, imageId);
+                filename, imageId);
         return success(display.getExternalLink().getId(), display.getId(), display.getPositionX(),
                 display.getPositionY(), display.getRotation(), display.getExternalLink().getExternalLink(), title,
                 displayType, null, null);
