@@ -29,7 +29,7 @@ public abstract class LinkManager<L extends ILink<T>, T extends IVSpaceElement, 
 
     @Autowired
     private ISpaceManager spaceManager;
-
+  
     @Autowired
     private IImageFactory imageFactory;
 
@@ -38,7 +38,7 @@ public abstract class LinkManager<L extends ILink<T>, T extends IVSpaceElement, 
 
     @Autowired
     private IStorageEngine storage;
-    
+
     @Autowired
     private IImageService imageService;
 
@@ -135,7 +135,7 @@ public abstract class LinkManager<L extends ILink<T>, T extends IVSpaceElement, 
         linkDisplay.setPositionX(positionX);
         linkDisplay.setPositionY(positionY);
         linkDisplay.setRotation(rotation);
-        linkDisplay.setType(displayType != null ? displayType : DisplayType.ARROW);     
+        linkDisplay.setType(displayType != null ? displayType : DisplayType.ARROW);
     }
 
     protected void setDisplayProperties(ILinkDisplay linkDisplay, String id, float positionX, float positionY,
