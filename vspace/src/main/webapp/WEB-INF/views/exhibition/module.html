@@ -126,6 +126,10 @@ ul{
 				    elem.msRequestFullscreen();
 				  }
 			   $("#Module_1").append('<div class = "exitfullscreen"><button class="btn circle-btn" style="padding: 3px;width: 35px;height: 35px;position: fixed;right: 0;bottom: 0;margin: 0 2rem 2rem 0;" onclick="exitFullScreen()"><span class="icon-collapse secondary"></span><span class="tooltiptextForExitFullscreen">Exit Full screen</span></button></div>')
+			   var sidebar = document.querySelector('.external-resources-sidebar');
+			   if (sidebar) {
+			       sidebar.style.zIndex = '9999';
+			   }
 		}
 
 		function exitFullScreen()
@@ -133,6 +137,10 @@ ul{
 			$(".exitfullscreen").remove();
 			$(".imgFullScreen").show();
 			$("#Module_1").css('overflow-y','visible')
+			var sidebar = document.querySelector('.external-resources-sidebar');
+			if (sidebar) {
+			    sidebar.style.zIndex = '105';
+			}
 			if (document.exitFullscreen) {
 			    document.exitFullscreen();
 			  } else if (document.webkitExitFullscreen) { /* Safari */
@@ -145,9 +153,17 @@ ul{
         function showModuleMapModal(){
         	$("#moduleOverviewModal").show();
         }
-        	
+
         function closeModal(){
         	$("#moduleOverviewModal").hide();
+        }
+
+        function showExternalLinksModal(){
+        	$("#externalLinksModal").show();
+        }
+
+        function closeExternalLinksModal(){
+        	$("#externalLinksModal").hide();
         }
 </script>
 </head>
@@ -223,6 +239,42 @@ ul{
             	<span class="icon-map"></span> <span class="tooltiptext">view
             		Module Map</span>
             </button>
+        </div>
+
+        <!-- External Links Button -->
+        <div th:if="${slideExternalLinkList != null and !#lists.isEmpty(slideExternalLinkList)}"
+             class="external_links_btn_class" style="position: fixed; z-index: 110; left: 4%; top: 60%; width: 50px;">
+            <button class="btn circle-btn" onClick="showExternalLinksModal()">
+                <span class="icon-link"></span>
+                <span class="tooltiptext">External Resources</span>
+            </button>
+        </div>
+
+        <!-- External Links Modal -->
+        <div th:if="${slideExternalLinkList != null and !#lists.isEmpty(slideExternalLinkList)}"
+             id="externalLinksModal" class="modal" role="dialog">
+            <div class="modal-dialog" role="document" style="max-width: 450px;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">External Resources</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onClick="closeExternalLinksModal()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="external-resources-content">
+                            <div th:each="link: ${slideExternalLinkList}" class="external-resource-item">
+                                <a th:href="@{${link.getExternalLink()}}"
+                                   target="_blank"
+                                   class="external-resource-link">
+                                    <span class="icon-link-out secondary" style="font-size: 14px; margin-right: 5px;"></span>
+                                    [[${link.getLabel()}]]
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
          <div style="position: relative;top: 6.5%;">
@@ -574,11 +626,5 @@ ul{
        	</div>
      	</div>
    		</div>
-   				<div th:if="${slideExternalLinkList != null and !#lists.isEmpty(slideExternalLinkList)}" style="margin:auto; width: 57%; padding: 30px 0 80px 0; background-color: white; z-index: 1; position: relative;">
-   					<h5 style="margin-bottom: 15px;">External Resources:</h5>
-	     			<div th:each="link: ${slideExternalLinkList}" style="margin-bottom: 8px; line-height: 1.5;"> -
-	      				<a style="text-decoration: underline; color:var(--primary); display: inline-block;" th:href="@{${link.getExternalLink()}}" th:target="_blank">[[${link.getLabel()}]]</a>
-	     			</div>
-    			</div>
 </body>
 </html>

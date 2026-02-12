@@ -227,3 +227,39 @@ a, a:hover, a:focus {
         width: 98%;
     }
 }
+
+/* External Links Button */
+.external_links_btn_class:hover .tooltiptext {
+    visibility: visible;
+}
+
+/* External Links Modal Content */
+.external-resources-content {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.external-resource-item {
+    margin: 0;
+    padding: 0;
+}
+
+.external-resource-link {
+    display: flex;
+    align-items: center;
+    padding: 10px 12px;
+    color: var(--primary);
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 15px;
+    line-height: 1.4;
+    word-wrap: break-word;
+    transition: all 0.2s ease;
+}
+
+.external-resource-link:hover {
+    background-color: #F2F2F2;
+    color: var(--primary);
+    text-decoration: underline;
+}
