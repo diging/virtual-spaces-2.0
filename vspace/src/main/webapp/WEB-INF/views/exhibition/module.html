@@ -153,9 +153,17 @@ ul{
         function showModuleMapModal(){
         	$("#moduleOverviewModal").show();
         }
-        	
+
         function closeModal(){
         	$("#moduleOverviewModal").hide();
+        }
+
+        function showExternalLinksModal(){
+        	$("#externalLinksModal").show();
+        }
+
+        function closeExternalLinksModal(){
+        	$("#externalLinksModal").hide();
         }
 </script>
 </head>
@@ -233,18 +241,38 @@ ul{
             </button>
         </div>
 
-        <!-- External Resources Sidebar -->
+        <!-- External Links Button -->
         <div th:if="${slideExternalLinkList != null and !#lists.isEmpty(slideExternalLinkList)}"
-             class="external-resources-sidebar">
-            <h5 class="external-resources-title">External Resources</h5>
-            <div class="external-resources-content">
-                <div th:each="link: ${slideExternalLinkList}" class="external-resource-item">
-                    <a th:href="@{${link.getExternalLink()}}"
-                       th:target="_blank"
-                       class="external-resource-link">
-                        <span class="icon-link-out secondary" style="font-size: 14px; margin-right: 5px;"></span>
-                        [[${link.getLabel()}]]
-                    </a>
+             class="external_links_btn_class" style="position: fixed; z-index: 110; left: 4%; top: 60%; width: 50px;">
+            <button class="btn circle-btn" onClick="showExternalLinksModal()">
+                <span class="icon-link"></span>
+                <span class="tooltiptext">External Resources</span>
+            </button>
+        </div>
+
+        <!-- External Links Modal -->
+        <div th:if="${slideExternalLinkList != null and !#lists.isEmpty(slideExternalLinkList)}"
+             id="externalLinksModal" class="modal" role="dialog">
+            <div class="modal-dialog" role="document" style="max-width: 450px;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">External Resources</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onClick="closeExternalLinksModal()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="external-resources-content">
+                            <div th:each="link: ${slideExternalLinkList}" class="external-resource-item">
+                                <a th:href="@{${link.getExternalLink()}}"
+                                   target="_blank"
+                                   class="external-resource-link">
+                                    <span class="icon-link-out secondary" style="font-size: 14px; margin-right: 5px;"></span>
+                                    [[${link.getLabel()}]]
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -228,36 +228,16 @@ a, a:hover, a:focus {
     }
 }
 
-/* External Resources Sidebar */
-.external-resources-sidebar {
-    position: fixed;
-    right: 1%;
-    top: 20%;
-    width: 280px;
-    max-height: 60vh;
-    background-color: white;
-    border: 1px solid #C7C7C7;
-    border-radius: 8px;
-    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.15);
-    z-index: 105;
-    padding: 20px;
-    overflow-y: auto;
-    overflow-x: hidden;
+/* External Links Button */
+.external_links_btn_class:hover .tooltiptext {
+    visibility: visible;
 }
 
-.external-resources-title {
-    margin: 0 0 15px 0;
-    font-size: 16px;
-    font-weight: 600;
-    color: #121212;
-    border-bottom: 2px solid var(--secondary);
-    padding-bottom: 8px;
-}
-
+/* External Links Modal Content */
 .external-resources-content {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 5px;
 }
 
 .external-resource-item {
@@ -268,55 +248,18 @@ a, a:hover, a:focus {
 .external-resource-link {
     display: flex;
     align-items: center;
-    padding: 8px 10px;
+    padding: 10px 12px;
     color: var(--primary);
     text-decoration: none;
     border-radius: 5px;
-    font-size: 14px;
+    font-size: 15px;
     line-height: 1.4;
     word-wrap: break-word;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
 }
 
 .external-resource-link:hover {
     background-color: #F2F2F2;
     color: var(--primary);
     text-decoration: underline;
-}
-
-/* Scrollbar styling */
-.external-resources-sidebar::-webkit-scrollbar {
-    width: 6px;
-}
-
-.external-resources-sidebar::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 3px;
-}
-
-.external-resources-sidebar::-webkit-scrollbar-thumb {
-    background: #C7C7C7;
-    border-radius: 3px;
-}
-
-.external-resources-sidebar::-webkit-scrollbar-thumb:hover {
-    background: #999;
-}
-
-/* Responsive Design */
-@media only screen and (max-width: 1200px) {
-    .external-resources-sidebar {
-        position: static;
-        width: 57%;
-        max-height: none;
-        margin: 30px auto;
-        right: auto;
-        top: auto;
-    }
-}
-
-@media only screen and (max-width: 800px) {
-    .external-resources-sidebar {
-        width: 90%;
-    }
 }
