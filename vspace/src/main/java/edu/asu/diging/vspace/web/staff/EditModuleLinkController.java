@@ -35,7 +35,7 @@ public class EditModuleLinkController extends EditSpaceLinksController {
         @RequestParam("moduleLinkLabel") String moduleLinkLabel,
         @RequestParam("moduleLinkIdValueEdit") String moduleLinkIdValueEdit,
         @RequestParam("moduleLinkDisplayId") String moduleLinkDisplayId, @RequestParam("type") String displayType,
-        @RequestParam(value = "moduleLinkImage", required=false) MultipartFile file, @RequestParam(value="editModule-imageId", required=false) String imageId) throws NumberFormatException,
+        @RequestParam(value = "moduleLinkImage", required=false) MultipartFile file, @RequestParam(value="editModuleLink-imageId", required=false) String imageId) throws NumberFormatException,
         SpaceDoesNotExistException, LinkDoesNotExistsException, IOException, ImageCouldNotBeStoredException, ImageDoesNotExistException {
 
         ResponseEntity<String> validation = checkIfSpaceExists(spaceManager, id, x, y);

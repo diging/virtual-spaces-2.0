@@ -151,7 +151,6 @@ public class SpaceLinkManagerTest {
         
         Mockito.when(spaceManager.getSpace(spaceId1)).thenReturn(space);
         Mockito.when(spaceLinkRepo.save((SpaceLink)spaceLink)).thenReturn((SpaceLink) spaceLink);
-        Mockito.when(spaceManager.getSpace(spaceId1)).thenReturn(space);
         Mockito.when(spaceLinkFactory.createSpaceLink("New Space Link", space)).thenReturn(spaceLink);
 
         ISpace target = new Space();
@@ -356,7 +355,7 @@ public class SpaceLinkManagerTest {
         Mockito.when(spaceDisplayManager.getBySpace(space)).thenReturn(displayAttributes);
         Mockito.when(spaceLinkRepo.save((SpaceLink) spaceLink)).thenReturn((SpaceLink)spaceLink);
         Mockito.when(spaceLinkDisplayRepo.save((SpaceLinkDisplay)spaceLinkDisplay)).thenReturn((SpaceLinkDisplay)spaceLinkDisplayUpdated);
-        Mockito.when(imageService.getImageById(Mockito.anyString())).thenReturn(spcImage);
+        Mockito.when(imageService.getImageById(imageId2)).thenReturn(spcImage);
         
         ISpaceLinkDisplay savedSpaceLinkDisplay2 = managerToTest.updateLink("Updated Space Link", spaceId1, 10, 30, 40, spaceId2, "Updated Space Link", "TestSpaceEdited Desc", "SPL002", "SPLD001", DisplayType.IMAGE, null, null, imageId2);
         Assert.assertEquals(spaceLinkDisplayUpdated.getId(), savedSpaceLinkDisplay2.getId());
