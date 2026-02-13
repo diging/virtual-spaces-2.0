@@ -71,7 +71,7 @@ public abstract class LinkManager<L extends ILink<T>, T extends IVSpaceElement, 
         if (linkedId == null || linkedId.trim().isEmpty()) {
             throw new SpaceDoesNotExistException("Linked ID cannot be null or empty.");
         }
-        if ((linkImage == null || linkImage.length == 0) && (existingImageId == null || existingImageId.trim().isEmpty())) {
+        if (displayType == DisplayType.IMAGE && (linkImage == null || linkImage.length == 0) && (existingImageId == null || existingImageId.trim().isEmpty())) {
             throw new ImageCouldNotBeStoredException("No image provided. Either linkImage or existingImageId must be provided.");
         }
         

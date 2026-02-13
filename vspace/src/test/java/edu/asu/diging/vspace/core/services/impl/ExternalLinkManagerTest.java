@@ -14,6 +14,10 @@ import org.mockito.MockitoAnnotations;
 
 import edu.asu.diging.vspace.core.data.ExternalLinkDisplayRepository;
 import edu.asu.diging.vspace.core.data.ExternalLinkRepository;
+import edu.asu.diging.vspace.core.data.ImageRepository;
+import edu.asu.diging.vspace.core.factory.IImageFactory;
+import edu.asu.diging.vspace.core.file.IStorageEngine;
+import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
 import edu.asu.diging.vspace.core.exception.ImageDoesNotExistException;
 import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
@@ -52,6 +56,18 @@ public class ExternalLinkManagerTest {
 
     @Mock
     private IExternalLinkDisplayFactory externalLinkDisplayFactory;
+
+    @Mock
+    private IImageFactory imageFactory;
+
+    @Mock
+    private IImageService imageService;
+
+    @Mock
+    private ImageRepository imageRepo;
+
+    @Mock
+    private IStorageEngine storage;
 
     @InjectMocks
     private ExternalLinkManager managerToTest = new ExternalLinkManager();
@@ -104,6 +120,9 @@ public class ExternalLinkManagerTest {
 
         Mockito.when(externalLinkRepo.save((ExternalLink) externalLink)).thenReturn((ExternalLink)externalLink);
         Mockito.when(externalLinkDisplayRepo.save((ExternalLinkDisplay)externalDisplayLink)).thenReturn((ExternalLinkDisplay)externalDisplayLink);
+
+        IVSImage linkImage = new VSImage();
+        Mockito.when(imageService.getImageById("IMG000000001")).thenReturn(linkImage);
 
         IExternalLinkDisplay savedExternalLinkDisplay1 = managerToTest.createLink("New External Link", spaceId1, 10.0f, 30.0f, 40, "EXL001", "New External Link", "Description", DisplayType.ARROW, null, null, null, "IMG000000001");
         Assert.assertEquals(externalDisplayLink.getId(), savedExternalLinkDisplay1.getId());

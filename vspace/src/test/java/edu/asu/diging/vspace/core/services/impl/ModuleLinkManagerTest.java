@@ -24,6 +24,7 @@ import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.factory.IModuleLinkDisplayFactory;
 import edu.asu.diging.vspace.core.factory.IModuleLinkFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
+import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.IModuleLink;
 import edu.asu.diging.vspace.core.model.ISpace;
@@ -67,6 +68,8 @@ public class ModuleLinkManagerTest {
     @Mock
     private IStorageEngine storage;
 
+    @Mock
+    private IImageService imageService;
 
     @Mock
     private IModuleLinkDisplayFactory moduleLinkDisplayFactory;
@@ -163,6 +166,8 @@ public class ModuleLinkManagerTest {
         
         Mockito.when(moduleLinkRepo.save((ModuleLink) moduleLink)).thenReturn((ModuleLink)moduleLink);
         Mockito.when(moduleLinkDisplayRepo.save((ModuleLinkDisplay)moduleDisplayLinkImage)).thenReturn((ModuleLinkDisplay)moduleDisplayLinkImage);
+
+        Mockito.when(imageService.getImageById("IMG000000001")).thenReturn(modImage);
 
         IModuleLinkDisplay savedModuleLinkDisplay2 = managerToTest.createLink("New Module Link", spaceId1, 10, 30, 40, "MOD001", "New Module Link", "New Module Link Desc", DisplayType.IMAGE, new byte[20], imageFileName, "IMG000000001");
         Assert.assertEquals(moduleDisplayLinkImage.getId(), savedModuleLinkDisplay2.getId());
