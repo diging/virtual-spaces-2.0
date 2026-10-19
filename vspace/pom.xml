@@ -14,7 +14,7 @@
         <spring-data.version>2021.2.18</spring-data.version>
         <spring-security-version>5.8.16</spring-security-version>
         <thymeleaf.version>3.0.13.RELEASE</thymeleaf.version>
-        <javers.version>5.15.0</javers.version>
+        <javers.version>6.14.0</javers.version>
         <simple-users-version>0.5</simple-users-version>
         <admin.username>admin</admin.username>
         <admin.password>$2a$04$ug2wdYfAW8Ey/DwjUdPuLufgrMqbhNnTmr1QEUNZnoWF1xGitSBae</admin.password>
