@@ -1,8 +1,11 @@
 package edu.asu.diging.vspace.core.services.impl;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -29,6 +32,11 @@ import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
+import edu.asu.diging.vspace.core.model.display.DisplayType;
+import edu.asu.diging.vspace.core.model.display.ExternalLinkDisplayMode;
+import edu.asu.diging.vspace.core.model.display.IExternalLinkDisplay;
+import edu.asu.diging.vspace.core.model.display.ILinkDisplay;
+import edu.asu.diging.vspace.core.model.display.IModuleLinkDisplay;
 import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.BranchingPoint;
 import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
@@ -45,6 +53,7 @@ import edu.asu.diging.vspace.core.services.ISlideManager;
 import edu.asu.diging.vspace.core.services.ISpaceDisplayManager;
 import edu.asu.diging.vspace.core.services.ISpaceLinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
+import edu.asu.diging.vspace.core.services.ISpaceTextBlockManager;
 
 @Service
 public class RenderingManager implements IRenderingManager {
@@ -90,7 +99,10 @@ public class RenderingManager implements IRenderingManager {
     
     @Autowired
     private IContentBlockManager contentBlockManager;
-    
+
+    @Autowired
+    private ISpaceTextBlockManager spaceTextBlockManager;
+
     private final String IMAGES_FOLDER_NAME = "images";
        
     private final String SPACE_DOWNLOAD_TEMPLATE = "exhibition/downloads/spaceDownloadTemplate";
@@ -123,6 +135,17 @@ public class RenderingManager implements IRenderingManager {
 
         // Copies the space image
         storageManager.copyImage(space.getImage(), imagesFolder) ;
+
+        // Copies the images used as link markers on the space
+        List<ILinkDisplay> linkDisplays = new ArrayList<>();
+        linkDisplays.addAll(spaceLinkManager.getLinkDisplays(spaceId));
+        linkDisplays.addAll(moduleLinkManager.getLinkDisplays(spaceId));
+        linkDisplays.addAll(externalLinkManager.getLinkDisplays(spaceId));
+        for (ILinkDisplay linkDisplay : linkDisplays) {
+            if (linkDisplay.getType() == DisplayType.IMAGE) {
+                storageManager.copyImage(linkDisplay.getImage(), imagesFolder);
+            }
+        }
 
         List<IModuleLink> moduleLinks = space.getModuleLinks();
 
@@ -314,22 +337,105 @@ public class RenderingManager implements IRenderingManager {
     private void populateContextForSpace(Context context, String id) {
 
         ISpace space = spaceManager.getSpace(id);
-        List<ISpaceLinkDisplay> spaceLinks;
         IExhibition exhibition = exhibitManager.getStartExhibition();
-        context.setVariable("isSpacePublished", true);        
+        List<IModuleLinkDisplay> moduleLinks = moduleLinkManager.getLinkDisplays(id);
+        List<IExternalLinkDisplay> externalLinks = externalLinkManager.getLinkDisplays(id);
+        context.setVariable("isSpacePublished", true);
         context.setVariable("exhibitionConfig", exhibition);
         context.setVariable("space", space);
-        context.setVariable("moduleList", moduleLinkManager.getLinkDisplays(id));
-        if (space.isShowUnpublishedLinks()) {
-            spaceLinks = spaceLinkManager.getLinkDisplays(id);
-        } else {
-            spaceLinks = spaceLinkManager.getSpaceLinkForGivenOrNullSpaceStatus(id, SpaceStatus.PUBLISHED);
-        }
-        List<ISpaceLinkDisplay> filteredSpaceLinks = spaceLinks.stream().filter(
-                spaceLinkDisplayObj -> !spaceLinkDisplayObj.getLink().getTargetSpace().isHideIncomingLinks())
+        context.setVariable("moduleList", moduleLinks);
+        // Only published spaces are part of the snapshot, so links to any other space would be broken
+        List<ISpaceLinkDisplay> filteredSpaceLinks = spaceLinkManager.getLinkDisplays(id).stream()
+                .filter(spaceLinkDisplayObj -> SpaceStatus.PUBLISHED.equals(spaceLinkDisplayObj.getLink().getTargetSpace().getSpaceStatus())
+                        && !spaceLinkDisplayObj.getLink().getTargetSpace().isHideIncomingLinks())
                 .collect(Collectors.toList());
         context.setVariable("spaceLinks", filteredSpaceLinks);
         context.setVariable("display", spaceDisplayManager.getBySpace(space));
-        context.setVariable("externalLinkList", externalLinkManager.getLinkDisplays(id));
+        context.setVariable("externalLinkList", externalLinks);
+
+        List<Map<String, Object>> linkMarkers = new ArrayList<>();
+        filteredSpaceLinks.forEach(spaceLink -> {
+            String targetSpaceId = spaceLink.getLink().getTargetSpace().getId();
+            linkMarkers.add(createLinkMarker(spaceLink, "space", spaceLink.getLink().getName(),
+                    "../" + targetSpaceId + "/" + targetSpaceId + PAGE_EXTENSION, false));
+        });
+        moduleLinks.forEach(moduleLink -> {
+            String moduleStartPage = getModuleStartPage(moduleLink.getLink().getModule());
+            if (moduleStartPage != null) {
+                linkMarkers.add(createLinkMarker(moduleLink, "module", moduleLink.getLink().getName(), moduleStartPage, false));
+            }
+        });
+        externalLinks.forEach(externalLink -> linkMarkers.add(createLinkMarker(externalLink, "external",
+                externalLink.getExternalLink().getName(), externalLink.getExternalLink().getExternalLink(),
+                externalLink.getHowToOpen() != ExternalLinkDisplayMode.SAMEWINDOW)));
+        context.setVariable("linkMarkers", linkMarkers);
+
+        List<Map<String, Object>> spaceTextBlocks = spaceTextBlockManager.getSpaceTextBlockDisplays(id).stream()
+                .map(textBlock -> {
+                    Map<String, Object> block = new HashMap<>();
+                    block.put("text", textBlock.getSpaceTextBlock().getText());
+                    block.put("x", textBlock.getPositionX());
+                    block.put("y", textBlock.getPositionY());
+                    block.put("width", textBlock.getWidth());
+                    block.put("height", textBlock.getHeight());
+                    block.put("textColor", textBlock.getTextColor());
+                    block.put("borderColor", textBlock.getBorderColor());
+                    return block;
+                }).collect(Collectors.toList());
+        context.setVariable("spaceTextBlocks", spaceTextBlocks);
+
+        List<Map<String, String>> publishedSpaces = spaceManager.getSpacesWithStatus(SpaceStatus.PUBLISHED).stream()
+                .map(publishedSpace -> {
+                    Map<String, String> spaceEntry = new HashMap<>();
+                    spaceEntry.put("name", publishedSpace.getName());
+                    spaceEntry.put("href", "../" + publishedSpace.getId() + "/" + publishedSpace.getId() + PAGE_EXTENSION);
+                    return spaceEntry;
+                }).collect(Collectors.toList());
+        context.setVariable("publishedSpaces", publishedSpaces);
+    }
+
+    /**
+     * Creates the data needed to draw a link marker on the space image of a static page.
+     *
+     * @param linkDisplay the display information of the link
+     * @param kind        "space", "module" or "external"
+     * @param name        the label of the link
+     * @param href        the relative or absolute url the link points to
+     * @param newWindow   true if the link should be opened in a new window
+     * @return map with the marker data
+     */
+    private Map<String, Object> createLinkMarker(ILinkDisplay linkDisplay, String kind, String name, String href,
+            boolean newWindow) {
+        Map<String, Object> marker = new HashMap<>();
+        marker.put("kind", kind);
+        marker.put("name", name);
+        marker.put("href", href);
+        marker.put("newWindow", newWindow);
+        marker.put("x", linkDisplay.getPositionX());
+        marker.put("y", linkDisplay.getPositionY());
+        marker.put("rotation", linkDisplay.getRotation());
+        marker.put("type", linkDisplay.getType() != null ? linkDisplay.getType().name() : null);
+        IVSImage image = linkDisplay.getImage();
+        if (linkDisplay.getType() == DisplayType.IMAGE && image != null) {
+            marker.put("imageSrc", "./" + IMAGES_FOLDER_NAME + "/" + image.getId() + "/" + image.getFilename());
+        }
+        return marker;
+    }
+
+    /**
+     * Returns the page of the first slide of the module's start sequence.
+     *
+     * @param module the module
+     * @return the file name of the first slide page or null if the module has no slides to show
+     */
+    private String getModuleStartPage(IModule module) {
+        if (module == null || module.getStartSequence() == null) {
+            return null;
+        }
+        List<ISlide> slides = module.getStartSequence().getSlides();
+        if (slides == null || slides.isEmpty()) {
+            return null;
+        }
+        return slides.get(0).getId() + PAGE_EXTENSION;
     }
 }

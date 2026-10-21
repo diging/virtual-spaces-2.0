@@ -219,6 +219,114 @@
     }
 }
 </style>
+<script src="./../resources/jquery/jquery-3.3.1.min.js"></script>
+<script th:inline="javascript">
+    var linkMarkers = [[${linkMarkers}]];
+    var spaceTextBlocks = [[${spaceTextBlocks}]];
+    var displayWidth = [[${display?.width}]];
+    var displayHeight = [[${display?.height}]];
+    let maxWidth = '(max-width: 1200px)';
+
+    function openNav() {
+        $("#mySidenav").css("width", "250px");
+        $("#mySidenav").css("overflow", "visible");
+    }
+
+    function closeNav() {
+        $("#mySidenav").css("width", "0");
+        $("#mySidenav").css("overflow", "hidden");
+    }
+
+    function openModuleNav() {
+        if (window.matchMedia(maxWidth).matches) {
+            $("#mySideModulenav").css("width", "170px");
+        } else {
+            $("#mySideModulenav").css("width", "240px");
+        }
+        $("#mySideModulenav").css("height", "auto");
+    }
+
+    function closeModuleNav() {
+        $("#mySideModulenav").css("width", "0");
+    }
+
+    function openSpaceDescription() {
+        if (window.matchMedia(maxWidth).matches) {
+            $("#rightContent").css("height", "170px");
+            $("#rightContent").css("width", "260px");
+        } else {
+            $("#rightContent").css("width", "300px");
+            $("#rightContent").css("height", displayHeight + "px");
+        }
+    }
+
+    function closeSpaceDescription() {
+        $("#rightContent").css("width", "0");
+        $("#rightContent").css("height", "0");
+    }
+
+    // Same marker layout as the live exhibition space page, but with links to the static pages
+    function drawLinks() {
+        $("#space a, #space .spaceTextBlock").remove();
+        var height = $("#bgImage").height();
+        var width = $("#bgImage").width();
+        var originalWidth = displayWidth ? displayWidth : width;
+        var relativeHeight = (originalWidth / width) * height;
+        var posX = parseInt($("#space").css('margin-left')) + $("#space").position().left;
+        var posY = $("#space").position().top;
+        var iconClasses = {
+            space: "icon-move Icon_awesome_info_c",
+            module: "icon-move Icon_awesome_info_m",
+            external: "icon-ext-link Icon_awesome_info_e"
+        };
+
+        linkMarkers.forEach(function(link) {
+            var anchor = $('<a></a>').attr("href", link.href);
+            if (link.newWindow) {
+                anchor.attr("target", "_blank");
+            }
+            var linkDisplay;
+            if (link.type == "ALERT") {
+                linkDisplay = $('<div class="alert alert-primary" role="alert"><span class="tooltiptextalert"></span></div>');
+                linkDisplay.find(".tooltiptextalert").text(link.name);
+            } else if (link.type == "IMAGE" && link.imageSrc) {
+                linkDisplay = $('<img/>').attr("src", link.imageSrc);
+            } else {
+                linkDisplay = $('<div class="Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="' + iconClasses[link.kind] + '"></span><span class="tooltiptext"></span></div>');
+                linkDisplay.find(".tooltiptext").text(link.name);
+            }
+            linkDisplay.css('position', 'absolute');
+            linkDisplay.css('transform', 'rotate(' + link.rotation + 'deg)');
+            linkDisplay.css('fill', 'grey');
+            linkDisplay.css('color', 'rgba(128,128,128,1)');
+            linkDisplay.css('left', (width * link.x) / originalWidth + posX);
+            linkDisplay.css('top', (height * link.y) / relativeHeight + posY);
+            anchor.append(linkDisplay);
+            $("#space").append(anchor);
+        });
+
+        spaceTextBlocks.forEach(function(block) {
+            var textBlock = $('<span class="spaceTextBlock Info_cz_Class"><textarea class="textBlock" readonly></textarea></span>');
+            textBlock.find("textarea").text(block.text).css({
+                'height': (block.height * height) / 100 + 'px',
+                'width': (block.width * width) / 100 + 'px',
+                'resize': 'none',
+                'color': block.textColor,
+                'border-color': block.borderColor
+            });
+            textBlock.css('position', 'absolute');
+            textBlock.css('left', (width * block.x) / originalWidth + posX);
+            textBlock.css('top', (height * block.y) / relativeHeight + posY);
+            $("#space").append(textBlock);
+        });
+    }
+
+    $(window).on("load", function() {
+        $("#Module_1").css("height", $("#bgImage").css("height"));
+        drawLinks();
+        $(window).resize(drawLinks);
+    });
+</script>
 </head>
 
 <body>
@@ -241,6 +349,12 @@
                     th:unless="${exhibitionConfig.customMessage != '' && exhibitionConfig.mode == 'OFFLINE'}">[[${exhibitionConfig.mode?.value}]]</h6>
             </div>
             <div id="Module_1" class="Home_Class" style="margin: -45px 0 60px auto;">
+                <div id="mySidenav" class="sidenav">
+                    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+                    <ul th:each="publishedSpace: ${publishedSpaces}">
+                        <li><a class="dropdown-item" th:href="${publishedSpace.href}">[[${publishedSpace.name}]]</a></li>
+                    </ul>
+                </div>
                 <span style="font-size: 30px; cursor: pointer"
                     onclick="openNav()">&#9776;</span>
                 <div class="spaceClass" id="spaceDiv"
@@ -296,8 +410,8 @@
                                 [[${space.name}]] <span
                                     th:if="${!#strings.isEmpty(space.description)}"
                                     class="icon-info-circle"
-                                    style="font-size: 20px; color: rgba(150, 45, 62, 1);">                                    
-                                    </span>
+                                    style="font-size: 20px; color: rgba(150, 45, 62, 1);"
+                                    onclick="openSpaceDescription()"></span>
                             </h3>
                         </div>
 
@@ -311,6 +425,7 @@
                         </div>
                     </div>
                     <div id="rightContent" th:if="${space.description!=NULL}">
+                        <span class="icon-circle-close closebtn" onclick="closeSpaceDescription()"></span>
                         <div class="spaceDescription">[[${space.description}]]</div>
                     </div>
                 </div>
