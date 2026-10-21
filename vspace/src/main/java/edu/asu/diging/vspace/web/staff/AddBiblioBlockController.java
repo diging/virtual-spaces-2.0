@@ -35,10 +35,8 @@ public class AddBiblioBlockController {
         
         String biblioTitle = biblioBlockData.getBiblioTitle();
         String description = biblioBlockData.getDescription();
-        Integer contentOrder = contentBlockManager.findMaxContentOrder(slideId);
-        contentOrder = contentOrder == null ? 0 : contentOrder + 1;
 
-        IBiblioBlock biblioBlock = contentBlockManager.createBiblioBlock(slideId, biblioTitle, description, contentOrder);
+        IBiblioBlock biblioBlock = contentBlockManager.createBiblioBlock(slideId, biblioTitle, description);
         return new ResponseEntity<>((BiblioBlock) biblioBlock, HttpStatus.OK);
     }
 

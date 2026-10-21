@@ -30,11 +30,7 @@ public class AddChoiceBlockController {
             @PathVariable("moduleId") String moduleId, @RequestParam("selectedChoices") List<String> selectedChoices,
             @RequestParam("showsAll") boolean showsAll) throws IOException {
 
-        Integer contentOrder = contentBlockManager.findMaxContentOrder(slideId);
-        contentOrder = contentOrder == null ? 0 : contentOrder + 1;
-
-        IChoiceBlock choiceBlock = contentBlockManager.createChoiceBlock(slideId, selectedChoices, contentOrder,
-                showsAll);
+        IChoiceBlock choiceBlock = contentBlockManager.createChoiceBlock(slideId, selectedChoices, showsAll);
         /*
          * After annotating sequence attribute with JsonIgnore in Choice model to fix
          * stack overflow issue the sequences are not returned as part of choiceBlock
