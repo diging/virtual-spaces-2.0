@@ -15,13 +15,18 @@ import org.springframework.util.StringUtils;
 
 import edu.asu.diging.vspace.config.ConfigConstants;
 import edu.asu.diging.vspace.config.ExhibitionLanguageConfig;
+import edu.asu.diging.vspace.core.data.ExhibitionLanguageRepository;
 import edu.asu.diging.vspace.core.data.ExhibitionRepository;
+import edu.asu.diging.vspace.core.data.LocalizedTextRepository;
+import edu.asu.diging.vspace.core.exception.ExhibitionLanguageDeletionException;
 import edu.asu.diging.vspace.core.exception.LanguageListConfigurationNotFoundException;
 import edu.asu.diging.vspace.core.factory.impl.ExhibitionFactory;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
+import edu.asu.diging.vspace.core.model.ILocalizedText;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
+import edu.asu.diging.vspace.core.model.impl.LocalizedText;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 
 @Transactional
@@ -36,6 +41,12 @@ public class ExhibitionManager implements IExhibitionManager {
     
     @Autowired
     private ExhibitionFactory exhibitFactory;
+    
+    @Autowired
+    private LocalizedTextRepository localizedTextRepo;
+    
+    @Autowired
+    private ExhibitionLanguageRepository exhibitionLanguageRepository;
 
     /*
      * (non-Javadoc)
@@ -101,10 +112,10 @@ public class ExhibitionManager implements IExhibitionManager {
      * @param exhibition
      * @param defaultLanguage 
      * @param languages
-     * @throws LanguageListConfigurationNotFoundException 
+     * @throws ExhibitionLanguageDeletionException 
      */
     @Override
-    public void updateExhibitionLanguages(IExhibition exhibition, List<String> codes, String defaultLanguage) {
+    public void updateExhibitionLanguages(IExhibition exhibition, List<String> codes, String defaultLanguage) throws ExhibitionLanguageDeletionException {
         if (CollectionUtils.isEmpty(exhibitionLanguageConfig.getExhibitionLanguageList())) {
             throw new LanguageListConfigurationNotFoundException("Exhibition Language Configuration not found");
         }
@@ -113,9 +124,9 @@ public class ExhibitionManager implements IExhibitionManager {
         if (CollectionUtils.isEmpty(codes)) {
             throw new IllegalArgumentException("At least one language must be selected for the exhibition");
         }
-
+        
         // Adds defaultLanguage to codes list if not already exists.
-        if (!StringUtils.isEmpty(defaultLanguage) && !codes.contains(defaultLanguage)) {
+        if (StringUtils.hasText(defaultLanguage) && !codes.contains(defaultLanguage)) {
             codes.add(defaultLanguage);
         }
 
@@ -127,11 +138,37 @@ public class ExhibitionManager implements IExhibitionManager {
             });
 
         // Removes exhibition language if unselected.
-        List<IExhibitionLanguage> languagesToBeRemoved = exhibition.getLanguages().stream()
+        List<IExhibitionLanguage> exhibitionLanguageToBeRemoved = exhibition.getLanguages().stream()
                 .filter(language -> !codes.contains(language.getCode())).collect(Collectors.toList());
-        
-        exhibition.getLanguages().removeAll(languagesToBeRemoved);
 
+        for (IExhibitionLanguage language  : exhibitionLanguageToBeRemoved ) {
+            if(!getLocalizedTexts(language).isEmpty()) {
+                throw new ExhibitionLanguageDeletionException("Exhibition cannot be deleted as it is not empty") ;
+            }
+        }       
+        exhibition.getLanguages().removeAll(exhibitionLanguageToBeRemoved);
+    }
+    
+    /**
+     * Return list localized texts linked to the given exhibition language
+     * @param exhibitionLanguage
+     */
+    @Override
+    public List<LocalizedText> getLocalizedTexts(IExhibitionLanguage language)  {
+        return localizedTextRepo.findByExhibitionLanguage(language);
+    }
+    
+    /**
+     * Removes localized texts from parent entities and delete them.
+     * 
+     */
+    @Override
+    public void deleteLocalizedTexts(List<ILocalizedText> emptyLocalizedTexts) {
+        
+        List<LocalizedText> convertedLocalizedTextsList = emptyLocalizedTexts.stream()
+                .map(localizedText -> (LocalizedText) localizedText)
+                .collect(Collectors.toList());
+        localizedTextRepo.deleteAll(convertedLocalizedTextsList);
     }
 
     /**
@@ -154,4 +191,9 @@ public class ExhibitionManager implements IExhibitionManager {
 
         return exhibitionLanguage;
     }
+
+    public IExhibitionLanguage getDefaultLanguage(IExhibition exhibition){
+        return exhibitionLanguageRepository.findByExhibitionAndIsDefault(exhibition);
+    }
+
 }

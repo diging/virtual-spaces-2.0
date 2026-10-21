@@ -23,6 +23,8 @@ import edu.asu.diging.vspace.core.model.IContentBlock;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.impl.BranchingPoint;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
+import edu.asu.diging.vspace.core.services.IExhibitionManager;
+import edu.asu.diging.vspace.core.services.ILanguageService;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 import edu.asu.diging.vspace.web.staff.forms.SequenceForm;
@@ -39,6 +41,12 @@ public class SlideController {
 
     @Autowired
     private IContentBlockManager contentBlockManager;
+    
+    @Autowired
+    private IExhibitionManager exhibitionManager;
+    
+    @Autowired
+    private ILanguageService languageService;
 
     @RequestMapping("/staff/module/{moduleId}/slide/{id}")
     public String listSlides(@PathVariable("id") String slideId, @PathVariable("moduleId") String moduleId, Model model) {
@@ -51,6 +59,10 @@ public class SlideController {
         model.addAttribute("slideContents", slideContents);
         model.addAttribute("contentCount",
                 slideContents.size() > 0 ? slideContents.get(slideContents.size() - 1).getContentOrder() : 0);
+
+        model.addAttribute("availableLanguages", languageService.getAvailableLanguages());
+        model.addAttribute("defaultLanguageCode", languageService.getDefaultLanguageCode());
+
         if (slideManager.getSlide(slideId) instanceof BranchingPoint) {
             model.addAttribute("choices", ((IBranchingPoint) slide).getChoices());
         }

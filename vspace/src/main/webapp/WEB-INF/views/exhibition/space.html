@@ -320,6 +320,13 @@
 		    $("#mySideModulenav").css("width", "0");
 		}
 		
+		function changeLanguage(languageCode) {
+		    var currentUrl = window.location.href;
+		    var url = new URL(currentUrl);
+		    url.searchParams.set('lang', languageCode);
+		    window.location.href = url.toString();
+		}
+		
 		function closeSpaceDescription(){
 		    $("#rightContent").css("width", "0");
 		    $("#rightContent").css("height", "0");
@@ -603,7 +610,7 @@
                         onclick="closeNav()">&times;</a>
                     <ul th:each="space: ${publishedSpaces}">
                         <li><a class="dropdown-item"
-                            th:href="@{'/exhibit/space/'+${space?.id}}">[[${space.name}]]</a> 
+                            th:href="@{'/exhibit/space/'+${space?.id}(lang=${selectedLanguage})}">[[${space.name}]]</a> 
                              
                             
                         </li>
@@ -613,7 +620,7 @@
                 <div  th:if="${isExhPreview} == true" id="mySidenav" class="sidenav">
                   <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
                     <ul th:each="space: ${publishedSpaces}">
-                        <li><a class="dropdown-item" id="previewNavBarItem" th:href="@{'/preview/'+${previewId}+'/space/'+${space?.id}}">[[${space.name}]]
+                        <li><a class="dropdown-item" id="previewNavBarItem" th:href="@{'/preview/'+${previewId}+'/space/'+${space?.id}(lang=${selectedLanguage})}">[[${space.name}]]
                             </a>
                         </li>
                     </ul>
@@ -676,6 +683,18 @@
                             </div>
                         </div>
                         <div class="text-Div" >
+                            <!-- Language Switcher -->
+                            <div th:if="${availableLanguages != null && availableLanguages.size() > 1}" 
+                                 style="float: right; margin-bottom: 10px;">
+                                <select id="languageSelector" onchange="changeLanguage(this.value)" 
+                                        style="padding: 5px; border: 1px solid #ccc; border-radius: 4px; background: white;">
+                                    <option th:each="lang : ${availableLanguages}" 
+                                            th:value="${lang.code}" 
+                                            th:selected="${lang.code == selectedLanguage}"
+                                            th:text="${lang.label}"></option>
+                                </select>
+                            </div>
+                            
                             <h3 class="spaceName">
                                 [[${space.name}]] <span
                                     th:if="${!#strings.isEmpty(space.description)}"

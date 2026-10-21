@@ -67,7 +67,7 @@ $(document).ready(function() {
             <div class="form-group row">
                 <label for="Slides">Select Slides<br>(Double click to select &nbsp; <br>and drag to reorder)</label> 
                 <select multiple="multiple" id="ordered-slides">
-                    <option th:each="slide: ${slides}" th:value=${slide.id} th:id=${slide.id}>[[${slide.name}]]</option>
+                    <option th:each="slide: ${slides}" th:value=${slide.id} th:id=${slide.id}>[(${slide.getLocalizedName(selectedLanguage, defaultLanguageCode) != null && !slide.getLocalizedName(selectedLanguage, defaultLanguageCode).isEmpty() ? slide.getLocalizedName(selectedLanguage, defaultLanguageCode) : slide.name})]</option>
                 </select> 
                 <input type="hidden" id="orderedSlides" name="orderedSlides"></input>
             </div>

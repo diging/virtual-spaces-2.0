@@ -12,6 +12,7 @@ import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.impl.BranchingPoint;
+import edu.asu.diging.vspace.core.services.ILanguageService;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.IModuleOverviewManager;
 import edu.asu.diging.vspace.core.services.impl.model.ModuleOverview;
@@ -24,7 +25,14 @@ public class ModuleOverviewManager implements IModuleOverviewManager {
     @Autowired
     private IModuleManager moduleManager;
     
+    @Autowired
+    private ILanguageService languageService;
+    
     public ModuleOverview getModuleOverview(String moduleId) throws ModuleNotFoundException{
+        return getModuleOverview(moduleId, languageService.getDefaultLanguageCode(), languageService.getDefaultLanguageCode());
+    }
+    
+    public ModuleOverview getModuleOverview(String moduleId, String selectedLanguage, String defaultLanguageCode) throws ModuleNotFoundException{
         IModule module = moduleManager.getModule(moduleId);
         if(module==null) {
             throw new ModuleNotFoundException("Module not found");
@@ -33,12 +41,12 @@ public class ModuleOverviewManager implements IModuleOverviewManager {
         
         List<ISequence> sequences = moduleManager.getModuleSequences(moduleId);
         
-        SequenceOverview sequenceOverviewNode = createSequenceOverviewNode(startSequence);
+        SequenceOverview sequenceOverviewNode = createSequenceOverviewNode(startSequence, selectedLanguage, defaultLanguageCode);
         List<SequenceOverview> otherSequences = new ArrayList<SequenceOverview>();
         for(ISequence sequence : sequences) {
             
             if(sequence != startSequence) {
-                otherSequences.add(createSequenceOverviewNode(sequence));
+                otherSequences.add(createSequenceOverviewNode(sequence, selectedLanguage, defaultLanguageCode));
             }
         }
         
@@ -55,6 +63,10 @@ public class ModuleOverviewManager implements IModuleOverviewManager {
      * @return ModuleOverview which contains the module and the list of sequences and its slides
      */   
     private SequenceOverview createSequenceOverviewNode(ISequence sequence) {
+        return createSequenceOverviewNode(sequence, languageService.getDefaultLanguageCode(), languageService.getDefaultLanguageCode());
+    }
+    
+    private SequenceOverview createSequenceOverviewNode(ISequence sequence, String selectedLanguage, String defaultLanguageCode) {
         if(sequence==null) {
             return null;
         }
@@ -62,17 +74,22 @@ public class ModuleOverviewManager implements IModuleOverviewManager {
         SequenceOverview sequenceOverview = new SequenceOverview();
         sequenceOverview.setName(sequence.getName());
         sequenceOverview.setId(sequence.getId());
-        List<SlideOverview> slideOverviews = createSlideOverviewNode(sequence.getSlides());
+        List<SlideOverview> slideOverviews = createSlideOverviewNode(sequence.getSlides(), selectedLanguage, defaultLanguageCode);
         sequenceOverview.setSlideOverviews(slideOverviews);
         return sequenceOverview;  
     }
     
     private List<SlideOverview> createSlideOverviewNode(List<ISlide> slides){
+        return createSlideOverviewNode(slides, languageService.getDefaultLanguageCode(), languageService.getDefaultLanguageCode());
+    }
+    
+    private List<SlideOverview> createSlideOverviewNode(List<ISlide> slides, String selectedLanguage, String defaultLanguageCode){
         List<SlideOverview> slideOverviews = new ArrayList<SlideOverview>();
         for(ISlide slide : slides) {
             SlideOverview slideOverview = new SlideOverview(); 
             slideOverview.setId(slide.getId());
-            slideOverview.setName(slide.getName());
+            String localizedName = slide.getLocalizedName(selectedLanguage, defaultLanguageCode);
+            slideOverview.setName(localizedName != null && !localizedName.isEmpty() ? localizedName : slide.getName());
             if(slide instanceof BranchingPoint) {
                 slideOverview.setBranchingPoint(true);
                 List<IChoice> sequenceChoices = ((BranchingPoint)slide).getChoices();

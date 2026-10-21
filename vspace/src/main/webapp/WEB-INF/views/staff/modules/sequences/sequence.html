@@ -334,9 +334,9 @@
 						Slides: <br> <small>(Double click to select and drag to reorder)</small>
 					</label> 
 					<select multiple="multiple" id="ordered-slides" name="selectSequence">
-						<option th:each="slide: ${allSlides}" th:if="${!#lists.contains(selectedSlides,slide)}"  th:value="${slide.id}" th:id="${slide.id}">[[${slide.name}]]</option>
+						<option th:each="slide: ${allSlides}" th:if="${!#lists.contains(selectedSlides,slide)}"  th:value="${slide.id}" th:id="${slide.id}">[(${slide.getLocalizedName(selectedLanguage, defaultLanguageCode) != null && !slide.getLocalizedName(selectedLanguage, defaultLanguageCode).isEmpty() ? slide.getLocalizedName(selectedLanguage, defaultLanguageCode) : slide.name})]</option>
 
-						<option th:each="selectedSlide: ${selectedSlides}"  th:value='${selectedSlide.id}' th:id="${selectedSlide.id}" selected="selected">[[${selectedSlide.name}]]</option>
+						<option th:each="selectedSlide: ${selectedSlides}"  th:value='${selectedSlide.id}' th:id="${selectedSlide.id}" selected="selected">[(${selectedSlide.getLocalizedName(selectedLanguage, defaultLanguageCode) != null && !selectedSlide.getLocalizedName(selectedLanguage, defaultLanguageCode).isEmpty() ? selectedSlide.getLocalizedName(selectedLanguage, defaultLanguageCode) : selectedSlide.name})]</option>
 					</select>
 					<input type="hidden" id="orderedSlides" name="orderedSlides"/>
 				</div>

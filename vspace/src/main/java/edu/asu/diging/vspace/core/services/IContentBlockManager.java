@@ -28,6 +28,8 @@ public interface IContentBlockManager {
     List<IContentBlock> getAllContentBlocks(String slideId);
 
     ITextBlock createTextBlock(String slideId, String content, Integer contentOrder);
+    
+    ITextBlock createTextBlockWithLanguage(String slideId, String content, Integer contentOrder, String languageCode);
 
     CreationReturnValue createImageBlock(String slideId, byte[] image, String filename, Integer contentOrder) throws ImageCouldNotBeStoredException;
     
