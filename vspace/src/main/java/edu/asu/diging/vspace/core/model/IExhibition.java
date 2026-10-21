@@ -55,7 +55,7 @@ public interface IExhibition extends IVSpaceElement {
     String getPreviewId();
     
     void setPreviewId(String previewId);
-
+    
     void setCustomMessage(String customMessage);
 
     void disableSpaceLinkDefaultImage();

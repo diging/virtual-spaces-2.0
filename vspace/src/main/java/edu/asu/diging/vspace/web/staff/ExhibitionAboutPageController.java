@@ -1,6 +1,7 @@
 package edu.asu.diging.vspace.web.staff;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +12,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import edu.asu.diging.vspace.core.factory.IAboutPageFormFactory;
+import edu.asu.diging.vspace.core.model.IExhibition;
+import edu.asu.diging.vspace.core.model.ILocalizedText;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionAboutPage;
+import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
+import edu.asu.diging.vspace.core.model.impl.LocalizedText;
 import edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager;
+import edu.asu.diging.vspace.core.services.IExhibitionManager;
+import edu.asu.diging.vspace.web.staff.forms.AboutPageForm;
+import edu.asu.diging.vspace.web.staff.forms.LocalizedTextForm;
+
 
 /**
  * 
@@ -24,23 +34,20 @@ public class ExhibitionAboutPageController {
 
     @Autowired
     private IExhibitionAboutPageManager aboutPageManager;
-
+    
+    @Autowired
+    private IAboutPageFormFactory exhibitionAboutPageFactory;
+   
     @RequestMapping(value = "/staff/exhibit/about", method = RequestMethod.GET)
-    public String showAboutPage(Model model) {
-        List<ExhibitionAboutPage> aboutPageList = aboutPageManager.findAll();
-        ExhibitionAboutPage exhibitionAboutPage = aboutPageList != null && !aboutPageList.isEmpty() ? aboutPageList.get(0):new ExhibitionAboutPage();
-        model.addAttribute("aboutPage", exhibitionAboutPage);
+    public String showAboutPage(Model model) {    
+        model.addAttribute("aboutPage", exhibitionAboutPageFactory.createAboutPageForm(aboutPageManager.getExhibitionAboutPage()));
         return "staff/exhibit/aboutPage";
     }
 
     
     @RequestMapping(value = "/staff/exhibit/about", method = RequestMethod.POST)
-    public String createOrUpdateAboutPage(@ModelAttribute ExhibitionAboutPage aboutPageForm, RedirectAttributes attributes) throws IOException {
-        List<ExhibitionAboutPage> aboutPageList = aboutPageManager.findAll();
-        ExhibitionAboutPage exhibitionAboutPage = aboutPageList != null && !aboutPageList.isEmpty() ? aboutPageList.get(0):new ExhibitionAboutPage();
-        exhibitionAboutPage.setTitle(aboutPageForm.getTitle());
-        exhibitionAboutPage.setAboutPageText(aboutPageForm.getAboutPageText());
-        exhibitionAboutPage = aboutPageManager.store(exhibitionAboutPage);
+    public String createOrUpdateAboutPage(@ModelAttribute AboutPageForm aboutPageForm, RedirectAttributes attributes) throws IOException {
+        aboutPageManager.store(aboutPageForm);
         attributes.addAttribute("alertType", "success");
         attributes.addAttribute("message", "Successfully Saved!");
         attributes.addAttribute("showAlert", "true");

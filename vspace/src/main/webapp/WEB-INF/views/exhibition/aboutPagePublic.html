@@ -15,6 +15,18 @@ padding-top:40px;
 
 
 </style>
+<script th:inline="javascript">
+	function changeLanguage(language){
+		var isPreview = [[${isExhPreview}]];
+		var previewId = [[${previewId}]];
+		
+		if(isPreview && previewId) {
+			window.location.href = "/preview/" + previewId + "/about/" + language.value;
+		} else {
+			window.location.href = "/exhibit/about/" + language.value;
+		}
+	}
+</script>
 </head>
 
 <body >
