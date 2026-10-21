@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +34,7 @@ import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 import edu.asu.diging.vspace.web.staff.forms.SlideForm;
 
+@Transactional
 @Service
 public class SlideManager implements ISlideManager {
 
@@ -113,8 +116,8 @@ public class SlideManager implements ISlideManager {
     }
 
     @Override
-    public void updateSlide(Slide slide) {
-        slideRepo.save((Slide) slide);
+    public ISlide updateSlide(ISlide slide) {
+        return slideRepo.save((Slide) slide);
     }
 
     @Override

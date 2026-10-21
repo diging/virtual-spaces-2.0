@@ -26,6 +26,8 @@ import edu.asu.diging.vspace.core.model.ExhibitionModes;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IdPrefix;
+import edu.asu.diging.vspace.core.model.IExhibition;
+import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
@@ -59,8 +61,9 @@ public class ExhibitionDataAspect {
         if (args != null && returnType == String.class) {
             for (Object obj : args) {
                 if (obj instanceof Model && !(obj instanceof RedirectAttributes)) {
+                    IExhibition exhibition = exhibitionManager.getStartExhibition();
                     if (!((Model) obj).containsAttribute("exhibition")) {
-                        ((Model) obj).addAttribute("exhibition", exhibitionManager.getStartExhibition());
+                        ((Model) obj).addAttribute("exhibition", exhibition);
                     }
                     if (!((Model) obj).containsAttribute("publishedSpaces")) {
                         List<ISpace> publishedSpaces = spaceManager.getSpacesWithStatus(SpaceStatus.PUBLISHED);
@@ -70,6 +73,19 @@ public class ExhibitionDataAspect {
                          */
                         publishedSpaces.addAll(spaceManager.getSpacesWithStatus(null));
                         ((Model) obj).addAttribute("publishedSpaces", publishedSpaces);
+                    }
+                    // Add default link image flags (true = show the default image)
+                    // Only check for showDefaultSpaceLinkImage as a guard - all three attributes
+                    // are always added together, so checking one is sufficient to avoid re-adding
+                    if (!((Model) obj).containsAttribute("showDefaultSpaceLinkImage") && exhibition != null) {
+                        IVSImage spaceImg = exhibition.getSpaceLinkDefaultImage();
+                        ((Model) obj).addAttribute("showDefaultSpaceLinkImage", spaceImg != null && !exhibition.isSpaceLinkDefaultImageDisabled());
+
+                        IVSImage moduleImg = exhibition.getModuleLinkDefaultImage();
+                        ((Model) obj).addAttribute("showDefaultModuleLinkImage", moduleImg != null && !exhibition.isModuleLinkDefaultImageDisabled());
+
+                        IVSImage externalImg = exhibition.getExternalLinkDefaultImage();
+                        ((Model) obj).addAttribute("showDefaultExternalLinkImage", externalImg != null && !exhibition.isExternalLinkDefaultImageDisabled());
                     }
                 }
             }

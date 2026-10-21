@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +29,8 @@ import edu.asu.diging.vspace.core.services.ISpaceManager;
 @Transactional
 @Service
 public class ModuleLinkManager extends LinkManager<IModuleLink, IModule, IModuleLinkDisplay> implements IModuleLinkManager {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private ISpaceManager spaceManager;
@@ -109,7 +113,17 @@ public class ModuleLinkManager extends LinkManager<IModuleLink, IModule, IModule
     @Override
     public Set<ISpace> findSpaceListFromModuleId(String moduleId) {
         List<IModuleLink> moduleLinks = moduleLinkRepo.findModuleLinksByModuleId(moduleId);
-        return moduleLinks.stream().map(s->s.getSpace()).collect(Collectors.toSet());
+        return moduleLinks.stream()
+                .map(link -> {
+                    ISpace space = link.getSpace();
+                    if (space == null) {
+                        logger.warn("ModuleLink {} references a non existent Space. Module ID: {}",
+                                link.getId(), moduleId);
+                    }
+                    return space;
+                })
+                .filter(space -> space != null)
+                .collect(Collectors.toSet());
     }
 
 }
