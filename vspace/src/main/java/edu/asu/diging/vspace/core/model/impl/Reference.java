@@ -10,18 +10,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
-import org.commonmark.node.Node;
-import org.commonmark.parser.Parser;
-import org.commonmark.renderer.html.HtmlRenderer;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import edu.asu.diging.vspace.core.model.IReference;
 
 @Entity
 public class Reference extends VSpaceElement implements IReference {
+
     @Id
     @GeneratedValue(generator = "reference_id_generator")
     @GenericGenerator(name = "reference_id_generator", 
@@ -181,5 +177,5 @@ public class Reference extends VSpaceElement implements IReference {
     public void setBiblios(List<BiblioBlock> biblios) {
         this.biblios = biblios;
     }
-    
+
 }
