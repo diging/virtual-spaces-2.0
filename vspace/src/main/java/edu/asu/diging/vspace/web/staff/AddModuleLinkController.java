@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-
+import edu.asu.diging.vspace.core.exception.ImageDoesNotExistException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -34,11 +34,13 @@ public class AddModuleLinkController {
 
     @RequestMapping(value = "/staff/space/{id}/modulelink", method = RequestMethod.POST)
     public ResponseEntity<String> createModuleLink(@PathVariable("id") String id, @RequestParam("x") String x,
-            @RequestParam("y") String y, @RequestParam("rotation") String rotation,
-            @RequestParam("moduleLinkLabel") String title, @RequestParam("linkedModule") String linkedModuleId,
-            @RequestParam("moduleLinkLabel") String moduleLinkLabel, @RequestParam("moduleType") String displayType,
-            @RequestParam("moduleLinkImage") MultipartFile file)
-            throws NumberFormatException, SpaceDoesNotExistException, IOException, ImageCouldNotBeStoredException {
+		@RequestParam("y") String y, @RequestParam("rotation") String rotation,
+		@RequestParam("moduleLinkLabel") String title, @RequestParam("linkedModule") String linkedModuleId,
+		@RequestParam("moduleLinkLabel") String moduleLinkLabel,
+		@RequestParam(value = "moduleLinkDesc", required = false) String moduleLinkDesc, @RequestParam("moduleType") String displayType,
+		@RequestParam(value = "moduleLinkImage", required = false) MultipartFile file,
+		@RequestParam(value = "module-imageId", required = false) String imageId)
+	    throws NumberFormatException, SpaceDoesNotExistException, IOException, ImageCouldNotBeStoredException, ImageDoesNotExistException {
 
         ISpace source = spaceManager.getSpace(id);
         if (source == null) {
@@ -49,6 +51,13 @@ public class AddModuleLinkController {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode node = mapper.createObjectNode();
             node.put("errorMessage", "No link coordinates specified.");
+            return new ResponseEntity<String>(mapper.writeValueAsString(node), HttpStatus.BAD_REQUEST);
+        }
+        
+        if (file == null && (imageId == null || imageId.equals(""))) {
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode node = mapper.createObjectNode();
+            node.put("errorMessage", "No image provided for space link.");
             return new ResponseEntity<String>(mapper.writeValueAsString(node), HttpStatus.BAD_REQUEST);
         }
 
@@ -63,7 +72,7 @@ public class AddModuleLinkController {
         IModuleLinkDisplay display;
         try {
             display = moduleLinkManager.createLink(title, id, new Float(x), new Float(y), new Integer(rotation),
-                    linkedModuleId, moduleLinkLabel, type, linkImage, filename);
+                      linkedModuleId, moduleLinkLabel, moduleLinkDesc, type, linkImage, filename, imageId);
         } catch (SpaceDoesNotExistException e) {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode node = mapper.createObjectNode();

@@ -4,6 +4,9 @@
 <link rel="stylesheet" type="text/css" id="applicationStylesheet"
     th:href="@{/resources/extra/Home.css}" />
 <link th:href="@{/resources/boostrap-colorpicker/dist/css/bootstrap-colorpicker.css}" rel="stylesheet">
+<script src="//use.fontawesome.com/releases/v5.8.1/js/all.js" data-auto-replace-svg="nest"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 
 <script th:src="@{'/resources/extra/space.js'}"></script>
 <script th:src="@{/resources/jquery/jquery-ui.min.js}"></script>
@@ -110,6 +113,7 @@ function setLinkPosition(modalLink, link, isSpaceLink, isModal, isExternalLink, 
     modalLink.find("span").css('fill', 'grey');
     modalLink.css('color', 'rgba(128,128,128,1)');
     modalLink.css('font-size', "16px");
+    modalLink.css('height', "10%");
     var positionX = isModal ? posXModal : posX;
     var positionY = isModal ? posYModal : posY;
     if(isSpaceLink && (link.link.targetSpace==null || link.link.targetSpace.spaceStatus=="UNPUBLISHED")){
@@ -786,6 +790,9 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
 	    });
 	    hideLinkInfoTabs();
 	    displayForms("#editSpaceLinkInfo");
+	    $('#editSpace-imageId').prop('selectedIndex',0).trigger( "change" );
+	    $('#editSpace-imageId').prop("disabled",true);
+	    $('#editSpaceLinkImage').prop("disabled",false);
 	}
 	function displayForms(formToShow){
 	    drawLinks();
@@ -826,6 +833,9 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
 	    });
 	    hideLinkInfoTabs();
 	    displayForms("#editModuleLinkInfo");
+	    $('#editModule-imageId').prop('selectedIndex',0).trigger( "change" );
+	    $('#editModule-imageId').prop("disabled",true);
+	    $('#editModuleImage').prop("disabled",false);
 	}
 	
 	function makeExternalLinksEditable(linkName, linkId, externalLinkURL, posXEdit, posYEdit, displayLinkId, linkType,tabOpenType) {
@@ -859,6 +869,9 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
 	    });
 	    hideLinkInfoTabs();
 	    displayForms("#editExternalLinkInfo");
+	    $('#editExternalLinkInfo-imageId').prop('selectedIndex',0).trigger( "change" );
+	    $('#editExternalLinkInfo-imageId').prop("disabled",true);
+	    $('#editExternalLinkInfoImage').prop("disabled",false);
 	}
 	
 	function makeTextBlockEditable(blockDisplayId,blockId,text,posX,posY,width,height, textColor, borderColor){
@@ -949,6 +962,272 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
 	            if ($("div#incomingLinks a").length < 2) {
 	                $("#noLinksToSpace").show()
 	            }
+            $('#externalLink-imageId').prop("disabled",true);
+            $('#module-imageId').prop("disabled",true);
+            $('#space-imageId').prop("disabled",true);
+            
+        	// Choose from Local for Space, Modules and External Links
+        	$('#externalLink-chooseFromLocal').click(function() {
+        		$("#externalLinkInfo-selectedImage").empty();
+        		$('#externalLink-imageId').prop('selectedIndex',0).trigger( "change" );
+        		$('#externalLink-imageId').prop("disabled",true);
+        		$('#externalLinkImage').prop("disabled",false);
+        		
+        	  });
+        	
+        	$('#module-chooseFromLocal').click(function() {
+        		$("#module-selectedImage").empty();
+        		$('#module-imageId').prop('selectedIndex',0).trigger( "change" );
+        		$('#module-imageId').prop("disabled",true);
+        		$('#moduleLinkImage').prop("disabled",false);
+        	});
+    		
+        	$('#space-chooseFromLocal').click(function() {
+        		$("#space-selectedImage").empty();
+        		$('#space-imageId').prop('selectedIndex',0).trigger( "change" );
+        		$('#space-imageId').prop("disabled",true);
+        		$('#spaceLinkImage').prop("disabled",false);
+        	});
+        	
+        	
+        	// Edit choose from Local for Space, Modules and External Links
+        	$('#editSpace-chooseFromLocal').click(function() {
+        		$('#editSpace-imageId').prop('selectedIndex',0).trigger( "change" );
+        		$('#editSpace-imageId').prop("disabled",true);
+        		$('#editSpaceLinkImage').prop("disabled",false);
+        	});
+        	
+        	$('#editModule-chooseFromLocal').click(function() {
+        		$('#editModule-imageId').prop('selectedIndex',0).trigger( "change" );
+        		$('#editModule-imageId').prop("disabled",true);
+        		$('#editModuleImage').prop("disabled",false);
+        	});
+        	
+        	$('#editExternalLinkInfo-chooseFromLocal').click(function() {
+        		$('#editExternalLinkInfo-imageId').prop('selectedIndex',0).trigger( "change" );
+        		$('#editExternalLinkInfo-imageId').prop("disabled",true);
+        		$('#editExternalLinkInfoImage').prop("disabled",false);
+        	});
+
+        	// Choose from exisiting Images for Space, Module and ExtrernalLinks
+        	$('#module-chooseFromExisting').click(function() {
+        		$('#moduleLinkImage').val('');
+        		$('#moduleLinkImage').prop("disabled",true);
+        		$('#module-imageId').prop("disabled",false);
+        	});
+        	
+        	$('#space-chooseFromExisting').click(function() {
+        		$('#spaceLinkImage').val('');
+        		$('#spaceLinkImage').prop("disabled",true);
+        		$('#space-imageId').prop("disabled",false);
+        	  });
+        	
+        	$('#externalLink-chooseFromExisting').click(function() {
+        		$('#externalLinkImage').val('');
+        		$('#externalLinkImage').prop("disabled",true);
+        		$('#externalLink-imageId').prop("disabled",false);
+        	});
+        	
+        	
+        	// Edit choose from exisiting images for Space, Module and ExtrernalLinks
+        	$('#editModule-chooseFromExisting').click(function() {
+        		$('#editModuleImage').prop("disabled",true);
+        		$('#editModule-imageId').prop("disabled",false);
+        	});
+        	
+        	$('#editSpace-chooseFromExisting').click(function() {
+        		$('#editSpaceLinkImage').val('');
+        		$('#editSpaceLinkImage').prop("disabled",true);
+        		$('#editSpace-imageId').prop("disabled",false);
+        	  });
+        	
+        	$('#editExternalLinkInfo-chooseFromExisting').click(function() {
+        		$('#editExternalLinkInfoImage').val('');
+        		$('#editExternalLinkInfoImage').prop("disabled",true);
+        		$('#editExternalLinkInfo-imageId').prop("disabled",false);
+        	  });
+        	
+    		// Linked Images for Space, Module and ExtrernalLinks
+        	$("#spaceLinkImage").click(function() {
+            	$("#space-selectedImage").empty();
+            	$('#space-imageId').prop('selectedIndex',0).trigger( "change" );
+            });
+        	
+        	$("#moduleLinkImage").click(function() {
+            	$("#module-selectedImage").empty();
+            	$('#module-imageId').prop('selectedIndex',0).trigger( "change" );
+            });
+        	
+        	$("#externalLinkImage").click(function() {
+            	$("#externalLinkInfo-selectedImage").empty();
+            	$('#externalLink-imageId').prop('selectedIndex',0).trigger( "change" );
+            });
+        	
+        	
+            $("#externalLink-imageId").select2({
+        		ajax: {
+        		    url: function (params) {
+        		  		var imageURL = [[@{|/staff/images/search|}]];
+        		  		return imageURL;
+        		    },
+        		    dataType: 'json',
+        		    processResults: function (data) {
+        		        return {
+        		          results: data,
+        		        };
+        		      },
+        		},
+        		templateResult: formatImage,
+        		templateSelection: formatSelection
+            });
+            
+            $("#module-imageId").select2({
+        		ajax: {
+        		    url: function (params) {
+        		  		var imageURL = [[@{|/staff/images/search|}]];
+        		  		return imageURL;
+        		    },
+        		    dataType: 'json',
+        		    processResults: function (data) {
+        		        return {
+        		          results: data,
+        		        };
+        		      },
+        		},
+        		templateResult: formatImage,
+        		templateSelection: formatSelection
+            });
+            
+            $("#space-imageId").select2({
+        		ajax: {
+        		    url: function (params) {
+        		  		var imageURL = [[@{|/staff/images/search|}]];
+        		  		return imageURL;
+        		    },
+        		    dataType: 'json',
+        		    processResults: function (data) {
+        		        return {
+        		          results: data,
+        		        };
+        		      },
+        		},
+        		templateResult: formatImage,
+        		templateSelection: formatSelection
+            });
+            
+            $("#editSpace-imageId").select2({
+        		ajax: {
+        		    url: function (params) {
+        		  		var imageURL = [[@{|/staff/images/search|}]];
+        		  		return imageURL;
+        		    },
+        		    dataType: 'json',
+        		    processResults: function (data) {
+        		        return {
+        		          results: data,
+        		        };
+        		      },
+        		},
+        		templateResult: formatImage,
+        		templateSelection: editSpaceFormatSelection
+            });
+            
+            $("#editModule-imageId").select2({
+        		ajax: {
+        		    url: function (params) {
+        		  		var imageURL = [[@{|/staff/images/search|}]];
+        		  		return imageURL;
+        		    },
+        		    dataType: 'json',
+        		    processResults: function (data) {
+        		        return {
+        		          results: data,
+        		        };
+        		      },
+        		},
+        		templateResult: formatImage,
+        		templateSelection: editModuleLinkFormatSelection
+            });
+            
+            $("#editExternalLinkInfo-imageId").select2({
+        		ajax: {
+        		    url: function (params) {
+        		  		var imageURL = [[@{|/staff/images/search|}]];
+        		  		return imageURL;
+        		    },
+        		    dataType: 'json',
+        		    processResults: function (data) {
+        		        return {
+        		          results: data,
+        		        };
+        		      },
+        		},
+        		templateResult: formatImage,
+        		templateSelection: editExternalLinkInfoFormatSelection
+            });
+            
+            function formatImage (image) {
+            	if (!image.id) {
+            		return image.text;
+            	}
+            	var tbaseUrl = [[@{|/api/image/|}]];
+            	var $image = $(
+            			'<span><img src="' + tbaseUrl + image.id + '" class="img-thumbnail" /> ' + image.text + '</span>'
+            	);
+            	return $image;
+            };
+            
+            function formatSelection(image) {
+            	if (!image.id) {
+                    return image.text;
+                }
+            	var tbaseUrl = [[@{|/api/image/|}]];
+                var $image = $(
+                        '<span>' + image.text + '</span>'
+                );
+                $("#selectedImage").empty();
+                $("#selectedImage").append('<img width="200px" src="' + tbaseUrl + image.id + '" class="img-thumbnail" />');
+                return $image;
+            }
+            
+            function editSpaceFormatSelection(image) {
+            	if (!image.id) {
+                    return image.text;
+                }
+            	var tbaseUrl = [[@{|/api/image/|}]];
+                var $image = $(
+                        '<span>' + image.text + '</span>'
+                );
+                $("#editSpace-selectedImage").empty();
+                $("#editSpace-selectedImage").append('<img width="200px" src="' + tbaseUrl + image.id + '" class="img-thumbnail" />');
+                return $image;
+            }
+            
+            function editModuleLinkFormatSelection(image) {
+            	if (!image.id) {
+                    return image.text;
+                }
+            	var tbaseUrl = [[@{|/api/image/|}]];
+                var $image = $(
+                        '<span>' + image.text + '</span>'
+                );
+                $("#editModuleLink-selectedImage").empty();
+                $("#editModuleLink-selectedImage").append('<img width="200px" src="' + tbaseUrl + image.id + '" class="img-thumbnail" />');
+                return $image;
+            }
+            
+            function editExternalLinkInfoFormatSelection(image) {
+            	if (!image.id) {
+                    return image.text;
+                }
+            	var tbaseUrl = [[@{|/api/image/|}]];
+                var $image = $(
+                        '<span>' + image.text + '</span>'
+                );
+                $("#editExternalLinkInfo-selectedImage").empty();
+                $("#editExternalLinkInfo-selectedImage").append('<img width="200px" src="' + tbaseUrl + image.id + '" class="img-thumbnail" />');
+                return $image;
+            }
 	        });
 	
 	        // -------- buttons that open modals (e.g. to create space links) ------
@@ -1285,7 +1564,10 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
 	                    $("#link").attr("id","");
 	                    $("#createModuleLinkAlert").hide();
 	                    $("#errorMsg").text("");
+                    $("#module-selectedImage").empty();
+                    $("#module-imageId").val(null).trigger('change');
 	                    $('#errorAlert').hide();
+                    console.log("Success");
 	                    $("."+linkData["id"]).remove();
 	                    form[0].reset();
 	                    $("#space").css("display", "none");
@@ -1444,6 +1726,7 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
 	        });
 	
 	        $("#createExternalLinkBtn").click(function(e) {
+        	
 	            e.preventDefault();
 	            $("#space").scrollTop(0);
 	            var payload = {};
@@ -1478,8 +1761,14 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
 	            $("#externalLinkX").val(storeX);
 	            $("#externalLinkY").val(storeY - 25);
 	
+            var file = $('#externalLinkImage')[0].files[0];
 	            var form = $("#createExternalLinkForm");
 	            var formData = new FormData(form[0]);
+/*             var chooseFromExisting = true;
+        	if (typeof(file) != "undefined"){
+        		chooseFromExisting = false;
+        		formData.append('file', file);
+        	} */
 	            var externalLinkInfo = createExternalLinkInfo();
 	
 	            $.ajax({
@@ -1508,6 +1797,8 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
 	                    $("#link").attr("id","");
 	                    $("#createExternalLinkAlert").hide();
 	                    $("#errorMsg").text("");
+                    $("externalLink-imageId").value = "";
+                    $("#externalLinkInfo-selectedImage").empty();
 	                    $('#errorAlert').hide();
 	                    $("."+linkData["id"]).remove();
 	                    form[0].reset();
@@ -2005,7 +2296,20 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
 	                        <label>Image</label>
 	                    </div>
 	                    <div class="col-sm-8">
+							<input type="radio" id="space-chooseFromLocal" name="uploadRadioBtn" checked />
+	                    		<small>Upload Image: </small>
 	                        <input type="file" class="form-control-sm-xs" name="spaceLinkImage" id="spaceLinkImage" style="width: inherit">
+	                        <input type="radio" id="space-chooseFromExisting" name="uploadRadioBtn" />
+	                        <div>
+								<small>Choose from existing: </small>
+								<select id="space-imageId" name="space-imageId" class="form-control-xs target"
+									style="height: 50px; width: 200px;">
+									<option selected value="">Choose from existing</option>
+								</select>
+							</div>
+							<div>
+								<span id="space-selectedImage" width="200px"></span>
+							</div>
 	                    </div>
 	                </div>
 	                <p class="mt-5 text-center">
@@ -2084,11 +2388,25 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
 	                
 	
 	                <div class="row">
-	                    <div class="col-sm-4">
+	                    <div class="col-sm-4" style="padding-right: 0;">
 	                        <label>Image</label>
 	                    </div>
-	                    <div class="col-sm-8">
+	                     <div class="col-sm-8">
+ 	                        <input type="radio" id="module-chooseFromLocal" name="uploadRadioBtn" checked />
+	                    		<small>Upload Image: </small>
 	                        <input type="file" class="form-control-sm" name="moduleLinkImage" id="moduleLinkImage" style="width: inherit">
+	                        <input type="radio" id="module-chooseFromExisting" name="uploadRadioBtn" />
+	                        <div>
+								<small>Choose from existing: </small>
+								<select id="module-imageId" name="module-imageId"
+									class="form-control-xs target"
+									style="height: 50px; width: 200px;">
+									<option selected value="">Choose from existing</option>
+								</select>
+							</div>
+							<div>
+								<span id="module-selectedImage" width="200px"></span>
+							</div>
 	                    </div>
 	                </div>
 	                <p class="mt-5 text-center">
@@ -2167,7 +2485,21 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
 	                        <label>Image</label>
 	                    </div>
 	                    <div class="col-sm-8">
+	                    	<input type="radio" id="externalLink-chooseFromLocal" name="uploadRadioBtn" checked />
+	                    		<small>Upload Image: </small>
 	                        <input type="file" class="form-control-sm" name="externalLinkImage" id="externalLinkImage" style="width: inherit">
+	                        <input type="radio" id="externalLink-chooseFromExisting" name="uploadRadioBtn" />
+	                        <div>
+								<small>Choose from existing: </small>
+								<select id="externalLink-imageId" name="externalLink-imageId"
+									class="form-control-xs target"
+									style="height: 50px; width: 200px;">
+									<option selected value="">Choose from existing</option>
+								</select>
+							</div>
+							<div>
+								<span id="externalLink-selectedImage" width="200px"></span>
+							</div>
 	                    </div>
 	                </div>
 	                <p class="mt-5 text-center">
@@ -2278,7 +2610,6 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
 					</div>
 	                
 	                <input type="hidden" name="spaceLinkIdValueEdit" id="spaceLinkIdValueEdit" />
-	
 	                <input type="hidden" name="x" id="spaceLinkXEdit" /> 
 	                <input type="hidden" name="y" id="spaceLinkYEdit" /> 
 	                <input type="hidden" name="spaceLinkDisplayId" id="spaceLinkDisplayId" />
@@ -2340,7 +2671,20 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
 	                        <label>Image</label>
 	                    </div>
 	                    <div class="col-sm-8">
-	                        <input type="file" class="form-control-sm" name="spaceLinkImage" id="spaceLinkImageEdit" style="width: inherit"/>
+							<input type="radio" id="editSpace-chooseFromLocal" name="uploadRadioBtn" checked />
+	                    		<small>Upload Image: </small>
+	                        <input type="file" class="form-control-sm-xs" name="editSpaceLinkImage" id="editSpaceLinkImage" style="width: inherit">
+	                        <input type="radio" id="editSpace-chooseFromExisting" name="uploadRadioBtn" />
+	                        <div>
+								<small>Choose from existing: </small>
+								<select id="editSpace-imageId" name="editSpace-imageId" class="form-control-xs target"
+									style="height: 50px; width: 200px;">
+									<option selected value="">Choose from existing</option>
+								</select>
+							</div>
+							<div>
+								<span id="editSpace-selectedImage" width="200px"></span>
+							</div>
 	                    </div>
 	                </div>
 	                
@@ -2418,8 +2762,7 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
                     </div>
                     <div class="row">
                         <div class="col-sm-4" style="padding-right: 0;">
-                            <label>Linked
-                                    Modules:</label>
+                            <label>Linked Modules:</label>
                         </div>
                         <div class="col-sm-8">
                             <select id="moduleLinkIdEdit"
@@ -2437,12 +2780,22 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
                             <label>Image:</label>
                         </div>
                         <div class="col-sm-9">
-                            <input type="file" class="form-control-sm"
-                                name="moduleLinkImage"
-                                id="moduleLinkImageEdit" style="width: inherit" />
+                        	<input type="radio" id="editModule-chooseFromLocal" name="uploadRadioBtn" checked />
+	                    		<small>Upload Image: </small>
+	                        	<input type="file" class="form-control-sm" name="editModuleImage" id="editModuleImage" style="width: inherit" />
+	                        <input type="radio" id="editModule-chooseFromExisting" name="uploadRadioBtn" />
+	                        <div>
+								<small>Choose from existing: </small>
+								<select id="editModule-imageId" name="editModule-imageId" class="form-control-xs target"
+									style="height: 50px; width: 200px;">
+									<option selected value="">Choose from existing</option>
+								</select>
+							</div>
+							<div>
+								<span id="editModuleLink-selectedImage" width="200px"></span>
+							</div>
                         </div>
                     </div>
-                    
                     
                     <p class="mt-5 text-center">
                         <button id="deleteModuleLinkButton" type="reset" class="btn delete-btn btn-sm"><i class="fa fa-trash"></i>Delete</button>
@@ -2535,9 +2888,21 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
                             <label>Image:</label>
                         </div>
                         <div class="col-sm-9">
-                            <input type="file" class="form-control-sm"
-                                name="externalLinkImage"
-                                id="externalLinkImageEdit" style="width: inherit" />
+							<input type="radio" id="editExternalLinkInfo-chooseFromLocal" name="uploadRadioBtn" checked />
+                        
+                            <small>Upload Image: </small>
+	                        	<input type="file" class="form-control-sm" name="editExternalLinkInfoImage" id="editExternalLinkInfoImage" style="width: inherit" />
+	                        <input type="radio" id="editExternalLinkInfo-chooseFromExisting" name="uploadRadioBtn" />
+	                        <div>
+								<small>Choose from existing: </small>
+								<select id="editExternalLinkInfo-imageId" name="editExternalLinkInfo-imageId" class="form-control-xs target"
+									style="height: 50px; width: 200px;">
+									<option selected value="">Choose from existing</option>
+								</select>
+							</div>
+							<div>
+								<span id="editExternalLinkInfo-selectedImage" width="200px"></span>
+							</div>
                         </div>
                     </div>
                     

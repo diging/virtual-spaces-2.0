@@ -13,7 +13,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @EnableAspectJAutoProxy
 @ComponentScan({"edu.asu.diging.vspace", "edu.asu.diging.simpleusers"})
 @EnableWebMvc
-@PropertySource({"classpath:config.properties", "${appConfigFile:classpath:}/app.properties"})
+@PropertySource({"classpath:config.properties", "${appConfigFile:classpath:app.properties}"})
 public class VSpaceConfig {
 	
 	@Value("${max_upload_size}")
