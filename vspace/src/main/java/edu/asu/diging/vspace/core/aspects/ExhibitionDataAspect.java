@@ -31,6 +31,7 @@ import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
+import edu.asu.diging.vspace.core.services.IExhibitionSpaceOrderUtility;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.web.exhibit.view.ExhibitionConstants;
@@ -50,6 +51,11 @@ public class ExhibitionDataAspect {
 
     @Autowired
     private AuthenticationFacade authFacade;
+
+    
+    @Autowired
+    private IExhibitionSpaceOrderUtility exhibitionSpaceOrderUtility;
+
 
     @After("execution(public * edu.asu.diging.vspace.web..*Controller.*(..))")
     public void setExhibition(JoinPoint jp) {
@@ -72,6 +78,7 @@ public class ExhibitionDataAspect {
                          * spaces with null space status
                          */
                         publishedSpaces.addAll(spaceManager.getSpacesWithStatus(null));
+                        publishedSpaces = spaceManager.sortPublishedSpacesByGivenOrder(publishedSpaces);
                         ((Model) obj).addAttribute("publishedSpaces", publishedSpaces);
                     }
                     // Add default link image flags (true = show the default image)

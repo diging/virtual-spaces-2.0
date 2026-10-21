@@ -2,6 +2,8 @@ package edu.asu.diging.vspace.core.model;
 
 import java.util.List;
 
+import edu.asu.diging.vspace.core.model.impl.SpacesCustomOrder;
+
 public interface IExhibition extends IVSpaceElement {
 
     /*
@@ -56,7 +58,13 @@ public interface IExhibition extends IVSpaceElement {
     
     void setPreviewId(String previewId);
 
-    void setCustomMessage(String customMessage);
+    SpacesCustomOrder getSpacesCustomOrder();
+
+    void setSpacesCustomOrder(SpacesCustomOrder spacesCustomOrder);
+
+    void setSpaceOrderMode(ExhibitionSpaceOrderMode spaceOrderMode);
+
+    ExhibitionSpaceOrderMode getSpaceOrderMode();
 
     void disableSpaceLinkDefaultImage();
 

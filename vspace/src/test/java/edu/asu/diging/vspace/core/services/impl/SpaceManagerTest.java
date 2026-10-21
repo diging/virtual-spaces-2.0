@@ -73,6 +73,7 @@ public class SpaceManagerTest {
 
     @Mock
     private ExhibitionManager exhibitionManager;
+    
 
 
     @InjectMocks
@@ -84,6 +85,7 @@ public class SpaceManagerTest {
     private String spaceId1, spaceId2;
     private String spaceLinkId1;
     private SpaceLink spaceLink;
+    List<ISpace> publishedSpaces = new ArrayList<ISpace>();
 
     @Before
     public void setUp() {
@@ -91,6 +93,7 @@ public class SpaceManagerTest {
         spaceId1 = "SPA000000001";
         spaceId2 = "SPA000000001";
         spaceLinkId1 = "SPL000000001";
+        
 
     }
 
@@ -301,5 +304,6 @@ public class SpaceManagerTest {
     public void test_getSpacesWithImageId_ImageIdIsNull(){
         Assert.assertNull(managerToTest.getSpacesWithImageId(null));
     }
+    
 
 }
