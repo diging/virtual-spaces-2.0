@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <!--
+        Auto-redirect to start space: This makes index.html immediately load the exhibition's
+        start space as the entry point, rather than showing a landing page with a list of all spaces.
+        The meta refresh causes an immediate redirect (0 second delay) to the start space HTML file.
+    -->
+    <meta http-equiv="refresh" th:content="${'0; url=./' + startSpace.id + '/' + startSpace.id + '.html'}">
+    <title th:text="${exhibitionTitle}">Virtual Exhibition</title>
+</head>
+<body>
+    <p>Redirecting to <span th:text="${exhibitionTitle}">the exhibition</span>...</p>
+    <p>If you are not redirected automatically, <a th:href="${'./' + startSpace.id + '/' + startSpace.id + '.html'}">click here to start the exhibition</a>.</p>
+</body>
+</html>
