@@ -334,6 +334,10 @@
 			<nav class="nav-bar" style="height:48px">
 		      <a class="navbar-brand" title="Go to exhibition" href="../index.html"><img src="./../resources/maintenance/img/logo-11.png" alt="Virtual Spaces logo" width="100px">
 		      [[${exhibition?.title}]]</a>
+			      <form class="searchInput" action="../search.html" method="get" style="margin-left: auto; margin-right: 10px; align-self: center; flex: 0 1 260px; min-width: 0;">
+			          <input class="form-control" style="background: none; margin-right: 4px; min-width: 0;" type="text" name="q" placeholder="Search..." aria-label="Search the exhibition">
+			          <button class="btn primary-btn btn-sm" type="submit" title="Search"><span class="icon-search"></span></button>
+			      </form>
 		    </nav>
 	    </div>
     <div id="mainDivContent" layout:fragment="content" style="margin: 60px 0 60px auto">
