@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import edu.asu.diging.vspace.core.exception.ExhibitionSnapshotNotFoundException;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
+import edu.asu.diging.vspace.core.exception.NoPublishedSpacesException;
 import edu.asu.diging.vspace.core.exception.SnapshotCouldNotBeCreatedException;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionSnapshot;
 import edu.asu.diging.vspace.core.services.ISnapshotManager;
@@ -36,7 +37,7 @@ public class SnapshotController {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value = "/staff/snapshot/create", method = RequestMethod.POST) 
-    public ResponseEntity<ExhibitionSnapshot> createExhibitionSnapshot(HttpServletRequest request, HttpServletResponse response,  Model model) throws ExecutionException {
+    public ResponseEntity<?> createExhibitionSnapshot(HttpServletRequest request, HttpServletResponse response,  Model model) {
         ExhibitionSnapshot exhibitionSnapshot = null;
         try {      
             exhibitionSnapshot = snapshotManager.triggerExhibitionSnapshotCreation();
@@ -44,7 +45,12 @@ public class SnapshotController {
                     .header(HttpHeaders.CONTENT_TYPE, "application/json")
                     .body(exhibitionSnapshot);
         } 
-        catch (IOException | SnapshotCouldNotBeCreatedException | InterruptedException e) {
+        catch (NoPublishedSpacesException e) {
+            return ResponseEntity.badRequest()
+                    .header(HttpHeaders.CONTENT_TYPE, "text/plain")
+                    .body(e.getMessage());
+        }
+        catch (IOException | SnapshotCouldNotBeCreatedException | InterruptedException | ExecutionException e) {
             logger.error("Could not create exhibition snapshot", e);
             return new ResponseEntity<ExhibitionSnapshot>(exhibitionSnapshot, HttpStatus.INTERNAL_SERVER_ERROR);
         }

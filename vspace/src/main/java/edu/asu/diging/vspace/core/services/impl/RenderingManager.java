@@ -32,6 +32,7 @@ import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
+import edu.asu.diging.vspace.core.model.IVideoBlock;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.ExternalLinkDisplayMode;
 import edu.asu.diging.vspace.core.model.display.IExternalLinkDisplay;
@@ -104,6 +105,8 @@ public class RenderingManager implements IRenderingManager {
     private ISpaceTextBlockManager spaceTextBlockManager;
 
     private final String IMAGES_FOLDER_NAME = "images";
+
+    private final String VIDEOS_FOLDER_NAME = "videos";
        
     private final String SPACE_DOWNLOAD_TEMPLATE = "exhibition/downloads/spaceDownloadTemplate";
     
@@ -242,6 +245,16 @@ public class RenderingManager implements IRenderingManager {
                         storageManager.copyImage(image, imagesFolderName);
                     } catch (FileStorageException e) {
                         logger.error("Failed to copy image to folder: " + imagesFolderName, e);
+                    }
+                }
+                IVideoBlock videoBlock = contentBlockManager.getVideoBlock(contentBlock.getId());
+                if(videoBlock != null) {
+                    String videosFolderName = spaceFolderName + File.separator + VIDEOS_FOLDER_NAME;
+                    try {
+                        storageEngineDownloads.createFolder(videosFolderName);
+                        storageManager.copyVideo(videoBlock.getVideo(), videosFolderName);
+                    } catch (FileStorageException e) {
+                        logger.error("Failed to copy video to folder: " + videosFolderName, e);
                     }
                 }
                 

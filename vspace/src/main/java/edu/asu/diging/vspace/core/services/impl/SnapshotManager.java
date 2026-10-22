@@ -1,11 +1,14 @@
 package edu.asu.diging.vspace.core.services.impl;
 
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+
+import javax.servlet.ServletContext;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,11 +28,13 @@ import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.exception.ExhibitionSnapshotNotFoundException;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
+import edu.asu.diging.vspace.core.exception.NoPublishedSpacesException;
 import edu.asu.diging.vspace.core.exception.SnapshotCouldNotBeCreatedException;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.impl.ExhibitionSnapshot;
 import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
 import edu.asu.diging.vspace.core.model.impl.SnapshotTask;
+import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.IRenderingManager;
 import edu.asu.diging.vspace.core.services.IAsyncSnapshotCreator;
 import edu.asu.diging.vspace.core.services.ISnapshotManager;
@@ -43,8 +48,8 @@ public class SnapshotManager  implements  ISnapshotManager {
     @Value("${page_size}")
     private int pageSize;
     
-    @Value("${resources_folder_path}")
-    private String resourcesPath;
+    @Autowired
+    private ServletContext servletContext;
 
     @Autowired
     @Qualifier("storageEngineDownloads")
@@ -55,6 +60,9 @@ public class SnapshotManager  implements  ISnapshotManager {
 
     @Autowired
     private SnapshotTaskRepository snapshotTaskRepository;
+
+    @Autowired
+    private SpaceRepository spaceRepository;
     
     @Autowired
     private IAsyncSnapshotCreator asyncSnapshotCreator;
@@ -64,16 +72,23 @@ public class SnapshotManager  implements  ISnapshotManager {
     /**
      * Triggers the creation of an exhibition snapshot.
      * This method initializes and saves an {@link ExhibitionSnapshot} and a {@link SnapshotTask}.
+     * If the snapshot cannot be created, the partially written folder is removed and
+     * the snapshot and its task are rolled back, so no unfinished snapshot is left behind.
      *
      * @return the created {@link ExhibitionSnapshot}
      * @throws IOException if an I/O error occurs during the snapshot creation process
      * @throws InterruptedException if the snapshot creation process is interrupted
+     * @throws NoPublishedSpacesException if there are no published spaces to export
      * @throws SnapshotCouldNotBeCreatedException if the snapshot could not be created due to any other errors
      * @throws ExecutionException if the async task execution fails
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = SnapshotCouldNotBeCreatedException.class)
     public ExhibitionSnapshot triggerExhibitionSnapshotCreation() throws IOException, InterruptedException, SnapshotCouldNotBeCreatedException, ExecutionException {
+        if (spaceRepository.findAllBySpaceStatus(SpaceStatus.PUBLISHED).isEmpty()) {
+            throw new NoPublishedSpacesException();
+        }
+
         String exhibitionFolderName = getExhibitionFolderName();
         ExhibitionSnapshot exhibitionSnapshot = new ExhibitionSnapshot();
         createSnapshotFolder(exhibitionSnapshot, exhibitionFolderName);       
@@ -82,12 +97,46 @@ public class SnapshotManager  implements  ISnapshotManager {
         exhibitionSnapshot = exhibitionSnapshotRepository.save(exhibitionSnapshot);
 
         try {
-            snapshotTask = createSnapshot(resourcesPath, exhibitionFolderName, exhibitionSnapshot);
+            snapshotTask = createSnapshot(getResourcesPath(), exhibitionFolderName, exhibitionSnapshot);
             storageEngineDownloads.generateZip(exhibitionFolderName);
-        } catch (IOException | InterruptedException | FileStorageException e) {
-            throw new SnapshotCouldNotBeCreatedException(e.getMessage(), e);
+        } catch (IOException | InterruptedException | FileStorageException | ExecutionException | RuntimeException e) {
+            deleteSnapshotFiles(exhibitionFolderName);
+            if (e instanceof InterruptedException) {
+                Thread.currentThread().interrupt();
+            }
+            Throwable cause = e instanceof ExecutionException && e.getCause() != null ? e.getCause() : e;
+            throw new SnapshotCouldNotBeCreatedException(cause.getMessage(), cause);
         }
         return exhibitionSnapshot;
+    }
+
+    /**
+     * Returns the path of the static resources (css, js, fonts) of the deployed application,
+     * which are copied into every snapshot.
+     *
+     * @return the absolute path of the resources folder
+     * @throws IOException if the resources folder cannot be found
+     */
+    private String getResourcesPath() throws IOException {
+        String resourcesPath = servletContext.getRealPath("/resources");
+        if (resourcesPath == null || !new File(resourcesPath).isDirectory()) {
+            throw new IOException("Could not find the resources folder of the application.");
+        }
+        return resourcesPath;
+    }
+
+    /**
+     * Removes the folder and zip file of a snapshot that could not be created.
+     *
+     * @param exhibitionFolderName the folder name of the snapshot
+     */
+    private void deleteSnapshotFiles(String exhibitionFolderName) {
+        try {
+            storageEngineDownloads.deleteFolder("", exhibitionFolderName);
+        } catch (IOException e) {
+            logger.error("Could not delete folder of failed snapshot " + exhibitionFolderName, e);
+        }
+        storageEngineDownloads.getFile("", exhibitionFolderName + ZIP_FILE_EXTENSION).delete();
     }
 
     /**

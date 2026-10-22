@@ -99,7 +99,9 @@ public class AsyncSnapshotCreator implements IAsyncSnapshotCreator {
     private void generateIndexHtml(String exhibitionFolderName, List<Space> spaces) throws FileStorageException {
         IExhibition exhibition = exhibitionManager.getStartExhibition();
         String exhibitionTitle = exhibition != null ? exhibition.getTitle() : "Virtual Exhibition";
-        ISpace startSpace = exhibition != null && exhibition.getStartSpace() != null ?
+        // Only published spaces are exported, so fall back to the first one if the start space is not published
+        ISpace startSpace = exhibition != null && exhibition.getStartSpace() != null
+                && exhibition.getStartSpace().getSpaceStatus() == SpaceStatus.PUBLISHED ?
             exhibition.getStartSpace() : (spaces.isEmpty() ? null : spaces.get(0));
         
         // Create Thymeleaf context and populate with data

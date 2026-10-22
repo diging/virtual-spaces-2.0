@@ -85,8 +85,10 @@
             	
             	// Clear any existing alerts
             	$('.successAlert').empty();
-            	
-            	var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>Snapshot could not be created</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+
+            	var message = data.status == 400 && data.responseText ? data.responseText : 'Snapshot could not be created';
+            	var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p></p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+            	alert.find('p').text(message);
             	$('.errorAdd').append(alert);
             	
             	var errorAlert = document.getElementById('downloadError');

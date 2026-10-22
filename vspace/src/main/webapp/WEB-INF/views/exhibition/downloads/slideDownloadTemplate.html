@@ -92,6 +92,18 @@
             <div id="blocks" class="Group_8_Class" th:each="contents: ${currentSlideCon.contents}">
                 <img th:if="${contents['class'].simpleName ==  'ImageBlock'}" id="${contents.id}" class="imgDiv" th:src="${'./images/'+ contents.image.id + '/'+ contents.image.filename}" style="max-width:57%">
                 <div th:if="${contents['class'].simpleName ==  'TextBlock'}" id="${contents.id}" class="textDiv">[(${contents.htmlRenderedText()})]</div>
+                <div th:if="${contents['class'].simpleName ==  'VideoBlock' && contents.video != null}" th:id="${contents.id}" class="VideoDiv">
+                    <div>
+                        <h3><strong>[[${contents.video.title}]]</strong></h3>
+                        <br/>
+                        <iframe width="800" height="530" th:src="${contents.video.url}" th:if="${contents.video.url}" frameborder="0"
+                            allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen></iframe>
+                        <video width="800" height="530" th:unless="${contents.video.url}" controls>
+                            <source th:src="${'./videos/' + contents.video.id + '/' + contents.video.filename}" th:type="${contents.video.fileType}"/>
+                        </video>
+                    </div>
+                </div>
                 <div th:if="${contents['class'].simpleName == 'ChoiceBlock'}" id="${contents.id}" class="textDiv" style="margin: 1%;">
                     <div th:if="${contents.showsAll eq true}" th:each="choice: ${choices}" class="list-group">
                         <a class="list-group-item list-group-item-action" 
