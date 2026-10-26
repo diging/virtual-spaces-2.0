@@ -1,31 +1,9 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
 
 
-<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-<meta name="description" content="">
-<meta name="author" content="">
-
-<link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
-
-<title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">Virtual Spaces</title>
-
-<!-- Bootstrap core CSS -->
-<link href="./../resources/bootstrap-4.1.2/css/bootstrap.min.css" type="text/css" rel="stylesheet">
-
-<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-<link href="./../resources/bootstrap/assets/css/ie10-viewport-bug-workaround.css" type="text/css" rel="stylesheet">
-
-<!-- Custom styles for this template -->
-<link href="./../resources/bootstrap/grid.css" type="text/css" rel="stylesheet">
-<link href="./../resources/extra/Module_1.css" type="text/css" rel="stylesheet">
-<link href="./../resources/extra/Module_1_slideshow_1.css" type="text/css" rel="stylesheet">
-<link href="./../resources/extra/Home.css" type="text/css" rel="stylesheet">
-<link href="./../resources/extra/Sequence.css" type="text/css" rel="stylesheet">
-<link href="./../resources/extra/diging-icon-pack.css" type="text/css" rel="stylesheet">
+<th:block th:replace="~{exhibition/downloads/fragments/downloadHead :: commonHead}"></th:block>
 
 <style >
 .Info_cz_Class .tooltiptext {
@@ -70,6 +48,11 @@
 }
 
 .sidenav .closebtn {
+    padding: 8px 8px 8px 32px;
+    background: none;
+    border: 0;
+    color: #818181;
+    cursor: pointer;
     position: relative;
     top: 5px;
     right: -100px;
@@ -292,7 +275,7 @@
             } else if (link.type == "IMAGE" && link.imageSrc) {
                 linkDisplay = $('<img/>').attr("src", link.imageSrc);
             } else {
-                linkDisplay = $('<div class="Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="' + iconClasses[link.kind] + '"></span><span class="tooltiptext"></span></div>');
+                linkDisplay = $('<div class="Info_cz_Class"><svg aria-hidden="true" class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg aria-hidden="true" class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg aria-hidden="true" class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="' + iconClasses[link.kind] + '"></span><span class="tooltiptext"></span></div>');
                 linkDisplay.find(".tooltiptext").text(link.name);
             }
             linkDisplay.css('position', 'absolute');
@@ -350,13 +333,13 @@
             </div>
             <div id="Module_1" class="Home_Class" style="margin: -45px 0 60px auto;">
                 <div id="mySidenav" class="sidenav">
-                    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+                    <button type="button" class="closebtn" aria-label="Close" onclick="closeNav()">&times;</button>
                     <ul th:each="publishedSpace: ${publishedSpaces}">
                         <li><a class="dropdown-item" th:href="${publishedSpace.href}">[[${publishedSpace.name}]]</a></li>
                     </ul>
                 </div>
-                <span style="font-size: 30px; cursor: pointer"
-                    onclick="openNav()">&#9776;</span>
+                <span style="font-size: 30px; cursor: pointer" aria-label="Open spaces menu"
+                    role="button" tabindex="0" onclick="openNav()" onkeydown="if (event.key === 'Enter' || event.key === ' ') { openNav(); }">&#9776;</span>
                 <div class="spaceClass" id="spaceDiv"
                     style="width: 80%; display: flex; margin-left: 10px; margin-top: -50px; justify-content: center; padding-top: 10px;">
                     <div>
@@ -368,34 +351,29 @@
                                 <div class="list-group spaceNav">
                                     <ul style="list-style: none;"
                                         th:each="module: ${moduleList}">
-                                        <li
-                                            th:if="${!#strings.isEmpty(module.link.name)}"><a
+                                        <li><a
                                             class="dropdown-item" th:href="${module.link.module?.startSequence != null ? module.link.module.startSequence.slides[0].id + '.html' : '#'}">
-                                            <div class="Info Info_cz_module_Class"><svg class="Ellipse_8_module_c_sidenav"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_module_c_sidenav"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_module_c_sidenav"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_module_m_sidenav"></span></div>[[${module.link.name}]]</a></li>
-                                        <li
-                                            th:if="${#strings.isEmpty(module.link.name)}"><a
-                                            class="dropdown-item" th:href="${module.link.module?.startSequence != null ? module.link.module.startSequence.slides[0].id + '.html' : '#'}">
-                                            <div class="Info Info_cz_module_Class"><svg class="Ellipse_8_module_c_sidenav"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_module_c_sidenav"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_module_c_sidenav"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_module_m_sidenav"></span></div>[[${module.link.module.name}]]</a></li>
+                                            <div class="Info Info_cz_module_Class"><svg aria-hidden="true" class="Ellipse_8_module_c_sidenav"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg aria-hidden="true" class="Ellipse_10_module_c_sidenav"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg aria-hidden="true" class="Ellipse_9_module_c_sidenav"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_module_m_sidenav"></span></div>[[${!#strings.isEmpty(module.link.name) ? module.link.name : module.link.module.name}]]</a></li>
                                     </ul>
                                 </div>
                             </div>
                             <div class="Group_3_Class"
                                 th:onclick="openModuleNav()">
-                                <svg class="Ellipse_8_dc">
+                                <svg aria-hidden="true" class="Ellipse_8_dc">
 			                        <ellipse fill="rgba(222,222,222,1)"
 	                                        class="Ellipse_8_dc_Class"
 	                                        rx="19.5" ry="19.5" cx="19.5"
 	                                        cy="19.5">
 			                        </ellipse>
 		                    	</svg>
-                                <svg class="Ellipse_10_dd">
+                                <svg aria-hidden="true" class="Ellipse_10_dd">
 			                        <ellipse fill="rgba(240,240,240,1)"
 	                                        class="Ellipse_10_dd_Class"
 	                                        rx="16.5" ry="16.5" cx="16.5"
 	                                        cy="16.5">
 			                        </ellipse>
 		                    	</svg>
-                                <svg class="Ellipse_9_de">
+                                <svg aria-hidden="true" class="Ellipse_9_de">
 			                        <ellipse fill="rgba(255,255,255,1)"
 	                                        class="Ellipse_9_de_Class"
 	                                        rx="13.5" ry="13.5" cx="13.5"
@@ -411,7 +389,7 @@
                                     th:if="${!#strings.isEmpty(space.description)}"
                                     class="icon-info-circle"
                                     style="font-size: 20px; color: rgba(150, 45, 62, 1);"
-                                    onclick="openSpaceDescription()"></span>
+                                    role="button" tabindex="0" onclick="openSpaceDescription()" onkeydown="if (event.key === 'Enter' || event.key === ' ') { openSpaceDescription(); }" aria-label="Show space description"></span>
                             </h3>
                         </div>
 
@@ -419,13 +397,13 @@
 
                             <img
                                 th:style="|max-width: ${space.image?.width}px; border-radius: 13px; width: 100%;|"
-                                id="bgImage" th:src="${'./images/'+ space.image?.id + '/'+ space.image?.filename}"/>
+                                id="bgImage" th:alt="${space.name}" th:src="${'./images/'+ space.image?.id + '/'+ space.image?.filename}"/>
                                  
 
                         </div>
                     </div>
                     <div id="rightContent" th:if="${space.description!=NULL}">
-                        <span class="icon-circle-close closebtn" onclick="closeSpaceDescription()"></span>
+                        <span class="icon-circle-close closebtn" aria-label="Close space description" role="button" tabindex="0" onclick="closeSpaceDescription()" onkeydown="if (event.key === 'Enter' || event.key === ' ') { closeSpaceDescription(); }"></span>
                         <div class="spaceDescription">[[${space.description}]]</div>
                     </div>
                 </div>
