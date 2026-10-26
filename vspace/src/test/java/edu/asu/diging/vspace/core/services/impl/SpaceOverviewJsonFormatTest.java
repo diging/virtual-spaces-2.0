@@ -77,8 +77,9 @@ public class SpaceOverviewJsonFormatTest {
         try {
             String json = serviceToTest.createNodes("contextPath", spacesToSpacesAndModulesMap);
             JsonNode tree1 = new ObjectMapper().readTree(json);
-            String expectedJson = "[{\"name\":\"SPACE_1\",\"id\":\"SPACE_ID1\",\"link\":\"contextPath/staff/space/SPACE_ID1\",\"img\":\"contextPath/api/image/IMG_ID1\",\"module\":false,\"unpublished\":false,\"hideIncomingLinks\":false,\"edges\":[\"MODULE_ID1\",\"MODULE_ID5\",\"MODULE_ID4\",\"SPACE_ID2\"]},"
-                    + "{\"name\":\"MODULE_1\",\"id\":\"MODULE_ID1\",\"link\":\"contextPath/staff/module/MODULE_ID1\",\"img\":\"\",\"module\":true,\"unpublished\":false,\"hideIncomingLinks\":false,\"edges\":null}]";
+            
+            String expectedJson = "[{\"name\":\"SPACE_1\",\"id\":\"SPACE_ID1\",\"description\":null,\"link\":\"contextPath/staff/space/SPACE_ID1\",\"img\":\"contextPath/api/image/IMG_ID1\",\"module\":false,\"unpublished\":false,\"hideIncomingLinks\":false,\"edges\":[\"MODULE_ID1\",\"MODULE_ID5\",\"MODULE_ID4\",\"SPACE_ID2\"]},"
+                    + "{\"name\":\"MODULE_1\",\"id\":\"MODULE_ID1\",\"description\":null,\"link\":\"contextPath/staff/module/MODULE_ID1\",\"img\":\"\",\"module\":true,\"unpublished\":false,\"hideIncomingLinks\":false,\"edges\":null}]";
             JsonNode tree2 = new ObjectMapper().readTree(expectedJson);
             assertEquals(tree1, tree2);
         } catch (JsonProcessingException e) {

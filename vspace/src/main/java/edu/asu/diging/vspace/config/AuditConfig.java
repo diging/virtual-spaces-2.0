@@ -14,7 +14,7 @@ import org.javers.spring.auditable.CommitPropertiesProvider;
 import org.javers.spring.auditable.SpringSecurityAuthorProvider;
 import org.javers.spring.auditable.aspect.springdata.JaversSpringDataAuditableRepositoryAspect;
 import org.javers.spring.jpa.JpaHibernateConnectionProvider;
-import org.javers.spring.jpa.TransactionalJaversBuilder;
+import org.javers.spring.jpa.TransactionalJpaJaversBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,7 +34,7 @@ public class AuditConfig {
                 .withDialect(DialectName.MYSQL) 
                 .build(); 
 
-        return TransactionalJaversBuilder 
+        return TransactionalJpaJaversBuilder 
                 .javers() 
                 .withTxManager(txManager)
                 .withObjectAccessHook(new HibernateUnproxyObjectAccessHook()) 
