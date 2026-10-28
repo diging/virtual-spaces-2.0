@@ -3,12 +3,10 @@
 <head>
     <meta charset='UTF-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <!--
-        Auto-redirect to start space: This makes index.html immediately load the exhibition's
-        start space as the entry point, rather than showing a landing page with a list of all spaces.
-        The meta refresh causes an immediate redirect (0 second delay) to the start space HTML file.
-    -->
-    <meta http-equiv="refresh" th:content="${'0; url=./' + startSpace.id + '/' + startSpace.id + '.html'}">
+    <!-- Auto-redirect: index.html immediately loads the exhibition's start space as the entry point. -->
+    <script th:inline="javascript">
+        window.location.replace(/*[[${'./' + startSpace.id + '/' + startSpace.id + '.html'}]]*/ '#');
+    </script>
     <title th:text="${exhibitionTitle}">Virtual Exhibition</title>
 </head>
 <body>
