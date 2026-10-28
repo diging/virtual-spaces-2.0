@@ -2,6 +2,7 @@
 <html lang="en">
    <head>
     <th:block th:replace="~{exhibition/downloads/fragments/downloadHead :: commonHead}"></th:block>
+    <title>Virtual Spaces</title>
 
     <style type="text/css">
       
@@ -74,7 +75,7 @@
                     <div>
                         <h3><strong>[[${contents.video.title}]]</strong></h3>
                         <br/>
-                        <iframe width="800" height="530" th:src="${contents.video.url}" th:if="${contents.video.url}" th:title="${contents.video.title}" style="border: 0;"
+                        <iframe width="800" height="530" th:src="${contents.video.url}" th:if="${contents.video.url}" title="Video" th:title="${contents.video.title}" style="border: 0;"
                             allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                             allowfullscreen></iframe>
                         <video width="800" height="530" th:unless="${contents.video.url}" controls>

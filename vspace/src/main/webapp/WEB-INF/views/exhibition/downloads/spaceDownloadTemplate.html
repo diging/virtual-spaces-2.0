@@ -4,6 +4,7 @@
 
 
 <th:block th:replace="~{exhibition/downloads/fragments/downloadHead :: commonHead}"></th:block>
+<title>Virtual Spaces</title>
 
 <style >
 .Info_cz_Class .tooltiptext {
@@ -45,6 +46,16 @@
     color: #818181;
     display: block;
     transition: 0.3s;
+}
+
+.icon-button {
+    background: none;
+    border: 0;
+    padding: 0;
+    color: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    cursor: pointer;
 }
 
 .sidenav .closebtn {
@@ -338,8 +349,8 @@
                         <li><a class="dropdown-item" th:href="${publishedSpace.href}">[[${publishedSpace.name}]]</a></li>
                     </ul>
                 </div>
-                <span style="font-size: 30px; cursor: pointer" aria-label="Open spaces menu"
-                    role="button" tabindex="0" onclick="openNav()" onkeydown="if (event.key === 'Enter' || event.key === ' ') { openNav(); }">&#9776;</span>
+                <button type="button" class="icon-button" style="font-size: 30px;" aria-label="Open spaces menu"
+                    onclick="openNav()">&#9776;</button>
                 <div class="spaceClass" id="spaceDiv"
                     style="width: 80%; display: flex; margin-left: 10px; margin-top: -50px; justify-content: center; padding-top: 10px;">
                     <div>
@@ -385,11 +396,11 @@
                         </div>
                         <div class="text-Div" >
                             <h3 class="spaceName">
-                                [[${space.name}]] <span
+                                [[${space.name}]] <button type="button"
                                     th:if="${!#strings.isEmpty(space.description)}"
-                                    class="icon-info-circle"
+                                    class="icon-button icon-info-circle"
                                     style="font-size: 20px; color: rgba(150, 45, 62, 1);"
-                                    role="button" tabindex="0" onclick="openSpaceDescription()" onkeydown="if (event.key === 'Enter' || event.key === ' ') { openSpaceDescription(); }" aria-label="Show space description"></span>
+                                    onclick="openSpaceDescription()" aria-label="Show space description"></button>
                             </h3>
                         </div>
 
@@ -403,7 +414,7 @@
                         </div>
                     </div>
                     <div id="rightContent" th:if="${space.description!=NULL}">
-                        <span class="icon-circle-close closebtn" aria-label="Close space description" role="button" tabindex="0" onclick="closeSpaceDescription()" onkeydown="if (event.key === 'Enter' || event.key === ' ') { closeSpaceDescription(); }"></span>
+                        <button type="button" class="icon-button icon-circle-close closebtn" aria-label="Close space description" onclick="closeSpaceDescription()"></button>
                         <div class="spaceDescription">[[${space.description}]]</div>
                     </div>
                 </div>
