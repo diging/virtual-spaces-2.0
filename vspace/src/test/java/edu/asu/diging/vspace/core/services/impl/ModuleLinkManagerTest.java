@@ -1,5 +1,6 @@
 package edu.asu.diging.vspace.core.services.impl;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -11,6 +12,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 
 import edu.asu.diging.vspace.core.data.ImageRepository;
 import edu.asu.diging.vspace.core.data.ModuleLinkRepository;
@@ -63,10 +66,14 @@ public class ModuleLinkManagerTest {
     private ImageRepository imageRepo;
     
     @Mock
+    @Qualifier("storageEngineUploads")
     private IStorageEngine storage;
 
     @Mock
     private IModuleLinkDisplayFactory moduleLinkDisplayFactory;
+    
+    @Value("${uploads_path}")
+    private String uploadsPath;
 
     @InjectMocks
     private ModuleLinkManager managerToTest = new ModuleLinkManager();
@@ -156,7 +163,7 @@ public class ModuleLinkManagerTest {
         
         Mockito.when(imageFactory.createImage(Mockito.anyString(), Mockito.anyString())).thenReturn(modImage);
         Mockito.when(imageRepo.save((VSImage) modImage)).thenReturn((VSImage) modImage);
-        Mockito.when(storage.storeFile(new byte[20], imageFileName, modImage.getId())).thenReturn("Dummy File Path");
+        Mockito.when(storage.storeFile(new byte[20], imageFileName,  uploadsPath + File.separator+modImage.getId())).thenReturn("Dummy File Path");
         
         Mockito.when(moduleLinkRepo.save((ModuleLink) moduleLink)).thenReturn((ModuleLink)moduleLink);
         Mockito.when(moduleLinkDisplayRepo.save((ModuleLinkDisplay)moduleDisplayLinkImage)).thenReturn((ModuleLinkDisplay)moduleDisplayLinkImage);
