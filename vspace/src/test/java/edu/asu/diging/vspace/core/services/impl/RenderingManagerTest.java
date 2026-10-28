@@ -42,7 +42,6 @@ import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.impl.Module;
 import edu.asu.diging.vspace.core.model.impl.ModuleLink;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
-import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.services.IExternalLinkManager;
@@ -52,6 +51,7 @@ import edu.asu.diging.vspace.core.services.ISnapshotManager;
 import edu.asu.diging.vspace.core.services.ISpaceDisplayManager;
 import edu.asu.diging.vspace.core.services.ISpaceLinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
+import edu.asu.diging.vspace.core.services.ISpaceTextBlockManager;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RenderingManagerTest {
@@ -101,6 +101,9 @@ public class RenderingManagerTest {
     
     @Mock
     private IExternalLinkManager externalLinkManager;
+    
+    @Mock
+    private ISpaceTextBlockManager spaceTextBlockManager;
     
     @Mock
     private TemplateEngine templateEngine;
@@ -155,12 +158,11 @@ public class RenderingManagerTest {
 
     @Test
     public void test_createSpaceSnapshot_success() throws FileStorageException, ExhibitionSnapshotNotFoundException, IOException {
-        SequenceHistory sequenceHistory = new SequenceHistory();
 
         when(spaceRepository.save((Space) space)).thenReturn(space);
         when(spaceManager.getSpace(spaceId)).thenReturn(space);
         when(moduleManager.getModule(moduleId)).thenReturn(module);
-        serviceToTest.createSpaceSnapshot(space, exhibitionId, sequenceHistory);
+        serviceToTest.createSpaceSnapshot(space, exhibitionId);
         
         verify(storageEngine).createFolder(exhibitionId + File.separator + spaceId);
         verify(storageEngine).storeFile(Mockito.any(byte[].class), eq(spaceId + ".html"), eq(exhibitionId + File.separator + spaceId));
@@ -181,15 +183,14 @@ public class RenderingManagerTest {
         space.setModuleLinks(moduleLinks);
         sequence.setSlides(slides);
         String exhibitionFolderName = exhibitionId;
-        SequenceHistory sequenceHistory = mock(SequenceHistory.class);
         Space space2 = new Space();
         space.setId("space02"); 
         
         when(spaceRepository.save((Space) space)).thenReturn(space);
         when(spaceManager.getSpace(spaceId)).thenReturn(space);
         
-        doThrow(FileStorageException.class).when(serviceToTest).createSpaceSnapshot(space2, exhibitionFolderName, sequenceHistory);
-        assertThrows(FileStorageException.class, () -> serviceToTest.createSpaceSnapshot(space2, exhibitionFolderName, sequenceHistory));
+        doThrow(FileStorageException.class).when(serviceToTest).createSpaceSnapshot(space2, exhibitionFolderName);
+        assertThrows(FileStorageException.class, () -> serviceToTest.createSpaceSnapshot(space2, exhibitionFolderName));
     }
 
     @Test
@@ -207,13 +208,12 @@ public class RenderingManagerTest {
         space.setModuleLinks(moduleLinks);
         sequence.setSlides(slides);
         String exhibitionFolderName = exhibitionId;
-        SequenceHistory sequenceHistory = mock(SequenceHistory.class);
         
         when(spaceRepository.save((Space) space)).thenReturn(space);
         when(spaceManager.getSpace(spaceId)).thenReturn(space);
         when(moduleManager.getModule(moduleId)).thenReturn(module); 
 
-        serviceToTest.createSpaceSnapshot(space, exhibitionFolderName, sequenceHistory);
+        serviceToTest.createSpaceSnapshot(space, exhibitionFolderName);
 
         verify(storageEngine).createFolder(exhibitionId + File.separator + spaceId);
         verify(storageEngine).storeFile(any(byte[].class), eq(spaceId + ".html"), eq(exhibitionId + File.separator + spaceId));
