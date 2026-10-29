@@ -41,7 +41,10 @@ public class AddFileController {
             try {
                 byte[] fileBytes = file.getBytes();
                 String originalFileName = file.getOriginalFilename();
-                fileManager.storeFile(fileBytes, originalFileName, fileForm.getFileName(),fileForm.getDescription());
+                CreationReturnValue returnValue = fileManager.storeFile(fileBytes, originalFileName, fileForm.getFileName(),fileForm.getDescription());
+                if (returnValue.getElement() == null) {
+                    return new ResponseEntity<String>("Could not create file", HttpStatus.INTERNAL_SERVER_ERROR);
+                }
               
             } catch (IOException e) {
                 logger.error("Error occured while creating file", e);  

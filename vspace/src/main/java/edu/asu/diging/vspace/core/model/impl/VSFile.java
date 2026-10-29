@@ -22,6 +22,7 @@ public class VSFile extends VSMedia implements IVSFile {
 
     private String originalFileName;
     private String fileDescription;
+    private String storedFileName;
 
     @Override
     public String getId() {
@@ -51,6 +52,16 @@ public class VSFile extends VSMedia implements IVSFile {
     @Override
     public void setFileDescription(String fileDescription) {
         this.fileDescription = fileDescription;
+    }
+
+    @Override
+    public String getStoredFileName() {
+        return storedFileName;
+    }
+
+    @Override
+    public void setStoredFileName(String storedFileName) {
+        this.storedFileName = storedFileName;
     }
     
     

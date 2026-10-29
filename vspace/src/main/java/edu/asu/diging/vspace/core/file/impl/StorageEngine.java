@@ -35,7 +35,12 @@ public class StorageEngine implements IStorageEngine {
     */
     @Override
     public String storeFile(byte[] fileContent, String filename, String directory) throws FileStorageException {        
-        File file = getFile(directory, filename);
+        File file;
+        try {
+            file = getFile(directory, filename);
+        } catch (IllegalArgumentException e) {
+            throw new FileStorageException("Could not store file.", e);
+        }
         BufferedOutputStream stream;
         try {
             stream = new BufferedOutputStream(new FileOutputStream(file));
@@ -54,21 +59,36 @@ public class StorageEngine implements IStorageEngine {
 
     @Override
     public boolean renameFile(String fileName, String newFileName, String directory) {             
-        File currentFile = getFile(directory, fileName);
-        File renamedFile = getFile(directory, newFileName);
+        File currentFile;
+        File renamedFile;
+        try {
+            currentFile = getFile(directory, fileName);
+            renamedFile = getFile(directory, newFileName);
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
         return currentFile.renameTo(renamedFile);
     }
 
     @Override
     public Resource downloadFile(String fileName, String directory) throws IOException {               
-        File fileObject = getFile(directory, fileName);
-        Path path = Paths.get(fileObject.getAbsolutePath());
-        return new ByteArrayResource(Files.readAllBytes(path));   
+        File fileObject;
+        try {
+            fileObject = getFile(directory, fileName);
+        } catch (IllegalArgumentException e) {
+            throw new IOException("Invalid file path.", e);
+        }
+        return new ByteArrayResource(Files.readAllBytes(fileObject.toPath()));   
     }
 
     @Override
     public byte[] getMediaContent(String directory, String filename) throws IOException {
-        File fileObject = new File(path + File.separator + directory + File.separator + filename);
+        File fileObject;
+        try {
+            fileObject = resolve(directory, filename);
+        } catch (IllegalArgumentException e) {
+            throw new IOException("Invalid file path.", e);
+        }
         URLConnection con = fileObject.toURI().toURL().openConnection();
         
         InputStream input = con.getInputStream();
@@ -96,8 +116,14 @@ public class StorageEngine implements IStorageEngine {
 
     @Override
     public boolean deleteFile(String fileName, String directory) {        
-        File storedFile = getFile(directory,fileName);               
-        File storedDirectory = getDirectoryPath(directory);
+        File storedFile;
+        File storedDirectory;
+        try {
+            storedFile = getFile(directory,fileName);               
+            storedDirectory = getDirectoryPath(directory);
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
         return storedFile.delete() && storedDirectory.delete() ;
 
     }
@@ -105,15 +131,45 @@ public class StorageEngine implements IStorageEngine {
     @Override
     public File getFile(String directory, String fileName) {
         File parentDirectory = getDirectoryPath(directory);
+        File file = resolve(directory, fileName);
         if (!parentDirectory.exists()) {
             parentDirectory.mkdir();
         }
-        return new File(parentDirectory.getAbsolutePath() + File.separator + fileName);
+        return file;
     }
     
     @Override
     public File getDirectoryPath(String directory) {
-        return new File(path + File.separator + directory);
+        checkPathSegment(directory);
+        Path baseDirectory = Paths.get(path).toAbsolutePath().normalize();
+        Path directoryPath = baseDirectory.resolve(directory).normalize();
+        if (!baseDirectory.equals(directoryPath.getParent())) {
+            throw new IllegalArgumentException("Invalid directory: " + directory);
+        }
+        return directoryPath.toFile();
+    }
+    
+    /**
+     * Resolves a file inside the uploads folder and makes sure it cannot
+     * point anywhere other than directly inside the given directory.
+     *
+     * @throws IllegalArgumentException if the directory or file name is not a single, safe path segment
+     */
+    private File resolve(String directory, String fileName) {
+        checkPathSegment(fileName);
+        Path directoryPath = getDirectoryPath(directory).toPath();
+        Path filePath = directoryPath.resolve(fileName).normalize();
+        if (!directoryPath.equals(filePath.getParent())) {
+            throw new IllegalArgumentException("Invalid file name: " + fileName);
+        }
+        return filePath.toFile();
+    }
+    
+    private void checkPathSegment(String segment) {
+        if (segment == null || segment.trim().isEmpty() || segment.equals(".") || segment.equals("..")
+                || segment.contains("/") || segment.contains("\\") || segment.contains("\0")) {
+            throw new IllegalArgumentException("Invalid path segment: " + segment);
+        }
     }
     
     
@@ -126,8 +182,6 @@ public class StorageEngine implements IStorageEngine {
      */ 
     @Override
     public boolean renameImage(IVSImage image, String newFileName) {
-        File currentFile = new File(path + File.separator + image.getId() + File.separator + image.getFilename());
-        File renamedFile = new File(path + File.separator + image.getId() + File.separator + newFileName);
-        return currentFile.renameTo(renamedFile);
+        return renameFile(image.getFilename(), newFileName, image.getId());
     }
 }
