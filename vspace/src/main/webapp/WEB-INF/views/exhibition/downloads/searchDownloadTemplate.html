@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -64,11 +64,11 @@
             var title = entry.title.toLowerCase();
             var all = (entry.title + " " + entry.context + " " + entry.text).toLowerCase();
             var score = 0;
-            for (var i = 0; i < terms.length; i++) {
-                if (all.indexOf(terms[i]) == -1) {
+            for (var term of terms) {
+                if (!all.includes(term)) {
                     return;
                 }
-                score += title.indexOf(terms[i]) != -1 ? 10 : 1;
+                score += title.includes(term) ? 10 : 1;
             }
             results.push({entry: entry, score: score});
         });
@@ -90,13 +90,13 @@
 
     // Adds text to the element with the search terms wrapped in <mark>
     function appendHighlighted(element, text, terms) {
-        var escaped = terms.map(function(term) { return term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); });
+        var escaped = terms.map(function(term) { return term.replace(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`); });
         var parts = escaped.length > 0 ? text.split(new RegExp("(" + escaped.join("|") + ")", "gi")) : [text];
         parts.forEach(function(part) {
             if (part.length == 0) {
                 return;
             }
-            if (terms.indexOf(part.toLowerCase()) != -1) {
+            if (terms.includes(part.toLowerCase())) {
                 var mark = document.createElement("mark");
                 mark.textContent = part;
                 element.appendChild(mark);
