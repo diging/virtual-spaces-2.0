@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+
+<title th:text="${exhibitionTitle != null ? 'Search - ' + exhibitionTitle : 'Search'}">Search</title>
+
+<link href="./resources/bootstrap-4.1.2/css/bootstrap.min.css" type="text/css" rel="stylesheet">
+<link href="./resources/bootstrap/grid.css" type="text/css" rel="stylesheet">
+<link href="./resources/extra/Home.css" type="text/css" rel="stylesheet">
+<link href="./resources/extra/diging-icon-pack.css" type="text/css" rel="stylesheet">
+
+<style>
+.search-page {
+    max-width: 800px;
+    margin: 80px auto 60px auto;
+    padding: 0 16px;
+}
+
+.search-result {
+    padding: 12px 0;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.search-result a {
+    font-size: 1.15em;
+    font-weight: bold;
+    color: rgb(150, 45, 62);
+}
+
+.search-result .search-context {
+    color: #777;
+    font-size: 0.85em;
+}
+
+.search-result p {
+    margin: 4px 0 0 0;
+}
+
+.search-result mark {
+    padding: 0;
+    background: #f9e79f;
+}
+</style>
+
+<!-- The index is a script rather than JSON, so the page also works when opened from disk -->
+<script src="./search-index.js"></script>
+<script>
+    function getTerms(query) {
+        return query.toLowerCase().split(/\s+/).filter(function(term) { return term.length > 0; });
+    }
+
+    // Every term has to appear in the page; matches in the title rank higher
+    function search(query) {
+        var terms = getTerms(query);
+        if (terms.length == 0) {
+            return [];
+        }
+        var results = [];
+        (window.SEARCH_INDEX || []).forEach(function(entry) {
+            var title = entry.title.toLowerCase();
+            var all = (entry.title + " " + entry.context + " " + entry.text).toLowerCase();
+            var score = 0;
+            for (var term of terms) {
+                if (!all.includes(term)) {
+                    return;
+                }
+                score += title.includes(term) ? 10 : 1;
+            }
+            results.push({entry: entry, score: score});
+        });
+        results.sort(function(a, b) { return b.score - a.score; });
+        return results.map(function(result) { return result.entry; });
+    }
+
+    // Returns the part of the text around the first match
+    function getSnippet(text, terms) {
+        var lowerText = text.toLowerCase();
+        var position = -1;
+        for (var i = 0; i < terms.length && position == -1; i++) {
+            position = lowerText.indexOf(terms[i]);
+        }
+        var start = Math.max(0, position - 60);
+        var snippet = text.substring(start, start + 200);
+        return (start > 0 ? "…" : "") + snippet + (start + 200 < text.length ? "…" : "");
+    }
+
+    // Adds text to the element with the search terms wrapped in <mark>
+    function appendHighlighted(element, text, terms) {
+        var escaped = terms.map(function(term) { return term.replace(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`); });
+        var parts = escaped.length > 0 ? text.split(new RegExp("(" + escaped.join("|") + ")", "gi")) : [text];
+        parts.forEach(function(part) {
+            if (part.length == 0) {
+                return;
+            }
+            if (terms.includes(part.toLowerCase())) {
+                var mark = document.createElement("mark");
+                mark.textContent = part;
+                element.appendChild(mark);
+            } else {
+                element.appendChild(document.createTextNode(part));
+            }
+        });
+    }
+
+    function showResults(query) {
+        var terms = getTerms(query);
+        var results = search(query);
+        var summary = document.getElementById("searchSummary");
+        var list = document.getElementById("searchResults");
+        list.innerHTML = "";
+        if (terms.length == 0) {
+            summary.textContent = "Enter a word to search the exhibition.";
+            return;
+        }
+        summary.textContent = results.length + (results.length == 1 ? " result" : " results") + " for \"" + query + "\"";
+        results.forEach(function(entry) {
+            var item = document.createElement("div");
+            item.className = "search-result";
+
+            var link = document.createElement("a");
+            link.href = "./" + entry.href;
+            appendHighlighted(link, entry.title || entry.type, terms);
+            item.appendChild(link);
+
+            var context = document.createElement("div");
+            context.className = "search-context";
+            context.textContent = entry.type + (entry.context ? " · " + entry.context : "");
+            item.appendChild(context);
+
+            if (entry.text) {
+                var snippet = document.createElement("p");
+                appendHighlighted(snippet, getSnippet(entry.text, terms), terms);
+                item.appendChild(snippet);
+            }
+            list.appendChild(item);
+        });
+    }
+
+    window.addEventListener("load", function() {
+        var query = new URLSearchParams(window.location.search).get("q") || "";
+        document.getElementById("searchField").value = query;
+        showResults(query);
+    });
+</script>
+</head>
+<body>
+    <nav class="nav-bar" style="height:48px; position: fixed; top: 0; z-index: 125; background: white;">
+        <a class="navbar-brand" title="Go to exhibition" href="./index.html"><img src="./resources/maintenance/img/logo-11.png" alt="Virtual Spaces logo" width="100px">
+        [[${exhibitionTitle}]]</a>
+    </nav>
+    <div class="search-page">
+        <h3>Search</h3>
+        <form class="searchInput" action="./search.html" method="get" style="margin: 16px 0;">
+            <input class="form-control" style="background: none; margin-right: 4px; flex: 1; min-width: 0;" type="text" id="searchField" name="q" placeholder="Search..." aria-label="Search the exhibition">
+            <button class="btn primary-btn" type="submit" title="Search"><span class="icon-search"></span></button>
+        </form>
+        <p id="searchSummary"></p>
+        <div id="searchResults"></div>
+    </div>
+</body>
+</html>
