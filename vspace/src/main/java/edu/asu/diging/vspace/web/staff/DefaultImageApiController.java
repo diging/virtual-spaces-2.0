@@ -1,10 +1,8 @@
 package edu.asu.diging.vspace.web.staff;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.CacheControl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +14,7 @@ import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IImageService;
+import edu.asu.diging.vspace.web.api.MediaResponseHeaders;
 
 @Controller
 public class DefaultImageApiController {
@@ -120,9 +119,7 @@ public class DefaultImageApiController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         byte[] imageContent = imageService.getImageContent(image);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setCacheControl(CacheControl.noCache().getHeaderValue());
-        headers.setContentType(MediaType.parseMediaType(image.getFileType()));
+        HttpHeaders headers = MediaResponseHeaders.create(image.getFileType());
         return new ResponseEntity<>(imageContent, headers, HttpStatus.OK);
     }
 
