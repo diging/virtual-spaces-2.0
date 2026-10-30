@@ -101,11 +101,8 @@ public class ContentBlockManagerTest {
     private ReferenceManager refManager;
 
     @Mock
-    private ChoiceContentBlockRepository choiceBlockRepo;
-    
-    @Mock
-    private VideoContentBlockRepository videoBlockRepo;
-
+    private SlideRepository slideRepo;
+   
     @Mock
     private IVideoFactory videoFactory;
     
@@ -132,6 +129,36 @@ public class ContentBlockManagerTest {
 
     @Mock
     private ChoiceBlockFactory choiceBlockFactory;
+
+    @Mock
+    private IImageBlockFactory imageBlockFactory;
+
+    @Mock
+    private SpaceBlockFactory spaceBlockFactory;
+
+    @Mock
+    private ChoiceContentBlockRepository choiceBlockRepo;
+
+    @Mock
+    private VideoContentBlockRepository videoBlockRepo;
+
+    @Mock
+    private IVideoFactory videoFactory;
+
+    @Mock
+    private ImageRepository imageRepo;
+
+    @Mock
+    private IImageFactory imageFactory;
+
+    @Mock
+    private ITextBlockFactory textBlockFactory;
+
+    @Mock
+    private ChoiceBlockFactory choiceBlockFactory;
+
+    @Mock
+    private IVideoBlockFactory videoBlockFactory;
 
     @Mock
     private VideoRepository videoRepo;
@@ -408,6 +435,7 @@ public class ContentBlockManagerTest {
     @Test
     public void test_updateContentOrder_success() throws BlockDoesNotExistException {
         ContentBlock firstContentBlock = new ContentBlock();
+        ISlide slide = firstContentBlock.getSlide();
         firstContentBlock.setId("contentBlockId1");
         firstContentBlock.setContentOrder(Integer.valueOf(3));
 
@@ -422,7 +450,7 @@ public class ContentBlockManagerTest {
         when(contentBlockRepository.findById("contentBlockId1")).thenReturn(Optional.of(contentBlock));
         when(contentBlockRepository.findById("contentBlockId2")).thenReturn(Optional.of(contentBlock1));
 
-        managerToTest.updateContentOrder(contentBlocks);
+        managerToTest.updateContentOrder(contentBlocks,slide);
         assertEquals(Integer.valueOf(3), contentBlock.getContentOrder());
         assertEquals(Integer.valueOf(4), contentBlock1.getContentOrder());
 
@@ -436,6 +464,7 @@ public class ContentBlockManagerTest {
     @Test(expected = BlockDoesNotExistException.class)
     public void test_updateContentOrder_forNonExistentId() throws BlockDoesNotExistException {
         ContentBlock contentBlock1 = new ContentBlock();
+        ISlide slide = contentBlock1.getSlide();
         contentBlock1.setId("notARealId");
         contentBlock1.setContentOrder(Integer.valueOf(1));
 
@@ -443,7 +472,7 @@ public class ContentBlockManagerTest {
         contentBlocks.add(contentBlock1);
 
         when(contentBlockRepository.findById("notARealId")).thenReturn(Optional.empty());
-        managerToTest.updateContentOrder(contentBlocks);
+        managerToTest.updateContentOrder(contentBlocks,slide);
     }
 
     @Test
@@ -461,11 +490,13 @@ public class ContentBlockManagerTest {
         contentBlocks.add(firstContentBlock);
         slide.setContents(contentBlocks);
         when(slideManager.getSlide(slideId)).thenReturn(slide);
+        when(slideRepo.findById("notARealId")).thenReturn(Optional.empty());
 
         List<IContentBlock> returnedContentBlock = managerToTest.getAllContentBlocks(slideId);
         assertEquals(returnedContentBlock.get(0).getId(), contentBlockIdString);
         assertEquals(returnedContentBlock.size(), contentBlocks.size());
         assertEquals(returnedContentBlock.get(0).getContentOrder(), Integer.valueOf(3));
+        assertTrue(!returnedContentBlock.isEmpty());
 
     }
 
