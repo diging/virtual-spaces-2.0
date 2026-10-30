@@ -693,7 +693,7 @@
 
                             <img
                                 th:style="|max-width: ${space.image?.width}px; border-radius: 13px; width: 100%;|"
-                                id="bgImage" th:src="@{'/api/image/'+${space.image?.id}}"/>
+                                id="bgImage" th:src="@{'/api/image/'+${space.image?.id}}" th:onerror="|this.onerror=null; this.src='@{/resources/images/cannot_load_image_placeholder.png}'|"/>
                         </div>
                     </div>
                     <div id="rightContent" th:if="${space.description!=NULL}">

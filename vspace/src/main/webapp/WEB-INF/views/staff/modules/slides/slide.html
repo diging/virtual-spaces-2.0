@@ -3956,7 +3956,7 @@
 				     th:if="${#strings.equals(contents['class'].simpleName,'ImageBlock')}">
 				    <img th:id="${contents.id}" 
 				         class="imgDiv" 
-				         th:src="@{'/api/image/'+${contents.image.id}}" />
+				         th:src="@{'/api/image/'+${contents.image.id}}" th:onerror="|this.onerror=null; this.src='@{/resources/images/cannot_load_image_placeholder.png}'|" />
 				    <input type="hidden" 
 				           data-image-id="${contents.id}"
 				           th:attr="data-image-id=${contents.id}"
