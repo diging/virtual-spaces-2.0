@@ -47,7 +47,6 @@
 	<root>
 		<priority value="warn" />
 		<appender-ref ref="console" />
-		<appender-ref ref="FILE" />
 	</root>
 	
 </log4j:configuration>
