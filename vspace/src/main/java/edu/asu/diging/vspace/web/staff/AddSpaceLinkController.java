@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-
+import edu.asu.diging.vspace.core.exception.ImageDoesNotExistException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -37,10 +37,11 @@ public class AddSpaceLinkController {
     public ResponseEntity<String> createSpaceLink(@PathVariable("id") String id, @RequestParam("x") String x,
             @RequestParam("y") String y, @RequestParam("rotation") String rotation,
             @RequestParam("spaceLinkLabel") String title, @RequestParam("linkedSpace") String linkedSpaceId,
-            @RequestParam("spaceLinkLabel") String spaceLinkLabel, @RequestParam("type") String displayType,
-            @RequestParam("spaceLinkImage") MultipartFile file)
-            throws NumberFormatException, SpaceDoesNotExistException, IOException {
+            @RequestParam("spaceLinkLabel") String spaceLinkLabel, @RequestParam(value = "spaceLinkDesc", required=false) String spaceLinkDesc, @RequestParam("type") String displayType,
+            @RequestParam(value="spaceLinkImage", required=false) MultipartFile file, @RequestParam(value="space-imageId", required=false) String imageId)
+            throws NumberFormatException, SpaceDoesNotExistException, IOException, ImageDoesNotExistException {
 
+        
         ISpace source = spaceManager.getSpace(id);
         if (source == null) {
             return new ResponseEntity<>("{'error': 'Space could not be found.'}", HttpStatus.NOT_FOUND);
@@ -50,6 +51,13 @@ public class AddSpaceLinkController {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode node = mapper.createObjectNode();
             node.put("errorMessage", "No link coordinates specified.");
+            return new ResponseEntity<String>(mapper.writeValueAsString(node), HttpStatus.BAD_REQUEST);
+        }
+        
+        if (file == null && (imageId == null || imageId.equals(""))) {
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode node = mapper.createObjectNode();
+            node.put("errorMessage", "No image provided for space link.");
             return new ResponseEntity<String>(mapper.writeValueAsString(node), HttpStatus.BAD_REQUEST);
         }
 
@@ -64,7 +72,7 @@ public class AddSpaceLinkController {
         ISpaceLinkDisplay display;
         try {
             display = spaceLinkManager.createLink(title, id, new Float(x), new Float(y), new Integer(rotation),
-                    linkedSpaceId, spaceLinkLabel, type, linkImage, filename);
+                    linkedSpaceId, spaceLinkLabel, spaceLinkDesc, type, linkImage, filename, imageId);
         } catch (ImageCouldNotBeStoredException e) {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode node = mapper.createObjectNode();
