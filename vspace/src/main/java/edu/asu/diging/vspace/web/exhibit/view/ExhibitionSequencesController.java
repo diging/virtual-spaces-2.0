@@ -37,6 +37,9 @@ public class ExhibitionSequencesController {
     @Autowired
     private SequenceHistory sequenceHistory;
 
+    @Autowired
+    private ExhibitionAccessChecker accessChecker;
+
     @RequestMapping(value = { 
         "/exhibit/{spaceId}/module/{moduleId}/sequence/{sequenceId}",
         "/preview/{"+ExhibitionConstants.PREVIEW_ID+"}/{spaceId}/module/{moduleId}/sequence/{sequenceId}" })
@@ -49,14 +52,14 @@ public class ExhibitionSequencesController {
             SequenceNotFoundException, SlidesInSequenceNotFoundException, SpaceNotFoundException {
 
         ISpace space = spaceManager.getSpace(spaceId);
-        if (space == null) {
+        if (!accessChecker.canView(space)) {
             return "redirect:/exhibit/404";
         }
         IModule module = moduleManager.getModule(moduleId);
-        model.addAttribute("module", module);
-        if (module == null) {
+        if (!accessChecker.canView(module)) {
             return "redirect:/exhibit/404";
         }
+        model.addAttribute("module", module);
         if (module.getStartSequence() == null) {
             return moduleNotConfigured(model, previewId);
         }

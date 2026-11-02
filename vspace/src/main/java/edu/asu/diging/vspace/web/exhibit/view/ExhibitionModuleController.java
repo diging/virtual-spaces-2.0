@@ -30,13 +30,16 @@ public class ExhibitionModuleController {
     @Autowired
     private IExhibitionManager exhibitManager;
 
+    @Autowired
+    private ExhibitionAccessChecker accessChecker;
+
     @RequestMapping(value = { "/exhibit/{spaceId}/module/{id}", "/preview/{"+ExhibitionConstants.PREVIEW_ID+"}/{spaceId}/module/{id}" })
     public String module(@PathVariable("id") String id, @PathVariable("spaceId") String spaceId,
             @PathVariable(name = ExhibitionConstants.PREVIEW_ID, required = false) String previewId, Model model)
             throws SpaceNotFoundException, ModuleNotFoundException {
 
         ISpace space = spaceManager.getSpace(spaceId);
-        if (space == null) {
+        if (!accessChecker.canView(space)) {
             return "redirect:/exhibit/404";
         } 
         IModule module = moduleManager.getModule(id);       

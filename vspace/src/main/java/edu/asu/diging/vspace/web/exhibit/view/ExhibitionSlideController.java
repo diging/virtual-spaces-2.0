@@ -49,6 +49,9 @@ public class ExhibitionSlideController {
 
     @Autowired
     private SequenceHistory sequenceHistory;
+
+    @Autowired
+    private ExhibitionAccessChecker accessChecker;
     
     @Autowired
     private ModuleOverviewManager moduleOverviewManager;
@@ -71,14 +74,14 @@ public class ExhibitionSlideController {
             SlideNotFoundException, SpaceDoesNotExistException, SpaceNotFoundException {
 
         ISpace space = spaceManager.getSpace(spaceId);
-        if (space == null) {
+        if (!accessChecker.canView(space)) {
             return "redirect:/exhibit/404";
         }
         IModule module = moduleManager.getModule(moduleId);
-        model.addAttribute("module", module);
-        if (module == null) {
+        if (!accessChecker.canView(module)) {
             return "redirect:/exhibit/404";
         }
+        model.addAttribute("module", module);
         if (module.getStartSequence() == null) {
             return moduleNotConfigured(model);
         }

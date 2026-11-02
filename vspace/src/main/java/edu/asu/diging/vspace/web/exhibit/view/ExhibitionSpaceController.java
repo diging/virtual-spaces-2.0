@@ -9,7 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import edu.asu.diging.vspace.core.auth.IAuthenticationFacade;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
@@ -47,7 +46,7 @@ public class ExhibitionSpaceController {
     private IExternalLinkManager externalLinkManager;
 
     @Autowired
-    private IAuthenticationFacade authenticationFacade;
+    private ExhibitionAccessChecker accessChecker;
 
     @Autowired
     private SequenceHistory sequenceHistory;
@@ -59,17 +58,10 @@ public class ExhibitionSpaceController {
     public String space(@PathVariable("id") String id, Model model) {
         ISpace space = spaceManager.getSpace(id);
         List<ISpaceLinkDisplay> spaceLinks;
-        Boolean isSpacePublished = true;
-        /* (non-Javadoc)
-         * Below null check is added to accommodate already existing spaces with null space status
-         */
-        if (space.getSpaceStatus() != null && space.getSpaceStatus().equals(SpaceStatus.UNPUBLISHED)) {
-            if (authenticationFacade.getAuthenticatedUser() != null) {
-                isSpacePublished = false;
-            } else {
-                return "redirect:/exhibit/404";
-            }
+        if (!accessChecker.canView(space)) {
+            return "redirect:/exhibit/404";
         }
+        Boolean isSpacePublished = space.getSpaceStatus() != SpaceStatus.UNPUBLISHED;
         model.addAttribute("isSpacePublished", isSpacePublished);
         IExhibition exhibition = exhibitManager.getStartExhibition();
         model.addAttribute("exhibitionConfig", exhibition);
