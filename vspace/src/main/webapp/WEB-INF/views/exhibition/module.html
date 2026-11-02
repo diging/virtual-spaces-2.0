@@ -107,6 +107,7 @@ ul{
 
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
+<script th:src="@{/resources/extra/citationFormatter.js}"></script>
 <script th:inline="javascript">       
          $( document ).ready(function() {
             $("#blocks a").css('color','rgb(150, 45, 62)').css('font-weight','bold');
@@ -231,17 +232,32 @@ ul{
             <div th:id="blocks" class="Group_8_Class" th:each="contents: ${currentSlideCon.contents}">
                 <img th:if="${contents['class'].simpleName ==  'ImageBlock'}" th:id="${contents.id}" class="imgDiv" th:src="@{'/api/image/'+${contents.image.id}}" style="max-width:57%; max-height: 650px;">
                 <div th:if="${contents['class'].simpleName ==  'TextBlock'}" th:id="${contents.id}" class="textDiv">[(${contents.htmlRenderedText()})]</div>
-                <div th:if="${contents['class'].simpleName ==  'BiblioBlock'}" th:id="${contents.id}" class="biblioDiv">
-                	<h4>Title: [(${contents.getBiblioTitle()})]</h4>
-                	<p>description: [(${contents.getDescription()})]</p>
-                	<ul>
-	                	<div th:each="contentRef: ${contents.references}">
-							<li>
-								<div th:id="${contentRef.id}" class="referenceDiv">
-									<p th:text="|${contentRef.getTitle()}, ${contentRef.getAuthor()}, ${contentRef.getYear()}, ${contentRef.getJournal()}, ${contentRef.getUrl()}, ${contentRef.getVolume()}, ${contentRef.getIssue()}, ${contentRef.getPages()}, ${contentRef.getEditors()}, ${contentRef.getType()}, ${contentRef.getNote()}|">
-								</div>
-							</li>
-						</div>
+                <div th:if="${contents['class'].simpleName ==  'BiblioBlock'}" th:id="${contents.id}" class="biblioDiv" data-biblio-block="true">
+                	<h4>[(${contents.getBiblioTitle()})]</h4>
+                	<p th:if="${contents.getDescription() != null and !contents.getDescription().isEmpty()}" class="biblio-description">[(${contents.getDescription()})]</p>
+
+                	<!-- Container for formatted references -->
+                	<div th:id="'formatted-' + ${contents.id}" class="formatted-references-container">
+                		<!-- Will be populated by JavaScript -->
+                	</div>
+
+                	<!-- Raw reference data (hidden, used by JavaScript) -->
+                	<ul class="reference-raw-data" th:id="'raw-' + ${contents.id}" style="display:none;">
+	                	<li th:each="contentRef: ${contents.references}">
+							<span th:data-ref-id="${contentRef.id}"
+							      th:data-title="${contentRef.getTitle()}"
+							      th:data-author="${contentRef.getAuthor()}"
+							      th:data-year="${contentRef.getYear()}"
+							      th:data-journal="${contentRef.getJournal()}"
+							      th:data-url="${contentRef.getUrl()}"
+							      th:data-volume="${contentRef.getVolume()}"
+							      th:data-issue="${contentRef.getIssue()}"
+							      th:data-pages="${contentRef.getPages()}"
+							      th:data-editors="${contentRef.getEditors()}"
+							      th:data-type="${contentRef.getType()}"
+							      th:data-note="${contentRef.getNote()}">
+							</span>
+						</li>
 					</ul>
                 </div>
                <div th:if="${contents['class'].simpleName ==  'VideoBlock'}" th:id="${contents.id}" class="VideoDiv">
@@ -580,5 +596,61 @@ ul{
 	      				<a style="text-decoration: underline; color:var(--primary); display: inline-block;" th:href="@{${link.getExternalLink()}}" th:target="_blank">[[${link.getLabel()}]]</a>
 	     			</div>
     			</div>
+
+<!-- Citation formatting initialization -->
+<script th:inline="javascript">
+    $(document).ready(function() {
+        // Find all bibliography blocks and format them
+        $('[data-biblio-block="true"]').each(function() {
+            var blockId = $(this).attr('id');
+            formatBiblioBlock(blockId, 'apa');
+        });
+    });
+
+    /**
+     * Extracts reference data from hidden raw data elements
+     * @param {string} blockId - The BiblioBlock ID
+     * @returns {Array} Array of reference objects
+     */
+    function extractReferences(blockId) {
+        var references = [];
+        $('#raw-' + blockId + ' span').each(function() {
+            var $span = $(this);
+            references.push({
+                id: $span.data('ref-id') || '',
+                title: $span.data('title') || '',
+                author: $span.data('author') || '',
+                year: $span.data('year') || '',
+                journal: $span.data('journal') || '',
+                url: $span.data('url') || '',
+                volume: $span.data('volume') || '',
+                issue: $span.data('issue') || '',
+                pages: $span.data('pages') || '',
+                editors: $span.data('editors') || '',
+                type: $span.data('type') || 'Other',
+                note: $span.data('note') || ''
+            });
+        });
+        return references;
+    }
+
+    /**
+     * Formats all references in a BiblioBlock
+     * @param {string} blockId - The BiblioBlock ID
+     * @param {string} style - Citation style (apa, chicago, mla)
+     */
+    function formatBiblioBlock(blockId, style) {
+        var references = extractReferences(blockId);
+        var container = $('#formatted-' + blockId);
+
+        if (references.length === 0) {
+            container.html('<p class="no-references">No references available.</p>');
+            return;
+        }
+
+        var html = VSpaceCitation.formatBibliography(references, style);
+        container.html(html);
+    }
+</script>
 </body>
 </html>
