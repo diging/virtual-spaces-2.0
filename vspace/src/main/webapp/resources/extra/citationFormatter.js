@@ -28,8 +28,8 @@ var VSpaceCitation = (function() {
         var authors = [];
         var authorParts = authorString.split(';');
 
-        for (var i = 0; i < authorParts.length; i++) {
-            var author = authorParts[i].trim();
+        for (var part of authorParts) {
+            var author = part.trim();
             if (author === '') continue;
 
             var nameParts = author.split(',');
@@ -77,8 +77,8 @@ var VSpaceCitation = (function() {
         }
 
         if (reference.year) {
-            var year = parseInt(reference.year, 10);
-            if (!isNaN(year)) {
+            var year = Number.parseInt(reference.year, 10);
+            if (!Number.isNaN(year)) {
                 cslItem.issued = {
                     'date-parts': [[year]]
                 };
@@ -187,9 +187,9 @@ var VSpaceCitation = (function() {
      */
     function formatBibliography(references, style) {
         var html = '';
-        for (var i = 0; i < references.length; i++) {
+        for (var reference of references) {
             html += '<div class="formatted-reference">' +
-                    formatReference(references[i], style) +
+                    formatReference(reference, style) +
                     '</div>';
         }
         return html;

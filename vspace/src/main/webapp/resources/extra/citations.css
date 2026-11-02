@@ -2,9 +2,9 @@
 
 /* In-text citation styling */
 .citation.in-text-citation {
-    color: #0066cc;
+    color: #0056b3;
     font-weight: 500;
-    background-color: rgba(0, 102, 204, 0.05);
+    background-color: #f2f7fc;
     padding: 1px 3px;
     border-radius: 3px;
     border-left: 2px solid #0066cc;
@@ -56,12 +56,12 @@
 }
 
 /* Styling for citation validation feedback */
-.citation-valid {
-    border-left-color: #28a745 !important;
+.citation.citation-valid {
+    border-left-color: #28a745;
 }
 
-.citation-invalid {
-    border-left-color: #dc3545 !important;
+.citation.citation-invalid {
+    border-left-color: #dc3545;
 }
 
 /* Text editor enhancement for citations */
@@ -130,7 +130,7 @@
 
 .citation-help-content code {
     background-color: #34495e;
-    color: #e74c3c;
+    color: #f5b7b1;
     padding: 1px 4px;
     border-radius: 2px;
     font-family: 'Courier New', monospace;
@@ -259,16 +259,17 @@
 
 .apa-references {
     margin-top: 15px;
+    counter-reset: apa-ref-counter;
 }
 
 .apa-reference {
     margin-bottom: 12px;
-    padding: 8px 0;
+    padding: 8px 0 8px 20px;
+    text-indent: -20px;
     line-height: 1.6;
     font-size: 0.9em;
     color: #2c3e50;
     border-bottom: 1px solid #e9ecef;
-    padding-bottom: 8px;
 }
 
 .apa-reference:last-child {
@@ -331,16 +332,6 @@
     font-weight: bold;
     color: #007bff;
     margin-right: 8px;
-}
-
-.apa-references {
-    counter-reset: apa-ref-counter;
-}
-
-/* Hanging indent for APA references */
-.apa-reference {
-    text-indent: -20px;
-    padding-left: 20px;
 }
 
 /* APA formatting for different reference types */
@@ -473,7 +464,7 @@
 
 /* Hide raw data used for JavaScript processing */
 .reference-raw-data {
-    display: none !important;
+    display: none;
 }
 
 /* No references message */
