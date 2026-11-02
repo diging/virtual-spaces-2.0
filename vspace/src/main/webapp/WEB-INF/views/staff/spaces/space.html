@@ -4,9 +4,9 @@
 <link rel="stylesheet" type="text/css" id="applicationStylesheet"
     th:href="@{/resources/extra/Home.css}" />
 <link th:href="@{/resources/boostrap-colorpicker/dist/css/bootstrap-colorpicker.css}" rel="stylesheet">
-<script src="//use.fontawesome.com/releases/v5.8.1/js/all.js" data-auto-replace-svg="nest"></script>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
-<script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+<script src="https://use.fontawesome.com/releases/v5.8.1/js/all.js" data-auto-replace-svg="nest" integrity="sha384-g5uSoOSBd7KkhAMlnQILrecXvzst9TdC09/VM+pjDTCM+1il8RHz5fKANTFFb+gQ" crossorigin="anonymous"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" integrity="sha384-RdQbeSCGSeSdSlTMGnUr2oDJZzOuGjJAkQy1MbKMu8fZT5G0qlBajY0n0sY/hKMK" crossorigin="anonymous" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js" integrity="sha384-uQwKPrmNkEOvI7rrNdCSs6oS1F3GvnZkmPtkntOSIiPQN4CCbFSxv+Bj6qe0mWDb" crossorigin="anonymous"></script>
 
 <script th:src="@{'/resources/extra/space.js'}"></script>
 <script th:src="@{/resources/jquery/jquery-ui.min.js}"></script>
@@ -2297,11 +2297,13 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
 	                    </div>
 	                    <div class="col-sm-8">
 							<input type="radio" id="space-chooseFromLocal" name="uploadRadioBtn" checked />
-	                    		<small>Upload Image: </small>
+	                    		<label for="space-chooseFromLocal" class="mb-0"><small>Upload Image: </small></label>
+	                        <label for="spaceLinkImage" class="sr-only">Image file to upload</label>
 	                        <input type="file" class="form-control-sm-xs" name="spaceLinkImage" id="spaceLinkImage" style="width: inherit">
 	                        <input type="radio" id="space-chooseFromExisting" name="uploadRadioBtn" />
 	                        <div>
-								<small>Choose from existing: </small>
+								<label for="space-chooseFromExisting" class="mb-0"><small>Choose from existing: </small></label>
+								<label for="space-imageId" class="sr-only">Existing image</label>
 								<select id="space-imageId" name="space-imageId" class="form-control-xs target"
 									style="height: 50px; width: 200px;">
 									<option selected value="">Choose from existing</option>
@@ -2393,11 +2395,13 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
 	                    </div>
 	                     <div class="col-sm-8">
  	                        <input type="radio" id="module-chooseFromLocal" name="uploadRadioBtn" checked />
-	                    		<small>Upload Image: </small>
+	                    		<label for="module-chooseFromLocal" class="mb-0"><small>Upload Image: </small></label>
+	                        <label for="moduleLinkImage" class="sr-only">Image file to upload</label>
 	                        <input type="file" class="form-control-sm" name="moduleLinkImage" id="moduleLinkImage" style="width: inherit">
 	                        <input type="radio" id="module-chooseFromExisting" name="uploadRadioBtn" />
 	                        <div>
-								<small>Choose from existing: </small>
+								<label for="module-chooseFromExisting" class="mb-0"><small>Choose from existing: </small></label>
+								<label for="module-imageId" class="sr-only">Existing image</label>
 								<select id="module-imageId" name="module-imageId"
 									class="form-control-xs target"
 									style="height: 50px; width: 200px;">
@@ -2486,11 +2490,13 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
 	                    </div>
 	                    <div class="col-sm-8">
 	                    	<input type="radio" id="externalLink-chooseFromLocal" name="uploadRadioBtn" checked />
-	                    		<small>Upload Image: </small>
+	                    		<label for="externalLink-chooseFromLocal" class="mb-0"><small>Upload Image: </small></label>
+	                        <label for="externalLinkImage" class="sr-only">Image file to upload</label>
 	                        <input type="file" class="form-control-sm" name="externalLinkImage" id="externalLinkImage" style="width: inherit">
 	                        <input type="radio" id="externalLink-chooseFromExisting" name="uploadRadioBtn" />
 	                        <div>
-								<small>Choose from existing: </small>
+								<label for="externalLink-chooseFromExisting" class="mb-0"><small>Choose from existing: </small></label>
+								<label for="externalLink-imageId" class="sr-only">Existing image</label>
 								<select id="externalLink-imageId" name="externalLink-imageId"
 									class="form-control-xs target"
 									style="height: 50px; width: 200px;">
@@ -2672,11 +2678,13 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
 	                    </div>
 	                    <div class="col-sm-8">
 							<input type="radio" id="editSpace-chooseFromLocal" name="uploadRadioBtn" checked />
-	                    		<small>Upload Image: </small>
+	                    		<label for="editSpace-chooseFromLocal" class="mb-0"><small>Upload Image: </small></label>
+	                        <label for="editSpaceLinkImage" class="sr-only">Image file to upload</label>
 	                        <input type="file" class="form-control-sm-xs" name="editSpaceLinkImage" id="editSpaceLinkImage" style="width: inherit">
 	                        <input type="radio" id="editSpace-chooseFromExisting" name="uploadRadioBtn" />
 	                        <div>
-								<small>Choose from existing: </small>
+								<label for="editSpace-chooseFromExisting" class="mb-0"><small>Choose from existing: </small></label>
+								<label for="editSpace-imageId" class="sr-only">Existing image</label>
 								<select id="editSpace-imageId" name="editSpace-imageId" class="form-control-xs target"
 									style="height: 50px; width: 200px;">
 									<option selected value="">Choose from existing</option>
@@ -2762,7 +2770,7 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
                     </div>
                     <div class="row">
                         <div class="col-sm-4" style="padding-right: 0;">
-                            <label>Linked Modules:</label>
+                            <label for="moduleLinkIdEdit">Linked Modules:</label>
                         </div>
                         <div class="col-sm-8">
                             <select id="moduleLinkIdEdit"
@@ -2781,11 +2789,13 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
                         </div>
                         <div class="col-sm-9">
                         	<input type="radio" id="editModule-chooseFromLocal" name="uploadRadioBtn" checked />
-	                    		<small>Upload Image: </small>
+	                    		<label for="editModule-chooseFromLocal" class="mb-0"><small>Upload Image: </small></label>
+	                        <label for="editModuleImage" class="sr-only">Image file to upload</label>
 	                        	<input type="file" class="form-control-sm" name="editModuleImage" id="editModuleImage" style="width: inherit" />
 	                        <input type="radio" id="editModule-chooseFromExisting" name="uploadRadioBtn" />
 	                        <div>
-								<small>Choose from existing: </small>
+								<label for="editModule-chooseFromExisting" class="mb-0"><small>Choose from existing: </small></label>
+								<label for="editModule-imageId" class="sr-only">Existing image</label>
 								<select id="editModule-imageId" name="editModule-imageId" class="form-control-xs target"
 									style="height: 50px; width: 200px;">
 									<option selected value="">Choose from existing</option>
@@ -2890,11 +2900,13 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
                         <div class="col-sm-9">
 							<input type="radio" id="editExternalLinkInfo-chooseFromLocal" name="uploadRadioBtn" checked />
                         
-                            <small>Upload Image: </small>
+                            <label for="editExternalLinkInfo-chooseFromLocal" class="mb-0"><small>Upload Image: </small></label>
+	                        <label for="editExternalLinkInfoImage" class="sr-only">Image file to upload</label>
 	                        	<input type="file" class="form-control-sm" name="editExternalLinkInfoImage" id="editExternalLinkInfoImage" style="width: inherit" />
 	                        <input type="radio" id="editExternalLinkInfo-chooseFromExisting" name="uploadRadioBtn" />
 	                        <div>
-								<small>Choose from existing: </small>
+								<label for="editExternalLinkInfo-chooseFromExisting" class="mb-0"><small>Choose from existing: </small></label>
+								<label for="editExternalLinkInfo-imageId" class="sr-only">Existing image</label>
 								<select id="editExternalLinkInfo-imageId" name="editExternalLinkInfo-imageId" class="form-control-xs target"
 									style="height: 50px; width: 200px;">
 									<option selected value="">Choose from existing</option>
