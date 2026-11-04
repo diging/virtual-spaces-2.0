@@ -2,8 +2,8 @@ package edu.asu.diging.vspace.core.model.impl;
 
 import java.time.OffsetDateTime;
 
-import javax.persistence.Lob;
-import javax.persistence.MappedSuperclass;
+import jakarta.persistence.Lob;
+import jakarta.persistence.MappedSuperclass;
 
 import edu.asu.diging.vspace.core.model.IVSpaceElement;
 
