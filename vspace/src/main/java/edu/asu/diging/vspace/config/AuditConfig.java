@@ -2,6 +2,9 @@ package edu.asu.diging.vspace.config;
 
 import java.util.Map;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+
 import org.javers.common.collections.Maps;
 import org.javers.core.Javers;
 import org.javers.hibernate.integration.HibernateUnproxyObjectAccessHook;
@@ -26,6 +29,9 @@ public class AuditConfig {
     @Autowired
     private PlatformTransactionManager txManager;
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     @Bean
     public Javers javers() {
         JaversSqlRepository sqlRepository = SqlRepositoryBuilder 
@@ -44,7 +50,7 @@ public class AuditConfig {
 
     @Bean 
     public ConnectionProvider jpaConnectionProvider() { 
-        return new JpaHibernateConnectionProvider(); 
+        return new JpaHibernateConnectionProvider(entityManager); 
     } 
 
     @Bean

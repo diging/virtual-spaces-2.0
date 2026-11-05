@@ -1,7 +1,7 @@
 package edu.asu.diging.vspace.core.services.impl;
 
-import javax.annotation.PostConstruct;
-import javax.transaction.Transactional;
+import jakarta.annotation.PostConstruct;
+import jakarta.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import edu.asu.diging.simpleusers.core.exceptions.UserAlreadyExistsException;
 import edu.asu.diging.simpleusers.core.model.IUser;
 import edu.asu.diging.simpleusers.core.model.Role;
-import edu.asu.diging.simpleusers.core.model.impl.User;
+import edu.asu.diging.simpleusers.core.model.impl.SimpleUser;
 import edu.asu.diging.simpleusers.core.service.IUserManager;
 import edu.asu.diging.vspace.core.services.ISetupManager;
 
@@ -47,7 +47,7 @@ public class SetupManager implements ISetupManager {
     
     @Override
     public IUser setupAdmin(String password) throws UserAlreadyExistsException {
-        IUser user = new User();
+        IUser user = new SimpleUser();
         user.setUsername(adminUsername);
         user.setPassword(password);
         userManager.create(user);
