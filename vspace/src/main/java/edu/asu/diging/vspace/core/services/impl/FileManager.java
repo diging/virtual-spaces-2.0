@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.apache.tika.Tika;
 import org.slf4j.Logger;
@@ -52,17 +53,19 @@ public class FileManager implements IFileManager {
             Tika tika = new Tika();
             String contentType = tika.detect(fileContent);
             file = fileFactory.createFile(fileName, contentType);
+            file.setStoredFileName(UUID.randomUUID().toString());
             fileRepo.save((VSFile)file);
         }
         CreationReturnValue returnValue = new CreationReturnValue();
         returnValue.setErrorMsgs(new ArrayList<>());
         if(file != null) {
-            String relativePath = null;
             try {
-                relativePath = storageEngine.storeFile(fileContent, fileName, file.getId());
+                storageEngine.storeFile(fileContent, file.getStoredFileName(), file.getId());
             } catch (FileStorageException e) {
                 logger.error("File could not be stored", e);
                 returnValue.getErrorMsgs().add("File could not be stored: " + e);
+                fileRepo.delete((VSFile) file);
+                return returnValue;
             }
             file.setFileDescription(fileDescription);
             file.setOriginalFileName(originalFileName);
@@ -99,8 +102,16 @@ public class FileManager implements IFileManager {
             return null;
         }
         IVSFile file  = optional.get();
-        if(storageEngine.renameFile(file.getFilename(), fileName, fileId)) {
-            file.setFilename(fileName);   
+        // files uploaded before stored file names existed are still saved on disk
+        // under their display name, so move them to a generated name first
+        if(file.getStoredFileName() == null) {
+            String storedFileName = UUID.randomUUID().toString();
+            if(storageEngine.renameFile(file.getFilename(), storedFileName, fileId)) {
+                file.setStoredFileName(storedFileName);
+            }
+        }
+        if(file.getStoredFileName() != null) {
+            file.setFilename(fileName);
         }
         file.setFileDescription(description);
         fileRepo.save((VSFile)file);
@@ -108,18 +119,22 @@ public class FileManager implements IFileManager {
     }
 
     @Override
-    public Resource downloadFile(String fileName, String fileId) throws IOException {             
-        return storageEngine.downloadFile(fileName, fileId);
+    public Resource downloadFile(IVSFile file) throws IOException {             
+        return storageEngine.downloadFile(getStoredFileName(file), file.getId());
     }
     
     @Override
     public boolean deleteFile(String fileId) {
         IVSFile file = getFileById(fileId);
-        if(file!=null && storageEngine.deleteFile(file.getFilename(), fileId)) {
+        if(file!=null && storageEngine.deleteFile(getStoredFileName(file), fileId)) {
             fileRepo.delete((VSFile) file);
             return true;
         }
         return false;
+    }
+
+    private String getStoredFileName(IVSFile file) {
+        return file.getStoredFileName() != null ? file.getStoredFileName() : file.getFilename();
     }
 
 }
