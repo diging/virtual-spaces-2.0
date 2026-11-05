@@ -6,6 +6,7 @@ import org.javers.spring.annotation.JaversSpringDataAuditable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,7 +16,7 @@ import edu.asu.diging.vspace.core.model.impl.Slide;
 
 @Repository
 @JaversSpringDataAuditable
-public interface SlideRepository extends PagingAndSortingRepository<Slide, String> {
+public interface SlideRepository extends PagingAndSortingRepository<Slide, String>, CrudRepository<Slide, String> {
 
     @Query("SELECT d FROM Slide d WHERE d.module.id = ?1")
     public List<Slide> findSlidesForModule(String moduleId);
