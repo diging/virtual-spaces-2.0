@@ -4,6 +4,9 @@ import java.time.OffsetDateTime;
 
 import jakarta.persistence.Lob;
 import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Transient;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import edu.asu.diging.vspace.core.model.IVSpaceElement;
 
@@ -100,5 +103,17 @@ public abstract class VSpaceElement implements IVSpaceElement {
     @Override
     public void setModificationDate(OffsetDateTime modificationDate) {
         this.modificationDate = modificationDate;
+    }
+
+    /**
+     * Simple name of the element's class (e.g. "TextBlock" or "BranchingPoint").
+     * Templates use this to decide how to render an element, because Thymeleaf
+     * 3.1 does not allow templates to access members of java.lang.Class.
+     * When called on a Hibernate proxy, this returns the name of the real class.
+     */
+    @Transient
+    @JsonIgnore
+    public String getElementType() {
+        return getClass().getSimpleName();
     }
 }
