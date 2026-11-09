@@ -9,6 +9,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.commonmark.node.Node;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.text.TextContentRenderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +34,7 @@ import edu.asu.diging.vspace.core.model.IModuleLink;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.ISpace;
+import edu.asu.diging.vspace.core.model.ITextBlock;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.IVideoBlock;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
@@ -107,6 +111,12 @@ public class RenderingManager implements IRenderingManager {
     private final String IMAGES_FOLDER_NAME = "images";
 
     private final String VIDEOS_FOLDER_NAME = "videos";
+
+    private final String SEARCH_TYPE_SPACE = "Space";
+
+    private final String SEARCH_TYPE_MODULE = "Module";
+
+    private final String SEARCH_TYPE_SLIDE = "Slide";
        
     private final String SPACE_DOWNLOAD_TEMPLATE = "exhibition/downloads/spaceDownloadTemplate";
     
@@ -125,6 +135,20 @@ public class RenderingManager implements IRenderingManager {
      */
     @Override
     public void createSpaceSnapshot(Space space, String exhibitionFolderName) throws FileStorageException {
+        createSpaceSnapshot(space, exhibitionFolderName, new ArrayList<>());
+    }
+
+    /**
+     * Creates a snapshot of the given space and related modules into exhibitionFolder
+     * and adds an entry for the space and every exported module and slide to searchIndex.
+     * 
+     * @param space                the space object 
+     * @param exhibitionFolderName the folder name of the exhibition where space contents will be stored
+     * @param searchIndex          the list the search entries of the exported pages are added to
+     * @throws FileStorageException if an error occurs while storing files
+     */
+    @Override
+    public void createSpaceSnapshot(Space space, String exhibitionFolderName, List<Map<String, String>> searchIndex) throws FileStorageException {
         
         String spaceId = space.getId();
         String spaceFolderName = exhibitionFolderName + File.separator + spaceId;
@@ -152,9 +176,15 @@ public class RenderingManager implements IRenderingManager {
 
         List<IModuleLink> moduleLinks = space.getModuleLinks();
 
+        StringBuilder spaceText = new StringBuilder();
+        spaceTextBlockManager.getSpaceTextBlockDisplays(spaceId).forEach(
+                textBlock -> spaceText.append(markdownToPlainText(textBlock.getSpaceTextBlock().getText())).append(" "));
+        addSearchEntry(searchIndex, SEARCH_TYPE_SPACE, space.getName(), null,
+                joinText(space.getDescription(), spaceText.toString()), spaceId + "/" + spaceId + PAGE_EXTENSION);
+
         moduleLinks.forEach(moduleLink -> {
             IModule module =   moduleLink.getModule();
-            createModuleSnapshot(module, space,  imagesFolder, spaceFolderName);
+            createModuleSnapshot(module, space,  imagesFolder, spaceFolderName, searchIndex);
         });
     }
     
@@ -181,14 +211,21 @@ public class RenderingManager implements IRenderingManager {
      * @param space             the {@link ISpace} object 
      * @param imagesFolder      the folder where the module's images will be stored
      * @param spaceFolderName   the folder where the module's content will be stored
+     * @param searchIndex       the list the search entries of the exported pages are added to
      * 
      */
-    private void createModuleSnapshot(IModule module, ISpace space, String imagesFolder, String spaceFolderName) {
+    private void createModuleSnapshot(IModule module, ISpace space, String imagesFolder, String spaceFolderName,
+            List<Map<String, String>> searchIndex) {
         ISequence startSequence = module.getStartSequence();
+        String moduleStartPage = getModuleStartPage(module);
+        if (moduleStartPage != null) {
+            addSearchEntry(searchIndex, SEARCH_TYPE_MODULE, module.getName(), space.getName(),
+                    module.getDescription(), space.getId() + "/" + moduleStartPage);
+        }
         if (startSequence != null) {
             try {
                 Set<String> visitedSequences = new HashSet<String>();
-                createSequencesSnapshot(startSequence, module, space, spaceFolderName, imagesFolder, visitedSequences);
+                createSequencesSnapshot(startSequence, module, space, spaceFolderName, imagesFolder, visitedSequences, searchIndex);
             } catch (FileStorageException e) {
                 logger.error("Could not download Module: " + module.getId() + " in Space: " + space.getId(), e);
                 // Note: This error occurs during async snapshot generation. Users are notified
@@ -210,21 +247,22 @@ public class RenderingManager implements IRenderingManager {
      * @param spaceFolderName    the space folder name where space content will be stored
      * @param imagesFolderName   the images folder name where images will be stored
      * @param visitedSequences   set of already processed sequence IDs to prevent infinite recursion
+     * @param searchIndex        the list the search entries of the exported pages are added to
      * @throws FileStorageException if an error occurs while storing snapshot files
      *
      */
     private void createSequencesSnapshot(ISequence sequence, IModule module, ISpace space, String spaceFolderName,
-            String imagesFolderName, Set<String> visitedSequences) throws FileStorageException {
+            String imagesFolderName, Set<String> visitedSequences, List<Map<String, String>> searchIndex) throws FileStorageException {
         List<ISlide> slides = sequence.getSlides();
         visitedSequences.add(sequence.getId());
         slides.forEach(slide -> {
-            createSlideSnapshot(slide, sequence, module, space, spaceFolderName, imagesFolderName);
+            createSlideSnapshot(slide, sequence, module, space, spaceFolderName, imagesFolderName, searchIndex);
             if(slide instanceof BranchingPoint) {              
                 ((BranchingPoint) slide).getChoices().forEach(choice -> {
                     //to prevent infinite loop because of branching to previous sequences 
                     if(!visitedSequences.contains(choice.getSequence().getId())) {
                         try {
-                            createSequencesSnapshot(choice.getSequence(), module, space, spaceFolderName, imagesFolderName, visitedSequences);
+                            createSequencesSnapshot(choice.getSequence(), module, space, spaceFolderName, imagesFolderName, visitedSequences, searchIndex);
                         } catch (FileStorageException e) {
                             logger.error("Could not download Sequence",e);
                         } 
@@ -235,10 +273,14 @@ public class RenderingManager implements IRenderingManager {
     }
     
     private void createSlideSnapshot(ISlide slide, ISequence sequence, IModule module, ISpace space, String spaceFolderName,
-            String imagesFolderName){
+            String imagesFolderName, List<Map<String, String>> searchIndex){
         List<IContentBlock> contentBlocks = slide.getContents();
+        StringBuilder slideText = new StringBuilder();
         contentBlocks.forEach(contentBlock -> {
             if(contentBlock!= null) {
+                if(contentBlock instanceof ITextBlock) {
+                    slideText.append(markdownToPlainText(((ITextBlock) contentBlock).getText())).append(" ");
+                }
                 if(contentBlockManager.getImageBlock(contentBlock.getId())!= null) {
                     IVSImage image = contentBlockManager.getImageBlock(contentBlock.getId()).getImage();
                     try {
@@ -249,6 +291,9 @@ public class RenderingManager implements IRenderingManager {
                 }
                 IVideoBlock videoBlock = contentBlockManager.getVideoBlock(contentBlock.getId());
                 if(videoBlock != null) {
+                    if(videoBlock.getVideo() != null && videoBlock.getVideo().getTitle() != null) {
+                        slideText.append(videoBlock.getVideo().getTitle()).append(" ");
+                    }
                     String videosFolderName = spaceFolderName + File.separator + VIDEOS_FOLDER_NAME;
                     try {
                         storageEngineDownloads.createFolder(videosFolderName);
@@ -264,6 +309,8 @@ public class RenderingManager implements IRenderingManager {
             String slideId = slide.getId();
             byte[] fileContent = renderSlide(slideId, space.getId(), module.getId(), sequence.getId());
             storageEngineDownloads.storeFile(fileContent, slideId + PAGE_EXTENSION,spaceFolderName );
+            addSearchEntry(searchIndex, SEARCH_TYPE_SLIDE, slide.getName(), module.getName(),
+                    joinText(slide.getDescription(), slideText.toString()), space.getId() + "/" + slideId + PAGE_EXTENSION);
         } catch (FileStorageException e) {
             logger.error("Could not store template for the slide", e);
         }
@@ -450,5 +497,47 @@ public class RenderingManager implements IRenderingManager {
             return null;
         }
         return slides.get(0).getId() + PAGE_EXTENSION;
+    }
+
+    /**
+     * Adds an entry for an exported page to the search index of the snapshot.
+     * 
+     * @param searchIndex the list of search entries
+     * @param type        the kind of page
+     * @param title       the title of the page
+     * @param context     what the page belongs to
+     * @param text        the searchable text of the page
+     * @param href        the path of the page relative to the exhibition folder
+     */
+    private void addSearchEntry(List<Map<String, String>> searchIndex, String type, String title, String context,
+            String text, String href) {
+        Map<String, String> entry = new HashMap<>();
+        entry.put("type", type);
+        entry.put("title", title != null ? title : "");
+        entry.put("context", context != null ? context : "");
+        entry.put("text", text != null ? text.replaceAll("\\s+", " ").trim() : "");
+        entry.put("href", href);
+        searchIndex.add(entry);
+    }
+
+    /**
+     * Converts markdown to plain text, so markup does not show up in search results.
+     * 
+     * @param markdown the markdown text
+     * @return the plain text
+     */
+    private String markdownToPlainText(String markdown) {
+        if (markdown == null) {
+            return "";
+        }
+        Node document = Parser.builder().build().parse(markdown);
+        // HTML written into the markdown is kept as text by the renderer, so its tags are removed here
+        return TextContentRenderer.builder().build().render(document)
+                .replaceAll("(?is)<(script|style)[^>]*>.*?</\\1>", " ")
+                .replaceAll("<[^>]*>", " ");
+    }
+
+    private String joinText(String first, String second) {
+        return (first != null ? first : "") + " " + (second != null ? second : "");
     }
 }

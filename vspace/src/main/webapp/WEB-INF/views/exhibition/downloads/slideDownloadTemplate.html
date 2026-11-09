@@ -14,6 +14,13 @@
     visibility: visible;
 }
 
+/* Both header buttons are also reachable from the logo and the bottom bar, so they make room for search on phones */
+@media (max-width: 576px) {
+    .nav-bar .header-buttons {
+        display: none;
+    }
+}
+
 .tooltiptextForExitFullscreen {
     visibility: hidden;
     width: 120px;
@@ -44,7 +51,11 @@
 			<nav class="nav-bar" style="height:48px">
 		      <a class="navbar-brand" title="Go to exhibition" href="../index.html"><img src="./../resources/maintenance/img/logo-11.png" alt="Virtual Spaces logo" width="100px">
 		      [[${exhibition?.title}]]</a>
-		      <div style="margin-left: auto;">
+		      <form class="searchInput" action="../search.html" method="get" style="margin-left: auto; margin-right: 10px; align-self: center; flex: 0 1 260px; min-width: 0;">
+			          <input class="form-control" style="background: none; margin-right: 4px; min-width: 0;" type="text" name="q" placeholder="Search..." aria-label="Search the exhibition">
+			          <button class="btn primary-btn btn-sm" type="submit" title="Search"><span class="icon-search"></span></button>
+			      </form>
+		      <div class="header-buttons" style="flex-shrink: 0;">
 		          <a th:href="${spaceId + '.html'}" class="btn outline btn-sm" style="margin-right: 10px;">Back to Space</a>
 		          <a href="../index.html" class="btn outline btn-sm">Exhibition Home</a>
 		      </div>
