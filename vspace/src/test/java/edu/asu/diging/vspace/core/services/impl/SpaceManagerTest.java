@@ -1,5 +1,6 @@
 package edu.asu.diging.vspace.core.services.impl;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -12,6 +13,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 
 import edu.asu.diging.vspace.core.data.ImageRepository;
 import edu.asu.diging.vspace.core.data.SpaceLinkRepository;
@@ -54,6 +57,7 @@ public class SpaceManagerTest {
     private SpaceLinkDisplayRepository spaceLinkDisplayRepo;
 
     @Mock
+    @Qualifier("storageEngineUploads")
     private IStorageEngine storage;
 
     @Mock
@@ -73,6 +77,9 @@ public class SpaceManagerTest {
 
     @Mock
     private ExhibitionManager exhibitionManager;
+    
+    @Value("${uploads_path}")
+    private String uploadsPath;
 
 
     @InjectMocks
@@ -112,7 +119,7 @@ public class SpaceManagerTest {
         String dirName = "DIR";
         String storePath = "PATH";
 
-        Mockito.when(storage.storeFile(imageBytes, filename, dirName)).thenReturn(storePath);
+        Mockito.when(storage.storeFile(imageBytes, filename,  uploadsPath + File.separator + dirName)).thenReturn(storePath);
 
         Space space = new Space();
         Mockito.when(spaceRepo.save((Space) space)).thenReturn(space);

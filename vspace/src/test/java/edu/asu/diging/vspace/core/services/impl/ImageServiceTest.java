@@ -18,6 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -38,13 +39,14 @@ import edu.asu.diging.vspace.web.staff.forms.ImageForm;
 public class ImageServiceTest {
 
     @Mock
+    private ImageRepository imageRepo;
+    
+    @Mock
+    @Qualifier("storageEngineUploads")
     private IStorageEngine storage;
 
     @Mock
     private IImageFactory imageFactory;
-
-    @Mock
-    private ImageRepository imageRepo;
 
     @InjectMocks
     private ImageService serviceToTest;
