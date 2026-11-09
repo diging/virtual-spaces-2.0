@@ -37,6 +37,7 @@ import edu.asu.diging.vspace.core.model.impl.Module;
 import edu.asu.diging.vspace.core.model.impl.ModuleLink;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
+import edu.asu.diging.vspace.core.services.IImageService;
 
 public class ModuleLinkManagerTest {
     @Mock
@@ -70,6 +71,9 @@ public class ModuleLinkManagerTest {
 
     @Mock
     private IModuleLinkDisplayFactory moduleLinkDisplayFactory;
+
+    @Mock
+    private IImageService imageService;
 
     @InjectMocks
     private ModuleLinkManager managerToTest = new ModuleLinkManager();
@@ -157,10 +161,8 @@ public class ModuleLinkManagerTest {
         
         Mockito.when(moduleLinkDisplayFactory.createModuleLinkDisplay(moduleLink)).thenReturn(moduleDisplayLinkImage);
         
-        Mockito.when(imageFactory.createImage(Mockito.anyString(), Mockito.anyString())).thenReturn(modImage);
-        Mockito.when(imageRepo.save((VSImage) modImage)).thenReturn((VSImage) modImage);
-        Mockito.when(storage.storeFile(new byte[20], imageFileName, modImage.getId())).thenReturn("Dummy File Path");
-        
+        Mockito.when(imageService.getImageById("IMG000000001")).thenReturn(modImage);
+
         Mockito.when(moduleLinkRepo.save((ModuleLink) moduleLink)).thenReturn((ModuleLink)moduleLink);
         Mockito.when(moduleLinkDisplayRepo.save((ModuleLinkDisplay)moduleDisplayLinkImage)).thenReturn((ModuleLinkDisplay)moduleDisplayLinkImage);
 
@@ -177,6 +179,8 @@ public class ModuleLinkManagerTest {
         Assert.assertEquals(moduleDisplayLinkImage.getImage().getWidth(), savedModuleLinkDisplay2.getImage().getWidth());
         Assert.assertEquals(moduleDisplayLinkImage.getImage().getId(), savedModuleLinkDisplay2.getImage().getId());
         Mockito.verify(moduleLinkDisplayRepo).save((ModuleLinkDisplay)moduleDisplayLinkImage);
+        // An existing image is reused, so no new image is stored
+        Mockito.verify(imageRepo, Mockito.never()).save(Mockito.any(VSImage.class));
         
     }
 

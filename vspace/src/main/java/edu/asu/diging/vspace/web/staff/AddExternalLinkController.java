@@ -51,10 +51,11 @@ public class AddExternalLinkController {
         byte[] linkImage = null;
         String filename = null;
         
-        if (file == null && imageId == null) {
+        if (DisplayType.IMAGE.name().equals(displayType) && (file == null || file.isEmpty())
+                && (imageId == null || imageId.trim().isEmpty())) {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode node = mapper.createObjectNode();
-            node.put("errorMessage", "No image provided for space link.");
+            node.put("errorMessage", "No image provided for external link.");
             return new ResponseEntity<String>(mapper.writeValueAsString(node), HttpStatus.BAD_REQUEST);
         }
         
@@ -66,7 +67,7 @@ public class AddExternalLinkController {
         ExternalLinkDisplayMode externalLinkOpenMode = howToOpen.isEmpty() ? null
                 : ExternalLinkDisplayMode.valueOf(howToOpen);
         IExternalLinkDisplay display = externalLinkManager.createLink(title, id, new Float(x), new Float(y), 0,
-                externalLink, title, desc, type, linkImage, filename, imageId);
+                externalLink, title, desc, type, linkImage, filename, externalLinkOpenMode, imageId);
         
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode linkNode = mapper.createObjectNode();

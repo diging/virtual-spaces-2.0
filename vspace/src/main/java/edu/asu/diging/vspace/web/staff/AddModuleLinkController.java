@@ -54,10 +54,11 @@ public class AddModuleLinkController {
             return new ResponseEntity<String>(mapper.writeValueAsString(node), HttpStatus.BAD_REQUEST);
         }
         
-        if (file == null && (imageId == null || imageId.equals(""))) {
+        if (DisplayType.IMAGE.name().equals(displayType) && (file == null || file.isEmpty())
+                && (imageId == null || imageId.trim().isEmpty())) {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode node = mapper.createObjectNode();
-            node.put("errorMessage", "No image provided for space link.");
+            node.put("errorMessage", "No image provided for module link.");
             return new ResponseEntity<String>(mapper.writeValueAsString(node), HttpStatus.BAD_REQUEST);
         }
 

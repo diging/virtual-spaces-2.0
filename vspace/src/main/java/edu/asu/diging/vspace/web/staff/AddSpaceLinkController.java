@@ -54,7 +54,8 @@ public class AddSpaceLinkController {
             return new ResponseEntity<String>(mapper.writeValueAsString(node), HttpStatus.BAD_REQUEST);
         }
         
-        if (file == null && (imageId == null || imageId.equals(""))) {
+        if (DisplayType.IMAGE.name().equals(displayType) && (file == null || file.isEmpty())
+                && (imageId == null || imageId.trim().isEmpty())) {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode node = mapper.createObjectNode();
             node.put("errorMessage", "No image provided for space link.");

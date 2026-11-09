@@ -77,7 +77,9 @@ public abstract class LinkManager<L extends ILink<T>, T extends IVSpaceElement, 
         if (displayType == null) {
             throw new IllegalArgumentException("DisplayType cannot be null.");
         }
-        if ((linkImage == null || linkImage.length == 0) && (existingImageId == null || existingImageId.trim().isEmpty())) {
+        // Only image links need an image; arrow and alert links are drawn without one
+        if (displayType == DisplayType.IMAGE && (linkImage == null || linkImage.length == 0)
+                && (existingImageId == null || existingImageId.trim().isEmpty())) {
             throw new ImageDoesNotExistException("Either linkImage or existingImageId must be provided.");
         }
         
