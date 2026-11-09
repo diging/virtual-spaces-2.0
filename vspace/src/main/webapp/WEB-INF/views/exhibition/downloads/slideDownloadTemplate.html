@@ -80,9 +80,9 @@
          <div style="position: relative;top: 6.5%;">
             <h3 style="text-align:center;">[[${currentSlideCon.name}]]</h3>
             <div id="blocks" class="Group_8_Class" th:each="contents: ${currentSlideCon.contents}">
-                <img th:if="${contents['class'].simpleName ==  'ImageBlock'}" id="${contents.id}" class="imgDiv" th:alt="${contents.image.filename}" th:src="${'./images/'+ contents.image.id + '/'+ contents.image.filename}" style="max-width:57%">
-                <div th:if="${contents['class'].simpleName ==  'TextBlock'}" id="${contents.id}" class="textDiv">[(${contents.htmlRenderedText()})]</div>
-                <div th:if="${contents['class'].simpleName ==  'VideoBlock' && contents.video != null}" th:id="${contents.id}" class="VideoDiv">
+                <img th:if="${contents.elementType ==  'ImageBlock'}" id="${contents.id}" class="imgDiv" th:alt="${contents.image.filename}" th:src="${'./images/'+ contents.image.id + '/'+ contents.image.filename}" style="max-width:57%">
+                <div th:if="${contents.elementType ==  'TextBlock'}" id="${contents.id}" class="textDiv">[(${contents.htmlRenderedText()})]</div>
+                <div th:if="${contents.elementType ==  'VideoBlock' && contents.video != null}" th:id="${contents.id}" class="VideoDiv">
                     <div>
                         <h3><strong>[[${contents.video.title}]]</strong></h3>
                         <br/>
@@ -94,7 +94,7 @@
                         </video>
                     </div>
                 </div>
-                <div th:if="${contents['class'].simpleName == 'ChoiceBlock'}" id="${contents.id}" class="textDiv" style="margin: 1%;">
+                <div th:if="${contents.elementType == 'ChoiceBlock'}" id="${contents.id}" class="textDiv" style="margin: 1%;">
                     <div th:if="${contents.showsAll eq true}" th:each="choice: ${choices}" class="list-group">
                         <a class="list-group-item list-group-item-action" 
                            th:href="${choice.sequence.slides != null && choice.sequence.slides.size() > 0 ? choice.sequence.slides[0].id + '.html' : '#'}">

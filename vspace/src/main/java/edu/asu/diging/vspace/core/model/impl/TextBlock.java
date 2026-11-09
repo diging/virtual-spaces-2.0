@@ -1,8 +1,8 @@
 package edu.asu.diging.vspace.core.model.impl;
 
-import javax.persistence.Entity;
-import javax.persistence.Lob;
-import javax.persistence.Transient;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Lob;
+import jakarta.persistence.Transient;
 
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;

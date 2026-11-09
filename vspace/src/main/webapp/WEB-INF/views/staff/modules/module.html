@@ -329,7 +329,7 @@ $(document).ready(function() {
                 <div th:each="slide: ${slides}" class="btn-group dropdown slide" th:id="${slide.id}">
                     <a th:href="@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}}" class="btn btn-light" style="width: 80%;">
                         <span class="card-head" style="white-space: pre-wrap;">[[${slide.name}]]</span>
-                        <span class="icon-branch" th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}" style="margin-left: 20px"></span><br> 
+                        <span class="icon-branch" th:if="${#strings.equals(slide.elementType,'BranchingPoint')}" style="margin-left: 20px"></span><br> 
                         <span class="card-text" style="white-space: pre-wrap; max-height: 70px; overflow-y: scroll;">[[${slide.description}]]</span>
                     </a>
                     <button type="button" class="btn btn-light dropdown-toggle-split checkSlideInSequence" data-toggle="modal" th:attr="data-target='#slide-modal'"

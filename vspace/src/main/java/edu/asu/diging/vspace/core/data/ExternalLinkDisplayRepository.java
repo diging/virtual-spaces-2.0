@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.javers.spring.annotation.JaversSpringDataAuditable;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +14,7 @@ import edu.asu.diging.vspace.core.model.display.impl.ExternalLinkDisplay;
 
 @Repository
 @JaversSpringDataAuditable
-public interface ExternalLinkDisplayRepository extends PagingAndSortingRepository<ExternalLinkDisplay, String> {
+public interface ExternalLinkDisplayRepository extends PagingAndSortingRepository<ExternalLinkDisplay, String>, CrudRepository<ExternalLinkDisplay, String> {
 
     @Query("SELECT d FROM ExternalLinkDisplay d WHERE d.externalLink.space.id = ?1")
     public List<IExternalLinkDisplay> findExternalLinkDisplaysForSpace(String spaceId);

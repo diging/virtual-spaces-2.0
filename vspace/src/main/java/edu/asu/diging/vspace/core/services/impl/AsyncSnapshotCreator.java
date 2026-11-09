@@ -21,9 +21,8 @@ import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.context.Context;
-import org.thymeleaf.spring5.SpringTemplateEngine;
+import org.thymeleaf.spring6.SpringTemplateEngine;
 
-import edu.asu.diging.vspace.core.data.SnapshotTaskRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
@@ -62,9 +61,6 @@ public class AsyncSnapshotCreator implements IAsyncSnapshotCreator {
     private IRenderingManager renderingManager;
     
     @Autowired
-    private SnapshotTaskRepository snapshotTaskRepository;
-    
-    @Autowired
     private IExhibitionManager exhibitionManager;
     
     @Autowired
@@ -98,9 +94,9 @@ public class AsyncSnapshotCreator implements IAsyncSnapshotCreator {
 
         generateSearch(exhibitionFolderName, searchIndex);
         
-        SnapshotTask snapshotTask = exhibitionSnapshot.getSnapshotTask();
-        snapshotTask.setTaskComplete(true);
-        return new AsyncResult<SnapshotTask>(snapshotTaskRepository.save(snapshotTask));   
+        // The task is not saved here: it was created in the caller's transaction, which has not
+        // committed yet, so this transaction cannot see it. The caller marks it complete.
+        return new AsyncResult<SnapshotTask>(exhibitionSnapshot.getSnapshotTask());
     }
     
     /**
