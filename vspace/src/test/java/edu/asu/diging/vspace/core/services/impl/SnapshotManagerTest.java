@@ -4,20 +4,18 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doThrow;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -27,7 +25,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import edu.asu.diging.vspace.core.data.ExhibitionSnapshotRepository;
 import edu.asu.diging.vspace.core.data.SnapshotTaskRepository;
@@ -67,9 +65,6 @@ public class SnapshotManagerTest {
     @Mock
     AsyncSnapshotCreator asyncSnapshotCreator;
     
-    @Mock 
-    SnapshotManager snapshotManagerTest;
-    
     @Mock
     ServletContext servletContext;
     
@@ -104,7 +99,6 @@ public class SnapshotManagerTest {
         when(snapshotTaskRepo.save(any(SnapshotTask.class))).thenReturn(exhibitionSnapshotTask);
         when(storageEngine.generateZip(Mockito.anyString())).thenReturn(fileContent.getBytes());
         when(asyncSnapshotCreator.createSnapshot(Mockito.anyString(), Mockito.anyString(), any(ExhibitionSnapshot.class))).thenReturn(future);
-        when(snapshotManagerTest.createSnapshot(Mockito.anyString(), Mockito.anyString(), any(ExhibitionSnapshot.class))).thenReturn(future.get());
         serviceToTest.triggerExhibitionSnapshotCreation();
         
         assertNotNull(exhibitionSnapshot);
@@ -135,9 +129,7 @@ public class SnapshotManagerTest {
         snapshotTask.setExhibitionSnapshot(exhibitionSnapshot);    
         exhibitionSnapshot.setSnapshotTask(snapshotTask);
 
-        when(spaceRepository.findAllBySpaceStatus(SpaceStatus.PUBLISHED)).thenReturn(new ArrayList());
         when(asyncSnapshotCreator.createSnapshot(Mockito.anyString(), Mockito.anyString(), any(ExhibitionSnapshot.class))).thenThrow(new IOException());
-        doThrow(new IOException()).when(storageEngine).copyToFolder(Mockito.anyString(), Mockito.anyString() );        
         assertThrows(IOException.class, ()-> serviceToTest.createSnapshot(resourcesPath, exhibitionId, exhibitionSnapshot));
     }
     

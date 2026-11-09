@@ -1,8 +1,8 @@
 package edu.asu.diging.vspace.core.services.impl;
 
 import static org.junit.Assert.assertThrows;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -22,9 +22,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.spring5.SpringTemplateEngine;
+import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import edu.asu.diging.vspace.core.data.SequenceRepository;
 import edu.asu.diging.vspace.core.data.SnapshotTaskRepository;
@@ -38,12 +38,12 @@ import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.IModuleLink;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
-import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.impl.Module;
 import edu.asu.diging.vspace.core.model.impl.ModuleLink;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.model.impl.Space;
+import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IExternalLinkManager;
 import edu.asu.diging.vspace.core.services.IModuleLinkManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
@@ -159,7 +159,6 @@ public class RenderingManagerTest {
     @Test
     public void test_createSpaceSnapshot_success() throws FileStorageException, ExhibitionSnapshotNotFoundException, IOException {
 
-        when(spaceRepository.save((Space) space)).thenReturn(space);
         when(spaceManager.getSpace(spaceId)).thenReturn(space);
         when(moduleManager.getModule(moduleId)).thenReturn(module);
         serviceToTest.createSpaceSnapshot(space, exhibitionId);
@@ -186,8 +185,6 @@ public class RenderingManagerTest {
         Space space2 = new Space();
         space.setId("space02"); 
         
-        when(spaceRepository.save((Space) space)).thenReturn(space);
-        when(spaceManager.getSpace(spaceId)).thenReturn(space);
         
         doThrow(FileStorageException.class).when(serviceToTest).createSpaceSnapshot(space2, exhibitionFolderName);
         assertThrows(FileStorageException.class, () -> serviceToTest.createSpaceSnapshot(space2, exhibitionFolderName));
@@ -208,16 +205,18 @@ public class RenderingManagerTest {
         space.setModuleLinks(moduleLinks);
         sequence.setSlides(slides);
         String exhibitionFolderName = exhibitionId;
-        
-        when(spaceRepository.save((Space) space)).thenReturn(space);
+        VSImage spaceImage = new VSImage();
+        spaceImage.setId("IMG000000001");
+        space.setImage(spaceImage);
+
         when(spaceManager.getSpace(spaceId)).thenReturn(space);
-        when(moduleManager.getModule(moduleId)).thenReturn(module); 
+        when(moduleManager.getModule(moduleId)).thenReturn(module);
 
         serviceToTest.createSpaceSnapshot(space, exhibitionFolderName);
 
         verify(storageEngine).createFolder(exhibitionId + File.separator + spaceId);
         verify(storageEngine).storeFile(any(byte[].class), eq(spaceId + ".html"), eq(exhibitionId + File.separator + spaceId));
         verify(storageEngine).createFolder(exhibitionId + File.separator + spaceId + File.separator +"images");
-        verify(storageManager).copyImage(Mockito.any(IVSImage.class), eq(exhibitionId + File.separator + spaceId+ File.separator + "images"));
+        verify(storageManager).copyImage(eq(spaceImage), eq(exhibitionId + File.separator + spaceId+ File.separator + "images"));
     }
 }

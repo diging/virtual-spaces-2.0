@@ -8,7 +8,7 @@ import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -97,8 +97,10 @@ public class SnapshotManager  implements  ISnapshotManager {
         exhibitionSnapshot = exhibitionSnapshotRepository.save(exhibitionSnapshot);
 
         try {
-            snapshotTask = createSnapshot(getResourcesPath(), exhibitionFolderName, exhibitionSnapshot);
+            createSnapshot(getResourcesPath(), exhibitionFolderName, exhibitionSnapshot);
             storageEngineDownloads.generateZip(exhibitionFolderName);
+            snapshotTask.setTaskComplete(true);
+            snapshotTaskRepository.save(snapshotTask);
         } catch (IOException | InterruptedException | FileStorageException | ExecutionException | RuntimeException e) {
             deleteSnapshotFiles(exhibitionFolderName);
             if (e instanceof InterruptedException) {
