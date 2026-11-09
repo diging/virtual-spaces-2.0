@@ -2,6 +2,9 @@ package edu.asu.diging.vspace.config;
 
 import java.util.Map;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+
 import org.javers.common.collections.Maps;
 import org.javers.core.Javers;
 import org.javers.hibernate.integration.HibernateUnproxyObjectAccessHook;
@@ -14,7 +17,7 @@ import org.javers.spring.auditable.CommitPropertiesProvider;
 import org.javers.spring.auditable.SpringSecurityAuthorProvider;
 import org.javers.spring.auditable.aspect.springdata.JaversSpringDataAuditableRepositoryAspect;
 import org.javers.spring.jpa.JpaHibernateConnectionProvider;
-import org.javers.spring.jpa.TransactionalJaversBuilder;
+import org.javers.spring.jpa.TransactionalJpaJaversBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,6 +29,9 @@ public class AuditConfig {
     @Autowired
     private PlatformTransactionManager txManager;
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     @Bean
     public Javers javers() {
         JaversSqlRepository sqlRepository = SqlRepositoryBuilder 
@@ -34,7 +40,7 @@ public class AuditConfig {
                 .withDialect(DialectName.MYSQL) 
                 .build(); 
 
-        return TransactionalJaversBuilder 
+        return TransactionalJpaJaversBuilder 
                 .javers() 
                 .withTxManager(txManager)
                 .withObjectAccessHook(new HibernateUnproxyObjectAccessHook()) 
@@ -44,7 +50,7 @@ public class AuditConfig {
 
     @Bean 
     public ConnectionProvider jpaConnectionProvider() { 
-        return new JpaHibernateConnectionProvider(); 
+        return new JpaHibernateConnectionProvider(entityManager); 
     } 
 
     @Bean

@@ -5,6 +5,7 @@ import java.util.List;
 import org.javers.spring.annotation.JaversSpringDataAuditable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,7 +15,7 @@ import edu.asu.diging.vspace.core.model.impl.ModuleStatus;
 
 @Repository
 @JaversSpringDataAuditable
-public interface ModuleRepository extends PagingAndSortingRepository<Module, String> {
+public interface ModuleRepository extends PagingAndSortingRepository<Module, String>, CrudRepository<Module, String> {
 
     List<Module> findTop5ByOrderByCreationDateDesc();
 
