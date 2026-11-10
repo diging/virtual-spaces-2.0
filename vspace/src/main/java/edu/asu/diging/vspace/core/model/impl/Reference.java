@@ -55,8 +55,8 @@ public class Reference extends VSpaceElement implements IReference {
 
     private String note;
 
-    @Column(name = "isPublic")
-    private boolean isPublic = true;
+    @Column(name = "isPublic", columnDefinition = "bit default 1")
+    private Boolean isPublic = true;
 
     @Override
     public String getTitle() {
@@ -169,7 +169,8 @@ public class Reference extends VSpaceElement implements IReference {
     }
 
     public boolean isPublic() {
-        return isPublic;
+        // rows created before this column existed hold NULL; treat them as public
+        return isPublic == null || isPublic;
     }
 
     public void setPublic(boolean isPublic) {

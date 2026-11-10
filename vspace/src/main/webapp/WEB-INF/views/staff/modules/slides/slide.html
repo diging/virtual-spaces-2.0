@@ -1516,7 +1516,7 @@
                 $("#confirmDeleteBiblioAlert .modal-footer input[type='hidden']").remove();
                 $("#confirmDeleteBiblioAlert").show();
                 
-                var biblioId = $(this).siblings("input[data-biblio-id]").val();
+                var biblioId = $(this).closest('.biblioDivStaff').attr('id');
                 var biblioInput = $('<input type="hidden" id="deleteBiblioId">');
                 biblioInput.val(biblioId);
                 $('#confirmDeleteBiblioAlert .modal-footer').append(biblioInput);
@@ -1975,8 +1975,8 @@
                         var biblioblock = $(
                             '<div id="' + data.id + '" class="biblioDivStaff tab row" data-biblio-block>' +
                             '<div class="col-md-10">' +
-                            '<h4><strong>' + data.biblioTitle + '</strong></h4>' +
-                            '<p>' + data.description + '</p>' +
+                            '<h4><strong>' + $('<div>').text(data.biblioTitle || '').html() + '</strong></h4>' +
+                            '<p>' + $('<div>').text(data.description || '').html() + '</p>' +
                             '</div>' +
                             '<input type="hidden" data-biblio-id="' + data.id + '" value="' + data.id + '" />' +
                             '<div class="button-group" style="position: absolute; right: 0px; top: 10px; display: flex; gap: 8px;">' +
@@ -2457,8 +2457,8 @@
 				    // Rebuild bibliography header structure
 				    var biblioHtml = 
 				        '<div class="col-md-10">' +
-				        '<h4><strong>' + formData.get('biblioTitle') + '</strong></h4>' +
-				        '<p>' + formData.get('description') + '</p>' +
+				        '<h4><strong>' + $('<div>').text(formData.get('biblioTitle') || '').html() + '</strong></h4>' +
+				        '<p>' + $('<div>').text(formData.get('description') || '').html() + '</p>' +
 				        '</div>' +
 				        '<input type="hidden" data-biblio-id="' + blockId + '" value="' + blockId + '" />' +
 				        '<div class="button-group" style="position: absolute; right: 0px; top: 10px; display: flex; gap: 8px;">' +
