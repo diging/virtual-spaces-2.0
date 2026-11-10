@@ -383,6 +383,57 @@
              
             var originalReferenceHtml = {};
 
+            var REFERENCE_FIELDS = ['title', 'author', 'year', 'journal', 'url', 'volume',
+                                    'issue', 'pages', 'editors', 'type', 'note'];
+
+            function escapeReferenceText(text) {
+                return String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                                   .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+            }
+
+            // Reads the raw reference fields stored as data attributes on a reference block
+            function readReferenceData(referenceBlock) {
+                var ref = {};
+                REFERENCE_FIELDS.forEach(function(field) {
+                    ref[field] = referenceBlock.attr('data-' + field) || '';
+                });
+                return ref;
+            }
+
+            function applyReferenceData(referenceBlock, ref) {
+                REFERENCE_FIELDS.forEach(function(field) {
+                    referenceBlock.attr('data-' + field, ref[field] || '');
+                });
+                referenceBlock.find('.reference-display').html(buildReferenceDisplay(ref));
+            }
+
+            // Builds the short reference summary shown in the staff slide editor
+            function buildReferenceDisplay(ref) {
+                var html = '';
+                if (ref.author) html += escapeReferenceText(ref.author);
+                if (ref.year) html += (ref.author ? ' ' : '') + '(' + escapeReferenceText(ref.year) + ')';
+                if (ref.author || ref.year) html += '. ';
+                if (ref.title) html += '<em>' + escapeReferenceText(ref.title) + '</em>. ';
+                var source = '';
+                if (ref.journal) source += escapeReferenceText(ref.journal);
+                if (ref.volume) source += (source ? ', ' : '') + escapeReferenceText(ref.volume);
+                if (ref.issue) source += '(' + escapeReferenceText(ref.issue) + ')';
+                if (ref.pages) source += (source ? ', ' : '') + escapeReferenceText(ref.pages);
+                if (source) html += source + '. ';
+                if (ref.editors) html += 'Edited by ' + escapeReferenceText(ref.editors) + '. ';
+                if (ref.type) html += '[' + escapeReferenceText(ref.type) + '] ';
+                if (ref.url) html += '<a href="' + escapeReferenceText(ref.url) + '" target="_blank">' + escapeReferenceText(ref.url) + '</a> ';
+                if (ref.note) html += 'Note: ' + escapeReferenceText(ref.note);
+                return html.trim() || 'Reference added';
+            }
+
+            $(document).ready(function() {
+                $('.referenceDivStaff').each(function() {
+                    var referenceBlock = $(this);
+                    applyReferenceData(referenceBlock, readReferenceData(referenceBlock));
+                });
+            });
+
             function referenceBlockDoubleClick(e) {
                 var referenceBlock = $(e.target).closest('.referenceDivStaff');
                 currentRefId = referenceBlock.find('input[data-reference-id]').val();
@@ -394,44 +445,12 @@
 
                 originalReferenceHtml[blockId] = referenceBlock.html();
 
-                var description = $("div.open p:eq(0)").text();
-                defaultValue = description;
+                var ref = readReferenceData(referenceBlock);
+                defaultValue = referenceBlock.find('.reference-display').text();
 
-                // Extract values - if Type is first in display, adjust indices accordingly
-                // Check if the current display has Type first or not
-                var fullText = $("div.open p:eq(0)").text();
-                console.log("Full reference text:", fullText);
-                
-                var type, title, author, year, journal, url, volume, issue, pages, editors, note;
-                
-                // Check if the text starts with "Type:" (new format) or "Reference Title:" (old format)
-                if (fullText.includes("Type:")) {
-                    // New format: Type is first
-                    type = $("div.open p span:eq(0)").text();
-                    title = $("div.open p span:eq(1)").text();
-                    author = $("div.open p span:eq(2)").text();
-                    year = $("div.open p span:eq(3)").text();
-                    journal = $("div.open p span:eq(4)").text();
-                    url = $("div.open p span:eq(5)").text();
-                    volume = $("div.open p span:eq(6)").text();
-                    issue = $("div.open p span:eq(7)").text();
-                    pages = $("div.open p span:eq(8)").text();
-                    editors = $("div.open p span:eq(9)").text();
-                    note = $("div.open p span:eq(10)").text();
-                } else {
-                    // Old format: Reference Title is first, Type is later
-                    title = $("div.open p span:eq(0)").text();
-                    author = $("div.open p span:eq(1)").text();
-                    year = $("div.open p span:eq(2)").text();
-                    journal = $("div.open p span:eq(3)").text();
-                    url = $("div.open p span:eq(4)").text();
-                    volume = $("div.open p span:eq(5)").text();
-                    issue = $("div.open p span:eq(6)").text();
-                    pages = $("div.open p span:eq(7)").text();
-                    editors = $("div.open p span:eq(8)").text();
-                    type = $("div.open p span:eq(9)").text();
-                    note = $("div.open p span:eq(10)").text();
-                }
+                var type = ref.type, title = ref.title, author = ref.author, year = ref.year,
+                    journal = ref.journal, url = ref.url, volume = ref.volume, issue = ref.issue,
+                    pages = ref.pages, editors = ref.editors, note = ref.note;
                 
                 // Show the edit reference form
                 $("#editReferenceAlert").show();
@@ -2060,27 +2079,18 @@
                     },
                     data: jsonData,
                     success: function(data) {
-                        // Updated with data attributes
 						var referenceblock = $(
-						    '<div id="'+ data.id +'" class="referenceDivStaff tab row" data-reference-block data-biblio-id="' + biblioBlockId + '">' +
-						    '<p class="col-md-10">' +
-						    'Reference Title: <span>' + data.title + '</span>, ' +
-						    'Author: <span>' + data.author + '</span>, ' +
-						    'Year: <span>' + data.year + '</span>, ' +
-						    'Journal: <span>' + data.journal + '</span>, ' +
-						    'Url: <span>' + data.url + '</span>, ' +
-						    'Volume: <span>' + data.volume + '</span>, ' +
-						    'Issue: <span>' + data.issue + '</span>, ' +
-						    'Pages: <span>' + data.pages + '</span>, ' +
-						    'Editors: <span>' + data.editors + '</span>, ' +
-						    'Type: <span>' + data.type + '</span>, ' +
-						    'Note: <span>' + data.note + '</span>' +
-						    '</p>' +
-						    '<input type="hidden" data-reference-id="' + data.id + '" value="' + data.id + '" />' +
-						    '<a class="btn col-md-1" data-action="delete-reference" href="javascript:;" style="position: absolute; right:0px;">' +
+						    '<div class="referenceDivStaff tab row" data-reference-block>' +
+						    '<div class="col-md-10 reference-display"></div>' +
+						    '<input type="hidden" class="deleteReferenceField" />' +
+						    '<a class="btn col-md-1" data-action="delete-reference" href="javascript:;">' +
 						    '<span class="icon-trash error"></span></a>' +
 						    '</div>'
 						);
+						referenceblock.attr('id', data.id).attr('data-biblio-id', biblioBlockId);
+						referenceblock.find('input.deleteReferenceField').attr('data-reference-id', data.id).val(data.id);
+						referenceblock.find('a[data-action="delete-reference"]').attr('data-reference-id', data.id);
+						applyReferenceData(referenceblock, data);
 
                         $(referenceblock[0]).mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(referenceBlockDoubleClick);
                         var elem = $('#' + biblioBlockId).find('#referenceSpace');
@@ -2444,8 +2454,8 @@
 				    // Rebuild bibliography header structure
 				    var biblioHtml = 
 				        '<p class="col-md-10">' +
-				        'Bibliography Title: <span>' + formData.get('biblioTitle') + '</span>, ' +
-				        'Description: <span>' + formData.get('description') + '</span>' +
+				        'Bibliography Title: <span>' + $('<div>').text(formData.get('biblioTitle') || '').html() + '</span>, ' +
+				        'Description: <span>' + $('<div>').text(formData.get('description') || '').html() + '</span>' +
 				        '</p>' +
 				        '<input type="hidden" data-biblio-id="' + blockId + '" value="' + blockId + '" />' +
 				        '<a class="btn col-md-1" data-action="delete-biblio" href="javascript:;" style="position: absolute; right: 0px;">' +
@@ -2459,7 +2469,7 @@
 				    // Restore ALL reference blocks with their complete HTML and event handlers
 				    if (allReferences.length > 0) {
 				        allReferences.each(function() {
-				            $("#referenceSpace").append($(this));
+				            $(".open").find("#referenceSpace").append($(this));
 				        });
 				    }
 				    
@@ -2470,6 +2480,8 @@
 				    $('.referenceDivStaff').mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(referenceBlockDoubleClick);
 				    
 				    $(".open").css('display', 'flex');
+				    $(".open").css('overflow-y', 'visible');
+				    $(".open").css('max-height', 'none');
 				    $(".open").removeClass("open");
 				}
              
@@ -2531,40 +2543,11 @@
 			}
           	
 			function updateReferenceBox(blockId, formData) {
-			    // Clear reference box and buttons
-			    $(".open").empty();
-			    
-			    // Use proper FormData.get() method and handle null values
-			    var title = formData.get('title') || '';
-			    var author = formData.get('author') || '';
-			    var year = formData.get('year') || '';
-			    var journal = formData.get('journal') || '';
-			    var url = formData.get('url') || '';
-			    var volume = formData.get('volume') || '';
-			    var issue = formData.get('issue') || '';
-			    var pages = formData.get('pages') || '';
-			    var editors = formData.get('editors') || '';
-			    var type = formData.get('type') || '';
-			    var note = formData.get('note') || '';
-			    
-			    $(".open").append(
-			        '<p class="col-md-10">' +
-			        'Reference Title: <span>' + title + '</span>, ' +
-			        'Author: <span>' + author + '</span>, ' +
-			        'Year: <span>' + year + '</span>, ' +
-			        'Journal: <span>' + journal + '</span>, ' +
-			        'Url: <span>' + url + '</span>, ' +
-			        'Volume: <span>' + volume + '</span>, ' +
-			        'Issue: <span>' + issue + '</span>, ' +
-			        'Pages: <span>' + pages + '</span>, ' +
-			        'Editors: <span>' + editors + '</span>, ' +
-			        'Type: <span>' + type + '</span>, ' +
-			        'Note: <span>' + note + '</span>' +
-			        '</p>' +
-			        '<input type="hidden" data-reference-id="' + blockId + '" value="' + blockId + '" />' +
-			        '<a class="btn col-md-1" data-action="delete-reference" href="javascript:;">' +
-			        '<span class="icon-trash error"></span></a>'
-			    );
+			    var ref = {};
+			    REFERENCE_FIELDS.forEach(function(field) {
+			        ref[field] = formData.get(field) || '';
+			    });
+			    applyReferenceData($(".open"), ref);
 			    
 			    // Reset border of the card 
 			    // Rebind event handlers
@@ -2729,18 +2712,23 @@
                     formData.append('biblioBlockId', blockId);
                     
                     $("#editBiblioAlert").hide();
-                    
+
+                    var jsonData = JSON.stringify({
+                        id: blockId,
+                        biblioTitle: title,
+                        description: desc
+                    });
+
                     $.ajax({
                         url: "[(@{'/staff/module/'+${module.id}+'/slide/'+${slide.id}+'/bibliography/edit'})]",
                         type: 'POST',
                         cache: false,
-                        contentType: false,
+                        contentType: 'application/json; charset=utf-8',
                         processData: false,
-                        data: formData,
+                        data: jsonData,
                         headers: {
                             'X-CSRF-Token': token
                         },
-                        enctype: 'multipart/form-data',
                         success: function(data) {
                             // Replace bibliography box with new values
                             updateBiblioBox(blockId, formData);
@@ -4058,31 +4046,30 @@
 					       style="padding-top: 8px;">+ New Reference</a>
 					    <div id="referenceSpace" class="col-md-10">
 						<div th:each="contentRef: ${contents.references}">
-						    <!-- Reference Block with TYPE FIRST -->
-						    <div th:id="${contentRef.id}" 
-						         class="referenceDivStaff tab row" 
+						    <!-- Reference Block -->
+						    <div th:id="${contentRef.id}"
+						         class="referenceDivStaff tab row"
 						         data-reference-block
-						         th:attr="data-biblio-id=${contents.id}">
-						        <p class="col-md-10">
-						            Type: <span>[[${contentRef.type}]]</span>,
-						            Reference Title: <span>[[${contentRef.title}]]</span>, 
-						            Author: <span>[[${contentRef.author}]]</span>,
-						            Year: <span>[[${contentRef.year}]]</span>, 
-						            Journal: <span>[[${contentRef.journal}]]</span>,
-						            Url: <span>[[${contentRef.url}]]</span>, 
-						            Volume: <span>[[${contentRef.volume}]]</span>,
-						            Issue: <span>[[${contentRef.issue}]]</span>, 
-						            Pages: <span>[[${contentRef.pages}]]</span>,
-						            Editors: <span>[[${contentRef.editors}]]</span>, 
-						            Note: <span>[[${contentRef.note}]]</span>
-						        </p>
-						        <input type="hidden" 
-						               class="deleteReferenceField" 
+						         th:attr="data-biblio-id=${contents.id}"
+						         th:data-title="${contentRef.title}"
+						         th:data-author="${contentRef.author}"
+						         th:data-year="${contentRef.year}"
+						         th:data-journal="${contentRef.journal}"
+						         th:data-url="${contentRef.url}"
+						         th:data-volume="${contentRef.volume}"
+						         th:data-issue="${contentRef.issue}"
+						         th:data-pages="${contentRef.pages}"
+						         th:data-editors="${contentRef.editors}"
+						         th:data-type="${contentRef.type}"
+						         th:data-note="${contentRef.note}">
+						        <div class="col-md-10 reference-display"></div>
+						        <input type="hidden"
+						               class="deleteReferenceField"
 						               data-reference-id="${contentRef.id}"
 						               th:attr="data-reference-id=${contentRef.id}"
 						               th:value="${contentRef.id}" />
-						        <a class="btn col-md-1" 
-						           data-action="delete-reference" 
+						        <a class="btn col-md-1"
+						           data-action="delete-reference"
 						           data-reference-id="${contentRef.id}"
 						           th:attr="data-reference-id=${contentRef.id}"
 						           href="javascript:;">
@@ -4090,7 +4077,7 @@
 						        </a>
 						    </div>
 						</div>
-				
+
 				    </div>
 				</div>
                
