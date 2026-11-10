@@ -130,6 +130,36 @@
           
         </style>
         <script th:inline="javascript">
+            function escapeBiblioText(value) {
+                return $('<div>').text(value || '').html();
+            }
+
+            function buildBiblioBlockHtml(id, title, description) {
+                return '<div class="col-md-10">' +
+                    '<h4><strong>' + escapeBiblioText(title) + '</strong></h4>' +
+                    '<p>' + escapeBiblioText(description) + '</p>' +
+                    '</div>' +
+                    '<input type="hidden" data-biblio-id="' + id + '" value="' + id + '" />' +
+                    '<div class="button-group">' +
+                    '<a class="biblio-action" data-action="add-reference"><span class="icon-circle-add"></span></a>' +
+                    '<a class="biblio-action" data-action="edit-biblio"><span class="icon-edit"></span></a>' +
+                    '<a class="btn col-md-1 biblio-action" data-action="delete-biblio" href="javascript:;"><span class="icon-trash error"></span></a>' +
+                    '</div>' +
+                    '<div class="referenceSpace col-md-10"></div>';
+            }
+
+            function showSlideError(message, autoHide) {
+                var container = $('#slide-error-container');
+                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p></p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                alert.find('p').text(message);
+                container.append(alert).show();
+                if (autoHide) {
+                    container.delay(4000).slideUp(500, function() {
+                        container.empty();
+                    });
+                }
+            }
+
             $(function () {
 		        $('.close').on('click', function () {
 		        	$('.modal').hide();
@@ -308,11 +338,7 @@
 
                     },
                     error: function(data) {
-                        var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                        $('#slide-error-container').append(alert);
-                        $("#slide-error-container").delay(4000).slideUp(500, function() {
-                            $("#slide-error-container").empty();
-                        });
+                        showSlideError('We are sorry but something went wrong. Please try again later.', true);
                     }
                 });
             }
@@ -817,8 +843,7 @@
                         if (data.status == 403) {
                             $("#loginAlert").show();
                         } else {
-                            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>Please try again.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                            $('#slide-error-container').append(alert);
+                            showSlideError('Please try again.');
                         }
                     }
                 });
@@ -1223,8 +1248,7 @@
                             
                         },
                         error: function(data) {
-                            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                            $('#slide-error-container').append(alert);
+                            showSlideError('We are sorry but something went wrong. Please try again later.');
                         }
                     });
                   });
@@ -1662,11 +1686,7 @@
          		        $('#' + blockId).remove();
          		    },
          			error: function(data) {
-         				var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-           		        $('#slide-error-container').append(alert); 
-           		        $("#slide-error-container").delay(4000).slideUp(500, function(){
-           		            $("#slide-error-container").empty();
-           		        });
+         				showSlideError('We are sorry but something went wrong. Please try to delete again later.', true);
          			}
          		});
          	});
@@ -1703,11 +1723,7 @@
          		            $('#' + refId).remove();
          		        },
          		        error: function(data) {
-         		            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-         		            $('#slide-error-container').append(alert); 
-         		            $("#slide-error-container").delay(4000).slideUp(500, function(){
-         		                $("#slide-error-container").empty();
-         		            });
+         		            showSlideError('We are sorry but something went wrong. Please try to delete again later.', true);
          		        }
          		    });
          		});
@@ -1734,11 +1750,7 @@
          		            $('#' + blockId).remove();
          		        },
          		        error: function(data) {
-         		            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-         		            $('#slide-error-container').append(alert); 
-         		            $("#slide-error-container").delay(4000).slideUp(500, function(){
-         		                $("#slide-error-container").empty();
-         		            });
+         		            showSlideError('We are sorry but something went wrong. Please try to delete again later.', true);
          		        }
          		    });
          		});
@@ -1767,11 +1779,7 @@
          		            $('#' + blockId).remove();
          		        },
          		        error: function(data) {
-         		            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-           		        $('#slide-error-container').append(alert); 
-           		        $("#slide-error-container").delay(4000).slideUp(500, function(){
-           		            $("#slide-error-container").empty();
-           		        });
+         		            showSlideError('We are sorry but something went wrong. Please try to delete again later.', true);
          		        }
          		    });
          		});
@@ -1789,11 +1797,7 @@
          		    
          		    var blockId = $('#deleteImageId').val();
          		    if(blockId == null || blockId == ''){
-         		        var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-           		        $('#slide-error-container').append(alert); 
-           		        $("#slide-error-container").delay(4000).slideUp(500, function(){
-           		            $("#slide-error-container").empty();
-           		        });
+         		        showSlideError('We are sorry but something went wrong. Please try to delete again later.', true);
          		    } else{
          		        $('#deleteImageId').remove();
          		        // ------------- delete image content blocks ------------
@@ -1804,11 +1808,7 @@
          		                $('#' + blockId).remove();
          		            },
          		            error: function(data) {
-         		                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-           		        $('#slide-error-container').append(alert); 
-           		        $("#slide-error-container").delay(4000).slideUp(500, function(){
-           		            $("#slide-error-container").empty();
-           		        });
+         		                showSlideError('We are sorry but something went wrong. Please try to delete again later.', true);
          		            }
          		        });
          		    }
@@ -1827,11 +1827,7 @@
          		    
          		    var blockId = $('#deleteChoiceBlockId').val();
          		    if(blockId == null || blockId == ''){
-         		        var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-           		        $('#slide-error-container').append(alert); 
-           		        $("#slide-error-container").delay(4000).slideUp(500, function(){
-           		            $("#slide-error-container").empty();
-           		        });
+         		        showSlideError('We are sorry but something went wrong. Please try to delete again later.', true);
          		    } else{
          		        $('#deleteChoiceBlockId').remove();
          		        // ------------- delete choices content blocks ------------
@@ -1842,11 +1838,7 @@
          		                $('#' + blockId).remove();
          		            },
          		            error: function(data) {
-         		                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-           		        $('#slide-error-container').append(alert); 
-           		        $("#slide-error-container").delay(4000).slideUp(500, function(){
-           		            $("#slide-error-container").empty();
-           		        });
+         		                showSlideError('We are sorry but something went wrong. Please try to delete again later.', true);
          		            }
          		        });
          		    }
@@ -1864,11 +1856,7 @@
 			    $('#videoIdToDelete').val("");
 			    
 			    if(blockId == null || blockId == ''){
-			        var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-           		        $('#slide-error-container').append(alert); 
-           		        $("#slide-error-container").delay(4000).slideUp(500, function(){
-           		            $("#slide-error-container").empty();
-           		        });
+			        showSlideError('We are sorry but something went wrong. Please try to delete again later.', true);
 			    } else{
 			        // ------------- delete video content blocks ------------
 			        $.ajax({
@@ -1878,11 +1866,7 @@
 			                $('#' + blockId).remove();
 			            },
 			            error: function(data) {
-			                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-           		        $('#slide-error-container').append(alert); 
-           		        $("#slide-error-container").delay(4000).slideUp(500, function(){
-           		            $("#slide-error-container").empty();
-           		        });
+			                showSlideError('We are sorry but something went wrong. Please try to delete again later.', true);
 			            }
 			        });
 			    }
@@ -1896,11 +1880,7 @@
            	    $("#confirmDeleteChoiceBlockAlert").hide();
            		var blockId = $('#deleteChoiceBlockId').attr('value');
            		if(blockId == null || blockId == ''){
-           			var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-           		        $('#slide-error-container').append(alert); 
-           		        $("#slide-error-container").delay(4000).slideUp(500, function(){
-           		            $("#slide-error-container").empty();
-           		        });
+           			showSlideError('We are sorry but something went wrong. Please try to delete again later.', true);
            		} else{
            			$('#deleteChoiceBlockId').remove()
            			// ------------- delete choices content blocks ------------
@@ -1911,11 +1891,7 @@
            			    	$('#' + blockId).remove();
            			    },
            				error: function(data) {
-           					var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try to delete again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-           		        $('#slide-error-container').append(alert); 
-           		        $("#slide-error-container").delay(4000).slideUp(500, function(){
-           		            $("#slide-error-container").empty();
-           		        });
+           					showSlideError('We are sorry but something went wrong. Please try to delete again later.', true);
            				}
            			});
            		}
@@ -1972,28 +1948,9 @@
                         console.log(data);
                         
                         // Updated biblioblock creation with data attributes
-                        var biblioblock = $(
-                            '<div id="' + data.id + '" class="biblioDivStaff tab row" data-biblio-block>' +
-                            '<div class="col-md-10">' +
-                            '<h4><strong>' + $('<div>').text(data.biblioTitle || '').html() + '</strong></h4>' +
-                            '<p>' + $('<div>').text(data.description || '').html() + '</p>' +
-                            '</div>' +
-                            '<input type="hidden" data-biblio-id="' + data.id + '" value="' + data.id + '" />' +
-                            '<div class="button-group" style="position: absolute; right: 0px; top: 10px; display: flex; gap: 8px;">' +
-                            '<a data-action="add-reference" style="padding: 6px; display: inline-flex; align-items: center; justify-content: center; min-width: 36px; height: 36px; cursor: pointer;">' +
-                            '<span class="icon-circle-add"></span>' +
-                            '</a>' +
-                            '<a data-action="edit-biblio" style="padding: 6px; display: inline-flex; align-items: center; justify-content: center; min-width: 36px; height: 36px; cursor: pointer;">' +
-                            '<span class="icon-edit"></span>' +
-                            '</a>' +
-                            '<a class="btn col-md-1" data-action="delete-biblio" href="javascript:;" style="padding: 6px; display: inline-flex; align-items: center; justify-content: center; min-width: 36px; height: 36px;">' +
-                            '<span class="icon-trash error"></span>' +
-                            '</a>' +
-                            '</div>' +
-                            '<div class="referenceSpace col-md-10">' +
-                            '</div>' +
-                            '</div>'
-                        );
+                        var biblioblock = $('<div class="biblioDivStaff tab row" data-biblio-block></div>')
+                            .attr('id', data.id)
+                            .html(buildBiblioBlockHtml(data.id, data.biblioTitle, data.description));
                         
                         // Don't bind any click handlers to the block itself
                         $('#slideSpace').append(biblioblock); 
@@ -2003,8 +1960,7 @@
                             $("#loginAlert").show();
                         }
                         else {
-                            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                            $('#slide-error-container').append(alert);
+                            showSlideError('We are sorry but something went wrong. Please try again later.');
                         }
                     }
                 });
@@ -2107,8 +2063,7 @@
                             $("#loginAlert").show();
                         }
                         else {
-                            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                            $('#slide-error-container').append(alert);
+                            showSlideError('We are sorry but something went wrong. Please try again later.');
                         }
                     }
                 });
@@ -2231,8 +2186,7 @@
                                 if (data.status == 403) {
                                     $("#loginAlert").show();
                                 } else {
-                                    var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                                    $('#slide-error-container').append(alert);
+                                    showSlideError('We are sorry but something went wrong. Please try again later.');
                                 }
                             }
                         });
@@ -2301,8 +2255,7 @@
                             $('#slideSpace').append(choiceblock);
                         },
                         error: function(data) {
-                            var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                            $('#slide-error-container').append(alert);
+                            showSlideError('We are sorry but something went wrong. Please try again later.');
                         }
                     });
                     $('#choiceForm')[0].reset();
@@ -2455,24 +2408,7 @@
 				    $(".open").empty();
 				    
 				    // Rebuild bibliography header structure
-				    var biblioHtml = 
-				        '<div class="col-md-10">' +
-				        '<h4><strong>' + $('<div>').text(formData.get('biblioTitle') || '').html() + '</strong></h4>' +
-				        '<p>' + $('<div>').text(formData.get('description') || '').html() + '</p>' +
-				        '</div>' +
-				        '<input type="hidden" data-biblio-id="' + blockId + '" value="' + blockId + '" />' +
-				        '<div class="button-group" style="position: absolute; right: 0px; top: 10px; display: flex; gap: 8px;">' +
-				        '<a data-action="add-reference" style="padding: 6px; display: inline-flex; align-items: center; justify-content: center; min-width: 36px; height: 36px; cursor: pointer;">' +
-				        '<span class="icon-circle-add"></span>' +
-				        '</a>' +
-				        '<a data-action="edit-biblio" style="padding: 6px; display: inline-flex; align-items: center; justify-content: center; min-width: 36px; height: 36px; cursor: pointer;">' +
-				        '<span class="icon-edit"></span>' +
-				        '</a>' +
-				        '<a class="btn col-md-1" data-action="delete-biblio" href="javascript:;" style="padding: 6px; display: inline-flex; align-items: center; justify-content: center; min-width: 36px; height: 36px;">' +
-				        '<span class="icon-trash error"></span>' +
-				        '</a>' +
-				        '</div>' +
-				        '<div class="referenceSpace col-md-10"></div>';
+				    var biblioHtml = buildBiblioBlockHtml(blockId, formData.get('biblioTitle'), formData.get('description'));
 				    
 				    $(".open").append(biblioHtml);
 				    
@@ -2790,8 +2726,7 @@
                             if (data.status == 403) {
                                 $("#loginAlert").show();
                             } else {
-                                var alert = $('<div class="alert alert-danger alert-dismissible fade show" role="alert"><p>We are sorry but something went wrong. Please try again later.</p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                                $('#slide-error-container').append(alert);
+                                showSlideError('We are sorry but something went wrong. Please try again later.');
                             }
                         }
                     });
@@ -4084,21 +4019,10 @@
 					           data-biblio-id="${contents.id}" 
 					           th:attr="data-biblio-id=${contents.id}"
 					           th:value="${contents.id}" />
-					    <div class="button-group" style="position: absolute; right: 0px; top: 10px; display: flex; gap: 8px;">
-					        <a data-action="add-reference" 
-					           style="padding: 6px; display: inline-flex; align-items: center; justify-content: center; min-width: 36px; height: 36px; cursor: pointer;">
-					            <span class="icon-circle-add"></span>
-					        </a>
-					        <a data-action="edit-biblio" 
-					           style="padding: 6px; display: inline-flex; align-items: center; justify-content: center; min-width: 36px; height: 36px; cursor: pointer;">
-					            <span class="icon-edit"></span>
-					        </a>
-					        <a class="btn col-md-1" 
-					           data-action="delete-biblio" 
-					           href="javascript:;" 
-					           style="padding: 6px; display: inline-flex; align-items: center; justify-content: center; min-width: 36px; height: 36px;">
-					            <span class="icon-trash error"></span>
-					        </a>
+					    <div class="button-group">
+					        <a class="biblio-action" data-action="add-reference"><span class="icon-circle-add"></span></a>
+					        <a class="biblio-action" data-action="edit-biblio"><span class="icon-edit"></span></a>
+					        <a class="btn col-md-1 biblio-action" data-action="delete-biblio" href="javascript:;"><span class="icon-trash error"></span></a>
 					    </div>
 					    <div class="referenceSpace col-md-10">
 						<div th:each="contentRef: ${contents.references}">

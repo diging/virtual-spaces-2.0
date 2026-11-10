@@ -798,29 +798,6 @@
 	background: #f2f2f2;
 }
 
-.btn.primary-btn.btn-sm[data-action="add-reference"] {
-	border-radius: 8px;
-	box-shadow: 0px 2px 4px rgba(0,0,0,0.1);
-	transition: all 0.2s ease;
-	margin-left: 8px;
-	min-width: 36px;
-	height: 36px;
-	display: inline-flex !important;
-	justify-content: center;
-	align-items: center;
-}
-
-.btn.primary-btn.btn-sm[data-action="add-reference"]:hover {
-	transform: translateY(-1px);
-	box-shadow: 0px 4px 8px rgba(0,0,0,0.15);
-}
-
-.btn.primary-btn.btn-sm[data-action="add-reference"] .icon-circle-add {
-	font-size: 16px;
-	margin: 0;
-	display: block;
-}
-
 .biblioDivStaff.tab.row {
 	position: relative;
 	padding-right: 90px; 
@@ -831,18 +808,33 @@
 }
 
 .button-group {
+	position: absolute;
+	right: 0;
+	top: 10px;
+	display: flex;
+	gap: 8px;
 	align-items: center;
+}
+
+.button-group .biblio-action {
+	padding: 6px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 36px;
+	height: 36px;
+	cursor: pointer;
 }
 
 .button-group .btn {
 	border-radius: 8px;
 	border: none;
+	transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .button-group .btn:hover {
 	transform: translateY(-1px);
 	box-shadow: 0px 4px 8px rgba(0,0,0,0.15);
-	transition: all 0.2s ease;
 }
 
 .searchInput {
