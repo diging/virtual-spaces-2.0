@@ -188,8 +188,12 @@ var VSpaceCitation = (function() {
     function formatBibliography(references, style) {
         var html = '';
         for (var reference of references) {
+            // APA output leaves out free-text notes, so show them below the citation
+            var note = reference.note ?
+                    '<p class="reference-note">' + escapeHtml(reference.note) + '</p>' : '';
             html += '<div class="formatted-reference">' +
                     formatReference(reference, style) +
+                    note +
                     '</div>';
         }
         return html;

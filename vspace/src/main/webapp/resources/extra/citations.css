@@ -448,6 +448,12 @@
     text-decoration: underline;
 }
 
+.formatted-reference .reference-note {
+    margin-top: 4px;
+    font-size: 13px;
+    color: #666;
+}
+
 /* Citation.js generated CSL styles */
 .formatted-reference .csl-entry {
     margin: 0;

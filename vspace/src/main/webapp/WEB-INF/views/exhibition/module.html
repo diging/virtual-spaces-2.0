@@ -570,7 +570,7 @@ ul{
                                 }).style("fill-opacity", function(d) { return d._children ? 1e-6 : 1e-6; });
                                                                  
                             // Transition links to their new position.
-                            link.transition().duration(duration).attr("d",function(d) { return customLink(source)});
+                            link.transition().duration(duration).attr("d",function(d) { return customLink(d)});
                             
                             // Stash the old positions for transition.
                             nodes.forEach(function(d) {

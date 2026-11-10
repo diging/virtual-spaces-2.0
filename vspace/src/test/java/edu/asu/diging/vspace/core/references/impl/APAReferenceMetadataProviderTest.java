@@ -33,7 +33,7 @@ public class APAReferenceMetadataProviderTest {
     public void testJournalArticleFormatting() throws ReferenceMetadataEncodingException {
         Reference ref = new Reference();
         ref.setTitle("Exploring Code Comprehension in Scientific Programming");
-        ref.setAuthor("Alyssa Chen, Carol Wong");
+        ref.setAuthor("Chen, Alyssa; Wong, Carol");
         ref.setYear("2025");
         ref.setJournal("arXiv");
         ref.setUrl("http://arxiv.org/abs/2501.10037");
@@ -87,7 +87,7 @@ public class APAReferenceMetadataProviderTest {
     public void testAuthorFormatting_MultipleAuthors() throws ReferenceMetadataEncodingException {
         Reference ref = new Reference();
         ref.setTitle("Test Article");
-        ref.setAuthor("Alyssa Chen, Carol Wong");
+        ref.setAuthor("Chen, Alyssa; Wong, Carol");
         ref.setYear("2025");
         ref.setType("Journal Article");
 

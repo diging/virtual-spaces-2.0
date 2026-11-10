@@ -16,8 +16,6 @@ public class BiblioBlock extends ContentBlock implements IBiblioBlock {
 
     private String biblioTitle;
 
-    private String description;
-    
     @JsonIgnore    
     @ManyToMany
     @JoinTable(name = "Biblio_Reference", joinColumns = @JoinColumn(name = "BIBLIO_ID"), inverseJoinColumns = @JoinColumn(name = "REFERENCE_ID"))
@@ -31,16 +29,6 @@ public class BiblioBlock extends ContentBlock implements IBiblioBlock {
     @Override
     public void setBiblioTitle(String biblioTitle) {
         this.biblioTitle = biblioTitle;
-    }
-
-    @Override
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    @Override
-    public String getDescription() {
-        return description;
     }
 
     @Override
