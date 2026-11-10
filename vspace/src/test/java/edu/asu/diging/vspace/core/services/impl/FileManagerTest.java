@@ -195,7 +195,9 @@ public class FileManagerTest {
     @Test
     public void test_downloadFile_failure() throws IOException {
         String fileId = "fileId";
+        String fileName = "testFile.txt";
         VSFile file = new VSFile();
+        file.setFilename(fileName);
         when(fileRepo.findById(fileId)).thenReturn(Optional.of(file));
         when(storageEngine.downloadFile(Mockito.any(String.class) ,Mockito.any( String.class))).thenThrow(new IOException());
         assertThrows(IOException.class, () -> serviceToTest.downloadFile(file.getFilename(), fileId));
