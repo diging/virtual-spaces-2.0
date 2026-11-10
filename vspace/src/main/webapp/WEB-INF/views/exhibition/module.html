@@ -230,9 +230,9 @@ ul{
             <h3 style="text-align:center;">[[${currentSlideCon.name}]]</h3>
             <div class="slide_container">
             <div th:id="blocks" class="Group_8_Class" th:each="contents: ${currentSlideCon.contents}">
-                <img th:if="${contents['class'].simpleName ==  'ImageBlock'}" th:id="${contents.id}" class="imgDiv" th:src="@{'/api/image/'+${contents.image.id}}" style="max-width:57%; max-height: 650px;">
-                <div th:if="${contents['class'].simpleName ==  'TextBlock'}" th:id="${contents.id}" class="textDiv">[(${contents.htmlRenderedText()})]</div>
-                <div th:if="${contents['class'].simpleName ==  'BiblioBlock'}" th:id="${contents.id}" class="biblioDiv" data-biblio-block="true">
+                <img th:if="${contents.elementType ==  'ImageBlock'}" th:id="${contents.id}" class="imgDiv" th:src="@{'/api/image/'+${contents.image.id}}" style="max-width:57%; max-height: 650px;">
+                <div th:if="${contents.elementType ==  'TextBlock'}" th:id="${contents.id}" class="textDiv">[(${contents.htmlRenderedText()})]</div>
+                <div th:if="${contents.elementType ==  'BiblioBlock'}" th:id="${contents.id}" class="biblioDiv" data-biblio-block="true">
                 	<h4>[(${contents.getBiblioTitle()})]</h4>
                 	<p th:if="${contents.getDescription() != null and !contents.getDescription().isEmpty()}" class="biblio-description">[(${contents.getDescription()})]</p>
 
@@ -260,7 +260,7 @@ ul{
 						</li>
 					</ul>
                 </div>
-               <div th:if="${contents['class'].simpleName ==  'VideoBlock'}" th:id="${contents.id}" class="VideoDiv">
+               <div th:if="${contents.elementType ==  'VideoBlock'}" th:id="${contents.id}" class="VideoDiv">
                   <div>
                      <h3><strong>[[${contents.video.title}]]</strong></h3>
                      <br/>
@@ -272,9 +272,9 @@ ul{
                      </video>
                   </div>
                </div>
-                <div th:if="${contents['class'].simpleName ==  'SpaceBlock'}" th:id="${contents.id}" class="textDiv">
+                <div th:if="${contents.elementType ==  'SpaceBlock'}" th:id="${contents.id}" class="textDiv">
                 <a th:href="@{'/exhibit/space/'+${contents.space?.id}}">[(${contents.title})]</a></div>
-                <div th:if="${contents['class'].simpleName == 'ChoiceBlock'}" th:id="${contents.id}" class="textDiv" style="margin: 1%;">
+                <div th:if="${contents.elementType == 'ChoiceBlock'}" th:id="${contents.id}" class="textDiv" style="margin: 1%;">
                     <div th:if="${contents.showsAll eq true}" th:each="choice: ${choices}" class="list-group">
                         <a th:href="${isExhPreview == null OR isExhPreview == false}?@{'/exhibit/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${choice.sequence.id}+'?branchingPoint='+${slideId}+'&previousSequenceId='+${currentSequenceId}}:@{'/preview/'+${previewId}+'/'+${spaceId}+'/module/'+${module.id}+'/sequence/'+${choice.sequence.id}+'?branchingPoint='+${slideId}+'&previousSequenceId='+${currentSequenceId}}"
                             class="list-group-item list-group-item-action">[[${choice.sequence.name}]]</a>

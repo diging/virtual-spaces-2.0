@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.model.IExhibition;
+import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
@@ -27,6 +28,7 @@ public class ListSpacesController {
 
         model.addAttribute("spaces", spaceManager.addIncomingLinkInfoToSpaces(spaceRepo.findAll()));
         IExhibition startExhibition = exhibitionManager.getStartExhibition();
+
         if(startExhibition!=null) {
             model.addAttribute("startSpace", startExhibition.getStartSpace());
         }

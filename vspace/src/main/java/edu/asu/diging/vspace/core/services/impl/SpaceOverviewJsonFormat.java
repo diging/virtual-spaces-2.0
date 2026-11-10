@@ -90,6 +90,7 @@ public class SpaceOverviewJsonFormat {
         SpaceOverview spaceOverview = new SpaceOverview();
         spaceOverview.setName(space.getName());
         spaceOverview.setId(space.getId());
+        spaceOverview.setDescription(space.getDescription());
         StringBuilder linkPathBuilder = new StringBuilder();
         linkPathBuilder.append(contextPath);
         linkPathBuilder.append(SpaceController.STAFF_SPACE_PATH);

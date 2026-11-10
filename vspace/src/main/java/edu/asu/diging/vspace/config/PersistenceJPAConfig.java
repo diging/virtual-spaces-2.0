@@ -2,8 +2,8 @@ package edu.asu.diging.vspace.config;
 
 import java.util.Properties;
 
-import javax.annotation.PostConstruct;
-import javax.persistence.EntityManagerFactory;
+import jakarta.annotation.PostConstruct;
+import jakarta.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,9 +84,13 @@ public class PersistenceJPAConfig {
     Properties additionalProperties() {
         Properties properties = new Properties();
         properties.setProperty("hibernate.hbm2ddl.auto", "update");
-        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL57Dialect");
+        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
         properties.setProperty("hibernate.show_sql", "false");
         properties.setProperty("hibernate.ejb.naming_strategy", "org.hibernate.cfg.ImprovedNamingStrategy");
+        // Keep Hibernate 5's naming of id generator tables (e.g. "space_id_generator") so
+        // generated ids continue where they left off in existing databases.
+        properties.setProperty("hibernate.id.db_structure_naming_strategy", "legacy");
+        properties.setProperty("hibernate.physical_naming_strategy", LegacyUserTableNamingStrategy.class.getName());
         return properties;
     }
 }

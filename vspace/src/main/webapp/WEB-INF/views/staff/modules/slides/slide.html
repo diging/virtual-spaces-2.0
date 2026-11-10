@@ -864,7 +864,7 @@
             		});
         		}
            	
-            [# th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}"]
+            [# th:if="${#strings.equals(slide.elementType,'BranchingPoint')}"]
         		$('#addChoice').show();
         		$('#choiceSpace').show();
         	[/]
@@ -3012,7 +3012,7 @@
                 <li class="breadcrumb-item active">[[${slide.name}]]</li>
             </ol>
             <div class="error"></div>
-            <div class="dropdown" style="float: right;" th:if="${#strings.equals(slide['class'].simpleName,'BranchingPoint')}">
+            <div class="dropdown" style="float: right;" th:if="${#strings.equals(slide.elementType,'BranchingPoint')}">
                 <button class="btn branchbtn dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="icon-branch"></span> This Branching Point links to the following Sequences
                 </button>
@@ -3941,7 +3941,7 @@
 		        </div>		        
 		        <div id="main-space">
 	                <div th:each="contents: ${slideContents}">
-	                    <div th:attr="data-position=${contents.contentOrder}" th:id="${contents.id}" class="valueDiv tab row" th:if="${#strings.equals(contents['class'].simpleName,'ImageBlock')}">
+	                    <div th:attr="data-position=${contents.contentOrder}" th:id="${contents.id}" class="valueDiv tab row" th:if="${#strings.equals(contents.elementType,'ImageBlock')}">
 	                        <img id="main-bgImage" th:id="${contents.id}" class="imgDiv" th:src="@{'/api/image/'+${contents.image.id}}"/>
 	                        <input type="hidden" id="deleteImageId" th:value="${contents.id}">
 	                        <a class="btn deleteImage col-md-1" href="javascript:;" style="position:absolute; right:25px;">
@@ -3959,7 +3959,7 @@
 				     th:id="${contents.id}" 
 				     class="valueDiv tab row" 
 				     data-image-block
-				     th:if="${#strings.equals(contents['class'].simpleName,'ImageBlock')}">
+				     th:if="${#strings.equals(contents.elementType,'ImageBlock')}">
 				    <img th:id="${contents.id}" 
 				         class="imgDiv" 
 				         th:src="@{'/api/image/'+${contents.image.id}}" />
@@ -3981,7 +3981,7 @@
 				     style="word-break:break-word;" 
 				     th:id="${contents.id}" 
 				     class="textDivStaff tab row" 
-				     th:if="${#strings.equals(contents['class'].simpleName,'TextBlock')}">
+				     th:if="${#strings.equals(contents.elementType,'TextBlock')}">
 				    <p class="col-md-10">[[${contents.text}]]</p>
 				    <input type="hidden" 
 				           data-text-id="${contents.id}" 
@@ -4000,7 +4000,7 @@
 				     class="tab vidDiv row" 
 				     th:id="${contents.id}" 
 				     data-video-block
-				     th:if="${#strings.equals(contents['class'].simpleName,'VideoBlock')}">
+				     th:if="${#strings.equals(contents.elementType,'VideoBlock')}">
 				    <div>
 				        <h3><strong>[[${contents.video.title}]]</strong></h3>
 				        <br/>
@@ -4044,7 +4044,7 @@
 					     class="biblioDivStaff tab row" 
 					     th:id="${contents.id}"
 					     data-biblio-block
-					     th:if="${#strings.equals(contents['class'].simpleName,'BiblioBlock')}">
+					     th:if="${#strings.equals(contents.elementType,'BiblioBlock')}">
 					    <p class="col-md-10">
 					        Bibliography Title: <span>[[${contents.biblioTitle}]]</span>, 
 					        Description: <span>[[${contents.description}]]</span>
@@ -4109,7 +4109,7 @@
 				     th:id="${contents.id}" 
 				     class="SpaceDivStaff tab row" 
 				     data-space-block
-				     th:if="${#strings.equals(contents['class'].simpleName,'SpaceBlock')}">
+				     th:if="${#strings.equals(contents.elementType,'SpaceBlock')}">
 				    <div style="display: flex; flex-direction: column; width: 100%;">
 				        <div style="display:flex; flex-direction: row; width: 100%;">
 				            <label>Title: </label>
@@ -4138,7 +4138,7 @@
 				     th:id="${contents.id}" 
 				     class="choiceDiv tab row" 
 				     data-choice-block
-				     th:if="${#strings.equals(contents['class'].simpleName,'ChoiceBlock')}" 
+				     th:if="${#strings.equals(contents.elementType,'ChoiceBlock')}" 
 				     style="display:block;">
 				    <a th:if="${contents.showsAll}" 
 				       th:each="choice: ${choices}" 

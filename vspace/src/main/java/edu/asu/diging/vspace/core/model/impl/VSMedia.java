@@ -1,7 +1,7 @@
 package edu.asu.diging.vspace.core.model.impl;
 
-import javax.persistence.Lob;
-import javax.persistence.MappedSuperclass;
+import jakarta.persistence.Lob;
+import jakarta.persistence.MappedSuperclass;
 
 import edu.asu.diging.vspace.core.model.IVSMedia;
 

@@ -2,11 +2,12 @@ package edu.asu.diging.vspace.core.model.impl;
 
 import java.util.Objects;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -23,7 +24,7 @@ public class ExhibitionLanguage extends VSpaceElement implements IExhibitionLang
     
     private String label;
     
-    @ManyToOne(targetEntity = Exhibition.class, cascade=CascadeType.ALL)
+    @ManyToOne(targetEntity = Exhibition.class, fetch = FetchType.LAZY)
     private IExhibition exhibition;
     
     private String code;
@@ -35,9 +36,9 @@ public class ExhibitionLanguage extends VSpaceElement implements IExhibitionLang
     }
     
     public ExhibitionLanguage(String label, String code, IExhibition exhibition) {
-        this.label=label;
-        this.code=code;
-        this.exhibition=exhibition;
+        this.label = label;
+        this.code = code;
+        this.exhibition = exhibition;
     }
     
     @Override
@@ -47,7 +48,7 @@ public class ExhibitionLanguage extends VSpaceElement implements IExhibitionLang
 
     @Override
     public void setId(String id) {
-        this.setId(id);        
+        this.id = id;      
     }
 
     public String getLabel() {
@@ -87,20 +88,27 @@ public class ExhibitionLanguage extends VSpaceElement implements IExhibitionLang
     
     @Override
     public int hashCode() {
-        return Objects.hash(code, exhibition, label);
+        return Objects.hash(code, 
+                exhibition == null ? null : exhibition.getId()
+            );
     }
 
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
             return true;
-        if (obj == null)
+        if (obj == null || getClass() != obj.getClass())
             return false;
-        if (getClass() != obj.getClass())
-            return false;
+        
         ExhibitionLanguage other = (ExhibitionLanguage) obj;
-        return Objects.equals(code, other.code) && Objects.equals(exhibition, other.exhibition)
-               && Objects.equals(label, other.label);
+        
+        if (!Objects.equals(this.code, other.code))
+            return false;
+        
+        if (this.exhibition == null || other.exhibition == null)
+            return false;
+        
+        return Objects.equals(this.exhibition.getId(), other.exhibition.getId());
     }
 
 
