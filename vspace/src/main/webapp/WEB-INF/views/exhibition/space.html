@@ -85,6 +85,22 @@
     visibility: visible;
 }
 
+#toggleBtn.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+#bgImage {
+    transition: width 0.3s ease, max-width 0.3s ease;
+}
+
+.spaceClass {
+    transition: width 0.3s ease, margin-left 0.3s ease, margin-right 0.3s ease;
+    position: relative;
+    right: 5%;
+    left: 5%;
+}
+
 .imgFullScreen {
     position: absolute;
     z-index: 1;
@@ -108,7 +124,7 @@
 }
 .tooltiptext {
     visibility: hidden;
-    width: 120px;
+    width: 200px;
     color: white;
     text-align: center;
     font-size: 12px;
@@ -116,7 +132,7 @@
     border-radius: 6px;
     position: absolute;
     z-index: 1;
-    left: -38px;
+    left: -85px;
     top: 46px;
     background: rgba(0, 0, 0, 0.6);
 }
@@ -164,12 +180,6 @@
 
 .wrapper {
     float: left;
-}
-
-.spaceClass {
-    position: relative;
-    right: 5%;
-    left: 5%;
 }
 
 #sidebar {
@@ -223,48 +233,90 @@
 			textBlock.addEventListener('focus-visible', function(e) {
 				e.target.style.outline = "2px solid blue";
 			});
+			checkImageResizeability();
+			$(window).resize(checkImageResizeability);
 		});
 		var showDefaultSpaceLinkImage = [[${showDefaultSpaceLinkImage ?: false}]];
 		var showDefaultModuleLinkImage = [[${showDefaultModuleLinkImage ?: false}]];
 		var showDefaultExternalLinkImage = [[${showDefaultExternalLinkImage ?: false}]];
+
+		function checkImageResizeability() {
+			// Store original max-width if not already stored
+			if (!$("#bgImage").data("originalMaxWidth")) {
+				var maxWidth = parseFloat($("#bgImage").css("max-width"));
+				if (!isNaN(maxWidth)) {
+					$("#bgImage").data("originalMaxWidth", maxWidth);
+				}
+			}
+			var maxImgWidthOrig = $("#bgImage").data("originalMaxWidth");
+			var windowWidth = $(window).width();
+
+			if (!maxImgWidthOrig || maxImgWidthOrig <= windowWidth) {
+				$("#toggleBtn").prop("disabled", true);
+				$("#toggleBtn").addClass("disabled");
+				$("#toggleBtn .tooltiptext").text("Image is not big enough to expand.");
+				// Reset cookie to collapsed state for small images
+				setCookie('isResizeImgBtnClicked', -1, null);
+			} else {
+				$("#toggleBtn").prop("disabled", false);
+				$("#toggleBtn").removeClass("disabled");
+				$("#toggleBtn .tooltiptext").text("Resize Image");
+			}
+		}
 			
 		function toggleImgSize(isClicked){
-			var maxImgWidth = $(window).width();
-			var spaceWidth = $("#bgImage").css("width");
-			var maxImgWidthOrig = parseFloat($("#bgImage").css("max-width"));
+			// Don't allow expansion if button is disabled (image too small)
+			if ($("#toggleBtn").prop("disabled") && isClicked) {
+				return;
+			}
+			var maxImgWidthOrig = $("#bgImage").data("originalMaxWidth");
 			var isResizeImgBtnClicked = getCookie('isResizeImgBtnClicked');
-			
+
 			if(isClicked) {
 				isResizeImgBtnClicked = -isResizeImgBtnClicked;
 				setCookie('isResizeImgBtnClicked', isResizeImgBtnClicked, null);
 			}
-			// resize the image to max width
+			// resize the image to max width (button is disabled if image is too small)
 			if ( isResizeImgBtnClicked == 1) {
 				$("#toggleImgClass").attr('class', "icon-collapse secondary");
-				if(maxImgWidthOrig > maxImgWidth) {
-					$(".spaceClass").css("display", ""); 
-					$(".spaceClass").css("justify-content", "");
-					$("#bgImage").css("width", maxImgWidth);
-					$(".spaceClass").css("height", "");
-					$("#Module_1").css("height", "");
-					$("#Module_1").css("min-height", "0");
-					$("#Module_1").css("margin-bottom", "0px");
-				}
+				// Expand: fill browser width with 5% gap
+				$("body").css("overflow-x", "hidden");
+				$(".spaceClass").css("width", "95%");
+				$(".spaceClass").css("margin-left", "auto");
+				$(".spaceClass").css("margin-right", "auto");
+				$(".spaceClass").css("left", "0");
+				$(".spaceClass").css("right", "0");
+				$(".spaceClass").css("display", "block");
+				$(".spaceClass").css("justify-content", "");
+				$("#bgImage").css("width", "100%");
+				$("#bgImage").css("max-width", "none");
+				$(".spaceClass").css("height", "");
+				$("#Module_1").css("height", "");
+				$("#Module_1").css("min-height", "0");
+				$("#Module_1").css("margin-bottom", "0px");
         		}
 			else {
 				$("#toggleImgClass").attr('class', "icon-expand secondary");
-				if(maxImgWidthOrig > maxImgWidth) {
-					$(".spaceClass").css("display", "flex"); 
-					$(".spaceClass").css("justify-content", "");
-					$("#bgImage").css("width", spaceWidth);
-					$('#bgImage').width('100%');
-					$(".spaceClass").css("height", "800px");
-					$("#Module_1").css("margin-bottom", "60px");
-				}
+				// Collapse: restore original layout
+				$("body").css("overflow-x", "");
+				$(".spaceClass").css("width", "80%");
+				$(".spaceClass").css("margin-left", "10px");
+				$(".spaceClass").css("margin-right", "");
+				$(".spaceClass").css("left", "");
+				$(".spaceClass").css("right", "");
+				$(".spaceClass").css("display", "flex");
+				$(".spaceClass").css("justify-content", "flex-start");
+				$("#bgImage").css("width", "100%");
+				$("#bgImage").css("max-width", maxImgWidthOrig + "px");
+				$(".spaceClass").css("height", "800px");
+				$("#Module_1").css("margin-bottom", "60px");
 			}
-			$("#space a").remove(); 
+			$("#space a").remove();
 			$(".Info_cz_Class").remove();
-			drawLinks();
+			// Delay drawLinks to let CSS transition complete (transition is 300ms)
+			setTimeout(function() {
+				drawLinks();
+			}, 350);
 		}
 		
 		function imageFullScreen(){
@@ -371,6 +423,8 @@
 					drawLinks();
 		    	});
 		    	drawLinks();
+		    	// Check if image is resizeable and reset cookie if needed before applying resize state
+		    	checkImageResizeability();
 		    	toggleImgSize(false);
 		});
 		
