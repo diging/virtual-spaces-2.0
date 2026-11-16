@@ -2981,6 +2981,731 @@
                     $("#addVideoAlert").show();
             	}
             });
+
+
+            var citesphereData = {
+                selectedReferences: [],
+                groups: [],
+                collections: {},
+                currentStep: 'connection',
+                currentGroup: null,
+                currentCollection: null
+            };
+
+            $('#addReferenceAlert').on('shown.bs.modal', function () {
+                updateReferenceModalButtons();
+                
+                if ($('#citesphereRefTab').hasClass('active')) {
+                    initializeCitesphereSteps();
+                }
+            });
+
+            // Tab switching handlers
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                updateReferenceModalButtons();
+                
+                if ($(e.target).attr('href') === '#citesphereRefTab') {
+                    initializeCitesphereSteps();
+                }
+            });
+            
+            $(document).on('click', 'a[href="#citesphereRefTab"]', function() {
+                setTimeout(function() {
+                    updateReferenceModalButtons();
+                    initializeCitesphereSteps();
+                }, 100);
+            });
+            
+            // Handle manual tab click to update buttons
+            $(document).on('click', 'a[href="#manualRefTab"]', function() {
+                setTimeout(function() {
+                    updateReferenceModalButtons();
+                }, 100);
+            });
+
+            function updateReferenceModalButtons() {
+                var isCitesphereTab = $('#citesphereRefTab').hasClass('active');
+                
+                if (isCitesphereTab) {
+                    $('#submitReference').hide();
+                    $('#submitCitesphereReferences').show();
+                } else {
+                    $('#submitReference').show();
+                    $('#submitCitesphereReferences').hide();
+                }
+            }
+
+            function initializeCitesphereSteps() {
+                
+                citesphereData.currentStep = 'connection';
+                citesphereData.currentGroup = null;
+                citesphereData.currentCollection = null;
+                citesphereData.selectedReferences = [];
+                
+                // Hide success message and all steps initially
+                hideImportSuccessMessage();
+                $('.citesphere-step').hide();
+                
+                // Show a loading message
+                $('#connectionStatusContent').html(
+                    '<div style="color: #007bff; background: #e3f2fd; border: 1px solid #90caf9; padding: 10px; border-radius: 3px;">' +
+                    '<i class="fa fa-spinner fa-spin"></i> <strong>Checking Citesphere connection...</strong>' +
+                    '</div>'
+                );
+                
+                checkCitesphereConnection();
+            }
+            
+            function checkCitesphereConnection() {
+                var token = $('input[name="_csrf"]').attr('value');
+                
+                $.ajax({
+                    url: '/vspace/staff/citesphere/groups',
+                    type: 'GET',
+                    headers: {
+                        'X-CSRF-Token': token
+                    },
+                    success: function(data) {
+                        showConnectionStatus(true);
+                        citesphereData.groups = data;
+                        citesphereData.currentStep = 'groups';
+                        showStep1Groups(data);
+                    },
+                    error: function(xhr, status, error) {
+                        showConnectionStatus(false);
+                        citesphereData.currentStep = 'connection';
+                    }
+                });
+            }
+            
+            function showImportSuccessMessage(message) {
+                var successContainer = $('#importSuccessStatus');
+                
+                successContainer.html(
+                    '<div style="color: #28a745; background: #d4edda; border: 1px solid #c3e6cb; padding: 10px; border-radius: 3px;">' +
+                    '<i class="fa fa-check-circle"></i> <strong>' + message + '</strong>' +
+                    '</div>'
+                );
+                
+                successContainer.show();
+                
+                setTimeout(function() {
+                    successContainer.fadeOut();
+                }, 5000);
+            }
+            
+            function hideImportSuccessMessage() {
+                $('#importSuccessStatus').hide();
+            }
+            
+            function showConnectionStatus(isConnected) {
+                var statusContainer = $('#connectionStatusContent');
+                
+                if (isConnected) {
+                    statusContainer.html(
+                        '<div style="color: #28a745; background: #d4edda; border: 1px solid #c3e6cb; padding: 10px; border-radius: 3px;">' +
+                        '<i class="fa fa-check-circle"></i> <strong>Connected to Citesphere</strong>' +
+                        '</div>'
+                    );
+                } else {
+                    statusContainer.html(
+                        '<div style="color: #dc3545; background: #f8d7da; border: 1px solid #f5c6cb; padding: 10px; border-radius: 3px;">' +
+                        '<i class="fa fa-exclamation-triangle"></i> <strong>Not Connected to Citesphere</strong><br>' +
+                        '<small>You need to authenticate to access your bibliography data.</small><br>' +
+                        '<a href="/vspace/staff/citesphere/oauth/authorize" class="btn btn-primary btn-sm" style="margin-top: 8px;">'  +
+                        '<i class="fa fa-sign-in"></i> Connect to Citesphere' +
+                        '</a>' +
+                        '</div>'
+                    );
+                }
+            }
+            
+            function showStep1Groups(groupsData) {
+                $('#step1-groups').show();
+                displayCitesphereGroups(groupsData);
+            }
+
+            function displayCitesphereGroups(groupsData) {
+                var groupsContainer = $('#citesphereGroups');
+                groupsContainer.empty();
+                
+                if (!groupsData || !groupsData.data || !Array.isArray(groupsData.data)) {
+                    groupsContainer.html('<div class="alert alert-info">No groups found.</div>');
+                    return;
+                }
+
+                groupsData.data.forEach(function(group) {
+                    
+                    var groupElement = $('<div class="group-item" style="margin-bottom: 10px; padding: 12px; border: 1px solid #ddd; border-radius: 5px; cursor: pointer; background: #f8f9fa; transition: all 0.2s;">' +
+                        '<div style="display: flex; justify-content: space-between; align-items: center;">' +
+                        '<div>' +
+                        '<h6 style="margin: 0; color: #333;"><i class="fa fa-users"></i> ' + (group.name || 'Unnamed Group') + '</h6>' +
+                        '<small class="text-muted">Click to view collections</small>' +
+                        '</div>' +
+                        '<i class="fa fa-chevron-right" style="color: #007bff;"></i>' +
+                        '</div>' +
+                        '</div>');
+                    
+                    groupElement.hover(
+                        function() { $(this).css('background', '#e3f2fd'); },
+                        function() { $(this).css('background', '#f8f9fa'); }
+                    );
+                    
+                    groupElement.click(function() {
+                        citesphereData.currentGroup = group;
+                        showStep2Collections(group);
+                    });
+                    
+                    groupsContainer.append(groupElement);
+                });
+            }
+
+            function showStep2Collections(group) {
+                $('#step1-groups').hide();
+                $('#step2-collections').show();
+                $('#currentGroupName').text('Group: ' + (group.name || 'Unnamed Group'));
+                citesphereData.currentStep = 'collections';
+                
+                $('#citesphereCollections').html('<div style="color: #007bff; background: #e3f2fd; border: 1px solid #90caf9; padding: 10px; border-radius: 3px;"><i class="fa fa-spinner fa-spin"></i> <strong>Loading collections...</strong></div>');
+                
+                // Extract group ID
+                var groupId = group.zoteroGroupId || group.id || group.groupId || group.key;
+                
+                loadGroupCollections(groupId, group.name);
+            }
+            
+            function loadGroupCollections(groupId, groupName) {
+                var token = $('input[name="_csrf"]').attr('value');
+                
+                $.ajax({
+                    url: '/vspace/staff/citesphere/groups/' + groupId + '/collections',
+                    type: 'GET',
+                    headers: {
+                        'X-CSRF-Token': token
+                    },
+                    success: function(data) {
+                        displayCollections(data, groupId, groupName);
+                    },
+                    error: function(xhr, status, error) {
+                        $('#citesphereCollections').html('<div class="alert alert-warning">Error loading collections: ' + error + ' (Status: ' + xhr.status + ')</div>');
+                    }
+                });
+            }
+
+            function displayCollections(collectionsData, groupId, groupName) {
+                var collectionsContainer = $('#citesphereCollections');
+                collectionsContainer.empty();
+                
+                var collections = collectionsData.collections || collectionsData.data || [];
+                
+                if (!collections || !Array.isArray(collections) || collections.length === 0) {
+                    collectionsContainer.html('<div class="alert alert-info">No collections found in this group.</div>');
+                    return;
+                }
+
+                collections.forEach(function(collection) {
+                    
+                    var collectionName = collection.name || (collection.data && collection.data.name) || 'Unnamed Collection';
+                    var collectionKey = collection.key || (collection.data && collection.data.key) || collection.id;
+                    
+                    var collectionElement = $('<div class="collection-item" style="margin-bottom: 10px; padding: 12px; border: 1px solid #ddd; border-radius: 5px; cursor: pointer; background: #f8f9fa; transition: all 0.2s;">' +
+                        '<div style="display: flex; justify-content: space-between; align-items: center;">' +
+                        '<div>' +
+                        '<div style="font-weight: 500; color: #333;"><i class="fa fa-folder"></i> ' + collectionName + '</div>' +
+                        '<small class="text-muted">Click to view references</small>' +
+                        '</div>' +
+                        '<i class="fa fa-chevron-right" style="color: #007bff;"></i>' +
+                        '</div>' +
+                        '</div>');
+                    
+                    collectionElement.hover(
+                        function() { $(this).css('background', '#e3f2fd'); },
+                        function() { $(this).css('background', '#f8f9fa'); }
+                    );
+                    
+                    collectionElement.click(function() {
+                        citesphereData.currentCollection = collection;
+                        showStep3References(groupId, collectionKey, collectionName);
+                    });
+                    
+                    collectionsContainer.append(collectionElement);
+                });
+            }
+
+            function showStep3References(groupId, collectionId, collectionName) {
+                $('#step2-collections').hide();
+                $('#step3-references').show();
+                $('#currentCollectionName').text('Collection: ' + (collectionName || 'Unnamed Collection'));
+                citesphereData.currentStep = 'references';
+                
+                // Show loading message
+                $('#citesphereReferences').html('<div style="color: #007bff; background: #e3f2fd; border: 1px solid #90caf9; padding: 10px; border-radius: 3px;"><i class="fa fa-spinner fa-spin"></i> <strong>Loading references...</strong></div>');
+                
+                loadCollectionItems(groupId, collectionId, collectionName);
+            }
+            
+            $(document).on('click', '#backToGroups', function() {
+                $('#step2-collections').hide();
+                $('#step1-groups').show();
+                citesphereData.currentStep = 'groups';
+                citesphereData.currentGroup = null;
+            });
+            
+            $(document).on('click', '#backToCollections', function() {
+                $('#step3-references').hide();
+                $('#step2-collections').show();
+                citesphereData.currentStep = 'collections';
+                citesphereData.currentCollection = null;
+                citesphereData.selectedReferences = [];
+                updateSelectedCount();
+            });
+
+            function loadCollectionItems(groupId, collectionId, collectionName) {
+                var token = $('input[name="_csrf"]').attr('value');
+                
+                $.ajax({
+                    url: '/vspace/staff/citesphere/groups/' + groupId + '/collections/' + collectionId + '/items',
+                    type: 'GET',
+                    headers: {
+                        'X-CSRF-Token': token
+                    },
+                    success: function(data) {
+                        displayIndividualItems(data, 'Items in ' + collectionName);
+                    },
+                    error: function(xhr, status, error) {
+                        $('#citesphereReferences').html('<div class="alert alert-warning">Error loading references: ' + error + ' (Status: ' + xhr.status + ')</div>');
+                    }
+                });
+            }
+
+            function displayIndividualItems(itemsData, title) {
+                var referencesContainer = $('#citesphereReferences');
+                referencesContainer.empty();
+                
+                var titleElement = $('<h6 style="margin-bottom: 10px; color: #333;"><i class="fa fa-file-text"></i> ' + title + '</h6>');
+                referencesContainer.append(titleElement);
+                
+                var items = itemsData.items || itemsData.data || itemsData || [];
+                
+                if (Array.isArray(itemsData)) {
+                    items = itemsData;
+                }
+                
+                if (!items || !Array.isArray(items) || items.length === 0) {
+                    referencesContainer.append('<div class="alert alert-info">No items found.</div>');
+                    return;
+                }
+
+                items.forEach(function(item, index) {
+                    
+                    var itemData = item.data || item;
+                    
+                    var title = item.title || itemData.title || item.referenceString || 'Untitled Reference';
+                    if (title.trim() === '') {
+                        title = 'Untitled Reference';
+                    }
+                    
+                    var author = '';
+                    if (item.authors && Array.isArray(item.authors) && item.authors.length > 0) {
+                        var displayAuthors = item.authors.slice(0, 3).map(function(auth) {
+                            var firstName = (auth.firstName || '').trim();
+                            var lastName = (auth.lastName || '').trim();
+                            
+                            if (firstName && lastName) {
+                                return firstName + ' ' + lastName;
+                            } else if (lastName) {
+                                return lastName;
+                            } else if (firstName) {
+                                return firstName;
+                            } else if (auth.name) {
+                                return auth.name.trim();
+                            }
+                            return '';
+                        }).filter(function(name) { return name !== ''; });
+                        
+                        if (displayAuthors.length > 0) {
+                            author = displayAuthors.join(', ');
+                            if (item.authors.length > 3) {
+                                author += ' et al.';
+                            }
+                        }
+                    }
+                    
+                    if (!author) {
+                        author = item.authorString || extractAuthorsFromItem(itemData) || item.author || 'Unknown Author';
+                    }
+                    
+                    var year = '';
+                    if (item.date) {
+                        var match = item.date.match(/(\d{4})/);
+                        year = match ? match[1] : '';
+                    }
+                    if (!year && item.dateFreetext) {
+                        var match = item.dateFreetext.match(/(\d{4})/);
+                        year = match ? match[1] : '';
+                    }
+                    if (!year) {
+                        year = item.year || extractYearFromItem(itemData) || '';
+                    }
+                    
+                    var type = 'Reference';
+                    if (item.itemType) {
+                        switch(item.itemType) {
+                            case 'JOURNAL_ARTICLE': type = 'Journal Article'; break;
+                            case 'BOOK': type = 'Book'; break;
+                            case 'BOOK_SECTION': type = 'Book Section'; break;
+                            case 'CONFERENCE_PAPER': type = 'Conference Paper'; break;
+                            default: type = item.itemType.replace(/_/g, ' ');
+                        }
+                    } else if (item['@type']) {
+                        type = item['@type'];
+                    } else if (itemData.itemType) {
+                        type = itemData.itemType;
+                    }
+                    
+                    var checkbox = $('<input type="checkbox" class="citesphere-item-checkbox" style="margin-right: 8px;">');
+                    checkbox.data('item', item);
+                    checkbox.attr('value', item.key || item.id || index);
+                    
+                    var itemElement = $('<div class="reference-item" style="margin-bottom: 8px; padding: 8px; border: 1px solid #ddd; border-radius: 3px; background: white; cursor: pointer; transition: all 0.2s ease;">' +
+                        '<div style="display: flex; align-items: flex-start;">' +
+                        '<div style="margin-right: 8px;"></div>' +
+                        '<div style="flex-grow: 1;">' +
+                        '<div style="font-weight: 500; color: #333; margin-bottom: 4px;">' + title + '</div>' +
+                        '<div style="color: #666; font-size: 0.9em; margin-bottom: 2px;">' + author + (year ? ' (' + year + ')' : '') + '</div>' +
+                        '<div style="color: #888; font-size: 0.8em;">Type: ' + type + '</div>' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>');
+                    
+                    itemElement.find('div').first().prepend(checkbox);
+
+                    itemElement.hover(
+                        function() { $(this).css('background-color', '#f8f9fa'); },
+                        function() {
+                            if (!checkbox.prop('checked')) {
+                                $(this).css('background-color', 'white');
+                            }
+                        }
+                    );
+
+                    itemElement.click(function(e) {
+                        if (e.target.type !== 'checkbox') {
+                            checkbox.prop('checked', !checkbox.prop('checked'));
+                            checkbox.trigger('change');
+                        }
+                    });
+
+                    checkbox.change(function() {
+                        if (this.checked) {
+                            var itemKey = item.key || item.id;
+                            var alreadySelected = citesphereData.selectedReferences.some(function(ref) {
+                                return (ref.key || ref.id) === itemKey;
+                            });
+                            if (!alreadySelected) {
+                                citesphereData.selectedReferences.push(item);
+                            }
+                            itemElement.css({
+                                'background-color': '#e3f2fd',
+                                'border-color': '#2196f3'
+                            });
+                        } else {
+                            var itemKey = item.key || item.id;
+                            citesphereData.selectedReferences = citesphereData.selectedReferences.filter(function(ref) {
+                                return (ref.key || ref.id) !== itemKey;
+                            });
+                            itemElement.css({
+                                'background-color': 'white',
+                                'border-color': '#ddd'
+                            });
+                        }
+                        updateSelectedCount();
+                    });
+                    
+                    referencesContainer.append(itemElement);
+                });
+            }
+
+            function extractAuthorsFromItem(itemData) {
+                if (itemData.authorString) {
+                    return itemData.authorString;
+                }
+                
+                if (itemData.creators && Array.isArray(itemData.creators)) {
+                    var authors = itemData.creators.map(function(creator) {
+                        var firstName = creator.firstName || '';
+                        var lastName = creator.lastName || '';
+                        
+                        if (lastName && firstName) {
+                            return lastName + ', ' + firstName;
+                        } else if (lastName) {
+                            return lastName;
+                        } else if (firstName) {
+                            return firstName;
+                        }
+                        return '';
+                    }).filter(Boolean);
+                    
+                    return authors.length > 0 ? authors.join('; ') : 'Unknown Author';
+                }
+                
+                return 'Unknown Author';
+            }
+
+            function extractYearFromItem(itemData) {
+                if (itemData.year) {
+                    return itemData.year;
+                }
+                
+                var date = itemData.date || itemData.accessDate || '';
+                if (date) {
+                    var match = date.match(/(\d{4})/);
+                    return match ? match[1] : '';
+                }
+                return '';
+            }
+
+            function updateSelectedCount() {
+                var count = citesphereData.selectedReferences.length;
+                if (count === 0) {
+                    $('#selectedCountText').text('No references selected');
+                } else if (count === 1) {
+                    $('#selectedCountText').text('1 reference selected');
+                } else {
+                    $('#selectedCountText').text(count + ' references selected');
+                }
+            }
+
+            $(document).on('click', '#selectAllReferences', function() {
+                $('.citesphere-item-checkbox').each(function() {
+                    if (!$(this).prop('checked')) {
+                        $(this).prop('checked', true);
+                        $(this).trigger('change');
+                    }
+                });
+            });
+
+            $(document).on('click', '#deselectAllReferences', function() {
+                $('.citesphere-item-checkbox').each(function() {
+                    if ($(this).prop('checked')) {
+                        $(this).prop('checked', false);
+                        $(this).trigger('change');
+                    }
+                });
+            });
+
+            $('#searchCitesphereBtn').click(function() {
+                var searchTerm = $('#citesphereSearch').val().trim();
+                if (searchTerm) {
+                    $('#citesphereReferences').html(
+                        '<div class="alert alert-info">' +
+                        '<h6><i class="fa fa-info-circle"></i> Search Not Available</h6>' +
+                        '<p>Search functionality is not yet available in the Citesphere API. Please browse through your groups and collections above to find references.</p>' +
+                        '</div>'
+                    );
+                } else {
+                    loadCitesphereGroups();
+                }
+            });
+
+            $('#citesphereSearch').keypress(function(e) {
+                if (e.which === 13) {
+                    $('#searchCitesphereBtn').click();
+                }
+            });
+
+            function handleCitesphereImport() {
+
+                if (citesphereData.selectedReferences.length === 0) {
+                    alert('Please select at least one reference to import.');
+                    return;
+                }
+
+                performCitesphereImport();
+            }
+            
+            function performCitesphereImport() {
+                var biblioId = $('#addReferenceTarget').val();
+                if (!biblioId) {
+                    alert('Error: Could not determine bibliography block.');
+                    return;
+                }
+                
+                
+                var transformedReferences = citesphereData.selectedReferences.map(function(item) {
+                    
+                    var creators = [];
+                    
+                    if (item.authors && Array.isArray(item.authors)) {
+                        creators = item.authors.map(function(author) {
+                            return {
+                                firstName: author.firstName || '',
+                                lastName: author.lastName || author.name || '',
+                                creatorType: 'author'
+                            };
+                        });
+                    } else if (item.authorString) {
+                        var authors = item.authorString.split(';');
+                        creators = authors.map(function(author) {
+                            var trimmedAuthor = author.trim();
+                            if (trimmedAuthor.includes(',')) {
+                                var parts = trimmedAuthor.split(',');
+                                return {
+                                    lastName: parts[0].trim(),
+                                    firstName: parts[1] ? parts[1].trim() : '',
+                                    creatorType: 'author'
+                                };
+                            } else {
+                                return {
+                                    lastName: trimmedAuthor,
+                                    firstName: '',
+                                    creatorType: 'author'
+                                };
+                            }
+                        });
+                    }
+                    
+                    var dateValue = '';
+                    if (item.date) {
+                        dateValue = item.date;
+                    } else if (item.dateFreetext) {
+                        dateValue = item.dateFreetext;
+                    } else if (item.year) {
+                        dateValue = item.year;
+                    }
+                    
+                    var itemType = 'journalArticle'; // Default to journal article
+                    if (item.itemType) {
+                        switch(item.itemType) {
+                            case 'JOURNAL_ARTICLE': itemType = 'journalArticle'; break;
+                            case 'BOOK': itemType = 'book'; break;
+                            case 'BOOK_SECTION': itemType = 'bookSection'; break;
+                            case 'CONFERENCE_PAPER': itemType = 'conferencePaper'; break;
+                            default: itemType = 'journalArticle';
+                        }
+                    } else if (item['@type']) {
+                        itemType = item['@type'];
+                    }
+                    
+                    
+                    var transformedItem = {
+                        data: {
+                            title: item.title || 'Untitled',
+                            itemType: itemType,
+                            date: dateValue,
+                            publicationTitle: item.publicationTitle || item.source || '',
+                            url: item.url || '',
+                            volume: item.volume || '',
+                            issue: item.issue || '',
+                            pages: item.pages || (item.firstPage && item.endPage ? item.firstPage + '-' + item.endPage : (item.firstPage || '')),
+                            DOI: item.doi || (item.identifier && item.identifierType === 'doi' ? item.identifier : ''),
+                            abstractNote: item.abstractNote || '',
+                            language: item.language || '',
+                            ISSN: item.issn || '',
+                            journalAbbreviation: item.journalAbbreviation || '',
+                            series: item.series || '',
+                            seriesTitle: item.seriesTitle || '',
+                            archive: item.archive || '',
+                            archiveLocation: item.archiveLocation || '',
+                            callNumber: item.callNumber || '',
+                            rights: item.rights || '',
+                            shortTitle: item.shortTitle || '',
+                            note: item.note || item.referenceString || '',
+                            extra: 'Imported from Citesphere - Key: ' + (item.key || item.id || ''),
+                            creators: creators
+                        }
+                    };
+                    
+                    return transformedItem;
+                });
+                
+                var moduleId = '[[${module.id}]]';
+                var slideId = '[[${slide.id}]]';
+                var token = $('input[name="_csrf"]').attr('value');
+                
+                
+                $.ajax({
+                    url: '/vspace/staff/module/' + moduleId + '/slide/' + slideId + '/bibliography/' + biblioId + '/citesphere/import',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    headers: {
+                        'X-CSRF-Token': token
+                    },
+                    data: JSON.stringify(transformedReferences),
+                    success: function(response) {
+
+                        if (response.success) {
+                            var count = response.imported_count || citesphereData.selectedReferences.length;
+                            var message = count === 1 ? '1 reference imported successfully!' : count + ' references imported successfully!';
+                            showImportSuccessMessage(message);
+                            
+                            var biblioBlock = $('[data-biblio-id="' + biblioId + '"]').closest('[data-biblio-block]');
+                            var referenceSpace = biblioBlock.find('#referenceSpace');
+                            
+                            if (response.references && Array.isArray(response.references)) {
+                                response.references.forEach(function(ref, index) {
+                                    
+                                    var referenceHtml = '<div id="' + ref.id + '" class="referenceDivStaff tab row" data-reference-block data-biblio-id="' + biblioId + '">' +
+                                        '<p class="col-md-10">' +
+                                        'Reference Title: <span>' + (ref.title || 'NO TITLE') + '</span>, ' +
+                                        'Author: <span>' + (ref.author || 'NO AUTHOR') + '</span>, ' +
+                                        'Year: <span>' + (ref.year || 'NO YEAR') + '</span>, ' +
+                                        'Journal: <span>' + (ref.journal || 'NO JOURNAL') + '</span>, ' +
+                                        'Url: <span>' + (ref.url || '') + '</span>, ' +
+                                        'Volume: <span>' + (ref.volume || '') + '</span>, ' +
+                                        'Issue: <span>' + (ref.issue || '') + '</span>, ' +
+                                        'Pages: <span>' + (ref.pages || '') + '</span>, ' +
+                                        'Editors: <span>' + (ref.editors || '') + '</span>, ' +
+                                        'Type: <span>' + (ref.type || '') + '</span>, ' +
+                                        'Note: <span>' + (ref.note || '') + '</span>' +
+                                        '</p>' +
+                                        '<input type="hidden" class="deleteReferenceField" data-reference-id="' + ref.id + '" value="' + ref.id + '" />' +
+                                        '<a class="btn col-md-1" data-action="delete-reference" data-reference-id="' + ref.id + '" href="javascript:;">' +
+                                        '<span class="icon-trash error"></span>' +
+                                        '</a>' +
+                                        '</div>';
+                                    
+                                    var refElement = $(referenceHtml);
+                                    refElement.mouseenter(onMouseEnter).mouseleave(onMouseLeave).dblclick(referenceBlockDoubleClick);
+                                    referenceSpace.append(refElement);
+                                });
+                            }
+                            
+                            // Reset and close modal
+                            citesphereData.selectedReferences = [];
+                            updateSelectedCount();
+                            $('#addReferenceAlert').modal('hide');
+                        } else {
+                            alert('Error importing references: ' + (response.error || 'Unknown error'));
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        alert('Error importing references: ' + error + ' (Status: ' + xhr.status + ')');
+                    }
+                });
+            }
+            
+            $('#submitCitesphereReferences').click(function() {
+                handleCitesphereImport();
+            });
+            
+            $('#addReferenceAlert').on('hidden.bs.modal', function () {
+                citesphereData.selectedReferences = [];
+                citesphereData.currentStep = 'connection';
+                citesphereData.currentGroup = null;
+                citesphereData.currentCollection = null;
+                updateSelectedCount();
+                
+                hideImportSuccessMessage();
+                
+                $('#citesphereGroups').empty();
+                $('#citesphereCollections').empty();
+                $('#citesphereReferences').empty();
+                $('#connectionStatusContent').empty();
+                
+                $('.citesphere-step').hide();
+            });
+
         });
         </script>
     </head>
@@ -3481,145 +4206,258 @@
 	               </div>
 	            </div>
 	         </div>
+			<!-- Add Reference Modal with Citesphere Tab -->
 			<div id="addReferenceAlert" class="modal" tabindex="-1" role="dialog" style="overflow-y: scroll;">
-			   <div class="modal-dialog" role="document" th:draggable="true">
+			   <div class="modal-dialog modal-lg" role="document" draggable="true">
 			      <div class="modal-content">
 			         <div class="modal-header">
 			            <h5 class="modal-title">Add new Reference</h5>
-			            <button type="button" class="close" data-dismiss="modal"
-			               aria-label="Close">
-			            <span aria-hidden="true">&times;</span>
+			            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			               <span aria-hidden="true">&times;</span>
 			            </button>
 			         </div>
-			         <form name="sendReferenceForm" id="sendReferenceForm">
-			            <div class="modal-body">
-			               <!-- TYPE FIELD - NOW FIRST AND REQUIRED -->
-			               <div class="form-group">
-			                  <table>
-			                     <tr>
-			                        <td><label for="typeRef" class="col-form-label">Type: <span style="color: red;">*</span></label></td>
-			                        <td>                           
-			                           <select class="form-control" id="typeRef" name="typeRef" required>
-			                              <option value="" disabled selected>Select a type *</option>
-			                              <option value="Book">Book</option>
-			                              <option value="Journal Article">Journal Article</option>
-			                              <option value="Conference Paper">Conference Paper</option>
-			                              <option value="Thesis">Thesis</option>
-			                              <option value="Report">Report</option>
-			                              <option value="Website">Website</option>
-			                              <option value="Patent">Patent</option>
-			                              <option value="Other">Other</option>
-			                           </select>
-			                        </td>
-			                     </tr>
-			                  </table>
-			               </div>
+			         
+			         <!-- Tab Navigation -->
+			         <div class="modal-body" style="background: var(--base-grey)">
+			            <div role="tabpanel">
+			               <ul class="nav nav-tabs" role="tablist">
+			                  <li role="presentation" id="manualRefLink" class="active show">
+			                     <a class="active show nav-link" href="#manualRefTab" aria-controls="manualRefTab" role="tab" data-toggle="tab">Manual Entry</a>
+			                  </li>
+			                  <li role="presentation" id="citesphereRefLink">
+			                     <a class="nav-link" href="#citesphereRefTab" aria-controls="citesphereRefTab" role="tab" data-toggle="tab">Add from Citesphere</a>
+			                  </li>
+			               </ul>
 			               
-			               <!-- TITLE FIELD -->
-			               <div class="form-group">
-			                  <table>
-			                     <tr>
-			                        <td><label for="titleRef" class="col-form-label">Title:</label></td>
-			                        <td><input type="text" class="form-control" id="titleRef" name="titleRef" /></td>
-			                     </tr>
-			                  </table>
-			               </div>
-			               
-			               <!-- AUTHOR FIELD -->
-			               <div class="form-group">
-			                  <table>
-			                     <tr>
-			                        <td><label for="authorRef" class="col-form-label">Author:</label></td>
-			                        <td><input type="text" class="form-control" id="authorRef" name="authorRef" /></td>
-			                     </tr>
-			                  </table>
-			               </div>
-			               
-			               <!-- YEAR FIELD -->
-			               <div class="form-group">
-			                  <table>
-			                     <tr>
-			                        <td><label for="yearRef" class="col-form-label">Year:</label></td>
-			                        <td><input type="text" class="form-control" id="yearRef" name="yearRef" /></td>
-			                     </tr>
-			                  </table>
-			               </div>
-			               
-			               <!-- JOURNAL FIELD -->
-			               <div class="form-group">
-			                  <table>
-			                     <tr>
-			                        <td><label for="journalRef" class="col-form-label">Journal:</label></td>
-			                        <td><input type="text" class="form-control" id="journalRef" name="journalRef" /></td>
-			                     </tr>
-			                  </table>
-			               </div>
-			               
-			               <!-- URL FIELD -->
-			               <div class="form-group">
-			                  <table>
-			                     <tr>
-			                        <td><label for="urlRef" class="col-form-label">Url:</label></td>
-			                        <td><input type="text" class="form-control" id="urlRef" name="urlRef" /></td>
-			                     </tr>
-			                  </table>
-			               </div>
-			               
-			               <!-- VOLUME FIELD -->
-			               <div class="form-group">
-			                  <table>
-			                     <tr>
-			                        <td><label for="volumeRef" class="col-form-label">Volume:</label></td>
-			                        <td><input type="text" class="form-control" id="volumeRef" name="volumeRef" /></td>
-			                     </tr>
-			                  </table>
-			               </div>
-			               
-			               <!-- ISSUE FIELD -->
-			               <div class="form-group">
-			                  <table>
-			                     <tr>
-			                        <td><label for="issueRef" class="col-form-label">Issue:</label></td>
-			                        <td><input type="text" class="form-control" id="issueRef" name="issueRef" /></td>
-			                     </tr>
-			                  </table>
-			               </div>
-			               
-			               <!-- PAGES FIELD -->
-			               <div class="form-group">
-			                  <table>
-			                     <tr>
-			                        <td><label for="pagesRef" class="col-form-label">Pages:</label></td>
-			                        <td><input type="text" class="form-control" id="pagesRef" name="pagesRef" /></td>
-			                     </tr>
-			                  </table>
-			               </div>
-			               
-			               <!-- EDITORS FIELD -->
-			               <div class="form-group">
-			                  <table>
-			                     <tr>
-			                        <td><label for="editorsRef" class="col-form-label">Editors:</label></td>
-			                        <td><input type="text" class="form-control" id="editorsRef" name="editorsRef" /></td>
-			                     </tr>
-			                  </table>
-			               </div>
-			               
-			               <!-- NOTE FIELD -->
-			               <div class="form-group">
-			                  <table>
-			                     <tr>
-			                        <td><label for="noteRef" class="col-form-label">Note:</label></td>
-			                        <td><input type="text" class="form-control" id="noteRef" name="noteRef" /></td>
-			                     </tr>
-			                  </table>
+			               <!-- Tab Content -->
+			               <div class="tab-content">
+			                  <!-- Manual Entry Tab -->
+			                  <div role="tabpanel" class="tab-pane active show" id="manualRefTab">
+			                     <form name="sendReferenceForm" id="sendReferenceForm">
+			                        <div class="modal-body-content" style="padding-top: 20px;">
+			                           <!-- TYPE FIELD - NOW FIRST AND REQUIRED -->
+			                           <div class="form-group">
+			                              <table>
+			                                 <tr>
+			                                    <td><label for="typeRef" class="col-form-label">Type: <span style="color: red;">*</span></label></td>
+			                                    <td>                           
+			                                       <select class="form-control" id="typeRef" name="typeRef" required>
+			                                          <option value="" disabled selected>Select a type *</option>
+			                                          <option value="Book">Book</option>
+			                                          <option value="Journal Article">Journal Article</option>
+			                                          <option value="Conference Paper">Conference Paper</option>
+			                                          <option value="Thesis">Thesis</option>
+			                                          <option value="Report">Report</option>
+			                                          <option value="Website">Website</option>
+			                                          <option value="Patent">Patent</option>
+			                                          <option value="Other">Other</option>
+			                                       </select>
+			                                    </td>
+			                                 </tr>
+			                              </table>
+			                           </div>
+			                           
+			                           <!-- TITLE FIELD -->
+			                           <div class="form-group">
+			                              <table>
+			                                 <tr>
+			                                    <td><label for="titleRef" class="col-form-label">Title:</label></td>
+			                                    <td><input type="text" class="form-control" id="titleRef" name="titleRef" /></td>
+			                                 </tr>
+			                              </table>
+			                           </div>
+			                           
+			                           <!-- AUTHOR FIELD -->
+			                           <div class="form-group">
+			                              <table>
+			                                 <tr>
+			                                    <td><label for="authorRef" class="col-form-label">Author:</label></td>
+			                                    <td><input type="text" class="form-control" id="authorRef" name="authorRef" /></td>
+			                                 </tr>
+			                              </table>
+			                           </div>
+			                           
+			                           <!-- YEAR FIELD -->
+			                           <div class="form-group">
+			                              <table>
+			                                 <tr>
+			                                    <td><label for="yearRef" class="col-form-label">Year:</label></td>
+			                                    <td><input type="text" class="form-control" id="yearRef" name="yearRef" /></td>
+			                                 </tr>
+			                              </table>
+			                           </div>
+			                           
+			                           <!-- JOURNAL FIELD -->
+			                           <div class="form-group">
+			                              <table>
+			                                 <tr>
+			                                    <td><label for="journalRef" class="col-form-label">Journal:</label></td>
+			                                    <td><input type="text" class="form-control" id="journalRef" name="journalRef" /></td>
+			                                 </tr>
+			                              </table>
+			                           </div>
+			                           
+			                           <!-- URL FIELD -->
+			                           <div class="form-group">
+			                              <table>
+			                                 <tr>
+			                                    <td><label for="urlRef" class="col-form-label">Url:</label></td>
+			                                    <td><input type="text" class="form-control" id="urlRef" name="urlRef" /></td>
+			                                 </tr>
+			                              </table>
+			                           </div>
+			                           
+			                           <!-- VOLUME FIELD -->
+			                           <div class="form-group">
+			                              <table>
+			                                 <tr>
+			                                    <td><label for="volumeRef" class="col-form-label">Volume:</label></td>
+			                                    <td><input type="text" class="form-control" id="volumeRef" name="volumeRef" /></td>
+			                                 </tr>
+			                              </table>
+			                           </div>
+			                           
+			                           <!-- ISSUE FIELD -->
+			                           <div class="form-group">
+			                              <table>
+			                                 <tr>
+			                                    <td><label for="issueRef" class="col-form-label">Issue:</label></td>
+			                                    <td><input type="text" class="form-control" id="issueRef" name="issueRef" /></td>
+			                                 </tr>
+			                              </table>
+			                           </div>
+			                           
+			                           <!-- PAGES FIELD -->
+			                           <div class="form-group">
+			                              <table>
+			                                 <tr>
+			                                    <td><label for="pagesRef" class="col-form-label">Pages:</label></td>
+			                                    <td><input type="text" class="form-control" id="pagesRef" name="pagesRef" /></td>
+			                                 </tr>
+			                              </table>
+			                           </div>
+			                           
+			                           <!-- EDITORS FIELD -->
+			                           <div class="form-group">
+			                              <table>
+			                                 <tr>
+			                                    <td><label for="editorsRef" class="col-form-label">Editors:</label></td>
+			                                    <td><input type="text" class="form-control" id="editorsRef" name="editorsRef" /></td>
+			                                 </tr>
+			                              </table>
+			                           </div>
+			                           
+			                           <!-- NOTE FIELD -->
+			                           <div class="form-group">
+			                              <table>
+			                                 <tr>
+			                                    <td><label for="noteRef" class="col-form-label">Note:</label></td>
+			                                    <td><input type="text" class="form-control" id="noteRef" name="noteRef" /></td>
+			                                 </tr>
+			                              </table>
+			                           </div>
+			                        </div>
+			                     </form>
+			                  </div>
+			                  
+			                  <!-- Citesphere Tab -->
+			                  <div role="tabpanel" class="tab-pane" id="citesphereRefTab">
+			                     <div class="modal-body-content" style="padding-top: 20px;">
+			                        
+			                        <!-- Connection Status -->
+			                        <div id="citesphereConnectionStatus" style="margin-bottom: 20px; padding: 10px; border-radius: 5px; text-align: center;">
+			                           <div id="connectionStatusContent">
+			                              <!-- Dynamic content will be loaded here -->
+			                           </div>
+			                        </div>
+			                        
+			                        <!-- Import Success Status -->
+			                        <div id="importSuccessStatus" style="display: none; margin-bottom: 15px; padding: 10px; border-radius: 5px; text-align: center;">
+			                           <!-- Success message will be shown here -->
+			                        </div>
+			                        
+			                        <!-- Step-by-Step Navigation -->
+			                        <div id="citesphereStepsContainer" style="max-height: 450px; overflow-y: auto;">
+			                           
+			                           <!-- Step 1: Select Group -->
+			                           <div id="step1-groups" class="citesphere-step" style="display: none;">
+			                              <div style="border: 1px solid #ddd; border-radius: 5px; padding: 15px; background: white;">
+			                                 <h6 style="margin-bottom: 15px; color: #333; border-bottom: 2px solid #007bff; padding-bottom: 8px;">
+			                                    <i class="fa fa-users"></i> Step 1: Select a Group
+			                                 </h6>
+			                                 <div id="citesphereGroups" style="max-height: 300px; overflow-y: auto;">
+			                                    <!-- Groups will be loaded here -->
+			                                 </div>
+			                              </div>
+			                           </div>
+			                           
+			                           <!-- Step 2: Select Collection -->
+			                           <div id="step2-collections" class="citesphere-step" style="display: none;">
+			                              <div style="border: 1px solid #ddd; border-radius: 5px; padding: 15px; background: white;">
+			                                 <div style="margin-bottom: 15px;">
+			                                    <button id="backToGroups" class="btn btn-sm btn-outline-secondary">
+			                                       <i class="fa fa-arrow-left"></i> Back to Groups
+			                                    </button>
+			                                 </div>
+			                                 <h6 style="margin-bottom: 15px; color: #333; border-bottom: 2px solid #007bff; padding-bottom: 8px;">
+			                                    <i class="fa fa-folder"></i> Step 2: Select a Collection
+			                                 </h6>
+			                                 <div id="currentGroupName" style="margin-bottom: 10px; font-weight: 500; color: #666;">
+			                                    <!-- Current group name will be shown here -->
+			                                 </div>
+			                                 <div id="citesphereCollections" style="max-height: 250px; overflow-y: auto;">
+			                                    <!-- Collections will be loaded here -->
+			                                 </div>
+			                              </div>
+			                           </div>
+			                           
+			                           <!-- Select References -->
+			                           <div id="step3-references" class="citesphere-step" style="display: none;">
+			                              <div style="border: 1px solid #ddd; border-radius: 5px; padding: 15px; background: white;">
+			                                 <div style="margin-bottom: 15px;">
+			                                    <button id="backToCollections" class="btn btn-sm btn-outline-secondary">
+			                                       <i class="fa fa-arrow-left"></i> Back to Collections
+			                                    </button>
+			                                 </div>
+			                                 <h6 style="margin-bottom: 15px; color: #333; border-bottom: 2px solid #007bff; padding-bottom: 8px;">
+			                                    <i class="fa fa-file-text"></i> Step 3: Select References to Import
+			                                 </h6>
+			                                 <div id="currentCollectionName" style="margin-bottom: 10px; font-weight: 500; color: #666;">
+			                                    <!-- Current collection name will be shown here -->
+			                                 </div>
+			                                 <!-- Select All / Deselect All buttons -->
+			                                 <div id="selectionControls" style="margin-bottom: 10px;">
+			                                    <button id="selectAllReferences" class="btn btn-sm btn-outline-primary" style="margin-right: 5px;">
+			                                       <i class="fa fa-check-square-o"></i> Select All
+			                                    </button>
+			                                    <button id="deselectAllReferences" class="btn btn-sm btn-outline-secondary">
+			                                       <i class="fa fa-square-o"></i> Deselect All
+			                                    </button>
+			                                 </div>
+			                                 <div id="citesphereReferences" style="max-height: 250px; overflow-y: auto;">
+			                                    <!-- References will be loaded here -->
+			                                 </div>
+
+			                                 <!-- Selected Count Display -->
+			                                 <div id="selectedCount" style="margin-top: 15px; padding: 10px; background: #f8f9fa; border-radius: 3px; font-size: 14px;">
+			                                    <strong>Selected:</strong> <span id="selectedCountText">No references selected</span>
+			                                 </div>
+			                              </div>
+			                           </div>
+			                           
+			                        </div>
+			                     </div>
+			                  </div>
 			               </div>
 			            </div>
-			            <div class="modal-footer">
-			               <button id="cancelSubmitReference" type="reset" class="btn light">Cancel</button>
-			               <button type="submit" id="submitReference" class="btn btn-primary">Submit</button>
-			            </div>
-			         </form>
+			         </div>
+			         
+			         <!-- Modal Footer -->
+			         <div class="modal-footer">
+			            <button id="cancelSubmitReference" type="reset" class="btn light">Cancel</button>
+			            <button type="submit" id="submitReference" class="btn btn-primary">Submit</button>
+			            <button type="button" id="submitCitesphereReferences" class="btn btn-primary" style="display: none;" onclick="handleCitesphereImport();">Add Selected Reference</button>
+			         </div>
 			      </div>
 			   </div>
 			</div>

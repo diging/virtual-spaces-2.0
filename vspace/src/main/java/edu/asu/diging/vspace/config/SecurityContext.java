@@ -50,7 +50,8 @@ public class SecurityContext {
                                 jakarta.servlet.DispatcherType.ERROR).permitAll()
                         // Anyone can access the urls
                         .requestMatchers("/", "/exhibit/**", "/api/**", "/resources/**", "/login",
-                                "/logout", "/register", "/reset/**", "/setup/admin", "/404", "/preview/**").permitAll()
+                                "/logout", "/register", "/reset/**", "/setup/admin", "/404", "/preview/**",
+                                "/staff/citesphere/oauth/**").permitAll()
                         // The rest of the our application is protected.
                         .requestMatchers("/users/**", "/admin/**", "/staff/user/**").hasRole("ADMIN")
                         .requestMatchers("/staff/**").hasAnyRole("STAFF", "ADMIN")
