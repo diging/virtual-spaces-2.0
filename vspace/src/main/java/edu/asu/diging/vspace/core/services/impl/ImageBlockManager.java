@@ -45,7 +45,7 @@ public class ImageBlockManager extends GenericContentBlockManager<IImageBlock, I
     @Override
     public IImageBlock createContentBlock(String slideId) {
         try {
-            return createImageBlock(slideId, null, "default.jpg").getElement();
+            return (IImageBlock) createImageBlock(slideId, null, "default.jpg").getElement();
         } catch (ImageCouldNotBeStoredException e) {
             throw new RuntimeException("Failed to create default image block", e);
         }

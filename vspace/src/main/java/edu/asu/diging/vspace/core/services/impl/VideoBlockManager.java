@@ -45,7 +45,7 @@ public class VideoBlockManager extends GenericContentBlockManager<IVideoBlock, V
     @Override
     public IVideoBlock createContentBlock(String slideId) {
         try {
-            return createVideoBlock(slideId, null, null, "default.mp4", null, "Default Video").getElement();
+            return (IVideoBlock) createVideoBlock(slideId, null, null, "default.mp4", null, "Default Video").getElement();
         } catch (VideoCouldNotBeStoredException e) {
             throw new RuntimeException("Failed to create default video block", e);
         }
