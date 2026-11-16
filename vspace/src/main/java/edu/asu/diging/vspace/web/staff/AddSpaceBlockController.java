@@ -27,9 +27,7 @@ public class AddSpaceBlockController {
     public ResponseEntity<String> addSpaceBlock(@RequestParam("title") String title,@RequestParam("spaceId") String spaceId, @PathVariable("slideId") String slideId,
             @PathVariable("moduleId") String moduleId){
         ISpace space = spaceManager.getSpace(spaceId);
-        Integer contentOrder = contentBlockManager.findMaxContentOrder(slideId);
-        contentOrder = contentOrder == null ? 0 : contentOrder + 1;
-        ISpaceBlock spaceBlock = contentBlockManager.createSpaceBlock(slideId, title, contentOrder, space);
+        ISpaceBlock spaceBlock = contentBlockManager.createSpaceBlock(slideId, title, space);
         return new ResponseEntity<>(spaceBlock.getId(), HttpStatus.OK);
     }
 

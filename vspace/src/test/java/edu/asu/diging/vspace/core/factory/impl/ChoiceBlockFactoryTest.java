@@ -24,16 +24,14 @@ public class ChoiceBlockFactoryTest {
     @Test
     public void test_createChoiceBlock_success() {
 
-        Integer contentOrder = 1;
-
         BranchingPoint slide = new BranchingPoint();
-        slide.setId("slide1"); 
+        slide.setId("slide1");
 
         Choice choice = new Choice();
-        choice.setId("choice1");  
+        choice.setId("choice1");
 
         Choice choice2 = new Choice();
-        choice.setId("choice2"); 
+        choice.setId("choice2");
 
         List<IChoice> choiceList = new ArrayList<IChoice>();
         choiceList.add(choice);
@@ -41,14 +39,12 @@ public class ChoiceBlockFactoryTest {
 
         slide.setChoices(choiceList);
 
-        IChoiceBlock actualChoiceBlock = choiceBlockFactoryToTest.createChoiceBlock(slide, contentOrder, choiceList, false);
+        IChoiceBlock actualChoiceBlock = choiceBlockFactoryToTest.createChoiceBlock(slide, choiceList, false);
         Assert.assertEquals(slide.getId(), actualChoiceBlock.getSlide().getId());
-        Assert.assertEquals(contentOrder, actualChoiceBlock.getContentOrder());
         Assert.assertEquals(choice.getId(), actualChoiceBlock.getChoices().get(0).getId());
 
-        IChoiceBlock actualChoiceBlockShowsAll = choiceBlockFactoryToTest.createChoiceBlock(slide, contentOrder, choiceList, true);
+        IChoiceBlock actualChoiceBlockShowsAll = choiceBlockFactoryToTest.createChoiceBlock(slide, choiceList, true);
         Assert.assertEquals(slide.getId(), actualChoiceBlockShowsAll.getSlide().getId());
-        Assert.assertEquals(contentOrder, actualChoiceBlockShowsAll.getContentOrder());
         Assert.assertEquals(choice.getId(), slide.getChoices().get(0).getId());
         Assert.assertNull(actualChoiceBlockShowsAll.getChoices());
     }
