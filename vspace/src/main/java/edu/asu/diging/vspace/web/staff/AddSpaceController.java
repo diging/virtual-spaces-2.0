@@ -26,7 +26,6 @@ import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
-import edu.asu.diging.vspace.web.staff.forms.LocalizedTextForm;
 import edu.asu.diging.vspace.web.staff.forms.SpaceForm;
 
 @Controller
@@ -62,11 +61,7 @@ public class AddSpaceController {
     public String addSpace(Model model, @ModelAttribute SpaceForm spaceForm, @RequestParam("file") MultipartFile file,
             Principal principal, @RequestParam(value = "imageId", required=false) String imageId, RedirectAttributes redirectAttrs) throws IOException {
         ISpace space;
-        
-        LocalizedTextForm nameSpace = spaceForm.getNames().stream().filter(name -> name != null).findFirst().orElse(null);
-        LocalizedTextForm descriptionSpace = spaceForm.getDescriptions().stream().filter(description -> description != null).findFirst().orElse(null);
-        spaceForm.setDefaultDescription(descriptionSpace);
-        spaceForm.setDefaultName(nameSpace);
+
         space = spaceFactory.createSpace(spaceForm);
         spaceManager.updateNameAndDescription(space, spaceForm);
 

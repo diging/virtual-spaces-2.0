@@ -15,7 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import edu.asu.diging.vspace.core.data.ExhibitionAboutPageRepository;
 import edu.asu.diging.vspace.core.data.ExhibitionLanguageRepository;
@@ -90,7 +90,6 @@ public class ExhibitionAboutPageManagerTest {
         ExhibitionAboutPage aboutPage = new ExhibitionAboutPage();
         Exhibition exhibition = new Exhibition();
         when(exhibitionManager.getStartExhibition()).thenReturn((IExhibition)exhibition);
-        when(repo.save(aboutPage)).thenReturn(aboutPage);
         
         serviceToTest.store(aboutPageForm);
         assertEquals(locText1.getText(), "title");
