@@ -2934,19 +2934,27 @@
             	$('[data-action="delete-text"]').css('right', '0');
              	$(".deleteBiblio").css('position', 'absolute');
              	$(".deleteBiblio").css('right', '0px');
-            	var images = $(".imgDiv");
-            	resizeImage(images);
-            	
-            	function resizeImage(images) {
-            		for(var i =0; i < images.length; i++) {
-            			if (images[i].width > divWindow.width() || images[i].width >= 800) {
-            				$(".valueDiv").find("#"+images[i].id).css("width", 800);
-            				images[i].width = 800;
-            			} else {
-            				$(".valueDiv").find("#"+images[i].id).css("width", images[i].width);
-            			}
+            	// Size each image from its natural width once it has loaded. Images
+            	// that fail to load swap to the placeholder, so the load handler
+            	// sizes the placeholder instead of the broken-image icon.
+            	function resizeImage(img) {
+            		if (!img.naturalWidth) {
+            			return;
             		}
+            		var width = img.naturalWidth;
+            		if (width > divWindow.width() || width >= 800) {
+            			width = 800;
+            		}
+            		$(img).css("width", width);
             	}
+            	$(".imgDiv").each(function () {
+            		$(this).on("load", function () {
+            			resizeImage(this);
+            		});
+            		if (this.complete) {
+            			resizeImage(this);
+            		}
+            	});
             });
             
 			// editing video block
@@ -3936,7 +3944,7 @@
 		        <div id="main-space">
 	                <div th:each="contents: ${slideContents}">
 	                    <div th:attr="data-position=${contents.contentOrder}" th:id="${contents.id}" class="valueDiv tab row" th:if="${#strings.equals(contents.elementType,'ImageBlock')}">
-	                        <img id="main-bgImage" th:id="${contents.id}" class="imgDiv" th:src="@{'/api/image/'+${contents.image.id}}"/>
+	                        <img id="main-bgImage" th:id="${contents.id}" class="imgDiv" th:src="@{'/api/image/'+${contents.image.id}}" th:onerror="|this.onerror=null; this.src='@{/resources/images/cannot_load_image_placeholder.png}'|"/>
 	                        <input type="hidden" id="deleteImageId" th:value="${contents.id}">
 	                        <a class="btn deleteImage col-md-1" href="javascript:;" style="position:absolute; right:25px;">
 	                        <span class="icon-trash error"></span>
