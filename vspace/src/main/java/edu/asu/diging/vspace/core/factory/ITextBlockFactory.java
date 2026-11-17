@@ -22,5 +22,15 @@ public interface ITextBlockFactory {
      * @return The created text block instance of the edu.asu.diging.vspace.core.model.ITextBlock.
      */
     ITextBlock createTextBlock(ISlide slide, String text);
+    
+    /**
+     * Creates a new text block with multilingual support.
+     *
+     * @param slide The slide to which the text block will be added.
+     * @param text The text content of the text block.
+     * @param languageCode The language code for the text content.
+     * @return The created text block instance of the edu.asu.diging.vspace.core.model.ITextBlock.
+     */
+    ITextBlock createTextBlockWithLanguage(ISlide slide, String text, String languageCode);
 
 }

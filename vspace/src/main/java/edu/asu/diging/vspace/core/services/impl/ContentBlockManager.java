@@ -130,17 +130,19 @@ public class ContentBlockManager implements IContentBlockManager {
         return slide.getContents();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * edu.asu.diging.vspace.core.services.impl.ITextBlock#createTextBlock(java.
-     * lang.String, java.lang.String)
-     */
     @Override
     public ITextBlock createTextBlock(String slideId, String text, Integer contentOrder) {
         ISlide slide = slideManager.getSlide(slideId);
         ITextBlock textBlock = textBlockFactory.createTextBlock(slide, text);
+        textBlock.setContentOrder(contentOrder);
+        textBlock = textBlockRepo.save((TextBlock) textBlock);
+        return textBlock;
+    }
+    
+    @Override
+    public ITextBlock createTextBlockWithLanguage(String slideId, String text, Integer contentOrder, String languageCode) {
+        ISlide slide = slideManager.getSlide(slideId);
+        ITextBlock textBlock = textBlockFactory.createTextBlockWithLanguage(slide, text, languageCode);
         textBlock.setContentOrder(contentOrder);
         textBlock = textBlockRepo.save((TextBlock) textBlock);
         return textBlock;

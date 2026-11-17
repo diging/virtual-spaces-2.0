@@ -27,11 +27,11 @@ public class SpaceFactoryTest {
     
     @Test
     public void test_createSpace_success() {
-        SpaceForm form = mock(SpaceForm.class);
+        SpaceForm form = new SpaceForm();
         String name = "Test Space";
         String description = "This is a test Space";
-        when(form.getName()).thenReturn(name);
-        when(form.getDescription()).thenReturn(description);
+        form.setName(name);
+        form.setDescription(description);
         
         ISpace space = spaceFactory.createSpace(form);
         assertEquals(name, space.getName());

@@ -28,6 +28,7 @@ import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
 import edu.asu.diging.vspace.core.model.impl.Slide;
+import edu.asu.diging.vspace.core.services.ILanguageService;
 import edu.asu.diging.vspace.core.services.impl.model.ModuleOverview;
 import edu.asu.diging.vspace.core.services.impl.model.SequenceOverview;
 import edu.asu.diging.vspace.core.services.impl.model.SlideOverview;
@@ -45,6 +46,9 @@ public class ModuleOverviewManagerTest {
     @Mock
     private ModuleManager moduleManager;
 
+    @Mock
+    private ILanguageService languageService;
+
     @InjectMocks
     private ModuleOverviewManager serviceToTest;
 
@@ -56,6 +60,7 @@ public class ModuleOverviewManagerTest {
     @Before
     public void init() {
         MockitoAnnotations.initMocks(this);
+        Mockito.when(languageService.getDefaultLanguageCode()).thenReturn("en");
         module = new Module();
         module.setId("MODULE_01");
 

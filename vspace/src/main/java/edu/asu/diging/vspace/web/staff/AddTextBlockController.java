@@ -13,21 +13,31 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import edu.asu.diging.vspace.core.model.ITextBlock;
 import edu.asu.diging.vspace.core.services.IContentBlockManager;
+import edu.asu.diging.vspace.core.services.ILanguageService;
 
 @Controller
 public class AddTextBlockController {
 
     @Autowired
     private IContentBlockManager contentBlockManager;
+    
+    @Autowired
+    private ILanguageService languageService;
 
     @RequestMapping(value = "/staff/module/{moduleId}/slide/{id}/textcontent", method = RequestMethod.POST)
     public ResponseEntity<String> addTextBlock(@PathVariable("id") String slideId,
-            @PathVariable("moduleId") String moduleId, @RequestParam("content") String content) throws IOException {
+            @PathVariable("moduleId") String moduleId, 
+            @RequestParam("content") String content,
+            @RequestParam(value = "languageCode", required = false) String languageCode) throws IOException {
 
         Integer contentOrder = contentBlockManager.findMaxContentOrder(slideId);
         contentOrder = contentOrder == null ? 0 : contentOrder + 1;
         
-        ITextBlock textBlock = contentBlockManager.createTextBlock(slideId, content, contentOrder);
+        if (languageCode == null || languageCode.isEmpty()) {
+            languageCode = languageService.getDefaultLanguageCode();
+        }
+        
+        ITextBlock textBlock = contentBlockManager.createTextBlockWithLanguage(slideId, content, contentOrder, languageCode);
 
         return new ResponseEntity<>(textBlock.getId(), HttpStatus.OK);
     }

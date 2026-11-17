@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import edu.asu.diging.vspace.core.model.ISequence;
+import edu.asu.diging.vspace.core.services.ILanguageService;
 import edu.asu.diging.vspace.core.services.IModuleManager;
 import edu.asu.diging.vspace.core.services.ISequenceManager;
 import edu.asu.diging.vspace.web.staff.forms.SequenceForm;
@@ -25,11 +26,18 @@ public class AddSequenceController {
     @Autowired
     private IModuleManager moduleManager;
     
+    @Autowired
+    private ILanguageService languageService;
+    
     @RequestMapping(value = "/staff/module/{id}/sequence/add", method = RequestMethod.GET)
     public String showAddSequence(@PathVariable("id") String moduleId, Model model) {
         model.addAttribute("moduleId", moduleId);
         model.addAttribute("sequence", new SequenceForm());
         model.addAttribute("slides", moduleManager.getModuleSlides(moduleId));
+        
+        model.addAttribute("selectedLanguage", languageService.getDefaultLanguageCode());
+        model.addAttribute("defaultLanguageCode", languageService.getDefaultLanguageCode());
+        
         return "staff/modules/sequences/add";
     }
     @RequestMapping(value = "/staff/module/{moduleId}/sequence/add", method = RequestMethod.POST)
