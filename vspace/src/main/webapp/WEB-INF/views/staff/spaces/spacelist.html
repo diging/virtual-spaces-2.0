@@ -80,7 +80,7 @@ vspace/src/main/java/edu/asu/diging/vspace/web/staff/DashboardController.java
 				</div>
 				<div class="spaceImage">
                     <a th:href="@{'/staff/space/'+${space.id}}">
-					<img class="card-img-top space-thumbnail" th:src="@{'/api/image/'+${space?.image?.id}}" alt="Space image">
+					<img class="card-img-top space-thumbnail" th:src="@{'/api/image/'+${space?.image?.id}}" th:onerror="|this.onerror=null; this.src='@{/resources/images/cannot_load_image_placeholder.png}'|" alt="Space image">
                     </a>
 				</div>
 				<div class="btn-group dropdown">
