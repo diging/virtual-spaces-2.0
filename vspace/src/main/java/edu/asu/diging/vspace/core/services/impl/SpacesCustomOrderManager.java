@@ -1,12 +1,12 @@
 package edu.asu.diging.vspace.core.services.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.persistence.EntityNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -117,9 +117,10 @@ public class SpacesCustomOrderManager implements ISpacesCustomOrderManager {
      */
     @Override
     public void updateSpaces(String spacesCustomOrderId, List<String> spacesIds) {
-        List<ISpace> spaces = new ArrayList<ISpace>();
-        spacesIds.stream().filter(spaceId -> spaceManager.getSpace(spaceId) != null)
-            .map(id -> spaces.add(spaceManager.getSpace(id)));
+        List<ISpace> spaces = spacesIds.stream()
+                .map(spaceManager::getSpace)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
         ISpacesCustomOrder spaceCustomOrder = get(spacesCustomOrderId);
         spaceCustomOrder.setCustomOrderedSpaces(spaces);
         spacesCustomOrderRepository.save((SpacesCustomOrder)spaceCustomOrder);

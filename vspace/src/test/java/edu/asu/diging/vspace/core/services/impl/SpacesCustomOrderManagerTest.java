@@ -3,9 +3,11 @@ package edu.asu.diging.vspace.core.services.impl;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -70,10 +72,18 @@ public class SpacesCustomOrderManagerTest{
         List<String> spaceIdList = new ArrayList<String>();
         spaceIdList.add(spaceId1);
         spaceIdList.add(spaceId2);
+        spaceIdList.add("SPA_MISSING");
+        Space space1 = new Space();
+        space1.setId(spaceId1);
+        Space space2 = new Space();
+        space2.setId(spaceId2);
+        when(spaceManager.getSpace(spaceId1)).thenReturn(space1);
+        when(spaceManager.getSpace(spaceId2)).thenReturn(space2);
         SpacesCustomOrder spacesCustomOrder = new SpacesCustomOrder();
         when(spacesCustomOrderRepository.findById(spaceCustomOrderId1)).thenReturn(Optional.of(spacesCustomOrder));
         serviceToTest.updateSpaces(spaceCustomOrderId1, spaceIdList);
         Mockito.verify(spacesCustomOrderRepository).save(spacesCustomOrder);
+        Assert.assertEquals(Arrays.asList(space1, space2), spacesCustomOrder.getCustomOrderedSpaces());
     }
     
     @Test

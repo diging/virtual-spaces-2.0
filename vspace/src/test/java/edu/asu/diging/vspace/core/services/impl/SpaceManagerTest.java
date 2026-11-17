@@ -16,6 +16,7 @@ import org.mockito.MockitoAnnotations;
 import edu.asu.diging.vspace.core.data.ImageRepository;
 import edu.asu.diging.vspace.core.data.SpaceLinkRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
+import edu.asu.diging.vspace.core.data.SpacesCustomOrderRepository;
 import edu.asu.diging.vspace.core.data.display.SpaceDisplayRepository;
 import edu.asu.diging.vspace.core.data.display.SpaceLinkDisplayRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
@@ -35,6 +36,7 @@ import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.impl.model.ImageData;
+import edu.asu.diging.vspace.core.services.ISpacesCustomOrderManager;
 
 public class SpaceManagerTest {
 
@@ -73,6 +75,12 @@ public class SpaceManagerTest {
 
     @Mock
     private ExhibitionManager exhibitionManager;
+
+    @Mock
+    private ISpacesCustomOrderManager spacesCustomOrderManager;
+
+    @Mock
+    private SpacesCustomOrderRepository spacesCustomOrderRepo;
     
 
 
