@@ -525,20 +525,7 @@ a.nav-link.active.show {
 						<div th:id="${contents.id}">
 							<a class="textDivStaff tab  btn btn-light" style="width: 100%"
 								th:href="@{'/staff/module/'+${contents.module.id}+'/slide/'+${contents.id}}">
-								<div th:if="${not #lists.isEmpty(contents.contents)}">
-									<div th:if="${contents?.firstImageBlock !=null}">
-										<img
-											th:onerror="|this.onerror=null; this.src='@{/resources/images/cannot_load_image_placeholder.png}'|"
-											class="searchImg" th:src="@{'/api/image/'+${contents?.firstImageBlock?.image?.id}}"
-											alt="Slide image" />
-									</div>
-									<div th:if="${contents?.firstImageBlock ==null}">
-										<img class="searchImg" th:src="@{'/resources/images/placeholder.png'}" />
-									</div>
-								</div>
-								<div th:if="${#lists.isEmpty(contents.contents)}">
-									<img class="searchImg" th:src="@{'/resources/images/placeholder.png'}" />
-								</div> 
+								<th:block th:replace="~{staff/search/fragments/slideThumbnail :: slideThumbnail(${contents})}"></th:block>
 								<span class="card-title"
                                 style="white-space: pre-wrap; line-break: anywhere;"><span 
                                 style="color: var(--dark-grey)">Slide:</span> [[${contents.name}]]<br><span 
@@ -576,20 +563,7 @@ a.nav-link.active.show {
 						<div th:id="${contents.id}">
 							<a class="textDivStaff tab  btn btn-light" style="width: 100%"
 								th:href="@{'/staff/module/'+${contents.module.id}+'/slide/'+${contents.id}}">
-								<div th:if="${not #lists.isEmpty(contents.contents)}">
-									<div th:if="${contents?.firstImageBlock !=null}">
-										<img
-											th:onerror="|this.onerror=null; this.src='@{/resources/images/cannot_load_image_placeholder.png}'|"
-											class="searchImg" th:src="@{'/api/image/'+${contents?.firstImageBlock?.image?.id}}"
-											alt="Slide image" />
-									</div>
-									<div th:if="${contents?.firstImageBlock ==null}">
-										<img class="searchImg" th:src="@{'/resources/images/placeholder.png'}" />
-									</div>
-								</div>
-								<div th:if="${#lists.isEmpty(contents.contents)}">
-									<img class="searchImg" th:src="@{'/resources/images/placeholder.png'}" />
-								</div> 
+								<th:block th:replace="~{staff/search/fragments/slideThumbnail :: slideThumbnail(${contents})}"></th:block>
 								<span class="card-title"
                                 style="white-space: pre-wrap; line-break: anywhere;"><span 
                                 style="color: var(--dark-grey)">Slide:</span> [[${contents.name}]]<br><span 

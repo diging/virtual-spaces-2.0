@@ -3944,7 +3944,7 @@
 		        <div id="main-space">
 	                <div th:each="contents: ${slideContents}">
 	                    <div th:attr="data-position=${contents.contentOrder}" th:id="${contents.id}" class="valueDiv tab row" th:if="${#strings.equals(contents.elementType,'ImageBlock')}">
-	                        <img id="main-bgImage" th:id="${contents.id}" class="imgDiv" th:src="@{'/api/image/'+${contents.image.id}}" th:onerror="|this.onerror=null; this.src='@{/resources/images/cannot_load_image_placeholder.png}'|"/>
+	                        <img id="main-bgImage" th:id="${contents.id}" class="imgDiv" th:src="@{'/api/image/'+${contents.image.id}}" th:onerror="|this.onerror=null; this.src='@{/resources/images/cannot_load_image_placeholder.png}'|" alt="Slide image"/>
 	                        <input type="hidden" id="deleteImageId" th:value="${contents.id}">
 	                        <a class="btn deleteImage col-md-1" href="javascript:;" style="position:absolute; right:25px;">
 	                        <span class="icon-trash error"></span>
@@ -3964,7 +3964,7 @@
 				     th:if="${#strings.equals(contents.elementType,'ImageBlock')}">
 				    <img th:id="${contents.id}" 
 				         class="imgDiv" 
-				         th:src="@{'/api/image/'+${contents.image.id}}" th:onerror="|this.onerror=null; this.src='@{/resources/images/cannot_load_image_placeholder.png}'|" />
+				         th:src="@{'/api/image/'+${contents.image.id}}" th:onerror="|this.onerror=null; this.src='@{/resources/images/cannot_load_image_placeholder.png}'|" alt="Slide image" />
 				    <input type="hidden" 
 				           data-image-id="${contents.id}"
 				           th:attr="data-image-id=${contents.id}"
