@@ -165,12 +165,30 @@
 		        </div>
 			</form>
 	        
-	        <form th:action="@{'/staff/space/customorder/'+${customSpaceOrder.id}}" method ="POST">
-				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-		        <button type="submit" id="deleteOrder" class="btn primary-btn ">
-		        	<i class="icon-trash" style="font-size: 1.3rem;vertical-align: text-bottom;padding-right: 3px;"></i>Delete Custom Order
-		        </button>
-			</form>
+	        <button type="button" id="deleteOrder" class="btn primary-btn" data-toggle="modal" data-target="#confirm-order-delete">
+	        	<i class="icon-trash" style="font-size: 1.3rem;vertical-align: text-bottom;padding-right: 3px;"></i>Delete Custom Order
+	        </button>
+
+	        <div class="modal fade" id="confirm-order-delete" tabindex="-1" role="dialog" aria-labelledby="deleteOrderTitle" aria-hidden="true">
+	            <div class="modal-dialog">
+	                <div class="modal-content">
+	                    <div class="modal-header">
+	                        <h5 class="modal-title" id="deleteOrderTitle">Confirm [[${customSpaceOrder.customOrderName}]] Deletion?</h5>
+	                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span class="icon-circle-close"></span></button>
+	                    </div>
+	                    <div class="modal-body">
+	                        <p>Are you sure you want to delete [[${customSpaceOrder.customOrderName}]]?</p>
+	                        <div class="text-danger">If this order is used on the exhibition, spaces will be listed alphabetically.</div>
+	                    </div>
+	                    <div class="modal-footer">
+	                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+	                        <form th:action="@{'/staff/space/customorder/'+${customSpaceOrder.id}}" method="POST" style="display: inline;">
+	                            <button type="submit" id="confirmDeleteOrder" class="btn btn-danger">Yes, delete!</button>
+	                        </form>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
 	        
 	        
 	        <!-- Modal -->

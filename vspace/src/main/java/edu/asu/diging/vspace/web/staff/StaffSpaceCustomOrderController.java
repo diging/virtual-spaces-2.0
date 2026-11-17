@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.asu.diging.vspace.core.model.ExhibitionSpaceOrderMode;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
@@ -36,8 +37,17 @@ public class StaffSpaceCustomOrderController {
     
     @RequestMapping(value = "/staff/space/order/{orderId}/set", method = RequestMethod.POST)
     public String setExhibitionSpacesCustomOrder(Model model,
-            @RequestParam("selectedCustomOrderId") String orderId) {
+            @RequestParam("selectedCustomOrderId") String orderId, RedirectAttributes attributes) {
+        if (spacesCustomOrderManager.get(orderId) == null) {
+            attributes.addFlashAttribute("alertType", "danger");
+            attributes.addFlashAttribute("message", "Please select a custom order.");
+            attributes.addFlashAttribute("showAlert", "true");
+            return "redirect:/staff/space/order";
+        }
         spacesCustomOrderManager.setExhibitionSpacesCustomOrder(orderId);
+        attributes.addFlashAttribute("alertType", "success");
+        attributes.addFlashAttribute("message", "Custom order to be used has been updated.");
+        attributes.addFlashAttribute("showAlert", "true");
         return "redirect:/staff/space/order";
     }
     
