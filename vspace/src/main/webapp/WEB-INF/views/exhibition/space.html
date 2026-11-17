@@ -686,7 +686,8 @@
                             <!-- Language Switcher -->
                             <div th:if="${availableLanguages != null && availableLanguages.size() > 1}" 
                                  style="float: right; margin-bottom: 10px;">
-                                <select id="languageSelector" onchange="changeLanguage(this.value)" 
+                                <label for="languageSelector" class="sr-only">Language</label>
+                                <select id="languageSelector" aria-label="Language" onchange="changeLanguage(this.value)" 
                                         style="padding: 5px; border: 1px solid #ccc; border-radius: 4px; background: white;">
                                     <option th:each="lang : ${availableLanguages}" 
                                             th:value="${lang.code}" 

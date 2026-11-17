@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Localized fields</title>
+</head>
+<body>
+
+	<!--/*
+		Language tabs with a name and a description field per exhibition language.
+
+		prefix                 unique prefix for element ids on the page (e.g. 'space')
+		nameLabel              label of the name/title field
+		descriptionLabel       label of the description/text field
+		defaultName            LocalizedTextForm of the default language name
+		defaultDescription     LocalizedTextForm of the default language description
+		defaultNamePath        form field path of the default name (e.g. 'defaultName')
+		defaultDescriptionPath form field path of the default description
+		names                  LocalizedTextForms of the other languages
+		descriptions           LocalizedTextForms of the other languages, same order as names
+		namesPath              form field path of the names list (e.g. 'names')
+		descriptionsPath       form field path of the descriptions list
+	*/-->
+	<div class="localized-fields"
+		th:fragment="localizedFields(prefix, nameLabel, descriptionLabel, defaultName, defaultDescription, defaultNamePath, defaultDescriptionPath, names, descriptions, namesPath, descriptionsPath)">
+		<div class="tab" role="tablist">
+			<button type="button" class="tablinks" role="tab"
+				th:attr="data-tab=|${prefix}-lang-default|"
+				th:text="${defaultName?.exhibitionLanguageLabel ?: 'Default'}">Default</button>
+			<button type="button" class="tablinks" role="tab"
+				th:each="lfName, lfStat : ${names}"
+				th:attr="data-tab=|${prefix}-lang-${lfStat.index}|"
+				th:text="${lfName.exhibitionLanguageLabel}">Language</button>
+		</div>
+
+		<div th:replace="~{staff/fragments/localizedFields :: languagePanel(|${prefix}-lang-default|, ${nameLabel}, ${descriptionLabel}, ${defaultName}, ${defaultDescription}, ${defaultNamePath}, ${defaultDescriptionPath})}"></div>
+
+		<th:block th:each="lfName, lfStat : ${names}">
+			<div th:replace="~{staff/fragments/localizedFields :: languagePanel(|${prefix}-lang-${lfStat.index}|, ${nameLabel}, ${descriptionLabel}, ${lfName}, ${descriptions[lfStat.index]}, |${namesPath}[${lfStat.index}]|, |${descriptionsPath}[${lfStat.index}]|)}"></div>
+		</th:block>
+	</div>
+
+	<div class="tabcontent" role="tabpanel" th:id="${panelId}"
+		th:fragment="languagePanel(panelId, nameLabel, descriptionLabel, nameText, descriptionText, namePath, descriptionPath)">
+		<label th:for="|${panelId}-name|" th:text="${nameLabel}">Name:</label>
+		<input type="text" class="form-control" th:id="|${panelId}-name|"
+			th:name="|${namePath}.text|" th:value="${nameText?.text}">
+		<input type="hidden" th:name="|${namePath}.localizedTextId|" th:value="${nameText?.localizedTextId}">
+		<input type="hidden" th:name="|${namePath}.exhibitionLanguageId|" th:value="${nameText?.exhibitionLanguageId}">
+
+		<div class="localized-description">
+			<label th:for="|${panelId}-description|" th:text="${descriptionLabel}">Description:</label>
+			<textarea class="form-control" rows="5" cols="30" th:id="|${panelId}-description|"
+				th:name="|${descriptionPath}.text|" th:text="${descriptionText?.text}"></textarea>
+			<input type="hidden" th:name="|${descriptionPath}.localizedTextId|" th:value="${descriptionText?.localizedTextId}">
+			<input type="hidden" th:name="|${descriptionPath}.exhibitionLanguageId|" th:value="${descriptionText?.exhibitionLanguageId}">
+		</div>
+	</div>
+
+</body>
+</html>
