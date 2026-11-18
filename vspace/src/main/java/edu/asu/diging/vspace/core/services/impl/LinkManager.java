@@ -2,6 +2,7 @@ package edu.asu.diging.vspace.core.services.impl;
 
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.transaction.annotation.Transactional;
 
 import edu.asu.diging.vspace.core.data.ImageRepository;
@@ -35,6 +36,7 @@ public abstract class LinkManager<L extends ILink<T>, T extends IVSpaceElement, 
     private ImageRepository imageRepo;
 
     @Autowired
+    @Qualifier("storageEngineUploads")
     private IStorageEngine storage;
 
     @Override

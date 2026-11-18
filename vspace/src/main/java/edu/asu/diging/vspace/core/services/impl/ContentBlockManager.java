@@ -9,6 +9,7 @@ import org.apache.tika.Tika;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -113,6 +114,7 @@ public class ContentBlockManager implements IContentBlockManager {
     private ChoiceContentBlockRepository choiceBlockRepo;
 
     @Autowired
+    @Qualifier("storageEngineUploads")
     private IStorageEngine storage;
 
     @Autowired
