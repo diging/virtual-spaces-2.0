@@ -211,7 +211,10 @@ public class SlideManager implements ISlideManager {
 
     @Override
     public void addSlideLocalizedText(ISlide slide, LocalizedTextForm localizedTextFormData, List<ILocalizedText> localizedTextList) {
-        localizedTextFactory.createLocalizedText(slide, localizedTextFormData, localizedTextList);
+        ILocalizedText localizedText = localizedTextFactory.createLocalizedText(slide, localizedTextFormData, localizedTextList);
+        if (localizedText != null && !localizedTextList.contains(localizedText)) {
+            localizedTextList.add(localizedText);
+        }
     }
 
     @Override

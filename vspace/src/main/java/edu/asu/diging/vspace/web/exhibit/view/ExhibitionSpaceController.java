@@ -96,7 +96,7 @@ public class ExhibitionSpaceController {
         model.addAttribute("defaultLanguage", language);
         model.addAttribute("spaceForm",spaceFormFactory.createNewSpaceForm(space, exhibition));
         model.addAttribute("languages", exhibition.getLanguages());
-        model.addAttribute("languageCode", language.getCode());
+        model.addAttribute("languageCode", language != null ? language.getCode() : "en");
 
         if (sequenceHistory.hasHistory()) {
             sequenceHistory.flushFromHistory();

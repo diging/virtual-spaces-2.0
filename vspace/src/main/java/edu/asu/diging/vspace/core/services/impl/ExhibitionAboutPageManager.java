@@ -67,8 +67,11 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
         }
 
         ExhibitionAboutPage exhibitionAboutPage = getExhibitionAboutPage();       
-        exhibitionAboutPage.setTitle(aboutPageForm.getTitle());
-        exhibitionAboutPage.setAboutPageText(aboutPageForm.getAboutPageText());
+        // the plain title/text hold the default language content (used as fallback on the public page)
+        exhibitionAboutPage.setTitle(aboutPageForm.getDefaultTitle() != null
+                ? aboutPageForm.getDefaultTitle().getText() : aboutPageForm.getTitle());
+        exhibitionAboutPage.setAboutPageText(aboutPageForm.getDefaultAboutPageText() != null
+                ? aboutPageForm.getDefaultAboutPageText().getText() : aboutPageForm.getAboutPageText());
         setLocalizedText(aboutPageForm.getDefaultTitle(), exhibitionAboutPage.getExhibitionTitles());
         setLocalizedText(aboutPageForm.getDefaultAboutPageText(), exhibitionAboutPage.getExhibitionTextDescriptions());
         
@@ -96,13 +99,19 @@ public class ExhibitionAboutPageManager implements IExhibitionAboutPageManager{
 
     private void setLocalizedText(LocalizedTextForm textForm, List<ILocalizedText> localizedTextList) {
         if (textForm!=null && !StringUtils.isEmpty(textForm.getText())) {
-            LocalizedText localizedText = localizedTextRepo.findById(textForm.getLocalizedTextId()).orElse(null);
+            LocalizedText localizedText = null;
+            if (!StringUtils.isEmpty(textForm.getLocalizedTextId())) {
+                localizedText = localizedTextRepo.findById(textForm.getLocalizedTextId()).orElse(null);
+            }
             if (localizedText != null) {
                 localizedText.setText(textForm.getText());
-            } else {
+            } else if (!StringUtils.isEmpty(textForm.getExhibitionLanguageId())) {
+                // texts without an exhibition language (no languages configured) are only stored as plain title/text
                 ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findById(textForm.getExhibitionLanguageId()).orElse(null);
-                localizedText = new LocalizedText(exhibitionLanguage, textForm.getText());
-                localizedTextList.add(localizedText);
+                if (exhibitionLanguage != null) {
+                    localizedText = new LocalizedText(exhibitionLanguage, textForm.getText());
+                    localizedTextList.add(localizedText);
+                }
             }
         }
     }

@@ -231,6 +231,20 @@ public class Space extends VSpaceElement implements ISpace {
         return spaceNames;
     }
 
+    @Override
+    public String getNameForLanguage(String languageCode) {
+        if (languageCode == null || spaceNames == null) {
+            return getName();
+        }
+        return spaceNames.stream()
+                .filter(text -> text != null && text.getExhibitionLanguage() != null
+                        && languageCode.equals(text.getExhibitionLanguage().getCode())
+                        && text.getText() != null && !text.getText().isBlank())
+                .map(ILocalizedText::getText)
+                .findFirst()
+                .orElse(getName());
+    }
+
     public void setSpaceNames(List<ILocalizedText> spaceNames) {
         this.spaceNames = spaceNames;
     }

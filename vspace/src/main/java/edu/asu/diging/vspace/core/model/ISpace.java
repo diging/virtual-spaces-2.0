@@ -35,6 +35,12 @@ public interface ISpace extends IVSpaceElement {
     void setHideIncomingLinks(boolean hideIncomingLinks);
     
     List<ILocalizedText> getSpaceNames();
+
+    /**
+     * Returns the name of this space in the language with the given code, or the
+     * default name if there is no name in that language.
+     */
+    String getNameForLanguage(String languageCode);
     
     void setSpaceNames(List<ILocalizedText> spaceNames);
     

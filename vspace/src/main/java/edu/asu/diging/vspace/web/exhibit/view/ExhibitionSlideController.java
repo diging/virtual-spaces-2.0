@@ -124,7 +124,7 @@ public class ExhibitionSlideController {
         model.addAttribute("languages", exhibition.getLanguages());
         
         IExhibitionLanguage language = exhibitManager.getDefaultLanguage(exhibition);
-        model.addAttribute("languageCode",language.getCode());
+        model.addAttribute("languageCode", language != null ? language.getCode() : "en");
 
         model.addAttribute("currentSlideCon", currentSlide);
         if (currentSlide instanceof BranchingPoint) {

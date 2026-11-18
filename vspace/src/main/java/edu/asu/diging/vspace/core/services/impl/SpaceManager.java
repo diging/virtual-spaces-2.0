@@ -325,7 +325,7 @@ public class SpaceManager implements ISpaceManager {
     @Override
     public void addSpaceDetails(ISpace space, LocalizedTextForm name, List<ILocalizedText> localizedTextList) {
         ILocalizedText localizedText = localizedTextFactory.createLocalizedText(space, name, localizedTextList);
-        if(!localizedTextList.contains(localizedText)) {
+        if(localizedText != null && !localizedTextList.contains(localizedText)) {
             localizedTextList.add(localizedText);
         }
         

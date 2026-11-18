@@ -39,10 +39,14 @@ public class LocalizedTextFactory implements ILocalizedTextFactory {
             return null;
         }
         
-        LocalizedText localizedText = localizedTextRepo.findById(localizedTextFormData.getLocalizedTextId()).orElse(null);
+        LocalizedText localizedText = null;
+        if (!StringUtils.isEmpty(localizedTextFormData.getLocalizedTextId())) {
+            localizedText = localizedTextRepo.findById(localizedTextFormData.getLocalizedTextId()).orElse(null);
+        }
         if (localizedText != null) {
             localizedText.setText(localizedTextFormData.getText());
-        } else {
+        } else if (!StringUtils.isEmpty(localizedTextFormData.getExhibitionLanguageId())) {
+            // texts without an exhibition language (no languages configured) are only stored as plain name/description
             ExhibitionLanguage exhibitionLanguage = exhibitionLanguageRepository.findById(localizedTextFormData.getExhibitionLanguageId()).orElse(null);
             if (exhibitionLanguage != null) {
                 localizedText = new LocalizedText(exhibitionLanguage, localizedTextFormData.getText());

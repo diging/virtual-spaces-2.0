@@ -35,14 +35,19 @@ public class SlideFormFactory implements ISlideFormFactory{
         
         startExhibition.getLanguages().forEach(language -> {
             if(language.isDefault()) {
-                slideForm.setDefaultName(localizedTextFormCreation.createLocalizedTextForm(language, slide.getSlideNames()));               
-                slideForm.setDefaultDescription(localizedTextFormCreation.createLocalizedTextForm(language, slide.getSlideDescriptions())); 
+                slideForm.setDefaultName(localizedTextFormCreation.createDefaultLanguageTextForm(language, slide.getSlideNames(), slide.getName()));
+                slideForm.setDefaultDescription(localizedTextFormCreation.createDefaultLanguageTextForm(language, slide.getSlideDescriptions(), slide.getDescription()));
             }
             else {
                 slideForm.getNames().add(localizedTextFormCreation.createLocalizedTextForm(language, slide.getSlideNames()));               
                 slideForm.getDescriptions().add(localizedTextFormCreation.createLocalizedTextForm(language, slide.getSlideDescriptions())); 
             }
         });
+        // No default language configured: still show the default name/description fields
+        if (slideForm.getDefaultName() == null) {
+            slideForm.setDefaultName(localizedTextFormCreation.createDefaultLocalizedTextForm(slide.getName()));
+            slideForm.setDefaultDescription(localizedTextFormCreation.createDefaultLocalizedTextForm(slide.getDescription()));
+        }
         return slideForm;
     }
 }

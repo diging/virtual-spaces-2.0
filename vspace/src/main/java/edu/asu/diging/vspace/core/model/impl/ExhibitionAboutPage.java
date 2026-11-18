@@ -98,8 +98,41 @@ public class ExhibitionAboutPage extends VSpaceElement {
      * edu.asu.diging.vspace.core.model.impl.ITextBlock#htmlRenderedText()
      */
     public String htmlRenderedText() {
+        return renderMarkdown(aboutPageText);
+    }
+
+    /**
+     * Returns the title in the language with the given code, or the default title
+     * if there is no title in that language.
+     */
+    public String getTitleForLanguage(String languageCode) {
+        return getTextForLanguage(localizedTitles, languageCode, title);
+    }
+
+    /**
+     * Renders the about page text in the language with the given code as html, or the
+     * default text if there is no text in that language.
+     */
+    public String htmlRenderedText(String languageCode) {
+        return renderMarkdown(getTextForLanguage(localizedDescriptions, languageCode, aboutPageText));
+    }
+
+    private String getTextForLanguage(List<ILocalizedText> localizedTexts, String languageCode, String defaultText) {
+        if (languageCode == null || localizedTexts == null) {
+            return defaultText;
+        }
+        return localizedTexts.stream()
+                .filter(text -> text != null && text.getExhibitionLanguage() != null
+                        && languageCode.equals(text.getExhibitionLanguage().getCode())
+                        && text.getText() != null && !text.getText().isBlank())
+                .map(ILocalizedText::getText)
+                .findFirst()
+                .orElse(defaultText);
+    }
+
+    private String renderMarkdown(String text) {
         Parser parser = Parser.builder().build();
-        Node document = parser.parse(aboutPageText);
+        Node document = parser.parse(text != null ? text : "");
         HtmlRenderer renderer = HtmlRenderer.builder().build();
         return renderer.render(document);
     }

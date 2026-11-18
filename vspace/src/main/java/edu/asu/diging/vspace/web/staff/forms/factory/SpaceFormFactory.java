@@ -33,14 +33,19 @@ public class SpaceFormFactory implements ISpaceFormFactory {
         
         startExhibition.getLanguages().forEach(language -> {
             if(language.isDefault()) {
-                spaceForm.setDefaultName(localizedTextFormCreation.createLocalizedTextForm(language, space.getSpaceNames()));
-                spaceForm.setDefaultDescription(localizedTextFormCreation.createLocalizedTextForm(language, space.getSpaceDescriptions()));                
+                spaceForm.setDefaultName(localizedTextFormCreation.createDefaultLanguageTextForm(language, space.getSpaceNames(), space.getName()));
+                spaceForm.setDefaultDescription(localizedTextFormCreation.createDefaultLanguageTextForm(language, space.getSpaceDescriptions(), space.getDescription()));                
             }
             else {
                 spaceForm.getNames().add(localizedTextFormCreation.createLocalizedTextForm(language, space.getSpaceNames()));               
                 spaceForm.getDescriptions().add(localizedTextFormCreation.createLocalizedTextForm(language, space.getSpaceDescriptions())); 
             }
         });
+        // No default language configured: still show the default name/description fields
+        if (spaceForm.getDefaultName() == null) {
+            spaceForm.setDefaultName(localizedTextFormCreation.createDefaultLocalizedTextForm(space.getName()));
+            spaceForm.setDefaultDescription(localizedTextFormCreation.createDefaultLocalizedTextForm(space.getDescription()));
+        }
         
         return spaceForm;      
     }

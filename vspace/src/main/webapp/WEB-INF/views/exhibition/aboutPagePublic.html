@@ -40,10 +40,10 @@ padding-top:40px;
 		
 	<div class="about-page" > 
 	
-	<h2>[(${exhibitionAboutPage.getTitle()})] </h2>
+	<h2>[[${exhibitionAboutPage.getTitleForLanguage(languageCode)}]] </h2>
 		<div >
 				<div>
-					 <div>[(${exhibitionAboutPage.htmlRenderedText()})]</div>
+					 <div>[(${exhibitionAboutPage.htmlRenderedText(languageCode)})]</div>
 				</div>
 		</div>
 	</div>

@@ -32,10 +32,16 @@ public class AboutPageFormFactory  implements IAboutPageFormFactory{
         IExhibition startExhibition = exhibitionManager.getStartExhibition();    
         IExhibitionLanguage defaultLanguage = exhibitionManager.getDefaultLanguage(startExhibition);
 
-        aboutPageForm.setDefaultTitle(localizedTextFormCreation.createLocalizedTextForm( defaultLanguage, 
-                exhibitionAboutPage.getExhibitionTitles()));
-        aboutPageForm.setDefaultAboutPageText(localizedTextFormCreation.createLocalizedTextForm( defaultLanguage, 
-                exhibitionAboutPage.getExhibitionTextDescriptions()));
+        if (defaultLanguage != null) {
+            aboutPageForm.setDefaultTitle(localizedTextFormCreation.createDefaultLanguageTextForm( defaultLanguage, 
+                    exhibitionAboutPage.getExhibitionTitles(), exhibitionAboutPage.getTitle()));
+            aboutPageForm.setDefaultAboutPageText(localizedTextFormCreation.createDefaultLanguageTextForm( defaultLanguage, 
+                    exhibitionAboutPage.getExhibitionTextDescriptions(), exhibitionAboutPage.getAboutPageText()));
+        } else {
+            // No default language configured: still show the default title/text fields
+            aboutPageForm.setDefaultTitle(localizedTextFormCreation.createDefaultLocalizedTextForm(exhibitionAboutPage.getTitle()));
+            aboutPageForm.setDefaultAboutPageText(localizedTextFormCreation.createDefaultLocalizedTextForm(exhibitionAboutPage.getAboutPageText()));
+        }
         startExhibition.getLanguages().forEach(language -> {
             if(!language.isDefault()) {
                 aboutPageForm.getTitles().add(localizedTextFormCreation.createLocalizedTextForm( language, 

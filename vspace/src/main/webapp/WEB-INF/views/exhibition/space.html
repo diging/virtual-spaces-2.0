@@ -620,7 +620,7 @@
                         onclick="closeNav()">&times;</a>
                     <ul th:each="space: ${publishedSpaces}">
                         <li><a class="dropdown-item"
-                            th:href="@{'/exhibit/space/'+${space?.id}+'/'+${languageCode}}">[[${space.name}]]</a> 
+                            th:href="@{'/exhibit/space/'+${space?.id}+'/'+${languageCode}}">[[${space.getNameForLanguage(languageCode)}]]</a> 
                              
                             
                         </li>
@@ -630,7 +630,7 @@
                 <div  th:if="${isExhPreview} == true" id="mySidenav" class="sidenav">
                   <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
                     <ul th:each="space: ${publishedSpaces}">
-                        <li><a class="dropdown-item" id="previewNavBarItem" th:href="@{'/preview/'+${previewId}+'/space/'+${space?.id}+'/'+${languageCode}}">[[${space.name}]]
+                        <li><a class="dropdown-item" id="previewNavBarItem" th:href="@{'/preview/'+${previewId}+'/space/'+${space?.id}+'/'+${languageCode}}">[[${space.getNameForLanguage(languageCode)}]]
                             </a>
                         </li>
                     </ul>
