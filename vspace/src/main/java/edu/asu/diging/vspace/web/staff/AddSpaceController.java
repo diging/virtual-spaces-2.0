@@ -4,11 +4,14 @@ import java.io.IOException;
 
 
 import java.security.Principal;
+import java.util.Objects;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -64,22 +67,31 @@ public class AddSpaceController {
             Principal principal, @RequestParam(value = "imageId", required=false) String imageId, RedirectAttributes redirectAttrs) throws IOException {
         ISpace space;
         /*
-         * Check if the default name is provided. If a non-default name is provided, create a new form without default values
+         * Check if the default name is provided. If it is empty, use the first non-default name
+         * that has text (and the description in the same language) as the default values.
          */
-        if (!spaceForm.getDefaultName().getText().isEmpty()) {
-            SpaceForm nonDefaultSpaceForm = new SpaceForm(); 
-            LocalizedTextForm nameSpace = spaceForm.getNames().stream().filter(name -> name != null).findFirst().orElse(null);
-            LocalizedTextForm descriptionSpace = spaceForm.getDescriptions().stream().filter(description -> description != null).findFirst().orElse(null);
-            nonDefaultSpaceForm.setDefaultDescription(descriptionSpace);
-            nonDefaultSpaceForm.setDefaultName(nameSpace);
+        LocalizedTextForm fallbackName = null;
+        if (spaceForm.getDefaultName() == null || !StringUtils.hasText(spaceForm.getDefaultName().getText())) {
+            fallbackName = spaceForm.getNames().stream()
+                    .filter(name -> name != null && StringUtils.hasText(name.getText()))
+                    .findFirst().orElse(null);
+        }
+        if (fallbackName != null) {
+            String languageId = fallbackName.getExhibitionLanguageId();
+            LocalizedTextForm fallbackDescription = spaceForm.getDescriptions().stream()
+                    .filter(description -> description != null && Objects.equals(description.getExhibitionLanguageId(), languageId))
+                    .findFirst().orElse(null);
+            SpaceForm nonDefaultSpaceForm = new SpaceForm();
+            nonDefaultSpaceForm.setDefaultName(fallbackName);
+            nonDefaultSpaceForm.setDefaultDescription(fallbackDescription);
             space = spaceFactory.createSpace(nonDefaultSpaceForm);
             spaceManager.updateNameAndDescription(space, nonDefaultSpaceForm);
         } else {
-            // If only the default name is provided, create the space with the default form
+            // The default name is provided, create the space with the default form
             space = spaceFactory.createSpace(spaceForm);
             spaceManager.updateNameAndDescription(space, spaceForm);
-        } 
-        
+        }
+
         space.setSpaceStatus(SpaceStatus.UNPUBLISHED);      
         exhibitionManager.getStartExhibition();
 

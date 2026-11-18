@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -159,7 +159,7 @@ public class ExhibitionManager implements IExhibitionManager {
     public boolean checkIfLocalizedTextsExists(IExhibitionLanguage language)  {               
 
         //This returns true if non empty localized texts exist
-        return localizedTextRepo.findByExhibitionLanguage(language).isEmpty();
+        return !localizedTextRepo.findByExhibitionLanguage(language).isEmpty();
     }
     
     /**

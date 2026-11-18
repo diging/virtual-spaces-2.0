@@ -37,7 +37,9 @@ public interface IExhibitionManager {
 
     IExhibition getStartExhibition();
 
-    void updateExhibitionLanguages(IExhibition exhibition, List<String> languages, String defaultLanguage);
+    void updateExhibitionLanguages(IExhibition exhibition, List<String> languages, String defaultLanguage) throws ExhibitionLanguageDeletionException;
+
+    boolean checkIfLocalizedTextsExists(IExhibitionLanguage language);
 
     void deleteLocalizedTexts(List<ILocalizedText> emptyLocalizedTexts);
     
