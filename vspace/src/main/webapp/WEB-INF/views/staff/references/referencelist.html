@@ -1,0 +1,238 @@
+<html layout:decorate="~{layouts/main_staff}">
+<head>
+<script th:src="@{/resources/bootpag/js/bootpag.min.js}"></script>
+<script th:inline="javascript">
+//# sourceURL=js.js
+$( document ).ready(function() {
+    $('#page-selection').bootpag({
+        total: [(${totalPages})],
+        page: [(${currentPageNumber})],
+        maxVisible: 10,
+        leaps: true,
+        firstLastUse: true,
+        first: '|<',
+        last: '>|',
+        wrapClass: 'pagination',
+        activeClass: 'active',
+        disabledClass: 'disabled',
+        nextClass: 'next',
+        prevClass: 'prev',
+        lastClass: 'last',
+        firstClass: 'first'
+    }).on("page", function(event, num){
+        window.location.assign("./"+num+"?sort="+[[${sortProperty}]]+"&order="+[[${order}]]);
+    });
+
+  $("table.table thead th").each(function(){
+      var head = $(this);
+      if(head.attr('sort-prop')=='[(${sortProperty})]'){
+          head.append([[${order}]]=='desc'?'<i class="fas fa-sort-down"></i>':'<i class="fas fa-sort-up"></i>')
+      }
+      });
+
+   //set click action, reload page on clicking with all query params
+   $("table.table thead th").click(function() {
+    var headerSortPropName = $(this).attr("sort-prop");
+    if(headerSortPropName) {
+        if(headerSortPropName =='[(${sortProperty})]'){
+            window.location.href = window.location.pathname+
+            '?sort='+ headerSortPropName+'&order='+
+            ('[(${order})]' == 'desc'?'asc':'desc');
+        } else{
+            window.location.href = window.location.pathname+
+            '?sort='+ headerSortPropName+'&order=asc';
+        }
+    }
+   });
+});
+</script>
+<style>
+.pagination>li>a {
+    border: 1px solid var(--primary);
+    padding: 5px;
+    color: var(--primary);
+    font-size: 15px;
+}
+
+.pagination>li.active>a {
+    background: var(--primary);
+    color: #fff;
+    font-size: 15px;
+}
+
+.reference-row {
+    cursor: pointer;
+}
+
+.reference-row:hover {
+    background-color: #f5f5f5;
+}
+
+.sortable-header {
+    cursor: pointer;
+    user-select: none;
+}
+
+.sortable-header:hover {
+    background-color: #f0f0f0;
+}
+
+table.table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+table.table thead th:nth-child(1) { /* Type */
+    width: 8%;
+}
+
+table.table thead th:nth-child(2) { /* Title */
+    width: 20%;
+}
+
+table.table thead th:nth-child(3) { /* Author */
+    width: 12%;
+}
+
+table.table thead th:nth-child(4) { /* Year */
+    width: 6%;
+}
+
+table.table thead th:nth-child(5) { /* Created Date */
+    width: 10%;
+}
+
+table.table thead th:nth-child(6) { /* Module */
+    width: 12%;
+}
+
+table.table thead th:nth-child(7) { /* Slide Link */
+    width: 10%;
+}
+
+table.table thead th:nth-child(8) { /* Details */
+    width: 22%;
+}
+
+table.table td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+}
+
+table.table td a {
+    color: var(--primary);
+    text-decoration: none;
+}
+
+table.table td a:hover {
+    color: var(--primary);
+    text-decoration: underline;
+}
+</style>
+</head>
+<body>
+    <div layout:fragment="content" class="main-content">
+        <h2>References</h2>
+        <div style="padding-bottom: 20px;">
+            This virtual exhibition contains the following references. 
+            Total references: <strong>[[${totalReferenceCount}]]</strong>
+        </div>
+        
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col" sort-prop="type" class="sortable-header">
+                        <a href="#">Type</a>
+                    </th>
+                    <th scope="col" sort-prop="title" class="sortable-header">
+                        <a href="#">Title</a>
+                    </th>
+                    <th scope="col" sort-prop="author" class="sortable-header">
+                        <a href="#">Author</a>
+                    </th>
+                    <th scope="col" sort-prop="year" class="sortable-header">
+                        <a href="#">Year</a>
+                    </th>
+                    <th scope="col" sort-prop="creationDate" class="sortable-header">
+                        <a href="#">Created Date</a>
+                    </th>
+                    <th scope="col">Module</th>
+                    <th scope="col">Slide Link</th>
+                    <th scope="col">Details</th>
+                </tr>
+            </thead>
+            <tbody class="tableBody">
+                <tr th:each="reference: ${references}" class="reference-row">
+                    <td>[[${reference.type}]]</td>
+                    <td>
+                        <strong>[[${reference.title}]]</strong>
+                    </td>
+                    <td>[[${reference.author}]]</td>
+                    <td>[[${reference.year}]]</td>
+                    <td><span class="date">[[${reference.creationDate}]]</span></td>
+                    <td>
+                        <span th:if="${!#lists.isEmpty(reference.biblios)}">
+                            <span th:with="firstBiblio=${reference.biblios[0]}">
+                                <span th:if="${firstBiblio.slide != null && firstBiblio.slide.module != null}">
+                                    [[${firstBiblio.slide.module.name}]]
+                                </span>
+                            </span>
+                        </span>
+                        <span th:if="${#lists.isEmpty(reference.biblios)}">-</span>
+                    </td>
+                    <td>
+                        <span th:if="${!#lists.isEmpty(reference.biblios)}">
+                            <span th:with="firstBiblio=${reference.biblios[0]}">
+                                <span th:if="${firstBiblio.slide != null && firstBiblio.slide.module != null}">
+                                    <a th:href="@{/staff/module/{moduleId}/slide/{slideId}(moduleId=${firstBiblio.slide.module.id},slideId=${firstBiblio.slide.id})}"
+                                       target="_blank">
+                                        [[${firstBiblio.slide.name}]]
+                                    </a>
+                                </span>
+                            </span>
+                        </span>
+                        <span th:if="${#lists.isEmpty(reference.biblios)}">-</span>
+                    </td>
+                    <td>
+                        <div style="font-size: 0.9em;">
+                            <span th:if="${reference.journal != null && !#strings.isEmpty(reference.journal)}">
+                                <strong>Journal:</strong> [[${reference.journal}]]<br/>
+                            </span>
+                            <span th:if="${reference.url != null && !#strings.isEmpty(reference.url)}">
+                                <strong>URL:</strong> 
+                                <a th:href="${reference.url}" target="_blank">[[${reference.url}]]</a><br/>
+                            </span>
+                            <span th:if="${reference.volume != null && !#strings.isEmpty(reference.volume)}">
+                                <strong>Volume:</strong> [[${reference.volume}]]
+                            </span>
+                            <span th:if="${reference.issue != null && !#strings.isEmpty(reference.issue)}">
+                                <strong>Issue:</strong> [[${reference.issue}]]
+                            </span>
+                            <span th:if="${reference.pages != null && !#strings.isEmpty(reference.pages)}">
+                                <strong>Pages:</strong> [[${reference.pages}]]
+                            </span>
+                            <span th:if="${reference.editors != null && !#strings.isEmpty(reference.editors)}">
+                                <br/><strong>Editors:</strong> [[${reference.editors}]]
+                            </span>
+                            <span th:if="${reference.note != null && !#strings.isEmpty(reference.note)}">
+                                <br/><strong>Note:</strong> [[${reference.note}]]
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(references)}">
+                    <td colspan="8" style="text-align: center; padding: 40px;">
+                        <em>No references found.</em>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div th:if="${totalPages > 1}" style="display: flex; justify-content: center; margin-top: 20px;">
+            <div id="page-selection"></div>
+        </div>
+    </div>
+</body>
+</html>
+

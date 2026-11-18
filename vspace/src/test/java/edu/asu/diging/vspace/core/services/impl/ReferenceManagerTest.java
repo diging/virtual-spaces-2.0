@@ -1,15 +1,23 @@
 package edu.asu.diging.vspace.core.services.impl;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import edu.asu.diging.vspace.core.data.ReferenceRepository;
 import edu.asu.diging.vspace.core.exception.ReferenceDoesNotExistException;
@@ -33,6 +41,7 @@ public class ReferenceManagerTest {
     @Before
     public void init() {
         MockitoAnnotations.initMocks(this);
+        ReflectionTestUtils.setField(refManagerToTest, "pageSize", 10);
 
         refId = "REF000000002";
         refIdOther = "REF000000001";
@@ -73,6 +82,32 @@ public class ReferenceManagerTest {
         Mockito.when(refRepo.findById(null)).thenReturn(Optional.empty());
         refManagerToTest.deleteReferenceById(null, biblioId);
         Mockito.verify(refRepo, Mockito.never()).deleteById(refIdNotPresent);
+    }
+
+    @Test
+    public void test_getAllReferences_sortByAuthorAscending() {
+        assertEquals(Sort.by("author").ascending(), getSortUsed("author", "asc"));
+    }
+
+    @Test
+    public void test_getAllReferences_sortByTypeDescending() {
+        assertEquals(Sort.by("type").descending(), getSortUsed("type", "desc"));
+    }
+
+    @Test
+    public void test_getAllReferences_unsupportedFieldFallsBackToCreationDate() {
+        assertEquals(Sort.by("creationDate").descending(), getSortUsed("filename", null));
+    }
+
+    private Sort getSortUsed(String sortedBy, String order) {
+        List<Reference> references = new ArrayList<>();
+        references.add(new Reference());
+        Page<Reference> page = new PageImpl<>(references);
+        Mockito.when(refRepo.findAll(Mockito.any(Pageable.class))).thenReturn(page);
+        refManagerToTest.getAllReferences(1, sortedBy, order);
+        ArgumentCaptor<Pageable> captor = ArgumentCaptor.forClass(Pageable.class);
+        Mockito.verify(refRepo).findAll(captor.capture());
+        return captor.getValue().getSort();
     }
 
 }
