@@ -29,9 +29,15 @@ public class ListReferencesController {
     @RequestMapping("/staff/references/list")
     public String listReferencesWithoutNum(Model model,
             @RequestParam(value = "sort", required = false) String sortedBy,
-            @RequestParam(value = "order", required = false) String order) {
-        return String.format("redirect:/staff/references/list/1?sort=%s&order=%s", 
-                sortedBy, order);
+            @RequestParam(value = "order", required = false) String order,
+            RedirectAttributes attributes) {
+        if (sortedBy != null) {
+            attributes.addAttribute("sort", sortedBy);
+        }
+        if (order != null) {
+            attributes.addAttribute("order", order);
+        }
+        return "redirect:/staff/references/list/1";
     }
 
     @RequestMapping("/staff/references/list/{page}")

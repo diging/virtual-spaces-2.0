@@ -1,6 +1,7 @@
 package edu.asu.diging.vspace.core.services.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +29,12 @@ public class ReferenceManager implements IReferenceManager {
 
     private static final String VISIBILITY_PRIVATE = "Private";
     private static final String VISIBILITY_PUBLIC = "Public";
+
+    /**
+     * Reference properties the staff reference list can be sorted by.
+     */
+    private static final List<String> SORTABLE_FIELDS = Arrays.asList(SortByField.CREATION_DATE.getValue(),
+            "type", "title", "author", "year");
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
     
@@ -140,7 +147,7 @@ public class ReferenceManager implements IReferenceManager {
     
     private Sort getSortingParameters(String sortedBy, String order) {
         Sort sortingParameters = Sort.by(SortByField.CREATION_DATE.getValue()).descending();
-        if (sortedBy != null && SortByField.getAllValues().contains(sortedBy)) {
+        if (sortedBy != null && SORTABLE_FIELDS.contains(sortedBy)) {
             sortingParameters = Sort.by(sortedBy);
         }
         if (order != null && order.equalsIgnoreCase(Sort.Direction.ASC.toString())) {
