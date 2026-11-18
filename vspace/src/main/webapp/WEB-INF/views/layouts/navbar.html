@@ -17,6 +17,7 @@
 					    </div>
 		        	</li>
                     <li class="nav-item active" style="padding-right: 20px;">
+                    <label for="languageSelected" class="sr-only">Language</label>
                     <select onchange="changeLanguage(this)" id="languageSelected" name="languageSelected">
                         <option th:each="language : ${languages}" th:value=${language.getCode()} th:text=${language.getLabel()} th:selected="${#strings.equals(language.code, languageCode)}">
                         </option>
@@ -81,7 +82,8 @@
 		        	
 		        	</li>
 		        	<li class="nav-item active" style="padding-right: 20px;">
-                    <select onchange="changeLanguage(this)" id="languageSelected" name="languageSelected">
+                    <label for="languageSelectedPreview" class="sr-only">Language</label>
+                    <select onchange="changeLanguage(this)" id="languageSelectedPreview" name="languageSelected">
                         <option th:each="language : ${languages}" th:value=${language.getCode()} th:text=${language.getLabel()} th:selected="${#strings.equals(language.code, languageCode)}">
                         </option>
                     </select>

@@ -180,81 +180,16 @@ public class ExhibitionSlideController {
             throws ModuleNotFoundException, SequenceNotFoundException, SlidesInSequenceNotFoundException,
             SlideNotFoundException, SpaceDoesNotExistException, SpaceNotFoundException {
 
-        ISpace space = spaceManager.getSpace(spaceId);
-        if (space == null) {
-            return "redirect:/exhibit/404";
+        String view = slide(model, slideId, sequenceId, spaceId, previewId, back, branchingPointId, previousSequenceId, moduleId);
+        if (!"exhibition/module".equals(view)) {
+            return view;
         }
-        IModule module = moduleManager.getModule(moduleId);
-        model.addAttribute("module", module);
-        if (module == null) {
-            return "redirect:/exhibit/404";
-        }
-        if (module.getStartSequence() == null) {
-            return moduleNotConfigured(model);
-        }
-        String startSequenceId = module.getStartSequence().getId();
-        model.addAttribute("startSequenceId", startSequenceId);
         IExhibition exhibition = exhibitManager.getStartExhibition();
-        model.addAttribute("exhibitionConfig", exhibition);
-        ISequence sequenceExist = moduleManager.checkIfSequenceExists(moduleId, sequenceId);
-        if (sequenceExist == null) {
-            throw new SequenceNotFoundException(sequenceId);
-        }
-        List<ISlide> sequenceSlides = sequenceManager.getSequence(sequenceId).getSlides();
-
-        boolean slideExist = sequenceSlides.stream().anyMatch(slide -> slide.getId().equals(slideId));
-        if (!slideExist) {
-            throw new SlideNotFoundException(slideId);
-        }
-
-        if (sequenceSlides.size() == 0) {
-            throw new SlidesInSequenceNotFoundException();
-        }
-        model.addAttribute("firstSlide", module.getStartSequence().getSlides().get(0).getId());
-        String nextSlideId = "";
-        String prevSlideId = "";
-
-        ISlide currentSlide = slideManager.getSlide(slideId);
-        int slideIndex = sequenceSlides.indexOf(currentSlide);
-
-        int slideSize = sequenceSlides.size();
-        if (slideSize > slideIndex + 1) {
-            nextSlideId = sequenceSlides.get(slideIndex + 1).getId();
-        }
-        if (slideIndex > 0) {
-            prevSlideId = sequenceSlides.get(slideIndex - 1).getId();
-        }
-        model.addAttribute("sequences", moduleManager.getModuleSequences(moduleId));
-        model.addAttribute("sequence", sequenceExist);
-        model.addAttribute("slides", sequenceSlides);
-        model.addAttribute("currentSequenceId", sequenceId);
-        model.addAttribute("nextSlide", nextSlideId);
-        model.addAttribute("prevSlide", prevSlideId);
-
-        model.addAttribute("currentSlideCon", currentSlide);
-        if (currentSlide instanceof BranchingPoint) {
-            handleBranchingPoint(model, slideId, back, currentSlide);
-        }
-        if (branchingPointId != null && !branchingPointId.isEmpty()) {
-            sequenceHistory.addToHistory(previousSequenceId, branchingPointId);
-        }
-        if (sequenceHistory.hasHistory()) {
-            model.addAttribute("showBackToPreviousChoice", true);
-            model.addAttribute("previousSequenceId", sequenceHistory.peekSequenceId());
-            model.addAttribute("previousBranchingPoint",
-                    ((BranchingPoint) slideManager.getSlide(sequenceHistory.peekBranchingPointId())));
-        }
         IExhibitionLanguage exhibitionLanguage = exhibitManager.getLanguageFromCode(exhibition, languageCode);
-        model.addAttribute("numOfSlides", sequenceSlides.size());
-        model.addAttribute("currentNumOfSlide", slideIndex + 1);
-        model.addAttribute("spaceId", spaceId);
-        model.addAttribute("spaceName", spaceManager.getSpace(spaceId).getName());
+        ISlide currentSlide = slideManager.getSlide(slideId);
         model.addAttribute("slideName", slideManager.getLanguageLocalizedSlideName(currentSlide, exhibitionLanguage));
         model.addAttribute("slideDescription", slideManager.getLanguageLocalizedSlideDescription(currentSlide, exhibitionLanguage));
-        model.addAttribute("languages", exhibition.getLanguages());
-        model.addAttribute("languageCode",languageCode);
-        model.addAttribute("currentSlideId",slideId);
-        
-        return "exhibition/module";
+        model.addAttribute("languageCode", languageCode);
+        return view;
     }
 }
