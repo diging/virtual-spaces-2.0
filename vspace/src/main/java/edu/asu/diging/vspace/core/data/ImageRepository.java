@@ -6,6 +6,7 @@ import org.javers.spring.annotation.JaversSpringDataAuditable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,7 +16,7 @@ import edu.asu.diging.vspace.core.model.impl.VSImage;
 
 @Repository
 @JaversSpringDataAuditable
-public interface ImageRepository extends PagingAndSortingRepository<VSImage, String> {
+public interface ImageRepository extends PagingAndSortingRepository<VSImage, String>, CrudRepository<VSImage, String> {
 
     List<VSImage> findByFilenameLikeOrNameLike(String filename, String name);
     

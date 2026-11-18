@@ -218,16 +218,15 @@
                //# sourceURL=click.js
 		$(function () {
 			$('[data-toggle="tooltip"]').tooltip()
-			checkDefaultImage();
 			const textBlock = document.getElementsByClassName("textBlock");
 			const color = textBlock.style.borderColor;
 			textBlock.addEventListener('focus-visible', function(e) {
 				e.target.style.outline = "2px solid blue";
 			});
 		});
-		var defaultSpaceImageFlag;
-		var defaultModuleImageFlag;
-		var defaultExternalLinkImageFlag;		
+		var showDefaultSpaceLinkImage = [[${showDefaultSpaceLinkImage ?: false}]];
+		var showDefaultModuleLinkImage = [[${showDefaultModuleLinkImage ?: false}]];
+		var showDefaultExternalLinkImage = [[${showDefaultExternalLinkImage ?: false}]];
 			
 		function toggleImgSize(isClicked){
 			var maxImgWidth = $(window).width();
@@ -363,35 +362,17 @@
 			var isResizeImgBtnClicked = getCookie('isResizeImgBtnClicked');
 			if(isResizeImgBtnClicked == null || isResizeImgBtnClicked == "") {
 				setCookie('isResizeImgBtnClicked', -1, null);
-			} 
+			}
 		    	let spaceHeight = $("#bgImage").css("height");
 		    	$("#Module_1").css("height",spaceHeight);
 			$( window ).resize(function() {
 					$("#space a").remove();
 					$(".Info_cz_Class").remove();
-			    	drawLinks();
-			    	checkDefaultImage();
+					drawLinks();
 		    	});
 		    	drawLinks();
-		    	checkDefaultImage();
 		    	toggleImgSize(false);
 		});
-		
-		function checkDefaultImage() {
-			$.ajax({
-				url: "[(@{'/api/exhibition/default/link/image/status/'})]",
-				type: 'GET',
-		        cache       : false,
-		        contentType : false,
-		        success: function(data) {
-		        	if(data.length > 0){
-		        		defaultSpaceImageFlag = JSON.parse(data).defaultSpaceImageFlag; 
-		        		defaultModuleImageFlag = JSON.parse(data).defaultModuleImageFlag
-		        		defaultExternalLinkImageFlag = JSON.parse(data).defaultExternalLinkImageFlag;
-		        	}
-		        }
-			});
-		}
 		
 		function drawLinks() {
 			var spaceLinks = [[${spaceLinks}]];
@@ -421,9 +402,9 @@
                         var spaceImageURL = [[@{/api/image/}]]+link.image.id;
                         linkDisplay = $('<img class="InfoSpace_'+index+'" src="'+spaceImageURL+'" />');
     		        }
-    		        else if(defaultSpaceImageFlag === true) {
-    		        	var defaultSpaceLinkImageURL = [[@{/api/image/default/link/space/}]];
-    		        	linkDisplay = $('<div class="InfoSpace_'+index+' Info_cz_Class"><img class="InfoSpace_'+index+'" src="'+defaultSpaceLinkImageURL+'" width="30" height="30" border-radius = "50%"/><span class="tooltiptext">'+link.link.name+'</span></div>');
+    		        else if(showDefaultSpaceLinkImage === true){
+                        var defaultSpaceLinkImageURL = [[@{/api/image/default/link/space/}]];
+                        linkDisplay = $('<div class="InfoSpace_'+index+' Info_cz_Class"><img src="'+defaultSpaceLinkImageURL+'" width="30" height="30" style="border-radius: 50%"/><span class="tooltiptext">'+link.link.name+'</span></div>');
     		        }
     		        linkDisplay.css('position', 'absolute');
     		        linkDisplay.css('transform', 'rotate('+link.rotation+'deg)');
@@ -457,14 +438,15 @@
     		        	 moduleLinkURL = [[@{|/exhibit/${space?.id}/module/|}]]+link.link.module.id;
     		        }
     		        moduleLink.attr("href", moduleLinkURL);
-    		        var linkDisplay = $('<div class="InfoModule_'+index+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_m"></span><span class="tooltiptext">'+link.link.name+'</span></div>');
+    		        var linkDisplay = $('<div class="InfoModule_'+index+' Info_cz_Class"><svg class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-move Icon_awesome_info_m"></span><span class="tooltiptext">'+link.link.name+'</span></div>');
     		        if(link.type=="IMAGE" && link.image != null){
                         var moduleImageURL = [[@{/api/image/}]]+link.image.id;
                         linkDisplay = $('<img class="InfoModule_'+index+'" src="'+moduleImageURL+'" />');
-    		        } else if(defaultModuleImageFlag === true){
-    		        	var defaultModuleURL = [[@{/api/image/default/link/module/}]];
-    		        	linkDisplay = $('<div class="InfoModule_'+index+' Info_cz_Class"><img class="InfoModule_'+index+'" src="'+defaultModuleURL+'" width="30" height="30" border-radius = "100%""/><span class="tooltiptext">'+link.link.name+'</span></div>');
                 	}
+    		        else if(showDefaultModuleLinkImage === true){
+                        var defaultModuleLinkImageURL = [[@{/api/image/default/link/module/}]];
+                        linkDisplay = $('<div class="InfoModule_'+index+' Info_cz_Class"><img src="'+defaultModuleLinkImageURL+'" width="30" height="30" style="border-radius: 50%"/><span class="tooltiptext">'+link.link.name+'</span></div>');
+    		        }
     		        linkDisplay.css('position', 'absolute');
     		        linkDisplay.css('transform', 'rotate('+link.rotation+'deg)');
     		        linkDisplay.css('fill', 'grey'); 
@@ -503,10 +485,10 @@
     		        	var extImageURL = [[@{/api/image/}]]+link.image.id;
     		        	linkDisplay = $('<img class="InfoExt_'+index+'" src="'+extImageURL+'" />');
                 	}
-                    else if(defaultExternalLinkImageFlag === true){
-                   		var defaultExternalLinkURL = [[@{/api/image/default/link/external/}]];
-                   		linkDisplay = $('<div class="InfoExt_'+index+' Info_cz_Class"><img class="InfoExt_'+index+'" src="'+defaultExternalLinkURL+'" width="30" height="30" border-radius = "50%""/><span class="tooltiptext">'+link.externalLink.name+'</span></div>');
-                	}
+                    else if(showDefaultExternalLinkImage === true){
+                        var defaultExtLinkImageURL = [[@{/api/image/default/link/external/}]];
+                        linkDisplay = $('<div class="InfoExt_'+index+' Info_cz_Class"><img src="'+defaultExtLinkImageURL+'" width="30" height="30" style="border-radius: 50%"/><span class="tooltiptext">'+link.externalLink.name+'</span></div>');
+    		        }
                     linkDisplay.css('position', 'absolute');
                     linkDisplay.css('transform', 'rotate('+link.rotation+'deg)');
                     linkDisplay.css('fill', 'grey'); 
@@ -552,7 +534,6 @@
             Array.from(textBlockElements).forEach(function(textBlock, index){
             	if(textBlock != null) {
             	   	const color = textBlock.style.borderColor;
-                 	console.log("color" + color);
                  	textBlock.addEventListener('focus', function(e) {
                		e.target.style.outline = "2px solid "+ color;
                  	});
@@ -560,7 +541,7 @@
                  		e.target.style.outline = "none";
                 	});
             	}
-         
+
             })
               
                 	
@@ -652,19 +633,19 @@
                                         <li
                                             th:if="${!#strings.isEmpty(module.link.name) AND (isExhPreview == null OR isExhPreview== false)}"><a
                                             class="dropdown-item"
-                                            th:href="@{'/exhibit/'+${space?.id}+'/module/'+${module.link.module?.id}}"><div class="Info Info_cz_module_Class"><svg class="Ellipse_8_module_c_sidenav"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_module_c_sidenav"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_module_c_sidenav"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_module_m_sidenav"></span></div>[[${module.link.name}]]</a></li>
+                                            th:href="@{'/exhibit/'+${space?.id}+'/module/'+${module.link.module?.id}}"><div class="Info Info_cz_module_Class"><svg class="Ellipse_8_module_c_sidenav"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_module_c_sidenav"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_module_c_sidenav"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-move Icon_awesome_info_module_m_sidenav"></span></div>[[${module.link.name}]]</a></li>
                                         <li
                                             th:if="${#strings.isEmpty(module.link.name) AND (isExhPreview == null OR isExhPreview== false)}"><a
                                             class="dropdown-item"
-                                            th:href="@{'/exhibit/'+${space?.id}+'/module/'+${module.link.module?.id}}"><div class="Info Info_cz_module_Class"><svg class="Ellipse_8_module_c_sidenav"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_module_c_sidenav"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_module_c_sidenav"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_module_m_sidenav"></span></div>[[${module.link.module.name}]]</a></li>
+                                            th:href="@{'/exhibit/'+${space?.id}+'/module/'+${module.link.module?.id}}"><div class="Info Info_cz_module_Class"><svg class="Ellipse_8_module_c_sidenav"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_module_c_sidenav"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_module_c_sidenav"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-move Icon_awesome_info_module_m_sidenav"></span></div>[[${module.link.module.name}]]</a></li>
                                        <li
                                             th:if="${!#strings.isEmpty(module.link.name) AND isExhPreview == true}"><a
                                             class="dropdown-item"
-                                            th:href="@{'/preview/'+${previewId}+'/'+${space?.id}+'/module/'+${module.link.module?.id}}"><div class="Info Info_cz_module_Class"><svg class="Ellipse_8_module_c_sidenav"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_module_c_sidenav"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_module_c_sidenav"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_module_m_sidenav"></span></div>[[${module.link.name}]]</a></li>
+                                            th:href="@{'/preview/'+${previewId}+'/'+${space?.id}+'/module/'+${module.link.module?.id}}"><div class="Info Info_cz_module_Class"><svg class="Ellipse_8_module_c_sidenav"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_module_c_sidenav"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_module_c_sidenav"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-move Icon_awesome_info_module_m_sidenav"></span></div>[[${module.link.name}]]</a></li>
                                         <li
                                             th:if="${#strings.isEmpty(module.link.name) AND isExhPreview == true}"><a
                                             class="dropdown-item"
-                                            th:href="@{'/preview/'+${previewId}+'/'+${space?.id}+'/module/'+${module.link.module?.id}}"><div class="Info Info_cz_module_Class"><svg class="Ellipse_8_module_c_sidenav"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_module_c_sidenav"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_module_c_sidenav"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_module_m_sidenav"></span></div>[[${module.link.module.name}]]</a></li>
+                                            th:href="@{'/preview/'+${previewId}+'/'+${space?.id}+'/module/'+${module.link.module?.id}}"><div class="Info Info_cz_module_Class"><svg class="Ellipse_8_module_c_sidenav"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg class="Ellipse_10_module_c_sidenav"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg class="Ellipse_9_module_c_sidenav"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-move Icon_awesome_info_module_m_sidenav"></span></div>[[${module.link.module.name}]]</a></li>
                                     </ul>
                                 </div>
                             </div>

@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Optional;
+
 import edu.asu.diging.vspace.core.data.ImageRepository;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
 import edu.asu.diging.vspace.core.model.IVSImage;
@@ -32,8 +34,15 @@ public class ImageApiController {
     private IStorageEngine storage;
 
     @RequestMapping(API_IMAGE_PATH + "{id}")
-    public ResponseEntity<byte[]> getImage(@PathVariable String id) {
-        IVSImage image = imageRepo.findById(id).get();
+    public ResponseEntity<byte[]> getImage(@PathVariable("id") String id) {
+        Optional<? extends IVSImage> imageOpt = imageRepo.findById(id);
+
+        if (!imageOpt.isPresent()) {
+            logger.warn("Image not found for id: {}", id);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        IVSImage image = imageOpt.get();
         byte[] imageContent = null;
         try {
             imageContent = storage.getMediaContent(image.getId(), image.getFilename());

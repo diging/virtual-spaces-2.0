@@ -44,6 +44,8 @@ public interface IImageService {
             String searchTerm, String sortedBy, String order);
 
     IVSImage storeImage(byte[] image, String filename);
+    
+    void removeImage(String imageId);
 
     byte[] getImageContent(IVSImage image);
 }
