@@ -1,0 +1,28 @@
+/* Shared styles for the custom space order pages (add and edit). */
+.sortableSpaces {
+    overflow-y: scroll;
+}
+
+.paraContent {
+    cursor: pointer;
+    border: 1px solid;
+    padding: 15px;
+}
+
+.paraContent:hover {
+    background: #D3D3D3;
+    font-weight: bold;
+}
+
+.para {
+    margin: 0;
+}
+
+.goBackContainer {
+    float: right;
+}
+
+.goBackContainer:hover {
+    cursor: pointer;
+    font-weight: bold;
+}

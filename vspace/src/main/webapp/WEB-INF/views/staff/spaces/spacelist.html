@@ -87,8 +87,7 @@
         Select how you want to arrange this in the exhibition navigation bar
         <div class="startSequence" style="padding-bottom: 10px;">
         <form th:action="@{/staff/space/order/mode}" method ="POST" name="f" style="text-align: right;">
-          <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-					<p>Select spaces display order.</p>
+					<label for="spaceOrderMode" style="display: block;">Select spaces display order.</label>
 					<select class="form-control col-md-4" id="spaceOrderMode" name="spaceOrderMode" style="display: inline-block !important; height:auto;">
 						  <option value="ALPHABETICAL">Alphabetical</option>
 						  <option value="CREATION_DATE">Creation Date</option>

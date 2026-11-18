@@ -82,20 +82,17 @@
 <body style="background: var(--base-grey)">
     <div th:insert="layouts/navbar_staff :: navbar"></div>
     <div style="width: 80%; margin: 0 0 0 auto;">
-    <div th:if="${param.showAlert != null and param.showAlert[0] == 'true'}" id="errorMsg" class="alert customWindow alertPopup" th:classappend="${param.alertType != null and param.alertType[0] == 'success'} ? alert-success : alert-danger">
-         [[${param.message}]]
+    <!-- Alerts come either from request parameters (redirect attributes) or from model/flash attributes. -->
+    <th:block th:with="fromParam=${param.showAlert != null and param.showAlert[0] == 'true'}">
+    <div th:if="${fromParam} or ${showAlert} == 'true'" id="errorMsg" class="alert customWindow alertPopup"
+         th:classappend="${fromParam} ? (${param.alertType != null and param.alertType[0] == 'success'} ? alert-success : alert-danger) : (${alertType} == 'success' ? alert-success : alert-danger)">
+         [[${fromParam ? param.message : message}]]
          <button type="button" class="close" id="closeAlert"
                 aria-label="Close">
                 <span aria-hidden="true">&times;</span>
          </button>
     </div>
-    <div th:if="${showAlert} == 'true'" id="errorMsg" class="alert customWindow alertPopup" th:classappend="${alertType} == 'success' ? alert-success : alert-danger">
-         [[${message}]]
-         <button type="button" class="close" id="closeAlert"
-                aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-         </button>
-    </div>
+    </th:block>
     <div layout:fragment="content">
     </div>
     </div>
