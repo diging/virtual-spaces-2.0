@@ -3,11 +3,14 @@
 <link th:href="@{/resources/multiselect/css/multiselect.css}"
     type="text/css" rel="stylesheet">
 <script th:src="@{/resources/multiselect/js/multiselect.min.js}"></script>
+<link th:href="@{/resources/extra/localizedText.css}" type="text/css" rel="stylesheet">
+<script th:src="@{'/resources/extra/editElement.js'}"></script>
+<script th:src="@{/resources/multiselect/js/multiselect.min.js}"></script>
 	<script th:inline="javascript">
 		$(window).on("load", function() {
 		    var vals = [];
 		    var choices = [];
-		    var selectedchoices = [(${choices})];
+		    var selectedchoices = "[(${choices})]";
 		    var selectedType =  $('select[id="type"]');
 		    if (selectedType.val() == "BRANCHING_POINT"){
 		            $('#sequences').show();
@@ -47,21 +50,18 @@
 		         }
 		});
 	</script>
+	
 </head>
+
 
 <body>
 	<div layout:fragment="content" class="main-content">
 		<h2>Edit Slide: [[${slideForm.name}]]</h2>
-
-		<form th:action="@{|/staff/module/${moduleId}/slide/${slideId}/edit?${_csrf.parameterName}=${_csrf.token}|}" method="POST" style="margin-top: 40px"
+		<form method="POST" th:action="@{|/staff/module/${moduleId}/slide/${slideId}/edit?${_csrf.parameterName}=${_csrf.token}|}" style="margin-top: 40px"
 			th:object="${slideForm}" enctype="multipart/form-data">
-		
-			<div class="form-group row">
-				<label for="name" class="col-md-2 col-form-label">Slide Name</label>
-                <textarea type="text" class="form-control col-md-10" id="name" rows="1" cols="30"
-                     th:text="${slideForm.name}" name="name"></textarea>
-			</div>
-		
+
+			<div th:replace="~{staff/fragments/localizedText :: localizedFields(${slideForm.defaultName}, ${slideForm.defaultDescription}, ${slideForm.names}, ${slideForm.descriptions}, 'defaultName', 'defaultDescription', 'names', 'descriptions', 'Slide Name:', 'Description:', 'slide')}"></div>
+			 
 		     <div class="form-group row">
 		     <label for="type" class="col-md-2 col-form-label">Type</label>
 		         <select id="type" class="form-control col-md-6" disabled="true">
@@ -78,14 +78,12 @@
 		           </select>
 		    <input type="hidden" id="choices" name="choices"/>
 		    </div> 
-		 
-			<div class="form-group row">
-				<label for="description" class="col-md-2 col-form-label">Description</label>
-				<textarea class="form-control col-md-10" rows="5" cols="30" id="description" name="description" th:text=${slideForm.description}></textarea>
-			</div>
+		    
+		    <p style="padding-top: 20px;">
+					<button class="btn primary-btn" type="submit" value="submit">Save Slide</button>
+					<a th:href="@{'/staff/module/'+${moduleId}+'/slide/'+${slideId}}" class="btn btn-light">Cancel</a>
+			</p>
 			
-			<button class="btn primary-btn" type="submit" value="submit" style="margin-right: 20px">Save Slide</button>
-			<a th:href="@{'/staff/module/'+${moduleId}+'/slide/'+${slideId}}" class="btn btn-light">Cancel</a>
 		</form>
 	</div>
 </body>

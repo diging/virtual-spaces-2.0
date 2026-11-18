@@ -2,16 +2,23 @@ package edu.asu.diging.vspace.core.services;
 
 import java.util.List;
 
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
+import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
+import edu.asu.diging.vspace.core.model.ILocalizedText;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
+import edu.asu.diging.vspace.core.model.impl.ExhibitionLanguage;
+import edu.asu.diging.vspace.core.model.impl.LocalizedText;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.services.impl.CreationReturnValue;
+import edu.asu.diging.vspace.web.staff.forms.LocalizedTextForm;
+import edu.asu.diging.vspace.web.staff.forms.SpaceForm;
 
 public interface ISpaceManager {
 
@@ -38,6 +45,14 @@ public interface ISpaceManager {
     Iterable<Space> addIncomingLinkInfoToSpaces(Iterable<Space> spaces);
     
     Page<ISpace> findByNameOrDescription(Pageable requestedPage,String searchText);
+
+    void updateNameAndDescription(ISpace space, SpaceForm spaceForm);
+
+    void addSpaceDetails(ISpace space, LocalizedTextForm names, List<ILocalizedText> localizedTextList);
+    
+    LocalizedText getLanguageLocalizedSpaceName(ISpace space, IExhibitionLanguage exhibitionLanguage);
+    
+    LocalizedText getLanguageLocalizedSpaceDescription(ISpace space, IExhibitionLanguage language);
     
     List<ISpace> findByName(String name);
 

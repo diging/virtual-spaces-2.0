@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Localized text fields</title>
+</head>
+<body>
+
+<!--
+    Tabbed form fields for a title and a text in every exhibition language.
+    defaultTitle/defaultText: LocalizedTextForm of the default language
+    titles/texts: LocalizedTextForms of the other languages
+    *Field: names of the matching form properties (e.g. "defaultName", "names")
+    titleLabel/textLabel: label text for the input and the textarea
+    idPrefix: prefix for the element ids, so they are unique on the page
+-->
+<div th:fragment="localizedFields(defaultTitle, defaultText, titles, texts, defaultTitleField, defaultTextField, titlesField, textsField, titleLabel, textLabel, idPrefix)">
+    <div class="tab">
+        <button type="button" class="tablinks" th:onclick="openForm(event, [[${defaultTitle.exhibitionLanguageLabel}]])">[[${defaultTitle.exhibitionLanguageLabel}]]</button>
+        <th:block th:each="title : ${titles}">
+            <button type="button" class="tablinks" th:onclick="openForm(event, [[${title.exhibitionLanguageLabel}]])">[[${title.exhibitionLanguageLabel}]]</button>
+        </th:block>
+    </div>
+    <div>
+        <div th:id="${defaultTitle.exhibitionLanguageLabel}" class="tabcontent">
+            <p>[[${defaultTitle.exhibitionLanguageLabel}]]</p>
+            <th:block th:replace="~{staff/fragments/localizedText :: textInput(${defaultTitle}, ${defaultTitleField}, |${idPrefix}Title|, ${titleLabel})}"></th:block>
+            <th:block th:replace="~{staff/fragments/localizedText :: textArea(${defaultText}, ${defaultTextField}, |${idPrefix}Text|, ${textLabel})}"></th:block>
+        </div>
+        <div th:each="title, stat : ${titles}" th:id="${title.exhibitionLanguageLabel}" class="tabcontent">
+            <p>[[${title.exhibitionLanguageLabel}]]</p>
+            <th:block th:replace="~{staff/fragments/localizedText :: textInput(${title}, |${titlesField}[${stat.index}]|, |${idPrefix}Title${stat.index}|, ${titleLabel})}"></th:block>
+            <th:block th:each="text : ${texts}" th:if="${text.exhibitionLanguageId == title.exhibitionLanguageId}">
+                <th:block th:replace="~{staff/fragments/localizedText :: textArea(${text}, |${textsField}[${stat.index}]|, |${idPrefix}Text${stat.index}|, ${textLabel})}"></th:block>
+            </th:block>
+        </div>
+    </div>
+</div>
+
+<th:block th:fragment="textInput(text, field, fieldId, label)">
+    <label th:for="${fieldId}">[[${label}]]</label>
+    <input type="hidden" th:name="|${field}.localizedTextId|" th:value="${text.localizedTextId}">
+    <input type="hidden" th:name="|${field}.exhibitionLanguageId|" th:value="${text.exhibitionLanguageId}">
+    <input type="text" class="form-control" th:id="${fieldId}" th:name="|${field}.text|" th:value="${text.text}">
+</th:block>
+
+<div th:fragment="textArea(text, field, fieldId, label)" class="localizedTextArea">
+    <label th:for="${fieldId}">[[${label}]]</label>
+    <textarea class="form-control" rows="5" cols="30" th:id="${fieldId}" th:name="|${field}.text|">[[${text.text}]]</textarea>
+    <input type="hidden" th:name="|${field}.localizedTextId|" th:value="${text.localizedTextId}">
+    <input type="hidden" th:name="|${field}.exhibitionLanguageId|" th:value="${text.exhibitionLanguageId}">
+</div>
+
+</body>
+</html>

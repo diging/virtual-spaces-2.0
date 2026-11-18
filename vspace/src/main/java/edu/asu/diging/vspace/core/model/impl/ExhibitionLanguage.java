@@ -2,7 +2,6 @@ package edu.asu.diging.vspace.core.model.impl;
 
 import java.util.Objects;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -10,6 +9,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
@@ -25,6 +26,7 @@ public class ExhibitionLanguage extends VSpaceElement implements IExhibitionLang
     private String label;
     
     @ManyToOne(targetEntity = Exhibition.class, fetch = FetchType.LAZY)
+    @JsonBackReference()
     private IExhibition exhibition;
     
     private String code;
@@ -85,7 +87,7 @@ public class ExhibitionLanguage extends VSpaceElement implements IExhibitionLang
     public void setDefault(boolean isDefault) {
         this.isDefault = isDefault;
     }
-    
+
     @Override
     public int hashCode() {
         return Objects.hash(code, 

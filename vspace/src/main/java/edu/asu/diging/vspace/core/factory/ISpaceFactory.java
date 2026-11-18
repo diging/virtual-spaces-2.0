@@ -1,6 +1,7 @@
 package edu.asu.diging.vspace.core.factory;
 
 import edu.asu.diging.vspace.core.model.ISpace;
+
 import edu.asu.diging.vspace.web.staff.forms.SpaceForm;
 
 /**
@@ -8,6 +9,7 @@ import edu.asu.diging.vspace.web.staff.forms.SpaceForm;
  * instances of the edu.asu.diging.vspace.core.model.ISpace interface.
  */
 public interface ISpaceFactory {
+    
     /**
      * (non-javadoc) 
      * Creates an instance of the ISpace interface based on the given

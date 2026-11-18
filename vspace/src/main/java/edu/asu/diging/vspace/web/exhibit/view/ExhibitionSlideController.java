@@ -17,6 +17,7 @@ import edu.asu.diging.vspace.core.exception.SlidesInSequenceNotFoundException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.exception.SpaceNotFoundException;
 import edu.asu.diging.vspace.core.model.IExhibition;
+import edu.asu.diging.vspace.core.model.IExhibitionLanguage;
 import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
@@ -120,6 +121,10 @@ public class ExhibitionSlideController {
         model.addAttribute("currentSequenceId", sequenceId);
         model.addAttribute("nextSlide", nextSlideId);
         model.addAttribute("prevSlide", prevSlideId);
+        model.addAttribute("languages", exhibition.getLanguages());
+        
+        IExhibitionLanguage language = exhibitManager.getDefaultLanguage(exhibition);
+        model.addAttribute("languageCode", language != null ? language.getCode() : "en");
 
         model.addAttribute("currentSlideCon", currentSlide);
         if (currentSlide instanceof BranchingPoint) {
@@ -143,6 +148,7 @@ public class ExhibitionSlideController {
         model.addAttribute("currentNumOfSlide", slideIndex + 1);
         model.addAttribute("spaceId", spaceId);
         model.addAttribute("spaceName", spaceManager.getSpace(spaceId).getName());
+        model.addAttribute("currentSlideId", slideId);
         model.addAttribute("slideExternalLinkList", currentSlide.getExternalLinks());
         return "exhibition/module";
     }
@@ -158,5 +164,32 @@ public class ExhibitionSlideController {
         model.addAttribute("showAlert", true);
         model.addAttribute("message", "Sorry, module has not been configured yet.");
         return "/exhibition/module";
+    }
+    
+    @RequestMapping(value = {
+            "/exhibit/{spaceId}/module/{moduleId}/sequence/{sequenceId}/slide/{slideId}/{languageCode}",
+            "/preview/{"+ExhibitionConstants.PREVIEW_ID+"}/{spaceId}/module/{moduleId}/sequence/{sequenceId}/slide/{slideId}/{languageCode}"
+            }, method = RequestMethod.GET)
+    public String localizedSlide(Model model, @PathVariable("slideId") String slideId, @PathVariable("moduleId") String moduleId,
+            @PathVariable("sequenceId") String sequenceId, @PathVariable("spaceId") String spaceId,
+            @PathVariable("languageCode") String languageCode,
+            @PathVariable(name = ExhibitionConstants.PREVIEW_ID, required = false) String previewId,
+            @RequestParam(required = false, name = "back") boolean back,
+            @RequestParam(required = false, name = "branchingPoint") String branchingPointId,
+            @RequestParam(required = false, name = "previousSequenceId") String previousSequenceId)
+            throws ModuleNotFoundException, SequenceNotFoundException, SlidesInSequenceNotFoundException,
+            SlideNotFoundException, SpaceDoesNotExistException, SpaceNotFoundException {
+
+        String view = slide(model, slideId, sequenceId, spaceId, previewId, back, branchingPointId, previousSequenceId, moduleId);
+        if (!"exhibition/module".equals(view)) {
+            return view;
+        }
+        IExhibition exhibition = exhibitManager.getStartExhibition();
+        IExhibitionLanguage exhibitionLanguage = exhibitManager.getLanguageFromCode(exhibition, languageCode);
+        ISlide currentSlide = slideManager.getSlide(slideId);
+        model.addAttribute("slideName", slideManager.getLanguageLocalizedSlideName(currentSlide, exhibitionLanguage));
+        model.addAttribute("slideDescription", slideManager.getLanguageLocalizedSlideDescription(currentSlide, exhibitionLanguage));
+        model.addAttribute("languageCode", languageCode);
+        return view;
     }
 }

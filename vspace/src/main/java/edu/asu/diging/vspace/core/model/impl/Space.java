@@ -1,12 +1,17 @@
 package edu.asu.diging.vspace.core.model.impl;
 
+import java.util.ArrayList;
+
 import java.util.List;
 
 import jakarta.persistence.Access;
 import jakarta.persistence.AccessType;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Transient;
@@ -17,8 +22,10 @@ import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.annotations.Parameter;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import edu.asu.diging.vspace.core.model.IExternalLink;
+import edu.asu.diging.vspace.core.model.ILocalizedText;
 import edu.asu.diging.vspace.core.model.IModuleLink;
 import edu.asu.diging.vspace.core.model.IPrefix;
 import edu.asu.diging.vspace.core.model.ISpace;
@@ -54,10 +61,25 @@ public class Space extends VSpaceElement implements ISpace {
     @OneToOne(targetEntity = VSImage.class)
     @NotFound(action = NotFoundAction.IGNORE)
     private IVSImage image;
-
+    
+    @OneToMany(targetEntity = LocalizedText.class, cascade={CascadeType.ALL})
+    @JoinTable(name="Space_LangObj_names",  
+        joinColumns = @JoinColumn(name = "Space_Id", referencedColumnName="id"),
+        inverseJoinColumns = @JoinColumn(name = "LocalizedText_Id", referencedColumnName="id"))
+    @JsonManagedReference()
+    private List<ILocalizedText> spaceNames = new ArrayList<ILocalizedText>();
+    
+    @OneToMany(targetEntity = LocalizedText.class, cascade={CascadeType.ALL})
+    @JoinTable(name="Space_LangObj_descriptions",
+        joinColumns = @JoinColumn(name = "Space_Id", referencedColumnName="id"),
+        inverseJoinColumns = @JoinColumn(name = "LocalizedText_Id", referencedColumnName="id")
+    )
+    @JsonManagedReference()
+    private List<ILocalizedText> spaceDescriptions = new ArrayList<ILocalizedText>();
+       
     @Transient
     private Boolean incomingLinks;
-
+    
     /*
      * (non-Javadoc)
      * 
@@ -200,10 +222,38 @@ public class Space extends VSpaceElement implements ISpace {
         return hideIncomingLinks;
     }
 
-
     @Override
     public void setHideIncomingLinks(boolean hideIncomingLinks) {
         this.hideIncomingLinks = hideIncomingLinks;
     }
+    
+    public List<ILocalizedText> getSpaceNames() {
+        return spaceNames;
+    }
 
+    @Override
+    public String getNameForLanguage(String languageCode) {
+        if (languageCode == null || spaceNames == null) {
+            return getName();
+        }
+        return spaceNames.stream()
+                .filter(text -> text != null && text.getExhibitionLanguage() != null
+                        && languageCode.equals(text.getExhibitionLanguage().getCode())
+                        && text.getText() != null && !text.getText().isBlank())
+                .map(ILocalizedText::getText)
+                .findFirst()
+                .orElse(getName());
+    }
+
+    public void setSpaceNames(List<ILocalizedText> spaceNames) {
+        this.spaceNames = spaceNames;
+    }
+
+    public List<ILocalizedText> getSpaceDescriptions() {
+        return spaceDescriptions;
+    }
+
+    public void setSpaceDescriptions(List<ILocalizedText> spaceDescriptions) {
+        this.spaceDescriptions = spaceDescriptions;
+    }
 }
