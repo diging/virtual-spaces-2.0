@@ -1,7 +1,7 @@
 package edu.asu.diging.vspace.core.model.display.impl;
 
-import javax.persistence.MappedSuperclass;
-import javax.persistence.OneToOne;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.OneToOne;
 
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.display.DisplayType;

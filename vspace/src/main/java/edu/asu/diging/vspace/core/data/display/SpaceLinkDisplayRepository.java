@@ -5,6 +5,7 @@ import java.util.List;
 import org.javers.spring.annotation.JaversSpringDataAuditable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -16,7 +17,7 @@ import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 
 @Repository
 @JaversSpringDataAuditable
-public interface SpaceLinkDisplayRepository extends PagingAndSortingRepository<SpaceLinkDisplay, String> {
+public interface SpaceLinkDisplayRepository extends PagingAndSortingRepository<SpaceLinkDisplay, String>, CrudRepository<SpaceLinkDisplay, String> {
 
     @Query("SELECT d FROM SpaceLinkDisplay d WHERE d.link.sourceSpace.id = ?1")
     public List<ISpaceLinkDisplay> findSpaceLinkDisplaysForSpace(String spaceId);
