@@ -233,8 +233,6 @@
 			textBlock.addEventListener('focus-visible', function(e) {
 				e.target.style.outline = "2px solid blue";
 			});
-			checkImageResizeability();
-			$(window).resize(checkImageResizeability);
 		});
 		var showDefaultSpaceLinkImage = [[${showDefaultSpaceLinkImage ?: false}]];
 		var showDefaultModuleLinkImage = [[${showDefaultModuleLinkImage ?: false}]];
@@ -418,9 +416,9 @@
 		    	let spaceHeight = $("#bgImage").css("height");
 		    	$("#Module_1").css("height",spaceHeight);
 			$( window ).resize(function() {
-					$("#space a").remove();
-					$(".Info_cz_Class").remove();
-					drawLinks();
+					// Re-check if the image can be expanded and re-apply the layout (this also redraws the links)
+					checkImageResizeability();
+					toggleImgSize(false);
 		    	});
 		    	drawLinks();
 		    	// Check if image is resizeable and reset cookie if needed before applying resize state
