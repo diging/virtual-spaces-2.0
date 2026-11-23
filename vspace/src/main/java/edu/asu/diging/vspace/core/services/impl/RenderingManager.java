@@ -137,7 +137,7 @@ public class RenderingManager implements IRenderingManager {
         storageEngineDownloads.createFolder(imagesFolder); 
 
         // Copies the space image
-        storageManager.copyImage(space.getImage(), imagesFolder) ;
+        copyImage(space.getImage(), imagesFolder);
 
         // Copies the images used as link markers on the space
         List<ILinkDisplay> linkDisplays = new ArrayList<>();
@@ -146,7 +146,7 @@ public class RenderingManager implements IRenderingManager {
         linkDisplays.addAll(externalLinkManager.getLinkDisplays(spaceId));
         for (ILinkDisplay linkDisplay : linkDisplays) {
             if (linkDisplay.getType() == DisplayType.IMAGE) {
-                storageManager.copyImage(linkDisplay.getImage(), imagesFolder);
+                copyImage(linkDisplay.getImage(), imagesFolder);
             }
         }
 
@@ -158,6 +158,21 @@ public class RenderingManager implements IRenderingManager {
         });
     }
     
+    /**
+     * Copies an image into the snapshot. A missing image file is logged and skipped, so that one
+     * broken image does not stop the whole exhibition from being exported.
+     *
+     * @param image        the image to copy
+     * @param imagesFolder the folder the image is copied to
+     */
+    private void copyImage(IVSImage image, String imagesFolder) {
+        try {
+            storageManager.copyImage(image, imagesFolder);
+        } catch (FileStorageException e) {
+            logger.error("Failed to copy image " + image.getId() + " to folder: " + imagesFolder, e);
+        }
+    }
+
     /**
      * Renders the given space.
      * 
@@ -357,10 +372,14 @@ public class RenderingManager implements IRenderingManager {
         context.setVariable("exhibitionConfig", exhibition);
         context.setVariable("space", space);
         context.setVariable("moduleList", moduleLinks);
-        // Only published spaces are part of the snapshot, so links to any other space would be broken
+        // Only published spaces are part of the snapshot, so links to any other space would be broken.
+        // Links whose target space was deleted have no target and are skipped as well.
         List<ISpaceLinkDisplay> filteredSpaceLinks = spaceLinkManager.getLinkDisplays(id).stream()
-                .filter(spaceLinkDisplayObj -> SpaceStatus.PUBLISHED.equals(spaceLinkDisplayObj.getLink().getTargetSpace().getSpaceStatus())
-                        && !spaceLinkDisplayObj.getLink().getTargetSpace().isHideIncomingLinks())
+                .filter(spaceLinkDisplayObj -> {
+                    ISpace targetSpace = spaceLinkDisplayObj.getLink().getTargetSpace();
+                    return targetSpace != null && SpaceStatus.PUBLISHED.equals(targetSpace.getSpaceStatus())
+                            && !targetSpace.isHideIncomingLinks();
+                })
                 .collect(Collectors.toList());
         context.setVariable("spaceLinks", filteredSpaceLinks);
         context.setVariable("display", spaceDisplayManager.getBySpace(space));

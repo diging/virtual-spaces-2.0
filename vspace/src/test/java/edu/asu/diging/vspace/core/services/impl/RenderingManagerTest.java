@@ -1,5 +1,6 @@
 package edu.asu.diging.vspace.core.services.impl;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -17,6 +18,7 @@ import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -24,6 +26,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.IContext;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import edu.asu.diging.vspace.core.data.SequenceRepository;
@@ -38,11 +41,15 @@ import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.IModuleLink;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
+import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
+import edu.asu.diging.vspace.core.model.display.impl.SpaceLinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.Module;
 import edu.asu.diging.vspace.core.model.impl.ModuleLink;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
 import edu.asu.diging.vspace.core.model.impl.Slide;
 import edu.asu.diging.vspace.core.model.impl.Space;
+import edu.asu.diging.vspace.core.model.impl.SpaceLink;
+import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IExternalLinkManager;
 import edu.asu.diging.vspace.core.services.IModuleLinkManager;
@@ -218,5 +225,55 @@ public class RenderingManagerTest {
         verify(storageEngine).storeFile(any(byte[].class), eq(spaceId + ".html"), eq(exhibitionId + File.separator + spaceId));
         verify(storageEngine).createFolder(exhibitionId + File.separator + spaceId + File.separator +"images");
         verify(storageManager).copyImage(eq(spaceImage), eq(exhibitionId + File.separator + spaceId+ File.separator + "images"));
+    }
+
+    @Test
+    public void test_createSpaceSnapshot_skipsLinksWithoutTargetSpace() throws FileStorageException {
+        Space targetSpace = new Space();
+        targetSpace.setId("SPA000000002");
+        targetSpace.setSpaceStatus(SpaceStatus.PUBLISHED);
+        List<ISpaceLinkDisplay> linkDisplays = new ArrayList<>();
+        linkDisplays.add(createSpaceLinkDisplay("SPL000000001", targetSpace));
+        // link whose target space was deleted
+        linkDisplays.add(createSpaceLinkDisplay("SPL000000002", null));
+
+        when(spaceManager.getSpace(spaceId)).thenReturn(space);
+        when(moduleManager.getModule(moduleId)).thenReturn(module);
+        when(spaceLinkManager.getLinkDisplays(spaceId)).thenReturn(linkDisplays);
+
+        serviceToTest.createSpaceSnapshot(space, exhibitionId);
+
+        ArgumentCaptor<IContext> contextCaptor = ArgumentCaptor.forClass(IContext.class);
+        verify(springTemplateEngine, Mockito.atLeastOnce()).process(Mockito.anyString(), contextCaptor.capture());
+        List<?> spaceLinks = (List<?>) contextCaptor.getAllValues().get(0).getVariable("spaceLinks");
+        assertEquals(1, spaceLinks.size());
+        assertEquals("SPL000000001", ((ISpaceLinkDisplay) spaceLinks.get(0)).getLink().getId());
+    }
+
+    @Test
+    public void test_createSpaceSnapshot_missingImageDoesNotStopSnapshot() throws FileStorageException {
+        VSImage spaceImage = new VSImage();
+        spaceImage.setId("IMG000000001");
+        space.setImage(spaceImage);
+        String imagesFolder = exhibitionId + File.separator + spaceId + File.separator + "images";
+
+        when(spaceManager.getSpace(spaceId)).thenReturn(space);
+        when(moduleManager.getModule(moduleId)).thenReturn(module);
+        doThrow(FileStorageException.class).when(storageManager).copyImage(spaceImage, imagesFolder);
+
+        serviceToTest.createSpaceSnapshot(space, exhibitionId);
+
+        verify(storageEngine).storeFile(any(byte[].class), eq(spaceId + ".html"), eq(exhibitionId + File.separator + spaceId));
+        verify(storageEngine).storeFile(any(byte[].class), eq(slide1Id + ".html"), eq(exhibitionId + File.separator + spaceId));
+    }
+
+    private ISpaceLinkDisplay createSpaceLinkDisplay(String linkId, Space targetSpace) {
+        SpaceLink link = new SpaceLink();
+        link.setId(linkId);
+        link.setSourceSpace(space);
+        link.setTargetSpace(targetSpace);
+        SpaceLinkDisplay display = new SpaceLinkDisplay();
+        display.setLink(link);
+        return display;
     }
 }
