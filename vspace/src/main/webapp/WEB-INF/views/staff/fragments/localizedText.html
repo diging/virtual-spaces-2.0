@@ -37,15 +37,15 @@
 </div>
 
 <th:block th:fragment="textInput(text, field, fieldId, label)">
-    <label th:for="${fieldId}">[[${label}]]</label>
+    <label for="localizedTextInput" th:for="${fieldId}">[[${label}]]</label>
     <input type="hidden" th:name="|${field}.localizedTextId|" th:value="${text.localizedTextId}">
     <input type="hidden" th:name="|${field}.exhibitionLanguageId|" th:value="${text.exhibitionLanguageId}">
-    <input type="text" class="form-control" th:id="${fieldId}" th:name="|${field}.text|" th:value="${text.text}">
+    <input type="text" class="form-control" id="localizedTextInput" th:id="${fieldId}" th:name="|${field}.text|" th:value="${text.text}">
 </th:block>
 
 <div th:fragment="textArea(text, field, fieldId, label)" class="localizedTextArea">
-    <label th:for="${fieldId}">[[${label}]]</label>
-    <textarea class="form-control" rows="5" cols="30" th:id="${fieldId}" th:name="|${field}.text|">[[${text.text}]]</textarea>
+    <label for="localizedTextArea" th:for="${fieldId}">[[${label}]]</label>
+    <textarea class="form-control" rows="5" cols="30" id="localizedTextArea" th:id="${fieldId}" th:name="|${field}.text|">[[${text.text}]]</textarea>
     <input type="hidden" th:name="|${field}.localizedTextId|" th:value="${text.localizedTextId}">
     <input type="hidden" th:name="|${field}.exhibitionLanguageId|" th:value="${text.exhibitionLanguageId}">
 </div>
