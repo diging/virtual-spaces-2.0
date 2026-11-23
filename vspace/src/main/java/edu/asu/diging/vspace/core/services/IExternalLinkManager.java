@@ -13,11 +13,15 @@ import edu.asu.diging.vspace.core.model.impl.ExternalLinkValue;
 public interface IExternalLinkManager extends ILinkManager<IExternalLink, ExternalLinkValue, IExternalLinkDisplay>{
 
     IExternalLinkDisplay createLink(String title, String id, float positionX, float positionY, int rotation, String linkedId,
-            String linkLabel, String desc, DisplayType displayType, byte[] linkImage, String imageFilename,ExternalLinkDisplayMode howToOpen, String imageId)
-            throws SpaceDoesNotExistException, ImageCouldNotBeStoredException, SpaceDoesNotExistException, ImageDoesNotExistException;
+            String linkLabel, DisplayType displayType, byte[] linkImage, String imageFilename,ExternalLinkDisplayMode howToOpen,
+            String existingImageId)
+            throws SpaceDoesNotExistException, ImageCouldNotBeStoredException, ImageDoesNotExistException;
 
     IExternalLinkDisplay updateLink(String title, String id, float positionX, float positionY, int rotation, String linkedId,
-            String linkLabel, String desc, String linkId, String linkDisplayId, DisplayType displayType, byte[] linkImage,
-            String imageFilename, String existingImageId, ExternalLinkDisplayMode howToOpen)
-            throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException, ImageDoesNotExistException;
+            String linkLabel, String linkId, String linkDisplayId, DisplayType displayType, byte[] linkImage,
+            String imageFilename,ExternalLinkDisplayMode howToOpen, String existingImageId)
+            throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException,
+            ImageDoesNotExistException;
+
+   
 }

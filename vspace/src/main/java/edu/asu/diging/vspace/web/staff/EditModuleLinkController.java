@@ -12,13 +12,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
+import edu.asu.diging.vspace.core.exception.ImageDoesNotExistException;
 import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.IModuleLinkDisplay;
 import edu.asu.diging.vspace.core.services.IModuleLinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
-import edu.asu.diging.vspace.core.exception.ImageDoesNotExistException;
+
 @Controller
 public class EditModuleLinkController extends EditSpaceLinksController {
 
@@ -26,23 +27,23 @@ public class EditModuleLinkController extends EditSpaceLinksController {
     private ISpaceManager spaceManager;
 
     @Autowired
-    private IModuleLinkManager moduleLinkManager;   
-    
+    private IModuleLinkManager moduleLinkManager;
+
     @RequestMapping(value = "/staff/space/link/module/{id}", method = RequestMethod.POST)
     public ResponseEntity<String> editModuleLink(@PathVariable("id") String id, @RequestParam("x") String x,
-        @RequestParam("y") String y, @RequestParam("rotation") String rotation,
-        @RequestParam("moduleLinkLabel") String title, @RequestParam("linkedModule") String linkedModuleId,
-        @RequestParam("moduleLinkLabel") String moduleLinkLabel,
-        @RequestParam("moduleLinkIdValueEdit") String moduleLinkIdValueEdit,
-        @RequestParam("moduleLinkDisplayId") String moduleLinkDisplayId, @RequestParam("type") String displayType,
-        @RequestParam(value = "moduleLinkImage", required=false) MultipartFile file, @RequestParam(value="editModule-imageId", required=false) String imageId) throws NumberFormatException,
-        SpaceDoesNotExistException, LinkDoesNotExistsException, IOException, ImageCouldNotBeStoredException, ImageDoesNotExistException {
+            @RequestParam("y") String y, @RequestParam("rotation") String rotation,
+            @RequestParam("moduleLinkLabel") String title, @RequestParam("linkedModule") String linkedModuleId,
+            @RequestParam("moduleLinkLabel") String moduleLinkLabel,
+            @RequestParam("moduleLinkIdValueEdit") String moduleLinkIdValueEdit,
+            @RequestParam("moduleLinkDisplayId") String moduleLinkDisplayId, @RequestParam("type") String displayType,
+            @RequestParam(value = "moduleLinkImage", required = false) MultipartFile file,
+            @RequestParam(value = "editModuleLink-imageId", required = false) String existingImageId) throws NumberFormatException,
+            SpaceDoesNotExistException, LinkDoesNotExistsException, IOException, ImageCouldNotBeStoredException {
 
         ResponseEntity<String> validation = checkIfSpaceExists(spaceManager, id, x, y);
         if (validation != null) {
             return validation;
         }
-        String moduleLinkDesc = "";
         byte[] linkImage = null;
         String filename = null;
         if (file != null) {
@@ -50,13 +51,16 @@ public class EditModuleLinkController extends EditSpaceLinksController {
             filename = file.getOriginalFilename();
         }
         DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
-        IModuleLinkDisplay display = (IModuleLinkDisplay) moduleLinkManager.updateLink(title, id, new Float(x),
-                new Float(y), new Integer(rotation), linkedModuleId, moduleLinkLabel,moduleLinkDesc, moduleLinkIdValueEdit,
-                moduleLinkDisplayId, type, linkImage, filename, imageId);
+        IModuleLinkDisplay display;
+        try {
+            display = (IModuleLinkDisplay) moduleLinkManager.updateLink(title, id, new Float(x), new Float(y),
+                    new Integer(rotation), linkedModuleId, moduleLinkLabel, moduleLinkIdValueEdit,
+                    moduleLinkDisplayId, type, linkImage, filename, existingImageId);
+        } catch (ImageDoesNotExistException e) {
+            return imageNotFound();
+        }
         return success(display.getLink().getId(), display.getId(), display.getPositionX(), display.getPositionY(),
                 display.getRotation(), null, title, displayType, linkedModuleId, null);
     }
 
 }
-
-

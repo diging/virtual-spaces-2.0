@@ -11,11 +11,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import edu.asu.diging.vspace.core.exception.ImageDoesNotExistException;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
+import edu.asu.diging.vspace.core.exception.ImageDoesNotExistException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
@@ -37,11 +38,11 @@ public class AddSpaceLinkController {
     public ResponseEntity<String> createSpaceLink(@PathVariable("id") String id, @RequestParam("x") String x,
             @RequestParam("y") String y, @RequestParam("rotation") String rotation,
             @RequestParam("spaceLinkLabel") String title, @RequestParam("linkedSpace") String linkedSpaceId,
-            @RequestParam("spaceLinkLabel") String spaceLinkLabel, @RequestParam(value = "spaceLinkDesc", required=false) String spaceLinkDesc, @RequestParam("type") String displayType,
-            @RequestParam(value="spaceLinkImage", required=false) MultipartFile file, @RequestParam(value="space-imageId", required=false) String imageId)
-            throws NumberFormatException, SpaceDoesNotExistException, IOException, ImageDoesNotExistException {
+            @RequestParam("spaceLinkLabel") String spaceLinkLabel, @RequestParam("type") String displayType,
+            @RequestParam(value = "spaceLinkImage", required = false) MultipartFile file,
+            @RequestParam(value = "spaceLink-imageId", required = false) String existingImageId)
+            throws NumberFormatException, SpaceDoesNotExistException, IOException {
 
-        
         ISpace source = spaceManager.getSpace(id);
         if (source == null) {
             return new ResponseEntity<>("{'error': 'Space could not be found.'}", HttpStatus.NOT_FOUND);
@@ -53,12 +54,12 @@ public class AddSpaceLinkController {
             node.put("errorMessage", "No link coordinates specified.");
             return new ResponseEntity<String>(mapper.writeValueAsString(node), HttpStatus.BAD_REQUEST);
         }
-        
+
         if (DisplayType.IMAGE.name().equals(displayType) && (file == null || file.isEmpty())
-                && (imageId == null || imageId.trim().isEmpty())) {
+                && (existingImageId == null || existingImageId.trim().isEmpty())) {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode node = mapper.createObjectNode();
-            node.put("errorMessage", "No image provided for space link.");
+            node.put("errorMessage", "Please upload an image or choose an existing one for the space link.");
             return new ResponseEntity<String>(mapper.writeValueAsString(node), HttpStatus.BAD_REQUEST);
         }
 
@@ -73,12 +74,17 @@ public class AddSpaceLinkController {
         ISpaceLinkDisplay display;
         try {
             display = spaceLinkManager.createLink(title, id, new Float(x), new Float(y), new Integer(rotation),
-                    linkedSpaceId, spaceLinkLabel, spaceLinkDesc, type, linkImage, filename, imageId);
+                    linkedSpaceId, spaceLinkLabel, type, linkImage, filename, existingImageId);
         } catch (ImageCouldNotBeStoredException e) {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode node = mapper.createObjectNode();
             node.put("errorMessage", "Link icon could not be stored.");
             return new ResponseEntity<>(mapper.writeValueAsString(node), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (ImageDoesNotExistException e) {
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode node = mapper.createObjectNode();
+            node.put("errorMessage", "The selected image could not be found.");
+            return new ResponseEntity<>(mapper.writeValueAsString(node), HttpStatus.BAD_REQUEST);
         }
         display.setRotation(new Integer(rotation));
 

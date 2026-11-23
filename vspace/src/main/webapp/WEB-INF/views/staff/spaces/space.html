@@ -4,7 +4,6 @@
 <link rel="stylesheet" type="text/css" id="applicationStylesheet"
     th:href="@{/resources/extra/Home.css}" />
 <link th:href="@{/resources/boostrap-colorpicker/dist/css/bootstrap-colorpicker.css}" rel="stylesheet">
-<script src="https://use.fontawesome.com/releases/v5.8.1/js/all.js" data-auto-replace-svg="nest" integrity="sha384-g5uSoOSBd7KkhAMlnQILrecXvzst9TdC09/VM+pjDTCM+1il8RHz5fKANTFFb+gQ" crossorigin="anonymous"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" integrity="sha384-RdQbeSCGSeSdSlTMGnUr2oDJZzOuGjJAkQy1MbKMu8fZT5G0qlBajY0n0sY/hKMK" crossorigin="anonymous" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js" integrity="sha384-uQwKPrmNkEOvI7rrNdCSs6oS1F3GvnZkmPtkntOSIiPQN4CCbFSxv+Bj6qe0mWDb" crossorigin="anonymous"></script>
 
@@ -790,9 +789,7 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
 	    });
 	    hideLinkInfoTabs();
 	    displayForms("#editSpaceLinkInfo");
-	    $('#editSpace-imageId').prop('selectedIndex',0).trigger( "change" );
-	    $('#editSpace-imageId').prop("disabled",true);
-	    $('#editSpaceLinkImage').prop("disabled",false);
+	    resetImageChooser("editSpaceLink", "spaceLinkImageEdit");
 	}
 	function displayForms(formToShow){
 	    drawLinks();
@@ -833,9 +830,7 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
 	    });
 	    hideLinkInfoTabs();
 	    displayForms("#editModuleLinkInfo");
-	    $('#editModule-imageId').prop('selectedIndex',0).trigger( "change" );
-	    $('#editModule-imageId').prop("disabled",true);
-	    $('#editModuleImage').prop("disabled",false);
+	    resetImageChooser("editModuleLink", "moduleLinkImageEdit");
 	}
 	
 	function makeExternalLinksEditable(linkName, linkId, externalLinkURL, posXEdit, posYEdit, displayLinkId, linkType,tabOpenType) {
@@ -869,9 +864,70 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
 	    });
 	    hideLinkInfoTabs();
 	    displayForms("#editExternalLinkInfo");
-	    $('#editExternalLinkInfo-imageId').prop('selectedIndex',0).trigger( "change" );
-	    $('#editExternalLinkInfo-imageId').prop("disabled",true);
-	    $('#editExternalLinkInfoImage').prop("disabled",false);
+	    resetImageChooser("editExternalLink", "externalLinkImageEdit");
+	}
+
+	// Lets staff either upload a new link image or choose an image that was uploaded before
+	function initImageChooser(prefix, fileInputId) {
+	    var fileInput = $("#" + fileInputId);
+	    var imageSelect = $("#" + prefix + "-imageId");
+	    imageSelect.select2({
+	        ajax: {
+	            url: [[@{|/staff/images/search|}]],
+	            dataType: 'json',
+	            processResults: function (data) {
+	                return { results: data };
+	            }
+	        },
+	        templateResult: formatImageOption,
+	        templateSelection: function (image) {
+	            showSelectedImage(prefix, image);
+	            return image.text;
+	        }
+	    });
+	    $("#" + prefix + "-chooseFromLocal").click(function() {
+	        resetImageChooser(prefix, fileInputId);
+	    });
+	    $("#" + prefix + "-chooseFromExisting").click(function() {
+	        fileInput.val('');
+	        fileInput.prop("disabled", true);
+	        imageSelect.prop("disabled", false);
+	    });
+	    fileInput.closest("form").on("reset", function() {
+	        setTimeout(function() {
+	            resetImageChooser(prefix, fileInputId);
+	        });
+	    });
+	    resetImageChooser(prefix, fileInputId);
+	}
+
+	function resetImageChooser(prefix, fileInputId) {
+	    $("#" + prefix + "-chooseFromLocal").prop("checked", true);
+	    $("#" + prefix + "-imageId").prop("selectedIndex", 0).trigger("change").prop("disabled", true);
+	    $("#" + prefix + "-selectedImage").empty();
+	    $("#" + fileInputId).prop("disabled", false);
+	}
+
+	function formatImageOption(image) {
+	    if (!image.id) {
+	        return image.text;
+	    }
+	    return $("<span>")
+	        .append($("<img>", { src: [[@{|/api/image/|}]] + image.id, "class": "img-thumbnail" }))
+	        .append(" ")
+	        .append(document.createTextNode(image.text));
+	}
+
+	function hasLinkImage(prefix, fileInputId) {
+	    return $("#" + fileInputId).val() || $("#" + prefix + "-imageId").val();
+	}
+
+	function showSelectedImage(prefix, image) {
+	    var preview = $("#" + prefix + "-selectedImage");
+	    preview.empty();
+	    if (image.id) {
+	        preview.append($("<img>", { src: [[@{|/api/image/|}]] + image.id, width: "200px", "class": "img-thumbnail" }));
+	    }
 	}
 	
 	function makeTextBlockEditable(blockDisplayId,blockId,text,posX,posY,width,height, textColor, borderColor){
@@ -962,272 +1018,12 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
 	            if ($("div#incomingLinks a").length < 2) {
 	                $("#noLinksToSpace").show()
 	            }
-            $('#externalLink-imageId').prop("disabled",true);
-            $('#module-imageId').prop("disabled",true);
-            $('#space-imageId').prop("disabled",true);
-            
-        	// Choose from Local for Space, Modules and External Links
-        	$('#externalLink-chooseFromLocal').click(function() {
-        		$("#externalLinkInfo-selectedImage").empty();
-        		$('#externalLink-imageId').prop('selectedIndex',0).trigger( "change" );
-        		$('#externalLink-imageId').prop("disabled",true);
-        		$('#externalLinkImage').prop("disabled",false);
-        		
-        	  });
-        	
-        	$('#module-chooseFromLocal').click(function() {
-        		$("#module-selectedImage").empty();
-        		$('#module-imageId').prop('selectedIndex',0).trigger( "change" );
-        		$('#module-imageId').prop("disabled",true);
-        		$('#moduleLinkImage').prop("disabled",false);
-        	});
-    		
-        	$('#space-chooseFromLocal').click(function() {
-        		$("#space-selectedImage").empty();
-        		$('#space-imageId').prop('selectedIndex',0).trigger( "change" );
-        		$('#space-imageId').prop("disabled",true);
-        		$('#spaceLinkImage').prop("disabled",false);
-        	});
-        	
-        	
-        	// Edit choose from Local for Space, Modules and External Links
-        	$('#editSpace-chooseFromLocal').click(function() {
-        		$('#editSpace-imageId').prop('selectedIndex',0).trigger( "change" );
-        		$('#editSpace-imageId').prop("disabled",true);
-        		$('#editSpaceLinkImage').prop("disabled",false);
-        	});
-        	
-        	$('#editModule-chooseFromLocal').click(function() {
-        		$('#editModule-imageId').prop('selectedIndex',0).trigger( "change" );
-        		$('#editModule-imageId').prop("disabled",true);
-        		$('#editModuleImage').prop("disabled",false);
-        	});
-        	
-        	$('#editExternalLinkInfo-chooseFromLocal').click(function() {
-        		$('#editExternalLinkInfo-imageId').prop('selectedIndex',0).trigger( "change" );
-        		$('#editExternalLinkInfo-imageId').prop("disabled",true);
-        		$('#editExternalLinkInfoImage').prop("disabled",false);
-        	});
-
-        	// Choose from exisiting Images for Space, Module and ExtrernalLinks
-        	$('#module-chooseFromExisting').click(function() {
-        		$('#moduleLinkImage').val('');
-        		$('#moduleLinkImage').prop("disabled",true);
-        		$('#module-imageId').prop("disabled",false);
-        	});
-        	
-        	$('#space-chooseFromExisting').click(function() {
-        		$('#spaceLinkImage').val('');
-        		$('#spaceLinkImage').prop("disabled",true);
-        		$('#space-imageId').prop("disabled",false);
-        	  });
-        	
-        	$('#externalLink-chooseFromExisting').click(function() {
-        		$('#externalLinkImage').val('');
-        		$('#externalLinkImage').prop("disabled",true);
-        		$('#externalLink-imageId').prop("disabled",false);
-        	});
-        	
-        	
-        	// Edit choose from exisiting images for Space, Module and ExtrernalLinks
-        	$('#editModule-chooseFromExisting').click(function() {
-        		$('#editModuleImage').prop("disabled",true);
-        		$('#editModule-imageId').prop("disabled",false);
-        	});
-        	
-        	$('#editSpace-chooseFromExisting').click(function() {
-        		$('#editSpaceLinkImage').val('');
-        		$('#editSpaceLinkImage').prop("disabled",true);
-        		$('#editSpace-imageId').prop("disabled",false);
-        	  });
-        	
-        	$('#editExternalLinkInfo-chooseFromExisting').click(function() {
-        		$('#editExternalLinkInfoImage').val('');
-        		$('#editExternalLinkInfoImage').prop("disabled",true);
-        		$('#editExternalLinkInfo-imageId').prop("disabled",false);
-        	  });
-        	
-    		// Linked Images for Space, Module and ExtrernalLinks
-        	$("#spaceLinkImage").click(function() {
-            	$("#space-selectedImage").empty();
-            	$('#space-imageId').prop('selectedIndex',0).trigger( "change" );
-            });
-        	
-        	$("#moduleLinkImage").click(function() {
-            	$("#module-selectedImage").empty();
-            	$('#module-imageId').prop('selectedIndex',0).trigger( "change" );
-            });
-        	
-        	$("#externalLinkImage").click(function() {
-            	$("#externalLinkInfo-selectedImage").empty();
-            	$('#externalLink-imageId').prop('selectedIndex',0).trigger( "change" );
-            });
-        	
-        	
-            $("#externalLink-imageId").select2({
-        		ajax: {
-        		    url: function (params) {
-        		  		var imageURL = [[@{|/staff/images/search|}]];
-        		  		return imageURL;
-        		    },
-        		    dataType: 'json',
-        		    processResults: function (data) {
-        		        return {
-        		          results: data,
-        		        };
-        		      },
-        		},
-        		templateResult: formatImage,
-        		templateSelection: formatSelection
-            });
-            
-            $("#module-imageId").select2({
-        		ajax: {
-        		    url: function (params) {
-        		  		var imageURL = [[@{|/staff/images/search|}]];
-        		  		return imageURL;
-        		    },
-        		    dataType: 'json',
-        		    processResults: function (data) {
-        		        return {
-        		          results: data,
-        		        };
-        		      },
-        		},
-        		templateResult: formatImage,
-        		templateSelection: formatSelection
-            });
-            
-            $("#space-imageId").select2({
-        		ajax: {
-        		    url: function (params) {
-        		  		var imageURL = [[@{|/staff/images/search|}]];
-        		  		return imageURL;
-        		    },
-        		    dataType: 'json',
-        		    processResults: function (data) {
-        		        return {
-        		          results: data,
-        		        };
-        		      },
-        		},
-        		templateResult: formatImage,
-        		templateSelection: formatSelection
-            });
-            
-            $("#editSpace-imageId").select2({
-        		ajax: {
-        		    url: function (params) {
-        		  		var imageURL = [[@{|/staff/images/search|}]];
-        		  		return imageURL;
-        		    },
-        		    dataType: 'json',
-        		    processResults: function (data) {
-        		        return {
-        		          results: data,
-        		        };
-        		      },
-        		},
-        		templateResult: formatImage,
-        		templateSelection: editSpaceFormatSelection
-            });
-            
-            $("#editModule-imageId").select2({
-        		ajax: {
-        		    url: function (params) {
-        		  		var imageURL = [[@{|/staff/images/search|}]];
-        		  		return imageURL;
-        		    },
-        		    dataType: 'json',
-        		    processResults: function (data) {
-        		        return {
-        		          results: data,
-        		        };
-        		      },
-        		},
-        		templateResult: formatImage,
-        		templateSelection: editModuleLinkFormatSelection
-            });
-            
-            $("#editExternalLinkInfo-imageId").select2({
-        		ajax: {
-        		    url: function (params) {
-        		  		var imageURL = [[@{|/staff/images/search|}]];
-        		  		return imageURL;
-        		    },
-        		    dataType: 'json',
-        		    processResults: function (data) {
-        		        return {
-        		          results: data,
-        		        };
-        		      },
-        		},
-        		templateResult: formatImage,
-        		templateSelection: editExternalLinkInfoFormatSelection
-            });
-            
-            function formatImage (image) {
-            	if (!image.id) {
-            		return image.text;
-            	}
-            	var tbaseUrl = [[@{|/api/image/|}]];
-            	var $image = $(
-            			'<span><img src="' + tbaseUrl + image.id + '" class="img-thumbnail" /> ' + image.text + '</span>'
-            	);
-            	return $image;
-            };
-            
-            function formatSelection(image) {
-            	if (!image.id) {
-                    return image.text;
-                }
-            	var tbaseUrl = [[@{|/api/image/|}]];
-                var $image = $(
-                        '<span>' + image.text + '</span>'
-                );
-                $("#selectedImage").empty();
-                $("#selectedImage").append('<img width="200px" src="' + tbaseUrl + image.id + '" class="img-thumbnail" />');
-                return $image;
-            }
-            
-            function editSpaceFormatSelection(image) {
-            	if (!image.id) {
-                    return image.text;
-                }
-            	var tbaseUrl = [[@{|/api/image/|}]];
-                var $image = $(
-                        '<span>' + image.text + '</span>'
-                );
-                $("#editSpace-selectedImage").empty();
-                $("#editSpace-selectedImage").append('<img width="200px" src="' + tbaseUrl + image.id + '" class="img-thumbnail" />');
-                return $image;
-            }
-            
-            function editModuleLinkFormatSelection(image) {
-            	if (!image.id) {
-                    return image.text;
-                }
-            	var tbaseUrl = [[@{|/api/image/|}]];
-                var $image = $(
-                        '<span>' + image.text + '</span>'
-                );
-                $("#editModuleLink-selectedImage").empty();
-                $("#editModuleLink-selectedImage").append('<img width="200px" src="' + tbaseUrl + image.id + '" class="img-thumbnail" />');
-                return $image;
-            }
-            
-            function editExternalLinkInfoFormatSelection(image) {
-            	if (!image.id) {
-                    return image.text;
-                }
-            	var tbaseUrl = [[@{|/api/image/|}]];
-                var $image = $(
-                        '<span>' + image.text + '</span>'
-                );
-                $("#editExternalLinkInfo-selectedImage").empty();
-                $("#editExternalLinkInfo-selectedImage").append('<img width="200px" src="' + tbaseUrl + image.id + '" class="img-thumbnail" />');
-                return $image;
-            }
+	            initImageChooser("spaceLink", "spaceLinkImage");
+	            initImageChooser("moduleLink", "moduleLinkImage");
+	            initImageChooser("externalLink", "externalLinkImage");
+	            initImageChooser("editSpaceLink", "spaceLinkImageEdit");
+	            initImageChooser("editModuleLink", "moduleLinkImageEdit");
+	            initImageChooser("editExternalLink", "externalLinkImageEdit");
 	        });
 	
 	        // -------- buttons that open modals (e.g. to create space links) ------
@@ -1436,6 +1232,11 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
 	                $('#errorAlert').show();
 	                return;
 	            }
+	            if ($("#type").val() == "IMAGE" && !hasLinkImage("spaceLink", "spaceLinkImage")) {
+	                $("#errorMsg").text("Please upload an image or choose an existing one.")
+	                $('#errorAlert').show();
+	                return;
+	            }
 	
 	            if (storeX == undefined || storeY == undefined) {
 	                $("#errorMsg").text("Please click on the image to specify where the new link should be located.")
@@ -1528,6 +1329,11 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
 	                $('#errorAlert').show();
 	                return;
 	            }
+	            if ($("#moduleType").val() == "IMAGE" && !hasLinkImage("moduleLink", "moduleLinkImage")) {
+	                $("#errorMsg").text("Please upload an image or choose an existing one.")
+	                $('#errorAlert').show();
+	                return;
+	            }
 	
 	            $("#moduleLinkX").val(storeX);
 	            $("#moduleLinkY").val(storeY - 25);
@@ -1564,10 +1370,7 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
 	                    $("#link").attr("id","");
 	                    $("#createModuleLinkAlert").hide();
 	                    $("#errorMsg").text("");
-                    $("#module-selectedImage").empty();
-                    $("#module-imageId").val(null).trigger('change');
 	                    $('#errorAlert').hide();
-                    console.log("Success");
 	                    $("."+linkData["id"]).remove();
 	                    form[0].reset();
 	                    $("#space").css("display", "none");
@@ -1726,7 +1529,6 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
 	        });
 	
 	        $("#createExternalLinkBtn").click(function(e) {
-        	
 	            e.preventDefault();
 	            $("#space").scrollTop(0);
 	            var payload = {};
@@ -1758,17 +1560,16 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
 	                $('#errorAlert').show();
 	                return;
 	            }
+	            if ($("#extType").val() == "IMAGE" && !hasLinkImage("externalLink", "externalLinkImage")) {
+	                $("#errorMsg").text("Please upload an image or choose an existing one.")
+	                $('#errorAlert').show();
+	                return;
+	            }
 	            $("#externalLinkX").val(storeX);
 	            $("#externalLinkY").val(storeY - 25);
 	
-            var file = $('#externalLinkImage')[0].files[0];
 	            var form = $("#createExternalLinkForm");
 	            var formData = new FormData(form[0]);
-/*             var chooseFromExisting = true;
-        	if (typeof(file) != "undefined"){
-        		chooseFromExisting = false;
-        		formData.append('file', file);
-        	} */
 	            var externalLinkInfo = createExternalLinkInfo();
 	
 	            $.ajax({
@@ -1797,8 +1598,6 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
 	                    $("#link").attr("id","");
 	                    $("#createExternalLinkAlert").hide();
 	                    $("#errorMsg").text("");
-                    $("externalLink-imageId").value = "";
-                    $("#externalLinkInfo-selectedImage").empty();
 	                    $('#errorAlert').hide();
 	                    $("."+linkData["id"]).remove();
 	                    form[0].reset();
@@ -2296,22 +2095,21 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
 	                        <label>Image</label>
 	                    </div>
 	                    <div class="col-sm-8">
-							<input type="radio" id="space-chooseFromLocal" name="uploadRadioBtn" checked />
-	                    		<label for="space-chooseFromLocal" class="mb-0"><small>Upload Image: </small></label>
+	                        <input type="radio" id="spaceLink-chooseFromLocal" name="spaceLink-imageSource" checked />
+	                        <label for="spaceLink-chooseFromLocal" class="mb-0"><small>Upload Image: </small></label>
 	                        <label for="spaceLinkImage" class="sr-only">Image file to upload</label>
 	                        <input type="file" class="form-control-sm-xs" name="spaceLinkImage" id="spaceLinkImage" style="width: inherit">
-	                        <input type="radio" id="space-chooseFromExisting" name="uploadRadioBtn" />
+	                        <input type="radio" id="spaceLink-chooseFromExisting" name="spaceLink-imageSource" />
 	                        <div>
-								<label for="space-chooseFromExisting" class="mb-0"><small>Choose from existing: </small></label>
-								<label for="space-imageId" class="sr-only">Existing image</label>
-								<select id="space-imageId" name="space-imageId" class="form-control-xs target"
-									style="height: 50px; width: 200px;">
-									<option selected value="">Choose from existing</option>
-								</select>
-							</div>
-							<div>
-								<span id="space-selectedImage" width="200px"></span>
-							</div>
+	                            <label for="spaceLink-chooseFromExisting" class="mb-0"><small>Choose from existing: </small></label>
+	                            <label for="spaceLink-imageId" class="sr-only">Existing image</label>
+	                            <select id="spaceLink-imageId" name="spaceLink-imageId" class="form-control-xs target" style="height: 50px; width: 200px;">
+	                                <option selected value="">Choose from existing</option>
+	                            </select>
+	                        </div>
+	                        <div>
+	                            <span id="spaceLink-selectedImage"></span>
+	                        </div>
 	                    </div>
 	                </div>
 	                <p class="mt-5 text-center">
@@ -2390,27 +2188,25 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
 	                
 	
 	                <div class="row">
-	                    <div class="col-sm-4" style="padding-right: 0;">
+	                    <div class="col-sm-4">
 	                        <label>Image</label>
 	                    </div>
-	                     <div class="col-sm-8">
- 	                        <input type="radio" id="module-chooseFromLocal" name="uploadRadioBtn" checked />
-	                    		<label for="module-chooseFromLocal" class="mb-0"><small>Upload Image: </small></label>
+	                    <div class="col-sm-8">
+	                        <input type="radio" id="moduleLink-chooseFromLocal" name="moduleLink-imageSource" checked />
+	                        <label for="moduleLink-chooseFromLocal" class="mb-0"><small>Upload Image: </small></label>
 	                        <label for="moduleLinkImage" class="sr-only">Image file to upload</label>
 	                        <input type="file" class="form-control-sm" name="moduleLinkImage" id="moduleLinkImage" style="width: inherit">
-	                        <input type="radio" id="module-chooseFromExisting" name="uploadRadioBtn" />
+	                        <input type="radio" id="moduleLink-chooseFromExisting" name="moduleLink-imageSource" />
 	                        <div>
-								<label for="module-chooseFromExisting" class="mb-0"><small>Choose from existing: </small></label>
-								<label for="module-imageId" class="sr-only">Existing image</label>
-								<select id="module-imageId" name="module-imageId"
-									class="form-control-xs target"
-									style="height: 50px; width: 200px;">
-									<option selected value="">Choose from existing</option>
-								</select>
-							</div>
-							<div>
-								<span id="module-selectedImage" width="200px"></span>
-							</div>
+	                            <label for="moduleLink-chooseFromExisting" class="mb-0"><small>Choose from existing: </small></label>
+	                            <label for="moduleLink-imageId" class="sr-only">Existing image</label>
+	                            <select id="moduleLink-imageId" name="moduleLink-imageId" class="form-control-xs target" style="height: 50px; width: 200px;">
+	                                <option selected value="">Choose from existing</option>
+	                            </select>
+	                        </div>
+	                        <div>
+	                            <span id="moduleLink-selectedImage"></span>
+	                        </div>
 	                    </div>
 	                </div>
 	                <p class="mt-5 text-center">
@@ -2489,23 +2285,21 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
 	                        <label>Image</label>
 	                    </div>
 	                    <div class="col-sm-8">
-	                    	<input type="radio" id="externalLink-chooseFromLocal" name="uploadRadioBtn" checked />
-	                    		<label for="externalLink-chooseFromLocal" class="mb-0"><small>Upload Image: </small></label>
+	                        <input type="radio" id="externalLink-chooseFromLocal" name="externalLink-imageSource" checked />
+	                        <label for="externalLink-chooseFromLocal" class="mb-0"><small>Upload Image: </small></label>
 	                        <label for="externalLinkImage" class="sr-only">Image file to upload</label>
 	                        <input type="file" class="form-control-sm" name="externalLinkImage" id="externalLinkImage" style="width: inherit">
-	                        <input type="radio" id="externalLink-chooseFromExisting" name="uploadRadioBtn" />
+	                        <input type="radio" id="externalLink-chooseFromExisting" name="externalLink-imageSource" />
 	                        <div>
-								<label for="externalLink-chooseFromExisting" class="mb-0"><small>Choose from existing: </small></label>
-								<label for="externalLink-imageId" class="sr-only">Existing image</label>
-								<select id="externalLink-imageId" name="externalLink-imageId"
-									class="form-control-xs target"
-									style="height: 50px; width: 200px;">
-									<option selected value="">Choose from existing</option>
-								</select>
-							</div>
-							<div>
-								<span id="externalLink-selectedImage" width="200px"></span>
-							</div>
+	                            <label for="externalLink-chooseFromExisting" class="mb-0"><small>Choose from existing: </small></label>
+	                            <label for="externalLink-imageId" class="sr-only">Existing image</label>
+	                            <select id="externalLink-imageId" name="externalLink-imageId" class="form-control-xs target" style="height: 50px; width: 200px;">
+	                                <option selected value="">Choose from existing</option>
+	                            </select>
+	                        </div>
+	                        <div>
+	                            <span id="externalLink-selectedImage"></span>
+	                        </div>
 	                    </div>
 	                </div>
 	                <p class="mt-5 text-center">
@@ -2616,6 +2410,7 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
 					</div>
 	                
 	                <input type="hidden" name="spaceLinkIdValueEdit" id="spaceLinkIdValueEdit" />
+	
 	                <input type="hidden" name="x" id="spaceLinkXEdit" /> 
 	                <input type="hidden" name="y" id="spaceLinkYEdit" /> 
 	                <input type="hidden" name="spaceLinkDisplayId" id="spaceLinkDisplayId" />
@@ -2677,22 +2472,21 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
 	                        <label>Image</label>
 	                    </div>
 	                    <div class="col-sm-8">
-							<input type="radio" id="editSpace-chooseFromLocal" name="uploadRadioBtn" checked />
-	                    		<label for="editSpace-chooseFromLocal" class="mb-0"><small>Upload Image: </small></label>
-	                        <label for="editSpaceLinkImage" class="sr-only">Image file to upload</label>
-	                        <input type="file" class="form-control-sm-xs" name="editSpaceLinkImage" id="editSpaceLinkImage" style="width: inherit">
-	                        <input type="radio" id="editSpace-chooseFromExisting" name="uploadRadioBtn" />
+	                        <input type="radio" id="editSpaceLink-chooseFromLocal" name="editSpaceLink-imageSource" checked />
+	                        <label for="editSpaceLink-chooseFromLocal" class="mb-0"><small>Upload Image: </small></label>
+	                        <label for="spaceLinkImageEdit" class="sr-only">Image file to upload</label>
+	                        <input type="file" class="form-control-sm" name="spaceLinkImage" id="spaceLinkImageEdit" style="width: inherit"/>
+	                        <input type="radio" id="editSpaceLink-chooseFromExisting" name="editSpaceLink-imageSource" />
 	                        <div>
-								<label for="editSpace-chooseFromExisting" class="mb-0"><small>Choose from existing: </small></label>
-								<label for="editSpace-imageId" class="sr-only">Existing image</label>
-								<select id="editSpace-imageId" name="editSpace-imageId" class="form-control-xs target"
-									style="height: 50px; width: 200px;">
-									<option selected value="">Choose from existing</option>
-								</select>
-							</div>
-							<div>
-								<span id="editSpace-selectedImage" width="200px"></span>
-							</div>
+	                            <label for="editSpaceLink-chooseFromExisting" class="mb-0"><small>Choose from existing: </small></label>
+	                            <label for="editSpaceLink-imageId" class="sr-only">Existing image</label>
+	                            <select id="editSpaceLink-imageId" name="editSpaceLink-imageId" class="form-control-xs target" style="height: 50px; width: 200px;">
+	                                <option selected value="">Choose from existing</option>
+	                            </select>
+	                        </div>
+	                        <div>
+	                            <span id="editSpaceLink-selectedImage"></span>
+	                        </div>
 	                    </div>
 	                </div>
 	                
@@ -2788,24 +2582,26 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
                             <label>Image:</label>
                         </div>
                         <div class="col-sm-9">
-                        	<input type="radio" id="editModule-chooseFromLocal" name="uploadRadioBtn" checked />
-	                    		<label for="editModule-chooseFromLocal" class="mb-0"><small>Upload Image: </small></label>
-	                        <label for="editModuleImage" class="sr-only">Image file to upload</label>
-	                        	<input type="file" class="form-control-sm" name="editModuleImage" id="editModuleImage" style="width: inherit" />
-	                        <input type="radio" id="editModule-chooseFromExisting" name="uploadRadioBtn" />
-	                        <div>
-								<label for="editModule-chooseFromExisting" class="mb-0"><small>Choose from existing: </small></label>
-								<label for="editModule-imageId" class="sr-only">Existing image</label>
-								<select id="editModule-imageId" name="editModule-imageId" class="form-control-xs target"
-									style="height: 50px; width: 200px;">
-									<option selected value="">Choose from existing</option>
-								</select>
-							</div>
-							<div>
-								<span id="editModuleLink-selectedImage" width="200px"></span>
-							</div>
+                            <input type="radio" id="editModuleLink-chooseFromLocal" name="editModuleLink-imageSource" checked />
+                            <label for="editModuleLink-chooseFromLocal" class="mb-0"><small>Upload Image: </small></label>
+                            <label for="moduleLinkImageEdit" class="sr-only">Image file to upload</label>
+                            <input type="file" class="form-control-sm"
+                                name="moduleLinkImage"
+                                id="moduleLinkImageEdit" style="width: inherit" />
+                            <input type="radio" id="editModuleLink-chooseFromExisting" name="editModuleLink-imageSource" />
+                            <div>
+                                <label for="editModuleLink-chooseFromExisting" class="mb-0"><small>Choose from existing: </small></label>
+                                <label for="editModuleLink-imageId" class="sr-only">Existing image</label>
+                                <select id="editModuleLink-imageId" name="editModuleLink-imageId" class="form-control-xs target" style="height: 50px; width: 200px;">
+                                    <option selected value="">Choose from existing</option>
+                                </select>
+                            </div>
+                            <div>
+                                <span id="editModuleLink-selectedImage"></span>
+                            </div>
                         </div>
                     </div>
+                    
                     
                     <p class="mt-5 text-center">
                         <button id="deleteModuleLinkButton" type="reset" class="btn delete-btn btn-sm"><i class="fa fa-trash"></i>Delete</button>
@@ -2898,23 +2694,23 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
                             <label>Image:</label>
                         </div>
                         <div class="col-sm-9">
-							<input type="radio" id="editExternalLinkInfo-chooseFromLocal" name="uploadRadioBtn" checked />
-                        
-                            <label for="editExternalLinkInfo-chooseFromLocal" class="mb-0"><small>Upload Image: </small></label>
-	                        <label for="editExternalLinkInfoImage" class="sr-only">Image file to upload</label>
-	                        	<input type="file" class="form-control-sm" name="editExternalLinkInfoImage" id="editExternalLinkInfoImage" style="width: inherit" />
-	                        <input type="radio" id="editExternalLinkInfo-chooseFromExisting" name="uploadRadioBtn" />
-	                        <div>
-								<label for="editExternalLinkInfo-chooseFromExisting" class="mb-0"><small>Choose from existing: </small></label>
-								<label for="editExternalLinkInfo-imageId" class="sr-only">Existing image</label>
-								<select id="editExternalLinkInfo-imageId" name="editExternalLinkInfo-imageId" class="form-control-xs target"
-									style="height: 50px; width: 200px;">
-									<option selected value="">Choose from existing</option>
-								</select>
-							</div>
-							<div>
-								<span id="editExternalLinkInfo-selectedImage" width="200px"></span>
-							</div>
+                            <input type="radio" id="editExternalLink-chooseFromLocal" name="editExternalLink-imageSource" checked />
+                            <label for="editExternalLink-chooseFromLocal" class="mb-0"><small>Upload Image: </small></label>
+                            <label for="externalLinkImageEdit" class="sr-only">Image file to upload</label>
+                            <input type="file" class="form-control-sm"
+                                name="externalLinkImage"
+                                id="externalLinkImageEdit" style="width: inherit" />
+                            <input type="radio" id="editExternalLink-chooseFromExisting" name="editExternalLink-imageSource" />
+                            <div>
+                                <label for="editExternalLink-chooseFromExisting" class="mb-0"><small>Choose from existing: </small></label>
+                                <label for="editExternalLink-imageId" class="sr-only">Existing image</label>
+                                <select id="editExternalLink-imageId" name="editExternalLink-imageId" class="form-control-xs target" style="height: 50px; width: 200px;">
+                                    <option selected value="">Choose from existing</option>
+                                </select>
+                            </div>
+                            <div>
+                                <span id="editExternalLink-selectedImage"></span>
+                            </div>
                         </div>
                     </div>
                     

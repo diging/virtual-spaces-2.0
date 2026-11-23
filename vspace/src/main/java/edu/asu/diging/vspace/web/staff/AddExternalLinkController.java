@@ -38,27 +38,26 @@ public class AddExternalLinkController {
     public ResponseEntity<String> createExternalLink(@PathVariable("id") String id, @RequestParam("x") String x,
             @RequestParam("y") String y, @RequestParam("externalLinkLabel") String title,
             @RequestParam("url") String externalLink, @RequestParam("tabOpen") String howToOpen,
-            @RequestParam("type") String displayType, @RequestParam(value="externalLinkImage", required=false) MultipartFile file,
-            @RequestParam(value="externalLink-imageId", required=false) String imageId)
-            throws NumberFormatException, SpaceDoesNotExistException, IOException, ImageCouldNotBeStoredException, ImageDoesNotExistException {
+            @RequestParam("type") String displayType,
+            @RequestParam(value = "externalLinkImage", required = false) MultipartFile file,
+            @RequestParam(value = "externalLink-imageId", required = false) String existingImageId)
+            throws NumberFormatException, SpaceDoesNotExistException, IOException, ImageCouldNotBeStoredException {
 
         ISpace space = spaceManager.getSpace(id);
-        String desc = "";
         if (space == null) {
             return new ResponseEntity<>("{'error': 'Space could not be found.'}", HttpStatus.NOT_FOUND);
         }
 
-        byte[] linkImage = null;
-        String filename = null;
-        
         if (DisplayType.IMAGE.name().equals(displayType) && (file == null || file.isEmpty())
-                && (imageId == null || imageId.trim().isEmpty())) {
+                && (existingImageId == null || existingImageId.trim().isEmpty())) {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode node = mapper.createObjectNode();
-            node.put("errorMessage", "No image provided for external link.");
+            node.put("errorMessage", "Please upload an image or choose an existing one for the external link.");
             return new ResponseEntity<String>(mapper.writeValueAsString(node), HttpStatus.BAD_REQUEST);
         }
-        
+
+        byte[] linkImage = null;
+        String filename = null;
         if (file != null) {
             linkImage = file.getBytes();
             filename = file.getOriginalFilename();
@@ -66,9 +65,16 @@ public class AddExternalLinkController {
         DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
         ExternalLinkDisplayMode externalLinkOpenMode = howToOpen.isEmpty() ? null
                 : ExternalLinkDisplayMode.valueOf(howToOpen);
-        IExternalLinkDisplay display = externalLinkManager.createLink(title, id, new Float(x), new Float(y), 0,
-                externalLink, title, desc, type, linkImage, filename, externalLinkOpenMode, imageId);
-        
+        IExternalLinkDisplay display;
+        try {
+            display = externalLinkManager.createLink(title, id, new Float(x), new Float(y), 0, externalLink, title,
+                    type, linkImage, filename, externalLinkOpenMode, existingImageId);
+        } catch (ImageDoesNotExistException e) {
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode node = mapper.createObjectNode();
+            node.put("errorMessage", "The selected image could not be found.");
+            return new ResponseEntity<>(mapper.writeValueAsString(node), HttpStatus.BAD_REQUEST);
+        }
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode linkNode = mapper.createObjectNode();
         linkNode.put("id", display.getExternalLink().getId());
