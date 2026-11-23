@@ -126,10 +126,6 @@ ul{
 				    elem.msRequestFullscreen();
 				  }
 			   $("#Module_1").append('<div class = "exitfullscreen"><button class="btn circle-btn" style="padding: 3px;width: 35px;height: 35px;position: fixed;right: 0;bottom: 0;margin: 0 2rem 2rem 0;" onclick="exitFullScreen()"><span class="icon-collapse secondary"></span><span class="tooltiptextForExitFullscreen">Exit Full screen</span></button></div>')
-			   var sidebar = document.querySelector('.external-resources-sidebar');
-			   if (sidebar) {
-			       sidebar.style.zIndex = '9999';
-			   }
 		}
 
 		function exitFullScreen()
@@ -137,10 +133,6 @@ ul{
 			$(".exitfullscreen").remove();
 			$(".imgFullScreen").show();
 			$("#Module_1").css('overflow-y','visible')
-			var sidebar = document.querySelector('.external-resources-sidebar');
-			if (sidebar) {
-			    sidebar.style.zIndex = '105';
-			}
 			if (document.exitFullscreen) {
 			    document.exitFullscreen();
 			  } else if (document.webkitExitFullscreen) { /* Safari */
@@ -153,7 +145,7 @@ ul{
         function showModuleMapModal(){
         	$("#moduleOverviewModal").show();
         }
-
+        	
         function closeModal(){
         	$("#moduleOverviewModal").hide();
         }
@@ -267,7 +259,7 @@ ul{
                                 <a th:href="@{${link.getExternalLink()}}"
                                    target="_blank"
                                    class="external-resource-link">
-                                    <span class="icon-link-out secondary" style="font-size: 14px; margin-right: 5px;"></span>
+                                    <span class="icon-link-alt secondary" style="font-size: 14px; margin-right: 5px;"></span>
                                     [[${link.getLabel()}]]
                                 </a>
                             </div>

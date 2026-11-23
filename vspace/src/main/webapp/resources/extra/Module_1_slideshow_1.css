@@ -233,6 +233,16 @@ a, a:hover, a:focus {
     visibility: visible;
 }
 
+/* External Links Modal: smaller than the full screen module map modal */
+#externalLinksModal .modal-dialog {
+    margin: 10vh auto;
+}
+
+#externalLinksModal .modal-content {
+    width: auto;
+    height: auto;
+}
+
 /* External Links Modal Content */
 .external-resources-content {
     display: flex;
