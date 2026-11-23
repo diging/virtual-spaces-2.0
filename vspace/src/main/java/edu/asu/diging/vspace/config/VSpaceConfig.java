@@ -1,12 +1,11 @@
 package edu.asu.diging.vspace.config;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Configuration
@@ -15,15 +14,15 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @EnableWebMvc
 @PropertySource({"classpath:config.properties", "${appConfigFile:classpath:}/app.properties"})
 public class VSpaceConfig {
-	
-	@Value("${max_upload_size}")
-	private String maxUploadSize;
 
-	@Bean(name = "multipartResolver")
-	public CommonsMultipartResolver multipartResolver() {
-	    CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
-	    multipartResolver.setMaxUploadSize(new Long(maxUploadSize));
-	    return multipartResolver;
-	}
-	
+    /**
+     * Spring 6 removed the commons-fileupload based resolver. Multipart parsing is
+     * now done by the servlet container; upload size limits are configured via
+     * the multipart-config element of the dispatcher servlet in web.xml.
+     */
+    @Bean(name = "multipartResolver")
+    public StandardServletMultipartResolver multipartResolver() {
+        return new StandardServletMultipartResolver();
+    }
+
 }
