@@ -41,6 +41,7 @@
                     var alert = $('<div class="alert alert-success alert-dismissible fade show" role="alert"><p>Snapshot '+folderName+' is ready. Please click to download. <a href=[[@{/staff/snapshot/'+id+'?folderName='+folderName+'}]] > <span class="btn primary-btn btn-sm">Download</span></a> </p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
                     $('.successAlert').empty();
                     $('.successAlert').append(alert);
+                    refreshDownloadsList();
                 }
             },
             error : function(data) {
@@ -56,6 +57,17 @@
         });
     }
     
+    // Reloads the rows of the downloads table, so a finished snapshot shows up without reloading the page
+    function refreshDownloadsList() {
+        var url = "[(@{'/staff/snapshots/list'})]" + "?downloadsPagenum=" + [[${downloadsCurrentPageNumber}]];
+        $.get(url, function(html) {
+            var rows = $('<div></div>').append($.parseHTML(html)).find('#downloads').html();
+            if (rows !== undefined) {
+                $('#downloads').html(rows);
+            }
+        });
+    }
+
     function triggerExhibitionSnapshotCreation(){ 
         // Show immediate feedback
         var button = $('.download');
@@ -111,6 +123,7 @@
                         var alert = $('<div class="alert alert-success alert-dismissible fade show" role="alert"><p>Snapshot '+folderName+' is ready. Please click to download. <a href=[[@{/staff/snapshot/'+id+'?folderName='+folderName+'}]] > <span class="btn primary-btn btn-sm">Download</span></a> </p><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
                         $('.successAlert').empty();
                         $('.successAlert').append(alert);
+                        refreshDownloadsList();
                         return resolve(result);
                     } else {
                         setTimeout( executePoll, interval, resolve, reject  );

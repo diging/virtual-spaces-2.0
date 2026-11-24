@@ -22,6 +22,10 @@
     background: rgba(0, 0, 0, 0.6);
 }
 
+.Info_cz_Class:hover {
+    z-index: 999;
+}
+
 .Info_cz_Class:hover .tooltiptext {
     visibility: visible;
 }
@@ -37,6 +41,7 @@
     overflow-x: hidden;
     transition: 0.5s;
     padding-top: 60px;
+    overflow-y: scroll;
 }
 
 .sidenav a {
@@ -285,6 +290,11 @@
                 linkDisplay.find(".tooltiptextalert").text(link.name);
             } else if (link.type == "IMAGE" && link.imageSrc) {
                 linkDisplay = $('<img/>').attr("src", link.imageSrc);
+            } else if (link.defaultImageSrc) {
+                // custom default link image of the exhibition, drawn like on the live space page
+                linkDisplay = $('<div class="Info_cz_Class"><img width="30" height="30" style="border-radius: 50%"/><span class="tooltiptext"></span></div>');
+                linkDisplay.find("img").attr("src", link.defaultImageSrc);
+                linkDisplay.find(".tooltiptext").text(link.name);
             } else {
                 linkDisplay = $('<div class="Info_cz_Class"><svg aria-hidden="true" class="Ellipse_8_c"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg aria-hidden="true" class="Ellipse_10_c"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg aria-hidden="true" class="Ellipse_9_c"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="' + iconClasses[link.kind] + '"></span><span class="tooltiptext"></span></div>');
                 linkDisplay.find(".tooltiptext").text(link.name);
@@ -362,9 +372,8 @@
                                 <div class="list-group spaceNav">
                                     <ul style="list-style: none;"
                                         th:each="module: ${moduleList}">
-                                        <li><a
-                                            class="dropdown-item" th:href="${module.link.module?.startSequence != null ? module.link.module.startSequence.slides[0].id + '.html' : '#'}">
-                                            <div class="Info Info_cz_module_Class"><svg aria-hidden="true" class="Ellipse_8_module_c_sidenav"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg aria-hidden="true" class="Ellipse_10_module_c_sidenav"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg aria-hidden="true" class="Ellipse_9_module_c_sidenav"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-info Icon_awesome_info_module_m_sidenav"></span></div>[[${!#strings.isEmpty(module.link.name) ? module.link.name : module.link.module.name}]]</a></li>
+                                        <!-- No whitespace inside the link: .sideModulenav a uses white-space: pre-wrap -->
+                                        <li><a class="dropdown-item" th:href="${module.link.module?.startSequence != null && !#lists.isEmpty(module.link.module.startSequence.slides) ? module.link.module.startSequence.slides[0].id + '.html' : '#'}"><div class="Info Info_cz_module_Class"><svg aria-hidden="true" class="Ellipse_8_module_c_sidenav"><ellipse fill="rgba(222,222,222,1)" class="Ellipse_8_c_Class" rx="14.5" ry="14.5" cx="14.5" cy="14.5"></ellipse></svg><svg aria-hidden="true" class="Ellipse_10_module_c_sidenav"><ellipse fill="rgba(240,240,240,1)" class="Ellipse_10_c_Class" rx="12.5" ry="12.5" cx="12.5" cy="12.5"></ellipse></svg><svg aria-hidden="true" class="Ellipse_9_module_c_sidenav"><ellipse fill="rgba(255,255,255,1)" class="Ellipse_9_c_Class" rx="10.5" ry="10.5" cx="10.5" cy="10.5"></ellipse></svg><span class="icon-move Icon_awesome_info_module_m_sidenav"></span></div>[[${!#strings.isEmpty(module.link.name) ? module.link.name : module.link.module.name}]]</a></li>
                                     </ul>
                                 </div>
                             </div>

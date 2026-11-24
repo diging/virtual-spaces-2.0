@@ -59,7 +59,7 @@
                 </button>
             </a>
         </div>
-        <div th:if="${showAlert != true}" id="Module_1" class="Module_1_Class">
+        <div th:if="${showAlert != true}" id="Module_1" class="Module_1_Class" style="min-height: 100vh; overflow-y: visible; padding-bottom: 100px;">
         <div th:if="${showAlert != true}" style="padding-top: 4%; padding-bottom: 1%; background-color: white; position: relative; z-index: 100; top: 5.5%; width: 100%; display: flex;">
             <h3 class="textDiv">[[${module.name}]]</h3>
             <p class="slideNumberClass">Slide [[${currentNumOfSlide}]]/[[${numOfSlides}]]</p>
@@ -69,7 +69,7 @@
          <div style="position: relative;top: 6.5%;">
             <h3 style="text-align:center;">[[${currentSlideCon.name}]]</h3>
             <div id="blocks" class="Group_8_Class" th:each="contents: ${currentSlideCon.contents}">
-                <img th:if="${contents.elementType ==  'ImageBlock'}" id="${contents.id}" class="imgDiv" th:alt="${contents.image.filename}" th:src="${'./images/'+ contents.image.id + '/'+ contents.image.filename}" style="max-width:57%">
+                <img th:if="${contents.elementType ==  'ImageBlock'}" id="${contents.id}" class="imgDiv" th:alt="${contents.image.filename}" th:src="${'./images/'+ contents.image.id + '/'+ contents.image.filename}" style="max-width:57%; max-height: 650px;">
                 <div th:if="${contents.elementType ==  'TextBlock'}" id="${contents.id}" class="textDiv">[(${contents.htmlRenderedText()})]</div>
                 <div th:if="${contents.elementType ==  'VideoBlock' && contents.video != null}" th:id="${contents.id}" class="VideoDiv">
                     <div>
@@ -98,25 +98,39 @@
             </div>
         </div>
         
-        <!-- Navigation buttons -->
-        <div style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 1000;">
-            <fieldset class="btn-group">
-                <a th:if="${prevSlide != null && prevSlide != ''}" 
-                   th:href="${prevSlide + '.html'}" 
-                   class="btn primary-btn">
-                    <span class="icon-chevron-left"></span> Previous
-                </a>
-                <a th:href="${spaceId + '.html'}" 
-                   class="btn outline" style="margin: 0 10px;">
-                    Back to Space
-                </a>
-                <a th:if="${nextSlide != null && nextSlide != ''}" 
-                   th:href="${nextSlide + '.html'}" 
-                   class="btn primary-btn">
-                    Next <span class="icon-chevron-right"></span>
-                </a>
-            </fieldset>
-        </div>
+        <!-- Navigation buttons, laid out like the live module page (exhibition/module.html) -->
+        <a th:if="${!#strings.isEmpty(prevSlide)}" th:href="${prevSlide + '.html'}">
+           <div class="Slideshow_previous_Class" style="position: fixed; z-index:110; left: 13%; top: 40.3%;">
+              <button class="btn circle-btn-slide-nav">
+                     <span class="icon-chevron-left slide-nav"></span>
+                     <span class="tooltiptext">Previous slide</span>
+              </button>
+           </div>
+        </a>
+        <a th:if="${!#strings.isEmpty(nextSlide)}" th:href="${nextSlide + '.html'}">
+           <div class="slideshow_next slideshow_next_Class" style="position: fixed; z-index:110; right: 11%; top: 40.3%;">
+                <button class="btn circle-btn-slide-nav">
+                     <span class="icon-chevron-right slide-nav"></span>
+                     <span class="tooltiptext">Next slide</span>
+                </button>
+           </div>
+        </a>
+        <a th:href="${spaceId + '.html'}">
+           <div class="exit_to_space_Class" style="position: fixed; z-index:120;">
+                 <button class="btn circle-btn">
+                     <span class="icon-double-chevron-left"></span>
+                     <span class="tooltiptext">Go To Space</span>
+                 </button>
+           </div>
+        </a>
+        <a th:if="${!#strings.isEmpty(firstSlide)}" th:href="${firstSlide + '.html'}">
+           <div class="exit_to_branchingPoint_Class" style="position: fixed; z-index:110;">
+                 <button class="btn circle-btn">
+                     <span class="icon-rewind-end"></span>
+                     <span class="tooltiptext">Go To Start Sequence of Module</span>
+                 </button>
+           </div>
+        </a>
       </div>
       </div>
     </body>

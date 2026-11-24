@@ -115,6 +115,12 @@ public class RenderingManager implements IRenderingManager {
     private final String PAGE_EXTENSION = ".html"; 
     
     private final String ERROR_PAGE_404 = "exhibition/downloads/page404Template";
+
+    private static final String LINK_KIND_SPACE = "space";
+
+    private static final String LINK_KIND_MODULE = "module";
+
+    private static final String LINK_KIND_EXTERNAL = "external";
     
     /**
      * Creates a snapshot of the given space and related modules into exhibitionFolder.
@@ -147,6 +153,15 @@ public class RenderingManager implements IRenderingManager {
         for (ILinkDisplay linkDisplay : linkDisplays) {
             if (linkDisplay.getType() == DisplayType.IMAGE) {
                 copyImage(linkDisplay.getImage(), imagesFolder);
+            }
+        }
+
+        // Copies the exhibition's default link images, which are used for links without an own image
+        IExhibition exhibition = exhibitManager.getStartExhibition();
+        for (String kind : new String[] { LINK_KIND_SPACE, LINK_KIND_MODULE, LINK_KIND_EXTERNAL }) {
+            IVSImage defaultImage = getDefaultLinkImage(exhibition, kind);
+            if (defaultImage != null) {
+                copyImage(defaultImage, imagesFolder);
             }
         }
 
@@ -388,18 +403,21 @@ public class RenderingManager implements IRenderingManager {
         List<Map<String, Object>> linkMarkers = new ArrayList<>();
         filteredSpaceLinks.forEach(spaceLink -> {
             String targetSpaceId = spaceLink.getLink().getTargetSpace().getId();
-            linkMarkers.add(createLinkMarker(spaceLink, "space", spaceLink.getLink().getName(),
-                    "../" + targetSpaceId + "/" + targetSpaceId + PAGE_EXTENSION, false));
+            linkMarkers.add(createLinkMarker(spaceLink, LINK_KIND_SPACE, spaceLink.getLink().getName(),
+                    "../" + targetSpaceId + "/" + targetSpaceId + PAGE_EXTENSION, false,
+                    getDefaultLinkImage(exhibition, LINK_KIND_SPACE)));
         });
         moduleLinks.forEach(moduleLink -> {
             String moduleStartPage = getModuleStartPage(moduleLink.getLink().getModule());
             if (moduleStartPage != null) {
-                linkMarkers.add(createLinkMarker(moduleLink, "module", moduleLink.getLink().getName(), moduleStartPage, false));
+                linkMarkers.add(createLinkMarker(moduleLink, LINK_KIND_MODULE, moduleLink.getLink().getName(),
+                        moduleStartPage, false, getDefaultLinkImage(exhibition, LINK_KIND_MODULE)));
             }
         });
-        externalLinks.forEach(externalLink -> linkMarkers.add(createLinkMarker(externalLink, "external",
+        externalLinks.forEach(externalLink -> linkMarkers.add(createLinkMarker(externalLink, LINK_KIND_EXTERNAL,
                 externalLink.getExternalLink().getName(), externalLink.getExternalLink().getExternalLink(),
-                externalLink.getHowToOpen() != ExternalLinkDisplayMode.SAMEWINDOW)));
+                externalLink.getHowToOpen() != ExternalLinkDisplayMode.SAMEWINDOW,
+                getDefaultLinkImage(exhibition, LINK_KIND_EXTERNAL))));
         context.setVariable("linkMarkers", linkMarkers);
 
         List<Map<String, Object>> spaceTextBlocks = spaceTextBlockManager.getSpaceTextBlockDisplays(id).stream()
@@ -434,10 +452,11 @@ public class RenderingManager implements IRenderingManager {
      * @param name        the label of the link
      * @param href        the relative or absolute url the link points to
      * @param newWindow   true if the link should be opened in a new window
+     * @param defaultImage the exhibition's default image for this kind of link, or null if there is none
      * @return map with the marker data
      */
     private Map<String, Object> createLinkMarker(ILinkDisplay linkDisplay, String kind, String name, String href,
-            boolean newWindow) {
+            boolean newWindow, IVSImage defaultImage) {
         Map<String, Object> marker = new HashMap<>();
         marker.put("kind", kind);
         marker.put("name", name);
@@ -449,9 +468,40 @@ public class RenderingManager implements IRenderingManager {
         marker.put("type", linkDisplay.getType() != null ? linkDisplay.getType().name() : null);
         IVSImage image = linkDisplay.getImage();
         if (linkDisplay.getType() == DisplayType.IMAGE && image != null) {
-            marker.put("imageSrc", "./" + IMAGES_FOLDER_NAME + "/" + image.getId() + "/" + image.getFilename());
+            marker.put("imageSrc", getImageSrc(image));
+        }
+        if (defaultImage != null) {
+            marker.put("defaultImageSrc", getImageSrc(defaultImage));
         }
         return marker;
+    }
+
+    private String getImageSrc(IVSImage image) {
+        return "./" + IMAGES_FOLDER_NAME + "/" + image.getId() + "/" + image.getFilename();
+    }
+
+    /**
+     * Returns the default image the exhibition shows for links of the given kind, the same way the
+     * live exhibition does: only if one was uploaded and it was not disabled.
+     *
+     * @param exhibition the exhibition, may be null
+     * @param kind       "space", "module" or "external"
+     * @return the default image or null if links of this kind have no default image
+     */
+    private IVSImage getDefaultLinkImage(IExhibition exhibition, String kind) {
+        if (exhibition == null) {
+            return null;
+        }
+        switch (kind) {
+        case LINK_KIND_SPACE:
+            return exhibition.isSpaceLinkDefaultImageDisabled() ? null : exhibition.getSpaceLinkDefaultImage();
+        case LINK_KIND_MODULE:
+            return exhibition.isModuleLinkDefaultImageDisabled() ? null : exhibition.getModuleLinkDefaultImage();
+        case LINK_KIND_EXTERNAL:
+            return exhibition.isExternalLinkDefaultImageDisabled() ? null : exhibition.getExternalLinkDefaultImage();
+        default:
+            return null;
+        }
     }
 
     /**

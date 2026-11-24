@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
@@ -41,8 +42,12 @@ import edu.asu.diging.vspace.core.model.IModule;
 import edu.asu.diging.vspace.core.model.IModuleLink;
 import edu.asu.diging.vspace.core.model.ISequence;
 import edu.asu.diging.vspace.core.model.ISlide;
+import edu.asu.diging.vspace.core.model.display.DisplayType;
+import edu.asu.diging.vspace.core.model.display.IModuleLinkDisplay;
 import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
+import edu.asu.diging.vspace.core.model.display.impl.ModuleLinkDisplay;
 import edu.asu.diging.vspace.core.model.display.impl.SpaceLinkDisplay;
+import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.Module;
 import edu.asu.diging.vspace.core.model.impl.ModuleLink;
 import edu.asu.diging.vspace.core.model.impl.Sequence;
@@ -265,6 +270,42 @@ public class RenderingManagerTest {
 
         verify(storageEngine).storeFile(any(byte[].class), eq(spaceId + ".html"), eq(exhibitionId + File.separator + spaceId));
         verify(storageEngine).storeFile(any(byte[].class), eq(slide1Id + ".html"), eq(exhibitionId + File.separator + spaceId));
+    }
+
+    @Test
+    public void test_createSpaceSnapshot_exportsDefaultLinkImages() throws FileStorageException {
+        VSImage moduleDefaultImage = new VSImage();
+        moduleDefaultImage.setId("IMG000000002");
+        moduleDefaultImage.setFilename("module.png");
+        VSImage spaceDefaultImage = new VSImage();
+        spaceDefaultImage.setId("IMG000000003");
+        spaceDefaultImage.setFilename("space.png");
+        Exhibition exhibition = new Exhibition();
+        exhibition.setModuleLinkDefaultImage(moduleDefaultImage);
+        exhibition.setSpaceLinkDefaultImage(spaceDefaultImage);
+        exhibition.disableSpaceLinkDefaultImage();
+
+        ModuleLinkDisplay moduleLinkDisplay = new ModuleLinkDisplay();
+        moduleLinkDisplay.setLink((ModuleLink) moduleLinks.get(0));
+        moduleLinkDisplay.setType(DisplayType.ARROW);
+        List<IModuleLinkDisplay> moduleLinkDisplays = new ArrayList<>();
+        moduleLinkDisplays.add(moduleLinkDisplay);
+        String imagesFolder = exhibitionId + File.separator + spaceId + File.separator + "images";
+
+        when(exhibitionManager.getStartExhibition()).thenReturn(exhibition);
+        when(spaceManager.getSpace(spaceId)).thenReturn(space);
+        when(moduleManager.getModule(moduleId)).thenReturn(module);
+        when(moduleLinkManager.getLinkDisplays(spaceId)).thenReturn(moduleLinkDisplays);
+
+        serviceToTest.createSpaceSnapshot(space, exhibitionId);
+
+        verify(storageManager).copyImage(moduleDefaultImage, imagesFolder);
+        verify(storageManager, Mockito.never()).copyImage(spaceDefaultImage, imagesFolder);
+        ArgumentCaptor<IContext> contextCaptor = ArgumentCaptor.forClass(IContext.class);
+        verify(springTemplateEngine, Mockito.atLeastOnce()).process(Mockito.anyString(), contextCaptor.capture());
+        List<?> linkMarkers = (List<?>) contextCaptor.getAllValues().get(0).getVariable("linkMarkers");
+        assertEquals(1, linkMarkers.size());
+        assertEquals("./images/IMG000000002/module.png", ((Map<?, ?>) linkMarkers.get(0)).get("defaultImageSrc"));
     }
 
     private ISpaceLinkDisplay createSpaceLinkDisplay(String linkId, Space targetSpace) {
