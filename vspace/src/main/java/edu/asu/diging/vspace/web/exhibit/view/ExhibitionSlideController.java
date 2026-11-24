@@ -25,11 +25,10 @@ import edu.asu.diging.vspace.core.model.impl.BranchingPoint;
 import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
+import edu.asu.diging.vspace.core.services.IModuleOverviewManager;
 import edu.asu.diging.vspace.core.services.ISequenceManager;
 import edu.asu.diging.vspace.core.services.ISlideManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
-import edu.asu.diging.vspace.core.services.impl.ModuleOverviewManager;
-import edu.asu.diging.vspace.core.services.impl.SlideManager;
 import edu.asu.diging.vspace.core.services.impl.model.ModuleOverview;
 
 @Controller
@@ -51,7 +50,7 @@ public class ExhibitionSlideController {
     private SequenceHistory sequenceHistory;
     
     @Autowired
-    private ModuleOverviewManager moduleOverviewManager;
+    private IModuleOverviewManager moduleOverviewManager;
     
     @Autowired
     private IExhibitionManager exhibitManager;

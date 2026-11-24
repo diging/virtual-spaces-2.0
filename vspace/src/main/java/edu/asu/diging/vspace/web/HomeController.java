@@ -40,7 +40,7 @@ public class HomeController {
             } else {
                 if (!(authentication instanceof AnonymousAuthenticationToken) &&
                         (authentication.getAuthorities().stream().anyMatch(r -> r.getAuthority().equals(Role.ADMIN) || r.getAuthority().equals("ROLE_STAFF")))) {
-                    return "redirect:/staff/dashboard/";
+                    return "redirect:/staff/dashboard";
                 } else {
                     return "redirect:/exhibit/space/" + exhibition.getStartSpace().getId();
                 }
