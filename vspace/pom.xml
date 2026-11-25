@@ -13,7 +13,7 @@
         <spring.version>6.2.19</spring.version>
         <spring-data.version>2025.0.13</spring-data.version>
         <spring-security-version>6.5.11</spring-security-version>
-        <thymeleaf.version>3.1.3.RELEASE</thymeleaf.version>
+        <thymeleaf.version>3.1.5.RELEASE</thymeleaf.version>
         <javers.version>7.11.9</javers.version>
         <simple-users-version>1.3</simple-users-version>
         <admin.username>admin</admin.username>
