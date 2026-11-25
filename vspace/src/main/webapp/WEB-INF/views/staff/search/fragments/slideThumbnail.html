@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Slide thumbnail</title>
+</head>
+<body>
+
+	<!--/*
+		Thumbnail of a slide in the staff search results: the first image block of
+		the slide, or the placeholder if the slide has no image. Images that fail to
+		load are replaced with the "cannot load image" placeholder.
+	*/-->
+	<th:block th:fragment="slideThumbnail(slide)">
+		<div th:if="${not #lists.isEmpty(slide.contents)}">
+			<div th:if="${slide?.firstImageBlock != null}">
+				<img
+					th:onerror="|this.onerror=null; this.src='@{/resources/images/cannot_load_image_placeholder.png}'|"
+					class="searchImg" th:src="@{'/api/image/'+${slide?.firstImageBlock?.image?.id}}"
+					alt="Slide image" />
+			</div>
+			<div th:if="${slide?.firstImageBlock == null}">
+				<img class="searchImg" th:src="@{'/resources/images/placeholder.png'}" alt="Slide image placeholder" />
+			</div>
+		</div>
+		<div th:if="${#lists.isEmpty(slide.contents)}">
+			<img class="searchImg" th:src="@{'/resources/images/placeholder.png'}" alt="Slide image placeholder" />
+		</div>
+	</th:block>
+
+</body>
+</html>
