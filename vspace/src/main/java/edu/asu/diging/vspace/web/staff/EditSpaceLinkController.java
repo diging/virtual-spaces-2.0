@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
+import edu.asu.diging.vspace.core.exception.ImageDoesNotExistException;
 import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
@@ -36,7 +37,8 @@ public class EditSpaceLinkController extends EditSpaceLinksController {
             @RequestParam("spaceLinkLabel") String spaceLinkLabel,
             @RequestParam("spaceLinkIdValueEdit") String spaceLinkIdValueEdit,
             @RequestParam("spaceLinkDisplayId") String spaceLinkDisplayId, @RequestParam("type") String displayType,
-            @RequestParam("spaceLinkImage") MultipartFile file) throws NumberFormatException,
+            @RequestParam(value = "spaceLinkImage", required = false) MultipartFile file,
+            @RequestParam(value = "editSpaceLink-imageId", required = false) String existingImageId) throws NumberFormatException,
             SpaceDoesNotExistException, LinkDoesNotExistsException, IOException, ImageCouldNotBeStoredException {
 
         ResponseEntity<String> validation = checkIfSpaceExists(spaceManager, id, x, y);
@@ -50,9 +52,14 @@ public class EditSpaceLinkController extends EditSpaceLinksController {
             filename = file.getOriginalFilename();
         }
         DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
-        ISpaceLinkDisplay display = (ISpaceLinkDisplay) spaceLinkManager.updateLink(title, id, new Float(x),
-                new Float(y), new Integer(rotation), linkedSpaceId, spaceLinkLabel, spaceLinkIdValueEdit,
-                spaceLinkDisplayId, type, linkImage, filename);
+        ISpaceLinkDisplay display;
+        try {
+            display = (ISpaceLinkDisplay) spaceLinkManager.updateLink(title, id, new Float(x), new Float(y),
+                    new Integer(rotation), linkedSpaceId, spaceLinkLabel, spaceLinkIdValueEdit, spaceLinkDisplayId,
+                    type, linkImage, filename, existingImageId);
+        } catch (ImageDoesNotExistException e) {
+            return imageNotFound();
+        }
         SpaceStatus targetSpaceStatus = spaceManager.getSpace(linkedSpaceId).getSpaceStatus();
         String linkedSpaceStatus = targetSpaceStatus != null ? targetSpaceStatus.toString() : null;
         return success(display.getLink().getId(), display.getId(), display.getPositionX(), display.getPositionY(),

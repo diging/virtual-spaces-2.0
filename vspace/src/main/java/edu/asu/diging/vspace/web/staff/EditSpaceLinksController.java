@@ -27,6 +27,13 @@ public class EditSpaceLinksController {
         return null;
     }
 
+    protected ResponseEntity<String> imageNotFound() throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode node = mapper.createObjectNode();
+        node.put("errorMessage", "The selected image could not be found.");
+        return new ResponseEntity<String>(mapper.writeValueAsString(node), HttpStatus.BAD_REQUEST);
+    }
+
     protected ResponseEntity<String> success(String id, String  displayId, float posX, float posY, int rotation, String url, String label, String displayType, String linkedId, String linkedSpaceStatus) throws IOException{
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode linkNode = mapper.createObjectNode();

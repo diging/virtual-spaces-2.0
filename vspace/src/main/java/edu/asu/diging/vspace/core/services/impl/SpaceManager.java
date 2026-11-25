@@ -11,6 +11,7 @@ import org.apache.tika.Tika;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
@@ -23,6 +24,7 @@ import edu.asu.diging.vspace.core.data.ExhibitionRepository;
 import edu.asu.diging.vspace.core.data.ImageRepository;
 import edu.asu.diging.vspace.core.data.SpaceLinkRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
+import edu.asu.diging.vspace.core.data.SpacesCustomOrderRepository;
 import edu.asu.diging.vspace.core.data.display.SpaceDisplayRepository;
 import edu.asu.diging.vspace.core.data.display.SpaceLinkDisplayRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
@@ -30,6 +32,7 @@ import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
 import edu.asu.diging.vspace.core.factory.ISpaceDisplayFactory;
 import edu.asu.diging.vspace.core.file.IStorageEngine;
+import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.SortByField;
@@ -39,10 +42,13 @@ import edu.asu.diging.vspace.core.model.impl.Exhibition;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
+import edu.asu.diging.vspace.core.model.impl.SpacesCustomOrder;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
+import edu.asu.diging.vspace.core.services.IExhibitionSpaceOrderUtility;
 import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
+import edu.asu.diging.vspace.core.services.ISpacesCustomOrderManager;
 import edu.asu.diging.vspace.core.services.impl.model.ImageData;
 
 @Transactional
@@ -60,6 +66,7 @@ public class SpaceManager implements ISpaceManager {
     private ImageRepository imageRepo;
 
     @Autowired
+    @Qualifier("storageEngineUploads")
     private IStorageEngine storage;
 
     @Autowired
@@ -82,6 +89,16 @@ public class SpaceManager implements ISpaceManager {
 
     @Autowired
     private SpaceLinkDisplayRepository spaceLinkDisplayRepo;
+    
+    @Autowired
+    private IExhibitionSpaceOrderUtility exhibitionSpaceOrderUtility;
+
+    @Autowired
+    private ISpacesCustomOrderManager spacesCustomOrderManager;
+    
+    @Autowired
+    private SpacesCustomOrderRepository spacesCustomOrderRepo;
+
     
     @Value("${page_size}")
     private int pageSize;
@@ -243,6 +260,14 @@ public class SpaceManager implements ISpaceManager {
             Optional<Space> space = spaceRepo.findById(id);
             if (space.isPresent()) {
                 fromSpaceLinks = spaceLinkRepo.findByTargetSpace(space.get());
+                
+                //To remove the current space from all existing custom orders
+                Iterable<SpacesCustomOrder> spacesCustomOrder = spacesCustomOrderManager.findAll();
+                for(SpacesCustomOrder spaceCustomOrder : spacesCustomOrder) {
+                    if(spaceCustomOrder.getCustomOrderedSpaces().remove(space.get())) {
+                        spacesCustomOrderRepo.save(spaceCustomOrder);
+                    }
+                }   
             } 
             Exhibition exhibition = (Exhibition) exhibitionManager.getStartExhibition();
             // When space has other links attached to it
@@ -388,4 +413,23 @@ public class SpaceManager implements ISpaceManager {
         }
     }
     
+
+    /**
+     * Method to sort published spaces based on the given order, i.e Alphabetical,
+     * Creation Date, or, Custom
+     * @param publishedSpaces
+     */
+    @Override
+    public List<ISpace> sortPublishedSpacesByGivenOrder(List<ISpace> publishedSpaces) {
+        IExhibition exhibition = exhibitionManager.getStartExhibition();
+        return exhibitionSpaceOrderUtility.sortSpaces(publishedSpaces, exhibition.getSpaceOrderMode());
+    }
+
+    @Override
+    public void addSpaceToCustomOrders(ISpace space) {
+        spacesCustomOrderManager.addSpaceToCustomOrders(space);
+        
+    }
+
+
 }

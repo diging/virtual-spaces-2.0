@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <!-- Auto-redirect: index.html immediately loads the exhibition's start space as the entry point. -->
+    <script th:inline="javascript">
+        window.location.replace(/*[[${'./' + startSpace.id + '/' + startSpace.id + '.html'}]]*/ '#');
+    </script>
+    <title th:text="${exhibitionTitle}">Virtual Exhibition</title>
+</head>
+<body>
+    <p>Redirecting to <span th:text="${exhibitionTitle}">the exhibition</span>...</p>
+    <p>If you are not redirected automatically, <a th:href="${'./' + startSpace.id + '/' + startSpace.id + '.html'}">click here to start the exhibition</a>.</p>
+</body>
+</html>

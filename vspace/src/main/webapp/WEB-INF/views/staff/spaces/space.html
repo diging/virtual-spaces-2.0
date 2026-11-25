@@ -4,6 +4,8 @@
 <link rel="stylesheet" type="text/css" id="applicationStylesheet"
     th:href="@{/resources/extra/Home.css}" />
 <link th:href="@{/resources/boostrap-colorpicker/dist/css/bootstrap-colorpicker.css}" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" integrity="sha384-RdQbeSCGSeSdSlTMGnUr2oDJZzOuGjJAkQy1MbKMu8fZT5G0qlBajY0n0sY/hKMK" crossorigin="anonymous" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js" integrity="sha384-uQwKPrmNkEOvI7rrNdCSs6oS1F3GvnZkmPtkntOSIiPQN4CCbFSxv+Bj6qe0mWDb" crossorigin="anonymous"></script>
 
 <script th:src="@{'/resources/extra/space.js'}"></script>
 <script th:src="@{/resources/jquery/jquery-ui.min.js}"></script>
@@ -110,6 +112,7 @@ function setLinkPosition(modalLink, link, isSpaceLink, isModal, isExternalLink, 
     modalLink.find("span").css('fill', 'grey');
     modalLink.css('color', 'rgba(128,128,128,1)');
     modalLink.css('font-size', "16px");
+    modalLink.css('height', "10%");
     var positionX = isModal ? posXModal : posX;
     var positionY = isModal ? posYModal : posY;
     if(isSpaceLink && (link.link.targetSpace==null || link.link.targetSpace.spaceStatus=="UNPUBLISHED")){
@@ -786,6 +789,7 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
 	    });
 	    hideLinkInfoTabs();
 	    displayForms("#editSpaceLinkInfo");
+	    resetImageChooser("editSpaceLink", "spaceLinkImageEdit");
 	}
 	function displayForms(formToShow){
 	    drawLinks();
@@ -826,6 +830,7 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
 	    });
 	    hideLinkInfoTabs();
 	    displayForms("#editModuleLinkInfo");
+	    resetImageChooser("editModuleLink", "moduleLinkImageEdit");
 	}
 	
 	function makeExternalLinksEditable(linkName, linkId, externalLinkURL, posXEdit, posYEdit, displayLinkId, linkType,tabOpenType) {
@@ -859,6 +864,70 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
 	    });
 	    hideLinkInfoTabs();
 	    displayForms("#editExternalLinkInfo");
+	    resetImageChooser("editExternalLink", "externalLinkImageEdit");
+	}
+
+	// Lets staff either upload a new link image or choose an image that was uploaded before
+	function initImageChooser(prefix, fileInputId) {
+	    var fileInput = $("#" + fileInputId);
+	    var imageSelect = $("#" + prefix + "-imageId");
+	    imageSelect.select2({
+	        ajax: {
+	            url: [[@{|/staff/images/search|}]],
+	            dataType: 'json',
+	            processResults: function (data) {
+	                return { results: data };
+	            }
+	        },
+	        templateResult: formatImageOption,
+	        templateSelection: function (image) {
+	            showSelectedImage(prefix, image);
+	            return image.text;
+	        }
+	    });
+	    $("#" + prefix + "-chooseFromLocal").click(function() {
+	        resetImageChooser(prefix, fileInputId);
+	    });
+	    $("#" + prefix + "-chooseFromExisting").click(function() {
+	        fileInput.val('');
+	        fileInput.prop("disabled", true);
+	        imageSelect.prop("disabled", false);
+	    });
+	    fileInput.closest("form").on("reset", function() {
+	        setTimeout(function() {
+	            resetImageChooser(prefix, fileInputId);
+	        });
+	    });
+	    resetImageChooser(prefix, fileInputId);
+	}
+
+	function resetImageChooser(prefix, fileInputId) {
+	    $("#" + prefix + "-chooseFromLocal").prop("checked", true);
+	    $("#" + prefix + "-imageId").prop("selectedIndex", 0).trigger("change").prop("disabled", true);
+	    $("#" + prefix + "-selectedImage").empty();
+	    $("#" + fileInputId).prop("disabled", false);
+	}
+
+	function formatImageOption(image) {
+	    if (!image.id) {
+	        return image.text;
+	    }
+	    return $("<span>")
+	        .append($("<img>", { src: [[@{|/api/image/|}]] + image.id, "class": "img-thumbnail" }))
+	        .append(" ")
+	        .append(document.createTextNode(image.text));
+	}
+
+	function hasLinkImage(prefix, fileInputId) {
+	    return $("#" + fileInputId).val() || $("#" + prefix + "-imageId").val();
+	}
+
+	function showSelectedImage(prefix, image) {
+	    var preview = $("#" + prefix + "-selectedImage");
+	    preview.empty();
+	    if (image.id) {
+	        preview.append($("<img>", { src: [[@{|/api/image/|}]] + image.id, width: "200px", "class": "img-thumbnail" }));
+	    }
 	}
 	
 	function makeTextBlockEditable(blockDisplayId,blockId,text,posX,posY,width,height, textColor, borderColor){
@@ -949,6 +1018,12 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
 	            if ($("div#incomingLinks a").length < 2) {
 	                $("#noLinksToSpace").show()
 	            }
+	            initImageChooser("spaceLink", "spaceLinkImage");
+	            initImageChooser("moduleLink", "moduleLinkImage");
+	            initImageChooser("externalLink", "externalLinkImage");
+	            initImageChooser("editSpaceLink", "spaceLinkImageEdit");
+	            initImageChooser("editModuleLink", "moduleLinkImageEdit");
+	            initImageChooser("editExternalLink", "externalLinkImageEdit");
 	        });
 	
 	        // -------- buttons that open modals (e.g. to create space links) ------
@@ -1157,6 +1232,11 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
 	                $('#errorAlert').show();
 	                return;
 	            }
+	            if ($("#type").val() == "IMAGE" && !hasLinkImage("spaceLink", "spaceLinkImage")) {
+	                $("#errorMsg").text("Please upload an image or choose an existing one.")
+	                $('#errorAlert').show();
+	                return;
+	            }
 	
 	            if (storeX == undefined || storeY == undefined) {
 	                $("#errorMsg").text("Please click on the image to specify where the new link should be located.")
@@ -1246,6 +1326,11 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
 	            
 	            if (type == undefined || type == "Choose...") {
 	                $("#errorMsg").text("Please select a link type in Type dropdown.")
+	                $('#errorAlert').show();
+	                return;
+	            }
+	            if ($("#moduleType").val() == "IMAGE" && !hasLinkImage("moduleLink", "moduleLinkImage")) {
+	                $("#errorMsg").text("Please upload an image or choose an existing one.")
 	                $('#errorAlert').show();
 	                return;
 	            }
@@ -1472,6 +1557,11 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
 	            
 	            if (type == undefined || type == "Choose...") {
 	                $("#errorMsg").text("Please select a link type in Type dropdown.")
+	                $('#errorAlert').show();
+	                return;
+	            }
+	            if ($("#extType").val() == "IMAGE" && !hasLinkImage("externalLink", "externalLinkImage")) {
+	                $("#errorMsg").text("Please upload an image or choose an existing one.")
 	                $('#errorAlert').show();
 	                return;
 	            }
@@ -1925,7 +2015,7 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
             &nbsp;
         </div>
         <div id="space" th:style="|max-width: ${display.width+400}px;|" th:if="${space.image != null}" class="link-modal flex-spacing">
-        <img id="bgImage" th:style="|max-width: ${display.width}px;|" th:src="@{'/api/image/'+${space.image?.id}}" />
+        <img id="bgImage" th:style="|max-width: ${display.width}px;|" th:src="@{'/api/image/'+${space.image?.id}}" th:onerror="|this.onerror=null; this.src='@{/resources/images/cannot_load_image_placeholder.png}'|" />
         <div id="errorAlert"
             class="alert alert-danger alert-dismissible fade show"
             role="alert"
@@ -2005,7 +2095,21 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
 	                        <label>Image</label>
 	                    </div>
 	                    <div class="col-sm-8">
+	                        <input type="radio" id="spaceLink-chooseFromLocal" name="spaceLink-imageSource" checked />
+	                        <label for="spaceLink-chooseFromLocal" class="mb-0"><small>Upload Image: </small></label>
+	                        <label for="spaceLinkImage" class="sr-only">Image file to upload</label>
 	                        <input type="file" class="form-control-sm-xs" name="spaceLinkImage" id="spaceLinkImage" style="width: inherit">
+	                        <input type="radio" id="spaceLink-chooseFromExisting" name="spaceLink-imageSource" />
+	                        <div>
+	                            <label for="spaceLink-chooseFromExisting" class="mb-0"><small>Choose from existing: </small></label>
+	                            <label for="spaceLink-imageId" class="sr-only">Existing image</label>
+	                            <select id="spaceLink-imageId" name="spaceLink-imageId" class="form-control-xs target" style="height: 50px; width: 200px;">
+	                                <option selected value="">Choose from existing</option>
+	                            </select>
+	                        </div>
+	                        <div>
+	                            <span id="spaceLink-selectedImage"></span>
+	                        </div>
 	                    </div>
 	                </div>
 	                <p class="mt-5 text-center">
@@ -2088,7 +2192,21 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
 	                        <label>Image</label>
 	                    </div>
 	                    <div class="col-sm-8">
+	                        <input type="radio" id="moduleLink-chooseFromLocal" name="moduleLink-imageSource" checked />
+	                        <label for="moduleLink-chooseFromLocal" class="mb-0"><small>Upload Image: </small></label>
+	                        <label for="moduleLinkImage" class="sr-only">Image file to upload</label>
 	                        <input type="file" class="form-control-sm" name="moduleLinkImage" id="moduleLinkImage" style="width: inherit">
+	                        <input type="radio" id="moduleLink-chooseFromExisting" name="moduleLink-imageSource" />
+	                        <div>
+	                            <label for="moduleLink-chooseFromExisting" class="mb-0"><small>Choose from existing: </small></label>
+	                            <label for="moduleLink-imageId" class="sr-only">Existing image</label>
+	                            <select id="moduleLink-imageId" name="moduleLink-imageId" class="form-control-xs target" style="height: 50px; width: 200px;">
+	                                <option selected value="">Choose from existing</option>
+	                            </select>
+	                        </div>
+	                        <div>
+	                            <span id="moduleLink-selectedImage"></span>
+	                        </div>
 	                    </div>
 	                </div>
 	                <p class="mt-5 text-center">
@@ -2167,7 +2285,21 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
 	                        <label>Image</label>
 	                    </div>
 	                    <div class="col-sm-8">
+	                        <input type="radio" id="externalLink-chooseFromLocal" name="externalLink-imageSource" checked />
+	                        <label for="externalLink-chooseFromLocal" class="mb-0"><small>Upload Image: </small></label>
+	                        <label for="externalLinkImage" class="sr-only">Image file to upload</label>
 	                        <input type="file" class="form-control-sm" name="externalLinkImage" id="externalLinkImage" style="width: inherit">
+	                        <input type="radio" id="externalLink-chooseFromExisting" name="externalLink-imageSource" />
+	                        <div>
+	                            <label for="externalLink-chooseFromExisting" class="mb-0"><small>Choose from existing: </small></label>
+	                            <label for="externalLink-imageId" class="sr-only">Existing image</label>
+	                            <select id="externalLink-imageId" name="externalLink-imageId" class="form-control-xs target" style="height: 50px; width: 200px;">
+	                                <option selected value="">Choose from existing</option>
+	                            </select>
+	                        </div>
+	                        <div>
+	                            <span id="externalLink-selectedImage"></span>
+	                        </div>
 	                    </div>
 	                </div>
 	                <p class="mt-5 text-center">
@@ -2340,7 +2472,21 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
 	                        <label>Image</label>
 	                    </div>
 	                    <div class="col-sm-8">
+	                        <input type="radio" id="editSpaceLink-chooseFromLocal" name="editSpaceLink-imageSource" checked />
+	                        <label for="editSpaceLink-chooseFromLocal" class="mb-0"><small>Upload Image: </small></label>
+	                        <label for="spaceLinkImageEdit" class="sr-only">Image file to upload</label>
 	                        <input type="file" class="form-control-sm" name="spaceLinkImage" id="spaceLinkImageEdit" style="width: inherit"/>
+	                        <input type="radio" id="editSpaceLink-chooseFromExisting" name="editSpaceLink-imageSource" />
+	                        <div>
+	                            <label for="editSpaceLink-chooseFromExisting" class="mb-0"><small>Choose from existing: </small></label>
+	                            <label for="editSpaceLink-imageId" class="sr-only">Existing image</label>
+	                            <select id="editSpaceLink-imageId" name="editSpaceLink-imageId" class="form-control-xs target" style="height: 50px; width: 200px;">
+	                                <option selected value="">Choose from existing</option>
+	                            </select>
+	                        </div>
+	                        <div>
+	                            <span id="editSpaceLink-selectedImage"></span>
+	                        </div>
 	                    </div>
 	                </div>
 	                
@@ -2418,8 +2564,7 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
                     </div>
                     <div class="row">
                         <div class="col-sm-4" style="padding-right: 0;">
-                            <label>Linked
-                                    Modules:</label>
+                            <label for="moduleLinkIdEdit">Linked Modules:</label>
                         </div>
                         <div class="col-sm-8">
                             <select id="moduleLinkIdEdit"
@@ -2437,9 +2582,23 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
                             <label>Image:</label>
                         </div>
                         <div class="col-sm-9">
+                            <input type="radio" id="editModuleLink-chooseFromLocal" name="editModuleLink-imageSource" checked />
+                            <label for="editModuleLink-chooseFromLocal" class="mb-0"><small>Upload Image: </small></label>
+                            <label for="moduleLinkImageEdit" class="sr-only">Image file to upload</label>
                             <input type="file" class="form-control-sm"
                                 name="moduleLinkImage"
                                 id="moduleLinkImageEdit" style="width: inherit" />
+                            <input type="radio" id="editModuleLink-chooseFromExisting" name="editModuleLink-imageSource" />
+                            <div>
+                                <label for="editModuleLink-chooseFromExisting" class="mb-0"><small>Choose from existing: </small></label>
+                                <label for="editModuleLink-imageId" class="sr-only">Existing image</label>
+                                <select id="editModuleLink-imageId" name="editModuleLink-imageId" class="form-control-xs target" style="height: 50px; width: 200px;">
+                                    <option selected value="">Choose from existing</option>
+                                </select>
+                            </div>
+                            <div>
+                                <span id="editModuleLink-selectedImage"></span>
+                            </div>
                         </div>
                     </div>
                     
@@ -2535,9 +2694,23 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
                             <label>Image:</label>
                         </div>
                         <div class="col-sm-9">
+                            <input type="radio" id="editExternalLink-chooseFromLocal" name="editExternalLink-imageSource" checked />
+                            <label for="editExternalLink-chooseFromLocal" class="mb-0"><small>Upload Image: </small></label>
+                            <label for="externalLinkImageEdit" class="sr-only">Image file to upload</label>
                             <input type="file" class="form-control-sm"
                                 name="externalLinkImage"
                                 id="externalLinkImageEdit" style="width: inherit" />
+                            <input type="radio" id="editExternalLink-chooseFromExisting" name="editExternalLink-imageSource" />
+                            <div>
+                                <label for="editExternalLink-chooseFromExisting" class="mb-0"><small>Choose from existing: </small></label>
+                                <label for="editExternalLink-imageId" class="sr-only">Existing image</label>
+                                <select id="editExternalLink-imageId" name="editExternalLink-imageId" class="form-control-xs target" style="height: 50px; width: 200px;">
+                                    <option selected value="">Choose from existing</option>
+                                </select>
+                            </div>
+                            <div>
+                                <span id="editExternalLink-selectedImage"></span>
+                            </div>
                         </div>
                     </div>
                     
@@ -2694,7 +2867,7 @@ function generateTextBlock(block,spanId,divId,isModal, posX, posY, posXModal, po
             <div id="loader" style="position: absolute; font-size: 30px;">
                 <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>
             </div>
-            <img id="main-bgImage" th:style="|max-width: ${display.width}px;|"  th:src="@{'/api/image/'+${space.image?.id}}" />
+            <img id="main-bgImage" th:style="|max-width: ${display.width}px;|"  th:src="@{'/api/image/'+${space.image?.id}}" th:onerror="|this.onerror=null; this.src='@{/resources/images/cannot_load_image_placeholder.png}'|" />
         </div>
         <p class="text-right" style="margin-top: 50px">
             <button type="button" id="deleteSpace"  class="btn primary-btn btn-sm"><i class="fa fa-trash"></i>&emsp;Delete Space</button>

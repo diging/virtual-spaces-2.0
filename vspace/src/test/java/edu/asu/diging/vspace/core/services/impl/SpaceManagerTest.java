@@ -1,5 +1,6 @@
 package edu.asu.diging.vspace.core.services.impl;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -12,10 +13,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 
 import edu.asu.diging.vspace.core.data.ImageRepository;
 import edu.asu.diging.vspace.core.data.SpaceLinkRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
+import edu.asu.diging.vspace.core.data.SpacesCustomOrderRepository;
 import edu.asu.diging.vspace.core.data.display.SpaceDisplayRepository;
 import edu.asu.diging.vspace.core.data.display.SpaceLinkDisplayRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
@@ -35,6 +39,7 @@ import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.impl.model.ImageData;
+import edu.asu.diging.vspace.core.services.ISpacesCustomOrderManager;
 
 public class SpaceManagerTest {
 
@@ -54,6 +59,7 @@ public class SpaceManagerTest {
     private SpaceLinkDisplayRepository spaceLinkDisplayRepo;
 
     @Mock
+    @Qualifier("storageEngineUploads")
     private IStorageEngine storage;
 
     @Mock
@@ -73,6 +79,16 @@ public class SpaceManagerTest {
 
     @Mock
     private ExhibitionManager exhibitionManager;
+    
+    @Value("${uploads_path}")
+    private String uploadsPath;
+
+    @Mock
+    private ISpacesCustomOrderManager spacesCustomOrderManager;
+
+    @Mock
+    private SpacesCustomOrderRepository spacesCustomOrderRepo;
+    
 
 
     @InjectMocks
@@ -84,6 +100,7 @@ public class SpaceManagerTest {
     private String spaceId1, spaceId2;
     private String spaceLinkId1;
     private SpaceLink spaceLink;
+    List<ISpace> publishedSpaces = new ArrayList<ISpace>();
 
     @Before
     public void setUp() {
@@ -91,6 +108,7 @@ public class SpaceManagerTest {
         spaceId1 = "SPA000000001";
         spaceId2 = "SPA000000001";
         spaceLinkId1 = "SPL000000001";
+        
 
     }
 
@@ -112,7 +130,7 @@ public class SpaceManagerTest {
         String dirName = "DIR";
         String storePath = "PATH";
 
-        Mockito.when(storage.storeFile(imageBytes, filename, dirName)).thenReturn(storePath);
+        Mockito.when(storage.storeFile(imageBytes, filename,  uploadsPath + File.separator + dirName)).thenReturn(storePath);
 
         Space space = new Space();
         Mockito.when(spaceRepo.save((Space) space)).thenReturn(space);
@@ -301,5 +319,6 @@ public class SpaceManagerTest {
     public void test_getSpacesWithImageId_ImageIdIsNull(){
         Assert.assertNull(managerToTest.getSpacesWithImageId(null));
     }
+    
 
 }

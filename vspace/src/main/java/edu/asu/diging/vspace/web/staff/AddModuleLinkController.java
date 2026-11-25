@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
+import edu.asu.diging.vspace.core.exception.ImageDoesNotExistException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
@@ -37,7 +38,8 @@ public class AddModuleLinkController {
             @RequestParam("y") String y, @RequestParam("rotation") String rotation,
             @RequestParam("moduleLinkLabel") String title, @RequestParam("linkedModule") String linkedModuleId,
             @RequestParam("moduleLinkLabel") String moduleLinkLabel, @RequestParam("moduleType") String displayType,
-            @RequestParam("moduleLinkImage") MultipartFile file)
+            @RequestParam(value = "moduleLinkImage", required = false) MultipartFile file,
+            @RequestParam(value = "moduleLink-imageId", required = false) String existingImageId)
             throws NumberFormatException, SpaceDoesNotExistException, IOException, ImageCouldNotBeStoredException {
 
         ISpace source = spaceManager.getSpace(id);
@@ -52,6 +54,14 @@ public class AddModuleLinkController {
             return new ResponseEntity<String>(mapper.writeValueAsString(node), HttpStatus.BAD_REQUEST);
         }
 
+        if (DisplayType.IMAGE.name().equals(displayType) && (file == null || file.isEmpty())
+                && (existingImageId == null || existingImageId.trim().isEmpty())) {
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode node = mapper.createObjectNode();
+            node.put("errorMessage", "Please upload an image or choose an existing one for the module link.");
+            return new ResponseEntity<String>(mapper.writeValueAsString(node), HttpStatus.BAD_REQUEST);
+        }
+
         byte[] linkImage = null;
         String filename = null;
         if (file != null) {
@@ -63,12 +73,17 @@ public class AddModuleLinkController {
         IModuleLinkDisplay display;
         try {
             display = moduleLinkManager.createLink(title, id, new Float(x), new Float(y), new Integer(rotation),
-                    linkedModuleId, moduleLinkLabel, type, linkImage, filename);
+                    linkedModuleId, moduleLinkLabel, type, linkImage, filename, existingImageId);
         } catch (SpaceDoesNotExistException e) {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode node = mapper.createObjectNode();
             node.put("errorMessage", "space could not be found.");
             return new ResponseEntity<>(mapper.writeValueAsString(node), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (ImageDoesNotExistException e) {
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode node = mapper.createObjectNode();
+            node.put("errorMessage", "The selected image could not be found.");
+            return new ResponseEntity<>(mapper.writeValueAsString(node), HttpStatus.BAD_REQUEST);
         }
         display.setRotation(new Integer(rotation));
 

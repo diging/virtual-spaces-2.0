@@ -12,9 +12,11 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import edu.asu.diging.vspace.core.data.ImageRepository;
 import edu.asu.diging.vspace.core.data.SpaceLinkRepository;
 import edu.asu.diging.vspace.core.data.display.SpaceLinkDisplayRepository;
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
+import edu.asu.diging.vspace.core.exception.ImageDoesNotExistException;
 import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.ISpaceLinkFactory;
@@ -30,6 +32,7 @@ import edu.asu.diging.vspace.core.model.display.impl.SpaceLinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.Space;
 import edu.asu.diging.vspace.core.model.impl.SpaceLink;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
+import edu.asu.diging.vspace.core.services.IImageService;
 
 public class SpaceLinkManagerTest {
     @Mock
@@ -50,10 +53,16 @@ public class SpaceLinkManagerTest {
     @Mock
     private SpaceLinkDisplayFactory spaceLinkDisplayFactory;
 
+    @Mock
+    private IImageService imageService;
+
+    @Mock
+    private ImageRepository imageRepo;
+
     @InjectMocks
     private SpaceLinkManager managerToTest = new SpaceLinkManager();
 
-    private String spaceId1, spaceId2, spaceId3, spaceLinkId1;
+    private String spaceId1, spaceId2, spaceId3, spaceLinkId1, imageId;
 
     @Before
     public void init() {
@@ -62,10 +71,11 @@ public class SpaceLinkManagerTest {
         spaceId2 = "SPA000000002";
         spaceId3 = "SPA000000003";
         spaceLinkId1 = "SPL00000001";
+        imageId = "IMG000000001";
     }
 
     @Test
-    public void test_createLink_success() throws SpaceDoesNotExistException, ImageCouldNotBeStoredException {
+    public void test_createLink_success() throws SpaceDoesNotExistException, ImageCouldNotBeStoredException, ImageDoesNotExistException {
 
         ISpace space = new Space();
         space.setId(spaceId1);
@@ -106,7 +116,7 @@ public class SpaceLinkManagerTest {
         Mockito.when(spaceLinkRepo.save((SpaceLink) spaceLink)).thenReturn((SpaceLink)spaceLink);
         Mockito.when(spaceLinkDisplayRepo.save((SpaceLinkDisplay)spaceDisplayLink)).thenReturn((SpaceLinkDisplay)spaceDisplayLink);
 
-        ISpaceLinkDisplay savedSpaceLinkDisplay = managerToTest.createLink("New Space Link", spaceId1, 10, 30, 40, spaceId2, "New Space Link", DisplayType.ARROW, null, null);
+        ISpaceLinkDisplay savedSpaceLinkDisplay = managerToTest.createLink("New Space Link", spaceId1, 10, 30, 40, spaceId2, "New Space Link", DisplayType.ARROW, null, null, null);
         Assert.assertEquals(spaceDisplayLink.getId(), savedSpaceLinkDisplay.getId());
         Assert.assertEquals(spaceDisplayLink.getName(), savedSpaceLinkDisplay.getName());
         Assert.assertEquals(new Double(spaceDisplayLink.getPositionX()), new Double(savedSpaceLinkDisplay.getPositionX()));
@@ -116,6 +126,95 @@ public class SpaceLinkManagerTest {
         Assert.assertEquals(spaceDisplayLink.getType(), savedSpaceLinkDisplay.getType());
         Assert.assertEquals(spaceDisplayLink.getLink().getTargetSpace(), savedSpaceLinkDisplay.getLink().getTargetSpace());
         Mockito.verify(spaceLinkDisplayRepo).save((SpaceLinkDisplay)spaceDisplayLink);
+    }
+
+    @Test
+    public void test_createLink_withExistingImage() throws SpaceDoesNotExistException, ImageCouldNotBeStoredException,
+            ImageDoesNotExistException {
+        ISpace space = new Space();
+        space.setId(spaceId1);
+        ISpace target = new Space();
+        target.setId(spaceId2);
+        ISpaceLink spaceLink = new SpaceLink();
+        spaceLink.setId("SPL001");
+        ISpaceLinkDisplay spaceDisplayLink = new SpaceLinkDisplay();
+        spaceDisplayLink.setId("SPLD001");
+        spaceDisplayLink.setLink(spaceLink);
+        IVSImage existingImage = new VSImage();
+        existingImage.setId(imageId);
+
+        Mockito.when(spaceManager.getSpace(spaceId1)).thenReturn(space);
+        Mockito.when(spaceManager.getSpace(spaceId2)).thenReturn(target);
+        Mockito.when(spaceLinkFactory.createSpaceLink("New Space Link", space)).thenReturn(spaceLink);
+        Mockito.when(spaceLinkDisplayFactory.createSpaceLinkDisplay(spaceLink)).thenReturn(spaceDisplayLink);
+        Mockito.when(spaceLinkRepo.save((SpaceLink) spaceLink)).thenReturn((SpaceLink) spaceLink);
+        Mockito.when(spaceLinkDisplayRepo.save((SpaceLinkDisplay) spaceDisplayLink)).thenReturn((SpaceLinkDisplay) spaceDisplayLink);
+        Mockito.when(imageService.getImageById(imageId)).thenReturn(existingImage);
+
+        ISpaceLinkDisplay savedSpaceLinkDisplay = managerToTest.createLink("New Space Link", spaceId1, 10, 30, 40,
+                spaceId2, "New Space Link", DisplayType.IMAGE, null, null, imageId);
+
+        Assert.assertEquals(DisplayType.IMAGE, savedSpaceLinkDisplay.getType());
+        Assert.assertSame(existingImage, savedSpaceLinkDisplay.getImage());
+        // the existing image is reused, so no new image is stored
+        Mockito.verify(imageRepo, Mockito.never()).save(Mockito.any(VSImage.class));
+    }
+
+    @Test
+    public void test_createLink_withUnknownExistingImage() throws SpaceDoesNotExistException,
+            ImageCouldNotBeStoredException, ImageDoesNotExistException {
+        ISpace space = new Space();
+        space.setId(spaceId1);
+        ISpaceLink spaceLink = new SpaceLink();
+        spaceLink.setId("SPL001");
+
+        Mockito.when(spaceManager.getSpace(spaceId1)).thenReturn(space);
+        Mockito.when(spaceLinkFactory.createSpaceLink("New Space Link", space)).thenReturn(spaceLink);
+        Mockito.when(spaceLinkRepo.save((SpaceLink) spaceLink)).thenReturn((SpaceLink) spaceLink);
+        Mockito.when(imageService.getImageById("IMG999999999")).thenThrow(new ImageDoesNotExistException("not found"));
+
+        try {
+            managerToTest.createLink("New Space Link", spaceId1, 10, 30, 40, spaceId2, "New Space Link",
+                    DisplayType.IMAGE, null, null, "IMG999999999");
+            Assert.fail("ImageDoesNotExistException expected");
+        } catch (ImageDoesNotExistException e) {
+            // no link is saved when the chosen image does not exist
+            Mockito.verify(spaceLinkRepo, Mockito.never()).save(Mockito.any(SpaceLink.class));
+            Mockito.verify(spaceLinkDisplayRepo, Mockito.never()).save(Mockito.any(SpaceLinkDisplay.class));
+        }
+    }
+
+    @Test
+    public void test_updateLink_withExistingImage() throws SpaceDoesNotExistException, LinkDoesNotExistsException,
+            ImageCouldNotBeStoredException, ImageDoesNotExistException {
+        ISpace space = new Space();
+        space.setId(spaceId1);
+        ISpace target = new Space();
+        target.setId(spaceId2);
+        ISpaceLink spaceLink = new SpaceLink();
+        spaceLink.setId("SPL002");
+        spaceLink.setSourceSpace(space);
+        SpaceLinkDisplay spaceLinkDisplay = new SpaceLinkDisplay();
+        spaceLinkDisplay.setId("SPLD001");
+        spaceLinkDisplay.setLink(spaceLink);
+        spaceLinkDisplay.setType(DisplayType.ARROW);
+        IVSImage existingImage = new VSImage();
+        existingImage.setId(imageId);
+
+        Mockito.when(spaceManager.getSpace(spaceId1)).thenReturn(space);
+        Mockito.when(spaceManager.getSpace(spaceId2)).thenReturn(target);
+        Mockito.when(spaceLinkRepo.findById("SPL002")).thenReturn(Optional.of((SpaceLink) spaceLink));
+        Mockito.when(spaceLinkDisplayRepo.findById("SPLD001")).thenReturn(Optional.of(spaceLinkDisplay));
+        Mockito.when(spaceLinkRepo.save((SpaceLink) spaceLink)).thenReturn((SpaceLink) spaceLink);
+        Mockito.when(spaceLinkDisplayRepo.save(spaceLinkDisplay)).thenReturn(spaceLinkDisplay);
+        Mockito.when(imageService.getImageById(imageId)).thenReturn(existingImage);
+
+        ISpaceLinkDisplay updatedLink = managerToTest.updateLink("TestSpaceEdited", spaceId1, 100, 300, 180, spaceId2,
+                "TestSpaceEdited", "SPL002", "SPLD001", DisplayType.IMAGE, null, null, imageId);
+
+        Assert.assertEquals(DisplayType.IMAGE, updatedLink.getType());
+        Assert.assertSame(existingImage, updatedLink.getImage());
+        Mockito.verify(imageRepo, Mockito.never()).save(Mockito.any(VSImage.class));
     }
 
     @Test
@@ -157,7 +256,7 @@ public class SpaceLinkManagerTest {
     }
 
     @Test
-    public void test_updateLink_success() throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException {
+    public void test_updateLink_success() throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException, ImageDoesNotExistException {
         ISpace space = new Space();
         space.setId(spaceId1);
         IVSImage spaceImage = new VSImage();
@@ -219,7 +318,7 @@ public class SpaceLinkManagerTest {
         Mockito.when(spaceLinkRepo.save((SpaceLink) spaceLink)).thenReturn((SpaceLink)spaceLink);
         Mockito.when(spaceLinkDisplayRepo.save((SpaceLinkDisplay)spaceLinkDisplay)).thenReturn((SpaceLinkDisplay)spaceLinkDisplayUpdated);
 
-        ISpaceLinkDisplay actualUpdatedLink = managerToTest.updateLink("TestSpaceEdited", spaceId1, 100, 300, 180, spaceId3, "TestSpaceEdited", "SPL002", "SPLD001", DisplayType.ALERT, null, null);
+        ISpaceLinkDisplay actualUpdatedLink = managerToTest.updateLink("TestSpaceEdited", spaceId1, 100, 300, 180, spaceId3, "TestSpaceEdited", "SPL002", "SPLD001", DisplayType.ALERT, null, null, null);
         Assert.assertEquals(spaceLinkDisplayUpdated.getId(), actualUpdatedLink.getId());
         Assert.assertEquals(spaceLinkDisplayUpdated.getName(), actualUpdatedLink.getName());
         Assert.assertEquals(new Double(spaceLinkDisplayUpdated.getPositionX()), new Double(actualUpdatedLink.getPositionX()));

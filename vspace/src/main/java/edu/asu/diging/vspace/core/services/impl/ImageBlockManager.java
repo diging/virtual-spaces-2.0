@@ -2,6 +2,7 @@ package edu.asu.diging.vspace.core.services.impl;
 
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import edu.asu.diging.vspace.core.data.ImageContentBlockRepository;
@@ -35,6 +36,7 @@ public class ImageBlockManager extends GenericContentBlockManager<IImageBlock, I
     private ImageContentBlockRepository imageBlockRepo;
 
     @Autowired
+    @Qualifier("storageEngineUploads")
     private IStorageEngine storage;
 
     @Override

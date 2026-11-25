@@ -2,11 +2,13 @@ package edu.asu.diging.vspace.core.services.impl;
 
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.transaction.annotation.Transactional;
 
 import edu.asu.diging.vspace.core.data.ImageRepository;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
+import edu.asu.diging.vspace.core.exception.ImageDoesNotExistException;
 import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.IImageFactory;
@@ -18,6 +20,7 @@ import edu.asu.diging.vspace.core.model.IVSpaceElement;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
 import edu.asu.diging.vspace.core.model.display.ILinkDisplay;
 import edu.asu.diging.vspace.core.model.impl.VSImage;
+import edu.asu.diging.vspace.core.services.IImageService;
 import edu.asu.diging.vspace.core.services.ILinkManager;
 import edu.asu.diging.vspace.core.services.ISpaceManager;
 
@@ -35,19 +38,26 @@ public abstract class LinkManager<L extends ILink<T>, T extends IVSpaceElement, 
     private ImageRepository imageRepo;
 
     @Autowired
+    @Qualifier("storageEngineUploads")
     private IStorageEngine storage;
+
+    @Autowired
+    private IImageService imageService;
 
     @Override
     public U createLink(String title, String id, float positionX, float positionY, int rotation, String linkedId,
-            String linkLabel, DisplayType displayType, byte[] linkImage, String imageFilename)
-            throws SpaceDoesNotExistException, ImageCouldNotBeStoredException, SpaceDoesNotExistException {
+            String linkLabel, DisplayType displayType, byte[] linkImage, String imageFilename, String existingImageId)
+            throws SpaceDoesNotExistException, ImageCouldNotBeStoredException, ImageDoesNotExistException {
 
+        // look up the chosen image first so that nothing is saved if it does not exist
+        IVSImage existingImage = getExistingImage(existingImageId);
         L link = createLinkObject(title, id);
         T target = getTarget(linkedId);
         link.setName(linkLabel);
         link.setTarget(target);
         U displayLink = createDisplayLink(link);
-        setDisplayProperties(displayLink, id, positionX, positionY, rotation, displayType, linkImage, imageFilename);
+        setDisplayProperties(displayLink, id, positionX, positionY, rotation, displayType, linkImage, imageFilename,
+                existingImage);
         return updateLinkAndDisplay(link, displayLink);
 
     }
@@ -55,17 +65,20 @@ public abstract class LinkManager<L extends ILink<T>, T extends IVSpaceElement, 
     @Override
     public U updateLink(String title, String id, float positionX, float positionY, int rotation, String linkedId,
             String linkLabel, String linkId, String linkDisplayId, DisplayType displayType, byte[] linkImage,
-            String imageFilename)
-            throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException {
+            String imageFilename, String existingImageId)
+            throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException,
+            ImageDoesNotExistException {
 
         validateSpace(id);
+        IVSImage existingImage = getExistingImage(existingImageId);
 
         L link = getLink(linkId);
         T target = getTarget(linkedId);
         link.setName(title);
         link.setTarget(target);
         U displayLink = getDisplayLink(linkDisplayId);
-        setDisplayProperties(displayLink, id, positionX, positionY, rotation, displayType, linkImage, imageFilename);
+        setDisplayProperties(displayLink, id, positionX, positionY, rotation, displayType, linkImage, imageFilename,
+                existingImage);
         return updateLinkAndDisplay(link, displayLink);
     }
 
@@ -103,7 +116,7 @@ public abstract class LinkManager<L extends ILink<T>, T extends IVSpaceElement, 
     }
     
     protected void setDisplayProperties(ILinkDisplay linkDisplay, String id, float positionX, float positionY,
-            int rotation, DisplayType displayType, byte[] linkImage, String imageFilename)
+            int rotation, DisplayType displayType, byte[] linkImage, String imageFilename, IVSImage existingImage)
             throws ImageCouldNotBeStoredException {
         linkDisplay.setPositionX(positionX);
         linkDisplay.setPositionY(positionY);
@@ -123,6 +136,16 @@ public abstract class LinkManager<L extends ILink<T>, T extends IVSpaceElement, 
             image.setParentPath(relativePath);
             imageRepo.save((VSImage) image);
             linkDisplay.setImage(image);
+        } else if (existingImage != null) {
+            // reuse an image that was uploaded before instead of storing a new copy
+            linkDisplay.setImage(existingImage);
         }
+    }
+
+    private IVSImage getExistingImage(String existingImageId) throws ImageDoesNotExistException {
+        if (existingImageId == null || existingImageId.trim().isEmpty()) {
+            return null;
+        }
+        return imageService.getImageById(existingImageId);
     }
 }

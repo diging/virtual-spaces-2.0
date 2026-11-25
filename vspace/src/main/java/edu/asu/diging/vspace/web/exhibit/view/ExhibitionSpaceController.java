@@ -13,10 +13,8 @@ import edu.asu.diging.vspace.core.auth.IAuthenticationFacade;
 import edu.asu.diging.vspace.core.model.IExhibition;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.display.ISpaceLinkDisplay;
-import edu.asu.diging.vspace.core.model.impl.ExhibitionAboutPage;
 import edu.asu.diging.vspace.core.model.impl.SequenceHistory;
 import edu.asu.diging.vspace.core.model.impl.SpaceStatus;
-import edu.asu.diging.vspace.core.services.IExhibitionAboutPageManager;
 import edu.asu.diging.vspace.core.services.IExhibitionManager;
 import edu.asu.diging.vspace.core.services.IExternalLinkManager;
 import edu.asu.diging.vspace.core.services.IModuleLinkManager;
@@ -81,8 +79,10 @@ public class ExhibitionSpaceController {
         } else {
             spaceLinks = spaceLinkManager.getSpaceLinkForGivenOrNullSpaceStatus(id, SpaceStatus.PUBLISHED);
         }
+        // Links whose target space was deleted have no target and are not shown
         List<ISpaceLinkDisplay> filteredSpaceLinks = spaceLinks.stream().filter(
-                spaceLinkDisplayObj -> !spaceLinkDisplayObj.getLink().getTargetSpace().isHideIncomingLinks())
+                spaceLinkDisplayObj -> spaceLinkDisplayObj.getLink().getTargetSpace() != null
+                        && !spaceLinkDisplayObj.getLink().getTargetSpace().isHideIncomingLinks())
                 .collect(Collectors.toList());
         model.addAttribute("spaceLinks", filteredSpaceLinks);
         model.addAttribute("display", spaceDisplayManager.getBySpace(space));
