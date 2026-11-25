@@ -35,6 +35,8 @@ import edu.asu.diging.vspace.core.data.SnapshotTaskRepository;
 import edu.asu.diging.vspace.core.data.SpaceRepository;
 import edu.asu.diging.vspace.core.exception.ExhibitionSnapshotNotFoundException;
 import edu.asu.diging.vspace.core.exception.FileStorageException;
+import edu.asu.diging.vspace.core.exception.SequenceNotFoundException;
+import edu.asu.diging.vspace.core.exception.SlidesInSequenceNotFoundException;
 import edu.asu.diging.vspace.core.file.impl.StorageEngine;
 import edu.asu.diging.vspace.core.file.impl.StorageManager;
 import edu.asu.diging.vspace.core.model.IContentBlock;
@@ -59,6 +61,8 @@ import edu.asu.diging.vspace.core.model.impl.VSImage;
 import edu.asu.diging.vspace.core.services.IExternalLinkManager;
 import edu.asu.diging.vspace.core.services.IModuleLinkManager;
 import edu.asu.diging.vspace.core.services.IModuleManager;
+import edu.asu.diging.vspace.core.services.ISequenceManager;
+import edu.asu.diging.vspace.core.services.ISlideManager;
 import edu.asu.diging.vspace.core.services.ISnapshotManager;
 import edu.asu.diging.vspace.core.services.ISpaceDisplayManager;
 import edu.asu.diging.vspace.core.services.ISpaceLinkManager;
@@ -116,6 +120,12 @@ public class RenderingManagerTest {
     
     @Mock
     private ISpaceTextBlockManager spaceTextBlockManager;
+
+    @Mock
+    private ISequenceManager sequenceManager;
+
+    @Mock
+    private ISlideManager slideManager;
     
     @Mock
     private TemplateEngine templateEngine;
@@ -306,6 +316,30 @@ public class RenderingManagerTest {
         List<?> linkMarkers = (List<?>) contextCaptor.getAllValues().get(0).getVariable("linkMarkers");
         assertEquals(1, linkMarkers.size());
         assertEquals("./images/IMG000000002/module.png", ((Map<?, ?>) linkMarkers.get(0)).get("defaultImageSrc"));
+    }
+
+    @Test
+    public void test_createSpaceSnapshot_setsExhibitionForNavbarTitle() throws FileStorageException,
+            SlidesInSequenceNotFoundException, SequenceNotFoundException {
+        Exhibition exhibition = new Exhibition();
+        exhibition.setTitle("Test Exhibition");
+
+        when(exhibitionManager.getStartExhibition()).thenReturn(exhibition);
+        when(spaceManager.getSpace(spaceId)).thenReturn(space);
+        when(moduleManager.getModule(moduleId)).thenReturn(module);
+        when(moduleManager.checkIfSequenceExists(moduleId, sequenceId)).thenReturn(sequence);
+        when(sequenceManager.getSequence(sequenceId)).thenReturn(sequence);
+        when(slideManager.getSlide(slide1Id)).thenReturn(slide1);
+
+        serviceToTest.createSpaceSnapshot(space, exhibitionId);
+
+        ArgumentCaptor<String> templateCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<IContext> contextCaptor = ArgumentCaptor.forClass(IContext.class);
+        verify(springTemplateEngine, Mockito.atLeast(2)).process(templateCaptor.capture(), contextCaptor.capture());
+        assertEquals("exhibition/downloads/spaceDownloadTemplate", templateCaptor.getAllValues().get(0));
+        assertEquals("exhibition/downloads/slideDownloadTemplate", templateCaptor.getAllValues().get(1));
+        assertEquals(exhibition, contextCaptor.getAllValues().get(0).getVariable("exhibition"));
+        assertEquals(exhibition, contextCaptor.getAllValues().get(1).getVariable("exhibition"));
     }
 
     private ISpaceLinkDisplay createSpaceLinkDisplay(String linkId, Space targetSpace) {

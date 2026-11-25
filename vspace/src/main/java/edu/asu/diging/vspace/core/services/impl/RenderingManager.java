@@ -327,6 +327,8 @@ public class RenderingManager implements IRenderingManager {
             throws SlidesInSequenceNotFoundException, SequenceNotFoundException, SlideNotFoundException {
         IModule module = moduleManager.getModule(moduleId);
         context.setVariable("module", module);
+        // shown in the navbar
+        context.setVariable("exhibition", exhibitManager.getStartExhibition());
         
         String startSequenceId = module.getStartSequence().getId();
         context.setVariable("startSequenceId", startSequenceId);
@@ -385,6 +387,8 @@ public class RenderingManager implements IRenderingManager {
         List<IExternalLinkDisplay> externalLinks = externalLinkManager.getLinkDisplays(id);
         context.setVariable("isSpacePublished", true);
         context.setVariable("exhibitionConfig", exhibition);
+        // shown in the navbar
+        context.setVariable("exhibition", exhibition);
         context.setVariable("space", space);
         context.setVariable("moduleList", moduleLinks);
         // Only published spaces are part of the snapshot, so links to any other space would be broken.
