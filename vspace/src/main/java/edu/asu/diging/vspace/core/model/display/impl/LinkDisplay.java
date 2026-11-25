@@ -1,7 +1,7 @@
 package edu.asu.diging.vspace.core.model.display.impl;
 
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MappedSuperclass;
-import jakarta.persistence.OneToOne;
 
 import edu.asu.diging.vspace.core.model.IVSImage;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
@@ -19,7 +19,7 @@ public abstract class LinkDisplay extends VSpaceElement implements ILinkDisplay 
     private DisplayType type;
     private ExternalLinkDisplayMode howToOpen;
 
-    @OneToOne(targetEntity = VSImage.class)
+    @ManyToOne(targetEntity = VSImage.class)
     private IVSImage image;
 
     /*

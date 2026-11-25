@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
+import edu.asu.diging.vspace.core.exception.ImageDoesNotExistException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.model.ISpace;
 import edu.asu.diging.vspace.core.model.display.DisplayType;
@@ -37,12 +38,22 @@ public class AddExternalLinkController {
     public ResponseEntity<String> createExternalLink(@PathVariable("id") String id, @RequestParam("x") String x,
             @RequestParam("y") String y, @RequestParam("externalLinkLabel") String title,
             @RequestParam("url") String externalLink, @RequestParam("tabOpen") String howToOpen,
-            @RequestParam("type") String displayType, @RequestParam("externalLinkImage") MultipartFile file)
+            @RequestParam("type") String displayType,
+            @RequestParam(value = "externalLinkImage", required = false) MultipartFile file,
+            @RequestParam(value = "externalLink-imageId", required = false) String existingImageId)
             throws NumberFormatException, SpaceDoesNotExistException, IOException, ImageCouldNotBeStoredException {
 
         ISpace space = spaceManager.getSpace(id);
         if (space == null) {
             return new ResponseEntity<>("{'error': 'Space could not be found.'}", HttpStatus.NOT_FOUND);
+        }
+
+        if (DisplayType.IMAGE.name().equals(displayType) && (file == null || file.isEmpty())
+                && (existingImageId == null || existingImageId.trim().isEmpty())) {
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode node = mapper.createObjectNode();
+            node.put("errorMessage", "Please upload an image or choose an existing one for the external link.");
+            return new ResponseEntity<String>(mapper.writeValueAsString(node), HttpStatus.BAD_REQUEST);
         }
 
         byte[] linkImage = null;
@@ -54,8 +65,16 @@ public class AddExternalLinkController {
         DisplayType type = displayType.isEmpty() ? null : DisplayType.valueOf(displayType);
         ExternalLinkDisplayMode externalLinkOpenMode = howToOpen.isEmpty() ? null
                 : ExternalLinkDisplayMode.valueOf(howToOpen);
-        IExternalLinkDisplay display = externalLinkManager.createLink(title, id, new Float(x), new Float(y), 0,
-                externalLink, title, type, linkImage, filename, externalLinkOpenMode);
+        IExternalLinkDisplay display;
+        try {
+            display = externalLinkManager.createLink(title, id, new Float(x), new Float(y), 0, externalLink, title,
+                    type, linkImage, filename, externalLinkOpenMode, existingImageId);
+        } catch (ImageDoesNotExistException e) {
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode node = mapper.createObjectNode();
+            node.put("errorMessage", "The selected image could not be found.");
+            return new ResponseEntity<>(mapper.writeValueAsString(node), HttpStatus.BAD_REQUEST);
+        }
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode linkNode = mapper.createObjectNode();
         linkNode.put("id", display.getExternalLink().getId());

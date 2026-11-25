@@ -13,6 +13,7 @@ import edu.asu.diging.vspace.core.data.ExternalLinkDisplayRepository;
 import edu.asu.diging.vspace.core.data.ExternalLinkRepository;
 import edu.asu.diging.vspace.core.data.ImageRepository;
 import edu.asu.diging.vspace.core.exception.ImageCouldNotBeStoredException;
+import edu.asu.diging.vspace.core.exception.ImageDoesNotExistException;
 import edu.asu.diging.vspace.core.exception.LinkDoesNotExistsException;
 import edu.asu.diging.vspace.core.exception.SpaceDoesNotExistException;
 import edu.asu.diging.vspace.core.factory.IExternalLinkDisplayFactory;
@@ -124,8 +125,8 @@ public class ExternalLinkManager extends LinkManager<IExternalLink, ExternalLink
     @Override
     public IExternalLinkDisplay createLink(String title, String id, float positionX, float positionY, int rotation,
             String linkedId, String linkLabel, DisplayType displayType, byte[] linkImage, String imageFilename,
-            ExternalLinkDisplayMode howToOpen)
-            throws SpaceDoesNotExistException, ImageCouldNotBeStoredException, SpaceDoesNotExistException {
+            ExternalLinkDisplayMode howToOpen, String existingImageId)
+            throws SpaceDoesNotExistException, ImageCouldNotBeStoredException, ImageDoesNotExistException {
 
         /*
          * When createLink is called then inside updateLinkAndDisplay(link, displayLink)
@@ -135,7 +136,7 @@ public class ExternalLinkManager extends LinkManager<IExternalLink, ExternalLink
          * automatically persist howToOpen in database.
          */
         IExternalLinkDisplay externalLinkDisplay = createLink(title, id, positionX, positionY, rotation, linkedId,
-                linkLabel, displayType, linkImage, imageFilename);
+                linkLabel, displayType, linkImage, imageFilename, existingImageId);
         externalLinkDisplay.setHowToOpen(howToOpen);
         return externalLinkDisplay;
 
@@ -144,8 +145,9 @@ public class ExternalLinkManager extends LinkManager<IExternalLink, ExternalLink
     @Override
     public IExternalLinkDisplay updateLink(String title, String id, float positionX, float positionY, int rotation,
             String linkedId, String linkLabel, String linkId, String linkDisplayId, DisplayType displayType,
-            byte[] linkImage, String imageFilename, ExternalLinkDisplayMode howToOpen)
-            throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException {
+            byte[] linkImage, String imageFilename, ExternalLinkDisplayMode howToOpen, String existingImageId)
+            throws SpaceDoesNotExistException, LinkDoesNotExistsException, ImageCouldNotBeStoredException,
+            ImageDoesNotExistException {
 
         /*
          * When updateLink is called then inside updateLinkAndDisplay(link, displayLink)
@@ -155,7 +157,7 @@ public class ExternalLinkManager extends LinkManager<IExternalLink, ExternalLink
          * automatically persist howToOpen in database.
          */
         IExternalLinkDisplay externalLinkDisplay = updateLink(title, id, positionX, positionY, rotation, linkedId,
-                linkLabel, linkId, linkDisplayId, displayType, linkImage, imageFilename);
+                linkLabel, linkId, linkDisplayId, displayType, linkImage, imageFilename, existingImageId);
         externalLinkDisplay.setHowToOpen(howToOpen);
         return externalLinkDisplay;
     }
